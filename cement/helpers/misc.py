@@ -34,6 +34,7 @@ def create_tgz(src_dir, dst_file):
     os.chdir(orig_dir)
     shutil.rmtree(tmp_dir)
     
+    
 def extract_tgz(src_file, dst_dir):
     t = tarfile.open(src_file, 'r:gz')
     dir_name = t.getnames()[0]
@@ -57,6 +58,7 @@ def convert_bytes(bytes):
     else:
         size = '%.2fb' % bytes
     return size
+           
                        
 def sort_dict(adict):
     if adict:
@@ -64,7 +66,6 @@ def sort_dict(adict):
     else:
         return None
 
-    
 def get_timestamp():
     log.debug('get_timestamp()')
     now = time.mktime(time.localtime())

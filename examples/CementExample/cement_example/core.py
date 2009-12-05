@@ -17,9 +17,9 @@ def main():
     dcf['log_file'] = '%s/log/%s.log' % (dcf['statedir'], dcf['app_name'])
     dcf['plugin_config_dir'] = './etc/plugins.d'
     dcf['plugin_dir'] = '%s/plugins.d' % dcf['statedir']
-    dcf['plugins'] = []
+    dcf['plugins'] = {}
     
-    (config, cli_opts, cli_args) = lay_cement(dcf)
+    (config, cli_opts, cli_args, commands) = lay_cement(dcf)
     
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
@@ -37,6 +37,10 @@ def main():
             else:
                 for i in config:
                     print("config[%s] => %s" % (i, config[i]))
+
+        elif commands.has_key(cmd):
+            commands[cmd](config, cli_opts, cli_args)
+            
         else:
             raise CementArgumentError, "unknown command, see --help?"
             

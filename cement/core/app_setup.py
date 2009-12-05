@@ -17,10 +17,11 @@ def lay_cement(config, version_banner=None):
     config = set_config_opts_per_file(config, config['app_module'], 
                                       config['config_file'])
     options = init_parser(config, version_banner)
-    (config, cli_opts, cli_args) = parse_options(config, options)
+    (config, plugin_commands, options) = load_all_plugins(config, options)
+    (config, cli_opts, cli_args) = parse_options(config, options, plugin_commands)
     config = set_config_opts_per_cli_opts(config, cli_opts)
     setup_logging(config)
-    return (config, cli_opts, cli_args)
+    return (config, cli_opts, cli_args, plugin_commands)
 
 
 def validate_config(config):
@@ -45,70 +46,68 @@ def validate_config(config):
             
             
 def load_plugin(config, options, plugin):
-    if config['show_plugin_load']:
+    """
+    Load a cement type plugin.  
+    
+    Arguments:
+    
+    config  => The existing config dict.
+    options => A OptParse object.
+    plugin  => Name of the plugin to load.
+    """
+    if config.has_key('show_plugin_load') and config['show_plugin_load']:
         print 'loading %s plugin' % plugin
-    full_plugin = '%s.plugins.%s' % (config['app_name'], plugin)
-    import_string = "import %s" % config['app_name']
-    try:
+    
+    try: 
+        import_string = "import %s" % config['app_module']
         exec(import_string)
     except ImportError, e:
-        raise CementConfigError, '%s unable to import base app!' % config['app_name']
-        
-    # try from 'app_name' first, then cement name space    
-    import_string = "from %s.plugins import %s" % (config['app_name'], plugin)
+        raise CementConfigError, e
+            
+    # try from 'app_module' first, then cement name space    
+    import_string = "from %s.plugins import %s" % (config['app_module'], plugin)
     try:
         exec(import_string)
-        setup_string = "res = %s.plugins.%s.register(config, options)" % \
-            (config['app_name'], plugin)
-        module_path = '%s.plugins.%s' % (config['app_name'], plugin)
+        setup_string = "res = %s.plugins.%s.register_plugin(config, options)" % \
+            (config['app_module'], plugin)
+        module_path = '%s.plugins.%s' % (config['app_module'], plugin)
     except ImportError, e:
+        # we allow all apps to use cement plugins like their own.
         try:
             import_string = "from cement.plugins import %s" % plugin
             exec(import_string)
-            setup_string = "res = cement.plugins.%s.register(config, options)" % \
+            setup_string = "res = cement.plugins.%s.register_plugin(config, options)" % \
                 plugin
             module_path = 'cement.plugins.%s' % plugin
         except ImportError, e:
-            raise cementConfigError, \
+            raise CementConfigError, \
                 'failed to load %s plugin: %s' % (plugin, e)    
     exec(setup_string)
 
-    (plugin_config, plugin_commands, plugin_exposed, options) = res
+    (p_config, p_commands, options) = res
     plugin_config_file = os.path.join(
         config['plugin_config_dir'], '%s.plugin' % plugin
         )
-    plugin_config = set_config_opts_per_file(
-        plugin_config, plugin, plugin_config_file
-        )
+    p_config = set_config_opts_per_file(p_config, plugin, plugin_config_file)
 
     # update the config
-    config['plugin_configs'][full_plugin] = plugin_config
+    config['plugins'][plugin] = p_config
         
-    # handler hook
-    try:
-        handler_string = "handler = %s.get_handler_hook(config)" % module_path
-        exec(handler_string)
-    except AttributeError, e:
-        handler = None
+    return (config, p_commands, options)
+    
         
-    return (config, plugin_commands, plugin_exposed, options, handler)
-    
-    
-def load_plugins(config, options, handlers):
-    p = config['enabled_plugins'][:] # make a copy
-    all_plugin_commands = {}
-    all_plugin_exposed = {}
-                
-    for plugin in p:
-        full_plugin = '%s.plugins.%s' % (config['app_name'], plugin)
-        res = load_plugin(config, options, plugin)
-        (config, plugin_commands, plugin_exposed, options, handler) = res
-        all_plugin_commands.update(plugin_commands)
-        if len(plugin_exposed) > 0:
-            all_plugin_exposed[full_plugin] = plugin_exposed
-        if handler:
-            if handler[0] in handlers:
-                raise ShakedownPluginError, 'handler[%s] already provided by %s' % \
-                    (handler[0], handlers[handler[0]].__module__)
-            handlers[handler[0]] = handler[1]
-    return (config, all_plugin_commands, all_plugin_exposed, options, handlers)
+def load_all_plugins(config, options):
+    """
+    Attempt to load all enabled plugins.  Passes the existing config and 
+    options object to each plugin and allows them to add/update each.
+    """
+    plugin_commands = {}
+    for plugin in config['enabled_plugins']:
+        full_plugin = '%s.plugins.%s' % (config['app_module'], plugin)
+        res = load_plugin(config, options, plugin)    
+        (config, p_commands, options) = res
+        
+        plugin_commands.update(p_commands)   # add the plugin commands
+        #config['plugins'][plugin] = p_config # add the plugin config
+        
+    return (config, plugin_commands, options)
