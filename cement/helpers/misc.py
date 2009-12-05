@@ -1,14 +1,13 @@
-import sys,os
+import os
 import time
 import re
 import shutil
-from cement.core.exc import *
-from cement.core.log import get_logger
 from configobj import ConfigObj
 from string import strip
-import inspect
 import tempfile
 import tarfile
+
+from cement.core.log import get_logger
 
 log = get_logger(__name__)
 
