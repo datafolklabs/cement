@@ -17,7 +17,7 @@ setup(name='Cement',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        # -*- Extra requirements: -*-
+        "ConfigObj"
         ],
     entry_points="""
     """,

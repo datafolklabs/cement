@@ -2,8 +2,8 @@ import sys,os
 import time
 import re
 import shutil
-from cement.exceptions import *
-from cement.logging import get_logger
+from cement.core.exc import *
+from cement.core.log import get_logger
 from configobj import ConfigObj
 from string import strip
 import inspect
@@ -59,7 +59,10 @@ def convert_bytes(bytes):
     return size
                        
 def sort_dict(adict):
-    return sorted(adict.items(), lambda x, y: cmp(x[1], y[1]))
+    if adict:
+        return sorted(adict.items(), lambda x, y: cmp(x[1], y[1]))
+    else:
+        return None
 
     
 def get_timestamp():

@@ -12,22 +12,19 @@ def setup_logging(config):
     # remove any previously setup handlers from other libraries
     for i in logging.getLogger().handlers:
         logging.getLogger().removeHandler(i)
-    
-    log = logging.getLogger(config['app_name'])
 
-    config['debug']
-    if config['debug']:
+    log = logging.getLogger(config['app_module'])
+    
+    if config.has_key('debug') and config['debug']:
         log_level = logging.DEBUG
         console_formatter = logging.Formatter(
             "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
             )
     else:
         log_level = logging.INFO
-        console_formatter = logging.Formatter(
-            "(%(levelname)s) : %(message)s"
-            )
+        console_formatter = logging.Formatter("%(message)s")
             
-    if config['log_file']:
+    if config.has_key('log_file'):
         file = logging.handlers.RotatingFileHandler(
             config['log_file'], maxBytes=512000, backupCount=4
             )

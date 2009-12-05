@@ -6,16 +6,17 @@
 
 import sys,os
 from cement import helpers as _h
+from cement.helpers.misc import sort_dict
 from optparse import OptionParser, IndentedHelpFormatter
 
 class Options(object):
-    def __init__(self, config, ver_banner):
+    def __init__(self, config, version_banner):
         self.config = config
         fmt = IndentedHelpFormatter(
             indent_increment=4,max_help_position=32, width=80, short_first=1
             )
         self.parser = OptionParser(
-            version=ver_banner(), formatter=fmt
+            version=version_banner, formatter=fmt
             )
             
     def add_default_options(self):
@@ -27,19 +28,20 @@ def init_parser(config, ver_banner):
     o = Options(config, ver_banner)
     return o
     
-def parse_options(config, options_obj, commands): 
+def parse_options(config, options_obj, commands=None): 
     o = options_obj
     
     cmd_txt = ''
     line = ''
-    sorted_commands = h.sort_dict(commands)
-    for c in commands:    
-        if not c.endswith('-help'):
-            if len(line) + len(c) < 55:
-                line += '%s, ' % c
-            else:
-                cmd_txt += "%s \n" % line
-                line = '           '
+    sorted_commands = sort_dict(commands)
+    if commands:
+        for c in commands:    
+            if not c.endswith('-help'):
+                if len(line) + len(c) < 55:
+                    line += '%s, ' % c
+                else:
+                    cmd_txt += "%s \n" % line
+                    line = '           '
 
     if line != '           ':
         cmd_txt += "%s \n" % line
@@ -47,41 +49,27 @@ def parse_options(config, options_obj, commands):
     
     o.parser.usage = """  %s [COMMAND] --(OPTIONS)
 
-Commands:  getconfig, %s
+Commands:  
+    getconfig  %s
     
-Help?  try [COMMAND]-help""" % (config['app_name'], cmd_txt)
+Help?  try [COMMAND]-help""" % (config['app_script'], cmd_txt)
 
     o.add_default_options()
     (opts, args) = o.parser.parse_args()
     
-    if opts.debug:
-        config['debug'] = opts.debug
     return (config, opts, args)
     
     
-def set_config_opts_per_file(config_opts, section, file):
+def set_config_opts_per_cli_opts(config, cli_opts):
     """
-    Parse config file options for config_opts.  Will do nothing if the config 
-    file does not exist.
+    Determine if any config optons were passed via cli options, and if so
+    override the config option.
     """
-    log.debug('set_config_opts_per_file()')
-    if not config_opts.has_key('config_source'):
-        config_opts['config_source'] = []
-        
-    if os.path.exists(file):
-        config_opts['config_source'].append(file)
-        config_opts['config_file'] = file
-        config = ConfigObj(file)
+    for opt in config:
         try:
-            config_opts.update(config[section])
-        except KeyError, e:
-            raise CementConfigError, \
-                'missing section %s in %s.  ignoring config...' % (section, file)
-
-        for option in config[section]:
-            if config[section][option] in ['True', 'true', True]:
-                config_opts[option] = True
-            elif config[section][option] in ['False', 'false', False]:
-                config_opts[option] = False
-
-    return config_opts
+            val = getattr(cli_opts, opt)
+            if val:
+                config[opt] = val
+        except AttributeError, e:
+            pass
+    return config

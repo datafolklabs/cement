@@ -3,7 +3,7 @@ import sys, os
 
 version = '0.1beta'
 
-setup(name='CementExample',
+setup(name='cement_example',
     version=version,
     description="Cement Example",
     long_description="""Cement Example""",
