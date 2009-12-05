@@ -52,7 +52,7 @@ def parse_options(config, options_obj, commands=None):
 Commands:  
     getconfig  %s
     
-Help?  try [COMMAND]-help""" % (config['app_script'], cmd_txt)
+Help?  try [COMMAND]-help""" % (config['app_name'], cmd_txt)
 
     o.add_default_options()
     (opts, args) = o.parser.parse_args()

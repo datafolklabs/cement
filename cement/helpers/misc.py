@@ -93,12 +93,3 @@ def copy_path(src_path, dest_path):
     log.debug('copied %s to %s' % (src_path, dest_path))
 
 
-def validate_config(config):
-    required_settings = [
-        'config_source', 'config_file', 'debug', 'log_file', 'data_dir',
-        'enabled_plugins', 'plugin_config_dir', 'plugins_dir', 
-        'plugin_configs', 'app_name', 'datastore_type', 'tmp_dir'
-        ]
-    for s in required_settings:
-        if not config.has_key(s):
-            raise cementConfigError, "config['%s'] value missing!" % s

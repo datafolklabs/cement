@@ -4,14 +4,22 @@ from cement.core.app_setup import lay_cement
 from cement.core.exc import CementArgumentError
 
 def main():
-    default_config = {
-        'app_module' : 'cement_example',
-        'app_script' : 'cement-example',
-        'log_file' : './cement_example.log',
-        'config_file' : './etc/cement-example.conf'
-        }
-        
-    (config, cli_opts, cli_args) = lay_cement(default_config)
+    dcf = {} # default config
+    dcf['config_source'] = ['defaults']
+    dcf['app_name'] = 'cement-example' 
+    dcf['app_module'] = 'cement_example'
+    dcf['config_file'] = './etc/%s.conf' % dcf['app_name']
+    dcf['enabled_plugins'] = []
+    dcf['debug'] = False
+    dcf['statedir'] = './var/lib/%s' % dcf['app_name']
+    dcf['datadir'] = '%s/data' % dcf['statedir']
+    dcf['tmpdir'] = '%s/tmp' % dcf['statedir']
+    dcf['log_file'] = '%s/log/%s.log' % (dcf['statedir'], dcf['app_name'])
+    dcf['plugin_config_dir'] = './etc/plugins.d'
+    dcf['plugin_dir'] = '%s/plugins.d' % dcf['statedir']
+    dcf['plugins'] = []
+    
+    (config, cli_opts, cli_args) = lay_cement(dcf)
     
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
