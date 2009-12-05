@@ -12,8 +12,8 @@ def lay_cement(config, version_banner=None):
         
     config = set_config_opts_per_file(config, config['app_module'], 
                                       config['config_file'])
-    setup_logging(config)
     options = init_parser(config, version_banner)
     (config, cli_opts, cli_args) = parse_options(config, options)
     config = set_config_opts_per_cli_opts(config, cli_opts)
+    setup_logging(config)
     return (config, cli_opts, cli_args)
