@@ -41,9 +41,11 @@ setup(name='Cement',
         ],
     entry_points="""
         [paste.global_paster_command]
-        laycement = cement.paste.commands:LayCementCommand
+        cement-app = cement.paste.commands:CementAppCommand
+        cement-plugin = cement.paste.commands:CementPluginCommand
         [paste.paster_create_template]
-        cement = cement.paste.template:CementTemplate
+        cementapp = cement.paste.template:CementAppTemplate
+        cementplugin = cement.paste.template:CementPluginTemplate
     """,
     namespace_packages=[
         'cement', 'cement.plugins', 'cement.handlers', 'cement.helpers'

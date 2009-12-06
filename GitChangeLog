@@ -1,3 +1,9 @@
+commit 55be183b7d42c3bc3e573d0037e90b6b5f227249
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sun Dec 6 14:32:52 2009 -0600
+
+    Added a PasteScript plugin to quickstart a cement app.
+
 commit 069cc6cb99a0e24da251a04e3c102a5d57704e66
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Sun Dec 6 12:48:05 2009 -0600
