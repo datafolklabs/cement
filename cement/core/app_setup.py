@@ -1,4 +1,4 @@
-
+"""Cement methods to setup the framework for applications using it."""
 import os
 from pkg_resources import get_distribution
 
@@ -9,6 +9,14 @@ from cement.core.options import set_config_opts_per_cli_opts
 from cement.core.exc import CementConfigError
 
 def lay_cement(config, version_banner=None):
+    """
+    Primary method to setup an application for Cement.  
+    
+    Arguments:
+    
+    config => dict containing application config.
+    version_banner => Option txt displayed for --version
+    """
     validate_config(config)
     
     if not version_banner:
@@ -18,7 +26,8 @@ def lay_cement(config, version_banner=None):
                                       config['config_file'])
     options = init_parser(config, version_banner)
     (config, plugin_commands, options) = load_all_plugins(config, options)
-    (config, cli_opts, cli_args) = parse_options(config, options, plugin_commands)
+    (config, cli_opts, cli_args) = parse_options(config, options, 
+                                                 plugin_commands)
     config = set_config_opts_per_cli_opts(config, cli_opts)
     setup_logging(config)
     return (config, cli_opts, cli_args, plugin_commands)
@@ -59,18 +68,19 @@ def load_plugin(config, options, plugin):
         print 'loading %s plugin' % plugin
     
     try: 
+        print config['app_module']
         import_string = "import %s" % config['app_module']
         exec(import_string)
     except ImportError, e:
         raise CementConfigError, e
             
     # try from 'app_module' first, then cement name space    
-    import_string = "from %s.plugins import %s" % (config['app_module'], plugin)
+    import_string = "from %s.plugins import %s" % \
+                    (config['app_module'], plugin)
     try:
         exec(import_string)
-        setup_string = "res = %s.plugins.%s.register_plugin(config, options)" % \
-            (config['app_module'], plugin)
-        module_path = '%s.plugins.%s' % (config['app_module'], plugin)
+        setup_string = "res = %s.plugins.%s.register_plugin(config, options)" \
+            % (config['app_module'], plugin)
     except ImportError, e:
         # we allow all apps to use cement plugins like their own.
         try:
@@ -78,7 +88,6 @@ def load_plugin(config, options, plugin):
             exec(import_string)
             setup_string = "res = cement.plugins.%s.register_plugin(config, options)" % \
                 plugin
-            module_path = 'cement.plugins.%s' % plugin
         except ImportError, e:
             raise CementConfigError, \
                 'failed to load %s plugin: %s' % (plugin, e)    
@@ -103,7 +112,6 @@ def load_all_plugins(config, options):
     """
     plugin_commands = {}
     for plugin in config['enabled_plugins']:
-        full_plugin = '%s.plugins.%s' % (config['app_module'], plugin)
         res = load_plugin(config, options, plugin)    
         (config, p_commands, options) = res
         

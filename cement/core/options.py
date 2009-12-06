@@ -1,39 +1,60 @@
-#!/usr/bin/env python
-#
-# This file is a part of the Cement package.  Please see the
-# README and LICENSE files includes with this software.
-#
+"""Cement methods and classes to handle cli option/arg parsing."""
 
-import sys,os
-from cement import helpers as _h
-from cement.helpers.misc import sort_dict
 from optparse import OptionParser, IndentedHelpFormatter
 
 class Options(object):
+    """
+    This class is used to setup the OptParse object for later use, and is
+    the object that is passed around thoughout the application.
+    """
     def __init__(self, config, version_banner):
         self.config = config
         fmt = IndentedHelpFormatter(
-            indent_increment=4,max_help_position=32, width=80, short_first=1
+            indent_increment=4, max_help_position=32, width=77, short_first=1
             )
         self.parser = OptionParser(
             version=version_banner, formatter=fmt
             )
             
     def add_default_options(self):
+        """
+        Sets up default options for applications using Cement.
+        """
         self.parser.add_option('-D', '--debug', action ='store_true', 
             dest='debug', default=None, help='debug output'
             ) 
+    
             
-def init_parser(config, ver_banner):
-    o = Options(config, ver_banner)
+def init_parser(config, version_banner=None):
+    """
+    Sets up the Options object and returns it for use throughout the 
+    application.
+    
+    Arguments
+    
+    config => dict containing the application configurations
+    version_banner => option txt to be display for --version.
+    """
+    o = Options(config, version_banner)
     return o
     
+    
 def parse_options(config, options_obj, commands=None): 
+    """
+    The actual method that parses the command line options and args.  
+    
+    Arguments:
+    
+    config => dict containing the application configurations.
+    options_obj => The options object used to pass the parser around.
+    commands => Plugin commands to be added to the --help output.
+    
+    Returns => a tuple of (config, options, args)
+    """
     o = options_obj
     
     cmd_txt = ''
     line = ''
-    sorted_commands = sort_dict(commands)
     if commands:
         for c in commands:    
             if not c.endswith('-help'):
@@ -63,12 +84,14 @@ def set_config_opts_per_cli_opts(config, cli_opts):
     """
     Determine if any config optons were passed via cli options, and if so
     override the config option.
+    
+    Returns the updated config dict.
     """
     for opt in config:
         try:
             val = getattr(cli_opts, opt)
             if val:
                 config[opt] = val
-        except AttributeError, e:
+        except AttributeError:
             pass
     return config

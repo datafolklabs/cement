@@ -1,14 +1,16 @@
-#!/usr/bin/env python
-#
-# This file is a part of the Cement package.  Please see the
-# README and LICENSE files includes with this software.
-#
+"""Cement methods to setup and configuring logging."""
 
-import sys,os
 import logging
 from logging.handlers import RotatingFileHandler
 
 def setup_logging(config):
+    """
+    Primary Cement method to setup logging.
+    
+    Arguments:
+    
+    config => dict containing the applications configurations.
+    """
     # remove any previously setup handlers from other libraries
     for i in logging.getLogger().handlers:
         logging.getLogger().removeHandler(i)
@@ -25,15 +27,15 @@ def setup_logging(config):
         console_formatter = logging.Formatter("%(message)s")
             
     if config.has_key('log_file'):
-        file = logging.handlers.RotatingFileHandler(
+        file_handler = RotatingFileHandler(
             config['log_file'], maxBytes=512000, backupCount=4
             )
-        file.setLevel(log_level)
+        file_handler.setLevel(log_level)
         formatter = logging.Formatter(
             "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
             )
-        log.addHandler(file)
-        file.setFormatter(formatter)
+        log.addHandler(file_handler)
+        file_handler.setFormatter(formatter)
     
     console = logging.StreamHandler()
     console.setLevel(log_level)
@@ -42,4 +44,12 @@ def setup_logging(config):
     log.setLevel(log_level)
     
 def get_logger(name):
+    """
+    Used throughout the application to get a logger opject with a namespace
+    of 'name' (should be passed as __name__).  
+    
+    Arguments:
+    
+    name => name of the module calling get_logger (use __name__).
+    """
     return logging.getLogger(name)

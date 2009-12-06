@@ -1,22 +1,20 @@
+"""Misc Cement helper methods."""
+
 import os
 import time
 import re
 import shutil
-from configobj import ConfigObj
-from string import strip
 import tempfile
 import tarfile
 
 from cement.core.log import get_logger
+from cement.core.exc import CementIOError
 
 log = get_logger(__name__)
 
 def create_tgz(src_dir, dst_file):
     orig_dir = os.curdir
     dir_name = os.path.basename(src_dir.rstrip('/'))
-    file_check = os.path.exists(
-        os.path.join(os.curdir, '%s.tgz' % os.path.basename(src_dir))
-        )
     if os.path.exists(dst_file):
         raise CementIOError, \
             "%s already exists!" % os.path.basename(dst_file)
@@ -36,36 +34,33 @@ def create_tgz(src_dir, dst_file):
     
 def extract_tgz(src_file, dst_dir):
     t = tarfile.open(src_file, 'r:gz')
-    dir_name = t.getnames()[0]
     t.extractall(path=dst_dir)
     t.close()
     
-def convert_bytes(bytes):
-    bytes = float(bytes)
-    if bytes >= 1099511627776:
-        terabytes = bytes / 1099511627776
+def convert_bytes(_bytes):
+    """
+    Convert bytes to a more appropriate human readable number.
+    """
+    _bytes = float(_bytes)
+    if _bytes >= 1099511627776:
+        terabytes = _bytes / 1099511627776
         size = '%.2fT' % terabytes
-    elif bytes >= 1073741824:
-        gigabytes = bytes / 1073741824
+    elif _bytes >= 1073741824:
+        gigabytes = _bytes / 1073741824
         size = '%.2fG' % gigabytes
-    elif bytes >= 1048576:
-        megabytes = bytes / 1048576
+    elif _bytes >= 1048576:
+        megabytes = _bytes / 1048576
         size = '%.2fM' % megabytes
-    elif bytes >= 1024:
-        kilobytes = bytes / 1024
+    elif _bytes >= 1024:
+        kilobytes = _bytes / 1024
         size = '%.2fK' % kilobytes
     else:
-        size = '%.2fb' % bytes
+        size = '%.2fb' % _bytes
     return size
-           
-                       
-def sort_dict(adict):
-    if adict:
-        return sorted(adict.items(), lambda x, y: cmp(x[1], y[1]))
-    else:
-        return None
+
 
 def get_timestamp():
+    """Get a timestamp."""
     log.debug('get_timestamp()')
     now = time.mktime(time.localtime())
     time_stamp = time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime(now))
@@ -73,6 +68,7 @@ def get_timestamp():
     
     
 def get_db_timestamp():
+    """Get a database savvy timestamp."""
     log.debug('get_db_timestamp()')
     now = time.mktime(time.localtime())
     time_stamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now))
@@ -88,6 +84,7 @@ def sub_special_characters(text):
 
 
 def copy_path(src_path, dest_path):
+    """Copy a src path to a destination path."""
     log.debug('copy_path()')
     shutil.copy(src_path, dest_path)
     log.debug('copied %s to %s' % (src_path, dest_path))
