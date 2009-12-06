@@ -9,7 +9,7 @@ def main():
     dcf['app_name'] = 'cement-example' 
     dcf['app_module'] = 'cement_example'
     dcf['config_file'] = './etc/%s.conf' % dcf['app_name']
-    dcf['enabled_plugins'] = []
+    dcf['enabled_plugins'] = ['simple']
     dcf['debug'] = False
     dcf['statedir'] = './var/lib/%s' % dcf['app_name']
     dcf['datadir'] = '%s/data' % dcf['statedir']
