@@ -1,10 +1,10 @@
-NAME: python-cement
+NAME: Cement
 
 CREATOR/MAINTAINER: BJ Dierkes <wdierkes@5dollarwhitebox.org
 
 DESCRIPTION:
 
-Cement is a basic Python CLI Application Framework.  Almost every command
+Cement is a Python CLI Application Framework.  Almost every command
 line type application has a number of basic pieces that have to exist before
 any real code and logic gets written.  At a minimum, Cement easily sets up
 the following:
@@ -28,7 +28,25 @@ using cement.
 
 GETTING STARTED:
 
-There are a number of examples under ./examples.  To see how to get an 
-application started with cement, see the CementExample application.  To see
-how to write plugins for some-such application using cement see the 
+Cement applications and plugins can be easily created with PasteScript.  The
+following command will create a command line application built on top of the 
+Cement Framework:
+
+    $ paster cement-app <myapp>
+    
+
+The following command will create an external plugin for your application:
+
+    $ paster cement-app <myapp> <myplugin>
+
+
+Additionally, there are a number of examples under ./examples.  To see how 
+to get an application started with cement, see the CementExample application.  
+To see how to write plugins for some-such application using cement see the 
 CementExampleMyPlugin which is a plugin for the CementExample application.
+
+
+CONTRIBUTING:
+
+Think you have a plugin that would fit nicely as a core plugin?  Send us an
+email and we'll talk about it.
