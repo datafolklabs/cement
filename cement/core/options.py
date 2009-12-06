@@ -54,23 +54,25 @@ def parse_options(config, options_obj, commands=None):
     o = options_obj
     
     cmd_txt = ''
-    line = ''
+    line = '    '
     if commands:
         for c in commands:    
             if not c.endswith('-help'):
-                if len(line) + len(c) < 55:
-                    line += '%s  ' % c
+                if line == '    ':
+                    line += '%s' % c
+                elif len(line) + len(c) < 55:
+                    line += ' - %s' % c
                 else:
-                    cmd_txt += "%s  \n" % line
-                    line = '           '
+                    cmd_txt += "%s \n" % line
+                    line = '    '
 
-    if line != '           ':
-        cmd_txt += "%s  \n" % line
+    if line != '    ':
+        cmd_txt += "%s\n" % line
     
     o.parser.usage = """  %s [COMMAND] --(OPTIONS)
 
 Commands:  
-    getconfig  %s
+%s
     
 Help?  try [COMMAND]-help""" % (config['app_name'], cmd_txt)
 

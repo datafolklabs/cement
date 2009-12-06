@@ -1,0 +1,19 @@
+[myplugin]
+# This is an example of a cement plugin configuration file.  Once parsed, the
+# values from here will be accessible from:
+#
+# config['plugins']['example']['param'] = value
+# 
+
+debug = false
+param1 = value1
+param2 = value two
+
+# equates to True
+param3 = yes
+
+# equates to False 
+param4 = 0 
+
+# equates to ['my', 'list', 'of', 'values']
+param5 = my, list, of, value

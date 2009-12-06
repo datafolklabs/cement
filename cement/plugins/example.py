@@ -1,3 +1,4 @@
+"""This is an example of how to write a Cement plugin."""
 
 from cement.core.log import get_logger
 from cement import helpers as _h
@@ -59,7 +60,7 @@ def example_method(config, cli_opts, cli_args):
     
     Our plugin configuration comes back in the global config as:
     
-        config['plugins'][example]
+        config['plugins']['example']
         
     So, to access our 'example_config_option' we would reference:
     

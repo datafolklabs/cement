@@ -3,10 +3,10 @@ import sys, os
 
 version = '0.1beta'
 
-setup(name='cement_example_plugin',
+setup(name='CementExampleMyPlugin',
     version=version,
-    description="Cement Example Plugin",
-    long_description="""Cement Example Plugin""",
+    description="Cement Example Plugin called MyPlugin",
+    long_description="""Cement Example Plugin called MyPlugin""",
     classifiers=[], 
     keywords='',
     author='BJ Dierkes',

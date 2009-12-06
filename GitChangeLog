@@ -1,0 +1,77 @@
+commit 8bae2f1116eec444457e161fa42f7780b351ebb3
+Author: abg <abg@goat.(none)>
+Date:   Sun Dec 6 13:58:28 2009 +0000
+
+    enable simple plugin in CementExample
+
+commit a97e4be705cab70ebab9dc3de41b8f82aa90572b
+Author: abg <abg@goat.(none)>
+Date:   Sun Dec 6 13:57:43 2009 +0000
+
+    replace exec with __import__
+
+commit db151739f76eec94a8f124814e4c85ce041b4b86
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sat Dec 5 20:39:28 2009 -0600
+
+    adding TODO
+
+commit 49d9a3af17e968398a252bc86c50c8fb48ca1657
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sat Dec 5 20:23:32 2009 -0600
+
+    removing .pyc files
+
+commit 5216bd7666f0f830fec763bd02d4b786680f6005
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sat Dec 5 19:46:10 2009 -0600
+
+    adding .gitignore file
+
+commit 15d24ed936c03e535be2dd30c157874f01997ff4
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sat Dec 5 19:44:24 2009 -0600
+
+    cleanup
+
+commit 7410a7c54eb996acaba0eb085cdd320b4f26c670
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sat Dec 5 19:19:37 2009 -0600
+
+    pylint cleanup
+
+commit 51d02e0c8fe07c1ba2d66dc4cfe3875a2b9312f9
+Author: BJ Dierkes <wdierkes@rackspace.com>
+Date:   Sat Dec 5 16:11:01 2009 -0600
+
+    adding example plugin
+
+commit bed80a7d9d89d54b408bdbc692042c5de94596de
+Author: BJ Dierkes <wdierkes@rackspace.com>
+Date:   Sat Dec 5 15:49:20 2009 -0600
+
+    plugin support functional
+
+commit eb6543da377a9137b7c9a3a3e3e44140b3bcba3d
+Author: BJ Dierkes <wdierkes@rackspace.com>
+Date:   Sat Dec 5 14:08:51 2009 -0600
+
+    config validation complete
+
+commit 32f88c64bdaa8233baf9dbe6cdeaf1af61039931
+Author: BJ Dierkes <wdierkes@rackspace.com>
+Date:   Fri Dec 4 23:36:37 2009 -0600
+
+    logging, config opts, and cli opts work
+
+commit 61c3dd7ff32caeeb3f454f65c77ab80d33fc7f74
+Author: BJ Dierkes <wdierkes@rackspace.com>
+Date:   Fri Dec 4 23:27:58 2009 -0600
+
+    logging, config opts, and cli opts work
+
+commit 8f9966f3b47f4e920445c27f9ddc84e69616d18f
+Author: BJ Dierkes <wdierkes@rackspace.com>
+Date:   Fri Dec 4 22:06:13 2009 -0600
+
+    initializing branch

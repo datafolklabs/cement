@@ -2,6 +2,7 @@
 import os
 from pkg_resources import get_distribution
 
+from cement import plugins as cement_plugins
 from cement.core.log import setup_logging
 from cement.core.options import init_parser, parse_options
 from cement.core.config import set_config_opts_per_file
@@ -17,6 +18,14 @@ def lay_cement(config, version_banner=None):
     config => dict containing application config.
     version_banner => Option txt displayed for --version
     """
+    dcf = {} # default config
+    dcf['config_source'] = ['defaults']
+    dcf['enabled_plugins'] = [] # no default plugins, add via the config file
+    dcf['debug'] = False
+    dcf['show_plugin_load'] = True
+
+    dcf.update(config) # override the actual defaults
+    config = dcf # take the new config with changes
     validate_config(config)
     
     if not version_banner:
@@ -75,14 +84,16 @@ def load_plugin(config, options, plugin):
     # try from 'app_module' first, then cement name space    
     try:
         plugins_module = __import__('%s.plugins' % config['app_module'],
-                                globals(), locals(),
-                                [plugin], 0)
+                                    globals(), locals(),
+                                    [plugin], 0)
         pluginobj = getattr(plugins_module, plugin)
-    except ImportError, e:
-        # we allow all apps to use cement plugins like their own.
+    except AttributeError, e:
+        # we allow all apps to use cement plugins like their own.        
         try:
-            pluginobj = getattr(cement.plugins, plugin)
-        except ImportError, e:
+            plugins_module = __import__('cement.plugins', globals(), locals(),
+                                        [plugin], 0)
+            pluginobj = getattr(plugins_module, plugin)
+        except AttributeError, e:
             raise CementConfigError, \
                 'failed to load %s plugin: %s' % (plugin, e)    
     res = pluginobj.register_plugin(config, options)

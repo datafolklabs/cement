@@ -1,0 +1,24 @@
+[example]
+# This is an example of a cement plugin configuration file.  Once parsed, the
+# values from here will be accessible from:
+#
+# config['plugins']['example']['param'] = value
+# 
+# 
+# Please not that core cement plugins can be loaded from an application
+# using the Cement framework.  That said, the example.plugin configuration
+# file needs to go under the plugins.d configuration directory of the 
+# application, not under cement itself.
+
+debug = false
+param1 = value1
+param2 = value two
+
+# equates to True
+param3 = yes
+
+# equates to False 
+param4 = 0 
+
+# equates to ['my', 'list', 'of', 'values']
+param5 = my, list, of, values, 

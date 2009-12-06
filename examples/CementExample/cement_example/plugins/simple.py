@@ -1,4 +1,7 @@
-
+"""
+This is a bare minimum Cement plugin.  See ./examples/CementExamplePlugin
+for a more verbose and commented plugin example.
+"""
 from cement.core.log import get_logger
 
 log = get_logger(__name__)
