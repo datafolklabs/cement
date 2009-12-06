@@ -40,6 +40,10 @@ setup(name='Cement',
         "ConfigObj"
         ],
     entry_points="""
+        [paste.global_paster_command]
+        laycement = cement.paste.commands:LayCementCommand
+        [paste.paster_create_template]
+        cement = cement.paste.template:CementTemplate
     """,
     namespace_packages=[
         'cement', 'cement.plugins', 'cement.handlers', 'cement.helpers'

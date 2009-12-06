@@ -12,16 +12,6 @@ def register_plugin(config, options):
     plugin_commands = {
         'getconfig' : getconfig_command,
         'getconfig-help' : getconfig_help,
-        'blah1' : None, 
-        'blah2' : None, 
-        'blah3' : None, 
-        'blah4' : None, 
-        'blah5' : None, 
-        'blah6' : None, 
-        'blah7' : None, 
-        'blah8' : None, 
-        'blah9' : None, 
-        
         }
     return (plugin_config, plugin_commands, options)
 

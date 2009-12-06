@@ -1,3 +1,20 @@
+commit 069cc6cb99a0e24da251a04e3c102a5d57704e66
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sun Dec 6 12:48:05 2009 -0600
+
+    Merge branches 'HEAD' and 'abg'
+
+commit f4679a191f14e4c9962797d0635f9db1bb7dffcf
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sun Dec 6 12:45:17 2009 -0600
+
+    Merged changes from abg. No longer using exec infavor of __import__ (thank you)
+    Fixed up plugin support for applications using cement plugins
+    Added the clibasic cement plugin and moved the 'getconfig' command from example there.
+    Added more verbose comments to the examples.
+    Moved the 'example' plugin under cement
+    Added the 'myplugin' example plugin.
+
 commit 8bae2f1116eec444457e161fa42f7780b351ebb3
 Author: abg <abg@goat.(none)>
 Date:   Sun Dec 6 13:58:28 2009 +0000

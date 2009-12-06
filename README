@@ -26,3 +26,9 @@ cement can also share plugins with either cement or other applications
 using cement.
 
 
+GETTING STARTED:
+
+There are a number of examples under ./examples.  To see how to get an 
+application started with cement, see the CementExample application.  To see
+how to write plugins for some-such application using cement see the 
+CementExampleMyPlugin which is a plugin for the CementExample application.

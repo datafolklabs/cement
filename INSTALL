@@ -4,3 +4,6 @@ SOURCE INSTALLATION:
     python setup.py install
 
 
+FROM PyPi:
+
+    easy_install cement
