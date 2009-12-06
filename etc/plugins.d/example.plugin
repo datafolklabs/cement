@@ -5,10 +5,10 @@
 # config['plugins']['example']['param'] = value
 # 
 # 
-# Please not that core cement plugins can be loaded from an application
-# using the Cement framework.  That said, the example.plugin configuration
-# file needs to go under the plugins.d configuration directory of the 
-# application, not under cement itself.
+# Please note that core cement plugins can be loaded from any application
+# using the Cement framework.  That said, plugin configuration files needs to 
+# go under the plugins.d configuration directory of the application, not under 
+# cement itself.
 
 debug = false
 param1 = value1
@@ -21,4 +21,4 @@ param3 = yes
 param4 = 0 
 
 # equates to ['my', 'list', 'of', 'values']
-param5 = my, list, of, values, 
+param5 = my,

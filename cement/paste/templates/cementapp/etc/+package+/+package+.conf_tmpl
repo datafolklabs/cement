@@ -8,16 +8,24 @@
 # toggle debug output... can be true, false, yes, no, 1, 0
 debug = false 
 
-# add any config options you'd like here
-myoption = this is my option
+# list of plugin names to load (comma separated).  
+enabled_plugins = clibasic, 
 
-# list of plugin names to load (comma separated).  Note that the 'simple'
-# plugin is from within CementExample directly (be it a core plugin if you
-# will).  The 'example' plugin comes from the CementExamplePlugin and is
-# an external 3rd party plugin.
-enabled_plugins = clibasic, example, 
+# these should probably be changed for production installations if you 
+# follow the FHS (and you should).
+datadir = ./var/lib/{{package}}/data
+tmpdir = ./var/lib/{{package}}/tmp
+log_file = ./var/lib/{{package}}/log/{{package}}.log
+plugin_config_dir = ./etc/{{package}}/plugins.d
+plugin_dir = ./var/lib/{{package}}/plugins.d
+
 
 # this is just a cosmetic option... whether to show 'loading plugin...'
 # on application startup.
 #
 # show_plugin_load = true
+
+
+# add any config options you'd like here
+#
+# myoption = this is my option

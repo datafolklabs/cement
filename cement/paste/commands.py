@@ -8,15 +8,15 @@ Create a new project named helloworld with this command:
     
 Create a new plugin for the helloworld project with this command:
 
-    $ paster cement-app helloworld -p myplugin
-
+    $ paster cement-plugin helloworld myplugin
+    
 
 Usage:
 
 .. parsed-literal::
 
     paster cement-app [--version][-h|--help]
-            [-p PLUGIN][--dry-run][-t|--templates *TEMPLATES*]
+            [--dry-run][-t|--templates *TEMPLATES*]
 
 .. container:: paster-usage
 
@@ -31,7 +31,7 @@ Usage:
     
 """
 
-# taken mostly from tg.devtools
+# Taken mostly from tg.devtools... Thank you! 
 
 import sys, os
 import re
@@ -138,7 +138,7 @@ class CementPluginCommand(command.Command):
 
 Example usage::
 
-    $ paster cement-plugin yourproject
+    $ paster cement-plugin yourproject yourplugin
     """
     version = pkg_resources.get_distribution('cement').version
     summary = __doc__.splitlines()[0]
@@ -147,6 +147,8 @@ Example usage::
     group_name = "Cement"
     dry_run = False
     templates = "cementplugin"
+    project = None
+    plugin = None
     
     parser = command.Command.standard_parser(quiet=True)
     parser = optparse.OptionParser(

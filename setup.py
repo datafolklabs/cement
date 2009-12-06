@@ -37,7 +37,10 @@ setup(name='Cement',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "ConfigObj"
+        "ConfigObj",
+        # Only required if you want to use paster
+        "PasteScript", 
+        "tempita",
         ],
     entry_points="""
         [paste.global_paster_command]
