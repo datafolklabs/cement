@@ -68,30 +68,24 @@ def load_plugin(config, options, plugin):
         print 'loading %s plugin' % plugin
     
     try: 
-        print config['app_module']
-        import_string = "import %s" % config['app_module']
-        exec(import_string)
+        app_module = __import__(config['app_module'])
     except ImportError, e:
         raise CementConfigError, e
             
     # try from 'app_module' first, then cement name space    
-    import_string = "from %s.plugins import %s" % \
-                    (config['app_module'], plugin)
     try:
-        exec(import_string)
-        setup_string = "res = %s.plugins.%s.register_plugin(config, options)" \
-            % (config['app_module'], plugin)
+        plugins_module = __import__('%s.plugins' % config['app_module'],
+                                globals(), locals(),
+                                [plugin], 0)
+        pluginobj = getattr(plugins_module, plugin)
     except ImportError, e:
         # we allow all apps to use cement plugins like their own.
         try:
-            import_string = "from cement.plugins import %s" % plugin
-            exec(import_string)
-            setup_string = "res = cement.plugins.%s.register_plugin(config, options)" % \
-                plugin
+            pluginobj = getattr(cement.plugins, plugin)
         except ImportError, e:
             raise CementConfigError, \
                 'failed to load %s plugin: %s' % (plugin, e)    
-    exec(setup_string)
+    res = pluginobj.register_plugin(config, options)
 
     (p_config, p_commands, options) = res
     plugin_config_file = os.path.join(
