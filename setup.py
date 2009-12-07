@@ -23,16 +23,16 @@ using cement.
 """
 
 
-setup(name='Cement',
+setup(name='cement',
     version=version,
     description="Python CLI Application Framework",
     long_description=LONG,
     classifiers=[], 
-    keywords='',
+    keywords='cli framework',
     author='BJ Dierkes',
     author_email='wdierkes@5dollarwhitebox.org',
     url='http://github.com/derks/python-cement',
-    license='',
+    license='GNU GPLv3',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     zip_safe=False,
