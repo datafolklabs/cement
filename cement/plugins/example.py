@@ -84,7 +84,7 @@ class ExampleCommand(CementCommand):
     """
     def __init__(self, *args):
         CementCommand.__init__(self, *args)
-        self.plugin_config = self.config['plugins']['clibasic'].config
+        self.plugin_config = self.config['plugins']['example'].config
 
     def run(self):        
         if self.cli_opts.example_plugin_option:
@@ -95,7 +95,7 @@ class ExampleCommand(CementCommand):
         # do something with our Example object
         
         # Note that you can either print to the console:
-        print 'This is the example plugin...  example_method()'
+        print 'This is the example plugin...  run() method'
         
         # or log to both console, and a log_file if one was configured in
         # the apps configuration.
@@ -107,5 +107,5 @@ class ExampleCommand(CementCommand):
         Help commands are hidden in the commands list, but can be called
         for any module command by adding it like this.
         """
-        print 'help content for cement.plugins.example.example_method()' 
+        print 'help content for cement.plugins.example.ExampleCommand().run()' 
     

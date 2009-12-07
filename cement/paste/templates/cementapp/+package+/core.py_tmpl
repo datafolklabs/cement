@@ -46,8 +46,11 @@ def main():
         m = re.match('(.*)-help', cli_args[0])
         if m:
             # command matches a plugin command help, run help()
-            cmd = commands[m.group(1)](config, cli_opts, cli_args)
-            cmd.help()
+            if commands.has_key(m.group(1)):
+                cmd = commands[m.group(1)](config, cli_opts, cli_args)
+                cmd.help()
+            else:
+                raise CementArgumentError, "Unknown command, see --help?"
                 
         elif commands.has_key(cli_args[0]):
             # commands are all the plugin commands that have been registered.

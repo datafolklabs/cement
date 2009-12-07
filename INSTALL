@@ -7,3 +7,8 @@ SOURCE INSTALLATION:
 FROM PyPi:
 
     easy_install cement
+
+    To use paster commands be sure to also install:
+    
+    easy_install PasteScript
+    easy_install tempita

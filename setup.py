@@ -51,6 +51,6 @@ setup(name='cement',
         cementplugin = cement.paste.template:CementPluginTemplate
     """,
     namespace_packages=[
-        'cement', 'cement.plugins', 'cement.handlers', 'cement.helpers'
+        'cement', 'cement.plugins', 'cement.helpers'
         ],
     )
