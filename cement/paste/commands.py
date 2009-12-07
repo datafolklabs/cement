@@ -43,6 +43,8 @@ from paste.script import create_distro
 beginning_letter = re.compile(r"^[^a-z]*")
 valid_only = re.compile(r"[^a-z0-9_]")
 
+from cement.core.app_setup import CEMENT_ABI
+
 class CementAppCommand(command.Command):
     """Create a new CLI Application using the Cement Framework.
 
@@ -85,7 +87,7 @@ Example usage::
             
         package = self.name.lower()
         package = beginning_letter.sub("", package)
-        package = valid_only.sub("", package)
+        package = valid_only.sub("_", package)
         if package:
             self.package = package
         else:
@@ -120,6 +122,7 @@ Example usage::
         for template in self.templates.split():
             cmd_args.append("--template=%s" % template)
         cmd_args.append(self.name)
+        cmd_args.append("cement_abi=%s" % CEMENT_ABI)
         
         command.run(cmd_args)
         
@@ -217,6 +220,7 @@ Example usage::
         cmd_args.append(self.name)
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("plugin=%s" % self.plugin)
+        cmd_args.append("cement_abi=%s" % CEMENT_ABI)
         
         command.run(cmd_args)
         

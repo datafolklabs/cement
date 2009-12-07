@@ -1,73 +1,37 @@
-"""This is an example of how to write a Cement plugin."""
+"""
+{{plugin}} for the {{project}} application.
+"""
+
+import os
 
 from cement.core.log import get_logger
-from cement import helpers as _h
+from cement.core.app_setup import CementCommand, CementPlugin
+from cement.core.options import init_parser
 
 log = get_logger(__name__)
-    
-def register_plugin(config, options):
-    """
-    All plugins that are set as enabled will be imported, and this method
-    will be called.  The module init method is expected to return the 
-    following:
-    
-        plugin_config (dict)
-        plugin_commands (dict)
-        options (object)
-        
-    As a tuple:
-    
-        return (plugin_config, plugin_commands, options)
-        
-    """
-    plugin_config = {
-        'config_source' : ['defaults'],
-        '{{plugin}}_option' : True
-        }
-    plugin_commands = {
-        '{{plugin}}' : {{plugin}}_method,
-        '{{plugin}}-help' : {{plugin}}_method_help
-        }
-    
-    # Cement allows you to expose command line options to the 
-    # unified cli utility as well.   
-    options.parser.add_option('--{{plugin}}-option', action ='store', 
-        dest='{{plugin}}_option', default=None, 
-        help='example option {{plugin}} plugin', metavar='VAR' 
-        )
-    return (plugin_config, plugin_commands, options)
 
-           
-def {{plugin}}_method(config, cli_opts, cli_args):
-    """
-    This is an example method that is called when the following command is 
-    run:
-        
-        <your_app_name> example
-        
-    
-    All plugin commands receive the global config dict, as well as the 
-    cli options that were passed at command line.
-    
-    Our plugin configuration comes back in the global config as:
-    
-        config['plugins']['{{plugin}}']
-        
-    So, to access our 'example_config_option' we would reference:
-    
-        config['plugins']['{{plugin}}']['example_config_options']
-        
-    """
-    if cli_opts.{{plugin}}_option:
-        print '--{{plugin}}-option option passed with value %s' % cli_opts.{{plugin}}_option
-        
-    log.debug('Loaded the {{plugin}} plugin')
+def register_plugin(global_config):
+    return {{plugin}}Plugin(global_config)
 
-
-def {{plugin}}_method_help(config, cli_opts, cli_args):
-    """
-    Help commands are hidden in the commands list, but can be called
-    for any module command by adding it like this.
-    """
-    print 'help content {{plugin}}_method()' 
-    
+class {{plugin}}Plugin(CementPlugin):
+    def __init__(self, global_config):
+        CementPlugin.__init__(self, global_config)
+        self.version = '0.1'
+        self.required_abi = '{{cement_abi}}'
+        self.description = "{{plugin}} Plugin for Applications using Cement Framework"
+        self.config = {
+            'config_source': ['defaults']
+            }
+        self.commands = {
+            '{{plugin}}' : {{plugin}}Command,
+            }
+        self.handlers = {}
+        self.options = init_parser(global_config)
+        
+        
+class {{plugin}}Command(CementCommand):
+    def run(self):
+        print "{{plugin}} run() method."
+                
+    def help(self):
+        print "{{plugin}} help() method."

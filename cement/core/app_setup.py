@@ -7,8 +7,40 @@ from cement.core.log import setup_logging
 from cement.core.options import init_parser, parse_options
 from cement.core.config import set_config_opts_per_file
 from cement.core.options import set_config_opts_per_cli_opts
-from cement.core.exc import CementConfigError
+from cement.core.exc import CementConfigError, CementRuntimeError
 
+CEMENT_ABI = "20091207"
+
+class CementCommand(object):
+    def __init__(self, config, cli_opts=None, cli_args=None, handlers=None):
+        self.config = config
+        self.cli_opts = cli_opts
+        self.cli_args = cli_args
+        self.handlers = handlers
+    
+    def help(self):
+        """Display command help information."""
+        print "No help information available."
+    
+    def run(self):
+        """Run the command actions."""
+        print "No actions have been defined for this command."
+        
+
+class CementPlugin(object):
+    def __init__(self, config):
+        self.version = None
+        self.description = ""
+        self.commands = {}
+        self.handlers = {}
+        self.config = {'config_source': ['defaults']}
+        self.options = init_parser(config)
+        
+
+def get_abi_version():
+    return CEMENT_ABI
+    
+    
 def lay_cement(config, version_banner=None):
     """
     Primary method to setup an application for Cement.  
@@ -31,15 +63,22 @@ def lay_cement(config, version_banner=None):
     if not version_banner:
         version_banner = get_distribution(config['app_module']).version
         
-    config = set_config_opts_per_file(config, config['app_module'], 
-                                      config['config_file'])
+    for cf in config['config_files']:
+        config = set_config_opts_per_file(config, config['app_module'], cf)
+        
     options = init_parser(config, version_banner)
-    (config, plugin_commands, options) = load_all_plugins(config, options)
-    (config, cli_opts, cli_args) = parse_options(config, options, 
-                                                 plugin_commands)
+    (config, commands, handlers, options) = load_all_plugins(config, options)
+    (config, cli_opts, cli_args) = parse_options(config, options, commands)
     config = set_config_opts_per_cli_opts(config, cli_opts)
     setup_logging(config)
-    return (config, cli_opts, cli_args, plugin_commands)
+    return (config, cli_opts, cli_args, commands, handlers)
+
+
+def ensure_abi_compat(module_name, required_abi):
+    if int(required_abi) != int(CEMENT_ABI):
+        raise CementRuntimeError, \
+            "%s requires abi version %s which differs from cement(abi) %s." % \
+                (module_name, required_abi, CEMENT_ABI)
 
 
 def validate_config(config):
@@ -47,7 +86,7 @@ def validate_config(config):
     Validate that all required cement configuration options are set.
     """
     required_settings = [
-        'config_source', 'config_file', 'debug', 'datadir',
+        'config_source', 'config_files', 'debug', 'datadir',
         'enabled_plugins', 'plugin_config_dir', 'plugin_dir', 
         'plugins', 'app_module', 'app_name', 'tmpdir'
         ]
@@ -63,14 +102,13 @@ def validate_config(config):
             os.makedirs(d)
             
             
-def load_plugin(config, options, plugin):
+def load_plugin(config, plugin):
     """
     Load a cement type plugin.  
     
     Arguments:
     
     config  => The existing config dict.
-    options => A OptParse object.
     plugin  => Name of the plugin to load.
     """
     if config.has_key('show_plugin_load') and config['show_plugin_load']:
@@ -96,19 +134,18 @@ def load_plugin(config, options, plugin):
         except AttributeError, e:
             raise CementConfigError, \
                 'failed to load %s plugin: %s' % (plugin, e)    
-    res = pluginobj.register_plugin(config, options)
+    
+    plugin_cls = pluginobj.register_plugin(config)
+    
+    ensure_abi_compat(plugin_cls.__module__, plugin_cls.required_abi)
 
-    (p_config, p_commands, options) = res
     plugin_config_file = os.path.join(
         config['plugin_config_dir'], '%s.plugin' % plugin
         )
-    p_config = set_config_opts_per_file(p_config, plugin, plugin_config_file)
-
-    # update the config
-    config['plugins'][plugin] = p_config
+    plugin_cls.config = set_config_opts_per_file(plugin_cls.config, plugin, 
+                                                 plugin_config_file)
+    return plugin_cls
         
-    return (config, p_commands, options)
-    
         
 def load_all_plugins(config, options):
     """
@@ -116,11 +153,34 @@ def load_all_plugins(config, options):
     options object to each plugin and allows them to add/update each.
     """
     plugin_commands = {}
+    plugin_handlers = {}
     for plugin in config['enabled_plugins']:
-        res = load_plugin(config, options, plugin)    
-        (config, p_commands, options) = res
+        plugin_cls = load_plugin(config, plugin)
+
+        # add the plugin commands
+        for key in plugin_cls.commands:
+            if plugin_commands.has_key(key):
+                raise CementRuntimeError, \
+                    'Command conflict, %s command already exists!' % key
+            plugin_commands[key] = plugin_cls.commands[key]
+
+        # add the plugin handlers
+        for key in plugin_cls.handlers:
+            if plugin_handlers.has_key(key):
+                raise CementRuntimeError, \
+                    'Handler conflict, %s handler already exists!' % key
+            plugin_handlers[key] = plugin_cls.handlers[key]
+
+        # add the plugin 
+        config['plugins'][plugin] = plugin_cls
         
-        plugin_commands.update(p_commands)   # add the plugin commands
-        #config['plugins'][plugin] = p_config # add the plugin config
+        # add the plugin options
+        for opt in plugin_cls.options.parser._get_all_options():
+            if opt.get_opt_string() == '--help':
+                pass
+            else:
+                options.parser.add_option(opt)
         
-    return (config, plugin_commands, options)
+    return (config, plugin_commands, plugin_handlers, options)
+
+    

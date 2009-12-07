@@ -3,6 +3,9 @@
 from paste.script import templates
 from tempita import paste_script_template_renderer
 
+from cement.core.app_setup import CEMENT_ABI
+
+
 class CementAppTemplate(templates.Template):
     """
     Cement default paste template class
@@ -11,7 +14,9 @@ class CementAppTemplate(templates.Template):
     template_renderer = staticmethod(paste_script_template_renderer)
     summary = 'Cement Standard Template'
     egg_plugins = ['PasteScript', 'Cement']
-    vars = []
+    vars = [
+        templates.var("cement_abi", "Cement ABI Version", default=CEMENT_ABI),
+        ]
 
     def pre(self, command, output_dir, vars):
         """Called before template is applied."""
@@ -27,7 +32,8 @@ class CementPluginTemplate(templates.Template):
     egg_plugins = ['PasteScript', 'Cement']
     vars = [
         templates.var("plugin", "cement plugin name", default=None),
-        templates.var("project", "Parent application this plugin is for", default=None)
+        templates.var("project", "Parent application this plugin is for", default=None),
+        templates.var("cement_abi", "Cement ABI Version", default=CEMENT_ABI)
         ]
 
     def pre(self, command, output_dir, vars):
