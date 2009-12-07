@@ -1,3 +1,47 @@
+commit 0b13046dc986165167b0b325c6c27a3a6c042645
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Dec 7 15:39:32 2009 -0600
+
+    cleanup, and removing handlers namespace
+
+commit a46313ebcc87bdad1b32fbcb677b4d8b2891d938
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Dec 7 03:57:57 2009 -0600
+
+    Merge branches 'HEAD' and 'plugin_rework'
+
+commit 966eaf46aacfb3e52f6df01e97d346e93a8a5b61
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Dec 7 03:56:29 2009 -0600
+
+    Reworked plugin framework.
+    Added ABI checking
+    Need to finish porting the other example plugins to new plugin format.
+
+commit 0461dad1109d3f0c66b29dcf68d0ae69f14948d2
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sun Dec 6 23:53:34 2009 -0600
+
+    adding MANIFEST.in, and fixing paster issues
+
+commit a3ad307d6a98f42a061eefd8e939a2833635d9ea
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sun Dec 6 16:53:12 2009 -0600
+
+    adding tempita to requires
+
+commit f780476b227d27203c45355fca656eff4b261fa3
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sun Dec 6 16:16:06 2009 -0600
+
+    cleaning up readme
+
+commit 521f76ea205b692154f23d5a5793aeef419a6d51
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sun Dec 6 16:08:36 2009 -0600
+
+    Adding cement-app and cement-plugin commands for PasteScript
+
 commit 55be183b7d42c3bc3e573d0037e90b6b5f227249
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Sun Dec 6 14:32:52 2009 -0600
