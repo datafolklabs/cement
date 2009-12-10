@@ -36,9 +36,7 @@ def main():
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
     
-    # react to passed commands, we add a 'getconfig' by default to easily 
-    # spit out the config dict after all the plugins, cli options, etc
-    # have been merged together.
+    # react to the passed command
     try:
         if not len(cli_args) > 0:
             raise CementArgumentError, "A command is required. See --help?"
