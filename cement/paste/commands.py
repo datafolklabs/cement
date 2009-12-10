@@ -173,15 +173,15 @@ Example usage::
         self.__dict__.update(self.options.__dict__)
         
         if self.args:
-            self.project = self.args[0]
-            self.plugin = self.args[1]
+            self.project = self.args[0].lower()
+            self.plugin = self.args[1].lower()
         
         while not self.project:
-            self.project = raw_input("Enter project name: ")
+            self.project = raw_input("Enter project name: ").lower()
         while not self.plugin:
-            self.plugin = raw_input("Enter plugin name: ")
+            self.plugin = raw_input("Enter plugin name: ").lower()
             
-        package = "%s-plugins-%s" % (self.project.lower(), self.plugin.lower())
+        package = "%s-plugins-%s" % (self.project, self.plugin)
         package = beginning_letter.sub("", package)
         package = valid_only.sub("_", package)
         if package:

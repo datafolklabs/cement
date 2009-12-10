@@ -23,7 +23,7 @@ using cement.
 """
 
 
-setup(name='cement',
+setup(name='Cement',
     version=version,
     description="Python CLI Application Framework",
     long_description=LONG,
