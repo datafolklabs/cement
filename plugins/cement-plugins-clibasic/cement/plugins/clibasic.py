@@ -9,7 +9,7 @@ from cement import config
 from cement.core.log import get_logger
 from cement.core.app_setup import CementCommand, CementPlugin, register_hook, \
                                   register_command, define_hook_namespace
-from cement.core.options import init_parser
+from cement.core.options import get_options
 
 log = get_logger(__name__)
 
@@ -26,10 +26,9 @@ class CLIBasicPlugin(CementPlugin):
             'config_source': ['defaults']
             }
         
-        self.options = init_parser()
-        self.options.parser.add_option('--test', action ='store_true', 
-            dest='test', default=None, help='test option'
-        ) 
+        #self.options.parser.add_option('--test', action ='store_true', 
+        #    dest='test', default=None, help='test option'
+        #) 
  
 @register_hook()
 def global_option_hook(*args, **kwargs):
@@ -37,7 +36,7 @@ def global_option_hook(*args, **kwargs):
     Pass back an OptParse object, options will be merged into the global
     options.
     """
-    global_options = init_parser()
+    global_options = get_options()
     global_options.parser.add_option('--debug', action ='store_true', 
         dest='debug', default=None, help='toggle debug output'
     ) 
@@ -72,7 +71,7 @@ class GetConfigCommand(CementCommand):
         print('')
 
 
-@register_command(name='list-plugins', namespace='global')
+@register_command(name='list-plugins')
 class ListPluginsCommand(CementCommand):
     def run(self):
         print

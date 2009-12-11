@@ -2,12 +2,12 @@
 import sys, os
 import re
 from pkg_resources import get_distribution
+from optparse import OptionParser, IndentedHelpFormatter
 
 from cement import plugins as cement_plugins
 from cement import config, hooks, commands, options
 from cement.core.log import setup_logging, get_logger
-from cement.core.options import init_parser, parse_options
-from cement.core.options import set_config_opts_per_cli_opts
+from cement.core.options import set_config_opts_per_cli_opts, get_options
 from cement.core.exc import CementConfigError, CementRuntimeError, \
                             CementArgumentError
 from cement.core.configuration import set_config_opts_per_file, \
@@ -35,9 +35,8 @@ class CementPlugin(object):
     def __init__(self):
         self.version = None
         self.description = ""
-        self.handlers = {}
         self.config = {'config_source': ['defaults']}
-        self.options = init_parser(config)
+        self.options = get_options()
         
 
 def get_abi_version():
@@ -122,18 +121,18 @@ def register_command(**kwargs):
             cmd_namespace = kwargs['namespace']
         else:
             cmd_namespace = func.__module__.split('.')[-1]
-        
         define_command_namespace(cmd_namespace)
         commands[cmd_namespace][kwargs['name']] = func
         return func
     return decorate
 
 
+# FIXME: This method is so effing ugly.
 def run_command(command_name):
     """
-    Run all defined hooks in the namespace.  Returns a list of return data.
+    Run the command or namespace-subcommand.
     """
-        
+    
     command_name = command_name.lstrip('*') 
     if command_name in commands.keys():
         namespace = command_name
@@ -141,11 +140,12 @@ def run_command(command_name):
     elif command_name.rstrip('-help') in commands.keys():   
         namespace = command_name.rstrip('-help') 
         raise CementArgumentError, \
-            "'%s' is a *namespace, not a command.  See '%s --help' instead." % (namespace, namespace)
+            "'%s' is a *namespace, not a command.  See '%s --help' instead." % \
+                (namespace, namespace)
     else:
         namespace = 'global'
-        
-    (cli_opts, cli_args) = parse_options(options, cmd_namespace=namespace)
+    
+    (cli_opts, cli_args) = parse_options(cmd_namespace=namespace)
     
     if namespace == 'global':
         actual_cmd = command_name
@@ -183,6 +183,7 @@ def lay_cement(default_app_config=None, version_banner=None):
     version_banner => Option txt displayed for --version
     """    
     global config, options
+
     config.update(default_app_config)
     validate_config(config)
     
@@ -195,7 +196,7 @@ def lay_cement(default_app_config=None, version_banner=None):
     for cf in config['config_files']:
         set_config_opts_per_file(config, config['app_module'], cf)
         
-    options = init_parser(version_banner)
+    options.init_parser(version_banner)
     load_all_plugins()
     setup_logging()
 
@@ -251,9 +252,10 @@ def load_all_plugins():
     options object to each plugin and allows them to add/update each.
     """
     global options
+
     for plugin in config['enabled_plugins']:
         plugin_cls = load_plugin(plugin)
-
+        
         # add the plugin 
         config['plugins'][plugin] = plugin_cls
         
@@ -267,4 +269,79 @@ def load_all_plugins():
                 else:
                     options.parser.add_option(opt)
         
+        
+def parse_options(cmd_namespace='global'): 
+    """
+    The actual method that parses the command line options and args.  
+    
+    Arguments:
+    
+    config => dict containing the application configurations.
+    options_obj => The options object used to pass the parser around.
+    commands => Plugin commands to be added to the --help output.
+    
+    Returns => a tuple of (options, args)
+    """
+    global options
+    if cmd_namespace == 'global':
+        o = options
+    else:
+        o = config['plugins'][cmd_namespace].options
+            
+        if config['plugins'][cmd_namespace].config['merge_global_options']:
+            for opt in options.parser._get_all_options(): 
+                if opt.get_opt_string() == '--help':
+                    pass
+                else:
+                    o.parser.add_option(opt)
+    
+    cmd_txt = ''
+    line = '    '
+    if commands:
+        for c in commands[cmd_namespace]:    
+            if c.endswith('-help') or commands[cmd_namespace][c].is_hidden:
+                pass
+            else:
+                if line == '    ':
+                    line += '%s' % c
+                elif len(line) + len(c) < 55:
+                    line += ' - %s' % c
+                else:
+                    cmd_txt += "%s \n" % line
+                    line = '    '
 
+    if cmd_namespace == 'global':
+        namespaces = commands.keys()
+        namespaces.remove('global')
+        if namespaces:
+            for nam in namespaces:    
+                if line == '    ':
+                    line += '*%s' % nam
+                elif len(line) + len(nam) < 55:
+                    line += ' - *%s' % nam
+                else:
+                    cmd_txt += "%s \n" % line
+                    line = '    '
+
+    if line != '    ':
+        cmd_txt += "%s\n" % line
+    
+    if cmd_namespace != 'global':
+        namespace_txt = ' %s' % cmd_namespace
+        cmd_type_txt = 'SUBCOMMAND'
+    else:
+        namespace_txt = ''
+        cmd_type_txt = 'COMMAND'
+    
+    script = os.path.basename(sys.argv[0])
+    o.parser.usage = """  %s%s [%s] --(OPTIONS)
+
+Commands:  
+%s
+    
+Help?  try [%s]-help""" % (script, namespace_txt, cmd_type_txt, cmd_txt, cmd_type_txt)
+
+    o.add_default_options()
+    (opts, args) = o.parser.parse_args()
+    
+    return (opts, args)

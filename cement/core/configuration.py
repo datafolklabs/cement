@@ -2,6 +2,7 @@
 import os
 from configobj import ConfigObj
 
+from cement.core.options import get_options
 from cement.core.exc import CementConfigError
 
 def get_default_config():
@@ -20,8 +21,8 @@ hooks = {}
 # commands dictionary
 commands = {'global' : {}}
 
-# OptParse options object *we set this up later
-options = None
+# OptParse options object *we set this up later    
+options = get_options()
 
 def set_config_opts_per_file(tmpconfig, section, config_file):
     """

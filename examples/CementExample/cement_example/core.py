@@ -3,7 +3,7 @@
 import sys, os
 import re
 
-from cement import config, commands, options
+from cement import config, options
 from cement.core.log import get_logger
 from cement.core.app_setup import lay_cement, ensure_abi_compat, run_command
 from cement.core.exc import CementArgumentError
@@ -40,7 +40,7 @@ def main():
     # you're doing.
     
     lay_cement(dcf)
-
+    
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
     
