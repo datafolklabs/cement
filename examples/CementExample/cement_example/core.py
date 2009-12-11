@@ -15,6 +15,7 @@ def main():
     dcf = {} # default config
     dcf['config_source'] = ['defaults']
     dcf['app_name'] = 'cement-example' 
+    dcf['app_egg_name'] = 'CementExample'
     dcf['app_module'] = 'cement_example'
     dcf['config_files'] = [
         os.path.join('/etc', dcf['app_name'], '%s.conf' % dcf['app_name']),

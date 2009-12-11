@@ -1,21 +1,22 @@
 from setuptools import setup, find_packages
 import sys, os
 
-setup(name='CementPluginsCLIBasic',
+# You probably want to change the name, this is a healthy default for paster
+setup(name='{{project}}_helpers_{{helper}}',
     version='0.1',
-    description='Basic Commands for Applications Build on Cement',
+    description='',
     classifiers=[], 
     keywords='',
-    author='BJ Dierkes',
-    author_email='wdierkes@5dollarwhitebox.org',
-    url='http://github.com/derks/cement',
-    license='GNU GPLv3',
+    author='',
+    author_email='',
+    url='',
+    license='',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "cement",
+        "Cement",
         ],
     setup_requires=[
         "PasteScript >= 1.7"
@@ -23,5 +24,5 @@ setup(name='CementPluginsCLIBasic',
     test_suite='nose.collector',
     entry_points="""
     """,
-    namespace_packages=['cement', 'cement.plugins'],
+    namespace_packages=['{{project}}', '{{project}}.helpers'],
     )

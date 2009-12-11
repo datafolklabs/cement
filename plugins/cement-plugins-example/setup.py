@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-setup(name='CementExamplePlugin',
+setup(name='CementPluginsExample',
     version='0.1',
     description='Example Plugin for Applications Built on Cement',
     classifiers=[], 

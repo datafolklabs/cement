@@ -231,4 +231,101 @@ Example usage::
             for base, path, files in os.walk("./"):
                 for file in files:
                     if file == "empty":
-                        os.remove(os.path.join(base, file))                        
+                        os.remove(os.path.join(base, file))      
+                        
+
+class CementHelperCommand(command.Command):
+    """Create a helper for an application using the Cement Framework.
+
+Example usage::
+
+    $ paster cement-helper yourproject yourplugin
+    """
+    version = pkg_resources.get_distribution('cement').version
+    summary = __doc__.splitlines()[0]
+    usage = '\n' + __doc__
+    name = None
+    group_name = "Cement"
+    dry_run = False
+    templates = "cementhelper"
+    project = None
+    plugin = None
+    
+    parser = command.Command.standard_parser(quiet=True)
+    parser = optparse.OptionParser(
+        usage="%prog cement-helper [options] [project name] [helper_name]",
+        version="%prog " + version
+        )
+    parser.add_option("-t", "--templates",
+        help="user specific templates",
+        dest="templates", default=templates
+        )
+    parser.add_option("--dry-run",
+        help="dry run (don't actually do anything)",
+        action="store_true", dest="dry_run"
+        )
+    
+    def command(self):
+        """LayCement for the new project helper."""
+        
+        self.__dict__.update(self.options.__dict__)
+        
+        if self.args:
+            self.project = self.args[0].lower()
+            self.helper = self.args[1].lower()
+        
+        while not self.project:
+            self.project = raw_input("Enter project name: ").lower()
+        while not self.helper:
+            self.helper = raw_input("Enter helper name: ").lower()
+            
+        package = "%s-helpers-%s" % (self.project, self.helper)
+        package = beginning_letter.sub("", package)
+        package = valid_only.sub("_", package)
+        if package:
+            self.package = package
+        else:
+            self.package = None
+            while not self.package:
+                self.package = raw_input(
+                    "Enter package name [%s]: " % package).strip() or package
+        
+        self.name = pkg_resources.safe_name(self.package)
+    
+        env = pkg_resources.Environment()
+        if self.name.lower() in env:
+            print 'The name "%s" is already in use by' % self.name,
+            for dist in env[self.name]:
+                print dist
+                return
+
+        import imp
+        try:
+            if imp.find_module(self.package):
+                print 'The package name "%s" is already in use' % self.package
+                return
+        except ImportError:
+            pass
+
+        if os.path.exists(self.name):
+            print 'A directory called "%s" already exists. Exiting.' % self.name
+            return
+        
+        command = create_distro.CreateDistroCommand("create")
+        cmd_args = []
+        for template in self.templates.split():
+            cmd_args.append("--template=%s" % template)
+        cmd_args.append(self.name)
+        cmd_args.append("project=%s" % self.project)
+        cmd_args.append("helper=%s" % self.helper)
+        
+        command.run(cmd_args)
+        
+        if not self.dry_run:
+            sys.argv = ["setup.py", "egg_info"]
+            
+            # dirty hack to allow "empty" dirs
+            for base, path, files in os.walk("./"):
+                for file in files:
+                    if file == "empty":
+                        os.remove(os.path.join(base, file))                                                

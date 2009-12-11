@@ -1,6 +1,7 @@
 """Cement methods and classes to handle cli option/arg parsing."""
 
 from optparse import OptionParser, IndentedHelpFormatter
+import sys, os
 
 class Options(object):
     """
@@ -20,9 +21,7 @@ class Options(object):
         """
         Sets up default options for applications using Cement.
         """
-        self.parser.add_option('-D', '--debug', action ='store_true', 
-            dest='debug', default=None, help='debug output'
-            ) 
+        pass
     
             
 def init_parser(config, version_banner=None):
@@ -69,6 +68,7 @@ def parse_options(config, options_obj, commands=None):
     if line != '    ':
         cmd_txt += "%s\n" % line
     
+    script = os.path.basename(sys.argv[0])
     o.parser.usage = """  %s [COMMAND] --(OPTIONS)
 
 Commands:  

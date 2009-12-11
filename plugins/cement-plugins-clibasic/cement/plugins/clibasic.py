@@ -29,6 +29,9 @@ class CLIBasicPlugin(CementPlugin):
             }
         self.handlers = {}
         self.options = init_parser(global_config)
+        self.options.parser.add_option('--debug', action ='store_true', 
+            dest='debug', default=None, help='toggle debug output'
+            ) 
         
         
 class GetConfigCommand(CementCommand):

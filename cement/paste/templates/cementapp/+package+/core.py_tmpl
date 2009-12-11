@@ -14,12 +14,15 @@ def main():
     
     dcf = {} # default config
     dcf['config_source'] = ['defaults']
-    dcf['app_name'] = '{{package}}' 
-    dcf['app_module'] = '{{package}}'
+    dcf['app_name'] = '{{package}}' # name for cli like /etc/<app_name>
+    dcf['app_egg_name'] = '{{package}}' # name from setup.py
+    dcf['app_module'] = '{{package}}' # name of the library dir
+    
+    # Be default look in /etc and ~/ for config files.  You should probably
+    # symlink /etc/<your_app> => ./config/<your_app> for easy development.
     dcf['config_files'] = [
         os.path.join('/etc', dcf['app_name'], '%s.conf' % dcf['app_name']),
         os.path.join(os.environ['HOME'], '.%s.conf' % dcf['app_name']),
-        os.path.join('./etc', dcf['app_name'], '%s.conf' % dcf['app_name']),
         ]
     dcf['enabled_plugins'] = [] # no default plugins, add via the config file
     dcf['debug'] = False

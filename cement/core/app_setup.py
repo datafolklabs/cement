@@ -61,7 +61,7 @@ def lay_cement(config, version_banner=None):
     validate_config(config)
     
     if not version_banner:
-        version_banner = get_distribution(config['app_module']).version
+        version_banner = get_distribution(config['app_egg_name']).version
         
     for cf in config['config_files']:
         config = set_config_opts_per_file(config, config['app_module'], cf)
