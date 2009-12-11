@@ -7,7 +7,8 @@ from pkg_resources import get_distribution
 
 from cement import config
 from cement.core.log import get_logger
-from cement.core.app_setup import CementCommand, CementPlugin
+from cement.core.app_setup import CementCommand, CementPlugin, register_hook, \
+                                  register_command
 from cement.core.options import init_parser
 
 log = get_logger(__name__)
@@ -30,21 +31,20 @@ class CLIBasicPlugin(CementPlugin):
             }
         self.handlers = {}
         
-    def global_option_hook(self):
-        """
-        Pass back an OptParse object, options will be merged into the global
-        options.
-        
-        Example:
-        
-        options = 
-        """
-        #global_options = init_parser()
-        #global_options.parser.add_option('--debug', action ='store_true', 
-        #    dest='debug', default=None, help='toggle debug output'
-        #    ) 
-        #return global_options
-            
+@register_hook()
+def global_option_hook(*args, **kwargs):
+    """
+    Pass back an OptParse object, options will be merged into the global
+    options.
+    """
+    global_options = init_parser()
+    global_options.parser.add_option('--debug', action ='store_true', 
+        dest='debug', default=None, help='toggle debug output'
+        ) 
+    return global_options
+
+
+@register_command(name='getconfig')
 class GetConfigCommand(CementCommand):
     def run(self):
         if len(self.cli_args) == 2:
@@ -72,6 +72,7 @@ class GetConfigCommand(CementCommand):
         print('')
 
 
+@register_command(name='listplugins')
 class ListPluginsCommand(CementCommand):
     def run(self):
         print

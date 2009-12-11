@@ -3,7 +3,7 @@
 from optparse import OptionParser, IndentedHelpFormatter
 import sys, os
 
-from cement import config
+from cement import config, commands
 
 class Options(object):
     """
@@ -38,7 +38,7 @@ def init_parser(version_banner=None):
     o = Options(version_banner)
     return o
     
-def parse_options(options_obj, commands=None): 
+def parse_options(options_obj): 
     """
     The actual method that parses the command line options and args.  
     
@@ -48,7 +48,7 @@ def parse_options(options_obj, commands=None):
     options_obj => The options object used to pass the parser around.
     commands => Plugin commands to be added to the --help output.
     
-    Returns => a tuple of (config, options, args)
+    Returns => a tuple of (options, args)
     """
     o = options_obj
     
@@ -56,7 +56,9 @@ def parse_options(options_obj, commands=None):
     line = '    '
     if commands:
         for c in commands:    
-            if not c.endswith('-help'):
+            if c.endswith('-help') or commands[c].hidden:
+                pass
+            else:
                 if line == '    ':
                     line += '%s' % c
                 elif len(line) + len(c) < 55:
@@ -74,7 +76,7 @@ def parse_options(options_obj, commands=None):
 Commands:  
 %s
     
-Help?  try [COMMAND]-help""" % (config['app_name'], cmd_txt)
+Help?  try [COMMAND]-help""" % (script, cmd_txt)
 
     o.add_default_options()
     (opts, args) = o.parser.parse_args()

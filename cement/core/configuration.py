@@ -14,6 +14,12 @@ def get_default_config():
 # global config dictionary
 config = get_default_config()
 
+# global hooks dictionary
+hooks = {}
+
+# commands dictionary
+commands = {}
+
 def set_config_opts_per_file(tmpconfig, section, config_file):
     """
     Parse config file options for into config dict.  Will do nothing if the 
@@ -46,3 +52,24 @@ def set_config_opts_per_file(tmpconfig, section, config_file):
                                           'No', '0']:
                 tmpconfig[option] = False
     return tmpconfig
+
+
+def validate_config(config):
+    """
+    Validate that all required cement configuration options are set.
+    """
+    required_settings = [
+        'config_source', 'config_files', 'debug', 'datadir',
+        'enabled_plugins', 'plugin_config_dir', 'plugin_dir', 
+        'plugins', 'app_module', 'app_name', 'tmpdir'
+        ]
+    for s in required_settings:
+        if not config.has_key(s):
+            raise CementConfigError, "config['%s'] value missing!" % s
+    
+    # create all directories if missing
+    for d in [os.path.dirname(config['log_file']), config['datadir'], 
+              config['plugin_config_dir'], config['plugin_dir'], 
+              config['tmpdir']]:
+        if not os.path.exists(d):
+            os.makedirs(d)

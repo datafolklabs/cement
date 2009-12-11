@@ -3,17 +3,21 @@ import os
 from pkg_resources import get_distribution
 
 from cement import plugins as cement_plugins
-from cement import config
-from cement.core.log import setup_logging
+from cement import config, hooks, commands
+from cement.core.log import setup_logging, get_logger
 from cement.core.options import init_parser, parse_options
-from cement.core.configuration import set_config_opts_per_file
 from cement.core.options import set_config_opts_per_cli_opts
 from cement.core.exc import CementConfigError, CementRuntimeError
+from cement.core.configuration import set_config_opts_per_file, \
+                                      validate_config
 
 CEMENT_ABI = "20091207"
 
+
+
 class CementCommand(object):
     def __init__(self, cli_opts=None, cli_args=None, handlers=None):
+        self.hidden = False # whether to display in command list
         self.cli_opts = cli_opts
         self.cli_args = cli_args
         self.handlers = handlers
@@ -40,6 +44,72 @@ class CementPlugin(object):
 def get_abi_version():
     return CEMENT_ABI
     
+def ensure_abi_compat(module_name, required_abi):
+    if int(required_abi) == int(CEMENT_ABI):
+        pass
+    else:
+        raise CementRuntimeError, \
+            "%s requires abi version %s which differs from cement(abi) %s." % \
+                (module_name, required_abi, CEMENT_ABI)
+    
+    
+def define_hook_namespace(namespace):
+    """
+    Define a hook namespace that plugins can register hooks in.
+    """
+    if hooks.has_key(namespace):
+        raise CementRuntimeError, "Hook name '%s' already defined!" % namespace
+    hooks[namespace] = []
+    
+def register_hook(**kwargs):
+    """
+    Decorator function for plugins to register hooks.  Used as:
+    
+    @register_hook()
+    def my_hook():
+        ...
+    """
+    def decorate(func):
+        if not hooks.has_key(func.__name__):
+            raise CementRuntimeError, "Hook name '%s' is not define!" % func.__name__
+        hooks[func.__name__].append(
+            (int(kwargs.get('weight', 0)), func.__name__, func)
+        )
+        return func
+    return decorate
+
+def run_hooks(namespace, *args, **kwargs):
+    """
+    Run all defined hooks in the namespace.  Returns a list of return data.
+    """
+    if not hooks.has_key(namespace):
+        CementRuntimeError, "Hook name '%s' is not defined!" % namespace
+    hooks[namespace].sort() # will order based on weight
+    for hook in hooks[namespace]:
+        res = hook[2](*args, **kwargs)
+        yield res
+
+def register_command(**kwargs):
+    """
+    Decorator function for plugins to register commands.  Used as:
+    
+    @register_command()
+    class MyCommand(CementCommand):
+        ...
+    """
+    def decorate(func):
+        setattr(func, 'hidden', kwargs.get('hidden', False))
+        commands[kwargs['name']] = func
+        return func
+    return decorate
+
+def run_command(command_name, cli_args, cli_opts, handlers):
+    """
+    Run all defined hooks in the namespace.  Returns a list of return data.
+    """
+    if not commands.has_key(command_name):
+        CementArgumentError, "Unknown command.  See --help?" % command_name
+    commands[command_name](cli_args, cli_opts, handlers)
     
 def lay_cement(default_app_config=None, version_banner=None):
     """
@@ -58,6 +128,9 @@ def lay_cement(default_app_config=None, version_banner=None):
     config.update(default_app_config)
     validate_config(config)
     
+    # define default hooks
+    define_hook_namespace('global_option_hook')
+    
     if not version_banner:
         version_banner = get_distribution(config['app_egg_name']).version
         
@@ -66,40 +139,12 @@ def lay_cement(default_app_config=None, version_banner=None):
         
     options = init_parser(version_banner)
     (commands, handlers, options) = load_all_plugins(options)
-    (cli_opts, cli_args) = parse_options(options, commands)
+    (cli_opts, cli_args) = parse_options(options)
     config = set_config_opts_per_cli_opts(config, cli_opts)
     setup_logging()
+    
     return (cli_opts, cli_args, commands, handlers)
 
-
-def ensure_abi_compat(module_name, required_abi):
-    if int(required_abi) != int(CEMENT_ABI):
-        raise CementRuntimeError, \
-            "%s requires abi version %s which differs from cement(abi) %s." % \
-                (module_name, required_abi, CEMENT_ABI)
-
-
-def validate_config(config):
-    """
-    Validate that all required cement configuration options are set.
-    """
-    required_settings = [
-        'config_source', 'config_files', 'debug', 'datadir',
-        'enabled_plugins', 'plugin_config_dir', 'plugin_dir', 
-        'plugins', 'app_module', 'app_name', 'tmpdir'
-        ]
-    for s in required_settings:
-        if not config.has_key(s):
-            raise CementConfigError, "config['%s'] value missing!" % s
-    
-    # create all directories if missing
-    for d in [os.path.dirname(config['log_file']), config['datadir'], 
-              config['plugin_config_dir'], config['plugin_dir'], 
-              config['tmpdir']]:
-        if not os.path.exists(d):
-            os.makedirs(d)
-            
-            
 def load_plugin(plugin):
     """
     Load a cement type plugin.  
@@ -173,14 +218,14 @@ def load_all_plugins(options):
         config['plugins'][plugin] = plugin_cls
         
         # add the plugin options
-        for opt in plugin_cls.options.parser._get_all_options():
-            if opt.get_opt_string() == '--help':
-                pass
-            elif opt.get_opt_string() == '--version': 
-                pass
-            else:
-                options.parser.add_option(opt)
+        for opt_obj in run_hooks('global_option_hook'):
+            for opt in opt_obj.parser._get_all_options(): 
+                if opt.get_opt_string() == '--help':
+                    pass
+                elif opt.get_opt_string() == '--version': 
+                    pass
+                else:
+                    options.parser.add_option(opt)
         
     return (plugin_commands, plugin_handlers, options)
 
-    
