@@ -3,16 +3,18 @@
 import sys, os
 import re
 
-from cement import config
+from cement import config, commands
 from cement.core.log import get_logger
-from cement.core.app_setup import lay_cement, ensure_abi_compat
+from cement.core.app_setup import lay_cement, ensure_abi_compat, run_command
 from cement.core.exc import CementArgumentError
 
-REQUIRED_CEMENT_ABI = '20091207'
+REQUIRED_CEMENT_ABI = '20091211'
 
 def main():
     ensure_abi_compat(__name__, REQUIRED_CEMENT_ABI)
     
+    # FIX ME: Default configurations will probably need to be modified
+
     dcf = {} # default config
     dcf['config_source'] = ['defaults']
     dcf['app_name'] = 'cement-example' 
@@ -32,34 +34,23 @@ def main():
     dcf['plugin_config_dir'] = './etc/%s/plugins.d' % dcf['app_name']
     dcf['plugin_dir'] = '%s/plugins.d' % dcf['statedir']
     dcf['plugins'] = {}
+
+
+    # Warning: You shouldn't modify below this point unless you know what 
+    # you're doing.
     
-    (cli_opts, cli_args, commands, handlers) = lay_cement(dcf)
+    # tie everything together
+    (cli_opts, cli_args) = lay_cement(dcf)
 
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
     
-    # react to the passed command
+    # react to the passed command.  
     try:
         if not len(cli_args) > 0:
             raise CementArgumentError, "A command is required. See --help?"
         
-        m = re.match('(.*)-help', cli_args[0])
-        if m:
-            # command matches a plugin command help, run help()
-            if commands.has_key(m.group(1)):
-                cmd = commands[m.group(1)](cli_opts, cli_args)
-                cmd.help()
-            else:
-                raise CementArgumentError, "Unknown command, see --help?"
-                
-        elif commands.has_key(cli_args[0]):
-            # commands are all the plugin commands that have been registered.
-            # if cli_args[0] matches a plugin command then we execute it.
-            cmd = commands[cli_args[0]](cli_opts, cli_args, handlers)
-            cmd.run()
-            
-        else:
-            raise CementArgumentError, "Unknown command, see --help?"
+        run_command(cli_args[0], cli_args, cli_opts)
             
     except CementArgumentError, e:
         print("CementArgumentError > %s" % e)

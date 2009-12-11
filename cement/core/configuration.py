@@ -18,7 +18,7 @@ config = get_default_config()
 hooks = {}
 
 # commands dictionary
-commands = {}
+commands = {'global' : {}}
 
 def set_config_opts_per_file(tmpconfig, section, config_file):
     """

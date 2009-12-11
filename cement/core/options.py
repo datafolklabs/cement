@@ -38,7 +38,7 @@ def init_parser(version_banner=None):
     o = Options(version_banner)
     return o
     
-def parse_options(options_obj): 
+def parse_options(options_obj, cmd_namespace='global'): 
     """
     The actual method that parses the command line options and args.  
     
@@ -51,12 +51,12 @@ def parse_options(options_obj):
     Returns => a tuple of (options, args)
     """
     o = options_obj
-    
+        
     cmd_txt = ''
     line = '    '
     if commands:
-        for c in commands:    
-            if c.endswith('-help') or commands[c].hidden:
+        for c in commands[cmd_namespace]:    
+            if c.endswith('-help') or commands[cmd_namespace][c].is_hidden:
                 pass
             else:
                 if line == '    ':
@@ -67,8 +67,22 @@ def parse_options(options_obj):
                     cmd_txt += "%s \n" % line
                     line = '    '
 
+    if cmd_namespace == 'global':
+        namespaces = commands.keys()
+        namespaces.remove('global')
+        if namespaces:
+            for nam in namespaces:    
+                if line == '    ':
+                    line += '*%s' % nam
+                elif len(line) + len(nam) < 55:
+                    line += ' - *%s' % nam
+                else:
+                    cmd_txt += "%s \n" % line
+                    line = '    '
+
     if line != '    ':
         cmd_txt += "%s\n" % line
+    
     
     script = os.path.basename(sys.argv[0])
     o.parser.usage = """  %s [COMMAND] --(OPTIONS)

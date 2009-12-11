@@ -8,7 +8,7 @@ from pkg_resources import get_distribution
 from cement import config
 from cement.core.log import get_logger
 from cement.core.app_setup import CementCommand, CementPlugin, register_hook, \
-                                  register_command
+                                  register_command, define_hook_namespace
 from cement.core.options import init_parser
 
 log = get_logger(__name__)
@@ -20,17 +20,17 @@ class CLIBasicPlugin(CementPlugin):
     def __init__(self):
         CementPlugin.__init__(self)
         self.version = '0.1'
-        self.required_abi = '20091207'
+        self.required_abi = '20091211'
         self.description = "Basic CLI Commands for Cement Applications"
         self.config = {
             'config_source': ['defaults']
             }
-        self.commands = {
-            'getconfig' : GetConfigCommand,
-            'listplugins' : ListPluginsCommand
-            }
-        self.handlers = {}
         
+        self.options = init_parser()
+        self.options.parser.add_option('--test', action ='store_true', 
+            dest='test', default=None, help='test option'
+        ) 
+ 
 @register_hook()
 def global_option_hook(*args, **kwargs):
     """
@@ -40,11 +40,11 @@ def global_option_hook(*args, **kwargs):
     global_options = init_parser()
     global_options.parser.add_option('--debug', action ='store_true', 
         dest='debug', default=None, help='toggle debug output'
-        ) 
+    ) 
     return global_options
 
 
-@register_command(name='getconfig')
+@register_command(name='getconfig', is_global=True)
 class GetConfigCommand(CementCommand):
     def run(self):
         if len(self.cli_args) == 2:
@@ -72,7 +72,7 @@ class GetConfigCommand(CementCommand):
         print('')
 
 
-@register_command(name='listplugins')
+@register_command(name='list-plugins', namespace='global')
 class ListPluginsCommand(CementCommand):
     def run(self):
         print
@@ -84,4 +84,28 @@ class ListPluginsCommand(CementCommand):
             print "%-18s  %-7s  %-50s" % (
                 plugin, plugin_cls.version, plugin_cls.description
                 )
+        print
+
+@register_command(name='list-hooks', hidden=True)
+class ListHiddenCommandsCommand(CementCommand):
+    def run(self):
+        from cement import hooks
+        print
+        print 'Development Hooks'
+        print '-' * 77
+        for h in hooks:
+            print h
+        print
+        
+@register_command(name='list-hidden-commands')
+class ListHiddenCommandsCommand(CementCommand):
+    def run(self):
+        from cement import commands
+        print
+        print 'Hidden commands'
+        print '-' * 77
+        for cmd in commands:
+            if commands[cmd].hidden:
+                print cmd
+            print "%s-help" % cmd   
         print
