@@ -1,8 +1,9 @@
 """An example application using the Cement framework."""
 
-import os
+import sys, os
 import re
 
+from cement import config
 from cement.core.log import get_logger
 from cement.core.app_setup import lay_cement, ensure_abi_compat
 from cement.core.exc import CementArgumentError
@@ -32,8 +33,8 @@ def main():
     dcf['plugin_dir'] = '%s/plugins.d' % dcf['statedir']
     dcf['plugins'] = {}
     
-    (config, cli_opts, cli_args, commands, handlers) = lay_cement(dcf)
-    
+    (cli_opts, cli_args, commands, handlers) = lay_cement(dcf)
+
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
     
@@ -46,7 +47,7 @@ def main():
         if m:
             # command matches a plugin command help, run help()
             if commands.has_key(m.group(1)):
-                cmd = commands[m.group(1)](config, cli_opts, cli_args)
+                cmd = commands[m.group(1)](cli_opts, cli_args)
                 cmd.help()
             else:
                 raise CementArgumentError, "Unknown command, see --help?"
@@ -54,7 +55,7 @@ def main():
         elif commands.has_key(cli_args[0]):
             # commands are all the plugin commands that have been registered.
             # if cli_args[0] matches a plugin command then we execute it.
-            cmd = commands[cli_args[0]](config, cli_opts, cli_args, handlers)
+            cmd = commands[cli_args[0]](cli_opts, cli_args, handlers)
             cmd.run()
             
         else:

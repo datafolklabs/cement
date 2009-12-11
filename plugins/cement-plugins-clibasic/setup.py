@@ -23,5 +23,5 @@ setup(name='CementPluginsCLIBasic',
     test_suite='nose.collector',
     entry_points="""
     """,
-    namespace_packages=['cement', 'cement.plugins'],
+    namespace_packages=['cement.plugins'],
     )

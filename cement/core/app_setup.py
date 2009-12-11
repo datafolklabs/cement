@@ -3,17 +3,17 @@ import os
 from pkg_resources import get_distribution
 
 from cement import plugins as cement_plugins
+from cement import config
 from cement.core.log import setup_logging
 from cement.core.options import init_parser, parse_options
-from cement.core.config import set_config_opts_per_file
+from cement.core.configuration import set_config_opts_per_file
 from cement.core.options import set_config_opts_per_cli_opts
 from cement.core.exc import CementConfigError, CementRuntimeError
 
 CEMENT_ABI = "20091207"
 
 class CementCommand(object):
-    def __init__(self, config, cli_opts=None, cli_args=None, handlers=None):
-        self.config = config
+    def __init__(self, cli_opts=None, cli_args=None, handlers=None):
         self.cli_opts = cli_opts
         self.cli_args = cli_args
         self.handlers = handlers
@@ -28,7 +28,7 @@ class CementCommand(object):
         
 
 class CementPlugin(object):
-    def __init__(self, config):
+    def __init__(self):
         self.version = None
         self.description = ""
         self.commands = {}
@@ -41,7 +41,7 @@ def get_abi_version():
     return CEMENT_ABI
     
     
-def lay_cement(config, version_banner=None):
+def lay_cement(default_app_config=None, version_banner=None):
     """
     Primary method to setup an application for Cement.  
     
@@ -50,28 +50,26 @@ def lay_cement(config, version_banner=None):
     config => dict containing application config.
     version_banner => Option txt displayed for --version
     """
-    dcf = {} # default config
-    dcf['config_source'] = ['defaults']
-    dcf['enabled_plugins'] = [] # no default plugins, add via the config file
-    dcf['debug'] = False
-    dcf['show_plugin_load'] = True
+    
 
-    dcf.update(config) # override the actual defaults
-    config = dcf # take the new config with changes
+    #dcf.update(config) # override the actual defaults
+    #config = dcf # take the new config with changes
+    global config
+    config.update(default_app_config)
     validate_config(config)
     
     if not version_banner:
         version_banner = get_distribution(config['app_egg_name']).version
         
     for cf in config['config_files']:
-        config = set_config_opts_per_file(config, config['app_module'], cf)
+        set_config_opts_per_file(config, config['app_module'], cf)
         
-    options = init_parser(config, version_banner)
-    (config, commands, handlers, options) = load_all_plugins(config, options)
-    (config, cli_opts, cli_args) = parse_options(config, options, commands)
+    options = init_parser(version_banner)
+    (commands, handlers, options) = load_all_plugins(options)
+    (cli_opts, cli_args) = parse_options(options, commands)
     config = set_config_opts_per_cli_opts(config, cli_opts)
-    setup_logging(config)
-    return (config, cli_opts, cli_args, commands, handlers)
+    setup_logging()
+    return (cli_opts, cli_args, commands, handlers)
 
 
 def ensure_abi_compat(module_name, required_abi):
@@ -102,7 +100,7 @@ def validate_config(config):
             os.makedirs(d)
             
             
-def load_plugin(config, plugin):
+def load_plugin(plugin):
     """
     Load a cement type plugin.  
     
@@ -135,7 +133,7 @@ def load_plugin(config, plugin):
             raise CementConfigError, \
                 'failed to load %s plugin: %s' % (plugin, e)    
     
-    plugin_cls = pluginobj.register_plugin(config)
+    plugin_cls = pluginobj.register_plugin()
     
     ensure_abi_compat(plugin_cls.__module__, plugin_cls.required_abi)
 
@@ -147,7 +145,7 @@ def load_plugin(config, plugin):
     return plugin_cls
         
         
-def load_all_plugins(config, options):
+def load_all_plugins(options):
     """
     Attempt to load all enabled plugins.  Passes the existing config and 
     options object to each plugin and allows them to add/update each.
@@ -155,7 +153,7 @@ def load_all_plugins(config, options):
     plugin_commands = {}
     plugin_handlers = {}
     for plugin in config['enabled_plugins']:
-        plugin_cls = load_plugin(config, plugin)
+        plugin_cls = load_plugin(plugin)
 
         # add the plugin commands
         for key in plugin_cls.commands:
@@ -178,9 +176,11 @@ def load_all_plugins(config, options):
         for opt in plugin_cls.options.parser._get_all_options():
             if opt.get_opt_string() == '--help':
                 pass
+            elif opt.get_opt_string() == '--version': 
+                pass
             else:
                 options.parser.add_option(opt)
         
-    return (config, plugin_commands, plugin_handlers, options)
+    return (plugin_commands, plugin_handlers, options)
 
     

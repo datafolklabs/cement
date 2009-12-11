@@ -3,7 +3,9 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-def setup_logging(config):
+from cement import config
+
+def setup_logging():
     """
     Primary Cement method to setup logging.
     

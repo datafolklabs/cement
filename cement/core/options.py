@@ -3,13 +3,14 @@
 from optparse import OptionParser, IndentedHelpFormatter
 import sys, os
 
+from cement import config
+
 class Options(object):
     """
     This class is used to setup the OptParse object for later use, and is
     the object that is passed around thoughout the application.
     """
-    def __init__(self, config, version_banner):
-        self.config = config
+    def __init__(self, version_banner):
         fmt = IndentedHelpFormatter(
             indent_increment=4, max_help_position=32, width=77, short_first=1
             )
@@ -24,7 +25,7 @@ class Options(object):
         pass
     
             
-def init_parser(config, version_banner=None):
+def init_parser(version_banner=None):
     """
     Sets up the Options object and returns it for use throughout the 
     application.
@@ -34,11 +35,10 @@ def init_parser(config, version_banner=None):
     config => dict containing the application configurations
     version_banner => option txt to be display for --version.
     """
-    o = Options(config, version_banner)
+    o = Options(version_banner)
     return o
     
-    
-def parse_options(config, options_obj, commands=None): 
+def parse_options(options_obj, commands=None): 
     """
     The actual method that parses the command line options and args.  
     
@@ -79,21 +79,21 @@ Help?  try [COMMAND]-help""" % (config['app_name'], cmd_txt)
     o.add_default_options()
     (opts, args) = o.parser.parse_args()
     
-    return (config, opts, args)
+    return (opts, args)
     
     
-def set_config_opts_per_cli_opts(config, cli_opts):
+def set_config_opts_per_cli_opts(tmpconfig, cli_opts):
     """
     Determine if any config optons were passed via cli options, and if so
     override the config option.
     
     Returns the updated config dict.
     """
-    for opt in config:
+    for opt in tmpconfig:
         try:
             val = getattr(cli_opts, opt)
             if val:
-                config[opt] = val
+                tmpconfig[opt] = val
         except AttributeError:
             pass
-    return config
+    return tmpconfig
