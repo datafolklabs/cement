@@ -3,7 +3,7 @@
 import sys, os
 import re
 
-from cement import config, commands
+from cement import config, commands, options
 from cement.core.log import get_logger
 from cement.core.app_setup import lay_cement, ensure_abi_compat, run_command
 from cement.core.exc import CementArgumentError
@@ -39,18 +39,17 @@ def main():
     # Warning: You shouldn't modify below this point unless you know what 
     # you're doing.
     
-    # tie everything together
-    (cli_opts, cli_args) = lay_cement(dcf)
+    lay_cement(dcf)
 
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
     
-    # react to the passed command.  
+    # react to the passed command.  command should be the first arg always
     try:
-        if not len(cli_args) > 0:
+        if not len(sys.argv) > 0:
             raise CementArgumentError, "A command is required. See --help?"
         
-        run_command(cli_args[0], cli_args, cli_opts)
+        run_command(sys.argv[1])
             
     except CementArgumentError, e:
         print("CementArgumentError > %s" % e)

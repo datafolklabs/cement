@@ -1,14 +1,15 @@
 """Cement methods to setup the framework for applications using it."""
-import os
+import sys, os
 import re
 from pkg_resources import get_distribution
 
 from cement import plugins as cement_plugins
-from cement import config, hooks, commands
+from cement import config, hooks, commands, options
 from cement.core.log import setup_logging, get_logger
 from cement.core.options import init_parser, parse_options
 from cement.core.options import set_config_opts_per_cli_opts
-from cement.core.exc import CementConfigError, CementRuntimeError
+from cement.core.exc import CementConfigError, CementRuntimeError, \
+                            CementArgumentError
 from cement.core.configuration import set_config_opts_per_file, \
                                       validate_config
 
@@ -59,6 +60,7 @@ def define_hook_namespace(namespace):
         raise CementRuntimeError, "Hook name '%s' already defined!" % namespace
     hooks[namespace] = []
     
+    
 def register_hook(**kwargs):
     """
     Decorator function for plugins to register hooks.  Used as:
@@ -70,11 +72,13 @@ def register_hook(**kwargs):
     def decorate(func):
         if not hooks.has_key(func.__name__):
             raise CementRuntimeError, "Hook name '%s' is not define!" % func.__name__
+        # (1) is the list of registered hooks in the namespace
         hooks[func.__name__].append(
             (int(kwargs.get('weight', 0)), func.__name__, func)
         )
         return func
     return decorate
+
 
 def run_hooks(namespace, *args, **kwargs):
     """
@@ -85,7 +89,10 @@ def run_hooks(namespace, *args, **kwargs):
     hooks[namespace].sort() # will order based on weight
     for hook in hooks[namespace]:
         res = hook[2](*args, **kwargs)
+        
+        # FIXME: Need to validate the return data somehow
         yield res
+
 
 def define_command_namespace(namespace):
     """
@@ -95,6 +102,7 @@ def define_command_namespace(namespace):
         #raise CementRuntimeError, "Command namespace '%s' already defined!" % namespace
         return
     commands[namespace] = {}
+    
     
 def register_command(**kwargs):
     """
@@ -120,25 +128,47 @@ def register_command(**kwargs):
         return func
     return decorate
 
-def run_command(command_name, cli_args, cli_opts):
+
+def run_command(command_name):
     """
     Run all defined hooks in the namespace.  Returns a list of return data.
     """
-    if not commands.has_key(command_name):
-        CementArgumentError, "Unknown command.  See --help?" % command_name
         
-    m = re.match('(.*)-help', cli_args[0])
+    command_name = command_name.lstrip('*') 
+    if command_name in commands.keys():
+        namespace = command_name
+    
+    elif command_name.rstrip('-help') in commands.keys():   
+        namespace = command_name.rstrip('-help') 
+        raise CementArgumentError, \
+            "'%s' is a *namespace, not a command.  See '%s --help' instead." % (namespace, namespace)
+    else:
+        namespace = 'global'
+        
+    (cli_opts, cli_args) = parse_options(options, cmd_namespace=namespace)
+    
+    if namespace == 'global':
+        actual_cmd = command_name
+    else:
+        try:
+            actual_cmd = cli_args[1]
+        except IndexError:
+            raise CementArgumentError, \
+                "Missing sub-command.  See '%s --help?" % (namespace)
+    
+    m = re.match('(.*)-help', actual_cmd)
     if m:
-        if commands.has_key(m.group(1)):
-            cmd = commands[m.group(1)](cli_opts, cli_args)
+        if commands[namespace].has_key(m.group(1)):
+            cmd = commands[namespace][m.group(1)](cli_opts, cli_args)
             cmd.help()
         else:
-            raise CementArgumentError, "Unknown command, see --help?"
+            raise CementArgumentError, \
+                "Unknown command '%s'.  See --help?" % actual_cmd
             
-    elif commands.has_key(cli_args[0]):
-        cmd = commands[cli_args[0]](cli_opts, cli_args)
+    elif commands[namespace].has_key(actual_cmd):
+        cmd = commands[namespace][actual_cmd](cli_opts, cli_args)
         cmd.run()
-        
+                        
     else:
         raise CementArgumentError, "Unknown command, see --help?"
     
@@ -152,7 +182,7 @@ def lay_cement(default_app_config=None, version_banner=None):
     config => dict containing application config.
     version_banner => Option txt displayed for --version
     """    
-    global config
+    global config, options
     config.update(default_app_config)
     validate_config(config)
     
@@ -166,12 +196,8 @@ def lay_cement(default_app_config=None, version_banner=None):
         set_config_opts_per_file(config, config['app_module'], cf)
         
     options = init_parser(version_banner)
-    options = load_all_plugins(options)
-    (cli_opts, cli_args) = parse_options(options)
-    config = set_config_opts_per_cli_opts(config, cli_opts)
+    load_all_plugins()
     setup_logging()
-    
-    return (cli_opts, cli_args)
 
 
 def load_plugin(plugin):
@@ -219,11 +245,12 @@ def load_plugin(plugin):
     return plugin_cls
         
         
-def load_all_plugins(options):
+def load_all_plugins():
     """
     Attempt to load all enabled plugins.  Passes the existing config and 
     options object to each plugin and allows them to add/update each.
     """
+    global options
     for plugin in config['enabled_plugins']:
         plugin_cls = load_plugin(plugin)
 
@@ -240,5 +267,4 @@ def load_all_plugins(options):
                 else:
                     options.parser.add_option(opt)
         
-    return options
 

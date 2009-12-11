@@ -86,7 +86,7 @@ class ListPluginsCommand(CementCommand):
                 )
         print
 
-@register_command(name='list-hooks', hidden=True)
+@register_command(name='list-hooks', is_hidden=True)
 class ListHiddenCommandsCommand(CementCommand):
     def run(self):
         from cement import hooks
@@ -104,8 +104,16 @@ class ListHiddenCommandsCommand(CementCommand):
         print
         print 'Hidden commands'
         print '-' * 77
-        for cmd in commands:
-            if commands[cmd].hidden:
-                print cmd
-            print "%s-help" % cmd   
+        for nam in commands:
+            for cmd in commands[nam]:
+                if commands[nam][cmd].is_hidden:
+                    if nam != 'global':
+                        print '%s %s' % (nam, cmd)
+                    else:
+                        print cmd
+                if nam == 'global':
+                    print '%s-help' % cmd
+                else:
+                    print '%s %s-help' % (nam, cmd)
+                    
         print

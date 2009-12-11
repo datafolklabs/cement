@@ -51,7 +51,7 @@ def parse_options(options_obj, cmd_namespace='global'):
     Returns => a tuple of (options, args)
     """
     o = options_obj
-        
+    
     cmd_txt = ''
     line = '    '
     if commands:
@@ -83,14 +83,20 @@ def parse_options(options_obj, cmd_namespace='global'):
     if line != '    ':
         cmd_txt += "%s\n" % line
     
+    if cmd_namespace != 'global':
+        namespace_txt = ' %s' % cmd_namespace
+        cmd_type_txt = 'SUBCOMMAND'
+    else:
+        namespace_txt = ''
+        cmd_type_txt = 'COMMAND'
     
     script = os.path.basename(sys.argv[0])
-    o.parser.usage = """  %s [COMMAND] --(OPTIONS)
+    o.parser.usage = """  %s%s [%s] --(OPTIONS)
 
 Commands:  
 %s
     
-Help?  try [COMMAND]-help""" % (script, cmd_txt)
+Help?  try [%s]-help""" % (script, namespace_txt, cmd_type_txt, cmd_txt, cmd_type_txt)
 
     o.add_default_options()
     (opts, args) = o.parser.parse_args()

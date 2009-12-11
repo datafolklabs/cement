@@ -20,6 +20,9 @@ hooks = {}
 # commands dictionary
 commands = {'global' : {}}
 
+# OptParse options object *we set this up later
+options = None
+
 def set_config_opts_per_file(tmpconfig, section, config_file):
     """
     Parse config file options for into config dict.  Will do nothing if the 
