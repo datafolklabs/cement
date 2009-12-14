@@ -5,15 +5,19 @@ from pkg_resources import get_distribution
 from optparse import OptionParser, IndentedHelpFormatter
 
 from cement import plugins as cement_plugins
-from cement import config, hooks, commands, options
+from cement import hooks, namespaces
 from cement.core.log import setup_logging, get_logger
-from cement.core.options import set_config_opts_per_cli_opts, get_options
+from cement.core.options import get_options, Options
 from cement.core.exc import CementConfigError, CementRuntimeError, \
                             CementArgumentError
 from cement.core.configuration import set_config_opts_per_file, \
-                                      validate_config
+                                      validate_config, CementNamespace, \
+                                      define_namespace, get_default_config, \
+                                      set_config_opts_per_cli_opts
 
 CEMENT_ABI = "20091211"
+
+log = get_logger(__name__)
 
 class CementCommand(object):
     def __init__(self, cli_opts=None, cli_args=None):
@@ -31,14 +35,12 @@ class CementCommand(object):
         print "No actions have been defined for this command."
         
 
-class CementPlugin(object):
-    def __init__(self):
-        self.version = None
-        self.description = ""
-        self.config = {'config_source': ['defaults']}
-        self.options = get_options()
-        
+class CementPlugin(CementNamespace):
+    def __init__(self, *args, **kwargs):
+        CementNamespace.__init__(self, *args, **kwargs)
 
+
+        
 def get_abi_version():
     return CEMENT_ABI
     
@@ -51,7 +53,7 @@ def ensure_abi_compat(module_name, required_abi):
                 (module_name, required_abi, CEMENT_ABI)
     
     
-def define_hook_namespace(namespace):
+def define_hook(namespace):
     """
     Define a hook namespace that plugins can register hooks in.
     """
@@ -70,7 +72,9 @@ def register_hook(**kwargs):
     """
     def decorate(func):
         if not hooks.has_key(func.__name__):
-            raise CementRuntimeError, "Hook name '%s' is not define!" % func.__name__
+            #raise CementRuntimeError, "Hook name '%s' is not define!" % func.__name__
+            log.warn("Hook name '%s' is not define!" % func.__name__)
+            return func
         # (1) is the list of registered hooks in the namespace
         hooks[func.__name__].append(
             (int(kwargs.get('weight', 0)), func.__name__, func)
@@ -93,40 +97,33 @@ def run_hooks(namespace, *args, **kwargs):
         yield res
 
 
-def define_command_namespace(namespace):
-    """
-    Define a command namespace that plugins can register commands in.
-    """
-    if commands.has_key(namespace):
-        #raise CementRuntimeError, "Command namespace '%s' already defined!" % namespace
-        return
-    commands[namespace] = {}
+#def define_command(namespace):
+#    """
+#    Define a command namespace that plugins can register commands in.
+#    """
+#    if namespaces[namespace].commands.has_key(namespace):
+#        #raise CementRuntimeError, "Command namespace '%s' already defined!" % namespace
+#        return
+#    commands[namespace] = {}
     
     
-def register_command(**kwargs):
+def register_command(name=None, namespace='global', **kwargs):
     """
     Decorator function for plugins to register commands.  Used as:
     
-    @register_command()
+    @register_command(namespace='namespace')
     class MyCommand(CementCommand):
         ...
     """
+    assert name, "Command name is required!"
     def decorate(func):
+        if not namespace in namespaces:
+            raise CementRuntimeError, "The namespace '%s' is not defined!" % namespace
         setattr(func, 'is_hidden', kwargs.get('is_hidden', False))
-        setattr(func, 'is_global', kwargs.get('is_global', False))
-
-        if func.is_global:
-            cmd_namespace = 'global'
-        elif kwargs.get('namespace', None):
-            cmd_namespace = kwargs['namespace']
-        else:
-            cmd_namespace = func.__module__.split('.')[-1]
-        define_command_namespace(cmd_namespace)
-        commands[cmd_namespace][kwargs['name']] = func
+        namespaces[namespace].commands[name] = func
         return func
     return decorate
-
-
+        
 # FIXME: This method is so effing ugly.
 def run_command(command_name):
     """
@@ -134,18 +131,24 @@ def run_command(command_name):
     """
     
     command_name = command_name.lstrip('*') 
-    if command_name in commands.keys():
+    if command_name in namespaces.keys():
         namespace = command_name
+    else:
+        namespace = 'global'
     
-    elif command_name.rstrip('-help') in commands.keys():   
+    commands = namespaces[namespace].commands
+    
+    if re.match('(.*)-help', command_name) and command_name.rstrip('-help') in namespaces.keys():   
         namespace = command_name.rstrip('-help') 
         raise CementArgumentError, \
             "'%s' is a *namespace, not a command.  See '%s --help' instead." % \
                 (namespace, namespace)
-    else:
-        namespace = 'global'
     
-    (cli_opts, cli_args) = parse_options(cmd_namespace=namespace)
+    (cli_opts, cli_args) = parse_options(namespace=namespace)
+    set_config_opts_per_cli_opts(namespace, cli_opts)
+    
+    for res in run_hooks('global_post_options_hook'):
+        pass
     
     if namespace == 'global':
         actual_cmd = command_name
@@ -158,21 +161,42 @@ def run_command(command_name):
     
     m = re.match('(.*)-help', actual_cmd)
     if m:
-        if commands[namespace].has_key(m.group(1)):
-            cmd = commands[namespace][m.group(1)](cli_opts, cli_args)
+        if namespaces[namespace].commands.has_key(m.group(1)):
+            cmd = namespaces[namespace].commands[m.group(1)](cli_opts, cli_args)
             cmd.help()
         else:
             raise CementArgumentError, \
                 "Unknown command '%s'.  See --help?" % actual_cmd
             
-    elif commands[namespace].has_key(actual_cmd):
-        cmd = commands[namespace][actual_cmd](cli_opts, cli_args)
+    elif namespaces[namespace].commands.has_key(actual_cmd):
+        cmd = namespaces[namespace].commands[actual_cmd](cli_opts, cli_args)
         cmd.run()
                         
     else:
         raise CementArgumentError, "Unknown command, see --help?"
     
     
+def register_plugin(**kwargs):
+    """
+    Decorator function to register plugin namespace.  Used as:
+    
+    @register_plugin()
+    class MyPlugin(CementPlugin):
+        ...
+    """
+    def decorate(func):
+        ensure_abi_compat(func.__name__, func().required_abi)
+        plugin_name = func.__module__.split('.')[-1]
+        define_namespace(plugin_name, func())
+        return func
+    return decorate
+    
+
+def register_default_hooks():
+    # define default hooks
+    define_hook('global_options_hook')
+    define_hook('global_post_options_hook')
+        
 def lay_cement(default_app_config=None, version_banner=None):
     """
     Primary method to setup an application for Cement.  
@@ -182,23 +206,39 @@ def lay_cement(default_app_config=None, version_banner=None):
     config => dict containing application config.
     version_banner => Option txt displayed for --version
     """    
-    global config, options
-
-    config.update(default_app_config)
-    validate_config(config)
+    global namespaces, log
     
-    # define default hooks
-    define_hook_namespace('global_option_hook')
-    
+    vb = version_banner    
     if not version_banner:
-        version_banner = get_distribution(config['app_egg_name']).version
+        vb = """%s version %s""" % (
+            default_app_config['app_name'],
+            get_distribution(default_app_config['app_egg_name']).version
+            )
         
-    for cf in config['config_files']:
-        set_config_opts_per_file(config, config['app_module'], cf)
-        
-    options.init_parser(version_banner)
+    namespace = CementNamespace(
+        label = 'global',
+        version = get_distribution(default_app_config['app_egg_name']).version,
+        required_abi = CEMENT_ABI,
+        config = get_default_config(),
+        version_banner = vb,
+        )
+    define_namespace('global', namespace)
+    namespaces['global'].config.update(default_app_config)
+    validate_config(namespaces['global'].config)
+    
+    register_default_hooks()
+    
+    for cf in namespaces['global'].config['config_files']:
+        set_config_opts_per_file('global', 
+                                 namespaces['global'].config['app_module'], 
+                                 cf)
+    # initial logger
+    setup_logging('cement', clear_loggers=True)
+    log = get_logger(__name__)                             
+    
     load_all_plugins()
-    setup_logging()
+    setup_logging(namespaces['global'].config['app_module'])
+    
 
 
 def load_plugin(plugin):
@@ -207,9 +247,11 @@ def load_plugin(plugin):
     
     Arguments:
     
-    config  => The existing config dict.
     plugin  => Name of the plugin to load.
     """
+    global namespaces
+    config = namespaces['global'].config
+    
     if config.has_key('show_plugin_load') and config['show_plugin_load']:
         print 'loading %s plugin' % plugin
     
@@ -217,60 +259,41 @@ def load_plugin(plugin):
         app_module = __import__(config['app_module'])
     except ImportError, e:
         raise CementConfigError, e
-            
-    # try from 'app_module' first, then cement name space    
+        
+    plugin_module = __import__('cement.plugins', globals(), locals(),
+               [plugin], -1)
+    
     try:
-        plugins_module = __import__('%s.plugins' % config['app_module'],
-                                    globals(), locals(),
-                                    [plugin], 0)
-        pluginobj = getattr(plugins_module, plugin)
-    except AttributeError, e:
-        # we allow all apps to use cement plugins like their own.        
-        try:
-            plugins_module = __import__('cement.plugins', globals(), locals(),
-                                        [plugin], 0)
-            pluginobj = getattr(plugins_module, plugin)
-        except AttributeError, e:
-            raise CementConfigError, \
-                'failed to load %s plugin: %s' % (plugin, e)    
-    
-    plugin_cls = pluginobj.register_plugin()
-    
-    ensure_abi_compat(plugin_cls.__module__, plugin_cls.required_abi)
-
+        getattr(plugin_module, plugin)
+    except AttributeError:
+        raise CementRuntimeError, "Failed loading plugin '%s', possibly syntax errors?" % plugin
+        
     plugin_config_file = os.path.join(
-        config['plugin_config_dir'], '%s.plugin' % plugin
+        namespaces['global'].config['plugin_config_dir'], '%s.plugin' % plugin
         )
-    plugin_cls.config = set_config_opts_per_file(plugin_cls.config, plugin, 
-                                                 plugin_config_file)
-    return plugin_cls
         
-        
+    set_config_opts_per_file(plugin, plugin, plugin_config_file)
+    
+                       
 def load_all_plugins():
     """
     Attempt to load all enabled plugins.  Passes the existing config and 
     options object to each plugin and allows them to add/update each.
     """
-    global options
+    global namespaces
 
-    for plugin in config['enabled_plugins']:
-        plugin_cls = load_plugin(plugin)
+    for plugin in namespaces['global'].config['enabled_plugins']:
+        load_plugin(plugin)
         
-        # add the plugin 
-        config['plugins'][plugin] = plugin_cls
-        
-        # add the plugin options
-        for opt_obj in run_hooks('global_option_hook'):
-            for opt in opt_obj.parser._get_all_options(): 
-                if opt.get_opt_string() == '--help':
-                    pass
-                elif opt.get_opt_string() == '--version': 
-                    pass
-                else:
-                    options.parser.add_option(opt)
+    for res in run_hooks('global_options_hook'):
+        for opt in res._get_all_options(): 
+            if opt.get_opt_string() == '--help':
+                pass
+            else:
+                namespaces['global'].options.add_option(opt)
         
         
-def parse_options(cmd_namespace='global'): 
+def parse_options(namespace='global'): 
     """
     The actual method that parses the command line options and args.  
     
@@ -282,24 +305,23 @@ def parse_options(cmd_namespace='global'):
     
     Returns => a tuple of (options, args)
     """
-    global options
-    if cmd_namespace == 'global':
-        o = options
-    else:
-        o = config['plugins'][cmd_namespace].options
-            
-        if config['plugins'][cmd_namespace].config['merge_global_options']:
-            for opt in options.parser._get_all_options(): 
-                if opt.get_opt_string() == '--help':
-                    pass
-                else:
-                    o.parser.add_option(opt)
+    global namespaces
+
+    if namespaces[namespace].config.has_key('merge_global_options') and \
+       namespaces[namespace].config['merge_global_options']:
+        for opt in namespaces['global'].options._get_all_options(): 
+            if opt.get_opt_string() == '--help':
+                pass
+            elif opt.get_opt_string() == '--version':
+                pass
+            else:
+                namespaces[namespace].options.add_option(opt)
     
     cmd_txt = ''
     line = '    '
-    if commands:
-        for c in commands[cmd_namespace]:    
-            if c.endswith('-help') or commands[cmd_namespace][c].is_hidden:
+    if namespaces[namespace].commands:
+        for c in namespaces[namespace].commands:    
+            if c.endswith('-help') or namespaces[namespace].commands[c].is_hidden:
                 pass
             else:
                 if line == '    ':
@@ -310,11 +332,9 @@ def parse_options(cmd_namespace='global'):
                     cmd_txt += "%s \n" % line
                     line = '    '
 
-    if cmd_namespace == 'global':
-        namespaces = commands.keys()
-        namespaces.remove('global')
-        if namespaces:
-            for nam in namespaces:    
+    if namespace == 'global':
+        for nam in namespaces: 
+            if nam != 'global':
                 if line == '    ':
                     line += '*%s' % nam
                 elif len(line) + len(nam) < 55:
@@ -326,22 +346,21 @@ def parse_options(cmd_namespace='global'):
     if line != '    ':
         cmd_txt += "%s\n" % line
     
-    if cmd_namespace != 'global':
-        namespace_txt = ' %s' % cmd_namespace
+    if namespace != 'global':
+        namespace_txt = ' %s' % namespace
         cmd_type_txt = 'SUBCOMMAND'
     else:
         namespace_txt = ''
         cmd_type_txt = 'COMMAND'
     
     script = os.path.basename(sys.argv[0])
-    o.parser.usage = """  %s%s [%s] --(OPTIONS)
+    namespaces[namespace].options.usage = """  %s%s [%s] --(OPTIONS)
 
 Commands:  
 %s
     
 Help?  try [%s]-help""" % (script, namespace_txt, cmd_type_txt, cmd_txt, cmd_type_txt)
 
-    o.add_default_options()
-    (opts, args) = o.parser.parse_args()
+    (opts, args) = namespaces[namespace].options.parse_args()
     
     return (opts, args)

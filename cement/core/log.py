@@ -3,21 +3,19 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-from cement import config
+from cement import namespaces
 
-def setup_logging():
+def setup_logging(base_name, clear_loggers=False):
     """
     Primary Cement method to setup logging.
-    
-    Arguments:
-    
-    config => dict containing the applications configurations.
     """
+    config = namespaces['global'].config
+    
     # remove any previously setup handlers from other libraries
     for i in logging.getLogger().handlers:
         logging.getLogger().removeHandler(i)
 
-    log = logging.getLogger(config['app_module'])
+    log = logging.getLogger(base_name)
     
     if config.has_key('debug') and config['debug']:
         log_level = logging.DEBUG

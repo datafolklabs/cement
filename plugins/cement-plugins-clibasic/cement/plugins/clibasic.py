@@ -2,71 +2,94 @@
 This is a simple plugin to add some basic functionality.
 """
 
-import os
+import sys, os
 from pkg_resources import get_distribution
+import logging
 
-from cement import config
-from cement.core.log import get_logger
+from cement import namespaces
+from cement.core.log import get_logger, setup_logging
 from cement.core.app_setup import CementCommand, CementPlugin, register_hook, \
-                                  register_command, define_hook_namespace
-from cement.core.options import get_options
+                                  register_command, define_hook, register_plugin
+from cement.core.options import init_parser
 
 log = get_logger(__name__)
 
-def register_plugin():
-    return CLIBasicPlugin()
-
+VERSION = '0.2'
+REQUIRED_CEMENT_ABI = '20091211'
+BANNER = """
+cement.plugins.clibasic v%s (abi:%s)
+""" % (VERSION, REQUIRED_CEMENT_ABI)
+ 
+@register_plugin() 
 class CLIBasicPlugin(CementPlugin):
     def __init__(self):
-        CementPlugin.__init__(self)
-        self.version = '0.1'
-        self.required_abi = '20091211'
-        self.description = "Basic CLI Commands for Cement Applications"
-        self.config = {
-            'config_source': ['defaults']
-            }
+        CementPlugin.__init__(self,
+            label = 'clibasic',
+            version = VERSION,
+            description = 'Basic CLI Commands for Cement Applications',
+            required_abi = REQUIRED_CEMENT_ABI,
+            version_banner=BANNER
+            )
         
-        #self.options.parser.add_option('--test', action ='store_true', 
-        #    dest='test', default=None, help='test option'
-        #) 
- 
 @register_hook()
-def global_option_hook(*args, **kwargs):
+def global_options_hook(*args, **kwargs):
     """
     Pass back an OptParse object, options will be merged into the global
     options.
     """
-    global_options = get_options()
-    global_options.parser.add_option('--debug', action ='store_true', 
+    global_options = init_parser()
+    global_options.add_option('--debug', action ='store_true', 
         dest='debug', default=None, help='toggle debug output'
+    ) 
+    global_options.add_option('-C', '--configs', action='store', 
+        dest='config_files', default=None, help='config file locations'
     ) 
     return global_options
 
-
-@register_command(name='getconfig', is_global=True)
+@register_hook()
+def global_post_options_hook(*args, **kwargs):
+    """Toggle debug output since we are adding the --debug option via
+    this plugin."""
+    if namespaces['global'].config['debug']:
+        setup_logging('cement', clear_loggers=True)
+        setup_logging(namespaces['global'].config['app_module'])
+        
+    
+        
+@register_command(name='getconfig')
 class GetConfigCommand(CementCommand):
     def run(self):
-        if len(self.cli_args) == 2:
-            config_key = self.cli_args[1]
-            if config.has_key(config_key):
+        try:
+            namespace = self.cli_args[1]
+        except IndexError:
+            self.help()
+            sys.exit()
+            
+        if len(self.cli_args) == 3:
+            config_key = self.cli_args[2]
+            if namespaces[namespace].config.has_key(config_key):
                 print('')
-                print('config[%s] => %s' % (config_key, config[config_key]))
+                print('config[%s] => %s' % (config_key, namespaces[namespace].config[config_key]))
                 print('')
         else:
-            for i in config:
-                print("config[%s] => %s" % (i, config[i]))
+            for i in namespaces[namespace].config:
+                print("config[%s] => %s" % (i, namespaces[namespace].config[i]))
                 
     def help(self):
         print('')
         print('-' * 77) 
         print('')
-        print('Print out entire config dict:')
+        print('Print out entire global config dict:')
         print('')
-        print('    myapp getconfig')
+        print('    myapp getconfig global')
+        print('')
+        print('Or specify an alternate namespace:')
+        print('')
+        print('    myapp getconfig clibasic')
         print('')
         print('Or specify a config key for just that value:')
         print('')
-        print('    myapp getconfig enabled_plugins')
+        print('    myapp getconfig global enabled_plugins')
         print('')
         print('')
 
@@ -78,15 +101,15 @@ class ListPluginsCommand(CementCommand):
         print "%-18s  %-7s  %-50s" % ('plugin', 'ver', 'description')
         print "%-18s  %-7s  %-50s" % ('-'*18, '-'*7, '-'*50)
         
-        for plugin in config['plugins']:
-            plugin_cls = config['plugins'][plugin]
+        for plugin in namespaces['global'].config['enabled_plugins']:
+            plugin_cls = namespaces[plugin]
             print "%-18s  %-7s  %-50s" % (
                 plugin, plugin_cls.version, plugin_cls.description
                 )
         print
 
-@register_command(name='list-hooks', is_hidden=True)
-class ListHiddenCommandsCommand(CementCommand):
+@register_command(name='list-hooks', is_hidden=True, namespace='clibasic')
+class ListHooksCommand(CementCommand):
     def run(self):
         from cement import hooks
         print

@@ -3,7 +3,6 @@
 import sys, os
 import re
 
-from cement import config, options
 from cement.core.log import get_logger
 from cement.core.app_setup import lay_cement, ensure_abi_compat, run_command
 from cement.core.exc import CementArgumentError
@@ -23,7 +22,6 @@ def main():
     dcf['config_files'] = [
         os.path.join('/etc', dcf['app_name'], '%s.conf' % dcf['app_name']),
         os.path.join(os.environ['HOME'], '.%s.conf' % dcf['app_name']),
-        os.path.join('./etc', dcf['app_name'], '%s.conf' % dcf['app_name']),
         ]
     dcf['enabled_plugins'] = [] # no default plugins, add via the config file
     dcf['debug'] = False
@@ -46,7 +44,7 @@ def main():
     
     # react to the passed command.  command should be the first arg always
     try:
-        if not len(sys.argv) > 0:
+        if not len(sys.argv) > 1:
             raise CementArgumentError, "A command is required. See --help?"
         
         run_command(sys.argv[1])

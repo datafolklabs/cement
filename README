@@ -37,7 +37,11 @@ Cement Framework:
 
 The following command will create an external plugin for your application:
 
-    $ paster cement-app <myapp> <myplugin>
+    $ paster cement-plugin <myapp> <myplugin>
+
+Have a helper library you want to make pluginable?
+
+    $ paster cement-helper <myapp> <myhelper>
 
 
 Additionally, there are a number of examples under ./examples.  To see how 

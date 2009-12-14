@@ -1,10 +1,9 @@
 """Core application main."""
 
-import os
-import re
+import sys, os
 
 from cement.core.log import get_logger
-from cement.core.app_setup import lay_cement, ensure_abi_compat
+from cement.core.app_setup import lay_cement, ensure_abi_compat, run_command
 from cement.core.exc import CementArgumentError
 
 REQUIRED_CEMENT_ABI = '{{cement_abi}}'
@@ -19,7 +18,7 @@ def main():
     dcf['app_module'] = '{{package}}' # name of the library dir
     
     # Be default look in /etc and ~/ for config files.  You should probably
-    # symlink /etc/<your_app> => ./config/<your_app> for easy development.
+    # symlink /etc/<your_app> => ./etc/<your_app> for easy development.
     dcf['config_files'] = [
         os.path.join('/etc', dcf['app_name'], '%s.conf' % dcf['app_name']),
         os.path.join(os.environ['HOME'], '.%s.conf' % dcf['app_name']),
@@ -34,33 +33,20 @@ def main():
     dcf['plugin_dir'] = '%s/plugins.d' % dcf['statedir']
     dcf['plugins'] = {}
     
-    (config, cli_opts, cli_args, commands, handlers) = lay_cement(dcf)
+    # Warning: You shouldn't modify below this point unless you know what 
+    # you're doing.
+    
+    lay_cement(dcf)
     
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
     
-    # react to the passed command
+    # react to the passed command.  command should be the first arg always
     try:
-        if not len(cli_args) > 0:
+        if not len(sys.argv) > 1:
             raise CementArgumentError, "A command is required. See --help?"
         
-        m = re.match('(.*)-help', cli_args[0])
-        if m:
-            # command matches a plugin command help, run help()
-            if commands.has_key(m.group(1)):
-                cmd = commands[m.group(1)](config, cli_opts, cli_args)
-                cmd.help()
-            else:
-                raise CementArgumentError, "Unknown command, see --help?"
-                
-        elif commands.has_key(cli_args[0]):
-            # commands are all the plugin commands that have been registered.
-            # if cli_args[0] matches a plugin command then we execute it.
-            cmd = commands[cli_args[0]](config, cli_opts, cli_args, handlers)
-            cmd.run()
-            
-        else:
-            raise CementArgumentError, "Unknown command, see --help?"
+        run_command(sys.argv[1])
             
     except CementArgumentError, e:
         print("CementArgumentError > %s" % e)
