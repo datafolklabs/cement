@@ -4,53 +4,59 @@ CREATOR/MAINTAINER: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 
 DESCRIPTION:
 
-Cement is a Python CLI Application Framework.  Almost every command
-line type application has a number of basic pieces that have to exist before
-any real code and logic gets written.  At a minimum, Cement easily sets up
-the following:
+Cement is a CLI Application Framework for Python. It promotes code re-use by 
+way of plugins and helper libraries that can be maintained internally, or 
+shared with the community. For a solid development base, build your next cli 
+on cement!
+
+At a minimum, Cement easily sets up the following:
 
     Configuration file parsing [using ConfigObj]
     Command line arguments and option parsing [using OptParse]
     Logging [using Logger]
     Plugin support [partially using setuptools]
-    
+    Basic "hook" support
 
-These four pieces are the most important for a fully functional command
-line application.  Normally to accomplish what's listed above would require 
-dozens of lines of code before you even begin coding your application.  With 
-Cement, the above is configured with more or less a single line of code.
+
+These pieces are important for a fully functional command line application. 
+Normally to accomplish what's listed above would require dozens of lines of 
+work before you even begin coding your application. With Cement, the above is 
+configured with more or less a single command (via paste).
 
 Cement is most generally used as a starting point from which to begin 
-developing a command line type application.  That said, applications using
-cement can also share plugins with either cement or other applications
-using cement.
+developing a command line type application. That said, applications using 
+cement can also share plugins with either cement or other applications using 
+cement.
 
 
 GETTING STARTED:
 
-Cement applications and plugins can be easily created with PasteScript.  The
-following command will create a command line application built on top of the 
-Cement Framework:
+Stable versions of Cement can be installed via the cheeze shop:
+
+    $ easy_install cement
+
+
+Development versions of Cement can be checked out of Git:
+
+    $ git clone git://github.com/derks/cement.git
+    
+    $ cd cement
+    
+    $ python setup.py install
+    
+    
+Additionally, Cement applications, plugins, and helpers can be created via 
+PasteScript. Once Cement is installed, the following command will create a 
+command line application built on top of the Cement Framework:
 
     $ paster cement-app <myapp>
-    
+
 
 The following command will create an external plugin for your application:
 
     $ paster cement-plugin <myapp> <myplugin>
 
-Have a helper library you want to make pluginable?
+
+Have a helper library you want to make plugable?
 
     $ paster cement-helper <myapp> <myhelper>
-
-
-Additionally, there are a number of examples under ./examples.  To see how 
-to get an application started with cement, see the CementExample application.  
-To see how to write plugins for some-such application using cement see the 
-CementExampleMyPlugin which is a plugin for the CementExample application.
-
-
-CONTRIBUTING:
-
-Think you have a plugin that would fit nicely as a core plugin?  Send us an
-email and we'll talk about it.
