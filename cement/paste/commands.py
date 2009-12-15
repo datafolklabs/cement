@@ -173,8 +173,11 @@ Example usage::
         self.__dict__.update(self.options.__dict__)
         
         if self.args:
-            self.project = self.args[0].lower()
-            self.plugin = self.args[1].lower()
+            try:
+                self.project = self.args[0].lower()
+                self.plugin = self.args[1].lower()
+            except IndexError:
+                pass
         
         while not self.project:
             self.project = raw_input("Enter project name: ").lower()

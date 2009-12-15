@@ -16,10 +16,13 @@ setup(name='{{project}}_plugins_{{plugin}}',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "Cement",
+        "cement",
+        "cement.plugins.clibasic",
+        "{{project}}",
         ],
     setup_requires=[
-        "PasteScript >= 1.7"
+        "PasteScript >= 1.7",
+        "ConfigObj",
         ],
     test_suite='nose.collector',
     entry_points="""

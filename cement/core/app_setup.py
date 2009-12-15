@@ -143,10 +143,12 @@ def run_command(command_name):
         raise CementArgumentError, \
             "'%s' is a *namespace, not a command.  See '%s --help' instead." % \
                 (namespace, namespace)
-    
+        
     (cli_opts, cli_args) = parse_options(namespace=namespace)
     set_config_opts_per_cli_opts(namespace, cli_opts)
     
+    # FIX ME: need a global_pre_command_hook here so that clibasic can
+    # look for -C and if so, parse the passed config files into the dict.
     for res in run_hooks('global_post_options_hook'):
         pass
     
@@ -237,6 +239,7 @@ def lay_cement(default_app_config=None, version_banner=None):
     log = get_logger(__name__)                             
     
     load_all_plugins()
+    setup_logging('cement', clear_loggers=True)
     setup_logging(namespaces['global'].config['app_module'])
     
 
@@ -260,13 +263,17 @@ def load_plugin(plugin):
     except ImportError, e:
         raise CementConfigError, e
         
-    plugin_module = __import__('cement.plugins', globals(), locals(),
-               [plugin], -1)
-    
     try:
+        plugin_module = __import__('%s.plugins' % config['app_module'], globals(), locals(),
+               [plugin], -1)
         getattr(plugin_module, plugin)
-    except AttributeError:
-        raise CementRuntimeError, "Failed loading plugin '%s', possibly syntax errors?" % plugin
+    except AttributeError, e:
+        try:
+            plugin_module = __import__('cement.plugins', globals(), locals(),
+                   [plugin], -1)
+            getattr(plugin_module, plugin)
+        except AttributeError, e:
+            raise CementRuntimeError, "Failed loading plugin '%s', possibly syntax errors?" % plugin
         
     plugin_config_file = os.path.join(
         namespaces['global'].config['plugin_config_dir'], '%s.plugin' % plugin
@@ -334,7 +341,7 @@ def parse_options(namespace='global'):
 
     if namespace == 'global':
         for nam in namespaces: 
-            if nam != 'global':
+            if nam != 'global' and namespaces[nam].commands:
                 if line == '    ':
                     line += '*%s' % nam
                 elif len(line) + len(nam) < 55:

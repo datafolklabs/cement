@@ -1,7 +1,6 @@
 """An example application using the Cement framework."""
 
 import sys, os
-import re
 
 from cement.core.log import get_logger
 from cement.core.app_setup import lay_cement, ensure_abi_compat, run_command

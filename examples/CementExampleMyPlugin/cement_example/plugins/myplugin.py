@@ -23,12 +23,12 @@ class ExamplePlugin(CementPlugin):
         self.required_abi = '20091207'
         self.description = "Example Plugin for a Cement Application."
         self.config = {
-            'config_source': ['defaults']
+            'config_source': ['defaults'],
+            'myplugin_opton' : 'My plugin value'
             }
         self.commands = {
             'myplugin' : MyPluginCommand,
             }
-        self.handlers = {}
         self.options = init_parser(global_config)
         
         # Cement allows you to expose command line options to the 
@@ -38,7 +38,7 @@ class ExamplePlugin(CementPlugin):
             help='example option for myplugun plugin', metavar='VAR' 
             )
         
-    
+
 class MyClass(object):
     def __init__(self, config):
         pass

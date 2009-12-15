@@ -23,7 +23,7 @@ using cement.
 """
 
 
-setup(name='Cement',
+setup(name='cement',
     version=version,
     description="Python CLI Application Framework",
     long_description=LONG,
@@ -41,6 +41,15 @@ setup(name='Cement',
         # Only required if you want to use paster
         "PasteScript", 
         "tempita",
+        ],
+    setup_requires=[
+        "PasteScript >= 1.7",
+        "ConfigObj"
+        ],
+    # FIX ME: This installs, but requiring CementABI == 0.4.20091211 doesn't
+    # work.    
+    provides=[
+        "CementABI (0.4.20091211)",
         ],
     entry_points="""
         [paste.global_paster_command]

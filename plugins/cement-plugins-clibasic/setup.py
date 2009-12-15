@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 import sys, os
 
-setup(name='CementPluginsCLIBasic',
-    version='0.1',
+setup(name='cement.plugins.clibasic',
+    version='0.2',
     description='Basic Commands for Applications Build on Cement',
     classifiers=[], 
     keywords='',
@@ -15,10 +15,11 @@ setup(name='CementPluginsCLIBasic',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "cement",
+        "cement == 0.4",
         ],
     setup_requires=[
-        "PasteScript >= 1.7"
+        "PasteScript >= 1.7",
+        "ConfigObj"
         ],
     test_suite='nose.collector',
     entry_points="""
