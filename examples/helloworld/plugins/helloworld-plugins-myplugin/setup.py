@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
 import sys, os
 
-setup(name='{{project}}',
+# You probably want to change the name, this is a healthy default for paster
+setup(name='helloworld_plugins_myplugin',
     version='0.1',
     description='',
     classifiers=[], 
@@ -15,15 +16,15 @@ setup(name='{{project}}',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "cement == {{cement_version}}",
+        "cement == 0.4",
+        "helloworld",
         ],
     setup_requires=[
-        "PasteScript >= 1.7"
+        "PasteScript >= 1.7",
+        "ConfigObj",
         ],
     test_suite='nose.collector',
     entry_points="""
-    [console_scripts]
-    {{package}} = {{package}}.appmain:main
     """,
-    namespace_packages=['{{package}}', '{{package}}.plugins'],
+    namespace_packages=['helloworld', 'helloworld.plugins'],
     )

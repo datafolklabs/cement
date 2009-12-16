@@ -6,7 +6,7 @@ from tempita import paste_script_template_renderer
 import pkg_resources
 from pkg_resources import get_distribution
 
-from cement.core.app_setup import CEMENT_ABI
+from cement.core.configuration import CEMENT_ABI
 
 class CementAppTemplate(templates.Template):
     """

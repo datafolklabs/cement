@@ -16,7 +16,6 @@ class CementConfigError(CementError):
         code = 10
         CementError.__init__(self, value, code)
 
-        
 class CementRuntimeError(CementError):
     """Runtime errors."""
     def __init__(self, value):

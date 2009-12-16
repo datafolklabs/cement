@@ -31,15 +31,16 @@ def register_hook(**kwargs):
     return decorate
 
 
-def run_hooks(namespace, *args, **kwargs):
+def run_hooks(*args, **kwargs):
     """
     Run all defined hooks in the namespace.  Returns a list of return data.
     """
-    if not hooks.has_key(namespace):
-        CementRuntimeError, "Hook name '%s' is not defined!" % namespace
-    hooks[namespace].sort() # will order based on weight
-    for hook in hooks[namespace]:
-        res = hook[2](*args, **kwargs)
+    hook_name = args[0]
+    if not hooks.has_key(hook_name):
+        CementRuntimeError, "Hook name '%s' is not defined!" % hook_name
+    hooks[hook_name].sort() # will order based on weight
+    for hook in hooks[hook_name]:
+        res = hook[2](*args[1:], **kwargs)
         
         # FIXME: Need to validate the return data somehow
         yield res

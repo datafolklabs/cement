@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-setup(name='{{project}}',
+setup(name='helloworld',
     version='0.1',
     description='',
     classifiers=[], 
@@ -15,7 +15,7 @@ setup(name='{{project}}',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "cement == {{cement_version}}",
+        "cement == 0.4",
         ],
     setup_requires=[
         "PasteScript >= 1.7"
@@ -23,7 +23,7 @@ setup(name='{{project}}',
     test_suite='nose.collector',
     entry_points="""
     [console_scripts]
-    {{package}} = {{package}}.appmain:main
+    helloworld = helloworld.appmain:main
     """,
-    namespace_packages=['{{package}}', '{{package}}.plugins'],
+    namespace_packages=['helloworld', 'helloworld.plugins'],
     )

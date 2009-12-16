@@ -1,6 +1,6 @@
 
 from cement import namespaces
-from cement.core.options import init_parser
+from cement.core.opt import init_parser
 
 class CementNamespace(object):
     def __init__(self, label, version, required_abi, **kw):

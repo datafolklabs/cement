@@ -2,6 +2,7 @@
 import os
         
 from cement import namespaces
+from cement.core.exc import *
 from cement.core.hook import run_hooks
 from cement.core.configuration import set_config_opts_per_file
 from cement.core.namespace import CementNamespace, define_namespace
@@ -75,9 +76,9 @@ def load_all_plugins():
     for plugin in namespaces['global'].config['enabled_plugins']:
         load_plugin(plugin)
         
-    for res in run_hooks('global_options_hook'):
+    for (namespace, res) in run_hooks('options_hook'):
         for opt in res._get_all_options(): 
             if opt.get_opt_string() == '--help':
                 pass
             else:
-                namespaces['global'].options.add_option(opt)
+                namespaces[namespace].options.add_option(opt)

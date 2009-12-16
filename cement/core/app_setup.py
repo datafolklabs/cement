@@ -11,7 +11,7 @@ from cement.core.configuration import *
 from cement.core.plugin import load_all_plugins
 from cement.core.namespace import CementNamespace, define_namespace
 from cement.core.log import setup_logging, get_logger
-from cement.core.options import init_parser, get_options, Options
+from cement.core.opt import init_parser, get_options, Options
 from cement.core.hook import define_hook, run_hooks
 from cement.core.command import CementCommand
 
@@ -20,8 +20,8 @@ log = get_logger(__name__)
     
 def register_default_hooks():
     # define default hooks
-    define_hook('global_options_hook')
-    define_hook('global_post_options_hook')
+    define_hook('options_hook')
+    define_hook('post_options_hook')
             
 def lay_cement(default_app_config=None, version_banner=None):
     """

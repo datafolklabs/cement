@@ -1,0 +1,15 @@
+[myplugin]
+# This is a cement plugin configuration file.  Once parsed, the
+# values from here will be accessible from:
+#
+# config['plugins']['myplugin']['param'] = value
+# 
+
+param1 = value1
+param2 = value two
+
+# true/false equate to True/False in python
+param3 = true
+
+# equates to ['my', 'list', 'of', 'values']
+param5 = my, list, of, values, 

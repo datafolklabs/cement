@@ -8,9 +8,11 @@ import logging
 
 from cement import namespaces
 from cement.core.log import get_logger, setup_logging
-from cement.core.app_setup import CementCommand, CementPlugin, register_hook, \
-                                  register_command, define_hook, register_plugin
-from cement.core.options import init_parser
+from cement.core.command import CementCommand, register_command
+from cement.core.plugin import CementPlugin, register_plugin
+from cement.core.hook import register_hook, define_hook
+from cement.core.opt import init_parser
+from cement.core.configuration import set_config_opts_per_file
 
 log = get_logger(__name__)
 
@@ -32,7 +34,7 @@ class CLIBasicPlugin(CementPlugin):
             )
         
 @register_hook()
-def global_options_hook(*args, **kwargs):
+def options_hook(*args, **kwargs):
     """
     Pass back an OptParse object, options will be merged into the global
     options.
@@ -41,21 +43,30 @@ def global_options_hook(*args, **kwargs):
     global_options.add_option('--debug', action ='store_true', 
         dest='debug', default=None, help='toggle debug output'
     ) 
-    global_options.add_option('-C', '--configs', action='store', 
-        dest='config_files', default=None, help='config file locations'
+    global_options.add_option('-L', action='store', 
+        dest='loglevel', default=None, 
+        help='Log level [debug, info, warn, error, fatal]', metavar='LEVEL'
     ) 
-    return global_options
+    return ('global', global_options)
+
 
 @register_hook()
-def global_post_options_hook(*args, **kwargs):
-    """Toggle debug output since we are adding the --debug option via
+def post_options_hook(cli_opts, cli_args, **kwargs):
+    """Toggle debug/loglevel output since we are adding the --debug option via
     this plugin."""
-    if namespaces['global'].config['debug']:
-        setup_logging('cement', clear_loggers=True)
-        setup_logging(namespaces['global'].config['app_module'])
-        
     
-        
+    # setup_logging again if our options passed
+    
+    log_namespace = namespaces['global'].config['app_module']
+    if cli_opts.loglevel:
+        namespaces['global'].config['loglevel'] = cli_opts.loglevel
+        setup_logging('cement', clear_loggers=True, level=cli_opts.loglevel)
+        setup_logging(log_namespace, level=cli_opts.loglevel)
+    elif cli_opts.debug:
+        setup_logging('cement', clear_loggers=True, level=cli_opts.loglevel)
+        setup_logging(log_namespace, level=cli_opts.loglevel)
+
+    
 @register_command(name='getconfig')
 class GetConfigCommand(CementCommand):
     def run(self):

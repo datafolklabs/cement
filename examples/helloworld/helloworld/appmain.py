@@ -8,14 +8,15 @@ file.
 
 import sys
 
-from cement.core.log import get_logger
-from cement.core.app_setup import lay_cement, ensure_abi_compat
-from cement.core.command import run_command
 from cement.core.exc import *
+from cement.core.log import get_logger
+from cement.core.app_setup import lay_cement
+from cement.core.configuration import ensure_abi_compat
+from cement.core.command import run_command
 
-from {{project}} import default_config
+from helloworld import default_config
 
-REQUIRED_CEMENT_ABI = '{{cement_abi}}'
+REQUIRED_CEMENT_ABI = '20091211'
 
 def main():
     ensure_abi_compat(__name__, REQUIRED_CEMENT_ABI)

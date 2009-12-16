@@ -1,4 +1,4 @@
-"""This is an example plugin for {{package}}."""
+"""This is an example plugin for helloworld."""
 
 """
 This is a simple plugin to add some basic functionality.
@@ -18,11 +18,11 @@ from cement.core.plugin import CementPlugin, register_plugin
 log = get_logger(__name__)
 
 VERSION = '0.1'
-REQUIRED_CEMENT_ABI = '{{cement_abi}}'
+REQUIRED_CEMENT_ABI = '20091211'
 
 # Optional: Allows you to customize the output of --version
 BANNER = """
-{{package}}.plugins.example v%s 
+helloworld.plugins.example v%s 
 """ % (VERSION)
  
         
@@ -32,7 +32,7 @@ class ExamplePlugin(CementPlugin):
         CementPlugin.__init__(self,
             label = 'example',
             version = VERSION,
-            description = 'Example plugin for {{package}}',
+            description = 'Example plugin for helloworld',
             required_abi = REQUIRED_CEMENT_ABI,
             version_banner=BANNER,
             )
@@ -150,14 +150,14 @@ class ex2Command(CementCommand):
         print "This is Example2Command.help()"
 
 
-@register_command(name='ex3', namespace='{{package}}_core')
+@register_command(name='ex3', namespace='helloworld_core')
 class ex3Command(CementCommand):
     """
     This is how to add a local/plugin subcommand to another namespace.  It
     is possible to use this in conjunction with the options_hook() to add 
     additional functionality to a completely other namespace:
     
-        $ myapp {{package}} ex3
+        $ myapp helloworld ex3
         
     """
     def run(self):

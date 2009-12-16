@@ -1,7 +1,3 @@
-move options, commands to a namespaces dict.  have hooks that register
-options and commands into a specific namespace.  Plugins automatically
-register a namespace of the plugin name.  For decorators, if no namespace
-is provided... attempt to guess the namespace based on __module__.split('.')[-1]
 
 documentation
 nose tests

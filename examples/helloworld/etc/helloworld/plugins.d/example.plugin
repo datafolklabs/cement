@@ -2,13 +2,15 @@
 # This is an example of a cement plugin configuration file.  Once parsed, the
 # values from here will be accessible from:
 #
-# config['plugins']['example']['param'] = value
+# namespaces['example'].config['param'] = value
 # 
-# 
-# Please not that core cement plugins can be loaded from an application
-# using the Cement framework.  That said, the example.plugin configuration
-# file needs to go under the plugins.d configuration directory of the 
-# application, not under cement itself.
+#
+# Some options are built into cement (suchas merge_global_options) and 
+# some are not.
+#
+
+# Whether or not to merge global options 
+merge_global_options = false
 
 debug = false
 param1 = value1

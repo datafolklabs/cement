@@ -2,8 +2,8 @@
 import re
 
 from cement import namespaces, hooks
-from cement.core.options import parse_options
-from cement.core.hooks import run_hooks
+from cement.core.opt import parse_options
+from cement.core.hook import run_hooks
 from cement.core.configuration import set_config_opts_per_cli_opts
 from cement.core.exc import *
 
@@ -55,7 +55,7 @@ def run_command(command_name):
     if m and m.group(1) in namespaces.keys():   
         namespace = m.group(1)
         raise CementArgumentError, \
-            "'%s' is a *namespace, not a command.  See '%s --help' instead." % \
+            "'%s' is a namespace*, not a command.  See '%s --help' instead." % \
                 (namespace, namespace)
         
     (cli_opts, cli_args) = parse_options(namespace=namespace)
@@ -63,8 +63,9 @@ def run_command(command_name):
     
     # FIX ME: need a global_pre_command_hook here so that clibasic can
     # look for -C and if so, parse the passed config files into the dict.
-    for res in run_hooks('global_post_options_hook'):
-        pass
+    args = (cli_opts, cli_args)
+    for res in run_hooks('post_options_hook', cli_opts, cli_args):
+        pass # doesn't expect a result
     
     if namespace == 'global':
         actual_cmd = command_name

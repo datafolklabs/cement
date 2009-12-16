@@ -43,7 +43,7 @@ from paste.script import create_distro
 beginning_letter = re.compile(r"^[^a-z]*")
 valid_only = re.compile(r"[^a-z0-9_]")
 
-from cement.core.app_setup import CEMENT_ABI
+from cement.core.configuration import CEMENT_ABI
 
 CEMENT_VERSION = pkg_resources.get_distribution('cement').version
 
