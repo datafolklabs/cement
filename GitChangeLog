@@ -1,3 +1,117 @@
+commit 62eb319ff168e0bc7cfc882e55bee4c38023bd68
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Dec 15 21:14:26 2009 -0600
+
+    stable app, plugin, helper setup.
+
+commit 3bf341cf813cd14e68ee956446370a6a22517c4c
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Dec 15 18:41:45 2009 -0600
+
+    reorganization of app_setup to other files
+
+commit f034c3d31ee3d1fcec6068ef1ac2e187f8d1731b
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Dec 14 20:23:27 2009 -0600
+
+    Updating README info
+
+commit 07547fb3d5e109a87b3502cc332ce92a2a6d66ee
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Dec 14 19:53:41 2009 -0600
+
+    refactor of how plugins load
+
+commit 7865cb55ad2c493ae8116f254981bbf09b3e0482
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sun Dec 13 19:53:23 2009 -0600
+
+    completely reworked layout, now options/commands/config all separated by namespaces... but its kind of broken
+
+commit 84e80ba2d818f22dd407cb046f600cdbf8a543ee
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Sun Dec 13 18:28:00 2009 -0600
+
+    Release under the PSF License from here on out
+
+commit c3f7789241baee20388a7a8afe69061b9004704b
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Dec 11 07:04:51 2009 -0600
+
+    Merge branches 'HEAD' and 'option_rework'
+
+commit dd1de15c7024bc9c5bca2dd4183a48d32d97db68
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Dec 11 07:04:21 2009 -0600
+
+    done
+
+commit 215d62383e7496514c6096df8ce19ff7955ecb53
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Dec 11 05:46:32 2009 -0600
+
+    reworking command/option parsgin
+
+commit e8bb32323296ac038600946b140d7f30ac1fd41f
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Dec 11 03:49:27 2009 -0600
+
+    clean up of app framework, command namespaces
+
+commit 2f90fcfbf66a37add415c3da18be72230cf3ed1e
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Dec 11 02:12:34 2009 -0600
+
+    added register_command() decorator, with hidden paramater to hide commands from command list
+
+commit 059f2a334e8c9505d8306dd651d1e3da12c0d49a
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Dec 11 00:06:16 2009 -0600
+
+    global config, no longer pass around the config dict
+
+commit decd553ff1d29ae5febae03f8de725c939a857ae
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Thu Dec 10 22:31:23 2009 -0600
+
+    added helpers paste templates
+
+commit ff51fe699389518d473b52df09056fc89c3f78ce
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 9 18:27:21 2009 -0600
+
+    Merge branches 'HEAD' and 'example_plugin'
+
+commit 28661a447670042a2cdc406ea6eb3cc034ccf06c
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 9 18:26:50 2009 -0600
+
+    moving example plugin to external ./plugins
+
+commit 7d7c2aa0d76cafebb7aa7aa3e695929f756daacc
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 9 18:01:13 2009 -0600
+
+    Merge branches 'HEAD' and 'clibasic_plugin'
+
+commit b6bc622221d76dfe7b08716222c16ae56147945b
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 9 18:00:46 2009 -0600
+
+    moving clibasic to ext plugin
+
+commit e26075b874b38b8742e417002ebe02ccc32e31bb
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Dec 7 15:47:37 2009 -0600
+
+    Release 0.3
+
+commit 707544acdbc6321947215fe61536fca64c853f03
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Dec 7 15:42:08 2009 -0600
+
+    Release 0.3
+
 commit 0b13046dc986165167b0b325c6c27a3a6c042645
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Mon Dec 7 15:39:32 2009 -0600
