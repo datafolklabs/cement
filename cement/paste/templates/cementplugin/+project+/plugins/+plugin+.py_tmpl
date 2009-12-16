@@ -4,10 +4,12 @@
 
 import os
 
+from cement import namespaces
 from cement.core.log import get_logger
-from cement.core.app_setup import CementCommand, CementPlugin, register_hook, \
-                                  register_command, register_plugin
-from cement.core.options import init_parser
+from cement.core.opt import init_parser
+from cement.core.hook import define_hook, register_hook
+from cement.core.command import CementCommand, register_command
+from cement.core.plugin import CementPlugin, register_plugin
 
 log = get_logger(__name__)
 
@@ -29,7 +31,7 @@ class {{plugin}}Plugin(CementPlugin):
             )
       
 @register_hook()
-def global_options_hook(*args, **kwargs):
+def options_hook(*args, **kwargs):
     """
     Register global options.
     """
@@ -37,9 +39,14 @@ def global_options_hook(*args, **kwargs):
     global_options.add_option('--{{plugin}}-global-option', action ='store_true', 
         dest='{{plugin}}_global_option', default=None, help='example global option'
     ) 
-    return global_options
+    return ('global', global_options)
           
-@register_command(name='{{plugin}}-command')              
+@register_hook()
+def post_options_hook(cli_opts, cli_args, **kwargs):
+    """Handle global options here."""
+    pass
+          
+@register_command(name='{{plugin}}-command', namespace='global')              
 class {{plugin}}Command(CementCommand):
     """
     Register global commands.
