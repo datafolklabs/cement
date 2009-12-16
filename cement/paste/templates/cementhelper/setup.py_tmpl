@@ -16,7 +16,7 @@ setup(name='{{project}}_helpers_{{helper}}',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "Cement",
+        "cement == {{cement_version}}",
         ],
     setup_requires=[
         "PasteScript >= 1.7"

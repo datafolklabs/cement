@@ -16,7 +16,6 @@ setup(name='{{project}}',
     install_requires=[
         "ConfigObj",
         "cement == {{cement_version}}",
-        "cement.plugins.clibasic",
         ],
     setup_requires=[
         "PasteScript >= 1.7"

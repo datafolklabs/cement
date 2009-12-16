@@ -45,6 +45,8 @@ valid_only = re.compile(r"[^a-z0-9_]")
 
 from cement.core.app_setup import CEMENT_ABI
 
+CEMENT_VERSION = pkg_resources.get_distribution('cement').version
+
 class CementAppCommand(command.Command):
     """Create a new CLI Application using the Cement Framework.
 
@@ -52,7 +54,7 @@ Example usage::
 
     $ paster cement-app yourproject
     """
-    version = pkg_resources.get_distribution('cement').version
+    version = CEMENT_VERSION
     summary = __doc__.splitlines()[0]
     usage = '\n' + __doc__
     name = None
@@ -123,7 +125,7 @@ Example usage::
             cmd_args.append("--template=%s" % template)
         cmd_args.append(self.name)
         cmd_args.append("cement_abi=%s" % CEMENT_ABI)
-        
+        cmd_args.append("cement_version=%s" % CEMENT_VERSION)
         command.run(cmd_args)
         
         if not self.dry_run:
@@ -143,7 +145,7 @@ Example usage::
 
     $ paster cement-plugin yourproject yourplugin
     """
-    version = pkg_resources.get_distribution('cement').version
+    version = CEMENT_VERSION
     summary = __doc__.splitlines()[0]
     usage = '\n' + __doc__
     name = None
@@ -224,6 +226,7 @@ Example usage::
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("plugin=%s" % self.plugin)
         cmd_args.append("cement_abi=%s" % CEMENT_ABI)
+        cmd_args.append("cement_version=%s" % CEMENT_VERSION)
         
         command.run(cmd_args)
         
@@ -244,7 +247,7 @@ Example usage::
 
     $ paster cement-helper yourproject yourplugin
     """
-    version = pkg_resources.get_distribution('cement').version
+    version = CEMENT_VERSION
     summary = __doc__.splitlines()[0]
     usage = '\n' + __doc__
     name = None
@@ -321,7 +324,7 @@ Example usage::
         cmd_args.append(self.name)
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("helper=%s" % self.helper)
-        
+        cmd_args.append("cement_version=%s" % CEMENT_VERSION)
         command.run(cmd_args)
         
         if not self.dry_run:

@@ -3,8 +3,10 @@
 from paste.script import templates
 from tempita import paste_script_template_renderer
 
-from cement.core.app_setup import CEMENT_ABI
+import pkg_resources
+from pkg_resources import get_distribution
 
+from cement.core.app_setup import CEMENT_ABI
 
 class CementAppTemplate(templates.Template):
     """
@@ -16,6 +18,7 @@ class CementAppTemplate(templates.Template):
     egg_plugins = ['PasteScript', 'Cement']
     vars = [
         templates.var("cement_abi", "Cement ABI Version", default=CEMENT_ABI),
+        templates.var("cement_version", "Cement version", default=None)
         ]
 
     def pre(self, command, output_dir, vars):
@@ -33,7 +36,8 @@ class CementPluginTemplate(templates.Template):
     vars = [
         templates.var("plugin", "cement plugin name", default=None),
         templates.var("project", "Parent application this plugin is for", default=None),
-        templates.var("cement_abi", "Cement ABI Version", default=CEMENT_ABI)
+        templates.var("cement_abi", "Cement ABI Version", default=CEMENT_ABI),
+        templates.var("cement_version", "Cement version", default=None)
         ]
 
     def pre(self, command, output_dir, vars):
@@ -51,6 +55,7 @@ class CementHelperTemplate(templates.Template):
     vars = [
         templates.var("helper", "cement helper name", default=None),
         templates.var("project", "Parent application this plugin is for", default=None),
+        templates.var("cement_version", "Cement version", default=None)
         ]
 
     def pre(self, command, output_dir, vars):
