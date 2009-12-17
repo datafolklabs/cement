@@ -1,13 +1,13 @@
 
 from cement import namespaces, hooks
 
-def define_hook(namespace):
+def define_hook(hook_name):
     """
     Define a hook namespace that plugins can register hooks in.
     """
-    if hooks.has_key(namespace):
-        raise CementRuntimeError, "Hook name '%s' already defined!" % namespace
-    hooks[namespace] = []
+    if hooks.has_key(hook_name):
+        raise CementRuntimeError, "Hook name '%s' already defined!" % hook_name
+    hooks[hook_name] = []
     
     
 def register_hook(**kwargs):

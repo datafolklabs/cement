@@ -1,8 +1,6 @@
 """This is the core plugin for {{package}}."""
 
 import sys, os
-from pkg_resources import get_distribution
-import logging
 
 from cement import namespaces
 from cement.core.log import get_logger
