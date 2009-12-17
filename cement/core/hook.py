@@ -1,5 +1,8 @@
 
 from cement import namespaces, hooks
+from cement.core.log import get_logger
+
+log = get_logger(__name__)
 
 def define_hook(hook_name):
     """
