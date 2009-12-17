@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.4'
+version = '0.4.1'
 
 LONG = """
 Cement is a basic Python CLI Application Framework.  Almost every command
@@ -48,9 +48,9 @@ setup(name='cement',
         ],
     # FIX ME: This installs, but requiring CementABI == 0.4.20091211 doesn't
     # work.    
-    provides=[
-        "CementABI (0.4.20091211)",
-        ],
+    #provides=[
+    #    "CementABI (0.4.20091211)",
+    #    ],
     entry_points="""
         [paste.global_paster_command]
         cement-app = cement.paste.commands:CementAppCommand
