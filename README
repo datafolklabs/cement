@@ -7,7 +7,7 @@ DESCRIPTION:
 Cement is a CLI Application Framework for Python. It promotes code re-use by 
 way of plugins and helper libraries that can be maintained internally, or 
 shared with the community. For a solid development base, build your next cli 
-on cement!
+on Cement.
 
 At a minimum, Cement easily sets up the following:
 

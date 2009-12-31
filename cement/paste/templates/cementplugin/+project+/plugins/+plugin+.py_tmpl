@@ -58,7 +58,7 @@ class {{plugin}}Command(CementCommand):
         print "{{plugin}} global command help() method."
 
 
-@register_command(name='{{plugin}}_command', namespace='{{plugin}}')              
+@register_command(name='{{plugin}}-sub-command', namespace='{{plugin}}')              
 class {{plugin}}LocalCommand(CementCommand):
     """
     Register local commands.

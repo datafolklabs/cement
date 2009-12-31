@@ -57,7 +57,7 @@ def load_plugin(plugin):
                    [plugin], -1)
             getattr(plugin_module, plugin)
         except AttributeError, e:
-            raise CementRuntimeError, "Failed loading plugin '%s', possibly syntax errors?" % plugin
+            raise CementRuntimeError, "Failed loading plugin '%s', is it installed?" % plugin
         
     plugin_config_file = os.path.join(
         namespaces['global'].config['plugin_config_dir'], '%s.plugin' % plugin

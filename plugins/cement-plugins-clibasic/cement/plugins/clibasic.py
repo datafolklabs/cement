@@ -30,7 +30,8 @@ class CLIBasicPlugin(CementPlugin):
             version = VERSION,
             description = 'Basic CLI Commands for Cement Applications',
             required_abi = REQUIRED_CEMENT_ABI,
-            version_banner=BANNER
+            version_banner=BANNER,
+            is_hidden=True
             )
         
 @register_hook()
@@ -119,7 +120,7 @@ class ListPluginsCommand(CementCommand):
                 )
         print
 
-@register_command(name='list-hooks', is_hidden=True, namespace='clibasic')
+@register_command(name='list-hooks', is_hidden=False, namespace='clibasic')
 class ListHooksCommand(CementCommand):
     def run(self):
         from cement import hooks
