@@ -10,6 +10,7 @@ class CementNamespace(object):
         self.description = kw.get('description', '')
         self.commands = kw.get('commands', {})
         self.config = kw.get('config', {'config_source': ['defaults']})
+        self.is_hidden = kw.get('is_hidden', False)
         
         if not kw.get('version_banner'):
             vb = "%s version %s" % (self.label, self.version)
