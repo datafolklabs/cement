@@ -90,13 +90,24 @@ def parse_options(namespace='global'):
     if namespace == 'global':
         for nam in namespaces: 
             if nam != 'global' and namespaces[nam].commands:
-                if line == '    ':
-                    line += '%s*' % nam
-                elif len(line) + len(nam) < 55:
-                    line += ' - %s*' % nam
+                if namespaces[nam].is_hidden:
+                    pass
                 else:
-                    cmd_txt += "%s \n" % line
-                    line = '    '
+                    # dirty, but have to account for namespaces with only 
+                    # hidden commands... which we don't want to show
+                    show_namespace = False
+                    for c in namespaces[nam].commands:
+                        if not namespaces[nam].commands[c].is_hidden:
+                            show_namespace = True
+                            break
+                    if show_namespace:        
+                        if line == '    ':
+                            line += '%s*' % nam
+                        elif len(line) + len(nam) < 55:
+                            line += ' - %s*' % nam
+                        else:
+                            cmd_txt += "%s \n" % line
+                            line = '    '
 
     if line != '    ':
         cmd_txt += "%s\n" % line
