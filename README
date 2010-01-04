@@ -28,6 +28,9 @@ developing a command line type application. That said, applications using
 cement can also share plugins with either cement or other applications using 
 cement.
 
+The Cement CLI Application Framework for Python is Open Source and is 
+distributed under a modified Python Software Foundation License.
+
 
 GETTING STARTED:
 

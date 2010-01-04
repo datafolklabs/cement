@@ -120,7 +120,7 @@ class ListPluginsCommand(CementCommand):
                 )
         print
 
-@register_command(name='list-hooks', is_hidden=False, namespace='clibasic')
+@register_command(name='list-hooks', namespace='clibasic')
 class ListHooksCommand(CementCommand):
     def run(self):
         from cement import hooks
@@ -131,16 +131,15 @@ class ListHooksCommand(CementCommand):
             print h
         print
         
-@register_command(name='list-hidden-commands')
+@register_command(name='list-hidden-commands', namespace='clibasic')
 class ListHiddenCommandsCommand(CementCommand):
     def run(self):
-        from cement import commands
         print
         print 'Hidden commands'
         print '-' * 77
-        for nam in commands:
-            for cmd in commands[nam]:
-                if commands[nam][cmd].is_hidden:
+        for nam in namespaces:
+            for cmd in namespaces[nam].commands:
+                if namespaces[nam].commands[cmd].is_hidden:
                     if nam != 'global':
                         print '%s %s' % (nam, cmd)
                     else:
