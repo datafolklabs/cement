@@ -231,7 +231,7 @@ Example usage::
         cmd_args.append("plugin=%s" % self.plugin)
         cmd_args.append("cement_abi=%s" % CEMENT_ABI)
         cmd_args.append("cement_version=%s" % CEMENT_VERSION)
-        cmd_args.append("cement__next_version=%s" % CEMENT_NEXT_VERSION)
+        cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         
         command.run(cmd_args)
         
@@ -330,7 +330,7 @@ Example usage::
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("helper=%s" % self.helper)
         cmd_args.append("cement_version=%s" % CEMENT_VERSION)
-        cmd_args.append("cement__next_version=%s" % CEMENT_NEXT_VERSION)
+        cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         command.run(cmd_args)
         
         if not self.dry_run:
