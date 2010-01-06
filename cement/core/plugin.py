@@ -21,8 +21,15 @@ def register_plugin(**kwargs):
         ...
     """
     def decorate(func):
+        nms = func.__module__.split('.')
+
         ensure_abi_compat(func.__name__, func().required_abi)
-        plugin_name = func.__module__.split('.')[-1]
+        if kwargs.get('name', None):
+            plugin_name = kwargs['name']
+        elif nms[-1] == 'pluginmain':
+            plugin_name = nms[-2:][0]
+        else:
+            plugin_name = nms[-1]
         define_namespace(plugin_name, func())
         return func
     return decorate
@@ -46,18 +53,47 @@ def load_plugin(plugin):
         app_module = __import__(config['app_module'])
     except ImportError, e:
         raise CementConfigError, e
+    
+    loaded = False
+    while True:
+        # simple style : myapp/plugins/myplugin.py
+        try:
+            plugin_module = __import__('%s.plugins' % config['app_module'], globals(), locals(),
+                   [plugin], -1)
+            getattr(plugin_module, plugin)
+            if namespaces.has_key(plugin):
+                loaded = True
+                break
+        except AttributeError, e:
+            pass
         
-    try:
-        plugin_module = __import__('%s.plugins' % config['app_module'], globals(), locals(),
-               [plugin], -1)
-        getattr(plugin_module, plugin)
-    except AttributeError, e:
+        # complex style : myapp/plugins/myplugin/pluginmain.py
+        try:
+            plugin_module = __import__('%s.plugins.%s' % (config['app_module'], plugin), globals(), locals(),
+                   ['pluginmain'], -1)
+            getattr(plugin_module, 'pluginmain')
+
+            if namespaces.has_key(plugin):
+                loaded = True
+                break
+        except AttributeError, e:
+            pass
+        except ImportError, e:
+            pass
+            
+        # load from cement plugins
         try:
             plugin_module = __import__('cement.plugins', globals(), locals(),
                    [plugin], -1)
             getattr(plugin_module, plugin)
+            if namespaces.has_key(plugin):
+                loaded = True
+                break
         except AttributeError, e:
-            raise CementRuntimeError, "Failed loading plugin '%s', is it installed?" % plugin
+            pass
+        
+    if not loaded:
+        raise CementRuntimeError, "Failed loading plugin '%s', is it installed?" % plugin
         
     plugin_config_file = os.path.join(
         namespaces['global'].config['plugin_config_dir'], '%s.plugin' % plugin
