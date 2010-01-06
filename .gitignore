@@ -1,6 +1,9 @@
 *.pyc
-*egg-info
+*egg*
 env/
+var/
+log/
+tmp/
 examples/CementExample/cement_example.log
 examples/CementExample/var
 build
