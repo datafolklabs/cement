@@ -1,3 +1,87 @@
+commit 3224f050057031b8bb5be906c549323d226f3c89
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Jan 6 17:04:18 2010 -0600
+
+    convert templates to new style plugins
+
+commit 4d15df3c6ddfecaa40e54621fa222803f638c3d3
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Jan 6 13:56:54 2010 -0600
+
+    adding debug output for plugin loading
+
+commit 73520d4b1a350230208e64eaef6d348364dfacd1
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Jan 5 20:53:33 2010 -0600
+
+    new feature of complex plugins
+
+commit f2b0844434e35b6d87dd47154c7b6707521072fd
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Jan 5 19:17:32 2010 -0600
+
+    Adding better install_requires to templates in lack of having an abi compat feature in setuptools
+
+commit d4768967fecc635a5464018247f7570cd132895c
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Jan 4 13:04:30 2010 -0600
+
+    Modified PSF License
+
+commit 7dfa7c39d80f1a7bff1cf56ca28ebda789fda0e4
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 30 23:22:48 2009 -0600
+
+    cleanup
+
+commit c1b005b63df8c5955589582ecf37783ece47c6ee
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 30 23:22:23 2009 -0600
+
+    added the ability to hide namespaces, even if all commands aren't hidden
+
+commit 328ad7cb775d24630df8c866ff6e66e960860326
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 30 23:22:16 2009 -0600
+
+    added the ability to hide namespaces, even if all commands aren't hidden
+
+commit c604ac4046bdbbb33c012c5be6367fc4d926d8a0
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 16 21:37:35 2009 -0600
+
+    0.4.1 development version
+
+commit eb940ce4920e20a7d7fb52907f86271951d62a67
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 16 21:35:28 2009 -0600
+
+    import missing log
+
+commit 63132853c7f53cf3ed32af9c9ab101f4ec0a39f3
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Dec 16 21:34:32 2009 -0600
+
+    removing un-necessary requires, cleanup hook
+
+commit 6367855aff488907153f0afb2a7faeb77a710af8
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Dec 15 21:39:47 2009 -0600
+
+    Minor fix for 0.4 (not upping version)
+
+commit 7e142b5002e0e079b69c3b6771b4687012fcb5cf
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Dec 15 21:21:05 2009 -0600
+
+    Merge branches 'HEAD' and 'portland'
+
+commit 3c60298b52fcd07b23334dbbce261cb21657383a
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Dec 15 21:16:10 2009 -0600
+
+    Release 0.4
+
 commit 62eb319ff168e0bc7cfc882e55bee4c38023bd68
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Tue Dec 15 21:14:26 2009 -0600
