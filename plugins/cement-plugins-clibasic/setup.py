@@ -15,7 +15,7 @@ setup(name='cement.plugins.clibasic',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "cement == 0.4.1",
+        "cement >=0.4, <0.5",
         ],
     setup_requires=[
         "PasteScript >= 1.7",

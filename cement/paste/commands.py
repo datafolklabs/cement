@@ -47,6 +47,9 @@ from cement.core.configuration import CEMENT_ABI
 
 CEMENT_VERSION = pkg_resources.get_distribution('cement').version
 
+(base, major) = CEMENT_VERSION.split('.')[:2]
+CEMENT_NEXT_VERSION = float("%s.%s" % (base, major)) + 0.1
+
 class CementAppCommand(command.Command):
     """Create a new CLI Application using the Cement Framework.
 
@@ -126,6 +129,7 @@ Example usage::
         cmd_args.append(self.name)
         cmd_args.append("cement_abi=%s" % CEMENT_ABI)
         cmd_args.append("cement_version=%s" % CEMENT_VERSION)
+        cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         command.run(cmd_args)
         
         if not self.dry_run:
@@ -227,6 +231,7 @@ Example usage::
         cmd_args.append("plugin=%s" % self.plugin)
         cmd_args.append("cement_abi=%s" % CEMENT_ABI)
         cmd_args.append("cement_version=%s" % CEMENT_VERSION)
+        cmd_args.append("cement__next_version=%s" % CEMENT_NEXT_VERSION)
         
         command.run(cmd_args)
         
@@ -325,6 +330,7 @@ Example usage::
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("helper=%s" % self.helper)
         cmd_args.append("cement_version=%s" % CEMENT_VERSION)
+        cmd_args.append("cement__next_version=%s" % CEMENT_NEXT_VERSION)
         command.run(cmd_args)
         
         if not self.dry_run:

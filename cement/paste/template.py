@@ -18,7 +18,8 @@ class CementAppTemplate(templates.Template):
     egg_plugins = ['PasteScript', 'Cement']
     vars = [
         templates.var("cement_abi", "Cement ABI Version", default=CEMENT_ABI),
-        templates.var("cement_version", "Cement version", default=None)
+        templates.var("cement_version", "Cement version", default=None),
+        templates.var("cement_next_version", "Cement Next Version", default=None)
         ]
 
     def pre(self, command, output_dir, vars):
@@ -37,7 +38,8 @@ class CementPluginTemplate(templates.Template):
         templates.var("plugin", "cement plugin name", default=None),
         templates.var("project", "Parent application this plugin is for", default=None),
         templates.var("cement_abi", "Cement ABI Version", default=CEMENT_ABI),
-        templates.var("cement_version", "Cement version", default=None)
+        templates.var("cement_version", "Cement version", default=None),
+        templates.var("cement_next_version", "Cement Next Version", default=None)
         ]
 
     def pre(self, command, output_dir, vars):
@@ -55,7 +57,8 @@ class CementHelperTemplate(templates.Template):
     vars = [
         templates.var("helper", "cement helper name", default=None),
         templates.var("project", "Parent application this plugin is for", default=None),
-        templates.var("cement_version", "Cement version", default=None)
+        templates.var("cement_version", "Cement version", default=None),
+        templates.var("cement_next_version", "Cement Next Version", default=None)
         ]
 
     def pre(self, command, output_dir, vars):

@@ -32,7 +32,7 @@ setup(name='cement',
     author='BJ Dierkes',
     author_email='wdierkes@5dollarwhitebox.org',
     url='http://github.com/derks/cement',
-    license='GNU GPLv3',
+    license='Python Software Foundation (PSF)',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     zip_safe=False,
@@ -44,7 +44,6 @@ setup(name='cement',
         ],
     setup_requires=[
         "PasteScript >= 1.7",
-        "ConfigObj"
         ],
     # FIX ME: This installs, but requiring CementABI == 0.4.20091211 doesn't
     # work.    
