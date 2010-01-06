@@ -3,10 +3,13 @@ import os
         
 from cement import namespaces
 from cement.core.exc import *
+from cement.core.log import get_logger
 from cement.core.hook import run_hooks
 from cement.core.configuration import set_config_opts_per_file
 from cement.core.namespace import CementNamespace, define_namespace
 from cement.core.configuration import ensure_abi_compat
+
+log = get_logger(__name__)
 
 class CementPlugin(CementNamespace):
     def __init__(self, *args, **kwargs):
@@ -63,23 +66,27 @@ def load_plugin(plugin):
             getattr(plugin_module, plugin)
             if namespaces.has_key(plugin):
                 loaded = True
+                log.debug("loaded %s from %s.plugins.%s.py" % \
+                    (plugin, config['app_module'], plugin))
                 break
         except AttributeError, e:
-            pass
+            log.debug("AttributeError => %s" % e)
         
         # complex style : myapp/plugins/myplugin/pluginmain.py
         try:
             plugin_module = __import__('%s.plugins.%s' % (config['app_module'], plugin), globals(), locals(),
                    ['pluginmain'], -1)
-            getattr(plugin_module, 'pluginmain')
 
+            getattr(plugin_module, 'pluginmain')
             if namespaces.has_key(plugin):
                 loaded = True
+                log.debug("loaded %s from %s.plugins.%s.pluginmain.py" % \
+                    (plugin, config['app_module'], plugin))
                 break
         except AttributeError, e:
-            pass
+            log.debug("AttributeError => %s" % e)
         except ImportError, e:
-            pass
+            log.debug("ImportError => %s" % e)
             
         # load from cement plugins
         try:
@@ -88,9 +95,13 @@ def load_plugin(plugin):
             getattr(plugin_module, plugin)
             if namespaces.has_key(plugin):
                 loaded = True
+                log.debug("loaded %s from cement.plugins.%s.py" % \
+                    (plugin, plugin))
                 break
         except AttributeError, e:
-            pass
+            log.debug("AttributeError => %s" % e)
+        
+        break
         
     if not loaded:
         raise CementRuntimeError, "Failed loading plugin '%s', is it installed?" % plugin
