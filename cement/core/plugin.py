@@ -68,6 +68,7 @@ def load_plugin(plugin):
                 loaded = True
                 log.debug("loaded %s from %s.plugins.%s.py" % \
                     (plugin, config['app_module'], plugin))
+                print("Deprecated Feature: old style plugins (i.e. myapp.plugins.myplugin.py) are deprecated.  Please see http://wiki.github.com/derks/cement/plugin-support")
                 break
         except AttributeError, e:
             log.debug("AttributeError => %s" % e)
