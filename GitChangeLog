@@ -1,3 +1,15 @@
+commit e6e82f221a45bdc978008f6ed9d96c4a58db0eef
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Jan 6 17:14:45 2010 -0600
+
+    Release 0.4.2
+
+commit a6d2902b2c7d47c47bd57411526e91b97df3c8e6
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Jan 6 17:14:23 2010 -0600
+
+    print deprecation warning
+
 commit 3224f050057031b8bb5be906c549323d226f3c89
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Wed Jan 6 17:04:18 2010 -0600
