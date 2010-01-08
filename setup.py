@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.4.2'
+version = '0.4.3'
 
 LONG = """
 Cement is a CLI Application Framework for Python. It promotes code re-use by
