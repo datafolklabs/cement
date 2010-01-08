@@ -1,5 +1,6 @@
 
 from cement import namespaces, hooks
+from cement.core.exc import CementRuntimeError
 from cement.core.log import get_logger
 
 log = get_logger(__name__)

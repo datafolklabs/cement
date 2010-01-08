@@ -1,7 +1,7 @@
 
 import os
         
-from cement import namespaces
+from cement import namespaces, hooks
 from cement.core.exc import *
 from cement.core.log import get_logger
 from cement.core.hook import run_hooks
@@ -48,7 +48,7 @@ def load_plugin(plugin):
     """
     global namespaces
     config = namespaces['global'].config
-    
+
     if config.has_key('show_plugin_load') and config['show_plugin_load']:
         print 'loading %s plugin' % plugin
     
@@ -56,7 +56,7 @@ def load_plugin(plugin):
         app_module = __import__(config['app_module'])
     except ImportError, e:
         raise CementConfigError, e
-    
+        
     loaded = False
     while True:
         # simple style : myapp/plugins/myplugin.py
@@ -76,7 +76,6 @@ def load_plugin(plugin):
         try:
             plugin_module = __import__('%s.plugins.%s' % (config['app_module'], plugin), globals(), locals(),
                    ['pluginmain'], -1)
-
             getattr(plugin_module, 'pluginmain')
             if namespaces.has_key(plugin):
                 loaded = True
@@ -91,9 +90,9 @@ def load_plugin(plugin):
         
         try:
             plugin_module = __import__('%s.plugins.%s' % (config['app_module'], plugin), globals(), locals(),
-                   [plugin], -1)
-
+                   [plugin], -1)            
             getattr(plugin_module, plugin)
+
             if namespaces.has_key(plugin):
                 loaded = True
                 log.debug("loaded %s from %s.plugins.%s.%s.py" % \
@@ -120,9 +119,9 @@ def load_plugin(plugin):
         # complex style from cement : cement/plugins/myplugin/pluginmain.py
         try:
             plugin_module = __import__('cement.plugins.%s' % plugin, globals(), locals(),
-                   ['pluginmain'], -1)
+                   [plugin], -1)
 
-            getattr(plugin_module, 'pluginmain')
+            getattr(plugin_module, plugin)
             if namespaces.has_key(plugin):
                 loaded = True
                 log.debug("loaded %s from cement.plugins.%s.%s.py" % \
@@ -134,7 +133,7 @@ def load_plugin(plugin):
             log.debug("ImportError => %s" % e)
             
         break
-        
+    
     if not loaded:
         raise CementRuntimeError, "Failed loading plugin '%s', is it installed?" % plugin
         
