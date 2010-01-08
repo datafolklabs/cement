@@ -68,7 +68,6 @@ def load_plugin(plugin):
                 loaded = True
                 log.debug("loaded %s from %s.plugins.%s.py" % \
                     (plugin, config['app_module'], plugin))
-                print("Deprecated Feature: old style plugins (i.e. myapp.plugins.myplugin.py) are deprecated.  Please see http://wiki.github.com/derks/cement/plugin-support")
                 break
         except AttributeError, e:
             log.debug("AttributeError => %s" % e)
@@ -83,6 +82,22 @@ def load_plugin(plugin):
                 loaded = True
                 log.debug("loaded %s from %s.plugins.%s.pluginmain.py" % \
                     (plugin, config['app_module'], plugin))
+                print("Deprecated Feature: rename pluginmain.py to %s.py.  Please see http://wiki.github.com/derks/cement/plugin-support" % plugin)    
+                break
+        except AttributeError, e:
+            log.debug("AttributeError => %s" % e)
+        except ImportError, e:
+            log.debug("ImportError => %s" % e)
+        
+        try:
+            plugin_module = __import__('%s.plugins.%s' % (config['app_module'], plugin), globals(), locals(),
+                   [plugin], -1)
+
+            getattr(plugin_module, plugin)
+            if namespaces.has_key(plugin):
+                loaded = True
+                log.debug("loaded %s from %s.plugins.%s.%s.py" % \
+                    (plugin, config['app_module'], plugin, plugin))
                 break
         except AttributeError, e:
             log.debug("AttributeError => %s" % e)
@@ -110,8 +125,8 @@ def load_plugin(plugin):
             getattr(plugin_module, 'pluginmain')
             if namespaces.has_key(plugin):
                 loaded = True
-                log.debug("loaded %s from cement.plugins.%s.pluginmain.py" % \
-                    (plugin, plugin))
+                log.debug("loaded %s from cement.plugins.%s.%s.py" % \
+                    (plugin, plugin, plugin))
                 break
         except AttributeError, e:
             log.debug("AttributeError => %s" % e)
