@@ -102,6 +102,22 @@ def load_plugin(plugin):
         except AttributeError, e:
             log.debug("AttributeError => %s" % e)
         
+        # complex style from cement : cement/plugins/myplugin/pluginmain.py
+        try:
+            plugin_module = __import__('cement.plugins.%s' % plugin, globals(), locals(),
+                   ['pluginmain'], -1)
+
+            getattr(plugin_module, 'pluginmain')
+            if namespaces.has_key(plugin):
+                loaded = True
+                log.debug("loaded %s from cement.plugins.%s.pluginmain.py" % \
+                    (plugin, plugin))
+                break
+        except AttributeError, e:
+            log.debug("AttributeError => %s" % e)
+        except ImportError, e:
+            log.debug("ImportError => %s" % e)
+            
         break
         
     if not loaded:
