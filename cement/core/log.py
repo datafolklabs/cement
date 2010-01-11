@@ -5,7 +5,7 @@ from logging.handlers import RotatingFileHandler
 
 from cement import namespaces
 
-def setup_logging(base_name, clear_loggers=False, level='INFO'):
+def setup_logging(base_name, clear_loggers=True, level='INFO'):
     """
     Primary Cement method to setup logging.
     """
@@ -13,24 +13,31 @@ def setup_logging(base_name, clear_loggers=False, level='INFO'):
     config = namespaces['global'].config
 
     # remove any previously setup handlers from other libraries
-    for i in logging.getLogger().handlers:
-        logging.getLogger().removeHandler(i)
+    if clear_loggers:
+        for i in logging.getLogger().handlers:
+            logging.getLogger().removeHandler(i)
+        for i in logging.getLogger(base_name).handlers:
+            logging.getLogger(base_name).removeHandler(i)
 
     log = logging.getLogger(base_name)
-    
+       
+    # log level
     if config.has_key('debug') and config['debug']:
         log_level = logging.DEBUG
-        console_formatter = logging.Formatter(
-            "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
-            )
     else:
         if level.upper() not in ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']:
             log_level = logging.INFO
         else:
             log_level = eval("logging.%s" % level.upper())
             
+    # console formater    
+    if log_level == logging.DEBUG:
+        console_formatter = logging.Formatter(
+                "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+                )   
+    else: 
         console_formatter = logging.Formatter("%(message)s")
-       
+        
     if config.has_key('log_file'):
         file_handler = RotatingFileHandler(
             config['log_file'], maxBytes=512000, backupCount=4

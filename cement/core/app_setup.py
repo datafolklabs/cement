@@ -22,6 +22,7 @@ def register_default_hooks():
     # define default hooks
     define_hook('options_hook')
     define_hook('post_options_hook')
+    define_hook('validate_config_hook')
             
 def lay_cement(default_app_config=None, version_banner=None):
     """
@@ -50,21 +51,26 @@ def lay_cement(default_app_config=None, version_banner=None):
         )
     define_namespace('global', namespace)
     namespaces['global'].config.update(default_app_config)
-    validate_config(namespaces['global'].config)
     
     register_default_hooks()
+    
+    validate_config(namespaces['global'].config)
     
     for cf in namespaces['global'].config['config_files']:
         set_config_opts_per_file('global', 
                                  namespaces['global'].config['app_module'], 
                                  cf)
     # initial logger
-    setup_logging('cement', clear_loggers=True)
-    log = get_logger(__name__)                             
+    setup_logging('cement')
+    #log = get_logger(__name__)                             
     
     load_all_plugins()
-    setup_logging('cement', clear_loggers=True)
+    setup_logging('cement')
     setup_logging(namespaces['global'].config['app_module'])
+    
+    # allow plugins to add config validation
+    for res in run_hooks('validate_config_hook', config=namespaces['global'].config):
+        pass
     
 
 

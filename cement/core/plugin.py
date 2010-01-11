@@ -160,3 +160,4 @@ def load_all_plugins():
                 pass
             else:
                 namespaces[namespace].options.add_option(opt)
+    
