@@ -59,7 +59,14 @@ def run_command(command_name):
                 (namespace, namespace)
         
     (cli_opts, cli_args) = parse_options(namespace=namespace)
-    set_config_opts_per_cli_opts(namespace, cli_opts)
+    if namespace == 'global':
+        set_config_opts_per_cli_opts('global', cli_opts)
+    else:
+        # if it merges in global ooptions, then it overrites them too.
+        if  namespaces[namespace].config.has_key('merge_global_options') and \
+            namespaces[namespace].config['merge_global_options']:
+            set_config_opts_per_cli_opts('global', cli_opts)    
+        set_config_opts_per_cli_opts(namespace, cli_opts)
     
     # FIX ME: need a global_pre_command_hook here so that clibasic can
     # look for -C and if so, parse the passed config files into the dict.
