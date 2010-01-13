@@ -81,6 +81,7 @@ setup(name='cement',
         "tempita",
         ],
     setup_requires=[
+        "ConfigObj",
         "PasteScript >= 1.7",
         ],
     # FIX ME: This installs, but requiring CementABI == 0.4.20091211 doesn't

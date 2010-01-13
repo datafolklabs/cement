@@ -15,9 +15,7 @@ from cement.core.opt import init_parser, get_options, Options
 from cement.core.hook import define_hook, run_hooks
 from cement.core.command import CementCommand
 
-
-log = get_logger(__name__)
-    
+log = get_logger(__name__)    
 def register_default_hooks():
     # define default hooks
     define_hook('options_hook')
@@ -61,12 +59,8 @@ def lay_cement(default_app_config=None, version_banner=None):
                                  namespaces['global'].config['app_module'], 
                                  cf)
     # initial logger
-    setup_logging('cement')
-    #log = get_logger(__name__)                             
-    
+    setup_logging()
     load_all_plugins()
-    setup_logging('cement')
-    setup_logging(namespaces['global'].config['app_module'])
     
     # allow plugins to add config validation
     for res in run_hooks('validate_config_hook', config=namespaces['global'].config):

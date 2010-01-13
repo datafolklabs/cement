@@ -2,15 +2,15 @@
 # This is an example of a cement plugin configuration file.  Once parsed, the
 # values from here will be accessible from:
 #
-# namespaces['example'].config['param'] = value
+# namespaces[{{plugin}}].config['param'] = value
 # 
 #
-# Some options are built into cement (suchas merge_global_options) and 
+# Some options are built into cement (such as merge_global_options) and 
 # some are not.
 #
 
 # Whether or not to merge global options 
-merge_global_options = false
+merge_global_options = true
 
 debug = false
 param1 = value1

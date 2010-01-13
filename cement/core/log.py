@@ -5,7 +5,7 @@ from logging.handlers import RotatingFileHandler
 
 from cement import namespaces
 
-def setup_logging(base_name, clear_loggers=True, level='INFO'):
+def setup_logging(clear_loggers=True, level=None):
     """
     Primary Cement method to setup logging.
     """
@@ -16,45 +16,54 @@ def setup_logging(base_name, clear_loggers=True, level='INFO'):
     if clear_loggers:
         for i in logging.getLogger().handlers:
             logging.getLogger().removeHandler(i)
-        for i in logging.getLogger(base_name).handlers:
-            logging.getLogger(base_name).removeHandler(i)
-
-    log = logging.getLogger(base_name)
-       
+        for i in logging.getLogger(config['app_module']).handlers:
+            logging.getLogger(config['app_module']).removeHandler(i)
+        for i in logging.getLogger('cement').handlers:
+            logging.getLogger('cement').removeHandler(i)
+            
+    app_log = logging.getLogger(config['app_module'])
+    cement_log = logging.getLogger('cement')
+    
     # log level
     if config.has_key('debug') and config['debug']:
-        log_level = logging.DEBUG
+        level = 'DEBUG'
+    elif level and level.upper() in ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']:
+        level = level
+    elif config.has_key('log_level'):
+        level = config['log_level']
     else:
-        if level.upper() not in ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']:
-            log_level = logging.INFO
-        else:
-            log_level = eval("logging.%s" % level.upper())
-            
-    # console formater    
+        level = 'INFO'
+
+    log_level = eval("logging.%s" % level.upper())
+    app_log.setLevel(log_level)
+    cement_log.setLevel(log_level)
+    
+    # console formatter    
+    console = logging.StreamHandler()
     if log_level == logging.DEBUG:
-        console_formatter = logging.Formatter(
-                "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
-                )   
+        console.setFormatter(
+            logging.Formatter("%(asctime)s (%(levelname)s) %(name)s : %(message)s")
+            )
     else: 
-        console_formatter = logging.Formatter("%(message)s")
-        
+        console.setFormatter(
+            logging.Formatter("%(levelname)s: %(message)s")
+            )
+    console.setLevel(log_level)   
+    app_log.addHandler(console)    
+    cement_log.addHandler(console)
+    
+    # file formatter
     if config.has_key('log_file'):
         file_handler = RotatingFileHandler(
             config['log_file'], maxBytes=512000, backupCount=4
             )
-        file_handler.setLevel(log_level)
-        formatter = logging.Formatter(
-            "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+        file_handler.setFormatter( 
+            logging.Formatter("%(asctime)s (%(levelname)s) %(name)s : %(message)s")
             )
-        log.addHandler(file_handler)
-        file_handler.setFormatter(formatter)
-    
-    console = logging.StreamHandler()
-    console.setLevel(log_level)
-    console.setFormatter(console_formatter)
-    log.addHandler(console)
-    log.setLevel(log_level)
-    
+        file_handler.setLevel(log_level)   
+        app_log.addHandler(file_handler)
+        cement_log.addHandler(file_handler)
+        
 def get_logger(name):
     """
     Used throughout the application to get a logger opject with a namespace

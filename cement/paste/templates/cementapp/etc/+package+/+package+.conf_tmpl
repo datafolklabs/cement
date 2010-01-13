@@ -26,6 +26,9 @@ plugin_dir = ./var/lib/{{package}}/plugins.d
 # toggle debug output... can be true, false, yes, no, 1, 0
 debug = false 
 
+# toggle the log level... can be info, warn, error, fatal, debug
+log_level = warn
+
 # add any config options you'd like here
 #
 # myoption = this is my option
