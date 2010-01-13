@@ -14,26 +14,41 @@ class SimpleCache(object):
         if not self.path:
             self.path = os.path.join(namespaces['global'].config['data_dir'],
                                      'simple_cache.pickle')
+        self.gen_cache()
+        
+    def gen_cache(self, clear_existing=False):
+        """Generate a pickle cache."""
         if not os.path.exists(os.path.dirname(self.path)):
             os.makedirs(os.path.exists(os.path.dirname(self.path)))
         
+        if clear_existing:
+            os.remove(self.path)
+            
         if not os.path.exists(self.path):
-            pickle.dump(self.cache, open(self.path, 'w'))
-        
-        self.load()
+            f = open(self.path, 'wb')
+            pickle.dump(self.cache, f)
+            f.close()
         
     def load(self):
-        self.cache = pickle.load(open(self.path, 'r'))
+        """Load the pickle cache into self.cache dict."""
+        self.cache = pickle.load(open(self.path, 'rb'))
         
     def store(self, key=None, value=None):
+        """Store a key/value pair, overwrite if existing."""
+        
+        log.debug('storing cache: %s => %s' % (key, value))
         if not key:
             log.warn('warning, no key supplied for cache.')
         else:
             self.load()
             self.cache[key] = value
-            pickle.dump(self.cache, open(self.path, 'w'))
+            f = open(self.path, 'wb')
+            pickle.dump(self.cache, f)
+            f.close()
+            self.load()
     
     def get(self, key=None):
+        log.debug('retrieving cache: %s' % key)
         if not key:
             return None
         self.load()
@@ -41,3 +56,10 @@ class SimpleCache(object):
             return self.cache[key]
         else:
             return None
+    
+    def drop(self, key):
+        log.debug('dropping cache: %s' % key)
+        self.load()
+        if self.cache.has_key(key):
+            self.cache.pop(key)
+            return True
