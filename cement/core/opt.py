@@ -81,12 +81,13 @@ def parse_options(namespace='global'):
             else:
                 if line == '    ':
                     line += '%s' % c
-                elif len(line) + len(c) < 55:
-                    line += ' - %s' % c
+                elif len(line) + len(c) < 75:
+                    line += ', %s' % c
                 else:
                     cmd_txt += "%s \n" % line
-                    line = '    '
+                    line = '    %s' % c
 
+    # determine whether to display namespaces
     if namespace == 'global':
         for nam in namespaces: 
             if nam != 'global' and namespaces[nam].commands:
@@ -99,13 +100,16 @@ def parse_options(namespace='global'):
                     for c in namespaces[nam].commands:
                         if not namespaces[nam].commands[c].is_hidden:
                             show_namespace = True
-                            if line == '    ':
-                                line += '%s*' % nam
-                            elif len(line) + len(nam) < 55:
-                                line += ' - %s*' % nam
-                            else:
-                                cmd_txt += "%s \n" % line
-                                line = '    '
+                            break
+
+                    if show_namespace:       
+                        if line == '    ':
+                            line += '%s*' % nam
+                        elif len(line) + len(nam) < 75:
+                            line += ', %s*' % nam
+                        else:
+                            cmd_txt += "%s \n" % line
+                            line = '    %s*' % nam
 
     if line != '    ':
         cmd_txt += "%s\n" % line
