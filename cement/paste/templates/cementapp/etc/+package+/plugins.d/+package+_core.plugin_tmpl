@@ -3,7 +3,7 @@
 # This is an example of a cement plugin configuration file.  Once parsed, the
 # values from here will be accessible from:
 #
-# namespaces[{{plugin}}].config['param'] = value
+# namespaces[{{package}}].config['param'] = value
 #
 
 # Whether or not to merge global options 
