@@ -1,3 +1,87 @@
+commit ed465f69858565bb415df875f653707263afe0e3
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Jan 13 16:33:07 2010 -0600
+
+    add support for log_max_bytes, and log_max_files.  If log_max_bytes not set, don't rotate the log
+
+commit 8b72e8bd070225838eccd706dd8cfe6326793e2d
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Jan 13 13:54:51 2010 -0600
+
+    fixing bug with namespace display on --help (really)
+
+commit 1bb94f334c31aef9069f8568aff354d929d8cee5
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Jan 13 13:23:07 2010 -0600
+
+    Fixing bug where subcommand namespaces weren't displaying in --help
+
+commit 524a0c40554bd0bffd514ee4c1c234a1f07e0253
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Jan 12 22:57:06 2010 -0600
+
+    adding mode for simple cache, default 0640
+
+commit 0dd5341a26999cb0c037f4e2b56ab62cdbcd28db
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Jan 12 20:17:02 2010 -0600
+
+    fixed simple caching issues
+
+commit 5b0bee2a7194883599f181b67bcf6936f198bb8d
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Tue Jan 12 19:17:25 2010 -0600
+
+    add default logging of warn
+
+commit e9a1c85e3fe919570720b929101eadaae3eb37c1
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Jan 11 18:40:03 2010 -0600
+
+    adding simple_cache functions
+
+commit 44ce67d7a7748a8cfd43f33a869886974ba927f2
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Mon Jan 11 13:37:39 2010 -0600
+
+    Adding validate_config_hook to default hooks.
+
+commit 5c9eaf4a5df90c4326d06d58f1404544a3a7c037
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Jan 8 17:03:56 2010 -0600
+
+    fixing issue with hook loading support
+
+commit f02041c781507e6a14a50c18a0b450b6063f7f69
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Jan 8 13:48:05 2010 -0600
+
+    no longer use pluginmain.py, use plugin name.py
+
+commit ef4d41fa1a51a7af21a84378741029b742603554
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Jan 8 13:28:42 2010 -0600
+
+    adding complex style plugin for cement plugins
+
+commit dfc107e223b8ef85a6e155b0862aa047483405ed
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Fri Jan 8 12:09:30 2010 -0600
+
+    adding README, INSTALL, LICENSE files
+
+commit d1af4b61d16cf7d4cbd7be0cb9e1372ca2efb69d
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Jan 6 17:29:00 2010 -0600
+
+    adding missing files
+
+commit cfc4f4e4b04238181c269788ae0b86fbea11649f
+Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+Date:   Wed Jan 6 17:15:28 2010 -0600
+
+    Release 0.4.2
+
 commit e6e82f221a45bdc978008f6ed9d96c4a58db0eef
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Wed Jan 6 17:14:45 2010 -0600
