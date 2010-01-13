@@ -8,15 +8,15 @@ from cement.core.log import get_logger
 log = get_logger(__name__)
 
 class SimpleCache(object):
-    def __init__(self, path=None):
+    def __init__(self, path=None, mode=0640):
         self.cache = {}
         self.path = path
         if not self.path:
             self.path = os.path.join(namespaces['global'].config['data_dir'],
                                      'simple_cache.pickle')
-        self.gen_cache()
+        self.gen_cache(clear_existing=False, mode=mode)
         
-    def gen_cache(self, clear_existing=False):
+    def gen_cache(self, clear_existing=False, mode=0640):
         """Generate a pickle cache."""
         if not os.path.exists(os.path.dirname(self.path)):
             os.makedirs(os.path.exists(os.path.dirname(self.path)))
@@ -28,6 +28,11 @@ class SimpleCache(object):
             f = open(self.path, 'wb')
             pickle.dump(self.cache, f)
             f.close()
+        
+        os.chmod(self.path, mode)
+        
+    def clear_cache(self):
+        os.remove(self.path)
         
     def load(self):
         """Load the pickle cache into self.cache dict."""

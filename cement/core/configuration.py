@@ -1,6 +1,6 @@
 """Cement methods for handling config file parsing."""
 import os
-from configobj import ConfigObj
+from configobj import ConfigObj, Section
 
 from cement.core.exc import CementConfigError
 
@@ -58,15 +58,43 @@ def set_config_opts_per_file(namespace, section, config_file):
             raise CementConfigError, \
                 'missing section %s in %s.' % (section, config_file)
 
+        # FIX ME: Is there an easier way to ensure true/false values are
+        # actually True/False.  I think ConfigSpec, but don't have time right
+        # now.
         for option in cnf[section]:
-            if cnf[section][option] in ['True', 'true', True, 'yes', 
-                                        'Yes', '1']:
+            if cnf[section][option] in \
+                ['True', 'true', True, 'yes', 'Yes', '1']:
                 namespaces[namespace].config[option] = True
-            elif cnf[section][option] in ['False', 'false', False, 'no', 
-                                          'No', '0']:
+                
+            elif cnf[section][option] in \
+                ['False', 'false', False, 'no', 'No', '0']:
                 namespaces[namespace].config[option] = False
-
-
+            
+            elif type(cnf[section][option]) == Section:
+                # this is another level of the same loop.  If the option is
+                # actually a configobj.Section, we need to run the loop on 
+                # that section.
+                for sub_option in cnf[section][option]:
+                    if cnf[section][option][sub_option] in \
+                        ['True', 'true', True, 'yes', 'Yes', '1']:
+                        namespaces[namespace].config[option][sub_option] = True
+                
+                    elif cnf[section][option][sub_option] in \
+                        ['False', 'false', False, 'no', 'No', '0']:
+                        namespaces[namespace].config[option][sub_option] = False
+                    
+                    elif type(cnf[section][option]) == Section:
+                        # This is yet another level of the same loop.  Only
+                        # willing to go 3 levels deep though.
+                        for sub_sub_option in cnf[section][option][sub_option]:
+                            if cnf[section][option][sub_option][sub_sub_option] in \
+                                ['True', 'true', True, 'yes', 'Yes', '1']:
+                                namespaces[namespace].config[option][sub_option][sub_sub_option] = True
+                
+                            elif cnf[section][option][sub_option][sub_sub_option] in \
+                                ['False', 'false', False, 'no', 'No', '0']:
+                                namespaces[namespace].config[option][sub_option][sub_sub_option] = False
+                                
 def set_config_opts_per_cli_opts(namespace, cli_opts):
     """
     Determine if any config optons were passed via cli options, and if so
