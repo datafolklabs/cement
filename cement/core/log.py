@@ -1,7 +1,6 @@
 """Cement methods to setup and configuring logging."""
 
 import logging
-from logging.handlers import RotatingFileHandler
 
 from cement import namespaces
 
@@ -54,9 +53,16 @@ def setup_logging(clear_loggers=True, level=None):
     
     # file formatter
     if config.has_key('log_file'):
-        file_handler = RotatingFileHandler(
-            config['log_file'], maxBytes=512000, backupCount=4
-            )
+        if config.has_key('log_max_bytes'):
+            from logging.handlers import RotatingFileHandler
+            file_handler = RotatingFileHandler(
+                config['log_file'], maxBytes=int(config['log_max_bytes']), 
+                backupCount=int(config['log_max_files'])
+                )
+        else:
+            from logging import FileHandler
+            file_handler = FileHandler(config['log_file'])
+            
         file_handler.setFormatter( 
             logging.Formatter("%(asctime)s (%(levelname)s) %(name)s : %(message)s")
             )
