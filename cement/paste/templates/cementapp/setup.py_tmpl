@@ -16,6 +16,8 @@ setup(name='{{project}}',
     install_requires=[
         "ConfigObj",
         "Cement >={{cement_version}}, <{{cement_next_version}}",
+        # Uncomment if you want to use shared cement plugins.
+        #"CementPlugins",
         ],
     setup_requires=[
         "PasteScript >= 1.7"

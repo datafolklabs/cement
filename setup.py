@@ -61,7 +61,7 @@ Have a helper library you want to make plugable?
 """
 
 
-setup(name='cement',
+setup(name='Cement',
     version=version,
     description="Python CLI Application Framework",
     long_description=LONG,
