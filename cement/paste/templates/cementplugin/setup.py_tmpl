@@ -20,7 +20,6 @@ setup(name='{{project}}_plugins_{{plugin}}',
         "{{project}}",
         ],
     setup_requires=[
-        "PasteScript >= 1.7",
         ],
     test_suite='nose.collector',
     entry_points="""

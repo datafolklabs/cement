@@ -20,7 +20,7 @@ setup(name='helloworld',
         #"CementPlugins",
         ],
     setup_requires=[
-        "PasteScript >= 1.7"
+        #"PasteScript >= 1.7"
         ],
     test_suite='nose.collector',
     entry_points="""
