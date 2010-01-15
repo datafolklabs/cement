@@ -36,7 +36,7 @@ GETTING STARTED:
 
 Stable versions of Cement can be installed via the cheeze shop:
 
-    $ easy_install cement
+    $ easy_install Cement
 
 
 Development versions of Cement can be checked out of Git:
