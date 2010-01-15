@@ -33,7 +33,7 @@ class render(object):
             
     def __call__(self, func):
         def wrapper(*args, **kw):        
-            res = func(*args, **kw)
+            res = func(func, *args, **kw)
             
             if self.engine == 'json':
                 print json.dumps(res)

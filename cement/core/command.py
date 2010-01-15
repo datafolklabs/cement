@@ -14,38 +14,9 @@ class CementCommand(object):
         self.cli_opts = cli_opts
         self.cli_args = cli_args
     
-    def help(self):
-        """Display command help information."""
-        #print "No help information available."
-        return dict()
-    
     def run(self):
         """Run the command actions."""
         print "No actions have been defined for this command."
-
-
-def expose(template=None, name=None, namespace='global', **kwargs):
-    """
-    Decorator function for plugins to register commands.  Used as:
-    
-    @register_command(namespace='namespace')
-    class MyCommand(CementCommand):
-        ...
-    """
-    #assert name, "Command name is required!"
-    def decorate(func):
-        name = func.__name__
-        if not namespace in namespaces:
-            raise CementRuntimeError, "The namespace '%s' is not defined!" % namespace
-        setattr(func, 'is_hidden', kwargs.get('is_hidden', False))
-        namespaces[namespace].commands[name] = func
-        
-        if template:
-            func.run = render(template)(func.run)        
-            help_template = "%s_help" % template
-            func.help = render(help_template)(func.help)
-        return func
-    return decorate
 
 
 def register_command(name=None, namespace='global', **kwargs):
@@ -113,14 +84,18 @@ def run_command(command_name):
     m = re.match('(.*)-help', actual_cmd)
     if m:
         if namespaces[namespace].commands.has_key(m.group(1)):
-            cmd = namespaces[namespace].commands[m.group(1)](cli_opts, cli_args)
+            cmd = namespaces[namespace].commands[m.group(1)]
+            cmd.cli_opts = cli_opts
+            cmd.cli_args = cli_args
             cmd.help()
         else:
             raise CementArgumentError, \
                 "Unknown command '%s'.  See --help?" % actual_cmd
             
     elif namespaces[namespace].commands.has_key(actual_cmd):
-        cmd = namespaces[namespace].commands[actual_cmd](cli_opts, cli_args)
+        cmd = namespaces[namespace].commands[actual_cmd]
+        cmd.cli_opts = cli_opts
+        cmd.cli_args = cli_args
         cmd.run()
                         
     else:

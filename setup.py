@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.4.5'
+version = '0.5.1'
 
 LONG = """
 Cement is a CLI Application Framework for Python. It promotes code re-use by
@@ -15,6 +15,8 @@ At a minimum, Cement easily sets up the following:
  * Logging [using Logger]
  * Plugin support [partially using setuptools]
  * Basic "hook" support
+ * Full Model, View, Controller support
+ * Genshi Text Formatting Engine
 
 
 These pieces are important for a fully functional command line application.
@@ -100,6 +102,7 @@ setup(name='Cement',
         cementhelper = cement.paste.template:CementHelperTemplate
     """,
     namespace_packages=[
-        'cement', 'cement.plugins', 'cement.helpers'
+        'cement', 'cement.plugins', 'cement.helpers', 'cement.controllers',
+        'cement.model', 'cement.view'
         ],
     )
