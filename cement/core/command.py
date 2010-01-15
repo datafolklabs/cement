@@ -4,6 +4,7 @@ import re
 from cement import namespaces, hooks
 from cement.core.opt import parse_options
 from cement.core.hook import run_hooks
+from cement.core.view import render
 from cement.core.configuration import set_config_opts_per_cli_opts
 from cement.core.exc import *
 
@@ -15,11 +16,37 @@ class CementCommand(object):
     
     def help(self):
         """Display command help information."""
-        print "No help information available."
+        #print "No help information available."
+        return dict()
     
     def run(self):
         """Run the command actions."""
         print "No actions have been defined for this command."
+
+
+def expose(template=None, name=None, namespace='global', **kwargs):
+    """
+    Decorator function for plugins to register commands.  Used as:
+    
+    @register_command(namespace='namespace')
+    class MyCommand(CementCommand):
+        ...
+    """
+    #assert name, "Command name is required!"
+    def decorate(func):
+        name = func.__name__
+        if not namespace in namespaces:
+            raise CementRuntimeError, "The namespace '%s' is not defined!" % namespace
+        setattr(func, 'is_hidden', kwargs.get('is_hidden', False))
+        namespaces[namespace].commands[name] = func
+        
+        if template:
+            func.run = render(template)(func.run)        
+            help_template = "%s_help" % template
+            func.help = render(help_template)(func.help)
+        return func
+    return decorate
+
 
 def register_command(name=None, namespace='global', **kwargs):
     """

@@ -14,6 +14,7 @@ setup(name='helloworld',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
+        "Genshi",
         "ConfigObj",
         "Cement >=0.4.5, <0.5",
         # Uncomment if you want to use shared cement plugins.
