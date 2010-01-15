@@ -1,0 +1,99 @@
+"""
+{{plugin}} for the {{project}} application.
+"""
+
+import os
+
+from cement import namespaces
+from cement.core.log import get_logger
+from cement.core.opt import init_parser
+from cement.core.hook import define_hook, register_hook
+from cement.core.plugin import CementPlugin, register_plugin
+
+log = get_logger(__name__)
+
+VERSION = '0.1'
+REQUIRED_CEMENT_API = '{{cement_api}}'
+BANNER = """
+{{plugin}} v%s (api:%s)
+""" % (VERSION, REQUIRED_CEMENT_API)
+ 
+@register_plugin() 
+class {{plugin}}Plugin(CementPlugin):
+    #
+    # Define hooks here, like so:
+    #
+    #   define_hook('{{plugin}}_hook')
+    
+    def __init__(self):
+        CementPlugin.__init__(self,
+            label = '{{plugin}}',
+            version = VERSION,
+            description = '{{plugin}} plugin for {{project}}',
+            required_api = REQUIRED_CEMENT_API,
+            version_banner=BANNER
+            )
+ 
+#      
+# HOOKS: Usually defined in the main plugin file (here).  Functions
+# that you decorate with @register_hook() will be run whenever/wherever 
+# run_hooks('the_hook_name') is called.
+#
+@register_hook()
+def options_hook(*args, **kwargs):
+    """
+    Register global options.
+    """
+    global_options = init_parser()
+    global_options.add_option('--{{plugin}}-global-option', action ='store_true', 
+        dest='{{plugin}}_global_option', default=None, help='example global option'
+    ) 
+    return ('global', global_options)
+          
+@register_hook()
+def post_options_hook(cli_opts, cli_args, **kwargs):
+    """Handle global options here."""
+    pass
+ 
+ 
+#          
+# MODEL: For more complex applications, please consider following the MVC and
+# moving your model class(es) to:
+#
+#   {{project}}/model/{{plugin}}.py
+#
+class {{plugin}}Model(object):
+    # define model class
+    pass
+ 
+    
+#
+# CONTROLLER: For more complex applications, please consider following the 
+# MVC and moving your controller class(es) to:
+#
+#   {{project}}/controllers/{{plugin}}.py
+#
+
+from cement.core.controller import CementController, expose
+
+class {{plugin}}Controller(CementController):
+    @expose()              
+    def {{plugin}}_command(self, opts, args):
+        """Register global command."""
+        print "{{plugin}} global command run() method."
+          
+    @expose()            
+    def {{plugin}}_command_help(self, opts, args):
+        print "{{plugin}} global command help method."
+
+    @expose('{{project}}.templates.{{plugin}}_command')              
+    def {{plugin}}_command2(self, opts, args):
+        """Register global command, with Genshi templating."""
+        foo = "Hello"
+        bar = "World"
+        return dict(foo=foo, bar=bar)
+
+    @expose(namespace='{{plugin}}')              
+    def {{plugin}}_sub_command(self, opts, args):
+        """Register sub command for the {{plugin}} namespace."""
+        print "{{plugin}} local command method."

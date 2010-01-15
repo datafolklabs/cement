@@ -48,7 +48,12 @@ from cement.core.configuration import CEMENT_API
 CEMENT_VERSION = pkg_resources.get_distribution('cement').version
 
 (base, major) = CEMENT_VERSION.split('.')[:2]
-CEMENT_NEXT_VERSION = float("%s.%s" % (base, major)) + 0.2
+CEMENT_MAJOR_VERSION = '.'.join(CEMENT_VERSION.split('.')[:2])
+
+if int(major)%2==0:
+    CEMENT_NEXT_VERSION = float(CEMENT_MAJOR_VERSION) + 0.1
+else:
+    CEMENT_NEXT_VERSION = float(CEMENT_MAJOR_VERSION) + 0.2
 
 class CementAppCommand(command.Command):
     """Create a new CLI Application using the Cement Framework.
@@ -128,7 +133,7 @@ Example usage::
             cmd_args.append("--template=%s" % template)
         cmd_args.append(self.name)
         cmd_args.append("cement_api=%s" % CEMENT_API)
-        cmd_args.append("cement_version=%s" % CEMENT_VERSION)
+        cmd_args.append("cement_version=%s" % CEMENT_MAJOR_VERSION)
         cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         command.run(cmd_args)
         
@@ -230,7 +235,7 @@ Example usage::
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("plugin=%s" % self.plugin)
         cmd_args.append("cement_api=%s" % CEMENT_API)
-        cmd_args.append("cement_version=%s" % CEMENT_VERSION)
+        cmd_args.append("cement_version=%s" % CEMENT_MAJOR_VERSION)
         cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         
         command.run(cmd_args)
@@ -329,7 +334,7 @@ Example usage::
         cmd_args.append(self.name)
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("helper=%s" % self.helper)
-        cmd_args.append("cement_version=%s" % CEMENT_VERSION)
+        cmd_args.append("cement_version=%s" % CEMENT_MAJOR_VERSION)
         cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         command.run(cmd_args)
         
