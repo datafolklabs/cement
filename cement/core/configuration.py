@@ -2,9 +2,9 @@
 import os
 from configobj import ConfigObj, Section
 
-from cement.core.exc import CementConfigError
+from cement.core.exc import *
 
-CEMENT_API = "20091211"
+CEMENT_API = "0.5-0.6:20100115"
     
 def get_default_config():
     dcf = {}
@@ -26,11 +26,11 @@ def get_api_version():
     return CEMENT_API
     
 def ensure_api_compat(module_name, required_api):
-    if int(required_api) == int(CEMENT_API):
+    if required_api == CEMENT_API:
         pass
     else:
         raise CementRuntimeError, \
-            "%s requires api version %s which differs from cement(api) %s." % \
+            "%s requires Cement(api:%s) which differs from installed Cement(api:%s)." % \
                 (module_name, required_api, CEMENT_API)
                 
 def set_config_opts_per_file(namespace, section, config_file):

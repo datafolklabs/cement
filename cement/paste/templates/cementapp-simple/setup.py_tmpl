@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-setup(name='helloworld',
+setup(name='{{project}}',
     version='0.1',
     description='',
     classifiers=[], 
@@ -15,8 +15,7 @@ setup(name='helloworld',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "Genshi",
-        "Cement >=0.5.1, <0.7",
+        "Cement >={{cement_version}}, <{{cement_next_version}}",
         # Uncomment if you want to use shared cement plugins.
         #"CementPlugins",
         ],
@@ -25,14 +24,7 @@ setup(name='helloworld',
     test_suite='nose.collector',
     entry_points="""
     [console_scripts]
-    helloworld = helloworld.appmain:main
+    {{package}} = {{package}}.appmain:main
     """,
-    namespace_packages=[
-        'helloworld', 
-        'helloworld.plugins',
-        'helloworld.controllers',
-        'helloworld.model',
-        'helloworld.helpers',
-        'helloworld.templates',
-        ],
+    namespace_packages=['{{package}}', '{{package}}.plugins'],
     )

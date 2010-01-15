@@ -1,0 +1,70 @@
+"""
+{{plugin}} for the {{project}} application.
+"""
+
+import os
+
+from cement import namespaces
+from cement.core.log import get_logger
+from cement.core.opt import init_parser
+from cement.core.hook import define_hook, register_hook
+from cement.core.command import CementCommand, register_command
+from cement.core.plugin import CementPlugin, register_plugin
+
+log = get_logger(__name__)
+
+VERSION = '0.1'
+REQUIRED_CEMENT_API = '{{cement_api}}'
+BANNER = """
+{{plugin}} v%s (api:%s)
+""" % (VERSION, REQUIRED_CEMENT_API)
+ 
+@register_plugin() 
+class {{plugin}}Plugin(CementPlugin):
+    def __init__(self):
+        CementPlugin.__init__(self,
+            label = '{{plugin}}',
+            version = VERSION,
+            description = '{{plugin}} plugin for {{project}}',
+            required_api = REQUIRED_CEMENT_API,
+            version_banner=BANNER
+            )
+      
+@register_hook()
+def options_hook(*args, **kwargs):
+    """
+    Register global options.
+    """
+    global_options = init_parser()
+    global_options.add_option('--{{plugin}}-global-option', action ='store_true', 
+        dest='{{plugin}}_global_option', default=None, help='example global option'
+    ) 
+    return ('global', global_options)
+          
+@register_hook()
+def post_options_hook(cli_opts, cli_args, **kwargs):
+    """Handle global options here."""
+    pass
+          
+@register_command(name='{{plugin}}-command', namespace='global')              
+class {{plugin}}Command(CementCommand):
+    """
+    Register global commands.
+    """
+    def run(self):
+        print "{{plugin}} global command run() method."
+                
+    def help(self):
+        print "{{plugin}} global command help() method."
+
+
+@register_command(name='{{plugin}}-sub-command', namespace='{{plugin}}')              
+class {{plugin}}LocalCommand(CementCommand):
+    """
+    Register local commands.
+    """
+    def run(self):
+        print "{{plugin}} local command run() method."
+                
+    def help(self):
+        print "{{plugin}} local command help() method."
