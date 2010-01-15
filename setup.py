@@ -1,12 +1,13 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.4.5'
+version = '0.5.1'
 
 LONG = """
-Cement is a CLI Application Framework for Python. It promotes code re-use by
-way of plugins and helper libraries that can be maintained internally, or
-shared with the community.
+Cement is a CLI Application Framework for Python. It promotes code re-use by 
+way of plugins and helper libraries that can be maintained internally, or 
+shared with the community.  The MVC and overall framework design is very much
+inspired by the TurboGears2 web framework.  
 
 At a minimum, Cement easily sets up the following:
 
@@ -15,17 +16,23 @@ At a minimum, Cement easily sets up the following:
  * Logging [using Logger]
  * Plugin support [partially using setuptools]
  * Basic "hook" support
+ * Full MVC support for advanced application design
+ * Text output rendering with Genshi templates
+    
 
+These pieces are important for any command line application.. 
+Normally to accomplish what's listed above would require hundreds of lines of 
+code before you even begin working on your application logic. With Cement, the 
+above is configured with more or less a single command (via paste).
 
-These pieces are important for a fully functional command line application.
-Normally to accomplish what's listed above would require dozens of lines of
-work before you even begin coding your application. With Cement, the above is
-configured with more or less a single command (via paste).
-
-Cement is most generally used as a starting point from which to begin
-developing a command line type application. That said, applications using
-cement can also share plugins with either cement or other applications using
+Cement is most generally used as a starting point from which to begin 
+developing a command line type application. That said, applications using 
+cement can also share plugins with either cement or other applications using 
 cement.
+
+The Cement CLI Application Framework for Python is Open Source and is 
+distributed under the Python Software Foundation License.
+
 
 GETTING STARTED:
 
@@ -58,6 +65,7 @@ The following command will create an external plugin for your application:
 Have a helper library you want to make plugable?
 ::
     $ paster cement-helper
+    
 """
 
 
@@ -100,6 +108,8 @@ setup(name='Cement',
         cementhelper = cement.paste.template:CementHelperTemplate
     """,
     namespace_packages=[
-        'cement', 'cement.plugins', 'cement.helpers'
+        'cement', 
+        'cement.plugins', 
+        'cement.helpers', 
         ],
     )

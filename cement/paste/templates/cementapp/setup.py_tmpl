@@ -15,6 +15,7 @@ setup(name='{{project}}',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
+        "Genshi",
         "Cement >={{cement_version}}, <{{cement_next_version}}",
         # Uncomment if you want to use shared cement plugins.
         #"CementPlugins",
@@ -26,5 +27,12 @@ setup(name='{{project}}',
     [console_scripts]
     {{package}} = {{package}}.appmain:main
     """,
-    namespace_packages=['{{package}}', '{{package}}.plugins'],
+    namespace_packages=[
+        '{{package}}', 
+        '{{package}}.plugins',
+        '{{package}}.controllers',
+        '{{package}}.model',
+        '{{package}}.helpers',
+        '{{package}}.templates',
+        ],
     )

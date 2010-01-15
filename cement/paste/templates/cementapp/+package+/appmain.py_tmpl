@@ -7,6 +7,7 @@ file.
 """
 
 import sys
+from pkg_resources import get_distribution
 
 from cement.core.exc import *
 from cement.core.log import get_logger
@@ -17,6 +18,10 @@ from cement.core.command import run_command
 from {{project}} import default_config
 
 REQUIRED_CEMENT_API = '{{cement_api}}'
+VERSION = get_distribution('{{project}}').version
+BANNER = """
+{{project}} version %s, built on Cement (api:%s)
+""" % (VERSION, REQUIRED_CEMENT_API)
 
 def main():
     ensure_api_compat(__name__, REQUIRED_CEMENT_API)
@@ -24,7 +29,7 @@ def main():
     # Warning: You shouldn't modify below this point unless you know what 
     # you're doing.
     
-    lay_cement(default_config)
+    lay_cement(default_config, version_banner=BANNER)
     
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
