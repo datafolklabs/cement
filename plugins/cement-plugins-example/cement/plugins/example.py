@@ -20,7 +20,7 @@ class ExamplePlugin(CementPlugin):
     def __init__(self, global_config):
         CementPlugin.__init__(self, global_config)
         self.version = '0.1'
-        self.required_abi = '20091207'
+        self.required_api = '20091207'
         self.description = "Example Plugin for a Cement Application."
         self.config = {
             'config_source': ['defaults']

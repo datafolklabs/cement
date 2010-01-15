@@ -7,7 +7,7 @@ from cement.core.log import get_logger
 from cement.core.hook import run_hooks
 from cement.core.configuration import set_config_opts_per_file
 from cement.core.namespace import CementNamespace, define_namespace
-from cement.core.configuration import ensure_abi_compat
+from cement.core.configuration import ensure_api_compat
 
 log = get_logger(__name__)
 
@@ -26,7 +26,7 @@ def register_plugin(**kwargs):
     def decorate(func):
         nms = func.__module__.split('.')
 
-        ensure_abi_compat(func.__name__, func().required_abi)
+        ensure_api_compat(func.__name__, func().required_api)
         if kwargs.get('name', None):
             plugin_name = kwargs['name']
         elif nms[-1] == 'pluginmain':

@@ -43,7 +43,7 @@ def lay_cement(default_app_config=None, version_banner=None):
     namespace = CementNamespace(
         label = 'global',
         version = get_distribution(default_app_config['app_egg_name']).version,
-        required_abi = CEMENT_ABI,
+        required_api = CEMENT_API,
         config = get_default_config(),
         version_banner = vb,
         )

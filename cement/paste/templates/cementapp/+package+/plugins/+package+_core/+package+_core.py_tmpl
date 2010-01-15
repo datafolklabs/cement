@@ -12,7 +12,7 @@ from cement.core.plugin import CementPlugin, register_plugin
 log = get_logger(__name__)
 
 VERSION = '0.1'
-REQUIRED_CEMENT_ABI = '{{cement_abi}}'
+REQUIRED_CEMENT_API = '{{cement_api}}'
 
 # Optional: Allows you to customize the output of --version
 BANNER = """
@@ -26,7 +26,7 @@ class {{package}}Plugin(CementPlugin):
             label = '{{package}}',
             version = VERSION,
             description = 'Core plugin for {{package}}',
-            required_abi = REQUIRED_CEMENT_ABI,
+            required_api = REQUIRED_CEMENT_API,
             version_banner = BANNER,
             )
 

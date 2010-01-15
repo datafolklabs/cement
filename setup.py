@@ -84,10 +84,10 @@ setup(name='Cement',
         "ConfigObj",
         "PasteScript >= 1.7",
         ],
-    # FIX ME: This installs, but requiring CementABI == 0.4.20091211 doesn't
+    # FIX ME: This installs, but requiring CementAPI == 0.4.20091211 doesn't
     # work.    
     #provides=[
-    #    "CementABI (0.4.20091211)",
+    #    "CementAPI (0.4.20091211)",
     #    ],
     entry_points="""
         [paste.global_paster_command]

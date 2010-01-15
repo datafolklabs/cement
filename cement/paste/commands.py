@@ -43,7 +43,7 @@ from paste.script import create_distro
 beginning_letter = re.compile(r"^[^a-z]*")
 valid_only = re.compile(r"[^a-z0-9_]")
 
-from cement.core.configuration import CEMENT_ABI
+from cement.core.configuration import CEMENT_API
 
 CEMENT_VERSION = pkg_resources.get_distribution('cement').version
 
@@ -127,7 +127,7 @@ Example usage::
         for template in self.templates.split():
             cmd_args.append("--template=%s" % template)
         cmd_args.append(self.name)
-        cmd_args.append("cement_abi=%s" % CEMENT_ABI)
+        cmd_args.append("cement_api=%s" % CEMENT_API)
         cmd_args.append("cement_version=%s" % CEMENT_VERSION)
         cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         command.run(cmd_args)
@@ -229,7 +229,7 @@ Example usage::
         cmd_args.append(self.name)
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("plugin=%s" % self.plugin)
-        cmd_args.append("cement_abi=%s" % CEMENT_ABI)
+        cmd_args.append("cement_api=%s" % CEMENT_API)
         cmd_args.append("cement_version=%s" % CEMENT_VERSION)
         cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         

@@ -6,7 +6,7 @@ from tempita import paste_script_template_renderer
 import pkg_resources
 from pkg_resources import get_distribution
 
-from cement.core.configuration import CEMENT_ABI
+from cement.core.configuration import CEMENT_API
 
 class CementAppTemplate(templates.Template):
     """
@@ -17,7 +17,7 @@ class CementAppTemplate(templates.Template):
     summary = 'Cement Standard Template'
     egg_plugins = ['PasteScript', 'Cement']
     vars = [
-        templates.var("cement_abi", "Cement ABI Version", default=CEMENT_ABI),
+        templates.var("cement_api", "Cement API Version", default=CEMENT_API),
         templates.var("cement_version", "Cement version", default=None),
         templates.var("cement_next_version", "Cement Next Version", default=None)
         ]
@@ -37,7 +37,7 @@ class CementPluginTemplate(templates.Template):
     vars = [
         templates.var("plugin", "cement plugin name", default=None),
         templates.var("project", "Parent application this plugin is for", default=None),
-        templates.var("cement_abi", "Cement ABI Version", default=CEMENT_ABI),
+        templates.var("cement_api", "Cement API Version", default=CEMENT_API),
         templates.var("cement_version", "Cement version", default=None),
         templates.var("cement_next_version", "Cement Next Version", default=None)
         ]

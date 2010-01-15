@@ -15,7 +15,9 @@ setup(name='helloworld',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "cement == 0.4",
+        "Cement >=0.4.5, <0.5",
+        # Uncomment if you want to use shared cement plugins.
+        #"CementPlugins",
         ],
     setup_requires=[
         "PasteScript >= 1.7"

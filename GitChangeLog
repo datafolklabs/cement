@@ -122,7 +122,7 @@ commit f2b0844434e35b6d87dd47154c7b6707521072fd
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Tue Jan 5 19:17:32 2010 -0600
 
-    Adding better install_requires to templates in lack of having an abi compat feature in setuptools
+    Adding better install_requires to templates in lack of having an api compat feature in setuptools
 
 commit d4768967fecc635a5464018247f7570cd132895c
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
@@ -140,13 +140,13 @@ commit c1b005b63df8c5955589582ecf37783ece47c6ee
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Wed Dec 30 23:22:23 2009 -0600
 
-    added the ability to hide namespaces, even if all commands aren't hidden
+    added the apility to hide namespaces, even if all commands aren't hidden
 
 commit 328ad7cb775d24630df8c866ff6e66e960860326
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Wed Dec 30 23:22:16 2009 -0600
 
-    added the ability to hide namespaces, even if all commands aren't hidden
+    added the apility to hide namespaces, even if all commands aren't hidden
 
 commit c604ac4046bdbbb33c012c5be6367fc4d926d8a0
 Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
@@ -315,7 +315,7 @@ Author: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 Date:   Mon Dec 7 03:56:29 2009 -0600
 
     Reworked plugin framework.
-    Added ABI checking
+    Added API checking
     Need to finish porting the other example plugins to new plugin format.
 
 commit 0461dad1109d3f0c66b29dcf68d0ae69f14948d2

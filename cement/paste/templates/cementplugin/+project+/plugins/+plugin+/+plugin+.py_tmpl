@@ -14,10 +14,10 @@ from cement.core.plugin import CementPlugin, register_plugin
 log = get_logger(__name__)
 
 VERSION = '0.1'
-REQUIRED_CEMENT_ABI = '{{cement_abi}}'
+REQUIRED_CEMENT_API = '{{cement_api}}'
 BANNER = """
-{{plugin}} v%s (abi:%s)
-""" % (VERSION, REQUIRED_CEMENT_ABI)
+{{plugin}} v%s (api:%s)
+""" % (VERSION, REQUIRED_CEMENT_API)
  
 @register_plugin() 
 class {{plugin}}Plugin(CementPlugin):
@@ -26,7 +26,7 @@ class {{plugin}}Plugin(CementPlugin):
             label = '{{plugin}}',
             version = VERSION,
             description = '{{plugin}} plugin for {{project}}',
-            required_abi = REQUIRED_CEMENT_ABI,
+            required_api = REQUIRED_CEMENT_API,
             version_banner=BANNER
             )
       

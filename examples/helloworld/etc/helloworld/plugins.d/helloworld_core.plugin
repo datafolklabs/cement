@@ -1,6 +1,10 @@
 [helloworld_core]
-
-# helloworld_core plugin configurations
+#
+# This is an example of a cement plugin configuration file.  Once parsed, the
+# values from here will be accessible from:
+#
+# namespaces[helloworld].config['param'] = value
+#
 
 # Whether or not to merge global options 
-merge_global_options = false
+merge_global_options = true

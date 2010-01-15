@@ -3,10 +3,10 @@ from cement import namespaces
 from cement.core.opt import init_parser
 
 class CementNamespace(object):
-    def __init__(self, label, version, required_abi, **kw):
+    def __init__(self, label, version, required_api, **kw):
         self.label = label
         self.version = version
-        self.required_abi = required_abi
+        self.required_api = required_api
         self.description = kw.get('description', '')
         self.commands = kw.get('commands', {})
         self.config = kw.get('config', {'config_source': ['defaults']})

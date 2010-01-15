@@ -4,7 +4,7 @@ from configobj import ConfigObj, Section
 
 from cement.core.exc import CementConfigError
 
-CEMENT_ABI = "20091211"
+CEMENT_API = "20091211"
     
 def get_default_config():
     dcf = {}
@@ -22,16 +22,16 @@ hooks = {}
 namespaces = {}
 
         
-def get_abi_version():
-    return CEMENT_ABI
+def get_api_version():
+    return CEMENT_API
     
-def ensure_abi_compat(module_name, required_abi):
-    if int(required_abi) == int(CEMENT_ABI):
+def ensure_api_compat(module_name, required_api):
+    if int(required_api) == int(CEMENT_API):
         pass
     else:
         raise CementRuntimeError, \
-            "%s requires abi version %s which differs from cement(abi) %s." % \
-                (module_name, required_abi, CEMENT_ABI)
+            "%s requires api version %s which differs from cement(api) %s." % \
+                (module_name, required_api, CEMENT_API)
                 
 def set_config_opts_per_file(namespace, section, config_file):
     """

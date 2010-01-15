@@ -2,7 +2,7 @@
 This is the application's core code.  Unless you know the "ins-and-outs" of
 The Cement CLI Application Framework, you probably should not modify this file.
 Keeping all customizations outside of core.py means that you can easily 
-upgrade to a newer version of the CEMENT_ABI by simply replacing this
+upgrade to a newer version of the CEMENT_API by simply replacing this
 file.
 """
 
@@ -11,15 +11,15 @@ import sys
 from cement.core.exc import *
 from cement.core.log import get_logger
 from cement.core.app_setup import lay_cement
-from cement.core.configuration import ensure_abi_compat
+from cement.core.configuration import ensure_api_compat
 from cement.core.command import run_command
 
 from {{project}} import default_config
 
-REQUIRED_CEMENT_ABI = '{{cement_abi}}'
+REQUIRED_CEMENT_API = '{{cement_api}}'
 
 def main():
-    ensure_abi_compat(__name__, REQUIRED_CEMENT_ABI)
+    ensure_api_compat(__name__, REQUIRED_CEMENT_API)
     
     # Warning: You shouldn't modify below this point unless you know what 
     # you're doing.
