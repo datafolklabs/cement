@@ -1,0 +1,19 @@
+0.5.1 - unreleased/development
+-----------------------------------------------------------------------------
+
+New Features:
+
+ +  Reworked cement to provide a proper model, view, controller interface
+    very similar to the layout of TurboGears2.
+ +  Added Genshi text templating support.
+ +  Modified all templates to utilize new features.
+
+
+Incompatible Changes:
+
+ -  Cement API Version Change: 0.5-0.6:20100115.  Cement will remain compatible
+    with this version of the API through version 0.6 stable.
+ -  Removed 'register_command()' decorator in favor or the new expose()
+    controller decorator.  
+ -  Namespace 'commands' member is no longer a dict of CementCommand objects,
+    is not a simplified dict of dicts.
