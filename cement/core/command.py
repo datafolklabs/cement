@@ -8,33 +8,33 @@ from cement.core.view import render
 from cement.core.configuration import set_config_opts_per_cli_opts
 from cement.core.exc import *
 
-class CementCommand(object):
-    def __init__(self, cli_opts=None, cli_args=None):
-        self.is_hidden = False # whether to display in command list at all
-        self.cli_opts = cli_opts
-        self.cli_args = cli_args
-    
-    def run(self):
-        """Run the command actions."""
-        print "No actions have been defined for this command."
+#class CementCommand(object):
+#    def __init__(self, cli_opts=None, cli_args=None):
+#        self.is_hidden = False # whether to display in command list at all
+#        self.cli_opts = cli_opts
+#        self.cli_args = cli_args
+#    
+#    def run(self):
+#        """Run the command actions."""
+#        print "No actions have been defined for this command."
 
 
-def register_command(name=None, namespace='global', **kwargs):
-    """
-    Decorator function for plugins to register commands.  Used as:
-    
-    @register_command(namespace='namespace')
-    class MyCommand(CementCommand):
-        ...
-    """
-    assert name, "Command name is required!"
-    def decorate(func):
-        if not namespace in namespaces:
-            raise CementRuntimeError, "The namespace '%s' is not defined!" % namespace
-        setattr(func, 'is_hidden', kwargs.get('is_hidden', False))
-        namespaces[namespace].commands[name] = func
-        return func
-    return decorate
+#def register_command(name=None, namespace='global', **kwargs):
+#    """
+#    Decorator function for plugins to register commands.  Used as:
+#    
+#    @register_command(namespace='namespace')
+#    class MyCommand(CementCommand):
+#        ...
+#    """
+#    assert name, "Command name is required!"
+#    def decorate(func):
+#        if not namespace in namespaces:
+#            raise CementRuntimeError, "The namespace '%s' is not defined!" % namespace
+#        setattr(func, 'is_hidden', kwargs.get('is_hidden', False))
+#        namespaces[namespace].commands[name] = func
+#        return func
+#    return decorate
         
 # FIXME: This method is so effing ugly.
 def run_command(command_name):
@@ -81,22 +81,18 @@ def run_command(command_name):
             raise CementArgumentError, \
                 "%s is a namespace* which requires a sub-command.  See '%s --help?" % (namespace, namespace)
     
-    m = re.match('(.*)-help', actual_cmd)
-    if m:
-        if namespaces[namespace].commands.has_key(m.group(1)):
-            cmd = namespaces[namespace].commands[m.group(1)]
-            cmd.cli_opts = cli_opts
-            cmd.cli_args = cli_args
-            cmd.help()
-        else:
-            raise CementArgumentError, \
-                "Unknown command '%s'.  See --help?" % actual_cmd
+    #m = re.match('(.*)-help', actual_cmd)
+    #if m:
+    #    if namespaces[namespace].controller.commands.has_key(m.group(1)):
+    #        cmd = namespaces[namespace].commands[m.group(1)]
+    #        cmd.cli_opts = cli_opts
+    #        cmd.cli_args = cli_args
+    #        cmd.help()
+    #    else:
+    #        raise CementArgumentError, \
+    #            "Unknown command '%s'.  See --help?" % actual_cmd
             
-    elif namespaces[namespace].commands.has_key(actual_cmd):
-        cmd = namespaces[namespace].commands[actual_cmd]
-        cmd.cli_opts = cli_opts
-        cmd.cli_args = cli_args
-        cmd.run()
-                        
+    if namespaces[namespace].commands.has_key(actual_cmd):
+        namespaces[namespace].commands[actual_cmd]['func'](cli_opts, cli_args)                    
     else:
         raise CementArgumentError, "Unknown command, see --help?"

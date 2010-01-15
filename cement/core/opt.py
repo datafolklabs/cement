@@ -76,7 +76,7 @@ def parse_options(namespace='global'):
     line = '    '
     if namespaces[namespace].commands:
         for c in namespaces[namespace].commands:    
-            if c.endswith('-help') or namespaces[namespace].commands[c].is_hidden:
+            if c.endswith('-help') or namespaces[namespace].commands[c]['is_hidden']:
                 pass
             else:
                 if line == '    ':
@@ -98,7 +98,7 @@ def parse_options(namespace='global'):
                     # hidden commands... which we don't want to show
                     show_namespace = False
                     for c in namespaces[nam].commands:
-                        if not namespaces[nam].commands[c].is_hidden:
+                        if not namespaces[nam].commands[c]['is_hidden']:
                             show_namespace = True
                             break
 

@@ -13,7 +13,6 @@ from cement.core.namespace import CementNamespace, define_namespace
 from cement.core.log import setup_logging, get_logger
 from cement.core.opt import init_parser, get_options, Options
 from cement.core.hook import define_hook, run_hooks
-from cement.core.command import CementCommand
 
 log = get_logger(__name__)    
 def register_default_hooks():
