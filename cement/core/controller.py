@@ -5,18 +5,31 @@ from cement import namespaces
 from cement.core.view import render
     
 class CementController(object):
-    cli_opts = None
-    cli_args = None
-    all_commands = []
-    hidden_commands = []
+    pass
       
 def expose(template=None, namespace='global', **kwargs):
     """
-    Decorator function for plugins to register commands.  Used as:
+    Decorator function for plugins to expose commands.  Used as:
     
-    @expose('app_module.view.template', namespace='namespace')
-    def mycommand(self):
-        ...
+    Arguments:
+    
+        template -- A template in python module form 
+                    (i.e 'myapp.templates.mytemplate')
+        
+        namespace -- The namespace to expose the command in.  Default: global
+        
+        kwargs -- Options kwargs.
+        
+    Usage: 
+    
+        @expose('app_module.view.template', namespace='namespace')
+        def mycommand(self):
+            ...
+    
+    Option Keyword Arguments:
+    
+        is_hidden -- True/False whether command should display on --help.
+        
     """
     def decorate(func):
         name = re.sub('_', '-', func.__name__)

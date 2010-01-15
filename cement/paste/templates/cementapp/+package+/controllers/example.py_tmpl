@@ -4,6 +4,8 @@ from cement import namespaces
 from cement.core.controller import CementController, expose
 from cement.core.hook import run_hooks
 
+from {{package}}.model.example import ExampleModel
+
 class ExampleController(CementController):
     """
     This is how to add a local/plugin subcommand because it will be  
@@ -15,6 +17,12 @@ class ExampleController(CementController):
     @expose() # no template, global namespace (default)
     def ex1(self, opts, args):
         print "This is ExampleController.ex1()"
+        
+        # commands are all passed the opts, args from the command line.
+        
+        # Here we show how to run hooks that we've defined:
+        for res in run_hooks('my_example_hook'):
+            print res
         
     def ex1_help(self, opts, args):
         print "This is the help method for ex1."
@@ -45,38 +53,26 @@ class ExampleController(CementController):
         
         # Here we are using our Example model, and then returning a dictionary
         # to our @expose() decorator where it will be rendered with Genshi.
-        example = Example()
+        example = ExampleModel()
         example.label = 'This is my Example Model'
 
         # You can see if options where passed.  These are set in 
         # myapp/plugins/example.py:
-        if cli_opts.global_option:
+        if opts.global_option:
             # --global-option was passed, do something
+            print '%s passed by --global-option' % opts.global_option
             pass
 
-        return dict(foo=True, example=example items=['one', 'two', 'three'])
-        
-            
-    def help(self):
-        """
-        All commands have a hidden -help option as well.  Here you can 
-        provide examples or other helpful information.
-        """
-        print "This is Example2Command.help()"
+        return dict(foo=True, example=example, items=['one', 'two', 'three'])
 
-
-@register_command(name='ex3', namespace='{{package}}_core')
-class ex3Command(CementCommand):
-    """
-    This is how to add a local/plugin subcommand to another namespace.  It
-    is possible to use this in conjunction with the options_hook() to add 
-    additional functionality to a completely other namespace:
+    @expose(namespace='{{package}}_core')
+    def ex3(self, opts, args):
+        """
+        This is how to add a local/plugin subcommand to another namespace.  It
+        is possible to use this in conjunction with the options_hook() to add 
+        additional functionality to a completely other namespace:
     
-        $ myapp {{package}} ex3
+            $ myapp {{package}} ex3
         
-    """
-    def run(self):
-        print "This is Example3Command.run()"
-        
-    def help(self):
-        print "This is Example3Command.help()"        
+        """
+        print "In {{package}}_core namespace"

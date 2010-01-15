@@ -5,29 +5,24 @@ This is a simple plugin to add some basic functionality.
 """
 
 import sys, os
-from pkg_resources import get_distribution
 import logging
 
 from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.opt import init_parser
 from cement.core.hook import define_hook, register_hook
-from cement.core.command import CementCommand, register_command
 from cement.core.plugin import CementPlugin, register_plugin
+
+from {{package}}.appmain import VERSION, BANNER
 
 log = get_logger(__name__)
 
-VERSION = '0.1'
 REQUIRED_CEMENT_API = '{{cement_api}}'
-
-# Optional: Allows you to customize the output of --version
-BANNER = """
-{{package}}.plugins.example v%s 
-""" % (VERSION)
- 
         
 @register_plugin() 
 class ExamplePlugin(CementPlugin):
+    define_hook('my_example_hook')
+    
     def __init__(self):
         CementPlugin.__init__(self,
             label = 'example',
@@ -46,7 +41,18 @@ class ExamplePlugin(CementPlugin):
         self.options.add_option('-E', '--example', action='store',
             dest='example_option', default=None, help='Example Plugin Option'
             )
-            
+           
+           
+# We import the controller here because the register_plugin() decorator
+# must get loaded first:
+from {{package}}.controllers.example import ExampleController
+
+
+#      
+# HOOKS: Usually defined in the main plugin file (here).  Functions
+# that you decorate with @register_hook() will be run whenever/wherever 
+# run_hooks('the_hook_name') is called.
+#
         
 @register_hook()
 def options_hook(*args, **kwargs):
@@ -93,4 +99,8 @@ def post_options_hook(*args, **kwargs):
         print "global_option => %s", cnf['global_option']  
         # then do something with it  
         
-
+@register_hook()
+def my_example_hook(*args, **kwargs):
+    """This is an example hook, that I define in my plugin config above."""
+    return "I'm in my_example_hook"
+    

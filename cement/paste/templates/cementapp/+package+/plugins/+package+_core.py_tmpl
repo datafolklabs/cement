@@ -17,6 +17,8 @@ REQUIRED_CEMENT_API = '{{cement_api}}'
         
 @register_plugin() 
 class {{package}}Plugin(CementPlugin):
+    # define_hook('myfunction_hook')
+    
     def __init__(self):
         CementPlugin.__init__(self,
             label = '{{package}}',
@@ -24,5 +26,6 @@ class {{package}}Plugin(CementPlugin):
             description = 'Core plugin for {{package}}',
             required_api = REQUIRED_CEMENT_API,
             version_banner = BANNER,
+            is_hidden=True,
             )
 

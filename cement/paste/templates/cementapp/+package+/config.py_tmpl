@@ -15,6 +15,7 @@ dcf['config_source'] = ['defaults']
 dcf['app_name'] = '{{package}}' # name for cli like /etc/<app_name>
 dcf['app_egg_name'] = '{{package}}' # name from setup.py
 dcf['app_module'] = '{{package}}' # name of the library dir
+dcf['app_basepath'] = os.path.dirname(__file__)
 
 # By default look in /etc and ~/ for config files.  You should probably
 # symlink /etc/<your_app> => ./etc/<your_app> for easy development.
