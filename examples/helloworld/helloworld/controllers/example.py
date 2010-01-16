@@ -1,10 +1,13 @@
 """This is the Example controller for helloworld."""
 
 from cement import namespaces
+from cement.core.log import get_logger
 from cement.core.controller import CementController, expose
 from cement.core.hook import run_hooks
 
 from helloworld.model.example import ExampleModel
+
+log = get_logger(__name__)
 
 class ExampleController(CementController):
     """
@@ -19,7 +22,7 @@ class ExampleController(CementController):
         print "This is ExampleController.ex1()"
         
         # commands are all passed the opts, args from the command line.
-
+        
         # Here we show how to run hooks that we've defined:
         for res in run_hooks('my_example_hook'):
             print res
