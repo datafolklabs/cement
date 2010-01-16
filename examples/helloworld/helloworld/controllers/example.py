@@ -19,10 +19,10 @@ class ExampleController(CementController):
         print "This is ExampleController.ex1()"
         
         # commands are all passed the opts, args from the command line.
-        
+
         # Here we show how to run hooks that we've defined:
         for res in run_hooks('my_example_hook'):
-            print res
+            print res['sec1']
         
     def ex1_help(self, opts, args):
         print "This is the help method for ex1."
