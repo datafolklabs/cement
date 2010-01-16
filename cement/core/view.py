@@ -1,3 +1,4 @@
+"""Methods and classes that enable Cement templating support."""
 
 import os
 import re
@@ -5,7 +6,7 @@ import json
 
 from cement import namespaces
 from cement.core.log import get_logger
-from genshi.template import TemplateLoader, NewTextTemplate
+from genshi.template import NewTextTemplate
 
 log = get_logger(__name__)
 
@@ -32,7 +33,9 @@ class render(object):
                                          '%s.txt' % t)
             
     def __call__(self, func):
-        def wrapper(*args, **kw):        
+        def wrapper(*args, **kw):  
+            log.debug("decorating '%s' with '%s:%s'" % \
+                (func.__name__, self.engine, self.template))      
             res = func(func, *args, **kw)
             
             if self.engine == 'json':
