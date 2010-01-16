@@ -7,7 +7,7 @@ New Features:
     very similar to the layout of TurboGears2.
  +  Added Genshi text templating support.
  +  Modified all templates to utilize new features.
-
+ +  Added more debug output to Cement framework.
 
 Incompatible Changes:
 

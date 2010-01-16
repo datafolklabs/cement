@@ -112,12 +112,8 @@ def set_config_opts_per_file(namespace, section, config_file):
                         for opt3 in sec3:
                             config[opt1][opt2][opt3] = t_f_pass(sec3[opt3])    
                         
-                
-                            
-            
-
-            # overwrite the namespace config
-            namespaces[namespace].config = config
+        # overwrite the namespace config
+        namespaces[namespace].config = config
                                 
 def set_config_opts_per_cli_opts(namespace, cli_opts):
     """
