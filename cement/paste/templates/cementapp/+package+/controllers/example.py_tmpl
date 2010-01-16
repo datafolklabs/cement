@@ -1,10 +1,13 @@
 """This is the Example controller for {{package}}."""
 
 from cement import namespaces
+from cement.core.log import get_logger
 from cement.core.controller import CementController, expose
 from cement.core.hook import run_hooks
 
 from {{package}}.model.example import ExampleModel
+
+log = get_logger(__name__)
 
 class ExampleController(CementController):
     """

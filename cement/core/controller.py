@@ -2,9 +2,11 @@
 import re
 
 from cement import namespaces
+from cement.core.exc import CementRuntimeError
 from cement.core.view import render
     
 class CementController(object):
+    """Currently just a place holder for more featureful controller."""
     pass
       
 def expose(template=None, namespace='global', **kwargs):
@@ -32,9 +34,14 @@ def expose(template=None, namespace='global', **kwargs):
         
     """
     def decorate(func):
+        """
+        Decorate the function and expose it to the namespace's commands
+        dict.
+        """
         name = re.sub('_', '-', func.__name__)
         if not namespace in namespaces:
-            raise CementRuntimeError, "The namespace '%s' is not defined!" % namespace
+            raise CementRuntimeError, \
+                "The namespace '%s' is not defined!" % namespace
         
         func = render(template)(func)        
         
