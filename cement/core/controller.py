@@ -1,10 +1,13 @@
-
+"""Methods and classes to handle Cement Controller functions."""
 import re
 
 from cement import namespaces
+from cement.core.log import get_logger
 from cement.core.exc import CementRuntimeError
 from cement.core.view import render
     
+log = get_logger(__name__)
+
 class CementController(object):
     """Currently just a place holder for more featureful controller."""
     pass
@@ -38,6 +41,9 @@ def expose(template=None, namespace='global', **kwargs):
         Decorate the function and expose it to the namespace's commands
         dict.
         """
+        log.debug("exposing namespaces['%s'].commands['%s'] from '%s'" % \
+            (namespace, func.__name__, func.__module__))
+            
         name = re.sub('_', '-', func.__name__)
         if not namespace in namespaces:
             raise CementRuntimeError, \

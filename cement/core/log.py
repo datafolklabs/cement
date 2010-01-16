@@ -10,7 +10,8 @@ def setup_logging(clear_loggers=True, level=None):
     """
     global namespaces
     config = namespaces['global'].config
-
+    all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
+    
     # remove any previously setup handlers from other libraries
     if clear_loggers:
         for i in logging.getLogger().handlers:
@@ -26,7 +27,7 @@ def setup_logging(clear_loggers=True, level=None):
     # log level
     if config.has_key('debug') and config['debug']:
         level = 'DEBUG'
-    elif level and level.upper() in ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']:
+    elif level and level.upper() in all_levels:
         level = level
     elif config.has_key('log_level'):
         level = config['log_level']
@@ -40,9 +41,8 @@ def setup_logging(clear_loggers=True, level=None):
     # console formatter    
     console = logging.StreamHandler()
     if log_level == logging.DEBUG:
-        console.setFormatter(
-            logging.Formatter("%(asctime)s (%(levelname)s) %(name)s : %(message)s")
-            )
+        console.setFormatter(logging.Formatter(
+            "%(asctime)s (%(levelname)s) %(name)s : %(message)s"))
     else: 
         console.setFormatter(
             logging.Formatter("%(levelname)s: %(message)s")

@@ -66,7 +66,7 @@ def load_plugin(plugin):
             getattr(plugin_module, plugin)
             if namespaces.has_key(plugin):
                 loaded = True
-                log.debug("loaded %s from %s.plugins.%s.py" % \
+                log.debug("loaded '%s' plugin from %s.plugins.%s" % \
                     (plugin, config['app_module'], plugin))
                 break
         except AttributeError, e:

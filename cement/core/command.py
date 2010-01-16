@@ -16,7 +16,7 @@ def run_command(command_name):
     """
     Run the command or namespace-subcommand.
     """
-    
+    log.debug("processing passed command '%s'", command_name)
     command_name = command_name.rstrip('*') 
     if command_name in namespaces.keys():
         namespace = command_name
@@ -54,6 +54,8 @@ def run_command(command_name):
             raise CementArgumentError, "%s is a namespace* which requires a sub-command.  See '%s --help?" % (namespace, namespace)
     
     if namespaces[namespace].commands.has_key(actual_cmd):
-        namespaces[namespace].commands[actual_cmd]['func'](cli_opts, cli_args)
+        func = namespaces[namespace].commands[actual_cmd]['func']
+        log.debug("executing command '%s'" % actual_cmd)
+        func(cli_opts, cli_args)
     else:
         raise CementArgumentError, "Unknown command, see --help?"
