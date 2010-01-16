@@ -1,8 +1,13 @@
+"""Methods and classes to handle Cement namespace support."""
 
 from cement import namespaces
+from cement.core.exc import CementRuntimeError
 from cement.core.opt import init_parser
 
 class CementNamespace(object):
+    """
+    Class that handles plugins and namespaces (commands, options, hooks).
+    """
     def __init__(self, label, version, required_api, **kw):
         self.label = label
         self.version = version

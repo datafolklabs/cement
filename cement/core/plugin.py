@@ -1,8 +1,9 @@
+"""Methods and classes to handle Cement plugin support."""
 
 import os
         
-from cement import namespaces, hooks
-from cement.core.exc import *
+from cement import namespaces
+from cement.core.exc import CementConfigError, CementRuntimeError
 from cement.core.log import get_logger
 from cement.core.hook import run_hooks
 from cement.core.configuration import set_config_opts_per_file
@@ -12,6 +13,7 @@ from cement.core.configuration import ensure_api_compat
 log = get_logger(__name__)
 
 class CementPlugin(CementNamespace):
+    """Wrapper for CementNamespace."""
     def __init__(self, *args, **kwargs):
         CementNamespace.__init__(self, *args, **kwargs)
         
@@ -24,13 +26,14 @@ def register_plugin(**kwargs):
         ...
     """
     def decorate(func):
+        """
+        Decorate a plugin class and add the namespace to global namespaces.
+        """
         nms = func.__module__.split('.')
 
         ensure_api_compat(func.__name__, func().required_api)
         if kwargs.get('name', None):
             plugin_name = kwargs['name']
-        elif nms[-1] == 'pluginmain':
-            plugin_name = nms[-2:][0]
         else:
             plugin_name = nms[-1]
         define_namespace(plugin_name, func())
@@ -46,14 +49,14 @@ def load_plugin(plugin):
     
     plugin  => Name of the plugin to load.
     """
-    global namespaces
     config = namespaces['global'].config
 
+    log.debug("loading plugin '%s'" % plugin)
     if config.has_key('show_plugin_load') and config['show_plugin_load']:
         print 'loading %s plugin' % plugin
     
     try: 
-        app_module = __import__(config['app_module'])
+        __import__(config['app_module'])
     except ImportError, e:
         raise CementConfigError, e
         
@@ -61,8 +64,8 @@ def load_plugin(plugin):
     while True:
         # simple style : myapp/plugins/myplugin.py
         try:
-            plugin_module = __import__('%s.plugins' % config['app_module'], globals(), locals(),
-                   [plugin], -1)
+            plugin_module = __import__('%s.plugins' % config['app_module'], 
+                globals(), locals(), [plugin], -1)
             getattr(plugin_module, plugin)
             if namespaces.has_key(plugin):
                 loaded = True
@@ -71,37 +74,21 @@ def load_plugin(plugin):
                 break
         except AttributeError, e:
             log.debug("AttributeError => %s" % e)
-        
-        # complex style : myapp/plugins/myplugin/pluginmain.py
-        try:
-            plugin_module = __import__('%s.plugins.%s' % (config['app_module'], plugin), globals(), locals(),
-                   ['pluginmain'], -1)
-            getattr(plugin_module, 'pluginmain')
-            if namespaces.has_key(plugin):
-                loaded = True
-                log.debug("loaded %s from %s.plugins.%s.pluginmain.py" % \
-                    (plugin, config['app_module'], plugin))
-                print("Deprecated Feature: rename pluginmain.py to %s.py.  Please see http://wiki.github.com/derks/cement/plugin-support" % plugin)    
-                break
-        except AttributeError, e:
-            log.debug("AttributeError => %s" % e)
-        except ImportError, e:
-            log.debug("ImportError => %s" % e)
-        
-        try:
-            plugin_module = __import__('%s.plugins.%s' % (config['app_module'], plugin), globals(), locals(),
-                   [plugin], -1)            
-            getattr(plugin_module, plugin)
-
-            if namespaces.has_key(plugin):
-                loaded = True
-                log.debug("loaded %s from %s.plugins.%s.%s.py" % \
-                    (plugin, config['app_module'], plugin, plugin))
-                break
-        except AttributeError, e:
-            log.debug("AttributeError => %s" % e)
-        except ImportError, e:
-            log.debug("ImportError => %s" % e)
+                
+#        try:
+#            plugin_module = __import__('%s.plugins.%s' % (config['app_module'], plugin), globals(), locals(),
+#                   [plugin], -1)            
+#            getattr(plugin_module, plugin)
+#
+#            if namespaces.has_key(plugin):
+#                loaded = True
+#                log.debug("loaded %s from %s.plugins.%s.%s.py" % \
+#                    (plugin, config['app_module'], plugin, plugin))
+#                break
+#        except AttributeError, e:
+#            log.debug("AttributeError => %s" % e)
+#        except ImportError, e:
+#            log.debug("ImportError => %s" % e)
             
         # load from cement plugins
         try:
@@ -115,27 +102,12 @@ def load_plugin(plugin):
                 break
         except AttributeError, e:
             log.debug("AttributeError => %s" % e)
-        
-        # complex style from cement : cement/plugins/myplugin/pluginmain.py
-        try:
-            plugin_module = __import__('cement.plugins.%s' % plugin, globals(), locals(),
-                   [plugin], -1)
-
-            getattr(plugin_module, plugin)
-            if namespaces.has_key(plugin):
-                loaded = True
-                log.debug("loaded %s from cement.plugins.%s.%s.py" % \
-                    (plugin, plugin, plugin))
-                break
-        except AttributeError, e:
-            log.debug("AttributeError => %s" % e)
-        except ImportError, e:
-            log.debug("ImportError => %s" % e)
-            
+                    
         break
     
     if not loaded:
-        raise CementRuntimeError, "Failed loading plugin '%s', is it installed?" % plugin
+        raise CementRuntimeError, \
+            "Failed loading plugin '%s', is it installed?" % plugin
         
     plugin_config_file = os.path.join(
         namespaces['global'].config['plugin_config_dir'], '%s.plugin' % plugin
@@ -149,8 +121,6 @@ def load_all_plugins():
     Attempt to load all enabled plugins.  Passes the existing config and 
     options object to each plugin and allows them to add/update each.
     """
-    global namespaces
-
     for plugin in namespaces['global'].config['enabled_plugins']:
         load_plugin(plugin)
         

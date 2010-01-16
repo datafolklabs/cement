@@ -4,8 +4,10 @@ import sys, os
 from optparse import OptionParser, IndentedHelpFormatter
 
 from cement import namespaces
-
+from cement.core.log import get_logger
             
+log = get_logger(__name__)            
+
 class Options(object):
     """
     This class is used to setup the OptParse object for later use, and is
@@ -34,13 +36,10 @@ class Options(object):
             indent_increment=4, max_help_position=32, width=77, short_first=1
             )
         self.parser = OptionParser(formatter=fmt, version=version_banner)
-    
-def get_options():
-    o = Options()
-    return o
-    
+        
 
 def init_parser(version_banner=None):
+    """Create an OptionParser object and returns its parser member."""
     fmt = IndentedHelpFormatter(
             indent_increment=4, max_help_position=32, width=77, short_first=1
             )
@@ -62,6 +61,7 @@ def parse_options(namespace='global'):
     """
     global namespaces
 
+    log.debug("parsing command line opts/args for '%s' namespace" % namespace)
     if namespaces[namespace].config.has_key('merge_global_options') and \
        namespaces[namespace].config['merge_global_options']:
         for opt in namespaces['global'].options._get_all_options(): 
@@ -127,7 +127,8 @@ def parse_options(namespace='global'):
 Commands:  
 %s
     
-Help?  try [%s]-help""" % (script, namespace_txt, cmd_type_txt, cmd_txt, cmd_type_txt)
+Help?  try [%s]-help""" % (script, namespace_txt, cmd_type_txt, cmd_txt, 
+                           cmd_type_txt)
 
     (opts, args) = namespaces[namespace].options.parse_args()
     
