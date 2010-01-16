@@ -44,7 +44,13 @@ def expose(template=None, namespace='global', **kwargs):
         log.debug("exposing namespaces['%s'].commands['%s'] from '%s'" % \
             (namespace, func.__name__, func.__module__))
             
+        json_func = func
+        
+        # first for the template
         name = re.sub('_', '-', func.__name__)
+        if template == 'json':
+            name = "%s.json" % func.__name__
+            
         if not namespace in namespaces:
             raise CementRuntimeError, \
                 "The namespace '%s' is not defined!" % namespace
@@ -55,7 +61,22 @@ def expose(template=None, namespace='global', **kwargs):
             'is_hidden' : kwargs.get('is_hidden', False),
             'func' : func
             }
-            
+
         namespaces[namespace].commands[name] = cmd
+    
+        # then for json, everything exposed with a template (meaning its
+        # returning a dict) gets a json deco also
+        if template:
+            name = re.sub('_', '-', json_func.__name__)
+            name = "%s.json" % name
+        
+            json_func = render('json')(json_func)        
+        
+            json_cmd = {
+                'is_hidden' : True,
+                'func' : json_func
+                }
+            namespaces[namespace].commands[name] = json_cmd
+        
         return func
     return decorate

@@ -1,8 +1,10 @@
 """Methods and classes that enable Cement templating support."""
 
 import os
+from sys import stdout
 import re
 import json
+import inspect
 
 from cement import namespaces
 from cement.core.log import get_logger
@@ -39,7 +41,16 @@ class render(object):
             res = func(func, *args, **kw)
             
             if self.engine == 'json':
-                print json.dumps(res)
+                # os.system('clear')
+                safe_res = {}
+                for i in res:
+                    try:
+                        getattr(res[i], '__dict__')
+                        safe_res[i] = res[i].__dict__
+                    except AttributeError, e:
+                        safe_res[i] = res[i]
+                        
+                print json.dumps(safe_res)
             
             elif self.engine == 'genshi':  
                 if self.template:  
