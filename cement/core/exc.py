@@ -33,9 +33,3 @@ class CementArgumentError(CementError):
     def __init__(self, value):
         code = 40
         CementError.__init__(self, value, code)
-    
-class CementIOError(CementError):
-    """IO operation errors."""
-    def __init__(self, value):
-        code = 50
-        CementError.__init__(self, value, code)
