@@ -14,7 +14,13 @@ def get_default_config():
     dcf['enabled_plugins'] = []
     dcf['debug'] = False
     dcf['show_plugin_load'] = True
-    dcf['merge_global_options'] = False
+    return dcf
+
+def get_default_plugin_config():
+    """Get a default plugin config dict."""
+    dcf = {}
+    dcf['config_source'] = ['defaults']
+    dcf['merge_global_options'] = True
     return dcf
 
 # global hooks dictionary

@@ -62,7 +62,8 @@ def lay_cement(default_app_config=None, version_banner=None):
             )
             
     # initial logger
-    if '--json' in sys.argv:
+    if '--json' in sys.argv \
+        or not namespaces['global'].config['log_to_console']:
         namespaces['global'].config['show_plugin_load'] = False
         setup_logging(to_console=False)
     else:

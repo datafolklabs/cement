@@ -32,6 +32,7 @@ dcf['log_file'] = '%s/log/%s.log' % (dcf['statedir'], dcf['app_name'])
 dcf['plugin_config_dir'] = '%s/etc/%s/plugins.d' % (dcf['statedir'], dcf['app_name'])
 dcf['plugin_dir'] = '%s/plugins.d' % dcf['statedir']
 dcf['plugins'] = {}
+dcf['log_to_console'] = True
 
 found_config = False
 for c in dcf['config_files']:

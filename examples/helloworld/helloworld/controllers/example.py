@@ -25,8 +25,7 @@ class ExampleController(CementController):
         
         # Here we show how to run hooks that we've defined:
         for res in run_hooks('my_example_hook'):
-            pass
-        return dict(foo='bar')
+            print res
         
     def ex1_help(self, opts, args):
         print "This is the help method for ex1."

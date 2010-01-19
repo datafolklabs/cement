@@ -2,6 +2,7 @@
 
 from cement import namespaces
 from cement.core.exc import CementRuntimeError
+from cement.core.configuration import get_default_plugin_config
 from cement.core.opt import init_parser
 
 class CementNamespace(object):
@@ -14,9 +15,12 @@ class CementNamespace(object):
         self.required_api = required_api
         self.description = kw.get('description', '')
         self.commands = kw.get('commands', {})
-        self.config = kw.get('config', {'config_source': ['defaults']})
         self.is_hidden = kw.get('is_hidden', False)
         
+        self.config = get_default_plugin_config()
+        if kw.get('config', None):
+            self.config.update(kw['config'])
+
         if not kw.get('version_banner'):
             vb = "%s version %s" % (self.label, self.version)
         else:

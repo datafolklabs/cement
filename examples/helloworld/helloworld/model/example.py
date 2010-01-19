@@ -8,6 +8,6 @@ from cement.core.log import get_logger
 log = get_logger(__name__)
 
 class ExampleModel(object):
-    id = None
-    label = None
-    description = None
+    id = int()
+    label = u''
+    description = u''

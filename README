@@ -7,7 +7,7 @@ DESCRIPTION:
 Cement is an advanced CLI Application Framework for Python. It promotes code 
 re-use by way of plugins and helper libraries that can be shared between 
 any application built on cement.  The MVC and overall framework design is 
-very much inspired by the TurboGears2 web framework.  Its goal it to introduce
+very much inspired by the TurboGears2 web framework.  Its goal is to introduce
 a standard, and feature-full platform for both simple and complex command line 
 applications as well as support rapid development needs without sacrificing
 quality.
