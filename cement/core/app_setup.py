@@ -1,5 +1,6 @@
 """Cement methods to setup the framework for applications using it."""
 
+import sys
 from pkg_resources import get_distribution
 
 from cement import namespaces
@@ -8,7 +9,7 @@ from cement.core.configuration import validate_config, get_default_config
 from cement.core.plugin import load_all_plugins
 from cement.core.namespace import CementNamespace, define_namespace
 from cement.core.log import setup_logging, get_logger
-from cement.core.hook import define_hook, run_hooks
+from cement.core.hook import register_hook, define_hook, run_hooks
 
 log = get_logger(__name__)    
 
@@ -17,7 +18,9 @@ def register_default_hooks():
     define_hook('options_hook')
     define_hook('post_options_hook')
     define_hook('validate_config_hook')
-            
+    define_hook('pre_plugins_hook')
+    define_hook('post_plugins_hook')
+
 def lay_cement(default_app_config=None, version_banner=None):
     """
     Primary method to setup an application for Cement.  
@@ -52,8 +55,18 @@ def lay_cement(default_app_config=None, version_banner=None):
         set_config_opts_per_file('global', 
                                  namespaces['global'].config['app_module'], 
                                  cf)
+
+    # Add the --json option (hack)
+    namespaces['global'].options.add_option('--json', action='store_true',
+            dest='enable_json', default=None, help='Display command output as json.'
+            )
+            
     # initial logger
-    setup_logging()
+    if '--json' in sys.argv:
+        namespaces['global'].config['show_plugin_load'] = False
+        setup_logging(to_console=False)
+    else:
+        setup_logging()
     load_all_plugins()
     
     # allow plugins to add config validation
@@ -61,8 +74,6 @@ def lay_cement(default_app_config=None, version_banner=None):
                          config=namespaces['global'].config):
         pass
     
-
-
 
         
         

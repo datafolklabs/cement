@@ -8,6 +8,7 @@ New Features:
  +  Added Genshi text templating support.
  +  Modified all templates to utilize new features.
  +  Added more debug output to Cement framework.
+ + Added pre_plugins_hook, and post_plugins_hook
 
 Incompatible Changes:
 

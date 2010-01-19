@@ -53,6 +53,10 @@ def run_command(command_name):
         except IndexError:
             raise CementArgumentError, "%s is a namespace* which requires a sub-command.  See '%s --help?" % (namespace, namespace)
     
+    # jsonify it
+    if cli_opts.enable_json:
+        actual_cmd = "%s.json" % actual_cmd
+        
     if namespaces[namespace].commands.has_key(actual_cmd):
         func = namespaces[namespace].commands[actual_cmd]['func']
         log.debug("executing command '%s'" % actual_cmd)

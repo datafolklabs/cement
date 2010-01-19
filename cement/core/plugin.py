@@ -50,7 +50,6 @@ def load_plugin(plugin):
     plugin  => Name of the plugin to load.
     """
     config = namespaces['global'].config
-
     log.debug("loading plugin '%s'" % plugin)
     if config.has_key('show_plugin_load') and config['show_plugin_load']:
         print 'loading %s plugin' % plugin
@@ -114,13 +113,15 @@ def load_plugin(plugin):
         )
         
     set_config_opts_per_file(plugin, plugin, plugin_config_file)
-    
-                       
+                           
 def load_all_plugins():
     """
     Attempt to load all enabled plugins.  Passes the existing config and 
     options object to each plugin and allows them to add/update each.
     """
+    for res in run_hooks('pre_plugins_hook'):
+        pass
+        
     for plugin in namespaces['global'].config['enabled_plugins']:
         load_plugin(plugin)
         
@@ -131,3 +132,5 @@ def load_all_plugins():
             else:
                 namespaces[namespace].options.add_option(opt)
     
+    for res in run_hooks('post_plugins_hook'):
+        pass

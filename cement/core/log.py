@@ -4,7 +4,7 @@ import logging
 
 from cement import namespaces
 
-def setup_logging(clear_loggers=True, level=None):
+def setup_logging(clear_loggers=True, level=None, to_console=True):
     """
     Primary Cement method to setup logging.
     """
@@ -39,17 +39,18 @@ def setup_logging(clear_loggers=True, level=None):
     cement_log.setLevel(log_level)
     
     # console formatter    
-    console = logging.StreamHandler()
-    if log_level == logging.DEBUG:
-        console.setFormatter(logging.Formatter(
-            "%(asctime)s (%(levelname)s) %(name)s : %(message)s"))
-    else: 
-        console.setFormatter(
-            logging.Formatter("%(levelname)s: %(message)s")
-            )
-    console.setLevel(log_level)   
-    app_log.addHandler(console)    
-    cement_log.addHandler(console)
+    if to_console:
+        console = logging.StreamHandler()
+        if log_level == logging.DEBUG:
+            console.setFormatter(logging.Formatter(
+                "%(asctime)s (%(levelname)s) %(name)s : %(message)s"))
+        else: 
+            console.setFormatter(
+                logging.Formatter("%(levelname)s: %(message)s")
+                )
+        console.setLevel(log_level)   
+        app_log.addHandler(console)    
+        cement_log.addHandler(console)
     
     # file formatter
     if config.has_key('log_file'):
