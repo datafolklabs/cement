@@ -129,7 +129,10 @@ def load_all_plugins():
         for opt in res._get_all_options(): 
             if opt.get_opt_string() == '--help':
                 pass
+            elif opt.get_opt_string() == '--json':
+                pass
             else:
+                print opt
                 namespaces[namespace].options.add_option(opt)
     
     for res in run_hooks('post_plugins_hook'):

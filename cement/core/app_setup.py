@@ -57,9 +57,12 @@ def lay_cement(default_app_config=None, version_banner=None):
                                  cf)
 
     # Add the --json option (hack)
-    namespaces['global'].options.add_option('--json', action='store_true',
+    try:
+        namespaces['global'].options.add_option('--json', action='store_true',
             dest='enable_json', default=None, help='Display command output as json.'
             )
+    except optparse.OptionConflictError, e:
+        pass
             
     # initial logger
     if '--json' in sys.argv \

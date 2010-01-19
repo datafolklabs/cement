@@ -62,15 +62,16 @@ def parse_options(namespace='global'):
     global namespaces
 
     log.debug("parsing command line opts/args for '%s' namespace" % namespace)
-    if namespaces[namespace].config.has_key('merge_global_options') and \
-       namespaces[namespace].config['merge_global_options']:
-        for opt in namespaces['global'].options._get_all_options(): 
-            if opt.get_opt_string() == '--help':
-                pass
-            elif opt.get_opt_string() == '--version':
-                pass
-            else:
-                namespaces[namespace].options.add_option(opt)
+    if namespace != 'global':
+        if namespaces[namespace].config.has_key('merge_global_options') and \
+           namespaces[namespace].config['merge_global_options']:
+            for opt in namespaces['global'].options._get_all_options(): 
+                if opt.get_opt_string() == '--help':
+                    pass
+                elif opt.get_opt_string() == '--version':
+                    pass
+                else:
+                    namespaces[namespace].options.add_option(opt)
     
     cmd_txt = ''
     line = '    '
