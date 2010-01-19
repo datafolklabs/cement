@@ -1,4 +1,36 @@
-"""Definition for Cement laycement templates."""
+"""
+Definition for Cement laycement templates.
+
+A significant portion of this file was derived from the tg.devtools software
+which is licensed under the MIT license.  The following license applies to
+the work in *this* file only, and not any other part of the Cement Framework
+unless otherwise noted:
+
+-----------------------------------------------------------------------------
+Copyright (c) 2008 TurboGears Team
+
+ Permission is hereby granted, free of charge, to any person
+ obtaining a copy of this software and associated documentation
+ files (the "Software"), to deal in the Software without
+ restriction, including without limitation the rights to use,
+ copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the
+ Software is furnished to do so, subject to the following
+ conditions:
+
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+-----------------------------------------------------------------------------
+"""
 
 from paste.script import templates
 from tempita import paste_script_template_renderer
@@ -19,7 +51,8 @@ class CementAppTemplate(templates.Template):
     vars = [
         templates.var("cement_api", "Cement API Version", default=CEMENT_API),
         templates.var("cement_version", "Cement version", default=None),
-        templates.var("cement_next_version", "Cement Next Version", default=None)
+        templates.var("cement_next_version", "Cement Next Version", 
+                      default=None)
         ]
 
     def pre(self, command, output_dir, vars):
@@ -36,10 +69,12 @@ class CementPluginTemplate(templates.Template):
     egg_plugins = ['PasteScript', 'Cement']
     vars = [
         templates.var("plugin", "cement plugin name", default=None),
-        templates.var("project", "Parent application this plugin is for", default=None),
+        templates.var("project", "Parent application this plugin is for", 
+                      default=None),
         templates.var("cement_api", "Cement API Version", default=CEMENT_API),
         templates.var("cement_version", "Cement version", default=None),
-        templates.var("cement_next_version", "Cement Next Version", default=None)
+        templates.var("cement_next_version", "Cement Next Version", 
+                      default=None)
         ]
 
     def pre(self, command, output_dir, vars):
@@ -56,9 +91,11 @@ class CementHelperTemplate(templates.Template):
     egg_plugins = ['PasteScript', 'Cement']
     vars = [
         templates.var("helper", "cement helper name", default=None),
-        templates.var("project", "Parent application this plugin is for", default=None),
+        templates.var("project", "Parent application this plugin is for", 
+                      default=None),
         templates.var("cement_version", "Cement version", default=None),
-        templates.var("cement_next_version", "Cement Next Version", default=None)
+        templates.var("cement_next_version", "Cement Next Version", 
+                      default=None)
         ]
 
     def pre(self, command, output_dir, vars):
