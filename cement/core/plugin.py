@@ -109,9 +109,9 @@ def load_plugin(plugin):
             "Failed loading plugin '%s', is it installed?" % plugin
         
     plugin_config_file = os.path.join(
-        namespaces['global'].config['plugin_config_dir'], '%s.plugin' % plugin
+        namespaces['global'].config['plugin_config_dir'], '%s.conf' % plugin
         )
-        
+
     set_config_opts_per_file(plugin, plugin, plugin_config_file)
                            
 def load_all_plugins():
