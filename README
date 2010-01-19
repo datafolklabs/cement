@@ -11,13 +11,14 @@ inspired by the TurboGears2 web framework.
 
 At a minimum, Cement easily sets up the following:
 
-    Configuration file parsing [using ConfigObj]
-    Command line arguments and option parsing [using OptParse]
-    Logging [using Logger]
-    Plugin support [partially using setuptools]
+    Multiple Configuration file parsing (default: /etc, ~/)
+    Command line argument and option parsing
+    Dual Console/File Logging Support
+    Full Internal and External (3rd Party) Plugin support
     Basic "hook" support
     Full MVC support for advanced application design
     Text output rendering with Genshi templates
+    Json output rendering allows other programs to access your CLI-API
     
 
 These pieces are important for any command line application.. 
