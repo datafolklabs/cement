@@ -25,11 +25,11 @@ class ExamplePlugin(CementPlugin):
     
     def __init__(self):
         CementPlugin.__init__(self,
-            label = 'example',
-            version = VERSION,
-            description = 'Example plugin for helloworld',
-            required_api = REQUIRED_CEMENT_API,
-            version_banner=BANNER,
+            label='example',
+            version=VERSION,
+            description='Example plugin for helloworld',
+            required_api=REQUIRED_CEMENT_API,
+            banner=BANNER,
             )
         
         # plugin configurations can be setup this way

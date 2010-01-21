@@ -38,12 +38,18 @@ class Options(object):
         self.parser = OptionParser(formatter=fmt, version=version_banner)
         
 
-def init_parser(version_banner=None):
-    """Create an OptionParser object and returns its parser member."""
+def init_parser(banner=None):
+    """
+    Create an OptionParser object and returns its parser member.
+    
+    Keyword arguments:
+    banner -- Optional version banner to display for --version
+    
+    """
     fmt = IndentedHelpFormatter(
             indent_increment=4, max_help_position=32, width=77, short_first=1
             )
-    parser = OptionParser(formatter=fmt, version=version_banner)
+    parser = OptionParser(formatter=fmt, version=banner)
     return parser
 
     

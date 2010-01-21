@@ -14,38 +14,35 @@ from cement.core.hook import register_hook, define_hook, run_hooks
 log = get_logger(__name__)    
 
 def register_default_hooks():
-    """Register Cement framework hooks."""
+    """Registers Cement framework hooks."""
     define_hook('options_hook')
     define_hook('post_options_hook')
     define_hook('validate_config_hook')
     define_hook('pre_plugins_hook')
     define_hook('post_plugins_hook')
 
-def lay_cement(default_app_config=None, version_banner=None):
+def lay_cement(config=None, banner=None):
     """
     Primary method to setup an application for Cement.  
     
-    Arguments:
-    
-    config => dict containing application config.
-    version_banner => Option txt displayed for --version
+    Keyword arguments:
+    config  -- Dict containing application config.
+    banner  -- Optional text to display for --version
     """    
-    vb = version_banner    
-    if not version_banner:
-        vb = """%s version %s""" % (
-            default_app_config['app_name'],
-            get_distribution(default_app_config['app_egg_name']).version
-            )
+    if not banner:
+        banner = "%s version %s" % (
+            config['app_name'],
+            get_distribution(config['app_egg_name']).version)
         
     namespace = CementNamespace(
-        label = 'global',
-        version = get_distribution(default_app_config['app_egg_name']).version,
-        required_api = CEMENT_API,
-        config = get_default_config(),
-        version_banner = vb,
+        label='global',
+        version=get_distribution(config['app_egg_name']).version,
+        required_api=CEMENT_API,
+        config=get_default_config(),
+        banner=banner,
         )
     define_namespace('global', namespace)
-    namespaces['global'].config.update(default_app_config)
+    namespaces['global'].config.update(config)
     
     register_default_hooks()
     

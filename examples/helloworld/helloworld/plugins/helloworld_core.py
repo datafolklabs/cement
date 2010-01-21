@@ -21,11 +21,11 @@ class helloworldPlugin(CementPlugin):
     
     def __init__(self):
         CementPlugin.__init__(self,
-            label = 'helloworld',
-            version = VERSION,
-            description = 'Core plugin for helloworld',
-            required_api = REQUIRED_CEMENT_API,
-            version_banner = BANNER,
+            label='helloworld',
+            version=VERSION,
+            description='Core plugin for helloworld',
+            required_api=REQUIRED_CEMENT_API,
+            banner=BANNER,
             is_hidden=True,
             )
 

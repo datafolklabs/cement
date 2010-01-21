@@ -12,18 +12,24 @@ from cement.core.exc import CementArgumentError
 log = get_logger(__name__)
         
 # FIXME: This method is so effing ugly.
-def run_command(command_name):
+def run_command(cmd_name=None):
     """
-    Run the command or namespace-subcommand.
+    Run the command or namespace-subcommand as defined by the 'expose()'
+    decorator used on a Controller function.
+    
+    Keyword arguments:
+    cmd_name --  The command name as store in the global 'namespaces'.  For
+                 example, namespaces['global'].commands['cmd_name'].
+                
     """
-    log.debug("processing passed command '%s'", command_name)
-    command_name = command_name.rstrip('*') 
-    if command_name in namespaces.keys():
-        namespace = command_name
+    log.debug("processing passed command '%s'", cmd_name)
+    cmd_name = cmd_name.rstrip('*') 
+    if cmd_name in namespaces.keys():
+        namespace = cmd_name
     else:
         namespace = 'global'
     
-    m = re.match('(.*)-help', command_name)
+    m = re.match('(.*)-help', cmd_name)
     if m and m.group(1) in namespaces.keys():   
         namespace = m.group(1)
         raise CementArgumentError, \
@@ -46,7 +52,7 @@ def run_command(command_name):
         pass # doesn't expect a result
     
     if namespace == 'global':
-        actual_cmd = command_name
+        actual_cmd = cmd_name
     else:
         try:
             actual_cmd = cli_args[1]
@@ -62,4 +68,4 @@ def run_command(command_name):
         log.debug("executing command '%s'" % actual_cmd)
         func(cli_opts, cli_args)
     else:
-        raise CementArgumentError, "Unknown command, see --help?"
+        raise CementArgumentError, "Unknown command '%s', see --help?" % actual_cmd

@@ -27,11 +27,11 @@ class sayhiPlugin(CementPlugin):
     
     def __init__(self):
         CementPlugin.__init__(self,
-            label = 'sayhi',
-            version = VERSION,
-            description = 'sayhi plugin for helloworld',
-            required_api = REQUIRED_CEMENT_API,
-            version_banner=BANNER
+            label='sayhi',
+            version=VERSION,
+            description='sayhi plugin for helloworld',
+            required_api=REQUIRED_CEMENT_API,
+            banner=BANNER
             )
  
 #      

@@ -29,7 +29,7 @@ def main():
     # Warning: You shouldn't modify below this point unless you know what 
     # you're doing.
     
-    lay_cement(default_config, version_banner=BANNER)
+    lay_cement(config=default_config, banner=BANNER)
     
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")

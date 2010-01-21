@@ -4,34 +4,42 @@ import sys, os
 version = '0.5.1'
 
 LONG = """
-Cement is a CLI Application Framework for Python. It promotes code re-use by 
-way of plugins and helper libraries that can be maintained internally, or 
-shared with the community.  The MVC and overall framework design is very much
-inspired by the TurboGears2 web framework.  
+Cement is an advanced CLI Application Framework for Python. It promotes code 
+re-use by way of plugins and helper libraries that can be shared between 
+any application built on Cement.  The MVC and overall framework design is 
+very much inspired by the TurboGears2 web framework.  Its goal is to introduce
+a standard, and feature-full platform for both simple and complex command line 
+applications as well as support rapid development needs without sacrificing
+quality.
 
-At a minimum, Cement easily sets up the following:
-
- * Configuration file parsing [using ConfigObj]
- * Command line arguments and option parsing [using OptParse]
- * Logging [using Logger]
- * Plugin support [partially using setuptools]
- * Basic "hook" support
- * Full MVC support for advanced application design
- * Text output rendering with Genshi templates
+At a minimum, Cement configures the following features for every application:
+::
+     * Multiple Configuration file parsing (default: /etc, ~/)
+     * Command line argument and option parsing
+     * Dual Console/File Logging Support
+     * Full Internal and External (3rd Party) Plugin support
+     * Basic "hook" support
+     * Full MVC support for advanced application design
+     * Text output rendering with Genshi templates
+     * Json output rendering allows other programs to access your CLI-API
     
 
-These pieces are important for any command line application.. 
-Normally to accomplish what's listed above would require hundreds of lines of 
-code before you even begin working on your application logic. With Cement, the 
-above is configured with more or less a single command (via paste).
+The above provides any level developer with a solid, and fully functional 
+cli application from the very start with more or less a single command via 
+the paster utility.  Cement brings an end to the 'hack it out, and [maybe] 
+clean it up later' routine that we all find ourselves in under deadlines.
 
-Cement is most generally used as a starting point from which to begin 
-developing a command line type application. That said, applications using 
-cement can also share plugins with either cement or other applications using 
-cement.
+Any application can utilize existing plugins from the CementPlugins
+project, or from other 3rd party resources to extend functionality.  The 
+plugin system is designed to allow portability of re-usable code, and it
+is encouraged to contribute any plugins back to the project to extend the 
+functionality of Cement.
 
 The Cement CLI Application Framework for Python is Open Source and is 
-distributed under the Python Software Foundation License.
+distributed under the Python Software Foundation License.  When creating
+plugins specifically for re-use within the community, please be sure to 
+follow the standard naming convention "HelloWorld Plugin for Cement" as an
+example.  The actual module name should be 'cement.plugins.helloworld'. 
 
 
 GETTING STARTED:

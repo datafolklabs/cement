@@ -27,11 +27,11 @@ class {{plugin}}Plugin(CementPlugin):
     
     def __init__(self):
         CementPlugin.__init__(self,
-            label = '{{plugin}}',
-            version = VERSION,
-            description = '{{plugin}} plugin for {{project}}',
-            required_api = REQUIRED_CEMENT_API,
-            version_banner=BANNER
+            label='{{plugin}}',
+            version=VERSION,
+            description='{{plugin}} plugin for {{project}}',
+            required_api=REQUIRED_CEMENT_API,
+            banner=BANNER
             )
  
 #      

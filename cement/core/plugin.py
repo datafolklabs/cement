@@ -132,7 +132,6 @@ def load_all_plugins():
             elif opt.get_opt_string() == '--json':
                 pass
             else:
-                print opt
                 namespaces[namespace].options.add_option(opt)
     
     for res in run_hooks('post_plugins_hook'):
