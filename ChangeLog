@@ -8,13 +8,13 @@ New Features:
  +  Added Genshi text templating support.
  +  Modified all templates to utilize new features.
  +  Added more debug output to Cement framework.
- + Added pre_plugins_hook, and post_plugins_hook
+ +  Added pre_plugins_hook, and post_plugins_hook
 
 Incompatible Changes:
 
  -  Cement API Version Change: 0.5-0.6:20100115.  Cement will remain compatible
     with this version of the API through version 0.6 stable.
- -  Removed 'register_command()' decorator in favor or the new expose()
+ -  Removed 'register_command()' decorator in favor of the new expose()
     controller decorator.  
  -  Namespace 'commands' member is no longer a dict of CementCommand objects,
-    is not a simplified dict of dicts.
+    is now a simplified dict of dicts.
