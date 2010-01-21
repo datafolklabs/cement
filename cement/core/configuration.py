@@ -49,9 +49,9 @@ def t_f_pass(value):
     python.
     """
     try:
-        if str(value.lower()) in ['true', True, 'yes', '1', 'on']:
+        if str(value.lower()) in ['true', True]:
             return True
-        if str(value.lower()) in ['false', False, 'no', '0', 'off']:
+        if str(value.lower()) in ['false', False]:
             return False
         else:
             return value
@@ -63,11 +63,10 @@ def set_config_opts_per_file(namespace, section, config_file):
     Parse config file options for into config dict.  Will do nothing if the 
     config file does not exist.
     
-    Arguments:
-    
-    config => dict containing configurations.
-    section => section of the configuration file to read.
-    config_file => The config file to parse.
+    Required arguments:
+    namespace   -- The namespace to set config options for
+    section     -- Section of the configuration file to read.
+    config_file -- The config file to parse.
     """
     config = namespaces[namespace].config
     

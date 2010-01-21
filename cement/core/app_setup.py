@@ -39,6 +39,8 @@ def lay_cement(config=None, banner=None):
     config  -- Dict containing application config.
     banner  -- Optional text to display for --version
     """    
+    global namespaces
+    
     if not banner:
         banner = "%s version %s" % (
             config['app_name'],
@@ -63,14 +65,27 @@ def lay_cement(config=None, banner=None):
                                  namespaces['global'].config['app_module'], 
                                  cf)
 
-    # Add the --json option (hack)
+    # Add hardcoded options hacks... might move this to a hook or plugin later
     try:
         namespaces['global'].options.add_option('--json', action='store_true',
-            dest='enable_json', default=None, help='Display command output as json.'
+            dest='enable_json', default=None, 
+            help='render command output as json (Cement CLI-API)'
+            )
+        namespaces['global'].options.add_option('--debug', action='store_true',
+            dest='debug', default=None, help='toggle debug output'
+            )
+        namespaces['global'].options.add_option('--quiet', action='store_true',
+            dest='quiet', default=None, help='disable console logging'
             )
     except optparse.OptionConflictError, e:
         pass
             
+    # hardcoded options hacks... 
+    if '--debug' in sys.argv:
+        namespaces['global'].config['debug'] = True
+    if '--quiet' in sys.argv:
+        namespaces['global'].config['log_to_console'] = False
+        
     # Setup logging for console and file
     if '--json' in sys.argv \
         or not namespaces['global'].config['log_to_console']:

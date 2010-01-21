@@ -98,7 +98,7 @@ def load_plugin(plugin):
     
     if not loaded:
         raise CementRuntimeError, \
-            "Failed loading plugin '%s', is it installed?" % plugin
+            "Plugin '%s' is not installed or is broken. Try --debug?" % plugin
         
     plugin_config_file = os.path.join(
         namespaces['global'].config['plugin_config_dir'], '%s.conf' % plugin

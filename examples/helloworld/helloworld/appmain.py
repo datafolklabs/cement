@@ -24,18 +24,13 @@ helloworld version %s, built on Cement (api:%s)
 """ % (VERSION, REQUIRED_CEMENT_API)
 
 def main():
-    ensure_api_compat(__name__, REQUIRED_CEMENT_API)
-    
-    # Warning: You shouldn't modify below this point unless you know what 
-    # you're doing.
-    
-    lay_cement(config=default_config, banner=BANNER)
-    
-    log = get_logger(__name__)
-    log.debug("Cement Framework Initialized!")
-    
-    # react to the passed command.  command should be the first arg always
     try:
+        ensure_api_compat(__name__, REQUIRED_CEMENT_API)    
+        lay_cement(config=default_config, banner=BANNER)
+    
+        log = get_logger(__name__)
+        log.debug("Cement Framework Initialized!")
+    
         if not len(sys.argv) > 1:
             raise CementArgumentError, "A command is required. See --help?"
         
@@ -43,9 +38,14 @@ def main():
             
     except CementArgumentError, e:
         print("CementArgumentError > %s" % e)
-    
+        sys.exit(e.code)
     except CementConfigError, e:
         print("CementConfigError > %s" % e)
+        sys.exit(e.code)
+    except CementRuntimeError, e:
+        print("CementRuntimeError > %s" % e)
+        sys.exit(e.code)
+    sys.exit(0)
         
 if __name__ == '__main__':
     main()

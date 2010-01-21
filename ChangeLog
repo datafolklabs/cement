@@ -6,9 +6,12 @@ New Features:
  +  Reworked cement to provide a proper model, view, controller interface
     very similar to the layout of TurboGears2.
  +  Added Genshi text templating support.
- +  Modified all templates to utilize new features.
+ +  Modified all paster templates to utilize new features.
  +  Added more debug output to Cement framework.
  +  Added pre_plugins_hook, and post_plugins_hook
+ +  Added --debug, --json, and --quiet hard coded global options, which 
+    function to alter output.
+ +  Added Json output rendering, turns every app into a CLI-API
 
 Incompatible Changes:
 
@@ -18,3 +21,5 @@ Incompatible Changes:
     controller decorator.  
  -  Namespace 'commands' member is no longer a dict of CementCommand objects,
     is now a simplified dict of dicts.
+ -  Plugin configs now end in .config, no longer .plugin
+ -  Boolean config options now only support true/false to limit confusion

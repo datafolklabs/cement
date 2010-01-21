@@ -3,9 +3,9 @@ SOURCE INSTALLATION:
 
     $ sudo python setup.py install
 
-    $ sudo cp -a ./etc/helloworld /etc/helloworld
+    $ sudo cp -a ./etc/{{package}} /etc/{{package}}
     
     
 USAGE:
 
-    $ helloworld --help
+    $ {{package}} --help

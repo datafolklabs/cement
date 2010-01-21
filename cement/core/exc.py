@@ -13,23 +13,23 @@ class CementError(Exception):
 class CementConfigError(CementError):
     """Config parsing and setup errors."""
     def __init__(self, value):
-        code = 10
+        code = 1010
         CementError.__init__(self, value, code)
 
 class CementRuntimeError(CementError):
     """Runtime errors."""
     def __init__(self, value):
-        code = 20
+        code = 1020
         CementError.__init__(self, value, code)
         
 class CementInternalServerError(CementError):
     """Unknown or private internal errors."""
     def __init__(self, value):
-        code = 30
+        code = 1030
         CementError.__init__(self, value, code)
         
 class CementArgumentError(CementError):
     """Argument errors."""
     def __init__(self, value):
-        code = 40
+        code = 1040
         CementError.__init__(self, value, code)

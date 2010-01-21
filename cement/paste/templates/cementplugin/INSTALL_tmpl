@@ -1,0 +1,15 @@
+
+SOURCE INSTALLATION:
+
+    $ sudo python setup.py install
+
+    # The following is one command
+    $ sudo cp -a ./etc/{{project}}/plugins.d/{{plugin}}.conf \
+                 /etc/{{project}}/plugins.d/
+    
+    
+USAGE:
+
+    $ {{project}} --help
+    
+    $ {{project}} {{plugin}} --help

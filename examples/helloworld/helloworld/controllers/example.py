@@ -10,27 +10,36 @@ from helloworld.model.example import ExampleModel
 log = get_logger(__name__)
 
 class ExampleController(CementController):
-    """
-    This is how to add a local/plugin subcommand because it will be  
-    under the 'example' namespace.  You would access this subcommand as:
-    
-        $ myapp example ex1
-        
-    """
     @expose() # no template, global namespace (default)
     def ex1(self, opts, args):
-        print "This is ExampleController.ex1()"
+        """
+        This is how to add a local/plugin subcommand because it will be  
+        under the 'example' namespace.  You would access this subcommand as:
+    
+            $ myapp example ex1
         
-        # commands are all passed the opts, args from the command line.
+        """
+
+        # Note, the 'print' statement should not be used, rather use the
+        # log or return data to the template.
         
-        # Here we show how to run hooks that we've defined:
+        # Commands are all passed the opts, args from the command line.
+        
+        # Here we show how to run a hook that we've defined in
+        # helloworld.plugins.example:
         for res in run_hooks('my_example_hook'):
             print res
         
+        # This command has no template, but if we return something we
+        # can still access the json output via --json.
+        return dict(foo='bar')
+        
+    @expose()
     def ex1_help(self, opts, args):
+        """Using the print statement is ok for help methods."""
         print "This is the help method for ex1."
     
-    @expose('helloworld.templates.example.ex2')    
+    @expose('helloworld.templates.example.ex2', namespace='global')    
     def ex2(self, opts, args): 
         """
         This is an example global command.  See --help.  When commands are
@@ -63,8 +72,7 @@ class ExampleController(CementController):
         # myapp/plugins/example.py:
         if opts.global_option:
             # --global-option was passed, do something
-            print '%s passed by --global-option' % opts.global_option
-            pass
+            log.info('%s passed by --global-option' % opts.global_option)
 
         return dict(foo=True, example=example, items=['one', 'two', 'three'])
 
@@ -75,7 +83,8 @@ class ExampleController(CementController):
         is possible to use this in conjunction with the options_hook() to add 
         additional functionality to a completely other namespace:
     
-            $ myapp helloworld ex3
+            $ myapp helloworld_core ex3
         
         """
-        print "In helloworld_core namespace"
+        log.info("In helloworld_core namespace")
+        return dict(foo='bar')
