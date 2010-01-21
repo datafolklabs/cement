@@ -26,9 +26,6 @@ BANNER = """
 def main():
     ensure_api_compat(__name__, REQUIRED_CEMENT_API)
     
-    # Warning: You shouldn't modify below this point unless you know what 
-    # you're doing.
-    
     lay_cement(config=default_config, banner=BANNER)
     
     log = get_logger(__name__)

@@ -26,6 +26,7 @@ class CementNamespace(object):
                        output (default: False)
         config      -- A config dict (default: None)
         banner      -- A version banner to display for --version (default: '')
+        
         """
         self.label = label
         self.version = version
@@ -52,6 +53,7 @@ def define_namespace(namespace, namespace_obj):
     namespace     -- Label of the namespace
     namespace_obj -- CementNamespace object.  Stored in global 'namespaces'
                      dict as namespaces['namespace']
+                     
     """
     if namespaces.has_key(namespace):
         raise CementRuntimeError, "Namespace '%s' already defined!" % namespace

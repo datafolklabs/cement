@@ -7,12 +7,17 @@ from cement import namespaces
 def setup_logging(clear_loggers=True, level=None, to_console=True):
     """
     Primary Cement method to setup logging.
+    
+    Keyword arguments:
+    clear_loggers -- Boolean, whether to clean exiting loggers (default: True)
+    level -- The log level (info, warn, error, debug, fatal), (default: None)
+    to_console -- Boolean, whether or not to log to console
+    
     """
-    global namespaces
     config = namespaces['global'].config
     all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
     
-    # remove any previously setup handlers from other libraries
+    # Remove any previously setup handlers from other libraries
     if clear_loggers:
         for i in logging.getLogger().handlers:
             logging.getLogger().removeHandler(i)
@@ -24,7 +29,7 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
     app_log = logging.getLogger(config['app_module'])
     cement_log = logging.getLogger('cement')
     
-    # log level
+    # Log level
     if config.has_key('debug') and config['debug']:
         level = 'DEBUG'
     elif level and level.upper() in all_levels:
@@ -38,7 +43,7 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
     app_log.setLevel(log_level)
     cement_log.setLevel(log_level)
     
-    # console formatter    
+    # Console formatter    
     if to_console:
         console = logging.StreamHandler()
         if log_level == logging.DEBUG:
@@ -52,7 +57,7 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
         app_log.addHandler(console)    
         cement_log.addHandler(console)
     
-    # file formatter
+    # File formatter
     if config.has_key('log_file'):
         if config.has_key('log_max_bytes'):
             from logging.handlers import RotatingFileHandler
@@ -77,7 +82,11 @@ def get_logger(name):
     of 'name' (should be passed as __name__).  
     
     Arguments:
+    name -- Name of the module calling get_logger (use __name__).
     
-    name => name of the module calling get_logger (use __name__).
+    Usage:
+        log = get_logger(__name__)
+        
     """
     return logging.getLogger(name)
+    

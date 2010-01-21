@@ -19,15 +19,23 @@ class CementPlugin(CementNamespace):
         
 def register_plugin(**kwargs):
     """
-    Decorator function to register plugin namespace.  Used as:
+    Decorator function to register plugin namespace.  
     
-    @register_plugin()
-    class MyPlugin(CementPlugin):
-        ...
+    Usage:    
+        @register_plugin()
+        class myplugin(CementPlugin):
+            ...
     """
     def decorate(func):
         """
-        Decorate a plugin class and add the namespace to global namespaces.
+        Decorate a plugin class and add the namespace to global namespaces
+        dictionary (not the 'global' namespace).
+        
+        Arguments:
+        func -- The function to decorate
+        
+        Returns:
+        func -- The original function
         """
         nms = func.__module__.split('.')
 
@@ -43,11 +51,11 @@ def register_plugin(**kwargs):
     
 def load_plugin(plugin):
     """
-    Load a cement type plugin.  
+    Load a cement plugin.  
     
-    Arguments:
+    Required arguments:
+    plugin -- Name of the plugin to load
     
-    plugin  => Name of the plugin to load.
     """
     config = namespaces['global'].config
     log.debug("loading plugin '%s'" % plugin)
@@ -61,7 +69,6 @@ def load_plugin(plugin):
         
     loaded = False
     while True:
-        # simple style : myapp/plugins/myplugin.py
         try:
             plugin_module = __import__('%s.plugins' % config['app_module'], 
                 globals(), locals(), [plugin], -1)
@@ -73,23 +80,8 @@ def load_plugin(plugin):
                 break
         except AttributeError, e:
             log.debug("AttributeError => %s" % e)
-                
-#        try:
-#            plugin_module = __import__('%s.plugins.%s' % (config['app_module'], plugin), globals(), locals(),
-#                   [plugin], -1)            
-#            getattr(plugin_module, plugin)
-#
-#            if namespaces.has_key(plugin):
-#                loaded = True
-#                log.debug("loaded %s from %s.plugins.%s.%s.py" % \
-#                    (plugin, config['app_module'], plugin, plugin))
-#                break
-#        except AttributeError, e:
-#            log.debug("AttributeError => %s" % e)
-#        except ImportError, e:
-#            log.debug("ImportError => %s" % e)
-            
-        # load from cement plugins
+                            
+        # Load from cement plugins if the plugin doesn't exist in the app.
         try:
             plugin_module = __import__('cement.plugins', globals(), locals(),
                    [plugin], -1)
@@ -120,7 +112,7 @@ def load_all_plugins():
     options object to each plugin and allows them to add/update each.
     """
     for res in run_hooks('pre_plugins_hook'):
-        pass
+        pass # No result expected
         
     for plugin in namespaces['global'].config['enabled_plugins']:
         load_plugin(plugin)
@@ -135,4 +127,4 @@ def load_all_plugins():
                 namespaces[namespace].options.add_option(opt)
     
     for res in run_hooks('post_plugins_hook'):
-        pass
+        pass # No result expected

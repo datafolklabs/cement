@@ -8,34 +8,34 @@ from cement.core.log import get_logger
             
 log = get_logger(__name__)            
 
-class Options(object):
-    """
-    This class is used to setup the OptParse object for later use, and is
-    the object that is passed around thoughout the application.
-    """
-    def __init__(self):
-        self.parser = None
-        self.init_parser()
-        
-    def add_default_options(self):
-        """
-        Sets up default options for applications using Cement.
-        """
-        pass  
-         
-    def init_parser(self, version_banner=None):
-        """
-        Sets up the Options object and returns it for use throughout the 
-        application.
-    
-        Arguments
-    
-        version_banner => option txt to be display for --version.
-        """
-        fmt = IndentedHelpFormatter(
-            indent_increment=4, max_help_position=32, width=77, short_first=1
-            )
-        self.parser = OptionParser(formatter=fmt, version=version_banner)
+#class Options(object):
+#    """
+#    This class is used to setup the OptParse object for later use, and is
+#    the object that is passed around thoughout the application.
+#    """
+#    def __init__(self):
+#        self.parser = None
+#        self.init_parser()
+#        
+#    def add_default_options(self):
+#        """
+#        Sets up default options for applications using Cement.
+#        """
+#        pass  
+#         
+#    def init_parser(self, version_banner=None):
+#        """
+#        Sets up the Options object and returns it for use throughout the 
+#        application.
+#    
+#        Arguments
+#    
+#        version_banner => option txt to be display for --version.
+#        """
+#        fmt = IndentedHelpFormatter(
+#            indent_increment=4, max_help_position=32, width=77, short_first=1
+#            )
+#        self.parser = OptionParser(formatter=fmt, version=version_banner)
         
 
 def init_parser(banner=None):
@@ -55,18 +55,21 @@ def init_parser(banner=None):
     
 def parse_options(namespace='global'): 
     """
-    The actual method that parses the command line options and args.  
+    The actual method that parses the command line options and args.  Also
+    handles all the magic that happens when you pass --help to your app.  It
+    also handles merging global options into plugins, if the plugins config
+    is set to do so (merge_global_options)
     
-    Arguments:
+    Keyword arguments:
+    namespace -- The namespace to parse options for (defaullt: 'global')
     
-    config => dict containing the application configurations.
-    options_obj => The options object used to pass the parser around.
-    commands => Plugin commands to be added to the --help output.
+    Returns:
+    tuple --  (options, args)
     
-    Returns => a tuple of (options, args)
     """
-    global namespaces
 
+    # FIX ME: This method is very messy/confusing.
+    
     log.debug("parsing command line opts/args for '%s' namespace" % namespace)
     if namespace != 'global':
         if namespaces[namespace].config.has_key('merge_global_options') and \
@@ -94,7 +97,7 @@ def parse_options(namespace='global'):
                     cmd_txt += "%s \n" % line
                     line = '    %s' % c
 
-    # determine whether to display namespaces
+    # Determine whether to display namespaces
     if namespace == 'global':
         for nam in namespaces: 
             if nam != 'global' and namespaces[nam].commands:

@@ -9,6 +9,10 @@ log = get_logger(__name__)
 def define_hook(name):
     """
     Define a hook namespace that plugins can register hooks in.
+    
+    Required arguments:
+    name -- The name of the hook, stored as hooks['name']
+    
     """
     log.debug("defining hook '%s'", name)
     if hooks.has_key(name):
@@ -20,9 +24,14 @@ def register_hook(**kwargs):
     """
     Decorator function for plugins to register hooks.  Used as:
     
-    @register_hook()
-    def my_hook():
-        ...
+    Optional keyword arguments:
+    weight -- The weight in which to order the hook function (default: 0)
+    
+    Usage:
+        @register_hook()
+        def my_hook():
+            ...
+            
     """
     def decorate(func):
         """Decorate the function and add the hook to the global 'hooks'."""
@@ -31,7 +40,7 @@ def register_hook(**kwargs):
         if not hooks.has_key(func.__name__):
             log.warn("Hook name '%s' is not define!" % func.__name__)
             return func
-        # (1) is the list of registered hooks in the namespace
+        # Hooks are as follows: (wieght, name, func)
         hooks[func.__name__].append(
             (int(kwargs.get('weight', 0)), func.__name__, func)
         )
@@ -41,15 +50,27 @@ def register_hook(**kwargs):
 
 def run_hooks(*args, **kwargs):
     """
-    Run all defined hooks in the namespace.  Returns a list of return data.
+    Run all defined hooks in the namespace.  Yields the result of each hook
+    function run.
+    
+    Optional arguments:
+    name    -- The name of the hook function
+    args    -- Any additional args are passed to the hook function
+    kwargs  -- Any kwargs are passed to the hook function
+    
+    Usage:
+        for res in run_hooks('hook_name'):
+            # do something with result from each hook function
+            ...
     """
     name = args[0]
     if not hooks.has_key(name):
         CementRuntimeError, "Hook name '%s' is not defined!" % name
-    hooks[name].sort() # will order based on weight
+    hooks[name].sort() # Will order based on weight
     for hook in hooks[name]:
         log.debug("running hook '%s' from %s" % (name, hook[2].__module__))
         res = hook[2](*args[1:], **kwargs)
         
-        # FIXME: Need to validate the return data somehow
+        # Results are yielded, so you must fun a for loop on it, you can not
+        # simply call run_hooks().  
         yield res

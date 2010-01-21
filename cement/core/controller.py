@@ -18,32 +18,37 @@ def expose(template=None, namespace='global', **kwargs):
     
     Arguments:
     
-        template -- A template in python module form 
+        template  -- A template in python module form 
                     (i.e 'myapp.templates.mytemplate')
         
         namespace -- The namespace to expose the command in.  Default: global
-        
-        kwargs -- Options kwargs.
+    
+    Optional Keyword Arguments:
+    
+        is_hidden -- True/False whether command should display on --help.
         
     Usage: 
     
         @expose('app_module.view.template', namespace='namespace')
         def mycommand(self):
             ...
-    
-    Option Keyword Arguments:
-    
-        is_hidden -- True/False whether command should display on --help.
-        
     """
     def decorate(func):
         """
         Decorate the function and expose it to the namespace's commands
         dict.
+        
+        Required arguments:
+        func -- The function to decorate
+        
+        Returns:
+        
+        func -- The decorated function.
+        
         """
         log.debug("exposing namespaces['%s'].commands['%s'] from '%s'" % \
             (namespace, func.__name__, func.__module__))
-            
+        
         json_func = func
         
         # first for the template
@@ -64,19 +69,17 @@ def expose(template=None, namespace='global', **kwargs):
 
         namespaces[namespace].commands[name] = cmd
     
-        # then for json, everything exposed with a template (meaning its
-        # returning a dict) gets a json deco also
-        if template:
-            name = re.sub('_', '-', json_func.__name__)
-            name = "%s.json" % name
-        
-            json_func = render('json')(json_func)        
-        
-            json_cmd = {
-                'is_hidden' : True,
-                'func' : json_func
-                }
-            namespaces[namespace].commands[name] = json_cmd
+        # Then for json
+        name = re.sub('_', '-', json_func.__name__)
+        name = "%s.json" % name
+    
+        json_func = render('json')(json_func)        
+    
+        json_cmd = {
+            'is_hidden' : True,
+            'func' : json_func
+            }
+        namespaces[namespace].commands[name] = json_cmd
         
         return func
     return decorate

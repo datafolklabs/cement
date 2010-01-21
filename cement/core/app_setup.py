@@ -14,7 +14,17 @@ from cement.core.hook import register_hook, define_hook, run_hooks
 log = get_logger(__name__)    
 
 def register_default_hooks():
-    """Registers Cement framework hooks."""
+    """
+    Registers Cement framework hooks.
+    
+    Hook definitions:
+    options_hook         -- Used to add options to a namespaces options object
+    post_options_hook    -- Run after all options have been setup and merged
+    validate_config_hook -- Run after config options are setup
+    pre_plugins_hook     -- Run just before all plugins are loaded (run once)
+    post_plugins_hook    -- Run just after all plugins are loaded (run once)
+    
+    """
     define_hook('options_hook')
     define_hook('post_options_hook')
     define_hook('validate_config_hook')
@@ -61,16 +71,17 @@ def lay_cement(config=None, banner=None):
     except optparse.OptionConflictError, e:
         pass
             
-    # initial logger
+    # Setup logging for console and file
     if '--json' in sys.argv \
         or not namespaces['global'].config['log_to_console']:
         namespaces['global'].config['show_plugin_load'] = False
         setup_logging(to_console=False)
     else:
         setup_logging()
+        
     load_all_plugins()
     
-    # allow plugins to add config validation
+    # Allow plugins to add config validation for the global namespace
     for res in run_hooks('validate_config_hook', 
                          config=namespaces['global'].config):
         pass

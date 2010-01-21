@@ -23,12 +23,13 @@ def run_command(cmd_name=None):
                 
     """
     log.debug("processing passed command '%s'", cmd_name)
-    cmd_name = cmd_name.rstrip('*') 
+    cmd_name = cmd_name.rstrip('*') # stripped off of namespace if passed
     if cmd_name in namespaces.keys():
         namespace = cmd_name
     else:
         namespace = 'global'
     
+    # Handle hidden -help commands
     m = re.match('(.*)-help', cmd_name)
     if m and m.group(1) in namespaces.keys():   
         namespace = m.group(1)
@@ -36,21 +37,23 @@ def run_command(cmd_name=None):
             "'%s' is a namespace*, not a command.  See '%s --help' instead." % \
                 (namespace, namespace)
         
+    # Parse cli options and arguments
     (cli_opts, cli_args) = parse_options(namespace=namespace)
     if namespace == 'global':
         set_config_opts_per_cli_opts('global', cli_opts)
     else:
-        # if it merges in global ooptions, then it overrites them too.
+        # If it merges in global ooptions, then it overrites them too.
         if  namespaces[namespace].config.has_key('merge_global_options') and \
             namespaces[namespace].config['merge_global_options']:
             set_config_opts_per_cli_opts('global', cli_opts)    
         set_config_opts_per_cli_opts(namespace, cli_opts)
     
-    # FIX ME: need a global_pre_command_hook here so that clibasic can
-    # look for -C and if so, parse the passed config files into the dict.
+    # Run all post options hooks
     for res in run_hooks('post_options_hook', cli_opts, cli_args):
-        pass # doesn't expect a result
+        pass # Doesn't expect a result
     
+    # If it isn't the global namespace, then the first arg is the namespace
+    # and the second is the actual command.
     if namespace == 'global':
         actual_cmd = cmd_name
     else:
@@ -59,7 +62,7 @@ def run_command(cmd_name=None):
         except IndexError:
             raise CementArgumentError, "%s is a namespace* which requires a sub-command.  See '%s --help?" % (namespace, namespace)
     
-    # jsonify it
+    # Jsonify it... json commands are hidden
     if cli_opts.enable_json:
         actual_cmd = "%s.json" % actual_cmd
         
@@ -69,3 +72,4 @@ def run_command(cmd_name=None):
         func(cli_opts, cli_args)
     else:
         raise CementArgumentError, "Unknown command '%s', see --help?" % actual_cmd
+        
