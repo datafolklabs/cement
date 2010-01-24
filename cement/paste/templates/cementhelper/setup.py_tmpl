@@ -23,5 +23,5 @@ setup(name='{{project}}_helpers_{{helper}}',
     test_suite='nose.collector',
     entry_points="""
     """,
-    namespace_packages=['{{project}}', '{{project}}.helpers'],
+    namespace_packages=['{{project}}.helpers'],
     )

@@ -31,6 +31,9 @@ def main():
         log = get_logger(__name__)
         log.debug("Cement Framework Initialized!")
     
+        # Setup the root controller
+        from helloworld.controllers import root
+        
         if not len(sys.argv) > 1:
             raise CementArgumentError, "A command is required. See --help?"
         

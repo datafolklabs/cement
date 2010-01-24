@@ -1,9 +1,5 @@
 """This is an example plugin for {{package}}."""
 
-"""
-This is a simple plugin to add some basic functionality.
-"""
-
 import sys, os
 import logging
 

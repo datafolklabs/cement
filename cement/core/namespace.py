@@ -33,6 +33,7 @@ class CementNamespace(object):
         self.required_api = required_api
         self.description = kw.get('description', '')
         self.commands = kw.get('commands', {})
+        self.controller = kw.get('controller', None)
         self.is_hidden = kw.get('is_hidden', False)
         
         self.config = get_default_plugin_config()

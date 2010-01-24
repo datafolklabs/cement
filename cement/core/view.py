@@ -1,12 +1,14 @@
 """Methods and classes that enable Cement templating support."""
 
 import os
-from sys import stdout
 import re
 import json
 import inspect
+from pkgutil import get_data
 
-from cement import namespaces
+from cement import namespaces, SAVED_STDOUT, SAVED_STDERR, \
+                   buf_stdout, buf_stderr
+from cement.core.exc import CementRuntimeError
 from cement.core.log import get_logger
 from genshi.template import NewTextTemplate
 
@@ -16,9 +18,6 @@ class render(object):
     """
     Class decorator to render data with Genshi text formatting engine or json.
     """
-    template = None
-    engine = 'genshi'
-    
     def __init__(self, template=None):
         """
         Called when the function is decorated, sets up the engine and 
@@ -34,19 +33,21 @@ class render(object):
                 ...
                 
         """
+        self.template = template
+        self.tmpl_module = None
+        self.tmpl_file = None
+        self.engine = 'genshi'
         self.config = namespaces['global'].config
         
-        if template == 'json':
+        if self.template == 'json':
             self.engine = 'json'
             self.template = None
 
-        elif template:
+        elif self.template:
             # Mock up the template path
-            t = re.sub('%s\.' % self.config['app_module'], '', template)
-            t = re.sub('\.', '/', t)
-        
-            self.template = os.path.join(self.config['app_basepath'], 
-                                         '%s.txt' % t)
+            parts = template.split('.')
+            self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
+            self.tmpl_module = '.'.join(parts) # left over in between
             
     def __call__(self, func):
         """
@@ -57,6 +58,7 @@ class render(object):
         def wrapper(*args, **kw):  
             log.debug("decorating '%s' with '%s:%s'" % \
                 (func.__name__, self.engine, self.template))      
+            
             res = func(func, *args, **kw)
             
             # FIX ME: Is there a better way to jsonify classes?
@@ -68,13 +70,16 @@ class render(object):
                         safe_res[i] = res[i].__dict__
                     except AttributeError, e:
                         safe_res[i] = res[i]
-                print json.dumps(safe_res)
+                
+                safe_res['stdout'] = buf_stdout.buffer
+                safe_res['stderr'] = buf_stderr.buffer
+                SAVED_STDOUT.write(json.dumps(safe_res))
             
             elif self.engine == 'genshi':  
                 if self.template:  
                     # FIX ME: Pretty sure genshi has better means of doing 
                     # this, but couldn't get it to work.
-                    tmpl_text = open(self.template).read()
+                    tmpl_text = get_data(self.tmpl_module, self.tmpl_file)
                     tmpl = NewTextTemplate(tmpl_text)
                     print tmpl.generate(**res).render()
         return wrapper

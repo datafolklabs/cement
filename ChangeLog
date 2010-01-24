@@ -10,13 +10,18 @@ New Features:
  +  Added more debug output to Cement framework.
  +  Added pre_plugins_hook, and post_plugins_hook
  +  Added --debug, --json, and --quiet hard coded global options, which 
-    function to alter output.
+    function to alter output. The --quiet option removes sys.stdout 
+    completely.
  +  Added Json output rendering, turns every app into a CLI-API
+ +  The --json/--quiet options now buffer sys.stdout, and sys.stderror and 
+    passes them on to json output should they be needed.  This eliminates the 
+    ability for rouge output to interfere with what should be just json 
+    output.
 
 Incompatible Changes:
 
- -  Cement API Version Change: 0.5-0.6:20100115.  Cement will remain compatible
-    with this version of the API through version 0.6 stable.
+ -  Cement API Version Change: 0.5-0.6:20100115.  Cement will remain 
+    compatible with this version of the API through version 0.6 stable.
  -  Removed 'register_command()' decorator in favor of the new expose()
     controller decorator.  
  -  Namespace 'commands' member is no longer a dict of CementCommand objects,

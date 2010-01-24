@@ -1,6 +1,7 @@
 """Methods and classes to handle Cement plugin support."""
 
 import os
+import re
         
 from cement import namespaces
 from cement.core.exc import CementConfigError, CementRuntimeError
@@ -58,44 +59,35 @@ def load_plugin(plugin):
     
     """
     config = namespaces['global'].config
+    m = re.match('(.*)\.plugins\.(.*)', plugin)
+    if m:
+        provider = m.group(1)
+        plugin = m.group(2)
+    else:
+        provider = config['app_module']
+        
     log.debug("loading plugin '%s'" % plugin)
     if config.has_key('show_plugin_load') and config['show_plugin_load']:
         print 'loading %s plugin' % plugin
     
     try: 
-        __import__(config['app_module'])
+        __import__(provider)
     except ImportError, e:
-        raise CementConfigError, e
+        raise CementConfigError, 'unable to load plugin provider: %s' % e
         
     loaded = False
-    while True:
-        try:
-            plugin_module = __import__('%s.plugins' % config['app_module'], 
-                globals(), locals(), [plugin], -1)
-            getattr(plugin_module, plugin)
-            if namespaces.has_key(plugin):
-                loaded = True
-                log.debug("loaded '%s' plugin from %s.plugins.%s" % \
-                    (plugin, config['app_module'], plugin))
-                break
-        except AttributeError, e:
-            log.debug("AttributeError => %s" % e)
+    try:
+        plugin_module = __import__('%s.plugins' % provider, 
+            globals(), locals(), [plugin], -1)
+        getattr(plugin_module, plugin)
+        if namespaces.has_key(plugin):
+            loaded = True
+            log.debug("loaded '%s' plugin from %s.plugins.%s" % \
+                (plugin, provider, plugin))
+    except AttributeError, e:
+        log.debug("AttributeError => %s" % e)
                             
-        # Load from cement plugins if the plugin doesn't exist in the app.
-        try:
-            plugin_module = __import__('cement.plugins', globals(), locals(),
-                   [plugin], -1)
-            getattr(plugin_module, plugin)
-            if namespaces.has_key(plugin):
-                loaded = True
-                log.debug("loaded %s from cement.plugins.%s.py" % \
-                    (plugin, plugin))
-                break
-        except AttributeError, e:
-            log.debug("AttributeError => %s" % e)
-                    
-        break
-    
+                                
     if not loaded:
         raise CementRuntimeError, \
             "Plugin '%s' is not installed or is broken. Try --debug?" % plugin

@@ -25,5 +25,5 @@ setup(name='helloworld_plugins_sayhi',
     test_suite='nose.collector',
     entry_points="""
     """,
-    namespace_packages=['helloworld', 'helloworld.plugins'],
+    namespace_packages=['helloworld.plugins'],
     )

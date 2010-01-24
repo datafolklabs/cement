@@ -11,7 +11,7 @@ log = get_logger(__name__)
 class CementController(object):
     """Currently just a place holder for more featureful controller."""
     pass
-      
+              
 def expose(template=None, namespace='global', **kwargs):
     """
     Decorator function for plugins to expose commands.  Used as:
@@ -34,18 +34,6 @@ def expose(template=None, namespace='global', **kwargs):
             ...
     """
     def decorate(func):
-        """
-        Decorate the function and expose it to the namespace's commands
-        dict.
-        
-        Required arguments:
-        func -- The function to decorate
-        
-        Returns:
-        
-        func -- The decorated function.
-        
-        """
         log.debug("exposing namespaces['%s'].commands['%s'] from '%s'" % \
             (namespace, func.__name__, func.__module__))
         
@@ -59,7 +47,7 @@ def expose(template=None, namespace='global', **kwargs):
         if not namespace in namespaces:
             raise CementRuntimeError, \
                 "The namespace '%s' is not defined!" % namespace
-        
+
         func = render(template)(func)        
         
         cmd = {

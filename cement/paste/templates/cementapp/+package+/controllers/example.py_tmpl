@@ -11,7 +11,7 @@ log = get_logger(__name__)
 
 class ExampleController(CementController):
     @expose() # no template, global namespace (default)
-    def ex1(self, opts, args):
+    def ex1(self, cli_opts, cli_args):
         """
         This is how to add a local/plugin subcommand because it will be  
         under the 'example' namespace.  You would access this subcommand as:
@@ -23,7 +23,7 @@ class ExampleController(CementController):
         # Note, the 'print' statement should not be used, rather use the
         # log or return data to the template.
         
-        # Commands are all passed the opts, args from the command line.
+        # Commands are all passed the cli_opts, cli_args from the command line.
         
         # Here we show how to run a hook that we've defined in
         # {{package}}.plugins.example:
@@ -35,15 +35,15 @@ class ExampleController(CementController):
         return dict(foo='bar')
         
     @expose()
-    def ex1_help(self, opts, args):
+    def ex1_help(self, cli_opts, cli_args):
         """Using the print statement is ok for help methods."""
         print "This is the help method for ex1."
     
     @expose('{{package}}.templates.example.ex2', namespace='global')    
-    def ex2(self, opts, args): 
+    def ex2(self, cli_opts, cli_args): 
         """
         This is an example global command.  See --help.  When commands are
-        called, they are passed the cli options and args passed after it.
+        called, they are passed the cli options and cli_args passed after it.
         
         Notice that you can specify the namespace via the decorator parameters.
         If a plugin has any non-global commands they are grouped under a 
@@ -70,14 +70,14 @@ class ExampleController(CementController):
 
         # You can see if options where passed.  These are set in 
         # myapp/plugins/example.py:
-        if opts.global_option:
+        if cli_opts.global_option:
             # --global-option was passed, do something
-            log.info('%s passed by --global-option' % opts.global_option)
+            log.info('%s passed by --global-option' % cli_opts.global_option)
 
         return dict(foo=True, example=example, items=['one', 'two', 'three'])
 
     @expose(namespace='{{package}}_core')
-    def ex3(self, opts, args):
+    def ex3(self, cli_opts, cli_args):
         """
         This is how to add a local/plugin subcommand to another namespace.  It
         is possible to use this in conjunction with the options_hook() to add 

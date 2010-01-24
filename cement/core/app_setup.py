@@ -3,7 +3,7 @@
 import sys
 from pkg_resources import get_distribution
 
-from cement import namespaces
+from cement import namespaces, buf_stdout, buf_stderr
 from cement.core.configuration import CEMENT_API, set_config_opts_per_file
 from cement.core.configuration import validate_config, get_default_config
 from cement.core.plugin import load_all_plugins
@@ -13,6 +13,8 @@ from cement.core.hook import register_hook, define_hook, run_hooks
 
 log = get_logger(__name__)    
 
+
+        
 def register_default_hooks():
     """
     Registers Cement framework hooks.
@@ -85,10 +87,14 @@ def lay_cement(config=None, banner=None):
         namespaces['global'].config['debug'] = True
     if '--quiet' in sys.argv:
         namespaces['global'].config['log_to_console'] = False
+        sys.stdout = buf_stdout
+        sys.stderr = buf_stderr
         
     # Setup logging for console and file
     if '--json' in sys.argv \
         or not namespaces['global'].config['log_to_console']:
+        sys.stdout = buf_stdout
+        sys.stderr = buf_stderr
         namespaces['global'].config['show_plugin_load'] = False
         setup_logging(to_console=False)
     else:
