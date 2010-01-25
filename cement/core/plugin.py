@@ -76,16 +76,13 @@ def load_plugin(plugin):
         raise CementConfigError, 'unable to load plugin provider: %s' % e
         
     loaded = False
-    try:
-        plugin_module = __import__('%s.plugins' % provider, 
-            globals(), locals(), [plugin], -1)
-        getattr(plugin_module, plugin)
-        if namespaces.has_key(plugin):
-            loaded = True
-            log.debug("loaded '%s' plugin from %s.plugins.%s" % \
-                (plugin, provider, plugin))
-    except AttributeError, e:
-        log.debug("AttributeError => %s" % e)
+    plugin_module = __import__('%s.plugins' % provider, 
+        globals(), locals(), [plugin], -1)
+    getattr(plugin_module, plugin)
+    if namespaces.has_key(plugin):
+        loaded = True
+        log.debug("loaded '%s' plugin from %s.plugins.%s" % \
+            (plugin, provider, plugin))
                             
                                 
     if not loaded:

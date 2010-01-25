@@ -69,7 +69,7 @@ def run_command(cmd_name=None):
     if namespaces[namespace].commands.has_key(actual_cmd):
         func = namespaces[namespace].commands[actual_cmd]['func']
         log.debug("executing command '%s'" % actual_cmd)
-        func(cli_opts, cli_args)
+        func(func, cli_opts, cli_args)
     else:
         raise CementArgumentError, "Unknown command '%s', see --help?" % actual_cmd
         

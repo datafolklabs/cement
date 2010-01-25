@@ -18,7 +18,7 @@ class render(object):
     """
     Class decorator to render data with Genshi text formatting engine or json.
     """
-    def __init__(self, template=None):
+    def __init__(self, func, template=None):
         """
         Called when the function is decorated, sets up the engine and 
         template for later use.  If not passed a template, render will do 
@@ -33,6 +33,8 @@ class render(object):
                 ...
                 
         """
+        self.func = func
+        print self.func
         self.template = template
         self.tmpl_module = None
         self.tmpl_file = None
@@ -49,7 +51,7 @@ class render(object):
             self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
             self.tmpl_module = '.'.join(parts) # left over in between
             
-    def __call__(self, func):
+    def __call__(self, *args, **kwargs):
         """
         Called when the command function is actually run.  Expects a 
         dictionary in return from the function decorated in __init__.
@@ -59,7 +61,8 @@ class render(object):
             log.debug("decorating '%s' with '%s:%s'" % \
                 (func.__name__, self.engine, self.template))      
             
-            res = func(func, *args, **kw)
+            print self.func
+            res = self.func(*args, **kw)
             
             # FIX ME: Is there a better way to jsonify classes?
             if self.engine == 'json':
