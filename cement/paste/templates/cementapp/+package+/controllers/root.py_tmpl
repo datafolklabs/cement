@@ -1,0 +1,9 @@
+
+from cement.core.controller import CementController, expose
+
+__controller__ = 'RootController'
+
+class RootController(CementController):
+    @expose('{{package}}.templates.error', is_hidden=True)
+    def error(self, errors={}):
+        return dict(errors=errors)
