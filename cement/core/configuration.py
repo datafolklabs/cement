@@ -14,6 +14,7 @@ def get_default_config():
     dcf['enabled_plugins'] = []
     dcf['debug'] = False
     dcf['show_plugin_load'] = True
+    dcf['output_engine'] = 'genshi'
     return dcf
 
 def get_default_plugin_config():
@@ -142,7 +143,8 @@ def validate_config(config):
     required_settings = [
         'config_source', 'config_files', 'debug', 'datadir',
         'enabled_plugins', 'plugin_config_dir', 'plugin_dir', 
-        'plugins', 'app_module', 'app_name', 'tmpdir', 'merge_root_options'
+        'plugins', 'app_module', 'app_name', 'tmpdir', 'merge_root_options',
+        'output_engine'
         ]
     for s in required_settings:
         if not config.has_key(s):

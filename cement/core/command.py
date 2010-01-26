@@ -70,17 +70,10 @@ def run_command(cmd_name=None):
     if namespaces[namespace].commands.has_key(actual_cmd):
         cmd = namespaces[namespace].commands[actual_cmd]
         log.debug("executing command '%s'" % actual_cmd)
-        
-        # Import the command module
-        #mod = __import__(cmd['module'], globals(), locals(), [cmd['controller']], -1)
-        
-        # Import the controller from the module
-        #controller = getattr(mod, cmd['controller'])()
-        
-        # Run the command function
+        #controller = namespaces[cmd['controller_namespace']].controller()
         #func = getattr(controller, cmd['func'])(cli_opts, cli_args)
-        controller = namespaces[cmd['controller_namespace']].controller()
-        func = getattr(controller, cmd['func'])(cli_opts, cli_args)
+        run_controller_command(cmd['controller_namespace'], cmd['func'], 
+                               cli_opts, cli_args)
 
 
         

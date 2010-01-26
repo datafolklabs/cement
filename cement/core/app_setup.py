@@ -3,7 +3,7 @@
 import sys
 from pkg_resources import get_distribution
 
-from cement import namespaces, buf_stdout, buf_stderr
+from cement import namespaces, buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
 from cement.core.configuration import CEMENT_API, set_config_opts_per_file
 from cement.core.configuration import validate_config, get_default_config
 from cement.core.plugin import load_all_plugins
@@ -89,23 +89,25 @@ def lay_cement(config=None, banner=None):
     except optparse.OptionConflictError, e:
         pass
             
-    # hardcoded options hacks... 
-    if '--debug' in sys.argv:
-        namespaces['root'].config['debug'] = True
+    # hardcoded hacks
     if '--quiet' in sys.argv:
         namespaces['root'].config['log_to_console'] = False
         sys.stdout = buf_stdout
         sys.stderr = buf_stderr
-        
-    # Setup logging for console and file
-    if '--json' in sys.argv \
-        or not namespaces['root'].config['log_to_console']:
+    if '--json' in sys.argv:
         sys.stdout = buf_stdout
         sys.stderr = buf_stderr
+        namespaces['root'].config['output_engine'] = 'json'
         namespaces['root'].config['show_plugin_load'] = False
-        setup_logging(to_console=False)
-    else:
-        setup_logging()
+    # debug trumps everything
+    if '--debug' in sys.argv:
+        namespaces['root'].config['debug'] = True
+        namespaces['root'].config['log_to_console'] = True
+        sys.stdout = SAVED_STDOUT
+        sys.stderr = SAVED_STDERR
+        
+    # Setup logging for console and file
+    setup_logging(to_console=namespaces['root'].config['log_to_console'])
         
     load_all_plugins()
     
