@@ -10,6 +10,7 @@ from cement.core.plugin import load_all_plugins
 from cement.core.namespace import CementNamespace, define_namespace
 from cement.core.log import setup_logging, get_logger
 from cement.core.hook import register_hook, define_hook, run_hooks
+from cement.core.controller import expose
 
 log = get_logger(__name__)    
 
@@ -48,35 +49,41 @@ def lay_cement(config=None, banner=None):
             config['app_name'],
             get_distribution(config['app_egg_name']).version)
         
+    
+    
     namespace = CementNamespace(
-        label='global',
+        label='root',
         version=get_distribution(config['app_egg_name']).version,
         required_api=CEMENT_API,
         config=get_default_config(),
-        banner=banner,
+        banner=banner
         )
-    define_namespace('global', namespace)
-    namespaces['global'].config.update(config)
+    define_namespace('root', namespace)
+    namespaces['root'].config.update(config)
+    
+    root_mod = __import__("%s.controllers.root" % namespaces['root'].config['app_module'], 
+                          globals(), locals(), ['root'], -1)
+    namespaces['root'].controller = getattr(root_mod, 'RootController')
     
     register_default_hooks()
     
-    validate_config(namespaces['global'].config)
+    validate_config(namespaces['root'].config)
     
-    for cf in namespaces['global'].config['config_files']:
-        set_config_opts_per_file('global', 
-                                 namespaces['global'].config['app_module'], 
+    for cf in namespaces['root'].config['config_files']:
+        set_config_opts_per_file('root', 
+                                 namespaces['root'].config['app_module'], 
                                  cf)
 
     # Add hardcoded options hacks... might move this to a hook or plugin later
     try:
-        namespaces['global'].options.add_option('--json', action='store_true',
+        namespaces['root'].options.add_option('--json', action='store_true',
             dest='enable_json', default=None, 
             help='render command output as json (Cement CLI-API)'
             )
-        namespaces['global'].options.add_option('--debug', action='store_true',
+        namespaces['root'].options.add_option('--debug', action='store_true',
             dest='debug', default=None, help='toggle debug output'
             )
-        namespaces['global'].options.add_option('--quiet', action='store_true',
+        namespaces['root'].options.add_option('--quiet', action='store_true',
             dest='quiet', default=None, help='disable console logging'
             )
     except optparse.OptionConflictError, e:
@@ -84,27 +91,42 @@ def lay_cement(config=None, banner=None):
             
     # hardcoded options hacks... 
     if '--debug' in sys.argv:
-        namespaces['global'].config['debug'] = True
+        namespaces['root'].config['debug'] = True
     if '--quiet' in sys.argv:
-        namespaces['global'].config['log_to_console'] = False
+        namespaces['root'].config['log_to_console'] = False
         sys.stdout = buf_stdout
         sys.stderr = buf_stderr
         
     # Setup logging for console and file
     if '--json' in sys.argv \
-        or not namespaces['global'].config['log_to_console']:
+        or not namespaces['root'].config['log_to_console']:
         sys.stdout = buf_stdout
         sys.stderr = buf_stderr
-        namespaces['global'].config['show_plugin_load'] = False
+        namespaces['root'].config['show_plugin_load'] = False
         setup_logging(to_console=False)
     else:
         setup_logging()
         
     load_all_plugins()
     
+    for nam in namespaces:
+        commands = namespaces[nam].commands.copy()
+        for command in commands:
+            # Shorten it
+            cmd = commands[command]
+            controller = namespaces[cmd['controller_namespace']].controller
+        
+            # Run the command function
+            func = cmd['original_func']
+            name="%s_json" % cmd['func']
+            json_func = expose(template='json', namespace=nam, is_hidden=True, 
+                               name=name)(func)
+
+            setattr(namespaces[cmd['controller_namespace']].controller, name, json_func) 
+            
     # Allow plugins to add config validation for the global namespace
     for res in run_hooks('validate_config_hook', 
-                         config=namespaces['global'].config):
+                         config=namespaces['root'].config):
         pass
     
 

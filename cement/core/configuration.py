@@ -20,7 +20,7 @@ def get_default_plugin_config():
     """Get a default plugin config dict."""
     dcf = {}
     dcf['config_source'] = ['defaults']
-    dcf['merge_global_options'] = True
+    dcf['merge_root_options'] = True
     return dcf
 
 # global hooks dictionary
@@ -142,7 +142,7 @@ def validate_config(config):
     required_settings = [
         'config_source', 'config_files', 'debug', 'datadir',
         'enabled_plugins', 'plugin_config_dir', 'plugin_dir', 
-        'plugins', 'app_module', 'app_name', 'tmpdir', 'merge_global_options'
+        'plugins', 'app_module', 'app_name', 'tmpdir', 'merge_root_options'
         ]
     for s in required_settings:
         if not config.has_key(s):

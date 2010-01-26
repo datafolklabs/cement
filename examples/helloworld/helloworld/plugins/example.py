@@ -1,9 +1,5 @@
 """This is an example plugin for helloworld."""
 
-"""
-This is a simple plugin to add some basic functionality.
-"""
-
 import sys, os
 import logging
 
@@ -58,17 +54,17 @@ from helloworld.controllers.example import ExampleController
 def options_hook(*args, **kwargs):
     """
     Use this hook to add options to other namespaces.  An OptParse object is 
-    expected on return, and any options will be merged into the global options.  
-    Global options can also be used as local options by setting the config 
-    option 'merge_global_options = true' in the plugin config.
+    expected on return, and any options will be merged into the root options.  
+    root options can also be used as local options by setting the config 
+    option 'merge_root_options = true' in the plugin config.
     """
-    global_options = init_parser()
-    global_options.add_option('-G', '--global-option', action ='store_true', 
-        dest='global_option', default=None, help='Example Global option'
+    root_options = init_parser()
+    root_options.add_option('-G', '--root-option', action ='store_true', 
+        dest='root_option', default=None, help='Example root option'
     ) 
     
-    # return the namespace and the global options to add.
-    return ('global', global_options)
+    # return the namespace and the root options to add.
+    return ('root', root_options)
 
 @register_hook()
 def options_hook(*args, **kwargs):
@@ -82,21 +78,21 @@ def options_hook(*args, **kwargs):
         dest='newlocal_option', default=None, help='Example Local option'
     ) 
     
-    # return the namespace and the global options to add.
+    # return the namespace and the root options to add.
     return ('example', my_options)
 
 
 @register_hook()
 def post_options_hook(*args, **kwargs):
     """
-    Use this hook if any operations need to be performed if a global
-    option is passed.  Notice that we set a global option of -G in our
-    global_options_hook above.  Here we can access that value from the 
-    global namespace configuration.
+    Use this hook if any operations need to be performed if a root
+    option is passed.  Notice that we set a root option of -G in our
+    root_options_hook above.  Here we can access that value from the 
+    root namespace configuration.
     """
-    cnf = namespaces['global'].config 
-    if cnf.has_key('global_option'):
-        print "global_option => %s", cnf['global_option']  
+    cnf = namespaces['root'].config 
+    if cnf.has_key('root_option'):
+        print "root_option => %s", cnf['root_option']  
         # then do something with it  
         
 @register_hook()

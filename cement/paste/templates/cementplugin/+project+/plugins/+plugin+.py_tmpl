@@ -42,17 +42,17 @@ class {{plugin}}Plugin(CementPlugin):
 @register_hook()
 def options_hook(*args, **kwargs):
     """
-    Register global options.
+    Register root options.
     """
-    global_options = init_parser()
-    global_options.add_option('--{{plugin}}-global-option', action ='store_true', 
-        dest='{{plugin}}_global_option', default=None, help='example global option'
+    root_options = init_parser()
+    root_options.add_option('--{{plugin}}-root-option', action ='store_true', 
+        dest='{{plugin}}_root_option', default=None, help='example root option'
     ) 
-    return ('global', global_options)
+    return ('root', root_options)
           
 @register_hook()
 def post_options_hook(cli_opts, cli_args, **kwargs):
-    """Handle global options here."""
+    """Handle root options here."""
     pass
  
  
@@ -79,16 +79,16 @@ from cement.core.controller import CementController, expose
 class {{plugin}}Controller(CementController):
     @expose()              
     def {{plugin}}_command(self, cli_opts, cli_args):
-        """Register global command."""
-        print "{{plugin}} global command run() method."
+        """Register root command."""
+        print "{{plugin}} root command run() method."
           
     @expose()            
     def {{plugin}}_command_help(self, cli_opts, cli_args):
-        print "{{plugin}} global command help method."
+        print "{{plugin}} root command help method."
 
     @expose('{{project}}.templates.{{plugin}}_command')              
     def {{plugin}}_command2(self, cli_opts, cli_args):
-        """Register global command, with Genshi templating."""
+        """Register root command, with Genshi templating."""
         foo = "Hello"
         bar = "World"
         return dict(foo=foo, bar=bar)

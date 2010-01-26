@@ -10,8 +10,8 @@ from helloworld.model.example import ExampleModel
 log = get_logger(__name__)
 
 class ExampleController(CementController):
-    @expose() # no template, global namespace (default)
-    def ex1(self, opts, args):
+    @expose() # no template, root namespace (default)
+    def ex1(self, cli_opts, cli_args):
         """
         This is how to add a local/plugin subcommand because it will be  
         under the 'example' namespace.  You would access this subcommand as:
@@ -23,7 +23,7 @@ class ExampleController(CementController):
         # Note, the 'print' statement should not be used, rather use the
         # log or return data to the template.
         
-        # Commands are all passed the opts, args from the command line.
+        # Commands are all passed the cli_opts, cli_args from the command line.
         
         # Here we show how to run a hook that we've defined in
         # helloworld.plugins.example:
@@ -35,26 +35,26 @@ class ExampleController(CementController):
         return dict(foo='bar')
         
     @expose()
-    def ex1_help(self, opts, args):
+    def ex1_help(self, cli_opts, cli_args):
         """Using the print statement is ok for help methods."""
         print "This is the help method for ex1."
     
-    @expose('helloworld.templates.example.ex2', namespace='global')    
-    def ex2(self, opts, args): 
+    @expose('helloworld.templates.example.ex2', namespace='root')    
+    def ex2(self, cli_opts, cli_args): 
         """
-        This is an example global command.  See --help.  When commands are
-        called, they are passed the cli options and args passed after it.
+        This is an example root command.  See --help.  When commands are
+        called, they are passed the cli options and cli_args passed after it.
         
         Notice that you can specify the namespace via the decorator parameters.
-        If a plugin has any non-global commands they are grouped under a 
+        If a plugin has any non-root commands they are grouped under a 
         single command to the base cli application.  For example, you will 
-        see global commands and namespaces* when you execute:
+        see root commands and namespaces* when you execute:
         
             myapp --help
             
             
         If 'myplugin' has local commands, you will see 'myplugin*' show up in 
-        the global commands list, and then the plugin subcommands will be seen 
+        the root commands list, and then the plugin subcommands will be seen 
         under:
         
             myapp myplugin --help
@@ -70,14 +70,14 @@ class ExampleController(CementController):
 
         # You can see if options where passed.  These are set in 
         # myapp/plugins/example.py:
-        if opts.global_option:
-            # --global-option was passed, do something
-            log.info('%s passed by --global-option' % opts.global_option)
+        if cli_opts.root_option:
+            # --root-option was passed, do something
+            log.info('%s passed by --root-option' % cli_opts.root_option)
 
         return dict(foo=True, example=example, items=['one', 'two', 'three'])
 
     @expose(namespace='helloworld_core')
-    def ex3(self, opts, args):
+    def ex3(self, cli_opts, cli_args):
         """
         This is how to add a local/plugin subcommand to another namespace.  It
         is possible to use this in conjunction with the options_hook() to add 

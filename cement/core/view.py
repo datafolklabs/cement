@@ -18,7 +18,7 @@ class render(object):
     """
     Class decorator to render data with Genshi text formatting engine or json.
     """
-    def __init__(self, func, template=None):
+    def __init__(self, template=None):
         """
         Called when the function is decorated, sets up the engine and 
         template for later use.  If not passed a template, render will do 
@@ -33,13 +33,12 @@ class render(object):
                 ...
                 
         """
-        self.func = func
-        print self.func
+        self.func = None
         self.template = template
         self.tmpl_module = None
         self.tmpl_file = None
         self.engine = 'genshi'
-        self.config = namespaces['global'].config
+        self.config = namespaces['root'].config
         
         if self.template == 'json':
             self.engine = 'json'
@@ -51,21 +50,22 @@ class render(object):
             self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
             self.tmpl_module = '.'.join(parts) # left over in between
             
-    def __call__(self, *args, **kwargs):
+    def __call__(self, func):
         """
         Called when the command function is actually run.  Expects a 
         dictionary in return from the function decorated in __init__.
         
         """
+        self.func = func
         def wrapper(*args, **kw):  
             log.debug("decorating '%s' with '%s:%s'" % \
                 (func.__name__, self.engine, self.template))      
             
-            print self.func
             res = self.func(*args, **kw)
             
             # FIX ME: Is there a better way to jsonify classes?
             if self.engine == 'json':
+                namespaces['root'].config['output_engine'] = 'json'
                 safe_res = {}
                 for i in res:
                     try:
@@ -79,6 +79,7 @@ class render(object):
                 SAVED_STDOUT.write(json.dumps(safe_res))
             
             elif self.engine == 'genshi':  
+                namespaces['root'].config['output_engine'] = 'genshi'
                 if self.template:  
                     # FIX ME: Pretty sure genshi has better means of doing 
                     # this, but couldn't get it to work.

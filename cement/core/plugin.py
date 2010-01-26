@@ -30,7 +30,7 @@ def register_plugin(**kwargs):
     def decorate(func):
         """
         Decorate a plugin class and add the namespace to global namespaces
-        dictionary (not the 'global' namespace).
+        dictionary (not the 'root' namespace).
         
         Arguments:
         func -- The function to decorate
@@ -58,7 +58,7 @@ def load_plugin(plugin):
     plugin -- Name of the plugin to load
     
     """
-    config = namespaces['global'].config
+    config = namespaces['root'].config
     m = re.match('(.*)\.plugins\.(.*)', plugin)
     if m:
         provider = m.group(1)
@@ -90,7 +90,7 @@ def load_plugin(plugin):
             "Plugin '%s' is not installed or is broken. Try --debug?" % plugin
         
     plugin_config_file = os.path.join(
-        namespaces['global'].config['plugin_config_dir'], '%s.conf' % plugin
+        namespaces['root'].config['plugin_config_dir'], '%s.conf' % plugin
         )
 
     set_config_opts_per_file(plugin, plugin, plugin_config_file)
@@ -103,7 +103,7 @@ def load_all_plugins():
     for res in run_hooks('pre_plugins_hook'):
         pass # No result expected
         
-    for plugin in namespaces['global'].config['enabled_plugins']:
+    for plugin in namespaces['root'].config['enabled_plugins']:
         load_plugin(plugin)
         
     for (namespace, res) in run_hooks('options_hook'):
@@ -113,7 +113,8 @@ def load_all_plugins():
             elif opt.get_opt_string() == '--json':
                 pass
             else:
-                namespaces[namespace].options.add_option(opt)
+                if namespaces.has_key(namespace):
+                    namespaces[namespace].options.add_option(opt)
     
     for res in run_hooks('post_plugins_hook'):
         pass # No result expected

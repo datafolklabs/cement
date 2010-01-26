@@ -6,5 +6,5 @@
 # namespaces[{{package}}].config['param'] = value
 #
 
-# Whether or not to merge global options 
-# merge_global_options = true
+# Whether or not to merge root options 
+# merge_root_options = true

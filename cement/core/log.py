@@ -14,7 +14,7 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
     to_console -- Boolean, whether or not to log to console
     
     """
-    config = namespaces['global'].config
+    config = namespaces['root'].config
     all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
     
     # Remove any previously setup handlers from other libraries

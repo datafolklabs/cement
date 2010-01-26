@@ -1,3 +1,0 @@
-__import__('pkg_resources').declare_namespace(__name__)
-
-from {{package}}.config import default_config

@@ -53,15 +53,15 @@ def init_parser(banner=None):
     return parser
 
     
-def parse_options(namespace='global'): 
+def parse_options(namespace='root'): 
     """
     The actual method that parses the command line options and args.  Also
     handles all the magic that happens when you pass --help to your app.  It
-    also handles merging global options into plugins, if the plugins config
-    is set to do so (merge_global_options)
+    also handles merging root options into plugins, if the plugins config
+    is set to do so (merge_root_options)
     
     Keyword arguments:
-    namespace -- The namespace to parse options for (defaullt: 'global')
+    namespace -- The namespace to parse options for (defaullt: 'root')
     
     Returns:
     tuple --  (options, args)
@@ -71,10 +71,10 @@ def parse_options(namespace='global'):
     # FIX ME: This method is very messy/confusing.
     
     log.debug("parsing command line opts/args for '%s' namespace" % namespace)
-    if namespace != 'global':
-        if namespaces[namespace].config.has_key('merge_global_options') and \
-           namespaces[namespace].config['merge_global_options']:
-            for opt in namespaces['global'].options._get_all_options(): 
+    if namespace != 'root':
+        if namespaces[namespace].config.has_key('merge_root_options') and \
+           namespaces[namespace].config['merge_root_options']:
+            for opt in namespaces['root'].options._get_all_options(): 
                 if opt.get_opt_string() == '--help':
                     pass
                 elif opt.get_opt_string() == '--version':
@@ -98,9 +98,9 @@ def parse_options(namespace='global'):
                     line = '    %s' % c
 
     # Determine whether to display namespaces
-    if namespace == 'global':
+    if namespace == 'root':
         for nam in namespaces: 
-            if nam != 'global' and namespaces[nam].commands:
+            if nam != 'root' and namespaces[nam].commands:
                 if namespaces[nam].is_hidden:
                     pass
                 else:
@@ -124,7 +124,7 @@ def parse_options(namespace='global'):
     if line != '    ':
         cmd_txt += "%s\n" % line
     
-    if namespace != 'global':
+    if namespace != 'root':
         namespace_txt = ' %s' % namespace
         cmd_type_txt = 'SUBCOMMAND'
     else:

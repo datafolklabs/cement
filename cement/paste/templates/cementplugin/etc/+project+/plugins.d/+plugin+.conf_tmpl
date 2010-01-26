@@ -5,8 +5,8 @@
 # namespaces[{{plugin}}].config['param'] = value
 # 
 
-# Whether or not to merge global options 
-merge_global_options = false
+# Whether or not to merge root options 
+merge_root_options = false
 
 param1 = value1
 param2 = value two
