@@ -62,7 +62,9 @@ class render(object):
                 (func.__name__, self.engine, self.template))      
             
             res = self.func(*args, **kw)
-            
+            if not res:
+                res = dict()
+                
             # FIX ME: Is there a better way to jsonify classes?
             if self.engine == 'json':
                 namespaces['root'].config['output_engine'] = 'json'
@@ -76,7 +78,12 @@ class render(object):
                 
                 safe_res['stdout'] = buf_stdout.buffer
                 safe_res['stderr'] = buf_stderr.buffer
-                SAVED_STDOUT.write(json.dumps(safe_res))
+                try:
+                    SAVED_STDOUT.write(json.dumps(safe_res))
+                except TypeError, e:
+                    safe_res = {}
+                    safe_res['errors'] = {'TypeError' : str(e)}
+                    SAVED_STDOUT.write(json.dumps(safe_res))
             
             elif self.engine == 'genshi':  
                 namespaces['root'].config['output_engine'] = 'genshi'

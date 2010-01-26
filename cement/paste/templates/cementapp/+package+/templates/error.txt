@@ -10,5 +10,5 @@
 The following errors were encountered:
 -----------------------------------------------------------------------------
 {% for error in errors %}\
- * ${error} => ${errors[error]}
+    * ${error} => ${errors[error]}
 {% end %}
