@@ -33,13 +33,13 @@ Any application can utilize existing plugins from The Rosendale Project, or
 from other 3rd party resources to extend functionality.  The plugin system is 
 designed to allow portability of re-usable code, and it is encouraged to 
 contribute any plugins back to the project to extend the functionality of 
-Cement.
+Cement.  When creating plugins specifically for re-use within the community, 
+please be sure to follow the standard naming convention 'HelloWorld Plugin for 
+Cement' as an example.  The actual module name should be something like:
+'myapp.plugins.helloworld'. 
 
 The Cement CLI Application Framework is Open Source and is distributed under 
-The MIT License.  When creating plugins specifically for re-use within the 
-community, please be sure to follow the standard naming convention 
-'HelloWorld Plugin for Cement' as an example.  The actual module name should 
-be 'yourapp.plugins.helloworld'. 
+The MIT License.  
 
 
 GETTING STARTED:
