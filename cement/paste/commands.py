@@ -164,7 +164,7 @@ Example usage::
             cmd_args.append("--template=%s" % template)
         cmd_args.append(self.name)
         cmd_args.append("cement_api=%s" % CEMENT_API)
-        cmd_args.append("cement_version=%s" % CEMENT_MAJOR_VERSION)
+        cmd_args.append("cement_version=%s" % CEMENT_VERSION)
         cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         command.run(cmd_args)
         
@@ -266,7 +266,7 @@ Example usage::
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("plugin=%s" % self.plugin)
         cmd_args.append("cement_api=%s" % CEMENT_API)
-        cmd_args.append("cement_version=%s" % CEMENT_MAJOR_VERSION)
+        cmd_args.append("cement_version=%s" % CEMENT_VERSION)
         cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         
         command.run(cmd_args)
@@ -365,7 +365,7 @@ Example usage::
         cmd_args.append(self.name)
         cmd_args.append("project=%s" % self.project)
         cmd_args.append("helper=%s" % self.helper)
-        cmd_args.append("cement_version=%s" % CEMENT_MAJOR_VERSION)
+        cmd_args.append("cement_version=%s" % CEMENT_VERSION)
         cmd_args.append("cement_next_version=%s" % CEMENT_NEXT_VERSION)
         command.run(cmd_args)
         

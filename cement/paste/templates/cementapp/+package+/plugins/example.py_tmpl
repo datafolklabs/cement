@@ -17,15 +17,21 @@ REQUIRED_CEMENT_API = '{{cement_api}}'
         
 @register_plugin() 
 class ExamplePlugin(CementPlugin):
+    # This is how we define a hook that we will honor later (see the example
+    # controller).  Hooks allow other plugins to tie into your namespace.
     define_hook('my_example_hook')
     
     def __init__(self):
+        # We import the controller here because the register_plugin() decorator
+        # must get loaded first:
+        from {{package}}.controllers.example import ExampleController
         CementPlugin.__init__(self,
             label='example',
             version=VERSION,
             description='Example plugin for {{package}}',
             required_api=REQUIRED_CEMENT_API,
             banner=BANNER,
+            controller = ExampleController,
             )
         
         # plugin configurations can be setup this way
@@ -37,11 +43,6 @@ class ExamplePlugin(CementPlugin):
         self.options.add_option('-E', '--example', action='store',
             dest='example_option', default=None, help='Example Plugin Option'
             )
-           
-           
-# We import the controller here because the register_plugin() decorator
-# must get loaded first:
-from {{package}}.controllers.example import ExampleController
 
 
 #      

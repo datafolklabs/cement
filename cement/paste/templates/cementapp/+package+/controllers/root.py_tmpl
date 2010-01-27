@@ -1,7 +1,10 @@
+"""
+This is the RootController for the {{package}} application.  Usually this
+file will remain pretty sparse, however it is a good place for miscellaneous
+commands that might night need there own namespace or controller.  
+"""
 
 from cement.core.controller import CementController, expose
-
-__controller__ = 'RootController'
 
 class RootController(CementController):
     @expose('{{package}}.templates.error', is_hidden=True)

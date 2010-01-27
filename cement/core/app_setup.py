@@ -15,7 +15,6 @@ from cement.core.controller import expose
 log = get_logger(__name__)    
 
 
-        
 def register_default_hooks():
     """
     Registers Cement framework hooks.
@@ -78,7 +77,7 @@ def lay_cement(config=None, banner=None):
     try:
         namespaces['root'].options.add_option('--json', action='store_true',
             dest='enable_json', default=None, 
-            help='render command output as json (Cement CLI-API)'
+            help='render output as json (Cement CLI-API) [EXPERIMENTAL]'
             )
         namespaces['root'].options.add_option('--debug', action='store_true',
             dest='debug', default=None, help='toggle debug output'
@@ -124,7 +123,8 @@ def lay_cement(config=None, banner=None):
             json_func = expose(template='json', namespace=nam, is_hidden=True, 
                                name=name)(func)
 
-            setattr(namespaces[cmd['controller_namespace']].controller, name, json_func) 
+            setattr(namespaces[cmd['controller_namespace']].controller, 
+                    name, json_func) 
             
     # Allow plugins to add config validation for the global namespace
     for res in run_hooks('validate_config_hook', 

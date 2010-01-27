@@ -70,8 +70,6 @@ def run_command(cmd_name=None):
     if namespaces[namespace].commands.has_key(actual_cmd):
         cmd = namespaces[namespace].commands[actual_cmd]
         log.debug("executing command '%s'" % actual_cmd)
-        #controller = namespaces[cmd['controller_namespace']].controller()
-        #func = getattr(controller, cmd['func'])(cli_opts, cli_args)
         run_controller_command(cmd['controller_namespace'], cmd['func'], 
                                cli_opts, cli_args)
 
