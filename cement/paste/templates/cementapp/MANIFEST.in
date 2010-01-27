@@ -1,2 +1,1 @@
-recursive-include plugins *
-recursive-include helpers *
+recursive-include {{package}}/templates
