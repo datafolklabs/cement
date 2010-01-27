@@ -225,8 +225,6 @@ class expose(object):
             'original_func' : func,
             'func' : self.name,
             'controller_namespace' : con_namespace,
-            #'module' : func.__module__,
-            #'controller' : controller
             }
 
         # Set the command info in the dest namespace

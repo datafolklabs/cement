@@ -3,6 +3,7 @@
 
 New Features:
 
+ +  Moving to the MIT License.
  +  Reworked cement to provide a proper model, view, controller interface
     very similar to the layout of TurboGears2.
  +  Added Genshi text templating support.
