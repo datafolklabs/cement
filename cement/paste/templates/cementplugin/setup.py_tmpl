@@ -25,5 +25,5 @@ setup(name='{{project}}_plugins_{{plugin}}',
     test_suite='nose.collector',
     entry_points="""
     """,
-    namespace_packages=['{{project}}.plugins'],
+    namespace_packages=[],
     )

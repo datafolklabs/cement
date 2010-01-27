@@ -76,15 +76,15 @@ class ExampleController(CementController):
 
         return dict(foo=True, example=example, items=['one', 'two', 'three'])
 
-    @expose(namespace='{{package}}_core')
-    def ex3(self, cli_opts, cli_args):
-        """
-        This is how to add a local/plugin subcommand to another namespace.  It
-        is possible to use this in conjunction with the options_hook() to add 
-        additional functionality to a completely other namespace:
-    
-            $ myapp {{package}}_core ex3
-        
-        """
-        log.info("In {{package}}_core namespace")
-        return dict(foo='bar')
+#    @expose(namespace='other_plugin')
+#    def ex3(self, cli_opts, cli_args):
+#        """
+#        This is how to add a local/plugin subcommand to another namespace.  It
+#        is possible to use this in conjunction with the options_hook() to add 
+#        additional functionality to a completely other namespace:
+#    
+#            $ myapp other_plugin ex3
+#        
+#        """
+#        log.info("In {{package}}_core namespace")
+#        return dict(foo='bar')

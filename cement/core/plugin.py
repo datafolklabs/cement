@@ -39,13 +39,22 @@ def register_plugin(**kwargs):
         func -- The original function
         """
         nms = func.__module__.split('.')
-
-        ensure_api_compat(func.__name__, func().required_api)
+        inst_func = func()
+        ensure_api_compat(func.__name__, inst_func.required_api)
         if kwargs.get('name', None):
             plugin_name = kwargs['name']
         else:
             plugin_name = nms[-1]
-        define_namespace(plugin_name, func())
+        
+        define_namespace(plugin_name, inst_func)
+        
+        # Extract the actual controller object from the namespace
+        (base, plugins, plugin) = func.__module__.split('.')
+        mymod = __import__("%s.controllers.%s" % (base, plugin), globals(), 
+                           locals(), [inst_func.controller], -1)
+        controller = getattr(mymod, inst_func.controller)  
+        namespaces[plugin_name].controller = controller
+        
         return func
     return decorate
     
@@ -76,14 +85,16 @@ def load_plugin(plugin):
         raise CementConfigError, 'unable to load plugin provider: %s' % e
         
     loaded = False
-    plugin_module = __import__('%s.plugins' % provider, 
-        globals(), locals(), [plugin], -1)
-    getattr(plugin_module, plugin)
-    if namespaces.has_key(plugin):
-        loaded = True
-        log.debug("loaded '%s' plugin from %s.plugins.%s" % \
-            (plugin, provider, plugin))
-                            
+    try:
+        plugin_module = __import__('%s.plugins' % provider, 
+            globals(), locals(), [plugin], -1)
+        getattr(plugin_module, plugin)
+        if namespaces.has_key(plugin):
+            loaded = True
+            log.debug("loaded '%s' plugin from %s.plugins.%s" % \
+                (plugin, provider, plugin))
+    except AttributeError, e:
+        log.debug('AttributeError => %s' % e)
                                 
     if not loaded:
         raise CementRuntimeError, \

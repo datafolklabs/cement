@@ -1,9 +1,16 @@
-0.5.1 - unreleased/development
+0.5.3 - unreleased 
 -----------------------------------------------------------------------------
 
 New Features:
 
  +  Moving to the MIT License.
+
+
+0.5.1 - Jan 2010
+-----------------------------------------------------------------------------
+
+New Features:
+
  +  Reworked cement to provide a proper model, view, controller interface
     very similar to the layout of TurboGears2.
  +  Added Genshi text templating support.

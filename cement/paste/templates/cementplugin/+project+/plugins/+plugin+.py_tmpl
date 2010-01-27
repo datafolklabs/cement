@@ -31,7 +31,8 @@ class {{plugin}}Plugin(CementPlugin):
             version=VERSION,
             description='{{plugin}} plugin for {{project}}',
             required_api=REQUIRED_CEMENT_API,
-            banner=BANNER
+            banner=BANNER,
+            controller='{{plugin}}Controller'
             )
  
 #      
@@ -54,46 +55,3 @@ def options_hook(*args, **kwargs):
 def post_options_hook(cli_opts, cli_args, **kwargs):
     """Handle root options here."""
     pass
- 
- 
-#          
-# MODEL: For more complex applications, please consider following the MVC and
-# moving your model class(es) to:
-#
-#   {{project}}/model/{{plugin}}.py
-#
-class {{plugin}}Model(object):
-    # define model class
-    pass
- 
-    
-#
-# CONTROLLER: For more complex applications, please consider following the 
-# MVC and moving your controller class(es) to:
-#
-#   {{project}}/controllers/{{plugin}}.py
-#
-
-from cement.core.controller import CementController, expose
-
-class {{plugin}}Controller(CementController):
-    @expose()              
-    def {{plugin}}_command(self, cli_opts, cli_args):
-        """Register root command."""
-        print "{{plugin}} root command run() method."
-          
-    @expose()            
-    def {{plugin}}_command_help(self, cli_opts, cli_args):
-        print "{{plugin}} root command help method."
-
-    @expose('{{project}}.templates.{{plugin}}_command')              
-    def {{plugin}}_command2(self, cli_opts, cli_args):
-        """Register root command, with Genshi templating."""
-        foo = "Hello"
-        bar = "World"
-        return dict(foo=foo, bar=bar)
-
-    @expose(namespace='{{plugin}}')              
-    def {{plugin}}_sub_command(self, cli_opts, cli_args):
-        """Register sub command for the {{plugin}} namespace."""
-        print "{{plugin}} local command method."

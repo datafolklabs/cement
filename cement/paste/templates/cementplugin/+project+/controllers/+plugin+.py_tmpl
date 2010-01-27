@@ -1,0 +1,34 @@
+"""{{plugin}} Controller class to expose commands for {{project}}."""
+
+from cement.core.controller import CementController, expose
+
+from {{project}}.model.{{plugin}} import {{plugin}}Model
+
+class {{plugin}}Controller(CementController):
+    @expose()              
+    def {{plugin}}_command(self, cli_opts, cli_args):
+        """Register root command that doesn't use a template."""
+        myvar = "{{plugin}} root command run() method."
+        print myvar
+        
+        # Even if you're not using a template, return relevant data so that
+        # you can still use the --json engine.
+        return dict(foo=myvar)
+          
+    @expose()            
+    def {{plugin}}_command_help(self, cli_opts, cli_args):
+        print "{{plugin}} root command help method."
+
+    @expose('{{project}}.templates.{{plugin}}.{{plugin}}_command')              
+    def {{plugin}}_command2(self, cli_opts, cli_args):
+        """Register root command, with Genshi templating."""
+        foo = "Hello"
+        bar = "World"
+        return dict(foo=foo, bar=bar)
+
+    @expose(namespace='{{plugin}}')              
+    def {{plugin}}_sub_command(self, cli_opts, cli_args):
+        """Register sub command for the {{plugin}} namespace."""
+        print "{{plugin}} local command method."
+        return dict()
+
