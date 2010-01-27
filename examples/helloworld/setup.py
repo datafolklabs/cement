@@ -1,10 +1,9 @@
 from setuptools import setup, find_packages
 import sys, os
 
-# You probably want to change the name, this is a healthy default for paster
-setup(name='{{project}}_plugins_{{plugin}}',
+setup(name='helloworld',
     version='0.1',
-    description='{{plugin}} plugin for {{project}}',
+    description='',
     classifiers=[], 
     keywords='',
     author='',
@@ -17,19 +16,23 @@ setup(name='{{project}}_plugins_{{plugin}}',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "Cement >={{cement_version}}, <{{cement_next_version}}",
-        "{{project}}",
+        "Cement >=0.5.3, <0.7",
+        # Uncomment if you want to use shared cement plugins.
+        #"CementPlugins",
         ],
     setup_requires=[
         ],
     test_suite='nose.collector',
     entry_points="""
+    [console_scripts]
+    helloworld = helloworld.appmain:main
     """,
     namespace_packages=[
-        '{{project}}.plugins',
-        '{{project}}.controllers',
-        '{{project}}.model',
-        '{{project}}.helpers',
-        '{{project}}.templates',
+        'helloworld', 
+        'helloworld.plugins',
+        'helloworld.controllers',
+        'helloworld.model',
+        'helloworld.helpers',
+        'helloworld.templates',
         ],
     )

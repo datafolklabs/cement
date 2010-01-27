@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 import sys, os
 
 # You probably want to change the name, this is a healthy default for paster
-setup(name='{{project}}_plugins_{{plugin}}',
+setup(name='helloworld_plugins_sayhi',
     version='0.1',
-    description='{{plugin}} plugin for {{project}}',
+    description='sayhi plugin for helloworld',
     classifiers=[], 
     keywords='',
     author='',
@@ -17,8 +17,8 @@ setup(name='{{project}}_plugins_{{plugin}}',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "Cement >={{cement_version}}, <{{cement_next_version}}",
-        "{{project}}",
+        "Cement >=0.5.3, <0.7",
+        "helloworld",
         ],
     setup_requires=[
         ],
@@ -26,10 +26,10 @@ setup(name='{{project}}_plugins_{{plugin}}',
     entry_points="""
     """,
     namespace_packages=[
-        '{{project}}.plugins',
-        '{{project}}.controllers',
-        '{{project}}.model',
-        '{{project}}.helpers',
-        '{{project}}.templates',
+        'helloworld.plugins',
+        'helloworld.controllers',
+        'helloworld.model',
+        'helloworld.helpers',
+        'helloworld.templates',
         ],
     )

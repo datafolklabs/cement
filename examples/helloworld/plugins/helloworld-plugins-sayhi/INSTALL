@@ -1,0 +1,15 @@
+
+SOURCE INSTALLATION:
+
+    $ sudo python setup.py install
+
+    # The following is one command
+    $ sudo cp -a ./etc/helloworld/plugins.d/sayhi.conf \
+                 /etc/helloworld/plugins.d/
+    
+    
+USAGE:
+
+    $ helloworld --help
+    
+    $ helloworld sayhi --help
