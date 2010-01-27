@@ -1,1 +1,1 @@
-recursive-include {{project}}/templates/{{plugin}}
+recursive-include {{project}}/templates/{{plugin}} *
