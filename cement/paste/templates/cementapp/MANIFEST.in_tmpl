@@ -1,1 +1,1 @@
-recursive-include {{package}}/templates
+recursive-include {{package}}/templates *
