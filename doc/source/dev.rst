@@ -9,12 +9,10 @@ them in your applications.
    :maxdepth: 20
 
    dev/quickstart
+   dev/features
    dev/mvc
+   dev/namespaces
    dev/plugins
    dev/hooks
-   dev/model
-   dev/controllers
-   dev/options
-   dev/config
    dev/templates
    

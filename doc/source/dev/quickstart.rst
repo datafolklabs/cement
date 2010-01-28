@@ -11,7 +11,7 @@ Installing Cement
 This section outlines how to install Cement.  By preference, we do so by way
 of installing to a virtualenv.  This is not necessary if you have root access
 on your system and want to install system wide.  That said, for development
-purpposes (i.e. building your application) you should be working out of a 
+purposes (i.e. building your application) you should be working out of a 
 virtualenv.
 
 Before installing Cement, setup your virtual environment:
@@ -56,7 +56,7 @@ Development versions of Cement can be cloned from GitHub:
 
     $ git clone git://github.com/derks/cement.git
     
-    $ cd helloworld
+    $ cd cement
     
     $ python setup.py install
 

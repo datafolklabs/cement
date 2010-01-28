@@ -1,0 +1,104 @@
+Model, View, Controller Overview
+================================
+
+The Cement Framework creates applications that honor the Model, View, 
+Controller design.  Each piece of your application should be separated this
+way.  For example, if you add a plugin called 'myplugin' you should work out 
+of the following files:
+
+ * ./helloworld/plugins/myplugin.py
+ * ./helloworld/model/myplugin.py
+ * ./helloworld/controllers/myplugin.py
+ * ./helloworld/templates/myplugin/
+ 
+
+As always, review the 'example' plugin included with your application to see
+how this all works.  Additionally, a great explanation of a typical MVC design
+can be found on `Wikipedia <http://en.wikipedia.org/wiki/Model–view–controller>`_.
+
+ 
+The Model 
+^^^^^^^^^
+
+The Model reprisents the data that you are working with.  This might be a
+User class, or a Product, etc.  The class might be an SQLAlchemy class tied
+to a database, or can just simply be an object allowing you to store data.
+
+**./helloworld/model/user.py**
+
+.. code-block:: python
+
+    class User(object):
+        def __init__(self, first, last, **kwargs):
+            self.first_name = first
+            self.last_name = last
+            self.address = kwargs.get('address', None)
+        
+        @property
+        def display_name(self):
+            return "%s %s" % (self.first_name, self.last_name)
+
+            
+The model should always be associated with 'data' and should rarely perform
+operations or tasks outside of creating/editing/saving/deleting/etc the 
+data associated with that model.
+
+The Controller
+^^^^^^^^^^^^^^
+
+The controller is primarily used to expose commands to your application. A
+typical example of this would be
+
+**./helloworld/controllers/greetings.py**
+
+.. code-block:: python
+
+    from cement.core.controller import CementController, expose
+    from helloworld.model.user import User
+    
+    class GreetingController(CementController):
+        @expose('helloworld.templates.greetings.sayhi', namespace='root')
+        def sayhi(self, cli_opts, cli_args):
+            user = User(first=cli_opts.first_name, 
+                        last=cli_opts.last_name)
+            return dict(user=user)
+
+
+The method 'GreetingController.sayhi' is expose to the 'root' namespace, and
+will be called when the following command is run:
+
+.. code-block:: console
+
+    $ helloworld sayhi --firstname="John" --lastname="Doe"
+
+The user object is then returned in a dictionary and rendered by Genshi with
+the template 'helloworld.templates.greetings.sayhi' or what equates to 
+'./helloworld/templates/greetings/sayhi.txt' on the filesystem (as an example).
+
+
+The View
+^^^^^^^^
+            
+Note that the templates directory *must* have a directory for each namespace
+that contains your template file (more on templating later).  Templating is not
+necessary if you prefer to simply use the print statement, that said for
+larger applications that provide a lot of console output learning the Genshi
+Text Template syntax will significantly clean up your controllers and provide
+more robust output to the user.
+
+Our 'sayhi' template would look like:
+
+**./helloworld/templates/greetings/sayhi.txt**
+
+.. code-block:: text
+
+    {# This is an example Genshi Text Template.  Documentation is at:          #}\
+    {#                                                                         #}\
+    {#    http://genshi.edgewall.org/wiki/Documentation/text-templates.html    #}\
+    {#                                                                         #}\
+    \
+    \
+    {# --------------------- 78 character baseline --------------------------- #}\
+    
+    Hello ${user.display_name}
+    
