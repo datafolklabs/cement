@@ -95,6 +95,8 @@ setup(name='Cement',
         # Only required if you want to use paster
         "PasteScript", 
         "tempita",
+        # Required for documentation
+        # "Pygments",
         ],
     setup_requires=[
         "ConfigObj",

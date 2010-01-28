@@ -7,35 +7,6 @@ from cement import namespaces
 from cement.core.log import get_logger
             
 log = get_logger(__name__)            
-
-#class Options(object):
-#    """
-#    This class is used to setup the OptParse object for later use, and is
-#    the object that is passed around thoughout the application.
-#    """
-#    def __init__(self):
-#        self.parser = None
-#        self.init_parser()
-#        
-#    def add_default_options(self):
-#        """
-#        Sets up default options for applications using Cement.
-#        """
-#        pass  
-#         
-#    def init_parser(self, version_banner=None):
-#        """
-#        Sets up the Options object and returns it for use throughout the 
-#        application.
-#    
-#        Arguments
-#    
-#        version_banner => option txt to be display for --version.
-#        """
-#        fmt = IndentedHelpFormatter(
-#            indent_increment=4, max_help_position=32, width=77, short_first=1
-#            )
-#        self.parser = OptionParser(formatter=fmt, version=version_banner)
         
 
 def init_parser(banner=None):
@@ -43,7 +14,11 @@ def init_parser(banner=None):
     Create an OptionParser object and returns its parser member.
     
     Keyword arguments:
-    banner -- Optional version banner to display for --version
+    
+        banner
+            Optional version banner to display for --version
+    
+    Returns: OptionParser object.
     
     """
     fmt = IndentedHelpFormatter(
@@ -60,11 +35,12 @@ def parse_options(namespace='root'):
     also handles merging root options into plugins, if the plugins config
     is set to do so (merge_root_options)
     
-    Keyword arguments:
-    namespace -- The namespace to parse options for (defaullt: 'root')
+    Required Arguments:
     
-    Returns:
-    tuple --  (options, args)
+        namespace
+            The namespace to parse options for (defaullt: 'root')
+    
+    Returns: tuple (options, args)
     
     """
 

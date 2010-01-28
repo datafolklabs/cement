@@ -32,11 +32,28 @@ namespaces = {}
 
         
 def get_api_version():
-    """Get the Cement API Version"""
+    """Get the Cement API Version."""
     return CEMENT_API
     
 def ensure_api_compat(module_name, required_api):
-    """Ensure the application is compatible with this version of Cement."""
+    """
+    Ensure the application is compatible with this version of Cement.
+    
+    Required Arguments:
+    
+        module_name
+            Name of the applications module.
+            
+        required_api
+            The Cement API version required by the application.
+    
+    
+    Possible Exceptions:
+    
+        CementRuntimeError
+            Raised if required_api/CEMENT_API do not match.
+    
+    """
     if required_api == CEMENT_API:
         pass
     else:
@@ -48,6 +65,18 @@ def t_f_pass(value):
     """
     A quick hack for making true/false type values actually True/False in
     python.
+    
+    Required arguments:
+    
+        value
+            The presumed 'true' or 'false' value.
+    
+    
+    Returns:
+    
+        boolean
+            True/False based on logic of the operation.
+    
     """
     try:
         if str(value.lower()) in ['true', True]:
@@ -65,9 +94,16 @@ def set_config_opts_per_file(namespace, section, config_file):
     config file does not exist.
     
     Required arguments:
-    namespace   -- The namespace to set config options for
-    section     -- Section of the configuration file to read.
-    config_file -- The config file to parse.
+    
+        namespace
+            The namespace to set config options for
+            
+        section
+            Section of the configuration file to read.
+            
+        config_file
+            The config file to parse.
+    
     """
     config = namespaces[namespace].config
     
@@ -124,9 +160,17 @@ def set_config_opts_per_file(namespace, section, config_file):
 def set_config_opts_per_cli_opts(namespace, cli_opts):
     """
     Determine if any config optons were passed via cli options, and if so
-    override the config option.
+    override the config option.  Overwrites the global 
+    namespaces['namespace'].config dict.
     
-    Returns the updated config dict.
+    Required arguments:
+    
+        namespace
+            The namespace of whose config to modify.
+
+        cli_opts
+            The cli_opts as parsed from OptParse.
+    
     """
     for opt in namespaces[namespace].config:
         try:
@@ -138,7 +182,21 @@ def set_config_opts_per_cli_opts(namespace, cli_opts):
             
 def validate_config(config):
     """
-    Validate that all required cement configuration options are set.
+    Validate that all required cement configuration options are set.  Also
+    creates any common directories based on config settings if they do not 
+    exist.
+    
+    Required arguments:
+    
+        config
+            The config dict to validate.
+    
+    
+    Possible Exceptions:
+    
+        CementConfigError
+            Raised on invalid configuration.
+    
     """
     required_settings = [
         'config_source', 'config_files', 'debug', 'datadir',

@@ -20,11 +20,21 @@ def register_default_hooks():
     Registers Cement framework hooks.
     
     Hook definitions:
-    options_hook         -- Used to add options to a namespaces options object
-    post_options_hook    -- Run after all options have been setup and merged
-    validate_config_hook -- Run after config options are setup
-    pre_plugins_hook     -- Run just before all plugins are loaded (run once)
-    post_plugins_hook    -- Run just after all plugins are loaded (run once)
+    
+        options_hook
+            Used to add options to a namespaces options object
+        
+        post_options_hook
+            Run after all options have been setup and merged
+        
+        validate_config_hook
+            Run after config options are setup
+
+        pre_plugins_hook
+            Run just before all plugins are loaded (run once)
+
+        post_plugins_hook
+            Run just after all plugins are loaded (run once)
     
     """
     define_hook('options_hook')
@@ -38,8 +48,23 @@ def lay_cement(config=None, banner=None):
     Primary method to setup an application for Cement.  
     
     Keyword arguments:
-    config  -- Dict containing application config.
-    banner  -- Optional text to display for --version
+    
+        config
+            Dict containing application config.
+    
+        banner
+            Optional text to display for --version
+    
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement.core.configuration import get_default_config
+        from cement.core.app_setup import lay_cement
+        
+        lay_cement(get_default_config())
+        
     """    
     global namespaces
     

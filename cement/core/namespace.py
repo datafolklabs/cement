@@ -8,26 +8,33 @@ from cement.core.opt import init_parser
 class CementNamespace(object):
     """
     Class that handles plugins and namespaces.
+    
+    Required Arguments:
+        
+        label
+            Namespace label.  Class is stored in the global 'namespaces' 
+            dict as namespaces['label'].
+        version
+            The version of the application.
+        required_api
+            The required Cement API the application was built on.
+        
+    Optional Keyword Arguments:
+        
+        description
+            Description of the plugin/namespace (default: '')
+        commands
+            A dict of command functions (default: {})
+        is_hidden
+            Boolean, whether command should display in --help output 
+            (default: False)
+        config
+            A config dict (default: None)
+        banner
+            A version banner to display for --version (default: '')
+            
     """
     def __init__(self, label, version, required_api, **kw):
-        """
-        Initialize CementNamespace class.
-        
-        Required arguments:
-        label       -- Namespace label.  Class is stored in the global 
-                       'namespaces' dict as namespaces['label'].
-        version     -- The version of the application.
-        required_api-- The required Cement API the application was built on.
-        
-        Optional keyword arguments:
-        description -- Description of the plugin/namespace (default: '')
-        commands    -- A dict of command functions (default: {})
-        is_hidden   -- Boolean, whether command should display in --help
-                       output (default: False)
-        config      -- A config dict (default: None)
-        banner      -- A version banner to display for --version (default: '')
-        
-        """
         self.label = label
         self.version = version
         self.required_api = required_api
@@ -50,10 +57,13 @@ def define_namespace(namespace, namespace_obj):
     """
     Define a namespace for commands, options, configuration, etc.  
     
-    Keyword arguments:
-    namespace     -- Label of the namespace
-    namespace_obj -- CementNamespace object.  Stored in global 'namespaces'
-                     dict as namespaces['namespace']
+    Required Arguments:
+    
+        namespace
+            Label of the namespace
+        namespace_obj
+            CementNamespace object.  Stored in global 'namespaces' dict as 
+            namespaces['namespace']
                      
     """
     if namespaces.has_key(namespace):

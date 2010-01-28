@@ -9,10 +9,22 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
     Primary Cement method to setup logging.
     
     Keyword arguments:
-    clear_loggers -- Boolean, whether to clean exiting loggers (default: True)
-    level -- The log level (info, warn, error, debug, fatal), (default: None)
-    to_console -- Boolean, whether or not to log to console
+        
+        clear_loggers
+            Boolean, whether to clean exiting loggers (default: True)
+        level
+            The log level (info, warn, error, debug, fatal), (default: None)
+        to_console
+            Boolean, whether or not to log to console
     
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement.core.log import setup_logging
+        setup_logging()
+        
     """
     config = namespaces['root'].config
     all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
@@ -82,9 +94,15 @@ def get_logger(name):
     of 'name' (should be passed as __name__).  
     
     Arguments:
-    name -- Name of the module calling get_logger (use __name__).
+    
+        name
+            Name of the module calling get_logger (use __name__).
     
     Usage:
+    
+    .. code-block:: python
+    
+        from cement.core.log import get_logger
         log = get_logger(__name__)
         
     """

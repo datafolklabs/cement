@@ -17,22 +17,20 @@ log = get_logger(__name__)
 class render(object):
     """
     Class decorator to render data with Genshi text formatting engine or json.
+    Called when the function is decorated, sets up the engine and template for 
+    later use.  If not passed a template, render will do nothing (unless 
+    --json is passed, by which json is returned).
+    
+    *Note: This is called form the cement.core.controller.expose() decorator 
+    and likely shouldn't ever be needed to call directly.*
+    
+    Keywork arguments:
+    
+        template
+            The module path to the template (default: None)
+                
     """
     def __init__(self, template=None):
-        """
-        Called when the function is decorated, sets up the engine and 
-        template for later use.  If not passed a template, render will do 
-        nothing (unless --json is passed, by which json is returned).
-        
-        Keywork arguments:
-        template -- The module path to the template (default: None)
-        
-        Usage:
-            @expose('myapp.templates.myplugin.template_name')
-            def mycommand(self, *args, *kwargs)
-                ...
-                
-        """
         self.func = None
         self.template = template
         self.tmpl_module = None

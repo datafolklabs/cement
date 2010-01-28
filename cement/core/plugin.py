@@ -23,20 +23,31 @@ def register_plugin(**kwargs):
     Decorator function to register plugin namespace.  
     
     Usage:    
+    
+    .. code-block:: python
+
+        from cement.core.plugin import register_plugin
+            
         @register_plugin()
-        class myplugin(CementPlugin):
-            ...
+        class ExamplePlugin(CementPlugin):
+            def __init__(self):
+                CementPlugin.__init__(self,
+                    label='example',
+                    version='0.1',
+                    description='Example plugin',
+                    required_api='0.5-0.6:20100115',
+                    controller = 'ExampleController'
+                    )    
+    
+    *Note: 'ExampleController' should match up with the controller object in
+    myapp.controllers.example.ExampleController.*
+    
     """
     def decorate(func):
         """
         Decorate a plugin class and add the namespace to global namespaces
-        dictionary (not the 'root' namespace).
+        dictionary.
         
-        Arguments:
-        func -- The function to decorate
-        
-        Returns:
-        func -- The original function
         """
         nms = func.__module__.split('.')
         inst_func = func()
@@ -64,7 +75,10 @@ def load_plugin(plugin):
     Load a cement plugin.  
     
     Required arguments:
-    plugin -- Name of the plugin to load
+    
+        plugin
+            Name of the plugin to load.  Should be accessible from the module
+            path of 'myapp.plugins.myplugin'.
     
     """
     config = namespaces['root'].config
@@ -110,6 +124,7 @@ def load_all_plugins():
     """
     Attempt to load all enabled plugins.  Passes the existing config and 
     options object to each plugin and allows them to add/update each.
+    
     """
     for res in run_hooks('pre_plugins_hook'):
         pass # No result expected

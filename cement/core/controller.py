@@ -18,6 +18,30 @@ class CementController(object):
         pass
 
 def run_controller_command(namespace, func, *args, **kwargs):
+    """
+    Cleanly run a command function from a controller.
+    
+    Arguments:
+    
+        namespace
+            The namespace of the controller
+        func
+            The name of the function
+        args
+            Any additional arguments to pass to the function
+        kwargs
+            Any additional keyword arguments to pass to the function.
+    
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement.core.controller import run_controller_command
+        
+        run_controller_command('root', 'cmd_name', myarg=True)
+        
+    """
     controller = namespaces[namespace].controller()
     func = getattr(controller, func)(*args, **kwargs)
                       
@@ -28,20 +52,29 @@ class expose(object):
     
     Arguments:
     
-        template  -- A template in python module form 
-                    (i.e 'myapp.templates.mytemplate')
-        
-        namespace -- The namespace to expose the command in.  Default: root
+        template
+            A template in python module form (i.e 'myapp.templates.mytemplate')
+        namespace
+            The namespace to expose the command in.  Default: root
+    
     
     Optional Keyword Arguments:
     
-        is_hidden -- True/False whether command should display on --help.
-        
-    Usage: 
+        is_hidden
+            True/False whether command should display on --help.
     
-        @expose('app_module.view.template', namespace='namespace')
-        def mycommand(self):
-            ...
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        class MyController(CementController):
+            @expose('myapp.templates.mycontroller.cmd', namespace='root')
+            def cmd(self):
+                foo="Foo"
+                bar="Bar"
+                return dict(foo=foo, bar=bar)
+                
     """
     def __init__(self, template=None, namespace='root', **kwargs):
         # These get set in __call__

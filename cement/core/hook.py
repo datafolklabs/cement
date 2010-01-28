@@ -11,8 +11,19 @@ def define_hook(name):
     Define a hook namespace that plugins can register hooks in.
     
     Required arguments:
-    name -- The name of the hook, stored as hooks['name']
     
+        name
+            The name of the hook, stored as hooks['name']
+    
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement.core.hook import define_hook
+        
+        define_hook('myhookname_hook')
+        
     """
     log.debug("defining hook '%s'", name)
     if hooks.has_key(name):
@@ -25,12 +36,21 @@ def register_hook(**kwargs):
     Decorator function for plugins to register hooks.  Used as:
     
     Optional keyword arguments:
-    weight -- The weight in which to order the hook function (default: 0)
+    
+        weight
+            The weight in which to order the hook function (default: 0)
     
     Usage:
+    
+    .. code-block:: python
+        
+        from cement.core.hook import register_hook
+        
         @register_hook()
-        def my_hook():
-            ...
+        def my_hook(*args, **kwargs):
+            # do something here
+            res = 'Something to return'
+            return res
             
     """
     def decorate(func):
@@ -54,12 +74,22 @@ def run_hooks(*args, **kwargs):
     function run.
     
     Optional arguments:
-    name    -- The name of the hook function
-    args    -- Any additional args are passed to the hook function
-    kwargs  -- Any kwargs are passed to the hook function
+    
+        name
+            The name of the hook function
+        args
+            Any additional args are passed to the hook function
+        kwargs
+            Any kwargs are passed to the hook function
+    
     
     Usage:
-        for res in run_hooks('hook_name'):
+    
+    .. code-block:: python
+    
+        from cement.core.hook import run_hook
+        
+        for result in run_hooks('hook_name'):
             # do something with result from each hook function
             ...
     """

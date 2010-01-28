@@ -30,35 +30,7 @@ Copyright (c) 2008 TurboGears Team
 -----------------------------------------------------------------------------
  
  
-Paste commands to a generate a new Cement projects and plugins.
-
-Create a new project named helloworld with this command:
-
-    $ paster cement-app helloworld
-    
-    
-Create a new plugin for the helloworld project with this command:
-
-    $ paster cement-plugin helloworld myplugin
-    
-
-Usage:
-
-.. parsed-literal::
-
-    paster cement-app [--version][-h|--help]
-            [--dry-run][-t|--templates *TEMPLATES*]
-
-.. container:: paster-usage
-
-  --version
-      show program's version number and exit
-  -h, --help
-      show this help message and exit
-  --dry-run
-      dry run (don't actually do anything)
-  -t *TEMPLATES*, --templates=*TEMPLATES*
-      user specific template
+Paste commands to generate a new Cement projects and plugins.
     
 """
 
@@ -92,6 +64,7 @@ class CementAppCommand(command.Command):
 Example usage::
 
     $ paster cement-app yourproject
+    
     """
     version = CEMENT_VERSION
     summary = __doc__.splitlines()[0]

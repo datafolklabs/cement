@@ -19,8 +19,10 @@ def run_command(cmd_name=None):
     decorator used on a Controller function.
     
     Keyword arguments:
-    cmd_name --  The command name as store in the global 'namespaces'.  For
-                 example, namespaces['root'].commands['cmd_name'].
+    
+        cmd_name
+            The command name as store in the global 'namespaces'. For 
+            example, namespaces['root'].commands['cmd_name'].
                 
     """
     log.debug("processing passed command '%s'", cmd_name)
@@ -71,10 +73,7 @@ def run_command(cmd_name=None):
         cmd = namespaces[namespace].commands[actual_cmd]
         log.debug("executing command '%s'" % actual_cmd)
         run_controller_command(cmd['controller_namespace'], cmd['func'], 
-                               cli_opts, cli_args)
-
-
-        
+                               cli_opts, cli_args)  
     else:
         raise CementArgumentError, "Unknown command '%s', see --help?" % actual_cmd
         
