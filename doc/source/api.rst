@@ -7,5 +7,5 @@ This page contains the internal API documentation for the Cement Framework.
    :maxdepth: 20
 
    api/core
-   api/paste
+   api/versions
    
