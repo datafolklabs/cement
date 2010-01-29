@@ -11,8 +11,7 @@ them in your applications.
    dev/quickstart
    dev/features
    dev/mvc
-   dev/namespaces
-   dev/plugins
+   dev/namespaces_and_plugins
    dev/hooks
    dev/templates
    
