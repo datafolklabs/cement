@@ -4,6 +4,7 @@ An Overview of Features
 The Cement CLI Application Framework provides the following features for
 every application (out of the box):
 
+ * Multiple Configuration file parsing (default: /etc, ~/)
  * Command line argument and option parsing
  * Dual Console/File Logging Support
  * Full Internal and External (3rd Party) Plugin support
@@ -38,6 +39,31 @@ order:
  * /etc/yourapp/yourapp.conf
  * ~/.yourapp.conf
  
+
+
+Command Line Argument and Option Parsing
+----------------------------------------
+
+Command line arguments and options are parsed via OptParse for each namespace.
+Meaning, the default base application owns the 'root' namespace.  
+
+.. code-block:: text
+
+    # options and commands for root namespace
+    $ helloworld --help 
+    
+    # options and subcommands for myplugin namespace
+    $ helloworld myplugin --help 
+    
+
+Plugins have an option to 'merge_root_options' where their OptParse object
+will merge in all of the options from the root namespace.  For example, the
+options --debug, --quiet, --json are all root namespace options that are
+merged into the 'myplugin' namespace by default.
+
+Options parsed from the command line will overwrite config options if the 
+name of the option matches the config option.  
+
 
 Logging
 -------
