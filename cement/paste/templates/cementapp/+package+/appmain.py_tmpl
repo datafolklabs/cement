@@ -8,7 +8,8 @@ easily upgrade to newer versions of Cement when the API compatibility changes.
 import sys
 from pkg_resources import get_distribution
 
-from cement.core.exc import *
+from cement.core.exc import CementArgumentError, CementConfigError, \
+                            CementRuntimeError
 from cement.core.log import get_logger
 from cement.core.app_setup import lay_cement
 from cement.core.configuration import ensure_api_compat

@@ -141,6 +141,8 @@ def load_all_plugins():
             else:
                 if namespaces.has_key(namespace):
                     namespaces[namespace].options.add_option(opt)
+                else:
+                    log.warning("namespace '%s' doesn't exist!" % namespace)
     
     for res in run_hooks('post_plugins_hook'):
         pass # No result expected

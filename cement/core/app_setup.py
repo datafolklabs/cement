@@ -73,7 +73,7 @@ def lay_cement(config=None, banner=None):
             config['app_name'],
             get_distribution(config['app_egg_name']).version)
         
-    
+    register_default_hooks()
     
     namespace = CementNamespace(
         label='root',
@@ -89,8 +89,6 @@ def lay_cement(config=None, banner=None):
                           globals(), locals(), ['root'], -1)
     namespaces['root'].controller = getattr(root_mod, 'RootController')
     
-    register_default_hooks()
-    
     validate_config(namespaces['root'].config)
     
     for cf in namespaces['root'].config['config_files']:
@@ -102,7 +100,7 @@ def lay_cement(config=None, banner=None):
     try:
         namespaces['root'].options.add_option('--json', action='store_true',
             dest='enable_json', default=None, 
-            help='render output as json (Cement CLI-API) [EXPERIMENTAL]'
+            help='render output as json (Cement CLI-API)'
             )
         namespaces['root'].options.add_option('--debug', action='store_true',
             dest='debug', default=None, help='toggle debug output'

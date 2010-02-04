@@ -81,7 +81,7 @@ Accessing Namespaces
 
 
 Plugin Support
-==============
+--------------
 
 Plugins are simply another form of namespaces, therefore you should read and 
 be familiar with the :ref:`namespaces-ref` section of the documentation.

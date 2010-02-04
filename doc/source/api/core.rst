@@ -71,13 +71,6 @@ Cement Core API Documentation
     :members:    
     
     
-:mod:`cement.core.util`
----------------------------
-
-.. automodule:: cement.core.util
-    :members:    
-    
-    
 :mod:`cement.core.view`
 ---------------------------
 
