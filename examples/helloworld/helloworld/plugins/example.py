@@ -7,6 +7,7 @@ from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.opt import init_parser
 from cement.core.hook import define_hook, register_hook
+from cement.core.namespace import register_namespace
 from cement.core.plugin import CementPlugin, register_plugin
 
 from helloworld.appmain import VERSION, BANNER
@@ -15,7 +16,7 @@ log = get_logger(__name__)
 
 REQUIRED_CEMENT_API = '0.5-0.6:20100115'
         
-@register_plugin() 
+@register_namespace() 
 class ExamplePlugin(CementPlugin):
     # This is how we define a hook that we will honor later (see the example
     # controller).  Hooks allow other plugins to tie into your namespace.

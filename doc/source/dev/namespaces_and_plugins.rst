@@ -5,8 +5,7 @@ Namespaces and Plugin Support
 The Cement Framework establishes a global 'namespaces' dictionary that stores
 information for each namespace (and/or plugin).  Namespaces are primarily 
 used by the plugin system to establish plugin namespaces, however there is
-also a 'root' namespace for the base application. Each namespace has the 
-following members:
+also a 'root' namespace for the base application. 
 
 
 .. _namespaces-ref:
@@ -48,8 +47,8 @@ global *namespaces['namespace']* dictionary:
         
     controller
         The CementController object for the namespace.  Set as a string
-        when initializing a plugin, but is instantiated as the object
-        after the plugin loads (and the namespace is created).
+        when initializing a namespace, but is instantiated as the object
+        after the namespace is defined.
     
     options
         An OptParse object used to set options that are local to this 
@@ -65,7 +64,37 @@ global *namespaces['namespace']* dictionary:
 
 
 In general, namespaces are created when you register a plugin, but can be
-manually defined as well.
+manually defined as well.  For example, you might have a dozen controllers
+and models that make up your core application and want a separate namespace
+for each, but making them a 'plugin' doesn't seem right.  What you can do is
+register the namespace from the root controller like so:
+
+**./helloworld/controllers/root.py**:
+
+.. code-block:: python
+
+    from cement.core.namespace import register_namespace
+    
+    @register_namespace()
+    class GreetingNamespace(CementNamespace):
+        def __init__(self):
+            CementNamespace.__init__(self,
+                label='greeting',
+                required_api='0.5-0.6:20100115',
+                controller = 'GreetingController'
+                )
+
+    class RootController(CementController):
+        @expose('helloworld.templates.root.error', is_hidden=True)
+        def error(self, errors={}):
+            return dict(errors=errors)
+
+
+As you can see, we can register any non-plugin namespaces before our
+RootController.  We do this here because the root controller is loaded first
+when the application is first setup by Cement allowing all of your namespaces
+to be registered before any controllers try to expose commands for that 
+namespace.
 
 
 Accessing Namespaces
@@ -84,7 +113,9 @@ Plugin Support
 --------------
 
 Plugins are simply another form of namespaces, therefore you should read and 
-be familiar with the :ref:`namespaces-ref` section of the documentation.
+be familiar with the :ref:`namespaces-ref` section of the documentation.  The
+difference is that plugins should be considered as optional, whereas namespaces
+defined in the root controller are required for core functionality.
 
 The Cement Framework automatically builds plugin support into your application.
 Plugins can be either internal, or external.  Internal plugins are shipped
@@ -122,9 +153,11 @@ An internal plugin would consist of the following files:
  * ./yourapp/plugins/yourplugin.py
  * ./yourapp/etc/yourapp/plugins.d/yourplugin.conf
 
-As you can see, plugins has the same layout as the standard application which
+As you can see, plugins have the same layout as the standard application which
 utilizes a Model, View, Controller design.  Lets take a look at an example 
 plugin for an application called 'helloworld'.
+
+**./yourapp/plugins/example.py**:
 
 .. code-block:: python
 

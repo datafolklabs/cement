@@ -3,10 +3,13 @@
 from pkg_resources import get_distribution
 
 from cement import namespaces
+from cement.core.log import get_logger
 from cement.core.configuration import ensure_api_compat
 from cement.core.exc import CementRuntimeError
 from cement.core.configuration import get_default_plugin_config
 from cement.core.opt import init_parser
+
+log = get_logger(__name__)
 
 def register_namespace(**kwargs):
     """
@@ -29,7 +32,8 @@ def register_namespace(**kwargs):
                     )    
     
     *Note: 'ExampleController' should match up with the controller object in
-    myapp.controllers.example.ExampleController.*
+    myapp.controllers.example.ExampleController.*  The path to the controller
+    module is determined by the 'label' of the namespace.  
     
     """
     def decorate(func):
@@ -41,21 +45,13 @@ def register_namespace(**kwargs):
         nms = func.__module__.split('.')
         inst_func = func()
         ensure_api_compat(func.__name__, inst_func.required_api)
-        if kwargs.get('name', None):
-            plugin_name = kwargs['name']
-        else:
-            plugin_name = nms[-1]
+        define_namespace(inst_func.label, inst_func)
         
-        define_namespace(plugin_name, inst_func)
-        
-        # Extract the actual controller object from the namespace
-        (base, plugins, plugin) = func.__module__.split('.')
-        mymod = __import__("%s.controllers.%s" % (base, plugin), globals(), 
-                           locals(), [inst_func.controller], -1)
-                           
-        controller = getattr(mymod, inst_func.controller)  
-        namespaces[plugin_name].controller = controller
-        
+        base = namespaces['root'].config['app_module']
+        mymod = __import__('%s.controllers.%s' % (base, inst_func.label), 
+                           globals(), locals(), [inst_func.controller], -1)
+        controller = getattr(mymod, inst_func.controller)                  
+        namespaces[inst_func.label].controller = controller
         return func
     return decorate
     
@@ -93,7 +89,7 @@ class CementNamespace(object):
             app_module = namespaces['root'].config['app_module']
             self.version = kw.get('version', get_distribution(app_module).version)
         else:
-            self.version = kw['version']
+            self.version = kw.get('version', None)
             
         self.label = label
         self.required_api = required_api
@@ -106,10 +102,11 @@ class CementNamespace(object):
         if kw.get('config', None):
             self.config.update(kw['config'])
 
-        if not kw.get('banner'):
-            banner = "%s version %s" % (self.label, self.version)
+        if kw.get('banner', None):
+            banner = kw['banner']
         else:
-            banner = kw.get('banner')
+            banner = "%s version %s" % (self.label, self.version)
+            
         self.options = kw.get('options', init_parser(banner=banner))
             
 def define_namespace(namespace, namespace_obj):
@@ -128,3 +125,5 @@ def define_namespace(namespace, namespace_obj):
     if namespaces.has_key(namespace):
         raise CementRuntimeError, "Namespace '%s' already defined!" % namespace
     namespaces[namespace] = namespace_obj
+    log.debug("namespace '%s' initialized from '%s'." % \
+             (namespace, namespace_obj.__module__))
