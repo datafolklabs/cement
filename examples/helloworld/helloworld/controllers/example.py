@@ -3,11 +3,25 @@
 from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.controller import CementController, expose
-from cement.core.hook import run_hooks
+from cement.core.hook import register_hook, define_hook, run_hooks
 
 from helloworld.model.example import ExampleModel
 
 log = get_logger(__name__)
+
+define_hook('ex2')
+
+@register_hook(weight=99)
+def my_example_hook(*args, **kwargs):
+    print "In example_hook number 1, weight = 99"
+
+@register_hook(weight=-1000)
+def my_example_hook(*args, **kwargs):
+    print "In example_hook number 2, weight = -1000"
+
+@register_hook()
+def my_example_hook(*args, **kwargs):
+    print "In example_hook number 3, weight = 0 (defaullt)"
 
 class ExampleController(CementController):
     @expose() # no template, root namespace (default)
@@ -40,6 +54,7 @@ class ExampleController(CementController):
         print "This is the help method for ex1."
     
     @expose('helloworld.templates.example.ex2', namespace='root')    
+    @register_hook()
     def ex2(self, cli_opts, cli_args): 
         """
         This is an example root command.  See --help.  When commands are

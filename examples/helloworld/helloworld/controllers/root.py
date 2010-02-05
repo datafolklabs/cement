@@ -5,8 +5,16 @@ commands that might not need there own namespace or controller.
 """
 
 from cement.core.controller import CementController, expose
+from cement.core.hook import define_hook, run_hooks
+
+from helloworld.controllers.greeting import GreetingController
 
 class RootController(CementController):
     @expose('helloworld.templates.root.error', is_hidden=True)
     def error(self, errors={}):
         return dict(errors=errors)
+        
+    @expose()
+    def hook_example(self, cli_opts, cli_args):
+        for res in run_hooks('my_example_hook'):
+            pass

@@ -20,9 +20,9 @@ can be found on `Wikipedia <http://en.wikipedia.org/wiki/Model–view–controll
 The Model 
 ^^^^^^^^^
 
-The Model reprisents the data that you are working with.  This might be a
+The Model represents the data that you are working with.  This might be a
 User class, or a Product, etc.  The class might be an SQLAlchemy class tied
-to a database, or can just simply be an object allowing you to store data.
+to a database, or can just simply be an object allowing you to organize data.
 
 **./helloworld/model/user.py**
 
@@ -49,7 +49,7 @@ The Controller
 The controller is primarily used to expose commands to your application. A
 typical example of this would be
 
-**./helloworld/controllers/greetings.py**
+**./helloworld/controllers/greeting.py**
 
 .. code-block:: python
 
