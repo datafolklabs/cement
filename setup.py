@@ -96,6 +96,7 @@ setup(name='Cement',
         "PasteScript", 
         "tempita",
         # Required for documentation
+        # "Sphinx",
         # "Pygments",
         ],
     setup_requires=[
