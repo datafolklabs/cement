@@ -6,6 +6,14 @@
 Welcome to The Cement Framework's documentation!
 ================================================================
 
+Cement is an advanced CLI Application Framework for Python. This documentation
+is a guide for developers wishing to build their applications ontop of the 
+Cement Framework.  Other sites that might be helpful:
+
+ * http://pypi.python.org/pypi/Cement
+ * http://github.com/derks/cement
+ * http://wiki.builtoncement.org
+ 
 Contents:
 
 .. toctree::
