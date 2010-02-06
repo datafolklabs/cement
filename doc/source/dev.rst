@@ -14,4 +14,5 @@ them in your applications.
    dev/namespaces_and_plugins
    dev/hooks
    dev/templates
+   dev/cli_api
    
