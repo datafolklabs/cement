@@ -1,0 +1,57 @@
+NAME: helloworld
+
+AUTHOR:
+
+DESCRIPTION:
+
+Describe your application here.
+
+helloworld is built on the Cement CLI Application Framework.
+
+
+USAGE:
+
+    $ helloworld --help
+    
+    
+PLUGIN DEVELOPMENT:
+
+helloworld supports external plugins via the Cement Framework.  To quick
+start a new plugin for helloworld you can use the paster utility.
+
+Setup a virtual environment for development:
+    
+    $ virtualenv --no-site-package /path/to/env
+    
+    $ source /path/to/env/bin/activate
+    
+    
+Install helloworld:
+    
+    $ cd /path/to/helloworld
+    
+    $ python setup.py develop
+    
+
+Create and install the plugin:
+
+    $ mkdir plugins
+    
+    $ cd plugins
+    
+    $ paster cement-plugin helloworld myplugin
+    
+    $ cd helloworld-plugins-myplugin
+    
+    $ python setup.py develop
+    
+    
+Once your plugin is installed, you can add the plugin to the enabled_plugins
+setting in /etc/helloworld/helloworld.conf.  Additionally, the plugin
+configurations can be set in /etc/helloworld/plugins.d/myplugin.conf. You 
+should then see some example commands/options show up with:
+
+    $ helloworld --help
+    
+    
+Then, code away!
