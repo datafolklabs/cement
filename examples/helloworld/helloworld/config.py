@@ -24,7 +24,6 @@ dcf['datadir'] = '%s/data' % dcf['statedir']
 dcf['tmpdir'] = '%s/tmp' % dcf['statedir']
 dcf['log_file'] = '%s/log/%s.log' % (dcf['statedir'], dcf['app_name'])
 dcf['plugin_config_dir'] = '%s/etc/plugins.d' % dcf['statedir']
-dcf['plugins'] = {}
 dcf['log_to_console'] = True
 dcf['output_engine'] = 'genshi'
 
