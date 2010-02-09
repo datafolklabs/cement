@@ -89,13 +89,13 @@ def lay_cement(config=None, banner=None):
                           globals(), locals(), ['root'], -1)
     namespaces['root'].controller = getattr(root_mod, 'RootController')
     
-    validate_config(namespaces['root'].config)
-    
     for cf in namespaces['root'].config['config_files']:
         set_config_opts_per_file('root', 
                                  namespaces['root'].config['app_module'], 
                                  cf)
 
+    validate_config(namespaces['root'].config)
+    
     # Add hardcoded options hacks... might move this to a hook or plugin later
     try:
         namespaces['root'].options.add_option('--json', action='store_true',

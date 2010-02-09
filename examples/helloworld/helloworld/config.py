@@ -17,24 +17,25 @@ dcf['app_egg_name'] = 'helloworld' # name from setup.py
 dcf['app_module'] = 'helloworld' # name of the library dir
 dcf['app_basepath'] = os.path.dirname(__file__)
 
-# By default look in /etc and ~/ for config files.  You should probably
-# symlink /etc/<your_app> => ./etc/<your_app> for easy development.
-dcf['config_files'] = [
-    os.path.join('/etc', dcf['app_name'], '%s.conf' % dcf['app_name']),
-    os.path.join(os.environ['HOME'], '.%s.conf' % dcf['app_name']),
-    ]
 dcf['enabled_plugins'] = [] # no default plugins, add via the config file
 dcf['debug'] = False
-dcf['statedir'] = './var/lib/%s' % dcf['app_name']
+dcf['statedir'] = '/var/lib/%s' % dcf['app_name']
 dcf['datadir'] = '%s/data' % dcf['statedir']
 dcf['tmpdir'] = '%s/tmp' % dcf['statedir']
 dcf['log_file'] = '%s/log/%s.log' % (dcf['statedir'], dcf['app_name'])
-dcf['plugin_config_dir'] = '%s/etc/%s/plugins.d' % (dcf['statedir'], dcf['app_name'])
-dcf['plugin_dir'] = '%s/plugins.d' % dcf['statedir']
+dcf['plugin_config_dir'] = '%s/etc/plugins.d' % dcf['statedir']
 dcf['plugins'] = {}
 dcf['log_to_console'] = True
 dcf['output_engine'] = 'genshi'
 
+# By default look in /etc and ~/ for config files.  You should probably
+# symlink /etc/<your_app> => ./etc/<your_app> for easy development.
+dcf['config_files'] = [
+    os.path.join('/etc', dcf['app_name'], '%s.conf' % dcf['app_name']),
+    os.path.join(dcf['statedir'], 'etc', '%s.conf' % dcf['app_name']),
+    os.path.join(os.environ['HOME'], '.%s.conf' % dcf['app_name']),
+    ]
+    
 found_config = False
 for c in dcf['config_files']:
     if os.path.exists(c):

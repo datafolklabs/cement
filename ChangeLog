@@ -1,7 +1,15 @@
+0.6.1 - unreleased
+-----------------------------------------------------------------------------
+
+ +  Set statedir (all data) to ~/<app_name> rather than ./var/etc.  Only 
+    affects new apps (or apps without a config file).
+ +  Added an additional config file location of <statedir>/etc/<app>.conf
+ +  Added a -dev config file that is more suitable for development use.
+ 
 0.6 - Feb 05, 2010
 -----------------------------------------------------------------------------
 
- + Version 0.6 Stable Release.
+ +  Version 0.6 Stable Release.
  
  
 0.5.4 - unreleased 
