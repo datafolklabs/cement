@@ -135,6 +135,7 @@ Example usage::
         cmd_args = []
         for template in self.templates.split():
             cmd_args.append("--template=%s" % template)
+
         cmd_args.append(self.name)
         cmd_args.append("cement_api=%s" % CEMENT_API)
         cmd_args.append("cement_version=%s" % CEMENT_VERSION)

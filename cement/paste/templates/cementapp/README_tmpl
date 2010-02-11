@@ -6,7 +6,7 @@ DESCRIPTION:
 
 Describe your application here.
 
-{{package}} is built on the Cement CLI Application Framework.
+{{project}} is built on the Cement CLI Application Framework.
 
 
 USAGE:
@@ -16,7 +16,7 @@ USAGE:
     
 PLUGIN DEVELOPMENT:
 
-{{package}} supports external plugins via the Cement Framework.  To quick
+{{project}} supports external plugins via the Cement Framework.  To quick
 start a new plugin for {{package}} you can use the paster utility.
 
 Setup a virtual environment for development:
@@ -26,9 +26,9 @@ Setup a virtual environment for development:
     $ source /path/to/env/bin/activate
     
     
-Install {{package}}:
+Install {{project}}:
     
-    $ cd /path/to/{{package}}
+    $ cd /path/to/{{project}}
     
     $ python setup.py develop
     
@@ -47,9 +47,10 @@ Create and install the plugin:
     
     
 Once your plugin is installed, you can add the plugin to the enabled_plugins
-setting in /etc/{{package}}/{{package}}.conf.  Additionally, the plugin
-configurations can be set in /etc/{{package}}/plugins.d/myplugin.conf. You 
-should then see some example commands/options show up with:
+setting in /etc/{{package}}/{{package}}.conf (or the path to the config).  
+Additionally, the plugin configurations can be set in 
+/etc/{{package}}/plugins.d/myplugin.conf. You should then see some example 
+commands/options show up with:
 
     $ {{package}} --help
     

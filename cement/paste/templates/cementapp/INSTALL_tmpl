@@ -3,7 +3,7 @@ SOURCE INSTALLATION:
 
     $ sudo python setup.py install
 
-    $ sudo cp -a ./etc/{{package}} /etc/{{package}}
+    $ sudo cp -a ./etc /etc/{{package}}
     
     
 USAGE:
