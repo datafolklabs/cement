@@ -19,7 +19,6 @@ enabled_plugins = example,
 #
 # these should probably be changed for production installations if you 
 # follow the FHS (and you should).
-statedir = ~/{{package}}/
 datadir = ~/{{package}}/data
 tmpdir = ~/{{package}}/tmp
 

@@ -55,6 +55,7 @@ def register_namespace(**kwargs):
         return func
     return decorate
     
+    
 class CementNamespace(object):
     """
     Class that handles plugins and namespaces.
@@ -103,11 +104,11 @@ class CementNamespace(object):
             self.config.update(kw['config'])
 
         if kw.get('banner', None):
-            banner = kw['banner']
+            self.banner = kw['banner']
         else:
-            banner = "%s version %s" % (self.label, self.version)
+            self.banner = "%s version %s" % (self.label, self.version)
             
-        self.options = kw.get('options', init_parser(banner=banner))
+        self.options = kw.get('options', init_parser(banner=self.banner))
             
 def define_namespace(namespace, namespace_obj):
     """
@@ -127,3 +128,20 @@ def define_namespace(namespace, namespace_obj):
     namespaces[namespace] = namespace_obj
     log.debug("namespace '%s' initialized from '%s'." % \
              (namespace, namespace_obj.__module__))
+
+
+def register_namespace2(label, controller):
+    nam = CementNamespace(
+            label=label,
+            required_api=namespaces['root'].required_api,
+            version=namespaces['root'].version,
+            banner=namespaces['root'].banner,
+            )
+    define_namespace(label, nam)
+    
+    base = namespaces['root'].config['app_module']
+    mymod = __import__('%s.controllers.%s' % (base, label), 
+                       globals(), locals(), [controller], -1)
+    cont = getattr(mymod, controller)                  
+    namespaces[label].controller = cont
+             

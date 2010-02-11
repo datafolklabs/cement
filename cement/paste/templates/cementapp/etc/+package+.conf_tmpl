@@ -19,8 +19,7 @@ enabled_plugins = example,
 #
 # These settings tend to follow the FHS, and may need to be modified for your
 # environment.
-statedir = ~/{{package}}/
-datadir = /var/lib/{{package}}/data
+datadir = /var/lib/{{package}}
 tmpdir = /tmp
 plugin_config_dir = /etc/{{package}}/plugins.d
 
