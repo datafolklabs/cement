@@ -3,12 +3,21 @@
 from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.controller import CementController, expose
-from cement.core.hook import run_hooks
+from cement.core.hook import run_hooks, define_hook, register_hook
 
 from helloworld.model.example import ExampleModel
 
 log = get_logger(__name__)
 
+# define hooks for that this controller will run
+define_hook('my_example_hook')
+
+# register hooks for this, or other controller's hooks
+@register_hook()
+def my_example_hook():
+    foo = "In my_example_hook at %s!" % __file__
+    return foo
+    
 class ExampleController(CementController):
     @expose() # no template, root namespace (default)
     def ex1(self, cli_opts, cli_args):
@@ -28,7 +37,7 @@ class ExampleController(CementController):
         # Here we show how to run a hook that we've defined in
         # helloworld.plugins.example:
         for res in run_hooks('my_example_hook'):
-            print res
+            print res  
         
         # This command has no template, but if we return something we
         # can still access the json output via --json.

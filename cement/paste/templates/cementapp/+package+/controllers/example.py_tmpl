@@ -9,6 +9,11 @@ from {{package}}.model.example import ExampleModel
 
 log = get_logger(__name__)
 
+# This is how we define a hook that we will honor within our namespace. Hooks 
+# allow other controllers/plugins to tie into this controller.
+define_hook('my_example_hook')
+
+
 class ExampleController(CementController):
     @expose() # no template, root namespace (default)
     def ex1(self, cli_opts, cli_args):

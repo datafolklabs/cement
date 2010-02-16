@@ -5,7 +5,7 @@ from configobj import ConfigObj, Section
 
 from cement.core.exc import CementRuntimeError, CementConfigError
 
-CEMENT_API = "0.5-0.6:20100115"
+CEMENT_API = "0.7-0.8:20100210"
     
 def get_default_config():
     """Get a default config dict."""

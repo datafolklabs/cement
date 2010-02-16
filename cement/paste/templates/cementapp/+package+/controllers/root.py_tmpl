@@ -5,7 +5,7 @@ non-plugin namespaces for controllers to use.
 """
 
 from cement import namespaces
-from cement.core.namespace import CementNamespace, register_namespace2
+from cement.core.namespace import CementNamespace, register_namespace
 from cement.core.controller import CementController, expose
 from cement.core.log import get_logger
 
@@ -19,7 +19,7 @@ log = get_logger(__name__)
 #   {{package}}/model/example.py
 #   {{package}}/templates/example/
 #
-register_namespace2('example', 'ExampleController')           
+register_namespace('example', 'ExampleController')           
     
 class RootController(CementController):
     @expose('{{package}}.templates.root.error', is_hidden=True)

@@ -11,7 +11,7 @@ from cement.core.opt import init_parser
 
 log = get_logger(__name__)
 
-def register_namespace(**kwargs):
+def register_namespaceOLD(**kwargs):
     """
     Decorator function to register a namespace.  Alternative to registering
     a plugin, but essentially the same thing.  
@@ -130,7 +130,7 @@ def define_namespace(namespace, namespace_obj):
              (namespace, namespace_obj.__module__))
 
 
-def register_namespace2(label, controller):
+def register_namespace(label, controller):
     nam = CementNamespace(
             label=label,
             required_api=namespaces['root'].required_api,

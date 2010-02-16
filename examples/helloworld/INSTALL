@@ -3,7 +3,7 @@ SOURCE INSTALLATION:
 
     $ sudo python setup.py install
 
-    $ sudo cp -a ./etc/helloworld /etc/helloworld
+    $ sudo cp -a ./etc /etc/helloworld
     
     
 USAGE:

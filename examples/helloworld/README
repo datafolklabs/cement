@@ -6,7 +6,7 @@ DESCRIPTION:
 
 Describe your application here.
 
-helloworld is built on the Cement CLI Application Framework.
+HelloWorld is built on the Cement CLI Application Framework.
 
 
 USAGE:
@@ -16,7 +16,7 @@ USAGE:
     
 PLUGIN DEVELOPMENT:
 
-helloworld supports external plugins via the Cement Framework.  To quick
+HelloWorld supports external plugins via the Cement Framework.  To quick
 start a new plugin for helloworld you can use the paster utility.
 
 Setup a virtual environment for development:
@@ -26,9 +26,9 @@ Setup a virtual environment for development:
     $ source /path/to/env/bin/activate
     
     
-Install helloworld:
+Install HelloWorld:
     
-    $ cd /path/to/helloworld
+    $ cd /path/to/HelloWorld
     
     $ python setup.py develop
     
@@ -47,9 +47,10 @@ Create and install the plugin:
     
     
 Once your plugin is installed, you can add the plugin to the enabled_plugins
-setting in /etc/helloworld/helloworld.conf.  Additionally, the plugin
-configurations can be set in /etc/helloworld/plugins.d/myplugin.conf. You 
-should then see some example commands/options show up with:
+setting in /etc/helloworld/helloworld.conf (or the path to the config).  
+Additionally, the plugin configurations can be set in 
+/etc/helloworld/plugins.d/myplugin.conf. You should then see some example 
+commands/options show up with:
 
     $ helloworld --help
     

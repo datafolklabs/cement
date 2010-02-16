@@ -17,7 +17,7 @@ from cement.core.command import run_command
 
 from helloworld.config import default_config
 
-REQUIRED_CEMENT_API = '0.5-0.6:20100115'
+REQUIRED_CEMENT_API = '0.7-0.8:20100210'
 VERSION = get_distribution('HelloWorld').version
 BANNER = """
 HelloWorld version %s, built on Cement (api:%s)

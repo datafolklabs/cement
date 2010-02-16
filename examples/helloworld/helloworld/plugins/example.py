@@ -13,7 +13,7 @@ from helloworld.appmain import VERSION, BANNER
 
 log = get_logger(__name__)
 
-REQUIRED_CEMENT_API = '0.5-0.6:20100115'
+REQUIRED_CEMENT_API = '0.7-0.8:20100210'
         
 @register_plugin() 
 class ExamplePlugin(CementPlugin):
