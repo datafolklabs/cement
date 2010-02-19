@@ -2,6 +2,12 @@
 -----------------------------------------------------------------------------
 
  +  Branching to portland, API incompatible changes.
+ +  Namespace config dictionaries are overwritten by [namespace] section of
+    primary applications configuration files.  Meaning, a namespace called
+    'example' reads configurations from [example] in the applications config
+    files.  Note: the [namespace] section is required.
+ +  Added new 'bootstrap' directory where all application setup happens for 
+    each namespace.
  
 0.6.1 - unreleased
 -----------------------------------------------------------------------------

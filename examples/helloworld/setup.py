@@ -16,7 +16,7 @@ setup(name='helloworld',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "Cement >=0.6, <0.7",
+        "Cement >=0.6.1, <0.7",
         # Uncomment to use shared plugins from The Rosendale Project.
         #"Rosendale",
         ],
