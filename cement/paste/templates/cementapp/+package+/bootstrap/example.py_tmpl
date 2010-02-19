@@ -1,5 +1,6 @@
 
 from cement.core.hook import define_hook
+from cement.core.configuration import set_config_opts_per_file
 from cement.core.namespace import CementNamespace, register_namespace
 
 define_hook('my_example_hook')

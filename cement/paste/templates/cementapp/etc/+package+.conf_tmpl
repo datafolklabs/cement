@@ -55,3 +55,7 @@ log_to_console = true
 # Add any config options you'd like here
 #
 # myoption = this is my option
+
+[example]
+# This is the config section for the example namespace
+foo = bar

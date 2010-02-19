@@ -17,7 +17,7 @@ def get_default_config():
     dcf['output_engine'] = 'genshi'
     return dcf
 
-def get_default_plugin_config():
+def get_default_namespace_config():
     """Get a default plugin config dict."""
     dcf = {}
     dcf['config_source'] = ['defaults']

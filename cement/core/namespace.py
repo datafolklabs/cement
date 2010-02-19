@@ -6,7 +6,8 @@ from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.configuration import ensure_api_compat
 from cement.core.exc import CementRuntimeError
-from cement.core.configuration import get_default_plugin_config
+from cement.core.configuration import get_default_namespace_config, \
+                                      set_config_opts_per_file
 from cement.core.opt import init_parser
 
 log = get_logger(__name__)
@@ -100,7 +101,7 @@ class CementNamespace(object):
         self.controller = kw.get('controller', None)
         self.is_hidden = kw.get('is_hidden', False)
         
-        self.config = get_default_plugin_config()
+        self.config = get_default_namespace_config()
         if kw.get('config', None):
             self.config.update(kw['config'])
 
@@ -140,23 +141,7 @@ def register_namespace(namespace):
                        globals(), locals(), [namespace.controller], -1)
     cont = getattr(mymod, namespace.controller)                  
     namespaces[namespace.label].controller = cont
-    
-def register_namespace2(label, controller, **kw):
-    nam = CementNamespace(
-            label=label,
-            controller=controller,
-            required_api=namespaces['root'].required_api,
-            version=kw.get('version', namespaces['root'].version),
-            banner=kw.get('banner', namespaces['root'].banner),
-            options=kw.get('options', None),
-            config=kw.get('config', None),
-            )
-            
-    define_namespace(label, nam)
-    
-    #base = namespaces['root'].config['app_module']
-    #mymod = __import__('%s.controllers.%s' % (base, label), 
-    #                   globals(), locals(), [controller], -1)
-    #cont = getattr(mymod, controller)                  
-    #namespaces[label].controller = cont
-             
+    set_config_opts_per_file(
+        namespace.label, namespace.label, namespaces['root'].config['config_file']
+        )
+        
