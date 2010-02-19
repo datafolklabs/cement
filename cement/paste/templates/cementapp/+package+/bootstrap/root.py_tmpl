@@ -1,0 +1,23 @@
+"""
+The bootstrap module should be used to setup parts of your application
+that need to exist before all controllers are loaded.  It is best used to 
+define hooks, setup namespaces, and the like.  The root namespace is 
+already bootstrapped by Cement, however you can extend that functionality
+by importing additional bootstrap files here.
+"""
+
+from cement.core.opt import init_parser
+from cement.core.hook import register_hook
+
+# Register root options
+@register_hook()
+def options_hook(*args, **kwargs):
+    root_options = init_parser()
+    root_options.add_option('-R', '--root-option', action ='store_true', 
+        dest='root_option', default=None, help='Example root option'
+    ) 
+    return ('root', root_options)
+    
+from {{package}}.bootstrap import example
+
+    

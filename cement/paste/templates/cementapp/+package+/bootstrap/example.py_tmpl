@@ -1,0 +1,15 @@
+
+from cement.core.hook import define_hook
+from cement.core.namespace import CementNamespace, register_namespace
+
+define_hook('my_example_hook')
+
+# Setup the 'example' namespace
+example = CementNamespace('example', controller='ExampleController')
+example.config['foo'] = 'bar'
+example.config['merge_root_options'] = True
+example.options.add_option('-F', '--foo', action='store',
+    dest='foo', default=None, help='Example Foo Option'
+    )
+register_namespace(example)
+
