@@ -85,15 +85,16 @@ class CementNamespace(object):
             A version banner to display for --version (default: '')
             
     """
-    def __init__(self, label, required_api, **kw):
+    def __init__(self, label, **kw):
         if not label == 'root':
             app_module = namespaces['root'].config['app_module']
             self.version = kw.get('version', get_distribution(app_module).version)
+            self.required_api = kw.get('required_api', namespaces['root'].required_api)
         else:
             self.version = kw.get('version', None)
+            self.required_api = kw.get('required_api', None)
             
         self.label = label
-        self.required_api = required_api
         self.description = kw.get('description', '')
         self.commands = kw.get('commands', {})
         self.controller = kw.get('controller', None)
@@ -129,19 +130,33 @@ def define_namespace(namespace, namespace_obj):
     log.debug("namespace '%s' initialized from '%s'." % \
              (namespace, namespace_obj.__module__))
 
-
-def register_namespace(label, controller):
+def register_namespace(namespace):
+    ensure_api_compat(namespace.__module__, namespace.required_api)
+    define_namespace(namespace.label, namespace)
+    
+    # Reveal the controller object.
+    base = namespaces['root'].config['app_module']
+    mymod = __import__('%s.controllers.%s' % (base, namespace.label), 
+                       globals(), locals(), [namespace.controller], -1)
+    cont = getattr(mymod, namespace.controller)                  
+    namespaces[namespace.label].controller = cont
+    
+def register_namespace2(label, controller, **kw):
     nam = CementNamespace(
             label=label,
+            controller=controller,
             required_api=namespaces['root'].required_api,
-            version=namespaces['root'].version,
-            banner=namespaces['root'].banner,
+            version=kw.get('version', namespaces['root'].version),
+            banner=kw.get('banner', namespaces['root'].banner),
+            options=kw.get('options', None),
+            config=kw.get('config', None),
             )
+            
     define_namespace(label, nam)
     
-    base = namespaces['root'].config['app_module']
-    mymod = __import__('%s.controllers.%s' % (base, label), 
-                       globals(), locals(), [controller], -1)
-    cont = getattr(mymod, controller)                  
-    namespaces[label].controller = cont
+    #base = namespaces['root'].config['app_module']
+    #mymod = __import__('%s.controllers.%s' % (base, label), 
+    #                   globals(), locals(), [controller], -1)
+    #cont = getattr(mymod, controller)                  
+    #namespaces[label].controller = cont
              

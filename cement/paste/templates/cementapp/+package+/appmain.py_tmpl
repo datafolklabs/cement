@@ -32,7 +32,7 @@ def main():
         log.debug("Cement Framework Initialized!")
     
         if not len(sys.argv) > 1:
-            raise CementArgumentError, "A command is required. See --help?"
+            sys.argv.append('default')
         
         run_command(sys.argv[1])
             

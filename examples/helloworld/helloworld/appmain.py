@@ -18,9 +18,9 @@ from cement.core.command import run_command
 from helloworld.config import default_config
 
 REQUIRED_CEMENT_API = '0.7-0.8:20100210'
-VERSION = get_distribution('HelloWorld').version
+VERSION = get_distribution('helloworld').version
 BANNER = """
-HelloWorld version %s, built on Cement (api:%s)
+helloworld version %s, built on Cement (api:%s)
 """ % (VERSION, REQUIRED_CEMENT_API)
 
 def main():
@@ -32,7 +32,7 @@ def main():
         log.debug("Cement Framework Initialized!")
     
         if not len(sys.argv) > 1:
-            raise CementArgumentError, "A command is required. See --help?"
+            sys.argv.append('default')
         
         run_command(sys.argv[1])
             

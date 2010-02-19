@@ -9,13 +9,8 @@ from {{package}}.model.example import ExampleModel
 
 log = get_logger(__name__)
 
-# This is how we define a hook that we will honor within our namespace. Hooks 
-# allow other controllers/plugins to tie into this controller.
-define_hook('my_example_hook')
-
-
 class ExampleController(CementController):
-    @expose() # no template, root namespace (default)
+    @expose(namespace='root') # no template, root namespace (default)
     def ex1(self, cli_opts, cli_args):
         """
         This is how to add a local/plugin subcommand because it will be  
@@ -39,12 +34,12 @@ class ExampleController(CementController):
         # can still access the json output via --json.
         return dict(foo='bar')
         
-    @expose()
+    @expose(namespace='root')
     def ex1_help(self, cli_opts, cli_args):
         """Using the print statement is ok for help methods."""
         print "This is the help method for ex1."
     
-    @expose('{{package}}.templates.example.ex2', namespace='root')    
+    @expose('{{package}}.templates.example.ex2', namespace='example')    
     def ex2(self, cli_opts, cli_args): 
         """
         This is an example root command.  See --help.  When commands are

@@ -42,6 +42,8 @@ def register_default_hooks():
     define_hook('validate_config_hook')
     define_hook('pre_plugins_hook')
     define_hook('post_plugins_hook')
+    define_hook('bootstrap_application_hook')
+    define_hook('bootstrap_plugins_hook')
 
 def lay_cement(config=None, banner=None):
     """
@@ -130,6 +132,13 @@ def lay_cement(config=None, banner=None):
         
     # Setup logging for console and file
     setup_logging(to_console=namespaces['root'].config['log_to_console'])
+        
+    boot = __import__("%s.bootstrap" % namespaces['root'].config['app_module'], 
+                          globals(), locals(), ['root'], -1)
+        
+    # bootstrap application
+    for res in run_hooks('bootstrap_application_hook'):
+        pass
         
     load_all_plugins()
     

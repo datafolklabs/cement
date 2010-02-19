@@ -3,23 +3,14 @@
 from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.controller import CementController, expose
-from cement.core.hook import run_hooks, define_hook, register_hook
+from cement.core.hook import run_hooks
 
 from helloworld.model.example import ExampleModel
 
 log = get_logger(__name__)
 
-# define hooks for that this controller will run
-define_hook('my_example_hook')
-
-# register hooks for this, or other controller's hooks
-@register_hook()
-def my_example_hook():
-    foo = "In my_example_hook at %s!" % __file__
-    return foo
-    
 class ExampleController(CementController):
-    @expose() # no template, root namespace (default)
+    @expose(namespace='root') # no template, root namespace (default)
     def ex1(self, cli_opts, cli_args):
         """
         This is how to add a local/plugin subcommand because it will be  
@@ -37,18 +28,18 @@ class ExampleController(CementController):
         # Here we show how to run a hook that we've defined in
         # helloworld.plugins.example:
         for res in run_hooks('my_example_hook'):
-            print res  
+            print res
         
         # This command has no template, but if we return something we
         # can still access the json output via --json.
         return dict(foo='bar')
         
-    @expose()
+    @expose(namespace='root')
     def ex1_help(self, cli_opts, cli_args):
         """Using the print statement is ok for help methods."""
         print "This is the help method for ex1."
     
-    @expose('helloworld.templates.example.ex2', namespace='root')    
+    @expose('helloworld.templates.example.ex2', namespace='example')    
     def ex2(self, cli_opts, cli_args): 
         """
         This is an example root command.  See --help.  When commands are
