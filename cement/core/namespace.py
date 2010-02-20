@@ -131,17 +131,16 @@ def define_namespace(namespace, namespace_obj):
     log.debug("namespace '%s' initialized from '%s'." % \
              (namespace, namespace_obj.__module__))
 
-def register_namespace(namespace):
-    ensure_api_compat(namespace.__module__, namespace.required_api)
-    define_namespace(namespace.label, namespace)
+def register_namespace(namespace_obj):
+    ensure_api_compat(namespace_obj.__module__, namespace_obj.required_api)
+    define_namespace(namespace_obj.label, namespace_obj)
     
     # Reveal the controller object.
     base = namespaces['root'].config['app_module']
-    mymod = __import__('%s.controllers.%s' % (base, namespace.label), 
-                       globals(), locals(), [namespace.controller], -1)
-    cont = getattr(mymod, namespace.controller)                  
-    namespaces[namespace.label].controller = cont
-    set_config_opts_per_file(
-        namespace.label, namespace.label, namespaces['root'].config['config_file']
-        )
+    mymod = __import__('%s.controllers.%s' % (base, namespace_obj.label), 
+                       globals(), locals(), [namespace_obj.controller], -1)
+    cont = getattr(mymod, namespace_obj.controller)                  
+    namespaces[namespace_obj.label].controller = cont
+    for file in namespaces['root'].config['config_files']:
+        set_config_opts_per_file(namespace_obj.label, namespace_obj.label, file)
         

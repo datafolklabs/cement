@@ -10,18 +10,18 @@ from {{package}}.model.example import ExampleModel
 log = get_logger(__name__)
 
 class ExampleController(CementController):
-    @expose(namespace='root') # no template, root namespace (default)
+    @expose(namespace='example') # no template
     def ex1(self, cli_opts, cli_args):
         """
-        This is how to add a local/plugin subcommand because it will be  
-        under the 'example' namespace.  You would access this subcommand as:
+        This is how to expose a subcommand because it will be under the 
+        'example' namespace.  You would access this subcommand as:
     
-            $ myapp example ex1
+            $ {{package}} example ex1
         
         """
 
-        # Note, the 'print' statement should not be used, rather use the
-        # log or return data to the template.
+        # You can print or log output however you like since this function
+        # does not render out to a template.
         
         # Commands are all passed the cli_opts, cli_args from the command line.
         
