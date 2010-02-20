@@ -103,11 +103,6 @@ setup(name='Cement',
         "ConfigObj",
         "PasteScript >= 1.7",
         ],
-    # FIX ME: This installs, but requiring CementAPI == 0.4.20091211 doesn't
-    # work.    
-    #provides=[
-    #    "CementAPI (0.4.20091211)",
-    #    ],
     entry_points="""
         [paste.global_paster_command]
         cement-app = cement.paste.commands:CementAppCommand
