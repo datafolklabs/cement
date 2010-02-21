@@ -30,7 +30,7 @@ def main():
     
         log = get_logger(__name__)
         log.debug("Cement Framework Initialized!")
-    
+
         if not len(sys.argv) > 1:
             sys.argv.append('default')
         

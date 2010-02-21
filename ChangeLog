@@ -13,6 +13,8 @@
     simply optional namespaces.
  +  Plugins can now be enabled by the [root] 'enabled_plugins' list, or under
     a [plugin] config by setting 'enable_plugin=true'.    
+ +  All namespace configs are merged into the root config dictionary as an 
+    embedded lamda function which calls get_config('namespace').
  
  
 0.6.1 - unreleased

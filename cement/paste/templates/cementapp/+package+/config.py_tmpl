@@ -8,12 +8,14 @@ file as packaged with the software.
 """
 
 import os
+from configobj import ConfigObj
+
 from cement.core.exc import CementConfigError
     
 # This is a sane default for development/no config    
 prefix = os.path.join(os.environ['HOME'], '.{{package}}')
     
-dcf = {} # default config
+dcf = ConfigObj() # default config
 dcf['config_source'] = ['defaults']
 dcf['app_name'] = '{{package}}' # name for cli like /etc/<app_name>
 dcf['app_egg_name'] = '{{package}}' # name from setup.py

@@ -21,10 +21,10 @@ class ExampleController(CementController):
         """
 
         # You can get the root application config like this:
-        config = get_config('root')
+        config = get_config()
         
-        # Or you can get your example namespace config like this:
-        config = get_config('example')
+        # The sub-config for just the example namespace is accessible as:
+        config['example']
         
         # You can print or log output however you like since this function
         # does not render out to a template.

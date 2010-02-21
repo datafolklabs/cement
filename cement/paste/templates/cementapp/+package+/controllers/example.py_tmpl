@@ -1,4 +1,10 @@
-"""This is the Example controller for {{package}}."""
+"""
+This is the ExampleController for the {{project}} application.  This can be used
+to expose commands to the example namespace which will be accessible under:
+
+    $ {{package}} example --help
+  
+"""
 
 from cement.core.namespace import get_config
 from cement.core.log import get_logger

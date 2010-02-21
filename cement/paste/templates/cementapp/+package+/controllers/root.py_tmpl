@@ -1,7 +1,9 @@
 """
 This is the RootController for the {{project}} application.  This can be used
-to expose commands to the root namespace, as well as define/register other
-non-plugin namespaces for controllers to use.  
+to expose commands to the root namespace which will be accessible under:
+
+    $ {{package}} --help
+  
 """
 
 from cement import namespaces

@@ -9,7 +9,7 @@ CEMENT_API = "0.7-0.8:20100210"
 
 def get_default_config():
     """Get a default config dict."""
-    dcf = {}
+    dcf = ConfigObj()
     dcf['config_source'] = ['defaults']
     dcf['enabled_plugins'] = []
     dcf['debug'] = False
@@ -19,7 +19,7 @@ def get_default_config():
 
 def get_default_namespace_config():
     """Get a default plugin config dict."""
-    dcf = {}
+    dcf = ConfigObj()
     dcf['config_source'] = ['defaults']
     dcf['merge_root_options'] = True
     return dcf
@@ -107,7 +107,7 @@ def set_config_opts_per_file(namespace, section, config_file):
     
     """
     config = namespaces[namespace].config
-    
+
     if not config.has_key('config_source'):
         config['config_source'] = []
         
@@ -117,7 +117,6 @@ def set_config_opts_per_file(namespace, section, config_file):
         cnf = ConfigObj(config_file)
         try:
             config.update(cnf[section])
-            cnf.update(config)
         except KeyError:
             # FIX ME: can't log here...  
             # log.debug('missing section %s in %s.' % (section, config_file))
@@ -136,7 +135,8 @@ def set_config_opts_per_file(namespace, section, config_file):
         # now.
         #
         # But since we are parsing config before our plugins load then how
-        # do you have a config spec for the app and plugin?
+        # do you have a config spec for the app and plugin?  UPDATE: i think
+        # with the new bootstrap layout a spec could be possible.
         #
         # Regardless... the point of this nonsense below is to ensure
         # true false values equate to True/False in python.  We go 3 levels
