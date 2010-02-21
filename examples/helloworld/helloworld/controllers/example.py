@@ -25,7 +25,7 @@ class ExampleController(CementController):
         
         # The sub-config for just the example namespace is accessible as:
         config['example']
-        
+
         # You can print or log output however you like since this function
         # does not render out to a template.
         

@@ -150,10 +150,4 @@ def lay_cement(config=None, banner=None):
     # Merge namespaces under root dict
     for nam in namespaces:
         if nam != 'root':
-            # Store lambda function (so contents of te namespace dict are
-            # always accurate)
-            x = lambda: get_config(nam)
-            namespaces['root'].config[nam] = x()
-
-        
-        
+            namespaces['root'].config[nam] = get_config(nam)
