@@ -1,13 +1,10 @@
 [{{plugin}}]
-# This is a cement plugin configuration file.  Once parsed, the
-# values from here will be accessible from:
-#
-# namespaces[{{plugin}}].config['param'] = value
-# 
+enable_plugin = true
 
 # Whether or not to merge root options 
-merge_root_options = false
+# merge_root_options = true
 
+# Add any configurations you want here
 param1 = value1
 param2 = value two
 
