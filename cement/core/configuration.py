@@ -117,6 +117,7 @@ def set_config_opts_per_file(namespace, section, config_file):
         cnf = ConfigObj(config_file)
         try:
             config.update(cnf[section])
+            cnf.update(config)
         except KeyError:
             # FIX ME: can't log here...  
             # log.debug('missing section %s in %s.' % (section, config_file))

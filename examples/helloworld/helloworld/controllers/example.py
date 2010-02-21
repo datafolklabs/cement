@@ -1,6 +1,6 @@
 """This is the Example controller for helloworld."""
 
-from cement import namespaces
+from cement.core.namespace import get_config
 from cement.core.log import get_logger
 from cement.core.controller import CementController, expose
 from cement.core.hook import run_hooks
@@ -20,8 +20,15 @@ class ExampleController(CementController):
         
         """
 
+        # You can get the root application config like this:
+        config = get_config('root')
+        
+        # Or you can get your example namespace config like this:
+        config = get_config('example')
+        
         # You can print or log output however you like since this function
         # does not render out to a template.
+
         
         # Commands are all passed the cli_opts, cli_args from the command line.
         # So if you have added cli options in your helloworld.bootstrap.example

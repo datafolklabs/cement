@@ -9,7 +9,8 @@ from cement.core.exc import CementConfigError, CementRuntimeError
 from cement.core.log import get_logger
 from cement.core.hook import run_hooks
 from cement.core.configuration import set_config_opts_per_file, t_f_pass
-from cement.core.namespace import CementNamespace, define_namespace
+from cement.core.namespace import CementNamespace, define_namespace, \
+                                  get_namespace
 from cement.core.configuration import ensure_api_compat
 
 log = get_logger(__name__)
@@ -26,13 +27,14 @@ def get_enabled_plugins_per_files():
     Uses the namespaces['root'].config dictionary.
     
     """
-    for file in os.listdir(namespaces['root'].config['plugin_config_dir']):
-        cnf = ConfigObj(os.path.join(namespaces['root'].config['plugin_config_dir'], file))
+    _n = get_namespace('root')
+    for file in os.listdir(_n.config['plugin_config_dir']):
+        cnf = ConfigObj(os.path.join(_n.config['plugin_config_dir'], file))
         for sect in cnf.sections:
             if sect != 'root' and cnf[sect].has_key('enable_plugin') \
                               and t_f_pass(cnf[sect]['enable_plugin']) == True \
-                              and not sect in namespaces['root'].config['enabled_plugins']:
-                namespaces['root'].config['enabled_plugins'].append(sect)
+                              and not sect in _n.config['enabled_plugins']:
+                _n.config['enabled_plugins'].append(sect)
                    
 def register_pluginOLD(**kwargs):
     """

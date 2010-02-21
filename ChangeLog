@@ -5,13 +5,12 @@
  +  Namespace config dictionaries are overwritten by [namespace] section of
     primary applications configuration files.  Meaning, a namespace called
     'example' reads configurations from [example] in the applications config
-    files.  Note: the [namespace] section is required.
+    files.  Additionally, Plugin configs can now exist in main application 
+    configs under [plugin], as well as the typical plugins.d directory.
  +  Added new 'bootstrap' directory where all application setup happens for 
     each namespace, and refactored 'plugins' around this bootstrap layout.
     Along with that, discarded the 'plugins' directory.  Plugins are now
     simply optional namespaces.
- +  Plugin configs can now exist in main application configs under [plugin],
-    as well as the typical plugins.d directory.
  +  Plugins can now be enabled by the [root] 'enabled_plugins' list, or under
     a [plugin] config by setting 'enable_plugin=true'.    
  

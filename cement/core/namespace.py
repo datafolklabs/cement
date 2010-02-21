@@ -12,6 +12,28 @@ from cement.core.opt import init_parser
 
 log = get_logger(__name__)
 
+def get_namespace(namespace):
+    """
+    Return the namespace object whose label is 'namespace'.
+    
+    Required Arguments:
+    
+        namespace
+            The label of the namespace object to return
+    
+    """
+    if namespaces.has_key(namespace):
+        return namespaces[namespace]
+    else:
+        log.fatal("the namespace '%s' doesn't exist" % namespace)
+
+def get_config(namespace):
+    """Get a namespace's config dictionary."""    
+    if namespaces.has_key(namespace):
+        return namespaces[namespace].config
+    else:
+        log.fatal("the namespace '%s' doesn't exist" % namespace)
+          
 def register_namespaceOLD(**kwargs):
     """
     Decorator function to register a namespace.  Alternative to registering

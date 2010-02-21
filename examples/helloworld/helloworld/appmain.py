@@ -15,6 +15,7 @@ from cement.core.app_setup import lay_cement
 from cement.core.configuration import ensure_api_compat
 from cement.core.command import run_command
 
+from cement.core.namespace import get_config
 from helloworld.config import default_config
 
 REQUIRED_CEMENT_API = '0.7-0.8:20100210'
@@ -35,7 +36,7 @@ def main():
             sys.argv.append('default')
         
         run_command(sys.argv[1])
-            
+        print get_config('root')
     except CementArgumentError, e:
         print("CementArgumentError > %s" % e)
         sys.exit(e.code)
