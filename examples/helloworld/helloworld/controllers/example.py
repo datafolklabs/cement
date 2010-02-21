@@ -28,7 +28,6 @@ class ExampleController(CementController):
         
         # You can print or log output however you like since this function
         # does not render out to a template.
-
         
         # Commands are all passed the cli_opts, cli_args from the command line.
         # So if you have added cli options in your helloworld.bootstrap.example

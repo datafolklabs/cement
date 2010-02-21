@@ -1,0 +1,16 @@
+"""helloworld controller."""
+
+from cement import namespaces
+from cement.core.log import get_logger
+from cement.core.controller import CementController, expose
+from cement.core.hook import run_hooks
+
+from helloworld.model.example import ExampleModel
+
+log = get_logger(__name__)
+
+class ExampleController(CementController):
+    @expose('helloworld.templates.example.cmd', namespace='example')
+    def cmd(self, cli_opts, cli_args):
+        # do something here
+        pass
