@@ -7,7 +7,7 @@ from cement import namespaces, buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDER
 from cement.core.configuration import CEMENT_API, set_config_opts_per_file
 from cement.core.configuration import validate_config, get_default_config
 from cement.core.plugin import load_all_plugins, get_enabled_plugins_per_files
-from cement.core.namespace import CementNamespace, define_namespace
+from cement.core.namespace import CementNamespace, define_namespace, get_config
 from cement.core.log import setup_logging, get_logger
 from cement.core.hook import register_hook, define_hook, run_hooks
 from cement.core.controller import expose
@@ -147,6 +147,13 @@ def lay_cement(config=None, banner=None):
                          config=namespaces['root'].config):
         pass
     
+    # Merge namespaces under root dict
+    for nam in namespaces:
+        if nam != 'root':
+            # Store lambda function (so contents of te namespace dict are
+            # always accurate)
+            x = lambda: get_config(nam)
+            namespaces['root'].config[nam] = x()
 
         
         
