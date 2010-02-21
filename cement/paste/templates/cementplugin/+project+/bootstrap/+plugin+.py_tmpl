@@ -1,0 +1,34 @@
+"""
+This bootstrap module should be used to setup parts of the {{plugin}} plugin
+that need to exist before all controllers are loaded.  It is best used to 
+define/register hooks, setup namespaces, and the like.  
+
+"""
+
+from cement.core.hook import define_hook
+from cement.core.namespace import CementNamespace, register_namespace
+
+define_hook('my_{{plugin}}_hook')
+
+# Setup the '{{plugin}}' namespace object
+{{plugin}} = CementNamespace('{{plugin}}', controller='{{plugin}}Controller')
+
+# {{plugin}} namespace default configurations, overwritten by the [{{plugin}}] 
+# section in the applications config file(s) *or* the plugin config located
+# in the 'plugins.d' directory.  Once registered, this dict is accessible as:
+#
+#   namespaces['{{plugin}}'].config
+#
+{{plugin}}.config['foo'] = 'bar'
+
+# {{plugin}} namespace options.  These options show up under:
+#
+#   $ {{package}} {{plugin}} --help
+#
+{{plugin}}.options.add_option('-F', '--foo', action='store',
+    dest='foo', default=None, help='{{plugin}} Foo Option'
+    )
+
+# Officialize and register the namespace
+register_namespace({{plugin}})
+
