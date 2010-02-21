@@ -97,21 +97,6 @@ def lay_cement(config=None, banner=None):
                                  cf)
 
     validate_config(namespaces['root'].config)
-    
-    # Add hardcoded options hacks... might move this to a hook or plugin later
-    try:
-        namespaces['root'].options.add_option('--json', action='store_true',
-            dest='enable_json', default=None, 
-            help='render output as json (Cement CLI-API)'
-            )
-        namespaces['root'].options.add_option('--debug', action='store_true',
-            dest='debug', default=None, help='toggle debug output'
-            )
-        namespaces['root'].options.add_option('--quiet', action='store_true',
-            dest='quiet', default=None, help='disable console logging'
-            )
-    except optparse.OptionConflictError, e:
-        pass
             
     # hardcoded hacks
     if '--quiet' in sys.argv:
@@ -135,13 +120,14 @@ def lay_cement(config=None, banner=None):
         
     boot = __import__("%s.bootstrap" % namespaces['root'].config['app_module'], 
                           globals(), locals(), ['root'], -1)
-        
+    
     # bootstrap application
     for res in run_hooks('bootstrap_application_hook'):
         pass
         
     load_all_plugins()
     
+    # Looks dirty, but this creates json counter part commands that are hidden
     for nam in namespaces:
         commands = namespaces[nam].commands.copy()
         for command in commands:

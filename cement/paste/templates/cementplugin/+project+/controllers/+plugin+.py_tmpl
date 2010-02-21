@@ -1,4 +1,4 @@
-"""{{plugin}} Controller class to expose commands for {{project}}."""
+"""{{plugin}} controller class to expose commands for {{project}}."""
 
 from cement.core.controller import CementController, expose
 

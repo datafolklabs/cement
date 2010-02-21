@@ -6,7 +6,7 @@ from configobj import ConfigObj, Section
 from cement.core.exc import CementRuntimeError, CementConfigError
 
 CEMENT_API = "0.7-0.8:20100210"
-    
+
 def get_default_config():
     """Get a default config dict."""
     dcf = {}
@@ -117,8 +117,9 @@ def set_config_opts_per_file(namespace, section, config_file):
         try:
             config.update(cnf[section])
         except KeyError:
-            raise CementConfigError, \
-                'missing section %s in %s.' % (section, config_file)
+            # FIX ME: can't log here...  
+            # log.debug('missing section %s in %s.' % (section, config_file))
+            return
 
         # FIX ME: Is there an easier way to ensure true/false values are
         # actually True/False.  I think ConfigSpec, but don't have time right

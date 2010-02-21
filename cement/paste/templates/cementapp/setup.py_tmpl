@@ -29,7 +29,7 @@ setup(name='{{project}}',
     """,
     namespace_packages=[
         '{{package}}', 
-        '{{package}}.plugins',
+        '{{package}}.bootstrap',
         '{{package}}.controllers',
         '{{package}}.model',
         '{{package}}.helpers',

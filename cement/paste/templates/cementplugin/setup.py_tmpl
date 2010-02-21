@@ -26,7 +26,7 @@ setup(name='{{project}}_plugins_{{plugin}}',
     entry_points="""
     """,
     namespace_packages=[
-        '{{project}}.plugins',
+        '{{project}}.bootstrap',
         '{{project}}.controllers',
         '{{project}}.model',
         '{{project}}.helpers',

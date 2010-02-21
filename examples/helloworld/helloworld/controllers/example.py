@@ -10,23 +10,29 @@ from helloworld.model.example import ExampleModel
 log = get_logger(__name__)
 
 class ExampleController(CementController):
-    @expose(namespace='root') # no template, root namespace (default)
+    @expose(namespace='example') # no template
     def ex1(self, cli_opts, cli_args):
         """
-        This is how to add a local/plugin subcommand because it will be  
-        under the 'example' namespace.  You would access this subcommand as:
+        This is how to expose a subcommand because it will be under the 
+        'example' namespace.  You would access this subcommand as:
     
-            $ myapp example ex1
+            $ helloworld example ex1
         
         """
 
-        # Note, the 'print' statement should not be used, rather use the
-        # log or return data to the template.
+        # You can print or log output however you like since this function
+        # does not render out to a template.
         
         # Commands are all passed the cli_opts, cli_args from the command line.
+        # So if you have added cli options in your helloworld.bootstrap.example
+        # file, you could access them here as:
+        #
+        #   cli_opts.<your_option>
+        #   cli_args[0] # first argument *after* your command
+        #
         
         # Here we show how to run a hook that we've defined in
-        # helloworld.plugins.example:
+        # helloworld.bootstrap.example:
         for res in run_hooks('my_example_hook'):
             print res
         
@@ -34,33 +40,39 @@ class ExampleController(CementController):
         # can still access the json output via --json.
         return dict(foo='bar')
         
-    @expose(namespace='root')
+    @expose(namespace='example')
     def ex1_help(self, cli_opts, cli_args):
-        """Using the print statement is ok for help methods."""
+        """
+        Help methods are found by way of <command>_help.  This would be
+        executed when you run:
+        
+            $ helloworld example ex1-help
+        
+        """
         print "This is the help method for ex1."
     
     @expose('helloworld.templates.example.ex2', namespace='example')    
     def ex2(self, cli_opts, cli_args): 
         """
-        This is an example root command.  See --help.  When commands are
-        called, they are passed the cli options and cli_args passed after it.
+        This is another command, also in the 'example' namespace but that is
+        rendered by a genshi template.  
         
         Notice that you can specify the namespace via the decorator parameters.
         If a plugin has any non-root commands they are grouped under a 
         single command to the base cli application.  For example, you will 
         see root commands and namespaces* when you execute:
         
-            myapp --help
+            $ helloworld --help
             
             
-        If 'myplugin' has local commands, you will see 'myplugin*' show up in 
-        the root commands list, and then the plugin subcommands will be seen 
-        under:
+        If 'example' has local commands, you will see 'example*' show up in 
+        the root commands list, and then the subcommands will be seen under:
         
-            myapp myplugin --help
+            $ helloworld myplugin --help
             
         
         This is done to give different options in how your application works.
+        
         """
         
         # Here we are using our Example model, and then returning a dictionary
@@ -69,22 +81,9 @@ class ExampleController(CementController):
         example.label = 'This is my Example Model'
 
         # You can see if options where passed.  These are set in 
-        # myapp/plugins/example.py:
-        if cli_opts.root_option:
-            # --root-option was passed, do something
-            log.info('%s passed by --root-option' % cli_opts.root_option)
+        # helloworld/bootstrap/example.py:
+        if cli_opts.foo:
+            # --foo was passed, do something
+            log.info('%s passed by --foo option' % cli_opts.foo)
 
-        return dict(foo=True, example=example, items=['one', 'two', 'three'])
-
-#    @expose(namespace='other_plugin')
-#    def ex3(self, cli_opts, cli_args):
-#        """
-#        This is how to add a local/plugin subcommand to another namespace.  It
-#        is possible to use this in conjunction with the options_hook() to add 
-#        additional functionality to a completely other namespace:
-#    
-#            $ myapp other_plugin ex3
-#        
-#        """
-#        log.info("In helloworld_core namespace")
-#        return dict(foo='bar')
+        return dict(foo=cli_opts.foo, example=example, items=['one', 'two', 'three'])

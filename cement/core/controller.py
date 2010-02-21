@@ -107,9 +107,10 @@ class expose(object):
         (base, controller, con_namespace) = func.__module__.split('.')
         self.func = func
         self.json_func = func
-        
+        if not self.name:
+            self.name = func.__name__
         log.debug("exposing namespaces['%s'].commands['%s'] from '%s'" % \
-                 (self.namespace, self.func.__name__, self.func.__module__))
+                 (self.namespace, self.name, self.func.__module__))
                 
         # First for the template
         if not self.name:

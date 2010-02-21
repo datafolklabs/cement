@@ -18,7 +18,7 @@ class CementPlugin(CementNamespace):
     def __init__(self, *args, **kwargs):
         CementNamespace.__init__(self, *args, **kwargs)
         
-def register_plugin(**kwargs):
+def register_pluginOLD(**kwargs):
     """
     Decorator function to register plugin namespace.  
     
@@ -100,7 +100,7 @@ def load_plugin(plugin):
         
     loaded = False
     try:
-        plugin_module = __import__('%s.plugins' % provider, 
+        plugin_module = __import__('%s.bootstrap' % provider, 
             globals(), locals(), [plugin], -1)
         getattr(plugin_module, plugin)
         if namespaces.has_key(plugin):
@@ -135,8 +135,6 @@ def load_all_plugins():
     for (namespace, res) in run_hooks('options_hook'):
         for opt in res._get_all_options(): 
             if opt.get_opt_string() == '--help':
-                pass
-            elif opt.get_opt_string() == '--json':
                 pass
             else:
                 if namespaces.has_key(namespace):

@@ -16,7 +16,7 @@ setup(name='helloworld',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "Cement >=0.6.1, <0.7",
+        "Cement >=0.7.1, <0.9",
         # Uncomment to use shared plugins from The Rosendale Project.
         #"Rosendale",
         ],
@@ -29,7 +29,7 @@ setup(name='helloworld',
     """,
     namespace_packages=[
         'helloworld', 
-        'helloworld.plugins',
+        'helloworld.bootstrap',
         'helloworld.controllers',
         'helloworld.model',
         'helloworld.helpers',

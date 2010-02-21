@@ -95,6 +95,12 @@ class CementNamespace(object):
             self.version = kw.get('version', None)
             self.required_api = kw.get('required_api', None)
             
+        try:
+            assert self.version, "A namespace version is required!"
+            assert self.required_api, "A required_api version is required!"
+        except AssertionError, e:
+            raise CementRuntimeError, e
+            
         self.label = label
         self.description = kw.get('description', '')
         self.commands = kw.get('commands', {})
@@ -132,6 +138,29 @@ def define_namespace(namespace, namespace_obj):
              (namespace, namespace_obj.__module__))
 
 def register_namespace(namespace_obj):
+    """
+    Wraps up defining a namespace, as well as revealing the actual controller
+    object (as it is passed as a string).
+    
+    Require Arguments:
+    
+        namespace_obj
+            Namespace object that is fully established (and ready to be 
+            added to the global namespaces dictionary)
+            
+    Usage:
+    
+    ..code-block:: python
+    
+        from cement.core.namespace import CementNamespace, register_namespace
+
+        example = CementNamespace('example', controller='ExampleController')
+        example.config['foo'] = 'bar'
+        example.options.add_option('-F', '--foo', action='store',
+            dest='foo', default=None, help='Example Foo Option')
+        register_namespace(example)
+        
+    """
     ensure_api_compat(namespace_obj.__module__, namespace_obj.required_api)
     define_namespace(namespace_obj.label, namespace_obj)
     
@@ -142,5 +171,6 @@ def register_namespace(namespace_obj):
     cont = getattr(mymod, namespace_obj.controller)                  
     namespaces[namespace_obj.label].controller = cont
     for file in namespaces['root'].config['config_files']:
-        set_config_opts_per_file(namespace_obj.label, namespace_obj.label, file)
+        set_config_opts_per_file(namespace_obj.label, namespace_obj.label, 
+                                 file)
         
