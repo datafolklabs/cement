@@ -2,12 +2,13 @@
 
 import os
 import re
-        
+from configobj import ConfigObj
+
 from cement import namespaces
 from cement.core.exc import CementConfigError, CementRuntimeError
 from cement.core.log import get_logger
 from cement.core.hook import run_hooks
-from cement.core.configuration import set_config_opts_per_file
+from cement.core.configuration import set_config_opts_per_file, t_f_pass
 from cement.core.namespace import CementNamespace, define_namespace
 from cement.core.configuration import ensure_api_compat
 
@@ -17,7 +18,22 @@ class CementPlugin(CementNamespace):
     """Wrapper for CementNamespace."""
     def __init__(self, *args, **kwargs):
         CementNamespace.__init__(self, *args, **kwargs)
-        
+     
+def get_enabled_plugins_per_files():
+    """
+    Open plugin config files from plugin_config_dir and determine if they are
+    enabled.  If so, append them to 'enabled_plugins' in the root config.
+    Uses the namespaces['root'].config dictionary.
+    
+    """
+    for file in os.listdir(namespaces['root'].config['plugin_config_dir']):
+        cnf = ConfigObj(os.path.join(namespaces['root'].config['plugin_config_dir'], file))
+        for sect in cnf.sections:
+            if sect != 'root' and cnf[sect].has_key('enable_plugin') \
+                              and t_f_pass(cnf[sect]['enable_plugin']) == True \
+                              and not sect in namespaces['root'].config['enabled_plugins']:
+                namespaces['root'].config['enabled_plugins'].append(sect)
+                   
 def register_pluginOLD(**kwargs):
     """
     Decorator function to register plugin namespace.  

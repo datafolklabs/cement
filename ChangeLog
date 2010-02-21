@@ -12,6 +12,8 @@
     simply optional namespaces.
  +  Plugin configs can now exist in main application configs under [plugin],
     as well as the typical plugins.d directory.
+ +  Plugins can now be enabled by the [root] 'enabled_plugins' list, or under
+    a [plugin] config by setting 'enable_plugin=true'.    
  
  
 0.6.1 - unreleased

@@ -6,15 +6,14 @@ from pkg_resources import get_distribution
 from cement import namespaces, buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
 from cement.core.configuration import CEMENT_API, set_config_opts_per_file
 from cement.core.configuration import validate_config, get_default_config
-from cement.core.plugin import load_all_plugins
+from cement.core.plugin import load_all_plugins, get_enabled_plugins_per_files
 from cement.core.namespace import CementNamespace, define_namespace
 from cement.core.log import setup_logging, get_logger
 from cement.core.hook import register_hook, define_hook, run_hooks
 from cement.core.controller import expose
 
 log = get_logger(__name__)    
-
-
+                
 def register_default_hooks():
     """
     Registers Cement framework hooks.
@@ -95,7 +94,8 @@ def lay_cement(config=None, banner=None):
         set_config_opts_per_file('root', 'root', cf)
 
     validate_config(namespaces['root'].config)
-            
+    get_enabled_plugins_per_files()
+    
     # hardcoded hacks
     if '--quiet' in sys.argv:
         namespaces['root'].config['log_to_console'] = False

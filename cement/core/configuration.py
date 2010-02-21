@@ -88,6 +88,7 @@ def t_f_pass(value):
     except:
         return value
         
+        
 def set_config_opts_per_file(namespace, section, config_file):
     """
     Parse config file options for into config dict.  Will do nothing if the 
@@ -120,7 +121,15 @@ def set_config_opts_per_file(namespace, section, config_file):
             # FIX ME: can't log here...  
             # log.debug('missing section %s in %s.' % (section, config_file))
             return
-
+        
+        # determine enabled plugins
+        if namespace == 'root' and section == 'root':
+            for sect in cnf.sections:
+                if sect != 'root' and cnf[sect].has_key('enable_plugin') \
+                                  and t_f_pass(cnf[sect]['enable_plugin']) == True \
+                                  and not sect in config['enabled_plugins']:
+                    config['enabled_plugins'].append(sect)
+                        
         # FIX ME: Is there an easier way to ensure true/false values are
         # actually True/False.  I think ConfigSpec, but don't have time right
         # now.
