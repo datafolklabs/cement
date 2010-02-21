@@ -118,6 +118,8 @@ def load_plugin(plugin):
         namespaces['root'].config['plugin_config_dir'], '%s.conf' % plugin
         )
 
+    for file in namespaces['root'].config['config_files']:
+        set_config_opts_per_file(plugin, plugin, file)
     set_config_opts_per_file(plugin, plugin, plugin_config_file)
                            
 def load_all_plugins():

@@ -92,9 +92,7 @@ def lay_cement(config=None, banner=None):
     namespaces['root'].controller = getattr(root_mod, 'RootController')
     
     for cf in namespaces['root'].config['config_files']:
-        set_config_opts_per_file('root', 
-                                 namespaces['root'].config['app_module'], 
-                                 cf)
+        set_config_opts_per_file('root', 'root', cf)
 
     validate_config(namespaces['root'].config)
             

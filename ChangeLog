@@ -10,6 +10,8 @@
     each namespace, and refactored 'plugins' around this bootstrap layout.
     Along with that, discarded the 'plugins' directory.  Plugins are now
     simply optional namespaces.
+ +  Plugin configs can now exist in main application configs under [plugin],
+    as well as the typical plugins.d directory.
  
  
 0.6.1 - unreleased

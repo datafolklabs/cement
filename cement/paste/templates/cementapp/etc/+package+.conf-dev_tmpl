@@ -1,9 +1,8 @@
-[{{package}}]
+[root]
 # This is an example application config using cement.  Some config options
 # are required for cement, like 'enabled_plugins' but you can add any config
-# options you like.  Only thing you have to have is the the above [block] 
-# must match your 'app_module' name from the default config options in 
-# your applications main() function.
+# options you like.  Only thing you have to have is the the above [root] 
+# which ties this config to your 'root' namespace.
 
 # PLUGINS
 #
@@ -32,7 +31,7 @@ plugin_config_dir = /path/to/{{package}}/etc/plugins.d
 # show_plugin_load = true
 
 # LOGGING
-
+#
 # Log file path, comment out if no log is required.
 log_file = ~/{{package}}/log/{{package}}.log
 
@@ -52,9 +51,12 @@ log_to_console = true
 #log_max_bytes = 512000000 
 #log_max_files = 4
 
-# APPLICATION SETTINGS
+# ROOT APPLICATION SETTINGS
 #
 # Add any config options you'd like here
 #
 # myoption = this is my option
 
+
+# [namespace]
+# Additional namespace/plugin configurations can go here.
