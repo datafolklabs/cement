@@ -1,0 +1,7 @@
+
+$foo
+
+The items list passed is:
+{% for i in items %}\
+    * $i
+{% end %}
