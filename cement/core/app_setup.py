@@ -119,7 +119,7 @@ def lay_cement(config=None, banner=None):
     boot = __import__("%s.bootstrap" % namespaces['root'].config['app_module'], 
                           globals(), locals(), ['root'], -1)
     
-    # bootstrap application
+    # Bootstrap application
     for res in run_hooks('bootstrap_application_hook'):
         pass
         

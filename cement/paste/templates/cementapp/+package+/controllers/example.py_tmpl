@@ -99,3 +99,10 @@ class ExampleController(CementController):
             log.info('%s passed by --foo option' % cli_opts.foo)
 
         return dict(foo=cli_opts.foo, example=example, items=['one', 'two', 'three'])
+
+    @expose(namespace='root')
+    def cmd2(self, cli_opts, cli_args):
+        """This command will be displayed under the root namespace."""
+        foo = "In {{package}}.controllers.example.cmd2()"
+        print foo
+        return dict(foo=foo)
