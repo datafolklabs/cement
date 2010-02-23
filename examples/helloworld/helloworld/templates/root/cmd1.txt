@@ -1,7 +1,7 @@
+{# --------------------- 78 character baseline --------------------------- #}\
 
 $foo
 
-The items list passed is:
-{% for i in items %}\
-    * $i
+{% for item in items %}\
+    * $item
 {% end %}

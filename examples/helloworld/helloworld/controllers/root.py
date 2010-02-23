@@ -9,9 +9,11 @@ to expose commands to the root namespace which will be accessible under:
 from cement import namespaces
 from cement.core.exc import CementArgumentError
 from cement.core.controller import CementController, expose
+from cement.core.namespace import get_config
 from cement.core.log import get_logger
 
 log = get_logger(__name__)
+config = get_config()
 
 class RootController(CementController):
     @expose('helloworld.templates.root.error', is_hidden=True)
@@ -50,3 +52,18 @@ class RootController(CementController):
         foo = 'In helloworld.controllers.root.cmd1_help()'
         return dict(foo=foo)
     
+    @expose('helloworld.templates.root.get-started')
+    def get_started(self, cli_opts, cli_args):
+        features = [
+            'Multiple Configuration file parsing (default: /etc, ~/)',
+            'Command line argument and option parsing',
+            'Dual Console/File Logging Support',
+            'Full Internal and External (3rd Party) Plugin support',
+            'Basic "hook" support',
+            'Full MVC support for advanced application design',
+            'Text output rendering with Genshi templates',
+            'Json output rendering allows other programs to access your CLI-API',
+            ]
+        
+        genshi_link = "http://genshi.edgewall.org/wiki/Documentation/text-templates.html"
+        return dict(config=config, features=features, genshi_link=genshi_link)
