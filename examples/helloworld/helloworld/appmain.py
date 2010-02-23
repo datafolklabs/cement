@@ -1,8 +1,8 @@
 """
 This is the application's core code.  Unless you know the "ins-and-outs" of
-The Cement CLI Application Framework, you probably should not modify this file.
-Keeping all customizations outside of appmain.py means that you can more
-easily upgrade to newer versions of Cement when the API compatibility changes.
+The Cement CLI Application Framework, you probably should not modify the 
+main() function of this file.
+
 """
 
 import sys

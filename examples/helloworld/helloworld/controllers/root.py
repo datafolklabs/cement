@@ -1,7 +1,9 @@
 """
 This is the RootController for the helloworld application.  This can be used
-to expose commands to the root namespace, as well as define/register other
-non-plugin namespaces for controllers to use.  
+to expose commands to the root namespace which will be accessible under:
+
+    $ helloworld --help
+  
 """
 
 from cement import namespaces
@@ -14,6 +16,11 @@ log = get_logger(__name__)
 class RootController(CementController):
     @expose('helloworld.templates.root.error', is_hidden=True)
     def error(self, *args, **kw):
+        """
+        This can be called when catching exceptions.  It expects an 
+        'errors' dictionary to be passed via **kwargs.
+        
+        """
         if kw.get('errors', None):
             return dict(errors=kw['errors'])
     
@@ -26,3 +33,20 @@ class RootController(CementController):
         
         """
         raise CementArgumentError, "A command is required. See --help?"
+    
+    @expose('helloworld.templates.root.cmd1')
+    def cmd1(self, cli_opts, cli_args):
+        """This is an example 'root' command.  It should be replaced."""
+        foo = 'In helloworld.controllers.root.cmd1()'
+        if cli_opts.debug:
+            print 'The --debug option was passed'
+        
+        items = ['one', 'two', 'three']
+        return dict(foo=foo, items=items)
+    
+    @expose()
+    def cmd1_help(self, cli_opts, cli_args):
+        """This is an example 'root' -help command.  It should be replaced."""
+        foo = 'In helloworld.controllers.root.cmd1_help()'
+        return dict(foo=foo)
+    

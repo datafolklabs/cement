@@ -1,4 +1,10 @@
-"""This is the Example controller for helloworld."""
+"""
+This is the ExampleController for the helloworld application.  This can be used
+to expose commands to the example namespace which will be accessible under:
+
+    $ helloworld example --help
+  
+"""
 
 from cement.core.namespace import get_config
 from cement.core.log import get_logger
@@ -21,11 +27,11 @@ class ExampleController(CementController):
         """
 
         # You can get the root application config like this:
-        config = get_config()
+        config = get_config('root')
         
-        # The sub-config for just the example namespace is accessible as:
-        config['example']
-
+        # Or you can get your example namespace config like this:
+        config = get_config('example')
+        
         # You can print or log output however you like since this function
         # does not render out to a template.
         
@@ -93,3 +99,10 @@ class ExampleController(CementController):
             log.info('%s passed by --foo option' % cli_opts.foo)
 
         return dict(foo=cli_opts.foo, example=example, items=['one', 'two', 'three'])
+
+    @expose(namespace='root')
+    def cmd2(self, cli_opts, cli_args):
+        """This command will be displayed under the root namespace."""
+        foo = "In helloworld.controllers.example.cmd2()"
+        print foo
+        return dict(foo=foo)
