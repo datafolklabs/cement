@@ -122,7 +122,7 @@ def load_all_plugins():
         pass # No result expected
        
     namespaces['root'].config['enabled_plugins'] = get_enabled_plugins()
-    print get_enabled_plugins() 
+
     for plugin in namespaces['root'].config['enabled_plugins']:
         load_plugin(plugin)
         
