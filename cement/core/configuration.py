@@ -113,7 +113,6 @@ def set_config_opts_per_file(namespace, section, config_file):
         
     if os.path.exists(config_file):
         config['config_source'].append(config_file)
-        config['config_file'] = config_file
         cnf = ConfigObj(config_file)
         try:
             config.update(cnf[section])
@@ -122,14 +121,7 @@ def set_config_opts_per_file(namespace, section, config_file):
             # log.debug('missing section %s in %s.' % (section, config_file))
             return
         
-        # determine enabled plugins
-        if namespace == 'root' and section == 'root':
-            for sect in cnf.sections:
-                if sect != 'root' and cnf[sect].has_key('enable_plugin') \
-                                  and t_f_pass(cnf[sect]['enable_plugin']) == True \
-                                  and not sect in config['enabled_plugins']:
-                    config['enabled_plugins'].append(sect)
-                        
+        
         # FIX ME: Is there an easier way to ensure true/false values are
         # actually True/False.  I think ConfigSpec, but don't have time right
         # now.

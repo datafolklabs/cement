@@ -10,7 +10,7 @@ from cement.core.log import get_logger
 from cement.core.hook import run_hooks
 from cement.core.configuration import set_config_opts_per_file, t_f_pass
 from cement.core.namespace import CementNamespace, define_namespace, \
-                                  get_namespace
+                                  get_config
 from cement.core.configuration import ensure_api_compat
 
 log = get_logger(__name__)
@@ -20,73 +20,45 @@ class CementPlugin(CementNamespace):
     def __init__(self, *args, **kwargs):
         CementNamespace.__init__(self, *args, **kwargs)
      
-def get_enabled_plugins_per_files():
+def get_enabled_plugins():
     """
     Open plugin config files from plugin_config_dir and determine if they are
     enabled.  If so, append them to 'enabled_plugins' in the root config.
     Uses the namespaces['root'].config dictionary.
     
     """
-    _n = get_namespace('root')
-    for file in os.listdir(_n.config['plugin_config_dir']):
-        cnf = ConfigObj(os.path.join(_n.config['plugin_config_dir'], file))
+    config = get_config()
+    enabled_plugins = []
+    # determine enabled plugins
+    
+    # first from config files
+    for file in config['config_files']:    
+        cnf = ConfigObj(file)
         for sect in cnf.sections:
             if sect != 'root' and cnf[sect].has_key('enable_plugin') \
                               and t_f_pass(cnf[sect]['enable_plugin']) == True \
-                              and not sect in _n.config['enabled_plugins']:
-                _n.config['enabled_plugins'].append(sect)
-                   
-def register_pluginOLD(**kwargs):
-    """
-    Decorator function to register plugin namespace.  
-    
-    Usage:    
-    
-    .. code-block:: python
+                              and not sect in enabled_plugins:
+                if not cnf[sect].has_key('provider'):
+                    provider = config['app_module']
+                else:
+                    provider = cnf[sect]['provider']
+                plugin = "%s.plugins.%s" % (provider, sect)
+                enabled_plugins.append(plugin)
 
-        from cement.core.plugin import register_plugin
-            
-        @register_plugin()
-        class ExamplePlugin(CementPlugin):
-            def __init__(self):
-                CementPlugin.__init__(self,
-                    label='example',
-                    version='0.1',
-                    description='Example plugin',
-                    required_api='0.5-0.6:20100115',
-                    controller = 'ExampleController'
-                    )    
-    
-    *Note: 'ExampleController' should match up with the controller object in
-    myapp.controllers.example.ExampleController.*
-    
-    """
-    def decorate(func):
-        """
-        Decorate a plugin class and add the namespace to global namespaces
-        dictionary.
-        
-        """
-        nms = func.__module__.split('.')
-        inst_func = func()
-        ensure_api_compat(func.__name__, inst_func.required_api)
-        if kwargs.get('name', None):
-            plugin_name = kwargs['name']
-        else:
-            plugin_name = nms[-1]
-        
-        define_namespace(plugin_name, inst_func)
-        
-        # Extract the actual controller object from the namespace
-        (base, plugins, plugin) = func.__module__.split('.')
-        mymod = __import__("%s.controllers.%s" % (base, plugin), globals(), 
-                           locals(), [inst_func.controller], -1)
-        controller = getattr(mymod, inst_func.controller)  
-        namespaces[plugin_name].controller = controller
-        
-        return func
-    return decorate
-    
+    # Then for plugin config files
+    for file in os.listdir(config['plugin_config_dir']):
+        cnf = ConfigObj(os.path.join(config['plugin_config_dir'], file))
+        for sect in cnf.sections:
+            if sect != 'root' and cnf[sect].has_key('enable_plugin') \
+                              and t_f_pass(cnf[sect]['enable_plugin']) == True \
+                              and not sect in enabled_plugins:
+                if not cnf[sect].has_key('provider'):
+                    provider = config['app_module']
+                else:
+                    provider = cnf[sect]['provider']
+                plugin = "%s.plugins.%s" % (provider, sect)
+                enabled_plugins.append(plugin)
+    return enabled_plugins
     
 def load_plugin(plugin):
     """
@@ -148,7 +120,9 @@ def load_all_plugins():
     """
     for res in run_hooks('pre_plugins_hook'):
         pass # No result expected
-        
+       
+    namespaces['root'].config['enabled_plugins'] = get_enabled_plugins()
+    print get_enabled_plugins() 
     for plugin in namespaces['root'].config['enabled_plugins']:
         load_plugin(plugin)
         

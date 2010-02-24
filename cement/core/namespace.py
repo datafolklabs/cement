@@ -110,25 +110,27 @@ class CementNamespace(object):
     """
     def __init__(self, label, **kw):
         if not label == 'root':
-            app_module = namespaces['root'].config['app_module']
-            self.version = kw.get('version', get_distribution(app_module).version)
+            app_name = namespaces['root'].config['app_name']
+            self.version = kw.get('version', get_distribution(app_name).version)
             self.required_api = kw.get('required_api', namespaces['root'].required_api)
+            self.provider = kw.get('provider', namespaces['root'].config['app_module'])
         else:
             self.version = kw.get('version', None)
             self.required_api = kw.get('required_api', None)
+            self.provider = kw.get('provider', None)
             
         try:
             assert self.version, "A namespace version is required!"
             assert self.required_api, "A required_api version is required!"
+            assert self.provider, "A namespace provider is required!"
         except AssertionError, e:
-            raise CementRuntimeError, e
+            raise CementRuntimeError, e.__str__()
             
         self.label = label
         self.description = kw.get('description', '')
         self.commands = kw.get('commands', {})
         self.controller = kw.get('controller', None)
         self.is_hidden = kw.get('is_hidden', False)
-        
         self.config = get_default_namespace_config()
         if kw.get('config', None):
             self.config.update(kw['config'])
@@ -183,11 +185,11 @@ def register_namespace(namespace_obj):
         register_namespace(example)
         
     """
-    ensure_api_compat(namespace_obj.__module__, namespace_obj.required_api)
+    ensure_api_compat(namespace_obj.label, namespace_obj.required_api)
     define_namespace(namespace_obj.label, namespace_obj)
     
     # Reveal the controller object.
-    base = namespaces['root'].config['app_module']
+    base = namespace_obj.provider
     mymod = __import__('%s.controllers.%s' % (base, namespace_obj.label), 
                        globals(), locals(), [namespace_obj.controller], -1)
     cont = getattr(mymod, namespace_obj.controller)                  
