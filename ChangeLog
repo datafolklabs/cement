@@ -15,7 +15,8 @@
     a [plugin] config by setting 'enable_plugin=true'.    
  +  All namespace configs are merged into the root config dictionary as an 
     embedded dictionary.
- 
+ +  cli_opts and cli_args are now passed to the controllers __init__ rather
+    than to each function.
  
 0.6.1 - unreleased
 -----------------------------------------------------------------------------

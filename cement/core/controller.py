@@ -14,8 +14,9 @@ log = get_logger(__name__)
 
 class CementController(object):
     """Currently just a place holder for more featureful controller."""
-    def __init__(self):
-        pass
+    def __init__(self, cli_opts=None, cli_args=None):
+        self.cli_opts = cli_opts
+        self.cli_args = cli_args
 
 def run_controller_command(namespace, func, *args, **kwargs):
     """
@@ -42,8 +43,8 @@ def run_controller_command(namespace, func, *args, **kwargs):
         run_controller_command('root', 'cmd_name', myarg=True)
         
     """
-    controller = namespaces[namespace].controller()
-    func = getattr(controller, func)(*args, **kwargs)
+    controller = namespaces[namespace].controller(*args, **kwargs)
+    func = getattr(controller, func)()
                       
         
 class expose(object):
