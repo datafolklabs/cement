@@ -1,5 +1,6 @@
 """Methods and classes to handle Cement Controller functions."""
 import re
+import json
 from pkgutil import get_data
 from genshi.template import NewTextTemplate
 
@@ -17,8 +18,9 @@ class CementController(object):
     def __init__(self, cli_opts=None, cli_args=None):
         self.cli_opts = cli_opts
         self.cli_args = cli_args
+    
 
-def run_controller_command(namespace, func, *args, **kwargs):
+def run_controller_command(namespace, func, *args, **kw):
     """
     Cleanly run a command function from a controller.
     
@@ -28,6 +30,10 @@ def run_controller_command(namespace, func, *args, **kwargs):
             The namespace of the controller
         func
             The name of the function
+        cli_opts
+            Options passed to the command line
+        cli_args
+            Arguments passed to the command line
         args
             Any additional arguments to pass to the function
         kwargs
@@ -43,8 +49,10 @@ def run_controller_command(namespace, func, *args, **kwargs):
         run_controller_command('root', 'cmd_name', myarg=True)
         
     """
-    controller = namespaces[namespace].controller(*args, **kwargs)
-    func = getattr(controller, func)()
+    cli_opts = kw.get('cli_opts', None)
+    cli_args = kw.get('cli_args', None)
+    controller = namespaces[namespace].controller(cli_opts, cli_args)
+    func = getattr(controller, func)(*args, **kw)
                       
         
 class expose(object):

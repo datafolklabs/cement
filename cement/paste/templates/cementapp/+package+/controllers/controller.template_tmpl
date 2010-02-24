@@ -11,6 +11,6 @@ log = get_logger(__name__)
 
 class ExampleController(CementController):
     @expose('{{package}}.templates.example.cmd', namespace='example')
-    def cmd(self, cli_opts, cli_args):
+    def cmd(self, *args, **kw):
         # do something here
         pass

@@ -17,7 +17,7 @@ log = get_logger(__name__)
 
 class ExampleController(CementController):
     @expose(namespace='example') # no template
-    def ex1(self, cli_opts, cli_args):
+    def ex1(self, *args, **kw):
         """
         This is how to expose a subcommand because it will be under the 
         'example' namespace.  You would access this subcommand as:
@@ -35,12 +35,12 @@ class ExampleController(CementController):
         # You can print or log output however you like since this function
         # does not render out to a template.
         
-        # Commands are all passed the cli_opts, cli_args from the command line.
+        # Controllers are all passed the opts and args from the command line.
         # So if you have added cli options in your {{project}}.bootstrap.example
         # file, you could access them here as:
         #
-        #   cli_opts.<your_option>
-        #   cli_args[0] # first argument *after* your command
+        #   self.cli_opts.<your_option>
+        #   self.cli_args[0] # first argument *after* your command
         #
         
         # Here we show how to run a hook that we've defined in
@@ -53,7 +53,7 @@ class ExampleController(CementController):
         return dict(foo='bar')
         
     @expose(namespace='example')
-    def ex1_help(self, cli_opts, cli_args):
+    def ex1_help(self, *args, **kw):
         """
         Help methods are found by way of <command>_help.  This would be
         executed when you run:
@@ -64,7 +64,7 @@ class ExampleController(CementController):
         print "This is the help method for ex1."
     
     @expose('{{package}}.templates.example.ex2', namespace='example')    
-    def ex2(self, cli_opts, cli_args): 
+    def ex2(self, *args, **kw): 
         """
         This is another command, also in the 'example' namespace but that is
         rendered by a genshi template.  
@@ -94,14 +94,14 @@ class ExampleController(CementController):
 
         # You can see if options where passed.  These are set in 
         # {{package}}/bootstrap/example.py:
-        if cli_opts.foo:
+        if self.cli_opts.foo:
             # --foo was passed, do something
-            log.info('%s passed by --foo option' % cli_opts.foo)
+            log.info('%s passed by --foo option' % self.cli_opts.foo)
 
-        return dict(foo=cli_opts.foo, example=example, items=['one', 'two', 'three'])
+        return dict(foo=self.cli_opts.foo, example=example, items=['one', 'two', 'three'])
 
     @expose(namespace='root')
-    def cmd2(self, cli_opts, cli_args):
+    def cmd2(self, *args, **kw):
         """This command will be displayed under the root namespace."""
         foo = "In {{package}}.controllers.example.cmd2()"
         print foo

@@ -6,7 +6,7 @@ from {{project}}.model.{{plugin}} import {{plugin}}Model
 
 class {{plugin}}Controller(CementController):
     @expose()              
-    def {{plugin}}_command(self, cli_opts, cli_args):
+    def {{plugin}}_command(self, *args, **kw):
         """Register root command that doesn't use a template."""
         myvar = "{{plugin}} root command run() method."
         print myvar
@@ -16,18 +16,18 @@ class {{plugin}}Controller(CementController):
         return dict(foo=myvar)
           
     @expose()            
-    def {{plugin}}_command_help(self, cli_opts, cli_args):
+    def {{plugin}}_command_help(self, *args, **kw):
         print "{{plugin}} root command help method."
 
     @expose('{{project}}.templates.{{plugin}}.{{plugin}}_command')              
-    def {{plugin}}_command2(self, cli_opts, cli_args):
+    def {{plugin}}_command2(self, *args, **kw):
         """Register root command, with Genshi templating."""
         foo = "Hello"
         bar = "World"
         return dict(foo=foo, bar=bar)
 
     @expose(namespace='{{plugin}}')              
-    def {{plugin}}_sub_command(self, cli_opts, cli_args):
+    def {{plugin}}_sub_command(self, *args, **kw):
         """Register sub command for the {{plugin}} namespace."""
         print "{{plugin}} local command method."
         return dict()
