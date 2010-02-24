@@ -1,6 +1,5 @@
 """{{package}} controller."""
 
-from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.controller import CementController, expose
 from cement.core.hook import run_hooks
