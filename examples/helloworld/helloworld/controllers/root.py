@@ -1,5 +1,5 @@
 """
-This is the RootController for the helloworld application.  This can be used
+This is the RootController for the HelloWorld application.  This can be used
 to expose commands to the root namespace which will be accessible under:
 
     $ helloworld --help
@@ -27,7 +27,7 @@ class RootController(CementController):
             return dict(errors=kw['errors'])
     
     @expose(is_hidden=True)
-    def default(self, cli_opts, cli_args):
+    def default(self, *args, **kw):
         """
         This is the default command method.  If no commands are passed to
         helloworld, this one will be executed.  By default it raises an
@@ -37,7 +37,7 @@ class RootController(CementController):
         raise CementArgumentError, "A command is required. See --help?"
     
     @expose('helloworld.templates.root.cmd1')
-    def cmd1(self, cli_opts, cli_args):
+    def cmd1(self, *args, **kw):
         """This is an example 'root' command.  It should be replaced."""
         foo = 'In helloworld.controllers.root.cmd1()'
         if cli_opts.debug:
@@ -47,13 +47,13 @@ class RootController(CementController):
         return dict(foo=foo, items=items)
     
     @expose()
-    def cmd1_help(self, cli_opts, cli_args):
+    def cmd1_help(self, *args, **kw):
         """This is an example 'root' -help command.  It should be replaced."""
         foo = 'In helloworld.controllers.root.cmd1_help()'
         return dict(foo=foo)
     
     @expose('helloworld.templates.root.get-started')
-    def get_started(self, cli_opts, cli_args):
+    def get_started(self, *args, **kw):
         features = [
             'Multiple Configuration file parsing (default: /etc, ~/)',
             'Command line argument and option parsing',

@@ -1,0 +1,35 @@
+"""{{project}} exception classes."""
+
+class {{project}}Error(Exception):
+    """Generic errors."""
+    def __init__(self, value, code=1):
+        Exception.__init__(self)
+        self.msg = value
+        self.code = code
+    
+    def __str__(self):
+        return self.msg
+        
+class {{project}}ConfigError({{project}}Error):
+    """Config parsing and setup errors."""
+    def __init__(self, value):
+        code = 10
+        {{project}}Error.__init__(self, value, code)
+
+class {{project}}RuntimeError({{project}}Error):
+    """Runtime errors."""
+    def __init__(self, value):
+        code = 20
+        {{project}}Error.__init__(self, value, code)
+        
+class {{project}}InternalServerError({{project}}Error):
+    """Unknown or private internal errors."""
+    def __init__(self, value):
+        code = 30
+        {{project}}Error.__init__(self, value, code)
+        
+class {{project}}ArgumentError({{project}}Error):
+    """Argument errors."""
+    def __init__(self, value):
+        code = 40
+        {{project}}Error.__init__(self, value, code)

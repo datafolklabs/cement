@@ -6,15 +6,17 @@
 
 # PLUGINS
 #
-# Plugins are generally enabled under their [plugin] config either in this
-# file or in the plugins.d config file for that plugin.  To enable a plugin
-# set 'enable_plugin = true' under the plugins configuration.  
+# Plugins are enabled under their [plugin] config either in this
+# file or in the plugins.d config file for that plugin.  An example plugin
+# config looks like:
 #
-# Alternatively, a list of plugin names can be set under the root namespace.  
-# These can be plugins from within your application, or shared plugin from 
-# another application such as The Rosendale Project.
+#   [example]
+#   enable_plugin = true
+#   provider = rosendale
 #
-# enabled_plugins = example, rosendale.plugins.clibasic
+#
+# The 'provider' is the package that provides it.  If it is an internal plugin
+# this can be left blank.
 #
 
 # DIRECTORIES

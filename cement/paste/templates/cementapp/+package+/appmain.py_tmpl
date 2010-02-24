@@ -16,6 +16,8 @@ from cement.core.configuration import ensure_api_compat
 from cement.core.command import run_command
 
 from {{package}}.config import default_config
+from {{package}}.exc import {{project}}ArgumentError, {{project}}ConfigError, \
+                                 {{project}}RuntimeError
 
 REQUIRED_CEMENT_API = '{{cement_api}}'
 VERSION = get_distribution('{{project}}').version
@@ -44,6 +46,15 @@ def main():
         sys.exit(e.code)
     except CementRuntimeError, e:
         print("CementRuntimeError > %s" % e)
+        sys.exit(e.code)
+    except {{project}}ArgumentError, e:
+        print("{{project}}ArgumentError > %s" % e)
+        sys.exit(e.code)
+    except {{project}}ConfigError, e:
+        print("{{project}}ConfigError > %s" % e)
+        sys.exit(e.code)
+    except {{project}}RuntimeError, e:
+        print("{{project}}RuntimeError > %s" % e)
         sys.exit(e.code)
     sys.exit(0)
         
