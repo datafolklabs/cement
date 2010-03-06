@@ -95,6 +95,7 @@ setup(name='Cement',
         # Only required if you want to use paster
         "PasteScript", 
         "tempita",
+        "jsonpickle",
         # Required for documentation
         # "Sphinx",
         # "Pygments",

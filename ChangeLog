@@ -18,6 +18,7 @@
  +  cli_opts and cli_args are now passed to the controllers __init__ rather
     than to each function.
  +  Added default exception classes for new projects.
+ +  Use jsonpickle instead of straight json.
  
 0.6.1 - unreleased
 -----------------------------------------------------------------------------

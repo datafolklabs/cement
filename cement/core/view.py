@@ -2,7 +2,7 @@
 
 import os
 import re
-import json
+import jsonpickle
 import inspect
 from pkgutil import get_data
 
@@ -58,7 +58,7 @@ class render(object):
         def wrapper(*args, **kw):  
             log.debug("decorating '%s' with '%s:%s'" % \
                 (func.__name__, self.engine, self.template))      
-            
+             
             res = self.func(*args, **kw)
             if not res:
                 res = dict()
@@ -66,22 +66,9 @@ class render(object):
             # FIX ME: Is there a better way to jsonify classes?
             if self.engine == 'json':
                 namespaces['root'].config['output_engine'] = 'json'
-                safe_res = {}
-                for i in res:
-                    try:
-                        getattr(res[i], '__dict__')
-                        safe_res[i] = res[i].__dict__
-                    except AttributeError, e:
-                        safe_res[i] = res[i]
-                
-                safe_res['stdout'] = buf_stdout.buffer
-                safe_res['stderr'] = buf_stderr.buffer
-                try:
-                    SAVED_STDOUT.write(json.dumps(safe_res))
-                except TypeError, e:
-                    safe_res = {}
-                    safe_res['errors'] = {'TypeError' : str(e)}
-                    SAVED_STDOUT.write(json.dumps(safe_res))
+                res['stdout'] = buf_stdout.buffer
+                res['stderr'] = buf_stderr.buffer
+                SAVED_STDOUT.write(jsonpickle.encode(res, unpicklable=False))
             
             elif self.engine == 'genshi':  
                 namespaces['root'].config['output_engine'] = 'genshi'

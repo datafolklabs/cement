@@ -6,7 +6,6 @@ to expose commands to the root namespace which will be accessible under:
   
 """
 
-from cement import namespaces
 from cement.core.exc import CementArgumentError
 from cement.core.controller import CementController, expose
 from cement.core.namespace import get_config
@@ -40,7 +39,7 @@ class RootController(CementController):
     def cmd1(self, *args, **kw):
         """This is an example 'root' command.  It should be replaced."""
         foo = 'In {{package}}.controllers.root.cmd1()'
-        if cli_opts.debug:
+        if self.cli_opts.debug:
             print 'The --debug option was passed'
         
         items = ['one', 'two', 'three']
