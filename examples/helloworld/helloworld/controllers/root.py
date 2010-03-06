@@ -1,12 +1,11 @@
 """
-This is the RootController for the HelloWorld application.  This can be used
+This is the RootController for the helloworld application.  This can be used
 to expose commands to the root namespace which will be accessible under:
 
     $ helloworld --help
   
 """
 
-from cement import namespaces
 from cement.core.exc import CementArgumentError
 from cement.core.controller import CementController, expose
 from cement.core.namespace import get_config
@@ -17,14 +16,34 @@ config = get_config()
 
 class RootController(CementController):
     @expose('helloworld.templates.root.error', is_hidden=True)
-    def error(self, *args, **kw):
+    def error(self, errors=[], *args, **kw):
         """
-        This can be called when catching exceptions.  It expects an 
-        'errors' dictionary to be passed via **kwargs.
+        This can be called when catching exceptions giving the developer a 
+        clean way of presenting errors to the user.
         
+        Required Arguments:
+        
+            errors
+                A list of tuples in the form of [('ErrorCode', 'Error message')].
+        
+        
+        The best way to use this is with an 'abort' function, such as the one
+        provided by the Rosendale Project.
+        
+        ..code-block:: python
+        
+            from rosendale.helpers.error import abort_on_error
+            
+            errors = []
+            # do something, if error
+            errors.append(('MyErrorCode', 'My Error Message'))
+            
+            abort_on_error(errors)
+            
+            # continue work (no errors)
+            
         """
-        if kw.get('errors', None):
-            return dict(errors=kw['errors'])
+        return dict(errors=errors)
     
     @expose(is_hidden=True)
     def default(self, *args, **kw):
@@ -40,7 +59,7 @@ class RootController(CementController):
     def cmd1(self, *args, **kw):
         """This is an example 'root' command.  It should be replaced."""
         foo = 'In helloworld.controllers.root.cmd1()'
-        if cli_opts.debug:
+        if self.cli_opts.debug:
             print 'The --debug option was passed'
         
         items = ['one', 'two', 'three']

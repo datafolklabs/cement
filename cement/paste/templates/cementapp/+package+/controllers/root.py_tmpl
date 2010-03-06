@@ -30,7 +30,7 @@ class RootController(CementController):
         The best way to use this is with an 'abort' function, such as the one
         provided by the Rosendale Project.
         
-        ..code-block:: python
+        .. code-block:: python
         
             from rosendale.helpers.error import abort_on_error
             

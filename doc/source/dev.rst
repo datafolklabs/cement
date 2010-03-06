@@ -8,8 +8,9 @@ them in your applications.
 .. toctree::
    :maxdepth: 20
 
-   dev/quickstart
    dev/features
+   dev/quickstart
+   dev/understanding_your_application
    dev/mvc
    dev/namespaces_and_plugins
    dev/hooks

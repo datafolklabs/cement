@@ -9,15 +9,24 @@ already have:
 {% end %}\
 
 If your config file is setup right, you should notice that your app is already 
-loading an 'example' plugin.  Plugins are enabled in a number of ways, but most 
-generally by adding the plugin name to 'enabled_plugins' in your applications 
-configuration, or by setting 'enable_plugin=true' in each plugin's 
-configuration (in the plugin_config_dir plugins.d/plugin_name.conf) under the
-'[plugin_name]' block.
+loading an 'example' plugin.  Plugins are enabled by adding a plugin config
+file in your plugin_config_dir (see {{package}}.conf).  The plugin config
+must have a [<plugin_name>] section and under that section you must set the
+following setting
+    
+    * enable_plugin=true
+    
+This will tell Cement to load that plugin.  You can also load plugins from
+other projects built on Cement by also adding the following setting:
 
-The included example plugin is a great starting point to learn how to build an
-application on top of the Cement Framework.  The following files and 
-directories should be explored:
+    * provider = someotherapp
+    
+Where 'someotherapp' is the package name of the application providing the 
+plugin.
+
+The included example plugin is a great starting point to learn how to build on 
+top of the Cement Framework.  The following files and directories should be 
+explored:
  
     * ./{{package}}/bootstrap/example.py
     * ./{{package}}/controllers/example.py

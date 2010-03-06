@@ -15,14 +15,14 @@ from cement.core.app_setup import lay_cement
 from cement.core.configuration import ensure_api_compat
 from cement.core.command import run_command
 
-from helloworld.config import default_config
-from helloworld.exc import HelloWorldArgumentError, HelloWorldConfigError, \
-                                 HelloWorldRuntimeError
+from helloworld.core.config import default_config
+from helloworld.core.exc import helloworldArgumentError, helloworldConfigError, \
+                                 helloworldRuntimeError
 
 REQUIRED_CEMENT_API = '0.7-0.8:20100210'
-VERSION = get_distribution('HelloWorld').version
+VERSION = get_distribution('helloworld').version
 BANNER = """
-HelloWorld version %s, built on Cement (api:%s)
+helloworld version %s, built on Cement (api:%s)
 """ % (VERSION, REQUIRED_CEMENT_API)
 
 def main():
@@ -47,14 +47,14 @@ def main():
     except CementRuntimeError, e:
         print("CementRuntimeError > %s" % e)
         sys.exit(e.code)
-    except HelloWorldArgumentError, e:
-        print("HelloWorldArgumentError > %s" % e)
+    except helloworldArgumentError, e:
+        print("helloworldArgumentError > %s" % e)
         sys.exit(e.code)
-    except HelloWorldConfigError, e:
-        print("HelloWorldConfigError > %s" % e)
+    except helloworldConfigError, e:
+        print("helloworldConfigError > %s" % e)
         sys.exit(e.code)
-    except HelloWorldRuntimeError, e:
-        print("HelloWorldRuntimeError > %s" % e)
+    except helloworldRuntimeError, e:
+        print("helloworldRuntimeError > %s" % e)
         sys.exit(e.code)
     sys.exit(0)
         

@@ -28,56 +28,18 @@ def get_namespace(namespace):
         log.fatal("the namespace '%s' doesn't exist" % namespace)
 
 def get_config(namespace='root'):
-    """Get a namespace's config dictionary."""    
+    """Get a namespace's config dictionary.  Returns a ConfigObj object.
+    
+    Optional Arguments:
+    
+        namespace
+            The namespace to pull the config object from.  Default: 'root'.
+    
+    """    
     if namespaces.has_key(namespace):
         return namespaces[namespace].config.dict()
     else:
         log.fatal("the namespace '%s' doesn't exist" % namespace)
-          
-def register_namespaceOLD(**kwargs):
-    """
-    Decorator function to register a namespace.  Alternative to registering
-    a plugin, but essentially the same thing.  
-    
-    Usage:    
-    
-    .. code-block:: python
-
-        from cement.core.namespace import CementNamespace, register_namespace
-            
-        @register_namespace()
-        class ExampleNamespace(CementNamespace):
-            def __init__(self):
-                CementNamespace.__init__(self,
-                    label='example',
-                    required_api='0.5-0.6:20100115',
-                    controller = 'ExampleController'
-                    )    
-    
-    *Note: 'ExampleController' should match up with the controller object in
-    myapp.controllers.example.ExampleController.*  The path to the controller
-    module is determined by the 'label' of the namespace.  
-    
-    """
-    def decorate(func):
-        """
-        Decorate a plugin class and add the namespace to global namespaces
-        dictionary.
-        
-        """
-        nms = func.__module__.split('.')
-        inst_func = func()
-        ensure_api_compat(func.__name__, inst_func.required_api)
-        define_namespace(inst_func.label, inst_func)
-        
-        base = namespaces['root'].config['app_module']
-        mymod = __import__('%s.controllers.%s' % (base, inst_func.label), 
-                           globals(), locals(), [inst_func.controller], -1)
-        controller = getattr(mymod, inst_func.controller)                  
-        namespaces[inst_func.label].controller = controller
-        return func
-    return decorate
-    
     
 class CementNamespace(object):
     """
@@ -103,7 +65,10 @@ class CementNamespace(object):
             Boolean, whether command should display in --help output 
             (default: False)
         config
-            A config dict (default: None)
+            A configobj object (default: None).  A basic default config will
+            be created if none is passed.  For advanced configurations such
+            as using a configspec or what have you can be done by passing in
+            the configobj object.
         banner
             A version banner to display for --version (default: '')
             
@@ -174,7 +139,7 @@ def register_namespace(namespace_obj):
             
     Usage:
     
-    ..code-block:: python
+    .. code-block:: python
     
         from cement.core.namespace import CementNamespace, register_namespace
 

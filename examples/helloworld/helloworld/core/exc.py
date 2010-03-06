@@ -1,6 +1,6 @@
-"""HelloWorld exception classes."""
+"""helloworld exception classes."""
 
-class HelloWorldError(Exception):
+class helloworldError(Exception):
     """Generic errors."""
     def __init__(self, value, code=1):
         Exception.__init__(self)
@@ -10,26 +10,26 @@ class HelloWorldError(Exception):
     def __str__(self):
         return self.msg
         
-class HelloWorldConfigError(HelloWorldError):
+class helloworldConfigError(helloworldError):
     """Config parsing and setup errors."""
     def __init__(self, value):
         code = 10
-        HelloWorldError.__init__(self, value, code)
+        helloworldError.__init__(self, value, code)
 
-class HelloWorldRuntimeError(HelloWorldError):
+class helloworldRuntimeError(helloworldError):
     """Runtime errors."""
     def __init__(self, value):
         code = 20
-        HelloWorldError.__init__(self, value, code)
+        helloworldError.__init__(self, value, code)
         
-class HelloWorldInternalServerError(HelloWorldError):
+class helloworldInternalServerError(helloworldError):
     """Unknown or private internal errors."""
     def __init__(self, value):
         code = 30
-        HelloWorldError.__init__(self, value, code)
+        helloworldError.__init__(self, value, code)
         
-class HelloWorldArgumentError(HelloWorldError):
+class helloworldArgumentError(helloworldError):
     """Argument errors."""
     def __init__(self, value):
         code = 40
-        HelloWorldError.__init__(self, value, code)
+        helloworldError.__init__(self, value, code)

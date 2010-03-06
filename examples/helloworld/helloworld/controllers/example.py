@@ -1,5 +1,5 @@
 """
-This is the ExampleController for the HelloWorld application.  This can be used
+This is the ExampleController for the helloworld application.  This can be used
 to expose commands to the example namespace which will be accessible under:
 
     $ helloworld example --help
@@ -36,7 +36,7 @@ class ExampleController(CementController):
         # does not render out to a template.
         
         # Controllers are all passed the opts and args from the command line.
-        # So if you have added cli options in your HelloWorld.bootstrap.example
+        # So if you have added cli options in your helloworld.bootstrap.example
         # file, you could access them here as:
         #
         #   self.cli_opts.<your_option>

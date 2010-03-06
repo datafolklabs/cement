@@ -26,8 +26,11 @@
 datadir = ~/{{package}}/data
 tmpdir = ~/{{package}}/tmp
 
-# This should be the path to your development tree ... /path/etc/plugins.d
-plugin_config_dir = /path/to/{{package}}/etc/plugins.d
+# This should be the path to your development tree ... 
+#   
+#   i.e. /path/to/{{package}}/etc/plugins.d
+#
+plugin_config_dir = ~/devel/{{package}}/etc/plugins.d
 
 
 # This is just a cosmetic option... whether to show 'loading plugin...'

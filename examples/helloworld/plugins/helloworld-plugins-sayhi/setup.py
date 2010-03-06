@@ -1,9 +1,10 @@
 from setuptools import setup, find_packages
 import sys, os
 
-setup(name='{{project}}',
+# You probably want to change the name, this is a healthy default for paster
+setup(name='helloworld_plugins_sayhi',
     version='0.1',
-    description='',
+    description='sayhi plugin for helloworld',
     classifiers=[], 
     keywords='',
     author='',
@@ -16,23 +17,19 @@ setup(name='{{project}}',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "Cement >={{cement_version}}, <{{cement_next_version}}",
-        # Uncomment to use shared plugins from The Rosendale Project.
-        #"Rosendale",
+        "Cement >=0.7.1, <0.9",
+        "helloworld",
         ],
     setup_requires=[
         ],
     test_suite='nose.collector',
     entry_points="""
-    [console_scripts]
-    {{package}} = {{package}}.core.appmain:main
     """,
     namespace_packages=[
-        '{{package}}', 
-        '{{package}}.bootstrap',
-        '{{package}}.controllers',
-        '{{package}}.model',
-        '{{package}}.helpers',
-        '{{package}}.templates',
+        'helloworld.bootstrap',
+        'helloworld.controllers',
+        'helloworld.model',
+        'helloworld.helpers',
+        'helloworld.templates',
         ],
     )

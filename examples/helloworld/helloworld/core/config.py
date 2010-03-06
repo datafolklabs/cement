@@ -21,7 +21,7 @@ dcf['app_name'] = 'helloworld' # name for cli like /etc/<app_name>
 dcf['app_egg_name'] = 'helloworld' # name from setup.py
 dcf['app_module'] = 'helloworld' # name of the library dir
 dcf['app_basepath'] = os.path.dirname(__file__)
-
+dcf['show_plugin_load'] = True
 dcf['enabled_plugins'] = [] # no default plugins, add via the config file
 dcf['debug'] = False
 dcf['datadir'] = '%s/data' % prefix

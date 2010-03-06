@@ -2,7 +2,9 @@ Quick Starting a New CLI Application
 ====================================
 
 The following outlines how to create a new application built on The Cement
-CLI Application Framework.
+CLI Application Framework.  Throughout this documentation we reference an
+application called 'helloworld'.  For almost all cases, you can replace
+helloworld with the package name of your application.
 
 
 Installing Cement
@@ -77,7 +79,10 @@ Creating The HelloWorld Application
 Now that the Cement Framework is installed, we can create our application
 from templates via PasteScript (which is installed as a dependency when you
 install Cement).  The following creates and installs a new CLI Application 
-called HelloWorld:
+called HelloWorld, and copies a 'development' config file to your home 
+directory path.  Note that the -dev config is geared towards 'local' file
+paths for your user where as the other config is geared towards a system wide
+production install:
 
 .. code-block:: text
 
@@ -92,11 +97,16 @@ called HelloWorld:
     
 **Note:** You need to look at ~/.helloworld.conf and edit any settings.  For
 most cases, the only thing you might want to edit is the 'plugin_config_dir' 
-path to point it to '/path/to/helloworld/etc/plugins.d'.  Note that your 
-application by default searches for '/etc/helloworld/helloworld.conf' as well 
-as '~/.helloworld.conf'.  
+path to point it to '/path/to/helloworld/etc/plugins.d'.  Your application by 
+default searches for configs in the following order:
 
-Now that helloworld is installed, lets see what it looks like:
+    * /etc/helloworld/helloworld.conf
+    * ~/.helloworld/etc/helloworld.conf
+    * ~/.helloworld.conf 
+
+The second is a hard set location based on the 'prefix' in your applications
+'helloworld/core/config.py' and is not often relied on.  Now that helloworld 
+is installed, lets see what it looks like:
 
 .. code-block:: text
 
@@ -105,7 +115,7 @@ Now that helloworld is installed, lets see what it looks like:
     Usage:   helloworld [COMMAND] --(OPTIONS)
 
     Commands:  
-        cmd1, cmd2, example*
+        get-started, cmd1, cmd2, example*
 
     
     Help?  try [COMMAND]-help
@@ -119,20 +129,46 @@ Now that helloworld is installed, lets see what it looks like:
         --quiet            disable console logging
     
 
-You will notice that your app is already loading an 'example' plugin.  Plugins
-are enabled in a number of ways, but most generally by adding the plugin name 
-to 'enabled_plugins' in your applications configuration, or by setting 
-'enable_plugin=true' in each plugin's configuration (in the plugin_config_dir
-plugins.d/plugin_name.conf) under '[plugin_name]'.
+Go ahead and run the get-started command:
 
-The included example plugin is a great starting point to learn how to build an
+.. code-block:: text
+
+    $ helloworld get-started
+
+
+It is more or less the same information you are reading here, however it is
+also a functional command that is rendered by Genshi and a template.  We've 
+put it there to show how commands are created and rendered.  Go ahead and
+take a look at the following files to see where and how that command is setup:
+
+    * helloworld/controllers/root.py
+    * helloworld/templates/root/get-started.txt
+    
+    
+You will also notice that your app is already loading an 'example' plugin.  
+Plugins are enabled under their [plugin] config either in your main 
+application configuration file, or in the plugins.d/<plugin_name>.conf file for 
+that plugin.  An example plugin config looks like:
+
+    [example]
+    enable_plugin = true
+    provider = helloworld
+
+The 'provider' is the package that provides it and can be omitted for plugins
+that are a part of your application.  However, you can load plugins from any
+other application that is built on Cement by adding them as the provider.  
+The plugin has to be written in a 'generic' fashion of course.  For more 
+information on shared plugins check our The Rosendale Project which provides
+plugins explicitly for re-usability in other applications built on Cement.  
+
+The included example plugin is a great starting point to learn how to build an 
 application on top of the Cement Framework.  The following files and 
 directories should be explored:
  
- * ./helloworld/bootstrap/example.py
- * ./helloworld/controllers/example.py
- * ./helloworld/model/example.py
- * ./helloworld/templates/example/
+    * ./helloworld/bootstrap/example.py
+    * ./helloworld/controllers/example.py
+    * ./helloworld/model/example.py
+    * ./helloworld/templates/example/
 
 It should be noted that the only difference between a plugin, and a built in
 part of your application is that a plugin is optional, and only loaded if 
@@ -145,17 +181,22 @@ application by adding the following to 'helloworld/bootstrap/root.py'
     
     
 All modules imported into the root bootstrap become a part of the application 
-permanently (meaning its not loaded as an optional plugin).
+permanently (meaning its not loaded as an optional plugin).  You then want to
+move the plugins configuration from a separate plugin config to your primary
+applications configuration and remove 'enable_plugin' setting.
 
-Once you're ready to start coding, you can remove 'example' from the 
-list of 'enabled_plugins' in your applications config. That said, it is 
+Once you're ready to start coding, you can disable the 'example' plugin by
+setting 'enable_plugin=false' in plugins.d/example.conf. That said, it is 
 recommended to keep the example plugin included with our application, as this 
 also provides a starting point for developers wanting to build external plugins 
 for your application (explained later on).
 
 By default, the base application has a command named 'cmd1' created in the
 controller and the options -R/--root-option, --debug, --quiet, --json which
-are created in the bootstrap file.
+are created in the bootstrap file.  You can remove these from the bootstrap
+file so that they don't show up under '--help', however please note that
+--debug, --quiet, and --json are hard coded in the Cement framework and will
+still function if the user passes them at command line.
 
 The example plugin provides the 'example*' namespace, which has two commands
 under it called 'ex1', and 'ex2' created in the controller, as well as the 

@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to The Cement Framework's documentation!
+Cement CLI Application Framework Documentation!
 ================================================================
 
 Cement is an advanced CLI Application Framework for Python. This documentation

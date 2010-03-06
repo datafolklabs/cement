@@ -15,8 +15,8 @@ from cement.core.app_setup import lay_cement
 from cement.core.configuration import ensure_api_compat
 from cement.core.command import run_command
 
-from {{package}}.config import default_config
-from {{package}}.exc import {{project}}ArgumentError, {{project}}ConfigError, \
+from {{package}}.core.config import default_config
+from {{package}}.core.exc import {{project}}ArgumentError, {{project}}ConfigError, \
                                  {{project}}RuntimeError
 
 REQUIRED_CEMENT_API = '{{cement_api}}'

@@ -14,6 +14,14 @@ USAGE:
     $ {{package}} --help
     
     
+CONFIGURATION:
+
+Application configuration files are parsed in the following order:
+
+    * /etc/{{package}}/{{package}}.conf
+    * ~/.{{package}}.conf
+
+    
 PLUGIN DEVELOPMENT:
 
 {{project}} supports external plugins via the Cement Framework.  To quick

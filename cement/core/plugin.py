@@ -47,7 +47,11 @@ def get_enabled_plugins():
 
     # Then for plugin config files
     for file in os.listdir(config['plugin_config_dir']):
-        cnf = ConfigObj(os.path.join(config['plugin_config_dir'], file))
+        path = os.path.join(config['plugin_config_dir'], file)
+        if not path.endswith('.conf'):
+            continue
+            
+        cnf = ConfigObj(path)
         for sect in cnf.sections:
             if sect != 'root' and cnf[sect].has_key('enable_plugin') \
                               and t_f_pass(cnf[sect]['enable_plugin']) == True \
