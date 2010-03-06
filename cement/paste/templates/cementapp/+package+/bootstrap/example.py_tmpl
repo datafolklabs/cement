@@ -11,7 +11,13 @@ example = CementNamespace('example', controller='ExampleController')
 # section of the applications config file(s).  Once registered, this dict is
 # accessible as:
 #
-#   namespaces['example'].config
+#   from cement.core.namespace import get_config
+#   example_config = get_config('example')
+#
+# Or simply as:
+#
+#   root_config = get_config()
+#   root_config['example']
 #
 example.config['foo'] = 'bar'
 

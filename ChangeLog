@@ -19,7 +19,12 @@
     than to each function.
  +  Added default exception classes for new projects.
  +  Use jsonpickle instead of straight json.
- 
+ +  Moved appmain.py/config.py to new 'core' directory.
+ +  Updated documentation a lot!
+ +  Changed register_hook to a class decorator, and added 'name' paramater to
+    override the name of the hook to register too (still uses name of func
+    otherwise).
+    
 0.6.1 - unreleased
 -----------------------------------------------------------------------------
 

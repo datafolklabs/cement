@@ -31,7 +31,7 @@ def define_hook(name):
     hooks[name] = []
     
     
-def register_hook(**kwargs):
+class register_hook(object):
     """
     Decorator function for plugins to register hooks.  Used as:
     
@@ -39,7 +39,10 @@ def register_hook(**kwargs):
     
         weight
             The weight in which to order the hook function (default: 0)
-    
+        
+        name
+            The name of the hook to register too.  If not passed, the __name__
+            of the decorated function will be used.
     Usage:
     
     .. code-block:: python
@@ -53,19 +56,22 @@ def register_hook(**kwargs):
             return res
             
     """
-    def decorate(func):
-        """Decorate the function and add the hook to the global 'hooks'."""
+    def __init__(self, weight=0, name=None):
+        self.weight = weight
+        self.name = name
+
+    def __call__(self, func):
         log.debug("registering hook func '%s' from %s" % \
             (func.__name__, func.__module__))
-        if not hooks.has_key(func.__name__):
-            log.warn("Hook name '%s' is not define!" % func.__name__)
+        if not self.name:
+            self.name = func.__name__
+        if not hooks.has_key(self.name):
+            log.warn("Hook name '%s' is not define!" % self.name)
             return func
         # Hooks are as follows: (wieght, name, func)
-        hooks[func.__name__].append(
-            (int(kwargs.get('weight', 0)), func.__name__, func)
+        hooks[self.name].append(
+            (int(self.weight), self.name, func)
         )
-        return func
-    return decorate
 
 
 def run_hooks(*args, **kwargs):

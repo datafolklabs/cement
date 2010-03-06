@@ -28,8 +28,8 @@ and can be accessed as:
 
 .. code-block:: python
 
-    from cement import namespaces
-    config = namespaces['root'].config
+    from cement.core.namespace import get_config
+    config = get_config()
 
 
 The global config dictionary is generated [and overridden] in the following 
@@ -77,11 +77,11 @@ be logged to console.
 The log level is determined by 'log_level' in your configuration, and is one
 of the following:
 
- * info
- * warn
- * error
- * fatal
- * debug
+    * info
+    * warn
+    * error
+    * fatal
+    * debug
  
 Note that there are built in command line options that over ride these as well.
 The --quiet option forces no console output at all (including print 

@@ -12,7 +12,8 @@ them in your applications.
    dev/quickstart
    dev/understanding_your_application
    dev/mvc
-   dev/namespaces_and_plugins
+   dev/namespaces
+   dev/plugin_support
    dev/hooks
    dev/templates
    dev/cli_api

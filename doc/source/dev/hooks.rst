@@ -41,50 +41,18 @@ A hook can be defined as follows:
     define_hook('my_example_hook')
 
 
-It is a good idea to define, and register hooks early on in the application 
-loading process.  For plugins, you should define hooks in the '__init__' 
-function of your plugin class so it is registered first thing, before any other 
-plugins have a chance to register a function to that hook.
+Hooks are defined during the bootstrap process, and should be added to the 
+bootstrap file for the namespace they relate to.
 
-**./helloworld/plugins/example.py**:
+**./helloworld/bootstrap/example.py**:
 
 .. code-block:: python
 
     from cement.core.hook import define_hook
     from cement.core.plugin import CementPlugin, register_plugin
     
-    @register_plugin() 
-    class ExamplePlugin(CementPlugin):
-        def __init__(self):
-            define_hook('my_example_hook')
-            CementPlugin.__init__(self,
-                label='example',
-                version=VERSION,
-                description='Example plugin for helloworld',
-                required_api=REQUIRED_CEMENT_API,
-                banner=BANNER,
-                controller = 'ExampleController', 
-                )
-            
-
-If not registering a plugin, you could also define a hook before a controller
-class:
-
-**./helloworld/controllers/example.py**:
-
-.. code-block:: python
-
-    from cement.core.controller import CementController, expose
-    from cement.core.hook import define_hook
-    
     define_hook('my_example_hook')
-    
-    class ExampleController(CementController):
-        @expose()
-        def some_function(self, cli_opts, cli_args):
-            # do something
-            bar = True
-            return dict(foo=bar)
+    ...
             
 
 Registering Functions to a Hook
@@ -92,46 +60,41 @@ Registering Functions to a Hook
 
 A hook is just an identifier, but the functions registered to that hook are 
 what get run when the hook is called.  Registering a hook should also be done
-early in the application load process, however because it utilizes a 
-decorator putting it toward the top of any controller file, or after 
-plugin registration in your plugin file should be sufficient.  The following
-is how to register a hook from a controller file:
+during the bootstrap process The following is how to register a hook from a 
+controller file:
 
-**./helloworld/controllers/example.py**:
+**./helloworld/bootstrap/someothernamespace.py**:
 
 .. code-block:: python
 
-    from cement.core.controller import CementController, expose
     from cement.core.hook import register_hook
     
     @register_hook()
-    def my_example_hook(self, *args, **kwargs):
+    def my_example_hook(*args, **kwargs):
         # do something
         something = "The result of my hook."
         return something
     
-    class ExampleController(CementController):
-        @expose()
-        def my_command(self, cli_opts, cli_args):
-            bar = True
-            return dict(foo=bar)
+    @register_hook(name='some_other_hook_name')
+    def my_function(*args, **kw):
+        # do something
+    ...
     
     
 The @register_hook() decorator uses the name of the function you are 
-decorating to determine the hook you are registering for.  That said, some
-decorators return an alternate func which changes the name of the 
-func.__name__.  For that reason, @register_hook() should be the first or only 
-decorator used on a hook function.  It should also be noted, you probably 
-don't want to decorate a command function [one that is @expose()'d] as a hook.
+decorating to determine the hook you are registering for, or you can pass the
+name parameter.  Note that if combining with other decorators you must pass
+the name parameter.  It should also be noted, you probably don't want to 
+decorate a command function [one that is @expose()'d] as a hook.
 
 What you return depends on what the developer defining the hook is expecting.
 Each hook is different, and the nature of the hook determines whether you need
 to return anything or not.  That is up to the developer.  Also, the args and
 kwargs coming in depend on the developer.  You have to be familiar with 
 the purpose of the defined hook in order to know whether you are receiving any
-args or kwargs.
+args or kwargs, but either way you ant to accept them.
 
-Registering a hook just puts the function into the namespace.  This will be an
+Registering a hook just puts the function into the hook list.  This will be an
 unbound function, so if you register a function that is a class method keep in
 mind that 'self' doesn't exist in the context of when the hook is run.  For the
 most part, standard unbound functions are best for hooks rather than controller
@@ -230,5 +193,8 @@ function. And the result?
 
 
 As you can see, it doesn’t matter what order we place register the hook, the 
-weight runs then in order from lowest to highest. That might actually be my 
-favorite addition.
+weight runs then in order from lowest to highest.  Hooks are awesome and 
+provide a little bit of magic to your application.  Be sure to properly 
+document any hooks you define, what their purpose is and where they will 
+be run.
+

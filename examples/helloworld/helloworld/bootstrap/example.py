@@ -1,8 +1,13 @@
 
-from cement.core.hook import define_hook
+from cement.core.hook import define_hook, register_hook
 from cement.core.namespace import CementNamespace, register_namespace
 
 define_hook('my_example_hook')
+
+@register_hook()
+def my_example_hook(*args, **kw):
+    print "in my_example_hook kapla"
+
 
 # Setup the 'example' namespace object
 example = CementNamespace('example', controller='ExampleController')

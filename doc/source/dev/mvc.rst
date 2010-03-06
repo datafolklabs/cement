@@ -1,15 +1,15 @@
 Model, View, Controller Overview
 ================================
 
-The Cement Framework creates applications that honor the Model, View, 
+The Cement Framework creates applications that encourage the Model, View, 
 Controller design.  Each piece of your application should be separated this
 way.  For example, if you add a plugin called 'myplugin' you should work out 
 of the following files:
 
- * ./helloworld/plugins/myplugin.py
- * ./helloworld/model/myplugin.py
- * ./helloworld/controllers/myplugin.py
- * ./helloworld/templates/myplugin/
+ * helloworld/bootstrap/myplugin.py
+ * helloworld/model/myplugin.py
+ * helloworld/controllers/myplugin.py
+ * helloworld/templates/myplugin/
  
 
 As always, review the 'example' plugin included with your application to see
@@ -24,7 +24,7 @@ The Model represents the data that you are working with.  This might be a
 User class, or a Product, etc.  The class might be an SQLAlchemy class tied
 to a database, or can just simply be an object allowing you to organize data.
 
-**./helloworld/model/user.py**
+**helloworld/model/user.py**
 
 .. code-block:: python
 
@@ -43,6 +43,29 @@ The model should always be associated with 'data' and should rarely perform
 operations or tasks outside of creating/editing/saving/deleting/etc the 
 data associated with that model.
 
+A recommended way of accessing your model throughout your application is to
+import all model classes into the 'root' model file like so:
+
+**helloworld/model/root.py**
+
+.. code-block:: python
+
+    from helloworld.model.example import Example
+    from helloworld.model.user import User
+    from helloworld.model.product import Product
+    
+
+Then, throughout your application you can access all of you module objects
+like this:
+
+.. code-block:: python
+
+    from helloworld.model import root as model
+    
+    user = model.User()
+    product = model.Product()
+    
+    
 The Controller
 ^^^^^^^^^^^^^^
 
@@ -65,18 +88,18 @@ will show up under:
 
 A typical example of this would be
 
-**./helloworld/controllers/greeting.py**
+**helloworld/controllers/greeting.py**
 
 .. code-block:: python
 
     from cement.core.controller import CementController, expose
-    from helloworld.model.user import User
+    from helloworld.model import root as model
     
     class GreetingController(CementController):
         @expose('helloworld.templates.greetings.sayhi', namespace='root')
         def sayhi(self, cli_opts, cli_args):
-            user = User(first=cli_opts.first_name, 
-                        last=cli_opts.last_name)
+            user = model.User(first=cli_opts.first_name, 
+                              last=cli_opts.last_name)
             return dict(user=user)
 
 
@@ -90,7 +113,7 @@ will be called when the following command is run:
     
 The user object is then returned in a dictionary and rendered by Genshi with
 the template 'helloworld.templates.greetings.sayhi' or what equates to 
-'./helloworld/templates/greetings/sayhi.txt' on the filesystem (as an example).
+'helloworld/templates/greetings/sayhi.txt' on the filesystem (as an example).
 The return dictionary can contain strings, lists, tuples, dicts, class objects
 and similar data.  It should never return functions or other non-serializable
 objects.  
@@ -99,27 +122,27 @@ Controllers are very flexible.  Some people won't want to use Genshi
 templating, which is perfectly fine.  The following exposes a command without
 template rendering:
 
-**./helloworld/controllers/greeting.py**
+**helloworld/controllers/greeting.py**
 
 .. code-block:: python
 
     from cement.core.controller import CementController, expose
-    from helloworld.model.user import User
+    from helloworld.model import root as model
     
     class GreetingController(CementController):
         @expose()
         def sayhi(self, cli_opts, cli_args):
-            user = User(first=cli_opts.first_name, 
-                        last=cli_opts.last_name)
+            user = model.User(first=cli_opts.first_name, 
+                              last=cli_opts.last_name)
             print 'Hello %s!' % user.display_name
             return dict(user=user)
 
 Notice how we don't need to specify a template path, though the command is 
-still exposed.  That said, you should always return any relavent data even
+still exposed.  That said, you should always return any relevant data even
 if not rendering a template.  This is because every command automatically
 has a Json output engine.  By adding '--json' to the end of your command, all
-output is surpress and only the return data is rendered via Json.  In addition
-stdout, and stderr are also added to the Json output.
+output is suppressed and only the return data is rendered via Json.  In 
+addition stdout, and stderr are also added to the Json output.
 
 
 The View
@@ -134,7 +157,7 @@ more robust output to the user.
 
 Our 'sayhi' template would look like:
 
-**./helloworld/templates/greetings/sayhi.txt**
+**helloworld/templates/greetings/sayhi.txt**
 
 .. code-block:: text
 
@@ -148,3 +171,6 @@ Our 'sayhi' template would look like:
     
     Hello ${user.display_name}
     
+    
+Using the '78 character baseline' comment in your templates is useful so that 
+you ensure your output remains within that limit when possible.

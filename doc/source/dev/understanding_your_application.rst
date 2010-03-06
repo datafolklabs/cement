@@ -36,8 +36,8 @@ namespace.
 helloworld.bootstrap
 --------------------
 
-The bootstrap modules is the second phase of the application runtime and is 
-used to initialize parts of the application that are required before and 
+The bootstrap module is the second phase of the application runtime and is 
+used to initialize parts of the application that are required before any
 controllers or code is loaded.  Typical uses of the bootstrap module are for:
 
     * Creating namespaces
@@ -45,11 +45,11 @@ controllers or code is loaded.  Typical uses of the bootstrap module are for:
 
 The helloworld/bootstrap/root.py is the only bootstrap called by the Cement
 Framework, however the 'root' namespace is already setup by Cement and does
-not get created in this bootstrap.  That said, and additional bootstrap files
+not get created in this bootstrap.  That said, any additional bootstrap files
 need to be imported into the root bootstrap.  For example, if you are creating
 a namespace for 'systems' you would create a file at 
 helloworld/bootstrap/systems.py where you would define and configure that
-namespace.  Then, if helloworld/bootstrap/root.py you would import it like:
+namespace.  Then, in helloworld/bootstrap/root.py you would import it like:
 
 .. code-block:: python
 
@@ -71,7 +71,7 @@ Controllers are used to expose commands to your application, and then perform
 operations when that command is called.  Ideally it should not present 
 output to the user at all, as this is handled by your templates.  Each command
 should perform an action and then return a dictionary of data.  This dictionary
-is then used to be rendered into either Json, or by Genshi Text Templating.
+is then used to be rendered into either Json, or text by the Genshi Engine.
 That said, some people will not care to use templating and would rather just
 print output to the console.  This is perfectly fine, but may clutter up your
 controller code with excessive print statements and janky formatting.
@@ -98,11 +98,14 @@ files.  Note that the first level must be directories related to a namespace.
 For example 'helloworld/templates/root' would be the directory with txt
 files used for templating commands that are exposed from the root controller.
 
-Cement use the Genshi Text Template Engine to render the dictionary of data
-that your controller function returns.  Documentaton can be found at:
+Cement uses the Genshi Text Template Engine to render the dictionary of data
+that your controller function returns.  Documentation can be found at:
 
     * http://genshi.edgewall.org/wiki/Documentation/text-templates.html 
     
+Note that every directory under 'helloworld.templates' must have a __init__.py
+file or your application will fail to load templates from it.
+
     
 helloworld.helpers
 ------------------
