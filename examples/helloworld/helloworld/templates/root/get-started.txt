@@ -1,0 +1,61 @@
+{# --------------------- 78 character baseline --------------------------- #}\
+Welcome to ${config['app_name']}.
+
+This application is built on Cement, and is ready to rock!  Out of the box you
+already have:
+
+{% for feature in features %}\
+    * $feature
+{% end %}\
+
+If your config file is setup right, you should notice that your app is already 
+loading an 'example' plugin.  Plugins are enabled by adding a plugin config
+file in your plugin_config_dir (see helloworld.conf).  The plugin config
+must have a [<plugin_name>] section and under that section you must set the
+following setting
+    
+    * enable_plugin=true
+    
+This will tell Cement to load that plugin.  You can also load plugins from
+other projects built on Cement by also adding the following setting:
+
+    * provider = someotherapp
+    
+Where 'someotherapp' is the package name of the application providing the 
+plugin.
+
+The included example plugin is a great starting point to learn how to build on 
+top of the Cement Framework.  The following files and directories should be 
+explored:
+ 
+    * ./helloworld/bootstrap/example.py
+    * ./helloworld/controllers/example.py
+    * ./helloworld/model/example.py
+    * ./helloworld/templates/example/
+
+
+This command is defined in the RootController in: 
+
+    helloworld/controllers/root.py 
+    
+
+Additionally, the output of this command is rendered by the Genshi templating 
+engine.  The template is at helloworld/templates/root/get-started.txt.
+You can find documentation here on the template syntax here:
+
+    * $genshi_link
+    
+    
+That said, you can also render the output of commands as JSON.  Don't believe
+me? Just run it again with the --json flag. 
+
+To make the included 'example' plugin a permanent part of your application you 
+simply need to add the following to helloworld/bootstrap/root.py:
+
+    from helloworld.bootstrap import example
+    
+    
+That said, by following the example plugin you can easily create built in code
+or additional plugins in the same fashion.
+
+Go forth, and code!
