@@ -1,0 +1,66 @@
+NAME: cementtests073
+
+AUTHOR:
+
+DESCRIPTION:
+
+Describe your application here.
+
+cement-tests-073 is built on the Cement CLI Application Framework.
+
+
+USAGE:
+
+    $ cementtests073 --help
+    
+    
+CONFIGURATION:
+
+Application configuration files are parsed in the following order:
+
+    * /etc/cementtests073/cementtests073.conf
+    * ~/.cementtests073.conf
+
+    
+PLUGIN DEVELOPMENT:
+
+cement-tests-073 supports external plugins via the Cement Framework.  To quick
+start a new plugin for cementtests073 you can use the paster utility.
+
+Setup a virtual environment for development:
+    
+    $ virtualenv --no-site-package /path/to/env
+    
+    $ source /path/to/env/bin/activate
+    
+    
+Install cement-tests-073:
+    
+    $ cd /path/to/cement-tests-073
+    
+    $ python setup.py develop
+    
+
+Create and install the plugin:
+
+    $ mkdir plugins
+    
+    $ cd plugins
+    
+    $ paster cement-plugin cementtests073 myplugin
+    
+    $ cd cementtests073-plugins-myplugin
+    
+    $ python setup.py develop
+    
+    
+Once your plugin is installed, you can add the plugin to the enabled_plugins
+setting in /etc/cementtests073/cementtests073.conf (or the path to the config).  
+Additionally, the plugin configurations can be set in 
+/etc/cementtests073/plugins.d/myplugin.conf. You should then see some example 
+commands/options show up with:
+
+    $ cementtests073 --help
+    
+    
+Then, code away!

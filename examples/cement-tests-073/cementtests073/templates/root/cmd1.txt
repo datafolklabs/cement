@@ -1,0 +1,7 @@
+{# --------------------- 78 character baseline --------------------------- #}\
+
+$foo
+
+{% for item in items %}\
+    * $item
+{% end %}

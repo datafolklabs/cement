@@ -1,0 +1,11 @@
+
+SOURCE INSTALLATION:
+
+    $ sudo python setup.py install
+
+    $ sudo cp -a ./etc /etc/cementtests073
+    
+    
+USAGE:
+
+    $ cementtests073 --help
