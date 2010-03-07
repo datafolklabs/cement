@@ -6,6 +6,9 @@ from cement.core.log import get_logger
 
 log = get_logger(__name__)
 
+def clear_hooks():
+    hooks = {}
+    
 def define_hook(name):
     """
     Define a hook namespace that plugins can register hooks in.

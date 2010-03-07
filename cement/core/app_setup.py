@@ -4,6 +4,7 @@ import sys
 from pkg_resources import get_distribution
 
 from cement import namespaces, buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
+from cement.core.exc import CementConfigError
 from cement.core.configuration import CEMENT_API, set_config_opts_per_file
 from cement.core.configuration import validate_config, get_default_config
 from cement.core.plugin import load_all_plugins
@@ -41,8 +42,6 @@ def register_default_hooks():
     define_hook('validate_config_hook')
     define_hook('pre_plugins_hook')
     define_hook('post_plugins_hook')
-    define_hook('bootstrap_application_hook')
-    define_hook('bootstrap_plugins_hook')
 
 def lay_cement(config=None, banner=None):
     """
@@ -68,6 +67,13 @@ def lay_cement(config=None, banner=None):
         
     """    
     global namespaces
+    
+    try:
+        assert config, "default config required!"
+    except AssertionError, e:
+        raise CementConfigError, e.message
+        
+    validate_config(config)
     
     if not banner:
         banner = "%s version %s" % (

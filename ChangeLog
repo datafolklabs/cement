@@ -1,7 +1,11 @@
 0.7.3 - unreleased
 -----------------------------------------------------------------------------
 
-
+ +  Paster now creates 'yourapp-plugin-yourplugin' rather than a plural 
+    '-plugins-' which is more standard.
+ +  Removed bogus hooks: bootstrap_application_hook, bootstrap_plugins_hook
+    
+    
 0.7.2 - Mar 06, 2010
 -----------------------------------------------------------------------------
 

@@ -12,6 +12,9 @@ from cement.core.opt import init_parser
 
 log = get_logger(__name__)
 
+def clear_namespaces():
+    namespaces = {}
+    
 def get_namespace(namespace):
     """
     Return the namespace object whose label is 'namespace'.

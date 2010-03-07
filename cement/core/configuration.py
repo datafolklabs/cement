@@ -11,6 +11,7 @@ def get_default_config():
     """Get a default config dict."""
     dcf = ConfigObj()
     dcf['config_source'] = ['defaults']
+    dcf['config_files'] = []
     dcf['enabled_plugins'] = []
     dcf['debug'] = False
     dcf['show_plugin_load'] = True
@@ -55,7 +56,7 @@ def ensure_api_compat(module_name, required_api):
     
     """
     if required_api == CEMENT_API:
-        pass
+        return True
     else:
         raise CementRuntimeError, \
             "%s requires Cement(api:%s) which differs from installed Cement(api:%s)." % \
@@ -214,7 +215,7 @@ def validate_config(config):
     required_settings = [
         'config_source', 'config_files', 'debug', 'datadir',
         'enabled_plugins', 'plugin_config_dir', 'app_module', 'app_name', 
-        'tmpdir', 'merge_root_options', 'output_engine'
+        'tmpdir', 'output_engine'
         ]
     for s in required_settings:
         if not config.has_key(s):
