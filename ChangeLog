@@ -3,8 +3,9 @@
 
  +  Paster now creates 'yourapp-plugin-yourplugin' rather than a plural 
     '-plugins-' which is more standard.
- +  Removed bogus hooks: bootstrap_application_hook, bootstrap_plugins_hook
+ -  Removed bogus hooks: bootstrap_application_hook, bootstrap_plugins_hook
  +  Added some tests (very few)
+ -  Set application exception classes based on package name, not project name
     
     
 0.7.2 - Mar 06, 2010
