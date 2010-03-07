@@ -6,10 +6,11 @@ to expose commands to the root namespace which will be accessible under:
   
 """
 
-from cement.core.exc import CementArgumentError
 from cement.core.controller import CementController, expose
 from cement.core.namespace import get_config
 from cement.core.log import get_logger
+
+from helloworld.core.exc import helloworldArgumentError
 
 log = get_logger(__name__)
 config = get_config()
@@ -53,7 +54,7 @@ class RootController(CementController):
         exception.
         
         """
-        raise CementArgumentError, "A command is required. See --help?"
+        raise helloworldArgumentError, "A command is required. See --help?"
     
     @expose('helloworld.templates.root.cmd1')
     def cmd1(self, *args, **kw):

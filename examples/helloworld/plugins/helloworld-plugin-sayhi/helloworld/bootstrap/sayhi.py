@@ -23,7 +23,7 @@ sayhi.config['foo'] = 'bar'
 
 # sayhi namespace options.  These options show up under:
 #
-#   $ helloworldpluginssayhi sayhi --help
+#   $ helloworldpluginsayhi sayhi --help
 #
 sayhi.options.add_option('-F', '--foo', action='store',
     dest='foo', default=None, help='sayhi Foo Option'

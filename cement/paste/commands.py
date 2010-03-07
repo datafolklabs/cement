@@ -200,7 +200,7 @@ Example usage::
         while not self.plugin:
             self.plugin = raw_input("Enter plugin name: ").lower()
             
-        package = "%s-plugins-%s" % (self.project, self.plugin)
+        package = "%s-plugin-%s" % (self.project, self.plugin)
         package = beginning_letter.sub("", package)
         package = valid_only.sub("_", package)
         if package:

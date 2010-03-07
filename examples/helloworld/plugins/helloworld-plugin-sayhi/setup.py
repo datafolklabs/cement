@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import sys, os
 
 # You probably want to change the name, this is a healthy default for paster
-setup(name='helloworld_plugins_sayhi',
+setup(name='helloworld_plugin_sayhi',
     version='0.1',
     description='sayhi plugin for helloworld',
     classifiers=[], 

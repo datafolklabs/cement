@@ -17,14 +17,8 @@ every application (out of the box):
 Config File Parsing
 -------------------
 
-Config file parsing is provided by the standard ConfigObj. Configuration files 
-are parsed from two locations by default:
-
- * /etc/yourapp/yourapp.conf (global)
- * ~/.yourapp.conf (per user)
- 
-The configuration dictionary is stored in the root namespaces config member 
-and can be accessed as:
+Config file parsing is provided by the standard ConfigObj.  The configuration 
+object is stored in the root namespaces config member and can be accessed as:
 
 .. code-block:: python
 
@@ -37,32 +31,41 @@ order:
 
  * defaults (set in ./yourapp/config.py)
  * /etc/yourapp/yourapp.conf
+ * %(prefix)/etc/yourapp.conf
  * ~/.yourapp.conf
  
+
+In the above, '%(prefix)' is a hard coded setting which points to 
+'~/.yourapp/' by default (sane for development/no config situation).  Some
+applications need a set location that all files belong in such as 
+/var/lib/yourapp in which case the hard coded prefix can be changed.
 
 
 Command Line Argument and Option Parsing
 ----------------------------------------
 
 Command line arguments and options are parsed via OptParse for each namespace.
-Meaning, the default base application owns the 'root' namespace.  
+The base application owns the 'root' namespace, where as additional namespaces
+branch off of that as illustrated below.  
 
 .. code-block:: text
 
     # options and commands for root namespace
     $ helloworld --help 
     
-    # options and subcommands for myplugin namespace
-    $ helloworld myplugin --help 
+    # options and subcommands for 'example' namespace
+    $ helloworld example --help 
     
 
-Plugins have an option to 'merge_root_options' where their OptParse object
+Namespaces have an option to 'merge_root_options' where their OptParse object
 will merge in all of the options from the root namespace.  For example, the
 options --debug, --quiet, --json are all root namespace options that are
-merged into the 'myplugin' namespace by default.
+merged into the 'example' namespace by default.
 
 Options parsed from the command line will overwrite config options if the 
-name of the option matches the config option.  
+name of the option matches the config option.  For example, when passing the 
+'--debug' option at command line, the root_config['debug'] setting is set to
+True.
 
 
 Logging
@@ -93,6 +96,7 @@ The logger can be accessed anywhere in your application by the following:
 .. code-block:: python
 
     from cement.core.log import get_logger
+    
     log = get_logger(__name__)
     log.info("This is an info message")
     log.error("This is an error message")
@@ -104,7 +108,7 @@ Plugin Support
 
 Cement provides support for both internal and external (third party) plugins.
 Internal plugins are those build as part of your base application, meaning
-they will ship with your application and exist under ./yourapp/plugins.
+they will ship with your application and exist under ./yourapp/ source tree.
 External plugins exist outside of your application and allow third parties to
 build plugins that tie into your application.
 
@@ -115,7 +119,7 @@ utility:
 
     $ paster cement-plugin yourapp myplugin
     
-    $ cd yourapp-plugins-myplugin
+    $ cd yourapp-plugin-myplugin
     
     $ python setup.py develop
 

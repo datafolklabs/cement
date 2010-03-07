@@ -1,8 +1,12 @@
+0.7.3 - unreleased
+-----------------------------------------------------------------------------
+
+
 0.7.2 - Mar 06, 2010
 -----------------------------------------------------------------------------
 
  +  Branching to portland, API incompatible changes.
- +  Namespace config dictionaries are overwritten by [namespace] section of
+ +  Namespace config settings are overwritten by [namespace] sections of the
     primary applications configuration files.  Meaning, a namespace called
     'example' reads configurations from [example] in the applications config
     files.  Additionally, Plugin configs can now exist in main application 
@@ -13,17 +17,20 @@
     simply optional namespaces.
  +  Plugins can now be enabled by the [root] 'enabled_plugins' list, or under
     a [plugin] config by setting 'enable_plugin=true'.    
- +  All namespace configs are merged into the root config dictionary as an 
-    embedded dictionary.
+ +  All namespace configs are merged into the root config object as an 
+    embedded object.  I.e. root_config['example'] is an embedded ConfigObj for
+    the example namespaces config.
  +  cli_opts and cli_args are now passed to the controllers __init__ rather
-    than to each function.
+    than to each function.  Functions now call 'self.cli_opts' or 
+    'self.cli_args'.
  +  Added default exception classes for new projects.
  +  Use jsonpickle instead of straight json.
  +  Moved appmain.py/config.py to new 'core' directory.
  +  Updated documentation a lot!
- +  Changed register_hook to a class decorator, and added 'name' paramater to
+ +  Changed register_hook to a class decorator, and added 'name' parameter to
     override the name of the hook to register too (still uses name of func
     otherwise).
+    
     
 0.6.1 - unreleased
 -----------------------------------------------------------------------------
@@ -32,6 +39,7 @@
     affects new apps (or apps without a config file).
  +  Added an additional config file location of <statedir>/etc/<app>.conf
  +  Added a -dev config file that is more suitable for development use.
+ 
  
 0.6 - Feb 05, 2010
 -----------------------------------------------------------------------------

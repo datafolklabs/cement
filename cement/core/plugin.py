@@ -42,7 +42,7 @@ def get_enabled_plugins():
                     provider = config['app_module']
                 else:
                     provider = cnf[sect]['provider']
-                plugin = "%s.plugins.%s" % (provider, sect)
+                plugin = "%s.plugin.%s" % (provider, sect)
                 enabled_plugins.append(plugin)
 
     # Then for plugin config files
@@ -60,7 +60,7 @@ def get_enabled_plugins():
                     provider = config['app_module']
                 else:
                     provider = cnf[sect]['provider']
-                plugin = "%s.plugins.%s" % (provider, sect)
+                plugin = "%s.plugin.%s" % (provider, sect)
                 enabled_plugins.append(plugin)
     return enabled_plugins
     
@@ -72,11 +72,11 @@ def load_plugin(plugin):
     
         plugin
             Name of the plugin to load.  Should be accessible from the module
-            path of 'myapp.plugins.myplugin'.
+            path of 'myapp.plugin.myplugin'.
     
     """
     config = namespaces['root'].config
-    m = re.match('(.*)\.plugins\.(.*)', plugin)
+    m = re.match('(.*)\.plugin\.(.*)', plugin)
     if m:
         provider = m.group(1)
         plugin = m.group(2)
@@ -99,7 +99,7 @@ def load_plugin(plugin):
         getattr(plugin_module, plugin)
         if namespaces.has_key(plugin):
             loaded = True
-            log.debug("loaded '%s' plugin from %s.plugins.%s" % \
+            log.debug("loaded '%s' plugin from %s.plugin.%s" % \
                 (plugin, provider, plugin))
     except AttributeError, e:
         log.debug('AttributeError => %s' % e)
