@@ -29,7 +29,7 @@ object is stored in the root namespaces config member and can be accessed as:
 The global config dictionary is generated [and overridden] in the following 
 order:
 
- * defaults (set in ./yourapp/config.py)
+ * defaults (set in ./yourapp/core/config.py)
  * /etc/yourapp/yourapp.conf
  * %(prefix)/etc/yourapp.conf
  * ~/.yourapp.conf
