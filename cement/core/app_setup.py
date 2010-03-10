@@ -36,7 +36,7 @@ def register_default_hooks():
         post_plugins_hook
             Run just after all plugins are loaded (run once)
         
-        bootstrap_application_hook
+        post_bootstrap_hook
             Run just after the root bootstrap is loaded.
     
     """
@@ -45,7 +45,7 @@ def register_default_hooks():
     define_hook('validate_config_hook')
     define_hook('pre_plugins_hook')
     define_hook('post_plugins_hook')
-    define_hook('bootstrap_application_hook')
+    define_hook('post_bootstrap_hook')
 
 def lay_cement(config=None, banner=None):
     """
@@ -129,8 +129,8 @@ def lay_cement(config=None, banner=None):
     boot = __import__("%s.bootstrap" % namespaces['root'].config['app_module'], 
                           globals(), locals(), ['root'], -1)
     
-    # Bootstrap application
-    for res in run_hooks('bootstrap_application_hook'):
+
+    for res in run_hooks('post_bootstrap_hook'):
         pass
         
     load_all_plugins()

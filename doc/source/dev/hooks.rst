@@ -29,6 +29,10 @@ Hook definitions:
     post_plugins_hook
         Run just after all plugins are loaded (run once)
     
+    post_bootstrap_hook
+        Run just after the root bootstrap is loaded.
+        
+    
 Defining a Hook
 ---------------
 
