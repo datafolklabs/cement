@@ -36,7 +36,7 @@ contribute any plugins back to the project to extend the functionality of
 Cement.  When creating plugins specifically for re-use within the community, 
 please be sure to follow the standard naming convention 'HelloWorld Plugin for 
 Cement' as an example.  The actual module name should be something like:
-'myapp.plugins.helloworld'. 
+'myapp.plugin.helloworld'. 
 
 The Cement CLI Application Framework is Open Source and is distributed under 
 The MIT License.  

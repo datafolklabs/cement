@@ -49,16 +49,14 @@ Create and install the plugin:
     
     $ paster cement-plugin {{package}} myplugin
     
-    $ cd {{package}}-plugins-myplugin
+    $ cd {{package}}-plugin-myplugin
     
     $ python setup.py develop
     
     
-Once your plugin is installed, you can add the plugin to the enabled_plugins
-setting in /etc/{{package}}/{{package}}.conf (or the path to the config).  
-Additionally, the plugin configurations can be set in 
-/etc/{{package}}/plugins.d/myplugin.conf. You should then see some example 
-commands/options show up with:
+Once your plugin is installed, you can enable it by adding a [plugin] block
+to a plugin config in /etc/{{package}}/plugins.d/myplugin.conf. You should 
+then see some example commands/options show up with:
 
     $ {{package}} --help
     

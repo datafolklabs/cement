@@ -175,7 +175,7 @@ part of your application is that a plugin is optional, and only loaded if
 enabled via the configuration.  You can make the example plugin part of your 
 application by adding the following to 'helloworld/bootstrap/root.py'
 
-..code-block:: python
+.. code-block:: python
     
     from helloworld.bootstrap import example
     
