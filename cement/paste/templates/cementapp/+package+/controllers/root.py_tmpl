@@ -10,7 +10,7 @@ from cement.core.controller import CementController, expose
 from cement.core.namespace import get_config
 from cement.core.log import get_logger
 
-from {{package}}.core.exc import {{project}}ArgumentError
+from {{package}}.core.exc import {{package}}ArgumentError
 
 log = get_logger(__name__)
 config = get_config()

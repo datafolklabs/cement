@@ -25,7 +25,7 @@ Application configuration files are parsed in the following order:
 PLUGIN DEVELOPMENT:
 
 {{project}} supports external plugins via the Cement Framework.  To quick
-start a new plugin for {{package}} you can use the paster utility.
+start a new plugin for {{project}} you can use the paster utility.
 
 Setup a virtual environment for development:
     

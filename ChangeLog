@@ -7,6 +7,7 @@
  +  Added some tests (very few)
  -  Set application exception classes based on package name, not project name
  +  Added 'post_bootstrap_hook'
+ -  Fixed exception names in appmain.py.
     
 0.7.2 - Mar 06, 2010
 -----------------------------------------------------------------------------
@@ -36,6 +37,7 @@
  +  Changed register_hook to a class decorator, and added 'name' parameter to
     override the name of the hook to register too (still uses name of func
     otherwise).
+ -  The 'options_hook' has become post_options_hook.
     
     
 0.6.1 - unreleased
