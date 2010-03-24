@@ -47,7 +47,7 @@ def main():
     except CementRuntimeError, e:
         print("CementRuntimeError > %s" % e)
         sys.exit(e.code)
-    except {{pacakge}}ArgumentError, e:
+    except {{package}}ArgumentError, e:
         print("{{package}}ArgumentError > %s" % e)
         sys.exit(e.code)
     except {{package}}ConfigError, e:
