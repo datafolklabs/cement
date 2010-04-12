@@ -47,7 +47,7 @@ def register_default_hooks():
     define_hook('post_plugins_hook')
     define_hook('post_bootstrap_hook')
 
-def lay_cement(config=None, banner=None):
+def lay_cement(config=None, banner=None, args=sys.argv):
     """
     Primary method to setup an application for Cement.  
     
@@ -107,17 +107,17 @@ def lay_cement(config=None, banner=None):
     validate_config(namespaces['root'].config)
     
     # hardcoded hacks
-    if '--quiet' in sys.argv:
+    if '--quiet' in args:
         namespaces['root'].config['log_to_console'] = False
         sys.stdout = buf_stdout
         sys.stderr = buf_stderr
-    if '--json' in sys.argv:
+    if '--json' in args:
         sys.stdout = buf_stdout
         sys.stderr = buf_stderr
         namespaces['root'].config['output_engine'] = 'json'
         namespaces['root'].config['show_plugin_load'] = False
     # debug trumps everything
-    if '--debug' in sys.argv:
+    if '--debug' in args:
         namespaces['root'].config['debug'] = True
         namespaces['root'].config['log_to_console'] = True
         sys.stdout = SAVED_STDOUT
