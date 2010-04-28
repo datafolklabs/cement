@@ -24,6 +24,9 @@ class render(object):
     *Note: This is called form the cement.core.controller.expose() decorator 
     and likely shouldn't ever be needed to call directly.*
     
+    *Note: If 'output_file' is passed in the return dictionary from func, then
+    the output is written to the specified file rather than STDOUT.*
+    
     Keywork arguments:
     
         template
@@ -49,7 +52,7 @@ class render(object):
                 raise CementRuntimeError, "Invalid engine:template identifier."
             
             if self.template and self.template == 'json':
-                self.engine == 'json'        
+                self.engine = 'json'        
             elif self.template:
                 # Mock up the template path
                 parts = self.template.split('.')
@@ -68,6 +71,8 @@ class render(object):
                 (func.__name__, self.engine, self.template))      
              
             res = self.func(*args, **kw)
+            output = None
+            output_handler = SAVED_STDOUT
             if not res:
                 res = dict()
                 
@@ -75,7 +80,7 @@ class render(object):
                 namespaces['root'].config['output_engine'] = 'json'
                 res['stdout'] = buf_stdout.buffer
                 res['stderr'] = buf_stderr.buffer
-                SAVED_STDOUT.write(jsonpickle.encode(res, unpicklable=False))
+                output = jsonpickle.encode(res, unpicklable=False)
             
             elif self.engine == 'genshi':  
                 namespaces['root'].config['output_engine'] = 'genshi'
@@ -84,6 +89,16 @@ class render(object):
                     # this, but couldn't get it to work.
                     tmpl_text = get_data(self.tmpl_module, self.tmpl_file)
                     tmpl = NewTextTemplate(tmpl_text)
-                    print tmpl.generate(**res).render()
+                    output = tmpl.generate(**res).render()
+                else:
+                    output = res
+                    
+            if res.has_key('output_file') and res['output_file']:
+                f = open(res['output_file'], 'w+')
+                f.write(output)
+                f.close()
+            elif output:
+                output_handler.write(output)
+                
         return wrapper
         

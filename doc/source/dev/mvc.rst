@@ -118,6 +118,9 @@ The return dictionary can contain strings, lists, tuples, dicts, class objects
 and similar data.  It should never return functions or other non-serializable
 objects.  
 
+*Note: You can also tell Cement to write output to a file rather than STDOUT
+by passing "output_file='/path/to/file'" in your return dict().*
+
 Controllers are very flexible.  Some people won't want to use Genshi
 templating, which is perfectly fine.  The following exposes a command without
 template rendering:
