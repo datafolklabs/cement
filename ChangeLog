@@ -1,3 +1,10 @@
+0.8.1 - unreleased
+-----------------------------------------------------------------------------
+
+ +  Enable passing output to a file rather than STDOUT (GH#20)
+ +  Support engine:template mix from @expose()
+ 
+ 
 0.8 - Mar 24, 2010
 -----------------------------------------------------------------------------
 
@@ -14,6 +21,7 @@
  -  Set application exception classes based on package name, not project name
  +  Added 'post_bootstrap_hook'
  -  Fixed exception names in appmain.py.
+    
     
 0.7.2 - Mar 06, 2010
 -----------------------------------------------------------------------------

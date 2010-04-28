@@ -76,9 +76,7 @@ def lay_cement(config=None, banner=None, args=sys.argv):
         assert config, "default config required!"
     except AssertionError, e:
         raise CementConfigError, e.message
-        
-    validate_config(config)
-    
+     
     if not banner:
         banner = "%s version %s" % (
             config['app_name'],
