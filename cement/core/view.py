@@ -71,7 +71,7 @@ class render(object):
                 (func.__name__, self.engine, self.template))      
              
             res = self.func(*args, **kw)
-            output = None
+            output = ''
             output_handler = SAVED_STDOUT
             if not res:
                 res = dict()
@@ -90,8 +90,6 @@ class render(object):
                     tmpl_text = get_data(self.tmpl_module, self.tmpl_file)
                     tmpl = NewTextTemplate(tmpl_text)
                     output = tmpl.generate(**res).render()
-                else:
-                    output = res
                     
             if res.has_key('output_file') and res['output_file']:
                 f = open(res['output_file'], 'w+')
