@@ -30,23 +30,31 @@ class render(object):
             The module path to the template (default: None)
                 
     """
-    def __init__(self, template=None):
+    def __init__(self, engine_template=None):
         self.func = None
-        self.template = template
+        self.template = None
         self.tmpl_module = None
         self.tmpl_file = None
-        self.engine = 'genshi'
         self.config = namespaces['root'].config
+        self.engine = self.config['output_engine']
         
-        if self.template == 'json':
-            self.engine = 'json'
-            self.template = None
-
-        elif self.template:
-            # Mock up the template path
-            parts = template.split('.')
-            self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
-            self.tmpl_module = '.'.join(parts) # left over in between
+        if engine_template:
+            parts = engine_template.split(':')
+            if len(parts) >= 2:
+                self.engine = parts[0]
+                self.template = parts[1]
+            elif len(parts) == 1:
+                self.template = parts[0]
+            else:
+                raise CementRuntimeError, "Invalid engine:template identifier."
+            
+            if self.template and self.template == 'json':
+                self.engine == 'json'        
+            elif self.template:
+                # Mock up the template path
+                parts = self.template.split('.')
+                self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
+                self.tmpl_module = '.'.join(parts) # left over in between
             
     def __call__(self, func):
         """
@@ -63,7 +71,6 @@ class render(object):
             if not res:
                 res = dict()
                 
-            # FIX ME: Is there a better way to jsonify classes?
             if self.engine == 'json':
                 namespaces['root'].config['output_engine'] = 'json'
                 res['stdout'] = buf_stdout.buffer
