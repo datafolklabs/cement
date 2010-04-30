@@ -1,0 +1,11 @@
+--- Cement-0.8/tests/core/app_setup_tests.py.orig	2010-03-24 17:46:37.000000000 -0500
++++ Cement-0.8/tests/core/app_setup_tests.py	2010-04-30 18:18:37.761913088 -0500
+@@ -20,7 +20,7 @@
+     register_default_hooks()
+     expected_hooks = [
+         'options_hook', 'post_options_hook', 'validate_config_hook',
+-        'pre_plugins_hook', 'post_plugins_hook', 'boostrap_application_hook'
++        'pre_plugins_hook', 'post_plugins_hook', 'post_bootstrap_hook'
+         ]
+     for hook_name in expected_hooks:
+         yield check_hook, hook_name

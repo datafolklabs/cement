@@ -92,17 +92,15 @@ setup(name='Cement',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
+        "jsonpickle",
         # Only required if you want to use paster
         "PasteScript", 
         "tempita",
-        "jsonpickle",
         # Required for documentation
-        # "Sphinx",
-        # "Pygments",
+        "Sphinx",
+        "Pygments",
         ],
     setup_requires=[
-        "ConfigObj",
-        "PasteScript >= 1.7",
         ],
     entry_points="""
         [paste.global_paster_command]

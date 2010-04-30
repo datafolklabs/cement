@@ -1,0 +1,17 @@
+--- Cement-0.8/doc/source/conf.py.orig	2010-03-24 17:46:37.000000000 -0500
++++ Cement-0.8/doc/source/conf.py	2010-04-30 18:05:26.738038175 -0500
+@@ -12,11 +12,10 @@
+ # serve to show the default.
+ 
+ import sys, os
+-from pkg_resources import get_distribution
++sys.path.insert(0, '.')
+ 
+-RELEASE = get_distribution('Cement').version
+-v = RELEASE.split('.')
+-VERSION = '%s.%s' % (v[0], v[1])
++RELEASE = '@@@cement_basever@@@' 
++VERSION = '@@@cement_version@@@' 
+ 
+ # If extensions (or modules to document with autodoc) are in another directory,
+ # add these directories to sys.path here. If the directory is relative to the
