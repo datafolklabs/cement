@@ -31,7 +31,7 @@ def get_namespace(namespace):
         log.fatal("the namespace '%s' doesn't exist" % namespace)
 
 def get_config(namespace='root'):
-    """Get a namespace's config dictionary.  Returns a ConfigObj object.
+    """Get a namespace's config.  Returns a ConfigObj object.
     
     Optional Arguments:
     
@@ -40,7 +40,7 @@ def get_config(namespace='root'):
     
     """    
     if namespaces.has_key(namespace):
-        return namespaces[namespace].config.dict()
+        return namespaces[namespace].config
     else:
         log.fatal("the namespace '%s' doesn't exist" % namespace)
     

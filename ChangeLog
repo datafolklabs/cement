@@ -3,6 +3,7 @@
 
  +  Enable passing output to a file rather than STDOUT (GH#20)
  +  Support engine:template mix from @expose()
+ +  namespace get_config() returns ConfigObj object (as is documented)
  
  
 0.8 - Mar 24, 2010
