@@ -42,15 +42,9 @@ def run_command(cmd_name=None):
         
     # Parse cli options and arguments
     (cli_opts, cli_args) = parse_options(namespace=namespace)
-    if namespace == 'root':
-        set_config_opts_per_cli_opts('root', cli_opts)
-    else:
-        # If it merges in root ooptions, then it overrites them too.
-        if  namespaces[namespace].config.has_key('merge_root_options') and \
-            namespaces[namespace].config['merge_root_options']:
-            set_config_opts_per_cli_opts('root', cli_opts)    
-        set_config_opts_per_cli_opts(namespace, cli_opts)
-    
+    for nam in namespaces:
+        set_config_opts_per_cli_opts(nam, cli_opts)
+
     # Run all post options hooks
     for res in run_hooks('post_options_hook', cli_opts, cli_args):
         pass # Doesn't expect a result

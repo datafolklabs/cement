@@ -192,7 +192,7 @@ def set_config_opts_per_cli_opts(namespace, cli_opts):
             if val:
                 namespaces[namespace].config[opt] = val
         except AttributeError:
-            pass
+            pass        
             
 def validate_config(config):
     """
