@@ -9,6 +9,7 @@ from cement import namespaces, SAVED_STDOUT, SAVED_STDERR, \
 from cement.core.log import get_logger
 from cement.core.exc import CementRuntimeError
 from cement.core.view import render
+from cement.core.configuration import set_config_opts_per_cli_opts
 
     
 log = get_logger(__name__)
@@ -49,8 +50,14 @@ def run_controller_command(namespace, func, *args, **kw):
         run_controller_command('root', 'cmd_name', myarg=True)
         
     """
+    
     cli_opts = kw.get('cli_opts', None)
     cli_args = kw.get('cli_args', None)
+    
+    # set configurations per what is passed at cli
+    for nam in namespaces:
+        set_config_opts_per_cli_opts(nam, cli_opts)
+        
     controller = namespaces[namespace].controller(cli_opts, cli_args)
     func = getattr(controller, func)(*args, **kw)
                       

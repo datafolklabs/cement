@@ -1,5 +1,6 @@
 """Methods and classes that enable Cement templating support."""
 
+import sys
 import os
 import re
 import jsonpickle
@@ -95,7 +96,7 @@ class render(object):
                 f = open(res['output_file'], 'w+')
                 f.write(output)
                 f.close()
-            elif output:
+            elif output and '--quiet' not in sys.argv:
                 output_handler.write(output)
                 
         return wrapper

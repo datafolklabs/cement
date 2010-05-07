@@ -3,7 +3,12 @@
 
  +  Enable passing output to a file rather than STDOUT (GH#20)
  +  Support engine:template mix from @expose()
- +  namespace get_config() returns ConfigObj object (as is documented)
+ +  Namespace get_config() returns ConfigObj object (as is documented)
+ +  Set all namespace's config options per cli options (if they have the key)
+    regardless of what namespace is called.  I.e. If --myoption is passed to
+    a command in the 'mynam' namespace, mynam.config['myoption'] is set as well
+    as any other namespace that has that config key.
+ +  log.warn on OptionConflictError
  
  
 0.8 - Mar 24, 2010

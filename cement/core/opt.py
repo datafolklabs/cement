@@ -1,7 +1,7 @@
 """Cement methods and classes to handle cli option/arg parsing."""
 
 import sys, os
-from optparse import OptionParser, IndentedHelpFormatter
+from optparse import OptionParser, IndentedHelpFormatter, OptionConflictError
 
 from cement import namespaces
 from cement.core.log import get_logger
@@ -28,7 +28,7 @@ def init_parser(banner=None):
     return parser
 
     
-def parse_options(namespace='root'): 
+def parse_options(namespace='root', ignore_conflicts=False): 
     """
     The actual method that parses the command line options and args.  Also
     handles all the magic that happens when you pass --help to your app.  It
@@ -56,7 +56,11 @@ def parse_options(namespace='root'):
                 elif opt.get_opt_string() == '--version':
                     pass
                 else:
-                    namespaces[namespace].options.add_option(opt)
+                    try:
+                        namespaces[namespace].options.add_option(opt)
+                    except OptionConflictError, e:
+                        if not ignore_conflicts:
+                            raise OptionConflictError, e
     
     cmd_txt = ''
     line = '    '

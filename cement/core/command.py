@@ -6,7 +6,7 @@ from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.hook import run_hooks
 from cement.core.opt import parse_options
-from cement.core.configuration import set_config_opts_per_cli_opts
+#from cement.core.configuration import set_config_opts_per_cli_opts
 from cement.core.controller import run_controller_command
 from cement.core.exc import CementArgumentError
 
@@ -42,8 +42,6 @@ def run_command(cmd_name=None):
         
     # Parse cli options and arguments
     (cli_opts, cli_args) = parse_options(namespace=namespace)
-    for nam in namespaces:
-        set_config_opts_per_cli_opts(nam, cli_opts)
 
     # Run all post options hooks
     for res in run_hooks('post_options_hook', cli_opts, cli_args):
