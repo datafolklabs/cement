@@ -96,7 +96,7 @@ class render(object):
                 f = open(res['output_file'], 'w+')
                 f.write(output)
                 f.close()
-            elif output and '--quiet' not in sys.argv:
+            elif output and self.config['log_to_console']:
                 output_handler.write(output)
                 
         return wrapper
