@@ -1,6 +1,9 @@
 from setuptools import setup, find_packages
 import sys, os
 
+# Note to distro packagers: This application requires Cement API 
+# version 0.7-0.8:20100210
+
 setup(name='helloworld',
     version='0.1',
     description='',

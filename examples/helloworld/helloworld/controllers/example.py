@@ -16,6 +16,10 @@ from helloworld.model.example import ExampleModel
 log = get_logger(__name__)
 
 class ExampleController(CementController):
+    @expose()
+    def test(self, *args, **kw):
+        config = get_config()
+        
     @expose(namespace='example') # no template
     def ex1(self, *args, **kw):
         """

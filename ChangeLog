@@ -9,8 +9,10 @@
     a command in the 'mynam' namespace, mynam.config['myoption'] is set as well
     as any other namespace that has that config key.
  +  log.warn on OptionConflictError
- 
- 
+ -  Don't render genshi output if --quiet is passed
+ -  Resolve GH#6 Make plugin templates pass full version, required_cement_api,
+    etc when registering their namespace
+    
 0.8 - Mar 24, 2010
 -----------------------------------------------------------------------------
 

@@ -5,7 +5,13 @@ from cement.core.namespace import CementNamespace, register_namespace
 define_hook('my_example_hook')
 
 # Setup the 'example' namespace object
-example = CementNamespace('example', controller='ExampleController')
+example = CementNamespace(
+            label='example', 
+            controller='ExampleController',
+            description='Example Plugin for helloworld',
+            version='0.1',
+            required_cement_api='0.7-0.8:20100210'
+            )
 
 # Example namespace default configurations, overwritten by the [example] 
 # section of the applications config file(s).  Once registered, this dict is
