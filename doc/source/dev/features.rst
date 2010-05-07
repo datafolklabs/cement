@@ -211,9 +211,4 @@ the language, be it PERL, Ruby, Etc...  if they can speak Json then they can
 access your application directly via a system call and get back data that they
 can use without having to tie into your python libraries.
 
-This is currently labeled as experimental, only because it has the potential
-to blow up on itself if you pass it data that is not serializable.  For 
-example, a function object will not serialize... however we've added a wrapper
-to Jsonify classes base on the __dict__.  
-
 
