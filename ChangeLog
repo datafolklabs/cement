@@ -1,3 +1,10 @@
+
+0.8.2 - May 13, 2010 
+-----------------------------------------------------------------------------
+
+ +  0.8.2 Stable Release
+
+
 0.8.1 - unreleased
 -----------------------------------------------------------------------------
 
@@ -12,7 +19,8 @@
  -  Don't render genshi output if --quiet is passed
  -  Resolve GH#6 Make plugin templates pass full version, required_cement_api,
     etc when registering their namespace
-    
+ -  Resolve GH#27 Remove unused app_basepath from config templates
+     
 0.8 - Mar 24, 2010
 -----------------------------------------------------------------------------
 
