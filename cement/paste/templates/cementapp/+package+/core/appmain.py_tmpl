@@ -25,10 +25,10 @@ BANNER = """
 {{project}} version %s, built on Cement (api:%s)
 """ % (VERSION, REQUIRED_CEMENT_API)
 
-def main():
+def main(args=sys.argv):
     try:
         ensure_api_compat(__name__, REQUIRED_CEMENT_API)    
-        lay_cement(config=default_config, banner=BANNER)
+        lay_cement(config=default_config, banner=BANNER, args=args)
     
         log = get_logger(__name__)
         log.debug("Cement Framework Initialized!")
