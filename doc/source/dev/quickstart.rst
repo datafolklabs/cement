@@ -150,9 +150,12 @@ Plugins are enabled under their [plugin] config either in your main
 application configuration file, or in the plugins.d/<plugin_name>.conf file for 
 that plugin.  An example plugin config looks like:
 
+.. code-block:: text
+
     [example]
     enable_plugin = true
     provider = helloworld
+
 
 The 'provider' is the package that provides it and can be omitted for plugins
 that are a part of your application.  However, you can load plugins from any
