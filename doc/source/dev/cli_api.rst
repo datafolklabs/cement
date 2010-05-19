@@ -64,3 +64,64 @@ The return data is rendered as Json, as well as STDOUT and STDERR.  All other
 output is suppressed, meaning the application calling this will get back just
 the Json, a standard format from which they can use the data more reliably and
 much more easily.
+
+
+Pretty Printing JSON
+--------------------
+
+A very handy tool that comes with Python 2.6+ is json.tool.  This allows you
+to "pretty print" JSON output at the console.
+
+.. code-block:: text
+
+    $ helloworld get-started --json | python -mjson.tool
+    {
+        "config": {
+            "app_egg_name": "helloworld", 
+            "app_module": "helloworld", 
+            "app_name": "helloworld", 
+            "config_files": [
+                "/etc/helloworld/helloworld.conf", 
+                "~/.helloworld/etc/helloworld.conf", 
+                "~/.helloworld.conf"
+            ], 
+            "config_source": [
+                "defaults"
+            ], 
+            "datadir": "~/.helloworld/data", 
+            "debug": false, 
+            "enabled_plugins": [
+                "helloworld.plugin.example"
+            ], 
+            "example": {
+                "config_source": [
+                    "defaults"
+                ], 
+                "enable_plugin": true, 
+                "foo": "bar", 
+                "merge_root_options": true
+            }, 
+            "log_file": "~/log/helloworld.log", 
+            "log_level": "warn", 
+            "log_to_console": true, 
+            "merge_root_options": true, 
+            "output_engine": "json", 
+            "plugin_config_dir": "~/.helloworld/etc/plugins.d", 
+            "show_plugin_load": false, 
+            "tmpdir": "~/.helloworld/tmp"
+        }, 
+        "features": [
+            "Multiple Configuration file parsing (default: /etc, ~/)", 
+            "Command line argument and option parsing", 
+            "Dual Console/File Logging Support", 
+            "Full Internal and External (3rd Party) Plugin support", 
+            "Basic \"hook\" support", 
+            "Full MVC support for advanced application design", 
+            "Text output rendering with Genshi templates", 
+            "Json output rendering allows other programs to access your CLI-API"
+        ], 
+        "genshi_link": "http://genshi.edgewall.org/wiki/Documentation/text-templates.html", 
+        "stderr": "", 
+        "stdout": ""
+    }
+    
