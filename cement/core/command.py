@@ -6,7 +6,6 @@ from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.hook import run_hooks
 from cement.core.opt import parse_options
-#from cement.core.configuration import set_config_opts_per_cli_opts
 from cement.core.controller import run_controller_command
 from cement.core.exc import CementArgumentError
 
