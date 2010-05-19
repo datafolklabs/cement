@@ -54,7 +54,7 @@ def run_command(cmd_name=None):
         try:
             actual_cmd = cli_args[1]
         except IndexError:
-            raise CementArgumentError, "%s is a namespace* which requires a sub-command.  See '%s --help?" % (namespace, namespace)
+            raise CementArgumentError, "%s is a namespace* which requires a sub-command.  See '%s --help'" % (namespace, namespace)
     
     # Jsonify it... json commands are hidden
     if namespaces['root'].config['output_engine'] == 'json':
