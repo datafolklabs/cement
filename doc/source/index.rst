@@ -12,7 +12,11 @@ Cement Framework.  Other sites that might be helpful:
 
  * http://pypi.python.org/pypi/Cement
  * http://github.com/derks/cement
- * http://wiki.builtoncement.org
+ * http://builtoncement.org
+ 
+Source Download:
+
+ * Stable: http://builtoncement.org/stable/0.8/
  
 Contents:
 
