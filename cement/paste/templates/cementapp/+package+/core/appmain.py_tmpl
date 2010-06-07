@@ -16,8 +16,8 @@ from cement.core.configuration import ensure_api_compat
 from cement.core.command import run_command
 
 from {{package}}.core.config import default_config
-from {{package}}.core.exc import {{package}}ArgumentError, {{package}}ConfigError, \
-                                 {{package}}RuntimeError
+from {{package}}.core.exc import {{package.capitalize()}}ArgumentError, {{package.capitalize()}}ConfigError, \
+                                 {{package.capitalize()}}RuntimeError
 
 REQUIRED_CEMENT_API = '{{cement_api}}'
 VERSION = get_distribution('{{project}}').version
@@ -39,22 +39,23 @@ def main(args=sys.argv):
         run_command(sys.argv[1])
             
     except CementArgumentError, e:
-        print("CementArgumentError > %s" % e)
+        # Display the apps exception names instead for the Cement exceptions.
+        print("{{package.capitalize()}}ArgumentError > %s" % e)
         sys.exit(e.code)
     except CementConfigError, e:
-        print("CementConfigError > %s" % e)
+        print("{{package.capitalize()}}ConfigError > %s" % e)
         sys.exit(e.code)
     except CementRuntimeError, e:
-        print("CementRuntimeError > %s" % e)
+        print("{{package.capitalize()}}RuntimeError > %s" % e)
         sys.exit(e.code)
-    except {{package}}ArgumentError, e:
-        print("{{package}}ArgumentError > %s" % e)
+    except {{package.capitalize()}}ArgumentError, e:
+        print("{{package.capitalize()}}ArgumentError > %s" % e)
         sys.exit(e.code)
-    except {{package}}ConfigError, e:
-        print("{{package}}ConfigError > %s" % e)
+    except {{package.capitalize()}}ConfigError, e:
+        print("{{package.capitalize()}}ConfigError > %s" % e)
         sys.exit(e.code)
-    except {{package}}RuntimeError, e:
-        print("{{package}}RuntimeError > %s" % e)
+    except {{package.capitalize()}}RuntimeError, e:
+        print("{{package.capitalize()}}RuntimeError > %s" % e)
         sys.exit(e.code)
     sys.exit(0)
         
