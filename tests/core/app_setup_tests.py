@@ -20,7 +20,7 @@ def test_register_default_hooks():
     register_default_hooks()
     expected_hooks = [
         'options_hook', 'post_options_hook', 'validate_config_hook',
-        'pre_plugins_hook', 'post_plugins_hook', 'boostrap_application_hook'
+        'pre_plugins_hook', 'post_plugins_hook', 'post_bootstrap_hook'
         ]
     for hook_name in expected_hooks:
         yield check_hook, hook_name
