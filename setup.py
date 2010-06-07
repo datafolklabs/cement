@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.8.3'
+version = '0.8.4'
 
 LONG = """
 Cement is an advanced CLI Application Framework for Python. It promotes code 
@@ -77,7 +77,7 @@ Have a helper library you want to make plugable?
 """
 
 
-setup(name='Cement',
+setup(name='cement',
     version=version,
     description="Python CLI Application Framework",
     long_description=LONG,
