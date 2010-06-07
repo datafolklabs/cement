@@ -9,7 +9,10 @@ class CementError(Exception):
     
     def __str__(self):
         return self.msg
-        
+    
+    def __unicode__(self):
+        return unicode(self.msg)
+            
 class CementConfigError(CementError):
     """Config parsing and setup errors."""
     def __init__(self, value):

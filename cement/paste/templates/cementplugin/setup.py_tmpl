@@ -17,7 +17,7 @@ setup(name='{{project}}_plugin_{{plugin}}',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "Cement >={{cement_version}}, <{{cement_next_version}}",
+        "cement >={{cement_version}}, <{{cement_next_version}}",
         "{{project}}",
         ],
     setup_requires=[

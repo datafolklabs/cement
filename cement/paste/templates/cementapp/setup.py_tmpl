@@ -19,9 +19,9 @@ setup(name='{{project}}',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "Cement >={{cement_version}}, <{{cement_next_version}}",
+        "cement >={{cement_version}}, <{{cement_next_version}}",
         # Uncomment to use shared plugins from The Rosendale Project.
-        #"Rosendale",
+        #"rosendale",
         ],
     setup_requires=[
         ],

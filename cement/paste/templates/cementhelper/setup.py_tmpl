@@ -16,7 +16,7 @@ setup(name='{{project}}_helpers_{{helper}}',
     zip_safe=False,
     install_requires=[
         "ConfigObj",
-        "Cement >={{cement_version}}, <{{cement_next_version}}",
+        "cement >={{cement_version}}, <{{cement_next_version}}",
         ],
     setup_requires=[
         ],

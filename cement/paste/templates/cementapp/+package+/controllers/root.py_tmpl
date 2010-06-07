@@ -10,7 +10,7 @@ from cement.core.controller import CementController, expose
 from cement.core.namespace import get_config
 from cement.core.log import get_logger
 
-from {{package}}.core.exc import {{package}}ArgumentError
+from {{package}}.core.exc import {{package.capitalize()}}ArgumentError
 
 log = get_logger(__name__)
 config = get_config()
@@ -54,7 +54,7 @@ class RootController(CementController):
         exception.
         
         """
-        raise {{project}}ArgumentError, "A command is required. See --help?"
+        raise {{project.capitalize()}}ArgumentError, "A command is required. See --help?"
     
     @expose('{{package}}.templates.root.cmd1')
     def cmd1(self, *args, **kw):

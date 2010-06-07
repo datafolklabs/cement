@@ -1,6 +1,6 @@
 """{{project}} exception classes."""
 
-class {{package}}Error(Exception):
+class {{package.capitalize()}}Error(Exception):
     """Generic errors."""
     def __init__(self, value, code=1):
         Exception.__init__(self)
@@ -10,26 +10,29 @@ class {{package}}Error(Exception):
     def __str__(self):
         return self.msg
         
-class {{package}}ConfigError({{package}}Error):
+    def __unicode__(self):
+        return unicode(self.msg)
+                
+class {{package.capitalize()}}ConfigError({{package.capitalize()}}Error):
     """Config parsing and setup errors."""
     def __init__(self, value):
         code = 10
-        {{package}}Error.__init__(self, value, code)
+        {{package.capitalize()}}Error.__init__(self, value, code)
 
-class {{package}}RuntimeError({{package}}Error):
+class {{package.capitalize()}}RuntimeError({{package.capitalize()}}Error):
     """Runtime errors."""
     def __init__(self, value):
         code = 20
-        {{package}}Error.__init__(self, value, code)
+        {{package.capitalize()}}Error.__init__(self, value, code)
         
-class {{package}}InternalServerError({{package}}Error):
+class {{package.capitalize()}}InternalServerError({{package.capitalize()}}Error):
     """Unknown or private internal errors."""
     def __init__(self, value):
         code = 30
-        {{package}}Error.__init__(self, value, code)
+        {{package.capitalize()}}Error.__init__(self, value, code)
         
-class {{package}}ArgumentError({{package}}Error):
+class {{package.capitalize()}}ArgumentError({{package.capitalize()}}Error):
     """Argument errors."""
     def __init__(self, value):
         code = 40
-        {{package}}Error.__init__(self, value, code)
+        {{package.capitalize()}}Error.__init__(self, value, code)
