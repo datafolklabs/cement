@@ -1,13 +1,24 @@
 
+0.8.4 - Jun 07, 2010
+-----------------------------------------------------------------------------
+
+ +  0.8.4 Stable Release
+
+
+0.8.3 - unreleased
+-----------------------------------------------------------------------------
+
+ +  Change module name to lower case 'cement' (non-functional change)
+ +  Resolved GH#31 Add link to official dev/stable download locations to doc
+ -  Resolved broken app_setup tests (application bootstrap hook)
+ -  Resolved GH#29 Cement exceptions should display the apps exception name
+ -  Resolved GH#32 Issues with Pasted Exception classes
+
+
 0.8.2 - May 13, 2010 
 -----------------------------------------------------------------------------
 
  +  0.8.2 Stable Release
-
-
-0.8.1 - unreleased
------------------------------------------------------------------------------
-
  +  Enable passing output to a file rather than STDOUT (GH#20)
  +  Support engine:template mix from @expose()
  +  Namespace get_config() returns ConfigObj object (as is documented)
@@ -20,6 +31,7 @@
  -  Resolve GH#6 Make plugin templates pass full version, required_cement_api,
     etc when registering their namespace
  -  Resolve GH#27 Remove unused app_basepath from config templates
+     
      
 0.8 - Mar 24, 2010
 -----------------------------------------------------------------------------
