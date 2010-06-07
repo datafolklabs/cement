@@ -14,9 +14,8 @@
 import sys, os
 from pkg_resources import get_distribution
 
-RELEASE = get_distribution('Cement').version
-v = RELEASE.split('.')
-VERSION = '%s.%s' % (v[0], v[1])
+VERSION = '0.8'
+RELEASE = '0.8.4'
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
