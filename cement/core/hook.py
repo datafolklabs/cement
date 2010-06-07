@@ -26,7 +26,7 @@ def define_hook(name):
         from cement.core.hook import define_hook
         
         define_hook('myhookname_hook')
-        
+    
     """
     log.debug("defining hook '%s'", name)
     if hooks.has_key(name):
@@ -57,7 +57,7 @@ class register_hook(object):
             # do something here
             res = 'Something to return'
             return res
-            
+    
     """
     def __init__(self, weight=0, name=None):
         self.weight = weight
