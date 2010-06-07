@@ -46,6 +46,7 @@ class register_hook(object):
         name
             The name of the hook to register too.  If not passed, the __name__
             of the decorated function will be used.
+
     Usage:
     
     .. code-block:: python
