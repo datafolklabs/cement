@@ -46,7 +46,7 @@ easy_install:
 
 .. code-block:: text
 
-    $ easy_install Cement
+    $ easy_install cement.devtools
     
     
 Development
@@ -61,6 +61,13 @@ Development versions of Cement can be cloned from GitHub:
     $ cd cement
     
     $ python setup.py install
+    
+    $ git clone git://github.com/derks/cement.devtools.git
+    
+    $ cd cement.devtools
+    
+    $ python setup.py install
+    
 
 
 The 'master' branch tracks development that is compatible with the stable

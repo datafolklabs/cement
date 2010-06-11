@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.8.4'
+version = '0.8.5'
 
 LONG = """
 Cement is an advanced CLI Application Framework for Python. It promotes code 
@@ -47,6 +47,9 @@ GETTING STARTED:
 Stable versions of Cement can be installed via the cheeze shop:
 ::
     $ easy_install cement
+    
+    # If creating an application
+    $ easy_install cement.devtools
 
 
 Development versions of Cement can be checked out of Git:
@@ -56,36 +59,43 @@ Development versions of Cement can be checked out of Git:
     $ cd cement
 
     $ python setup.py install
+    
+    $ git clone git://github.com/derks/cement.devtools.git
+    
+    $ cd cement.devtools
+
+    $ python setup.py install
 
 
-Additionally, Cement applications, plugins, and helpers can be created via
-PasteScript. Once Cement is installed, the following command will create a
-command line application built on top of the Cement Framework:
+With the 'devtools' package, Cement applications, plugins, and helpers can be 
+created via PasteScript. Once cement and cement.devtools are installed, 
+the following command will create a command line application built on top of 
+the Cement Framework:
 ::
-    $ paster cement-app 
+    $ paster cement-app myapp
 
 
 The following command will create an external plugin for your application:
 ::
-    $ paster cement-plugin  
+    $ paster cement-plugin myapp myplugin
 
 
-Have a helper library you want to make plugable?
+Have an external helper library you want to make plugable?
 ::
-    $ paster cement-helper
+    $ paster cement-helper myapp myhelper
     
 """
 
 
 setup(name='cement',
     version=version,
-    description="Python CLI Application Framework",
+    description="CLI Application Framework for Python",
     long_description=LONG,
     classifiers=[], 
     keywords='cli framework',
     author='BJ Dierkes',
     author_email='wdierkes@5dollarwhitebox.org',
-    url='http://github.com/derks/cement',
+    url='http://builtoncement.org',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
@@ -93,24 +103,13 @@ setup(name='cement',
     install_requires=[
         "ConfigObj",
         "jsonpickle",
-        # Only required if you want to use paster
-        "PasteScript", 
-        "tempita",
         # Required for documentation
-        "Sphinx",
-        "Pygments",
+        #"Sphinx",
+        #"Pygments",
         ],
     setup_requires=[
         ],
     entry_points="""
-        [paste.global_paster_command]
-        cement-app = cement.paste.commands:CementAppCommand
-        cement-plugin = cement.paste.commands:CementPluginCommand
-        cement-helper = cement.paste.commands:CementHelperCommand
-        [paste.paster_create_template]
-        cementapp = cement.paste.template:CementAppTemplate
-        cementplugin = cement.paste.template:CementPluginTemplate
-        cementhelper = cement.paste.template:CementHelperTemplate
     """,
     namespace_packages=[],
     )
