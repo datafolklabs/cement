@@ -42,7 +42,7 @@ Stable
 ^^^^^^
 
 Stable versions of Cement can be installed from the CheezeShop via 
-easy_install:
+easy_install (devtools installs cement as a dependency):
 
 .. code-block:: text
 
