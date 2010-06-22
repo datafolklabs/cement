@@ -15,7 +15,7 @@ import sys, os
 from pkg_resources import get_distribution
 
 VERSION = '0.8'
-RELEASE = '0.8.6'
+RELEASE = '0.8.7'
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
