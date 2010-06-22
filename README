@@ -46,7 +46,7 @@ GETTING STARTED:
 
 Stable versions of Cement can be installed via the cheeze shop:
 
-    $ easy_install Cement
+    $ easy_install cement
 
 
 Development versions of Cement can be checked out of Git:
@@ -73,3 +73,4 @@ The following command will create an external plugin for your application:
 Have a helper library you want to make pluggable?
 
     $ paster cement-helper <myapp> <myhelper>
+
