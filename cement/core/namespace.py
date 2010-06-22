@@ -86,7 +86,7 @@ class CementNamespace(object):
             self.version = kw.get('version', None)
             self.required_api = kw.get('required_api', None)
             self.provider = kw.get('provider', None)
-            
+
         try:
             assert self.version, "A namespace version is required!"
             assert self.required_api, "A required_api version is required!"

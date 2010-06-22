@@ -76,8 +76,13 @@ def parse_options(namespace='root', ignore_conflicts=False):
                 else:
                     cmd_txt += "%s \n" % line
                     line = '    %s' % c
-
-    # Determine whether to display namespaces
+    if line != '    ':
+        cmd_txt += "%s\n" % line
+        
+    # Do the same thing, but with namespaces (if applicable to each namespace)
+    nam_txt = ''
+    line = '    '
+    script = os.path.basename(sys.argv[0])
     if namespace == 'root':
         for nam in namespaces: 
             if nam != 'root' and namespaces[nam].commands:
@@ -98,27 +103,30 @@ def parse_options(namespace='root', ignore_conflicts=False):
                         elif len(line) + len(nam) < 75:
                             line += ', %s*' % nam
                         else:
-                            cmd_txt += "%s \n" % line
+                            nam_txt += "%s \n" % line
                             line = '    %s*' % nam
-
-    if line != '    ':
-        cmd_txt += "%s\n" % line
+                            
+        if line != '    ':
+            nam_txt += "%s\n" % line    
     
-    if namespace != 'root':
-        namespace_txt = ' %s' % namespace
-        cmd_type_txt = 'SUBCOMMAND'
-    else:
-        namespace_txt = ''
-        cmd_type_txt = 'COMMAND'
-    
-    script = os.path.basename(sys.argv[0])
-    namespaces[namespace].options.usage = """  %s%s [%s] --(OPTIONS)
+        namespaces[namespace].options.usage = """  %s [COMMAND] --(OPTIONS)
 
 Commands:  
 %s
-    
-Help?  try [%s]-help""" % (script, namespace_txt, cmd_type_txt, cmd_txt, 
-                           cmd_type_txt)
+Namespaces:
+%s
+Help?  try '[COMMAND]-help' OR '[NAMESPACE] --help'""" % \
+        (script, cmd_txt, nam_txt)
+                         
+    else: # namespace not root
+        nam_title = ''
+        namespaces[namespace].options.usage = """  %s %s [SUBCOMMAND] --(OPTIONS)
+
+Sub-Commands:  
+%s
+Help?  try '[SUBCOMMAND]-help'""" % \
+        (script, namespace, cmd_txt)
+        
 
     (opts, args) = namespaces[namespace].options.parse_args()
     
