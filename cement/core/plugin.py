@@ -6,7 +6,7 @@ from configobj import ConfigObj
 
 from cement import namespaces
 from cement.core.exc import CementConfigError, CementRuntimeError
-from cement.core.log import get_logger
+from cement.core.log import get_logger, setup_logging_for_plugin_provider
 from cement.core.hook import run_hooks
 from cement.core.configuration import set_config_opts_per_file, t_f_pass
 from cement.core.namespace import CementNamespace, define_namespace, \
@@ -42,6 +42,7 @@ def get_enabled_plugins():
                     provider = config['app_module']
                 else:
                     provider = cnf[sect]['provider']
+                    setup_logging_for_plugin_provider(provider)
                 plugin = "%s.plugin.%s" % (provider, sect)
                 enabled_plugins.append(plugin)
 
@@ -60,6 +61,7 @@ def get_enabled_plugins():
                     provider = config['app_module']
                 else:
                     provider = cnf[sect]['provider']
+                    setup_logging_for_plugin_provider(provider)
                 plugin = "%s.plugin.%s" % (provider, sect)
                 enabled_plugins.append(plugin)
     return enabled_plugins

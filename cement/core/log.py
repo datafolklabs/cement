@@ -4,6 +4,21 @@ import logging
 
 from cement import namespaces
 
+def setup_logging_for_plugin_provider(provider):
+    """
+    Setup the logging handlers for a plugin providers module name space.
+    
+    Required Arguments:
+    
+        provider
+            The name of the application (module) providing the shared plugin.
+    
+    """
+    config = namespaces['root'].config
+    provider_log = logging.getLogger(provider)
+    for handler in logging.getLogger(config['app_module']).handlers:
+        provider_log.addHandler(handler)
+        
 def setup_logging(clear_loggers=True, level=None, to_console=True):
     """
     Primary Cement method to setup logging.
