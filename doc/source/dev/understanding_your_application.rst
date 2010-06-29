@@ -8,6 +8,7 @@ directories:
     * helloworld.core
     * helloworld.bootstrap
     * helloworld.controllers
+    * helloworld.lib
     * helloworld.model
     * helloworld.templates
     * helloworld.helpers
@@ -69,12 +70,23 @@ you should not import a controller directly anywhere in your application.
 
 Controllers are used to expose commands to your application, and then perform
 operations when that command is called.  Ideally it should not present 
-output to the user at all, as this is handled by your templates.  Each command
-should perform an action and then return a dictionary of data.  This dictionary
-is then used to be rendered into either Json, or text by the Genshi Engine.
-That said, some people will not care to use templating and would rather just
-print output to the console.  This is perfectly fine, but may clutter up your
-controller code with excessive print statements and janky formatting.
+output to the user at all, as this is handled by your templates however some
+scenarios don't lend themselves well to templating so making print statements
+is also possible.  Each command should perform an action and then return a 
+dictionary of data.  This dictionary is then used to be rendered into either 
+Json, or text by the Genshi Engine. That said, some people will not care to 
+use templating and would rather just print output to the console.  This is 
+perfectly fine, but may clutter up your controller code with excessive print 
+statements and janky formatting.
+
+
+helloworld.lib
+--------------
+
+The lib module is a common place for code that doesn't necessarily fit into
+the 'controller', or 'model' modules, but is not necessarily 'core' code.  
+Such code might be part of a plugin (which shouldn't create any code in the
+core namespace).
 
 
 helloworld.model
