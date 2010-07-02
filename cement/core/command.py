@@ -38,7 +38,8 @@ def run_command(cmd_name=None):
         raise CementArgumentError, \
             "'%s' is a namespace*, not a command.  See '%s --help' instead." % \
                 (namespace, namespace)
-        
+
+                               
     # Parse cli options and arguments
     (cli_opts, cli_args) = parse_options(namespace=namespace)
 
@@ -65,6 +66,7 @@ def run_command(cmd_name=None):
         log.debug("executing command '%s'" % actual_cmd)
         run_controller_command(cmd['controller_namespace'], cmd['func'], 
                                cli_opts=cli_opts, cli_args=cli_args)  
+
     else:
         raise CementArgumentError, "Unknown command '%s', see --help?" % actual_cmd
         

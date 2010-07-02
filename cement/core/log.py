@@ -16,9 +16,12 @@ def setup_logging_for_plugin_provider(provider):
     """
     config = namespaces['root'].config
     provider_log = logging.getLogger(provider)
-    for handler in logging.getLogger(config['app_module']).handlers:
+    cement_log = logging.getLogger('cement')
+    
+    for handler in logging.getLogger('cement').handlers:
         provider_log.addHandler(handler)
-        
+    provider_log.level = cement_log.level
+    
 def setup_logging(clear_loggers=True, level=None, to_console=True):
     """
     Primary Cement method to setup logging.

@@ -109,7 +109,16 @@ def parse_options(namespace='root', ignore_conflicts=False):
         if line != '    ':
             nam_txt += "%s\n" % line    
     
-        namespaces[namespace].options.usage = """  %s [COMMAND] --(OPTIONS)
+        if nam_txt == "":
+            namespaces[namespace].options.usage = """  %s [COMMAND] --(OPTIONS)
+
+Commands:  
+%s
+Help?  try '[COMMAND]-help' OR '[NAMESPACE] --help'""" % \
+            (script, cmd_txt)
+
+        else:
+            namespaces[namespace].options.usage = """  %s [COMMAND] --(OPTIONS)
 
 Commands:  
 %s

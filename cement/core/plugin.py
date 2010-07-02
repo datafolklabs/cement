@@ -64,6 +64,7 @@ def get_enabled_plugins():
                     setup_logging_for_plugin_provider(provider)
                 plugin = "%s.plugin.%s" % (provider, sect)
                 enabled_plugins.append(plugin)
+
     return enabled_plugins
     
 def load_plugin(plugin):
@@ -101,8 +102,7 @@ def load_plugin(plugin):
         getattr(plugin_module, plugin)
         if namespaces.has_key(plugin):
             loaded = True
-            log.debug("loaded '%s' plugin from %s.plugin.%s" % \
-                (plugin, provider, plugin))
+            log.debug("loaded '%s' plugin" % plugin)
     except AttributeError, e:
         log.debug('AttributeError => %s' % e)
                                 
