@@ -5,8 +5,6 @@
  -  Added a fix for logging.  Previously, an application using a shared 
     plugin (such as from Rosendale) would be unable to log because there 
     were no handlers setup for the providers module name space.
- -  No longer pass *args and **kwargs to controller methods (they weren't
-    being passed anything anyhow).
     
 
 0.8.6 - Jun 11, 2010

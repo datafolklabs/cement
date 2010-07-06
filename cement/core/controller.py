@@ -50,17 +50,16 @@ def run_controller_command(namespace, func, *args, **kw):
         run_controller_command('root', 'cmd_name', myarg=True)
         
     """
-    
+
     cli_opts = kw.get('cli_opts', None)
     cli_args = kw.get('cli_args', None)
-    
+
     # set configurations per what is passed at cli
     for nam in namespaces:
         set_config_opts_per_cli_opts(nam, cli_opts)
         
     controller = namespaces[namespace].controller(cli_opts, cli_args)
-    #func = getattr(controller, func)(*args, **kw)
-    func = getattr(controller, func)()
+    func = getattr(controller, func)(*args, **kw)
                       
         
 class expose(object):
