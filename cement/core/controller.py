@@ -21,7 +21,7 @@ class CementController(object):
         self.cli_args = cli_args
     
 
-def run_controller_command(namespace, func, *args, **kw):
+def run_controller_command(namespace, func, cli_opts, cli_args, *args, **kw):
     """
     Cleanly run a command function from a controller.
     
@@ -50,9 +50,6 @@ def run_controller_command(namespace, func, *args, **kw):
         run_controller_command('root', 'cmd_name', myarg=True)
         
     """
-
-    cli_opts = kw.get('cli_opts', None)
-    cli_args = kw.get('cli_args', None)
 
     # set configurations per what is passed at cli
     for nam in namespaces:

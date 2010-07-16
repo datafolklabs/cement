@@ -5,7 +5,9 @@
  -  Added a fix for logging.  Previously, an application using a shared 
     plugin (such as from Rosendale) would be unable to log because there 
     were no handlers setup for the providers module name space.
-    
+ -  core.controller.run_controller_command() now requires cli_opts/cli_args
+    to be passed *not* as kwargs (potential incompatible change for any
+    code using run_controller_command directly).
 
 0.8.6 - Jun 11, 2010
 -----------------------------------------------------------------------------
