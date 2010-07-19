@@ -21,7 +21,7 @@ class CementController(object):
         self.cli_args = cli_args
     
 
-def run_controller_command(namespace, func, cli_opts, cli_args, *args, **kw):
+def run_controller_command(namespace, func, cli_opts=None, cli_args=None, *args, **kw):
     """
     Cleanly run a command function from a controller.
     
