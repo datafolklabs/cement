@@ -151,7 +151,7 @@ that will run the hook.
     
     class RootController(CementController):
         @expose()
-        def hook_example(self, cli_opts, cli_args):
+        def hook_example(self):
             for res in run_hooks('my_example_hook'):
                 pass
                 
