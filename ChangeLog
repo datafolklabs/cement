@@ -8,7 +8,9 @@
  -  core.controller.run_controller_command() now requires cli_opts/cli_args
     to be passed *not* as kwargs (potential incompatible change for any
     code using run_controller_command directly).
-
+ -  Resolve GH#38 Plugin loaded/listed twice
+ 
+ 
 0.8.6 - Jun 11, 2010
 -----------------------------------------------------------------------------
 

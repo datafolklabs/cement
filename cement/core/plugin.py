@@ -63,8 +63,8 @@ def get_enabled_plugins():
                     provider = cnf[sect]['provider']
                     setup_logging_for_plugin_provider(provider)
                 plugin = "%s.plugin.%s" % (provider, sect)
-                enabled_plugins.append(plugin)
-
+                if plugin not in enabled_plugins:
+                    enabled_plugins.append(plugin)
     return enabled_plugins
     
 def load_plugin(plugin):
