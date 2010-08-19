@@ -74,7 +74,7 @@ class register_hook(object):
             return func
         # Hooks are as follows: (wieght, name, func)
         hooks[self.name].append(
-            (int(self.weight), self.name, func)
+            (int(self.weight), func.__name__, func)
         )
 
 

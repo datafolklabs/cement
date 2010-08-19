@@ -9,6 +9,7 @@
     to be passed *not* as kwargs (potential incompatible change for any
     code using run_controller_command directly).
  -  Resolve GH#38 Plugin loaded/listed twice
+ -  Store the func.__name__ in the hook tuple rather than the hook name
  
  
 0.8.6 - Jun 11, 2010
