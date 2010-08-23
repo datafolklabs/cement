@@ -65,14 +65,14 @@ class register_hook(object):
         self.name = name
 
     def __call__(self, func):
-        log.debug("registering hook func '%s' from %s" % \
-            (func.__name__, func.__module__))
         if not self.name:
             self.name = func.__name__
+        log.debug("registering hook func '%s' from %s into hooks['%s']" % \
+            (func.__name__, func.__module__, self.name))
         if not hooks.has_key(self.name):
             log.warn("Hook name '%s' is not define!" % self.name)
             return func
-        # Hooks are as follows: (wieght, name, func)
+        # Hooks are as follows: (weight, name, func)
         hooks[self.name].append(
             (int(self.weight), func.__name__, func)
         )

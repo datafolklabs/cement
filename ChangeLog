@@ -1,4 +1,10 @@
 
+0.8.8 - Sun Aug 22, 2010
+-----------------------------------------------------------------------------
+
+ +  0.8.8 Stable Release
+
+
 0.8.7 - unreleased
 -----------------------------------------------------------------------------
 
@@ -10,6 +16,7 @@
     code using run_controller_command directly).
  -  Resolve GH#38 Plugin loaded/listed twice
  -  Store the func.__name__ in the hook tuple rather than the hook name
+ -  Updated links in docs, and references to The Rosendale Project
  
  
 0.8.6 - Jun 11, 2010

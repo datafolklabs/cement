@@ -15,7 +15,7 @@ import sys, os
 from pkg_resources import get_distribution
 
 VERSION = '0.8'
-RELEASE = '0.8.7'
+RELEASE = '0.8.8'
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -42,7 +42,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Cement'
-copyright = u'2009, BJ Dierkes'
+copyright = u'2010, BJ Dierkes'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
