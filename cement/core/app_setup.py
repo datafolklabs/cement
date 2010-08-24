@@ -47,19 +47,23 @@ def register_default_hooks():
     define_hook('post_plugins_hook')
     define_hook('post_bootstrap_hook')
 
-def lay_cement(config=None, banner=None, cli_args=None):
+def lay_cement(config, **kw):
     """
     Primary method to setup an application for Cement.  
     
-    Keyword arguments:
+    Required Arguments:
     
         config
             Dict containing application config.
     
+    Optional Keyword Arguments:
+    
         banner
             Optional text to display for --version
-    
-    
+        
+        cli_args
+            Args to use (default: sys.argv)
+        
     Usage:
     
     .. code-block:: python
@@ -71,9 +75,15 @@ def lay_cement(config=None, banner=None, cli_args=None):
         
     """    
     global namespaces
+    cli_args = kw.get('cli_args', None)
+    banner = kw.get('banner', None)
     
     if not cli_args:
-        cli_args = sys.argv
+        if kw.get('args', None):
+            # backward compat
+            cli_args = kw['args']
+        else:
+            cli_args = sys.argv
         
     try:
         assert config, "default config required!"
