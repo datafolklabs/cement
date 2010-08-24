@@ -44,7 +44,8 @@ def get_enabled_plugins():
                     provider = cnf[sect]['provider']
                     setup_logging_for_plugin_provider(provider)
                 plugin = "%s.plugin.%s" % (provider, sect)
-                enabled_plugins.append(plugin)
+                if plugin not in enabled_plugins:
+                    enabled_plugins.append(plugin)
 
     # Then for plugin config files
     for file in os.listdir(config['plugin_config_dir']):
@@ -114,9 +115,10 @@ def load_plugin(plugin):
         namespaces['root'].config['plugin_config_dir'], '%s.conf' % plugin
         )
 
+    set_config_opts_per_file(plugin, plugin, plugin_config_file)
     for file in namespaces['root'].config['config_files']:
         set_config_opts_per_file(plugin, plugin, file)
-    set_config_opts_per_file(plugin, plugin, plugin_config_file)
+    
                            
 def load_all_plugins():
     """
