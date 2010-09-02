@@ -4,6 +4,7 @@ import sys
 import os
 import re
 import jsonpickle
+import yaml
 import inspect
 from pkgutil import get_data
 
@@ -19,8 +20,8 @@ class render(object):
     """
     Class decorator to render data with Genshi text formatting engine or json.
     Called when the function is decorated, sets up the engine and template for 
-    later use.  If not passed a template, render will do nothing (unless 
-    --json is passed, by which json is returned).
+    later use.  If not passed a template, render will do nothing (unless
+    --json or --yaml is passed, by which json or yaml is returned, respectively).
     
     *Note: This is called form the cement.core.controller.expose() decorator 
     and likely shouldn't ever be needed to call directly.*
@@ -53,7 +54,11 @@ class render(object):
                 raise CementRuntimeError, "Invalid engine:template identifier."
             
             if self.template and self.template == 'json':
-                self.engine = 'json'        
+                self.engine = 'json'
+
+            elif self.template and self.template == 'yaml':
+                self.engine = 'yaml'
+
             elif self.template:
                 # Mock up the template path
                 parts = self.template.split('.')
@@ -82,6 +87,12 @@ class render(object):
                 res['stdout'] = buf_stdout.buffer
                 res['stderr'] = buf_stderr.buffer
                 output = jsonpickle.encode(res, unpicklable=False)
+
+            if self.engine == 'yaml':
+                namespaces['root'].config['output_engine'] = 'yaml'
+                res['stdout'] = buf_stdout.buffer
+                res['stderr'] = buf_stderr.buffer
+                output = yaml.dump(res)
             
             elif self.engine == 'genshi':  
                 namespaces['root'].config['output_engine'] = 'genshi'
