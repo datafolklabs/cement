@@ -19,6 +19,9 @@ def options_hook(*args, **kwargs):
     root_options.add_option('--json', action='store_true',
         dest='enable_json', default=None, 
         help='render output as json (Cement CLI-API)')
+    root_options.add_option('--yaml', action='store_true',
+        dest='enable_yaml', default=None,
+        help='render output as yaml (Cement CLI-API)')
     root_options.add_option('--debug', action='store_true',
         dest='debug', default=None, help='toggle debug output')
     root_options.add_option('--quiet', action='store_true',
