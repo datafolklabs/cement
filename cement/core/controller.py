@@ -120,6 +120,7 @@ class expose(object):
         (base, controller, con_namespace) = func.__module__.split('.')
         self.func = func
         self.json_func = func
+        self.yaml_func = func
         if not self.name:
             self.name = func.__name__
         log.debug("exposing namespaces['%s'].commands['%s'] from '%s'" % \

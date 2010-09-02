@@ -60,6 +60,10 @@ def run_command(cmd_name=None):
     # Jsonify it... json commands are hidden
     if namespaces['root'].config['output_engine'] == 'json':
         actual_cmd = "%s-json" % actual_cmd
+
+    # Yamlify it... yaml commands are hidden
+    if namespaces['root'].config['output_engine'] == 'yaml':
+        actual_cmd = "%s-yaml" % actual_cmd
         
     if namespaces[namespace].commands.has_key(actual_cmd):
         cmd = namespaces[namespace].commands[actual_cmd]
