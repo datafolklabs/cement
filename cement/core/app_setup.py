@@ -173,26 +173,10 @@ def lay_cement(config, **kw):
 
     for res in run_hooks('post_bootstrap_hook'):
         pass
-        
+
+    # load all plugins
     load_all_plugins()
     
-    # Looks dirty, but this creates json counter part commands that are hidden
-    #for nam in namespaces:
-    #    commands = namespaces[nam].commands.copy()
-    #    for command in commands:
-    #        # Shorten it
-    #        cmd = commands[command]
-    #        controller = namespaces[cmd['controller_namespace']].controller
-    #    
-    #        # Run the command function
-    #        func = cmd['original_func']
-    #        name="%s_json" % cmd['func']
-    #        json_func = expose(template='json', namespace=nam, is_hidden=True, 
-    #                           name=name)(func)
-    #
-    #        setattr(namespaces[cmd['controller_namespace']].controller, 
-    #                name, json_func) 
-            
     # Allow plugins to add config validation for the global namespace
     for res in run_hooks('validate_config_hook', 
                          config=namespaces['root'].config):
