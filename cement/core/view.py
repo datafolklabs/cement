@@ -141,12 +141,12 @@ class render(object):
                 raise CementRuntimeError, "Controller functions must return type dict()."
             
             if self.template:  
-                template_content = get_data(self.tmpl_module, self.tmpl_file)
+                tmpl_content = get_data(self.tmpl_module, self.tmpl_file)
             
             if self.output_handler in handlers['output_handlers']:
                 handler = handlers['output_handlers'][self.output_handler]
                 namespaces['root'].config['output_handler'] = self.output_handler
-                out_txt = handler(res, template_content)
+                out_txt = handler(res, tmpl_content)
                 
                 if res.has_key('output_file') and res['output_file']:
                     f = open(res['output_file'], 'w+')

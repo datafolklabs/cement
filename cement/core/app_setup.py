@@ -86,8 +86,9 @@ def lay_cement(config, **kw):
         banner
             Optional text to display for --version
         
-        cli_args
-            Args to use (default: sys.argv)
+        args
+            Args to use (default: sys.argv)... if passed, args overrides 
+            sys.argv because optparse accesses sys.argv.
         
     Usage:
     
@@ -100,15 +101,16 @@ def lay_cement(config, **kw):
         
     """    
     global namespaces
-    cli_args = kw.get('cli_args', None)
+    args = kw.get('args', None)
     banner = kw.get('banner', None)
     
-    if not cli_args:
-        if kw.get('args', None):
-            # backward compat
-            cli_args = kw['args']
-        else:
-            cli_args = sys.argv
+    # DEPRECATED: compat with 0.8.8
+    if not args and kw.get('cli_args', None): 
+        args = kw['cli_args']
+    
+    # a bit of a hack, but optparse and others use sys.argv
+    if args:
+        sys.argv = args
         
     try:
         assert config, "default config required!"
@@ -141,17 +143,17 @@ def lay_cement(config, **kw):
     validate_config(namespaces['root'].config)
     
     # hardcoded hacks
-    if '--quiet' in cli_args:
+    if '--quiet' in sys.argv:
         namespaces['root'].config['log_to_console'] = False
         sys.stdout = buf_stdout
         sys.stderr = buf_stderr
-    if '--json' in cli_args:
+    if '--json' in sys.argv:
         sys.stdout = buf_stdout
         sys.stderr = buf_stderr
         namespaces['root'].config['output_handler_override'] = 'json'
         namespaces['root'].config['show_plugin_load'] = False
     # debug trumps everything
-    if '--debug' in cli_args:
+    if '--debug' in sys.argv:
         namespaces['root'].config['debug'] = True
         namespaces['root'].config['log_to_console'] = True
         sys.stdout = SAVED_STDOUT
@@ -161,7 +163,7 @@ def lay_cement(config, **kw):
     setup_logging(to_console=namespaces['root'].config['log_to_console'])
         
     define_default_hooks()
-    define_default_handlers()
+    define_default_handler_types()
     
     register_default_handlers()
     
