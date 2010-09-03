@@ -48,7 +48,7 @@ def test_validate_config():
     dcf['log_file'] = '%s/log/%s.log' % (prefix, dcf['app_name'])
     dcf['plugin_config_dir'] = '%s/etc/plugins.d' % prefix
     dcf['log_to_console'] = True
-    dcf['output_engine'] = 'genshi'
+    dcf['output_handler'] = 'genshi'
     dcf['show_plugin_load'] = True
 
     # By default look in /etc and ~/ for config files.  You should probably

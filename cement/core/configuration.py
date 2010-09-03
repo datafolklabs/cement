@@ -219,7 +219,7 @@ def validate_config(config):
     required_settings = [
         'config_source', 'config_files', 'debug', 'datadir',
         'enabled_plugins', 'plugin_config_dir', 'app_module', 'app_name', 
-        'tmpdir', 'output_engine'
+        'tmpdir', 'output_handler'
         ]
     for s in required_settings:
         if not config.has_key(s):

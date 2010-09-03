@@ -17,6 +17,29 @@ from genshi.template import NewTextTemplate
 log = get_logger(__name__)
 
 def render_genshi_output(return_dict, template_content=None):
+    """
+    Render output from Genshi template text.  In general, this function 
+    should not be called directly, as it is called from render().
+    
+    Required Arguments:
+    
+        return_dict
+            The dictionary returned from a controller function.
+            
+        template_content
+            The content (text) read from the template file.
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement.core.view import render_genshi_output
+        
+        fake_dict = dict(foo='String', bar=100, list=[1,2,3,4,5])
+        tmpl_content = "$foo $bar {% for i in list %}${i}{% end %}"
+        output = render_genshi_output(fake_dict, tmpl_content)
+        
+    """
     log.debug("rendering genshi output")
     if template_content:  
         tmpl = NewTextTemplate(template_content)
@@ -26,6 +49,28 @@ def render_genshi_output(return_dict, template_content=None):
         return return_dict
 
 def render_json_output(return_dict, template_content=None):
+    """
+    Render output into JSON.  In general, this function 
+    should not be called directly, as it is called from render().
+    
+    Required Arguments:
+    
+        return_dict
+            The dictionary returned from a controller function.
+            
+        template_content
+            The content (text) read from the template file.
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement.core.view import render_json_output
+        
+        fake_dict = dict(foo='String', bar=100, list=[1,2,3,4,5])
+        output = render_json_output(fake_dict)
+        
+    """
     log.debug("rendering json output")
     return_dict['stdout'] = buf_stdout.buffer
     return_dict['stderr'] = buf_stderr.buffer

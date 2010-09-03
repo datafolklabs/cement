@@ -20,7 +20,7 @@ def test_render_genshi_output():
     eq_(output, 'String10012345')
 
 @with_setup(setup_func, teardown_func)
-def test_render_genshi_output():
+def test_render_json_output():
     fake_dict = dict(foo='String', bar=100, list=[1,2,3,4,5])
     tmpl_content = """$foo$bar{% for i in list %}${i}{% end %}"""
     output = render_json_output(fake_dict, tmpl_content)
