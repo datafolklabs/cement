@@ -10,7 +10,6 @@ from cement.core.log import get_logger
 from cement.core.exc import CementRuntimeError
 from cement.core.view import render
 from cement.core.configuration import set_config_opts_per_cli_opts
-
     
 log = get_logger(__name__)
 
@@ -57,8 +56,7 @@ def run_controller_command(namespace, func, cli_opts=None, cli_args=None, *args,
         
     controller = namespaces[namespace].controller(cli_opts, cli_args)
     func = getattr(controller, func)(*args, **kw)
-                      
-        
+
 class expose(object):
     """
     Decorator function for plugins to expose commands.  Used as:
@@ -100,15 +98,40 @@ class expose(object):
         self.config = namespaces['root'].config
         self.is_hidden = kwargs.get('is_hidden', False)
         
-        if self.template:
-            # Mock up the template path
-            parts = template.split('.')
-            self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
-            self.tmpl_module = '.'.join(parts) # left over in at the beginning
-        
         if not self.namespace in namespaces:
             raise CementRuntimeError, \
                 "The namespace '%s' is not defined!" % self.namespace
+                
+        # First set output_handler from config
+        # DEPRECATION: output_engine
+        self.output_handler = None
+        if not self.config.has_key('output_handler'):
+            if self.config.has_key('output_engine'):
+                self.output_handler = self.config['output_engine']
+        else:
+            self.output_handler = self.config['output_handler']
+        
+        # The override output_handler from @expose()
+        if self.template:
+            parts = template.split(':')
+            if len(parts) >= 2:
+                self.output_handler = parts[0]
+                self.template = parts[1]
+            elif len(parts) == 1:
+                self.template = parts[0]
+            else:
+                raise CementRuntimeError, "Invalid handler:template identifier."
+        
+        if not self.output_handler:
+            log.warn('no output handlers available.')
+            
+        #if self.template:
+        #    # Mock up the template path
+        #    parts = template.split('.')
+        #    self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
+        #    self.tmpl_module = '.'.join(parts) # left over in at the beginning
+        
+        
                         
     def __get__(self, obj, type=None):
         if self.func:
@@ -119,7 +142,7 @@ class expose(object):
     def __call__(self, func):
         (base, controller, con_namespace) = func.__module__.split('.')
         self.func = func
-        self.json_func = func
+        #self.json_func = func
         if not self.name:
             self.name = func.__name__
         log.debug("exposing namespaces['%s'].commands['%s'] from '%s'" % \
@@ -138,6 +161,6 @@ class expose(object):
 
         # Set the command info in the dest namespace
         namespaces[self.namespace].commands[cmd_name] = cmd
-        self.func = render(self.template)(self.func)
+        self.func = render(self.output_handler, self.template)(self.func)
         return self.func
       

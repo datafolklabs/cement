@@ -3,7 +3,7 @@ __import__('pkg_resources').declare_namespace(__name__)
 
 import sys
 
-from cement.core.configuration import namespaces, hooks
+from cement.core.configuration import namespaces, hooks, handlers
 
 SAVED_STDOUT = sys.stdout
 SAVED_STDERR = sys.stderr

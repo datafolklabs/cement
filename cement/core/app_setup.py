@@ -3,7 +3,8 @@
 import sys
 from pkg_resources import get_distribution
 
-from cement import namespaces, buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
+from cement import namespaces, handlers
+from cement import buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
 from cement.core.exc import CementConfigError
 from cement.core.configuration import CEMENT_API, set_config_opts_per_file
 from cement.core.configuration import validate_config, get_default_config
@@ -12,12 +13,14 @@ from cement.core.namespace import CementNamespace, define_namespace, get_config
 from cement.core.log import setup_logging, get_logger
 from cement.core.hook import register_hook, define_hook, run_hooks
 from cement.core.controller import expose
+from cement.core.handler import define_handler_type, register_handler
+from cement.core.view import render_genshi_output, render_json_output
 
 log = get_logger(__name__)    
                 
-def register_default_hooks():
+def define_default_hooks():
     """
-    Registers Cement framework hooks.
+    Defines Cement framework hooks.
     
     Hook definitions:
     
@@ -47,6 +50,28 @@ def register_default_hooks():
     define_hook('post_plugins_hook')
     define_hook('post_bootstrap_hook')
 
+def define_default_handler_types():
+    """
+    Defines Cement framework handlers.
+    
+    Handler Definitions:
+    
+        output_handlers
+            Output handlers are responsible for rendering output as returned
+            from controller functions.  This may be 'Genshi', 'json', 'yaml',
+            'Jinja2', etc.
+            
+    """
+    define_handler_type('output_handlers')
+
+def register_default_handlers():
+    """
+    Register the default base level handlers required to run a Cement
+    application.
+    """
+    register_handler('output_handlers', 'genshi', render_genshi_output)
+    register_handler('output_handlers', 'json', render_json_output)
+    
 def lay_cement(config, **kw):
     """
     Primary method to setup an application for Cement.  
@@ -94,8 +119,6 @@ def lay_cement(config, **kw):
         banner = "%s version %s" % (
             config['app_name'],
             get_distribution(config['app_egg_name']).version)
-        
-    register_default_hooks()
     
     namespace = CementNamespace(
         label='root',
@@ -125,7 +148,7 @@ def lay_cement(config, **kw):
     if '--json' in cli_args:
         sys.stdout = buf_stdout
         sys.stderr = buf_stderr
-        namespaces['root'].config['output_engine'] = 'json'
+        namespaces['root'].config['output_handler_override'] = 'json'
         namespaces['root'].config['show_plugin_load'] = False
     # debug trumps everything
     if '--debug' in cli_args:
@@ -134,9 +157,14 @@ def lay_cement(config, **kw):
         sys.stdout = SAVED_STDOUT
         sys.stderr = SAVED_STDERR
         
-    # Setup logging for console and file
+    # Setup logging for console and file -- again
     setup_logging(to_console=namespaces['root'].config['log_to_console'])
         
+    define_default_hooks()
+    define_default_handlers()
+    
+    register_default_handlers()
+    
     boot = __import__("%s.bootstrap" % namespaces['root'].config['app_module'], 
                           globals(), locals(), ['root'], -1)
     
@@ -147,21 +175,21 @@ def lay_cement(config, **kw):
     load_all_plugins()
     
     # Looks dirty, but this creates json counter part commands that are hidden
-    for nam in namespaces:
-        commands = namespaces[nam].commands.copy()
-        for command in commands:
-            # Shorten it
-            cmd = commands[command]
-            controller = namespaces[cmd['controller_namespace']].controller
-        
-            # Run the command function
-            func = cmd['original_func']
-            name="%s_json" % cmd['func']
-            json_func = expose(template='json', namespace=nam, is_hidden=True, 
-                               name=name)(func)
-
-            setattr(namespaces[cmd['controller_namespace']].controller, 
-                    name, json_func) 
+    #for nam in namespaces:
+    #    commands = namespaces[nam].commands.copy()
+    #    for command in commands:
+    #        # Shorten it
+    #        cmd = commands[command]
+    #        controller = namespaces[cmd['controller_namespace']].controller
+    #    
+    #        # Run the command function
+    #        func = cmd['original_func']
+    #        name="%s_json" % cmd['func']
+    #        json_func = expose(template='json', namespace=nam, is_hidden=True, 
+    #                           name=name)(func)
+    #
+    #        setattr(namespaces[cmd['controller_namespace']].controller, 
+    #                name, json_func) 
             
     # Allow plugins to add config validation for the global namespace
     for res in run_hooks('validate_config_hook', 

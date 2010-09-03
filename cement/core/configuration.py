@@ -15,7 +15,9 @@ def get_default_config():
     dcf['enabled_plugins'] = []
     dcf['debug'] = False
     dcf['show_plugin_load'] = True
-    dcf['output_engine'] = 'genshi'
+    dcf['output_engine'] = 'genshi' # deprecated
+    dcf['output_handler'] = 'genshi'
+    dcf['output_handler_override'] = None
     return dcf
 
 def get_default_namespace_config():
@@ -28,9 +30,11 @@ def get_default_namespace_config():
 # global hooks dictionary
 hooks = {}
 
-# setup namespace dict
+# global namespace dict
 namespaces = {}
 
+# global handlers dict
+handlers = {}
         
 def get_api_version():
     """Get the Cement API Version."""
