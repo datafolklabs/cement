@@ -45,8 +45,8 @@ def render_genshi_output(return_dict, template_content=None):
         tmpl = NewTextTemplate(template_content)
         return tmpl.generate(**return_dict).render()
     else:
-        log.debug('unable to render genshi output without template_content.')
-        return return_dict
+        log.debug('template content is empty.')
+        return ''
 
 def render_json_output(return_dict, template_content=None):
     """
@@ -148,9 +148,12 @@ class render(object):
                 namespaces['root'].config['output_handler'] = self.output_handler
                 out_txt = handler(res, tmpl_content)
                 
+                if not out_txt:
+                    out_txt = ''
+                    
                 if res.has_key('output_file') and res['output_file']:
                     f = open(res['output_file'], 'w+')
-                    f.write(output)
+                    f.write(out_txt)
                     f.close()
                 elif out and self.config['log_to_console']:
                     out.write(out_txt)
