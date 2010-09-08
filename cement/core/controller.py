@@ -55,7 +55,7 @@ def run_controller_command(namespace, func, cli_opts=None, cli_args=None, *args,
         set_config_opts_per_cli_opts(nam, cli_opts)
         
     controller = namespaces[namespace].controller(cli_opts, cli_args)
-    func = getattr(controller, func)(*args, **kw)
+    getattr(controller, func)(*args, **kw)
 
 class expose(object):
     """

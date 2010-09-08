@@ -132,7 +132,6 @@ class render(object):
             res = self.func(*args, **kw)
             
             out = SAVED_STDOUT
-            out_content = ''
             tmpl_content = None
             
             if not res:
@@ -157,7 +156,6 @@ class render(object):
                     f.close()
                 elif out and self.config['log_to_console']:
                     out.write(out_txt)
-
             else:
                 raise CementRuntimeError, "Handler name '%s' does not exist in handlers['output_handlers']." % \
                                            self.output_handler        

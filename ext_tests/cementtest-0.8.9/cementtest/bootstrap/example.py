@@ -1,5 +1,5 @@
 
-from cement.core.hook import define_hook
+from cement.core.hook import define_hook, register_hook
 from cement.core.namespace import CementNamespace, register_namespace
 
 define_hook('my_example_hook')
@@ -12,29 +12,24 @@ example = CementNamespace(
             required_api='0.7-0.8:20100210',
             provider='cementtest'
             )
-
-# Example namespace default configurations, overwritten by the [example] 
-# section of the applications config file(s).  Once registered, this dict is
-# accessible as:
-#
-#   from cement.core.namespace import get_config
-#   example_config = get_config('example')
-#
-# Or simply as:
-#
-#   root_config = get_config()
-#   root_config['example']
-#
 example.config['foo'] = 'bar'
-
-# Example namespace options.  These options show up under:
-#
-#   $ cementtest example --help
-#
 example.options.add_option('-F', '--foo', action='store',
     dest='foo', default=None, help='Example Foo Option'
     )
 
-# Officialize and register the namespace
 register_namespace(example)
+
+@register_hook(weight=99)
+def my_example_hook():
+    return 99
+
+@register_hook(name='my_example_hook')
+def some_other_hook_name():
+    return 0
+
+@register_hook(weight=-100)
+def my_example_hook():
+    return -100
+
+
 

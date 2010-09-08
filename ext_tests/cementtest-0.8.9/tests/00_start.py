@@ -1,11 +1,8 @@
 
 import os    
 import sys
-import hashlib
 import shutil
-import random
 from tempfile import mkdtemp
-from datetime import datetime
 from nose.tools import raises, with_setup
 
 from cement import namespaces

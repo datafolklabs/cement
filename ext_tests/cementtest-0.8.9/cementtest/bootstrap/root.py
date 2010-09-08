@@ -31,4 +31,5 @@ def options_hook(*args, **kwargs):
 # 
 #   from cementtest.bootstrap import example
 #
-    
+
+from cementtest.bootstrap import example
