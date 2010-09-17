@@ -17,7 +17,7 @@ config = get_nose_config(tempdir)
 args = []
 args.append(__file__)
 args.append('nose_tests')
-nose_main([__file__, 'nosetests'], config)
+nose_main([__file__, 'nosetests', '--quiet'], config)
 
             
 def setup_func():

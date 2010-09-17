@@ -39,15 +39,6 @@ dcf['config_files'] = [
     os.path.join(os.environ['HOME'], '.%s.conf' % dcf['app_name']),
     ]
     
-found_config = False
-for c in dcf['config_files']:
-    if os.path.exists(c):
-        found_config = True
-        break
-
-if not found_config:
-    print "WARNING: Config not found."
-
 default_config = dcf
 
 def get_nose_config(prefix):

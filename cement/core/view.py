@@ -3,8 +3,6 @@
 import sys
 import os
 import re
-import jsonpickle
-import inspect
 from pkgutil import get_data
 
 from cement import handlers
@@ -12,7 +10,6 @@ from cement import namespaces, SAVED_STDOUT, SAVED_STDERR
 from cement import buf_stdout, buf_stderr
 from cement.core.exc import CementRuntimeError
 from cement.core.log import get_logger
-from genshi.template import NewTextTemplate
 
 log = get_logger(__name__)
 
@@ -41,6 +38,7 @@ def render_genshi_output(return_dict, template_content=None):
         
     """
     log.debug("rendering genshi output")
+    from genshi.template import NewTextTemplate
     if template_content:  
         tmpl = NewTextTemplate(template_content)
         return tmpl.generate(**return_dict).render()
@@ -72,6 +70,7 @@ def render_json_output(return_dict, template_content=None):
         
     """
     log.debug("rendering json output")
+    import jsonpickle
     return_dict['stdout'] = buf_stdout.buffer
     return_dict['stderr'] = buf_stderr.buffer
     return jsonpickle.encode(return_dict, unpicklable=False)
@@ -137,26 +136,34 @@ class render(object):
             if not res:
                 res = dict()
             if type(res) != dict:
-                raise CementRuntimeError, "Controller functions must return type dict()."
+                raise CementRuntimeError, \
+                    "Controller functions must return type dict()."
             
             if self.template:  
                 tmpl_content = get_data(self.tmpl_module, self.tmpl_file)
             
-            if self.output_handler in handlers['output_handlers']:
-                handler = handlers['output_handlers'][self.output_handler]
-                namespaces['root'].config['output_handler'] = self.output_handler
-                out_txt = handler(res, tmpl_content)
+            if self.output_handler:
+                if self.output_handler in handlers['output_handlers']:
+                    handler = handlers['output_handlers'][self.output_handler]
+                    namespaces['root'].config['output_handler'] = self.output_handler
+                    out_txt = handler(res, tmpl_content)
                 
-                if not out_txt:
-                    out_txt = ''
+                    if not out_txt:
+                        out_txt = ''
                     
-                if res.has_key('output_file') and res['output_file']:
-                    f = open(res['output_file'], 'w+')
-                    f.write(out_txt)
-                    f.close()
-                elif out and self.config['log_to_console']:
-                    out.write(out_txt)
-            else:
-                raise CementRuntimeError, "Handler name '%s' does not exist in handlers['output_handlers']." % \
-                                           self.output_handler        
+                    if res.has_key('output_file') and res['output_file']:
+                        f = open(res['output_file'], 'w+')
+                        f.write(out_txt)
+                        f.close()
+                    elif out and self.config['log_to_console']:
+                        out.write(out_txt)
+                    
+                    # return res, because we want it to be readable when
+                    # called directly from run_controller_command()
+                    return res
+                else:
+                    raise CementRuntimeError, \
+                        "Handler name '%s' " % self.output_handler + \
+                        "does not exist in handlers['output_handlers']."
+                    
         return wrapper

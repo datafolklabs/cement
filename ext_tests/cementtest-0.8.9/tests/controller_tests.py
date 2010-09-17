@@ -29,6 +29,6 @@ def teardown_func():
 def test_example_namespace_cmd1():  
     sys.argv = [__file__, 'example', 'cmd1']
     (opts, args) = parse_options('example', ignore_conflicts=True)
-    run_controller_command(sys.argv[1], sys.argv[2], cli_opts=opts, cli_args=args)
-    
-    raise
+    res = run_controller_command(sys.argv[1], sys.argv[2], 
+                                 cli_opts=opts, cli_args=args)
+    ok_(res, {'foo' : 'bar'})
