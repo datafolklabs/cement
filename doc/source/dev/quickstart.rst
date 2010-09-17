@@ -7,6 +7,59 @@ application called 'helloworld'.  For almost all cases, you can replace
 helloworld with the package name of your application.
 
 
+Raw Commands For The Impatient
+------------------------------
+
+This is for development.  Please note that in production you will likely be
+installing system wide (with root access), and that you only need 'cement' in
+production (not cement.devtools).
+
+.. code-block:: text
+
+    ### install
+    
+    $ virtualenv --no-site-packages ~/env/helloworld
+    
+    $ source ~/env/helloworld/bin/activate
+    
+    $ easy_install cement.devtools
+    
+    
+    ### create app
+    
+    $ paster cement-app helloworld
+    
+    $ cd helloworld
+    
+    $ python setup.py develop
+    
+    
+    ### setup local (user) config
+    
+    $ cp -a ./etc/helloworld.conf-dev ~/.helloworld.conf
+    
+    $ vi ~/.helloworld.conf
+    
+    $ helloworld --help
+    
+    
+    ### create an external plugin
+    
+    $ mkdir plugins
+    
+    $ cd plugins
+    
+    $ paster cement-plugin helloworld myplugin
+    
+    $ cd helloworld.myplugin
+    
+    $ python setup.py develop
+    
+    $ cp -a ./etc/plugins.d/myplugin.conf ~/path/to/plugin_config_dir
+    
+    $ helloworld --help
+    
+    
 Installing Cement
 -----------------
 
