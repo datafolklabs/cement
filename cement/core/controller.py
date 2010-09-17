@@ -123,17 +123,6 @@ class expose(object):
                 self.template = parts[0]
             else:
                 raise CementRuntimeError, "Invalid handler:template identifier."
-        
-        if not self.output_handler:
-            log.warn('no output handlers available.')
-            
-        #if self.template:
-        #    # Mock up the template path
-        #    parts = template.split('.')
-        #    self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
-        #    self.tmpl_module = '.'.join(parts) # left over in at the beginning
-        
-        
                         
     def __get__(self, obj, type=None):
         if self.func:
