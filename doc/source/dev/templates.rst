@@ -3,7 +3,11 @@ Genshi Templating Engine
 
 Cement applications use a Model, View, Controller design.  By separating the
 view, or in this case what is printed to STDOUT, you can significantly clean
-up your controller code.  
+up your controller code.  Cement configures new applications to use the 
+Genshi text templating language by default.  This is configured in your
+applications 'core.config' module via the setting 'output_handler'.  Note
+that for developers not interested in having output rendered from template
+or any other kind of output rendering... this setting can be set to None.
 
 A sample controller that exports its data to a Genshi template:
 
@@ -23,7 +27,17 @@ A sample controller that exports its data to a Genshi template:
 
         return dict(foo=True, example=example, items=['one', 'two', 'three'])
         
+It should be noted that the output_handler is implied in the above code, and
+tells Cement to use the default that is configured in your apps core.config
+module under 'output_handler'.  To specify an alternate handler, you can do
+the following:
 
+.. code-block:: python
+
+    @expose('jinja2:helloworld.templates.example.ex2', namespace='root') 
+    ...
+    
+Where 'jinja2' is the alternate output_handler to use for that command only.
 The template looks like:
 
 **./helloworld/templates/example/ex2.txt**:
