@@ -11,6 +11,8 @@
  +  Add 'output_handler_override' to config
  +  Add the ability to pass 'version' to lay_cement, avoiding a dependency
     on pkg_resources.get_distribution
+ +  Pass return dict all the way back from render() so it is returned from
+    run_controller_command()
     
 0.8.8 - Sun Aug 22, 2010
 -----------------------------------------------------------------------------
