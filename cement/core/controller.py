@@ -99,6 +99,7 @@ class expose(object):
         self.tmpl_file = None
         self.config = namespaces['root'].config
         self.is_hidden = kwargs.get('is_hidden', False)
+        self.desc = kwargs.get('desc', None)
         
         if not self.namespace in namespaces:
             raise CementRuntimeError, \

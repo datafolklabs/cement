@@ -122,7 +122,7 @@ Help?  try '[COMMAND]-help' OR '[NAMESPACE] --help'""" % \
 
 Commands:  
 %s
-Namespaces:
+Namespaces (Nested SubCommands):
 %s
 Help?  try '[COMMAND]-help' OR '[NAMESPACE] --help'""" % \
         (script, cmd_txt, nam_txt)
