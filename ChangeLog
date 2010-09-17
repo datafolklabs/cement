@@ -13,6 +13,9 @@
     on pkg_resources.get_distribution
  +  Pass return dict all the way back from render() so it is returned from
     run_controller_command()
+ -  Don't log.warn when no output_handler is set, just log.debug as the
+    output_handler may purposely be set to None.
+
     
 0.8.8 - Sun Aug 22, 2010
 -----------------------------------------------------------------------------

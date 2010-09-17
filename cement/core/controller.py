@@ -133,9 +133,13 @@ class expose(object):
     def __call__(self, func):
         (base, controller, con_namespace) = func.__module__.split('.')
         self.func = func
-        #self.json_func = func
         if not self.name:
-            self.name = func.__name__
+            self.name = self.func.__name__
+        
+        if not self.output_handler:
+            log.debug("no output handler configured to generate output " + \
+                      "for %s" % self.name)
+            
         log.debug("exposing namespaces['%s'].commands['%s'] from '%s'" % \
                  (self.namespace, self.name, self.func.__module__))
                 
