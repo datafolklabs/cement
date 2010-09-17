@@ -9,7 +9,9 @@
     in the config, overridden by @expose(), and overridden by 
     output_handler_override.  
  +  Add 'output_handler_override' to config
-
+ +  Add the ability to pass 'version' to lay_cement, avoiding a dependency
+    on pkg_resources.get_distribution
+    
 0.8.8 - Sun Aug 22, 2010
 -----------------------------------------------------------------------------
 

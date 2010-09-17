@@ -103,6 +103,7 @@ setup(name='cement',
     install_requires=[
         "ConfigObj",
         "jsonpickle",
+        "Genshi",
         # Required for documentation
         #"Sphinx",
         #"Pygments",

@@ -1,7 +1,6 @@
 """Cement methods to setup the framework for applications using it."""
 
 import sys
-from pkg_resources import get_distribution
 
 from cement import namespaces, handlers
 from cement import buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
@@ -103,6 +102,11 @@ def lay_cement(config, **kw):
     global namespaces
     args = kw.get('args', None)
     banner = kw.get('banner', None)
+    version = kw.get('version', None)
+    
+    if not version:
+        from pkg_resources import get_distribution
+        version = get_distribution(config['app_egg_name']).version
     
     # DEPRECATED: compat with 0.8.8
     if not args and kw.get('cli_args', None): 
@@ -120,11 +124,11 @@ def lay_cement(config, **kw):
     if not banner:
         banner = "%s version %s" % (
             config['app_name'],
-            get_distribution(config['app_egg_name']).version)
+            version)
     
     namespace = CementNamespace(
         label='root',
-        version=get_distribution(config['app_egg_name']).version,
+        version=version,
         required_api=CEMENT_API,
         config=get_default_config(),
         banner=banner,

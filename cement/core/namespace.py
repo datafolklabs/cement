@@ -1,7 +1,5 @@
 """Methods and classes to handle Cement namespace support."""
 
-from pkg_resources import get_distribution
-
 from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.configuration import ensure_api_compat
@@ -79,7 +77,7 @@ class CementNamespace(object):
     def __init__(self, label, **kw):
         if not label == 'root':
             app_name = namespaces['root'].config['app_name']
-            self.version = kw.get('version', get_distribution(app_name).version)
+            self.version = kw.get('version', namespaces['root'].version)
             self.required_api = kw.get('required_api', namespaces['root'].required_api)
             self.provider = kw.get('provider', namespaces['root'].config['app_module'])
         else:
