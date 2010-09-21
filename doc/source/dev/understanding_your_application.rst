@@ -48,8 +48,8 @@ The helloworld/bootstrap/root.py is the only bootstrap called by the Cement
 Framework, however the 'root' namespace is already setup by Cement and does
 not get created in this bootstrap.  That said, any additional bootstrap files
 need to be imported into the root bootstrap.  For example, if you are creating
-a namespace for 'systems' you would create a file at 
-helloworld/bootstrap/systems.py where you would define and configure that
+a namespace for 'system' you would create a file at 
+helloworld/bootstrap/system.py where you would define and configure that
 namespace.  Then, in helloworld/bootstrap/root.py you would import it like:
 
 .. code-block:: python

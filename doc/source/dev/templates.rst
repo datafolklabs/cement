@@ -37,7 +37,10 @@ the following:
     @expose('jinja2:helloworld.templates.example.ex2', namespace='root') 
     ...
     
-Where 'jinja2' is the alternate output_handler to use for that command only.
+Where 'jinja2' is the alternate output_handler to use for that command only,
+assuming that a plugin is installed that provides an output_handler called
+'jinja2'.
+
 The template looks like:
 
 **./helloworld/templates/example/ex2.txt**:

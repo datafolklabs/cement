@@ -97,9 +97,9 @@ A typical example of this would be
     
     class GreetingController(CementController):
         @expose('helloworld.templates.greetings.sayhi', namespace='root')
-        def sayhi(self, cli_opts, cli_args):
-            user = model.User(first=cli_opts.first_name, 
-                              last=cli_opts.last_name)
+        def sayhi(self):
+            user = model.User(first=self.cli_opts.first_name, 
+                              last=self.cli_opts.last_name)
             return dict(user=user)
 
 
@@ -134,9 +134,9 @@ template rendering:
     
     class GreetingController(CementController):
         @expose()
-        def sayhi(self, cli_opts, cli_args):
-            user = model.User(first=cli_opts.first_name, 
-                              last=cli_opts.last_name)
+        def sayhi(self):
+            user = model.User(first=self.cli_opts.first_name, 
+                              last=self.cli_opts.last_name)
             print 'Hello %s!' % user.display_name
             return dict(user=user)
 
