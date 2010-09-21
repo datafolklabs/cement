@@ -1,0 +1,2 @@
+Remove cement-helper from Paster command
+Deprecate 'ensure_api_compat'... only rely on cement versions
