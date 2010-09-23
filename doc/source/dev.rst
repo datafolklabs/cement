@@ -11,12 +11,12 @@ them in your applications.
    dev/features
    dev/quickstart
    dev/understanding_your_application
-   dev/mvc
    dev/namespaces
+   dev/hooks
    dev/handlers
+   dev/mvc
    dev/options_and_arguments
    dev/plugin_support
-   dev/hooks
    dev/templates
    dev/cli_api
    
