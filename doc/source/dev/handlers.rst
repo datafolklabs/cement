@@ -64,6 +64,89 @@ file):
 In this example, the first argument (output) is the handler type, the second 
 (yaml) is the label/name of the output handler you are registering, and finally
 the last argument is the function or class object to store as the handler.  
-**Note**: Do not pass an instantiated function or object, meaning pass 'AClass'
-and not 'AClass()'.
 
+**Note**: The handler can be store as an instantiated function/class or not. 
+This all depends on how the handler is to be used.  For example, you might want
+to use handlers to create a stateful object (instantated once) or not 
+(instantiated every time it is called).  The 'output' handler is an example
+of a handler that is not instantiated, because it is only a function that 
+relies on different arguments everytime it is called.  However, a database
+handler might only be instantiated once (same database, same info, same args)
+
+Example Usage
+-------------
+
+How a handler is accessed depends on how the handler is defined.  Does it 
+expect arguments?  Does it return data?  This is all for the developer of the
+application to determine, and document.  As an example, lets say we have a
+database handler.  We want to use handlers to setup and provide access to
+two different databases.  One for read operations, and one for write .
+operations.  Please note, this is a psuedo example and will not have any real
+database interaction.  
+
+**helloworld/core/database.py**
+
+.. code-block:: python
+
+    class Database(object):
+        def __init__(self, uri):
+            self.uri = uri
+        
+        def connect(self):
+            # do something and establish a connection
+            raise NotImplementedError, "Database.connect() must be subclassed."
+        
+        def query(self, query_string):
+            # do something and return query_results
+            raise NotImplementedError, "Database.query() must be subclassed."            
+        
+
+**helloworld/lib/database/mysql.py**
+
+.. code-block:: python
+
+    from helloworld.core.database import Database
+    
+    class MySQLDatabase(Database)
+        def connect(self):
+            # do something to connect to self.uri
+            pass
+        
+        def query(self, query_string):
+            # do something with query_string
+            return query_results
+            
+
+**helloworld/bootstrap/root.py**
+
+.. code-block:: python
+
+    from cement.core.handler import define_handler
+    from helloworld.lib.database.mysql import MySQLDatabase
+    
+    define_handler('database')
+    
+    # setup a persistant database object, one for read one for write
+    read_db = MySQLDatabase('some_db_uri')
+    write_db = MySQLDatabase('some_other_db_uri')
+    register_handler('database', 'read_db', read_db)
+    register_handler('database', 'write_db', write_db)
+    
+    
+**helloworld/controller/root.py**
+
+    from cement.core.handler import get_handler
+    
+    class RootController(CementController):
+        def query_database(self)
+            # read from the readonly database server
+            db = get_handler('database', 'read_db')
+            res = db.query('some SQL query')
+            # do something with res
+        
+        def update_something(self):
+            # do some operation on the write database server
+            db = get_handler('database', 'write_db')
+            db.query('some system to update something')
+            
+            

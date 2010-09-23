@@ -6,6 +6,13 @@ from cement.core.exc import CementRuntimeError
 
 log = get_logger(__name__)
 
+def get_handler(handler_type, handler_name):
+    if handler_type in handlers:
+        if handler_name in handlers[handler_type]:
+            return handlers[handler_type][handler_name]
+    raise MFRuntimeError, "The handler handlers[%s][%s] does not exist!" \
+        (handler_type, handler_name)
+    
 def define_handler(type):
     """
     Define a handler type that plugins can register handler objects under.
