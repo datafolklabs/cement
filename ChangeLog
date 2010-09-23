@@ -3,7 +3,7 @@
 -----------------------------------------------------------------------------
 
  +  Application config file now override plugin configs
- +  Added 'core.handlers' module which includes 'define_handler_type', and 
+ +  Added 'core.handlers' module which includes 'define_handler', and 
     'register_handler'.  
  +  Re-factored output rendering.  Output is now handled by 'output_handler' 
     in the config, overridden by @expose(), and overridden by 

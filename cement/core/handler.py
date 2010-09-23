@@ -6,7 +6,7 @@ from cement.core.exc import CementRuntimeError
 
 log = get_logger(__name__)
 
-def define_handler_type(type):
+def define_handler(type):
     """
     Define a handler type that plugins can register handler objects under.
     
@@ -20,9 +20,9 @@ def define_handler_type(type):
     
     .. code-block:: python
     
-        from cement.core.handler import define_handler_type
+        from cement.core.handler import define_handler
         
-        define_handler('database_handler')
+        define_handler('database')
     
     """
     log.debug("defining handler type '%s'", type)
@@ -53,7 +53,7 @@ def register_handler(type, name, handler_object):
         from cement.core.handler import register_handler
         
         my_handler_object = SomeTypeOfObject()
-        register_handler('some_handler_type', 'my_handler', my_handler_object)
+        register_handler('database', 'my_database_handler', my_handler_object)
     
     """
     if type not in handlers:

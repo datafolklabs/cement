@@ -35,7 +35,7 @@ def test_define_default_handler_types():
     global handlers
     define_default_handler_types()
     expected_handler_types = [
-        'output_handlers'
+        'output'
         ]
     for handler_type in expected_handler_types:
         yield check_handler_type, handler_type
@@ -47,11 +47,11 @@ def check_handler_type(handler_type):
 def test_register_default_handlers():
     global handlers
     register_default_handlers()
-    expected_output_handlers = [
+    expected_output = [
         'genshi', 'json'
         ]
-    for handler in expected_output_handlers:
-        yield check_handler, 'output_handlers', handler
+    for handler in expected_output:
+        yield check_handler, 'output', handler
     
 def check_handler(type, name):
     assert handlers[type].has_key(name)

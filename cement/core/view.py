@@ -143,8 +143,8 @@ class render(object):
                 tmpl_content = get_data(self.tmpl_module, self.tmpl_file)
             
             if self.output_handler:
-                if self.output_handler in handlers['output_handlers']:
-                    handler = handlers['output_handlers'][self.output_handler]
+                if self.output_handler in handlers['output']:
+                    handler = handlers['output'][self.output_handler]
                     namespaces['root'].config['output_handler'] = self.output_handler
                     out_txt = handler(res, tmpl_content)
                 
@@ -164,6 +164,6 @@ class render(object):
                 else:
                     raise CementRuntimeError, \
                         "Handler name '%s' " % self.output_handler + \
-                        "does not exist in handlers['output_handlers']."
+                        "does not exist in handlers['output']."
                     
         return wrapper
