@@ -104,7 +104,8 @@ class CementNamespace(object):
         if kw.get('banner', None):
             self.banner = kw['banner']
         else:
-            self.banner = "%s version %s" % (self.label, self.version)
+            self.banner = "%s %s version %s" % (
+                get_config()['app_name'], self.label, self.version)
             
         self.options = kw.get('options', init_parser(banner=self.banner))
             
