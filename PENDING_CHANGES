@@ -1,5 +1,7 @@
-Remove cement-helper from Paster command
-Deprecate 'ensure_api_compat'... only rely on cement versions
-Migrate optparse to argparse
-Create standard handlers and classes for logging, options
-Python 3 compat
+ - Deprecate 'ensure_api_compat'... only rely on cement versions
+
+ - Migrate optparse to argparse
+
+ - Create standard handlers and classes for logging, options
+
+ - Python 3 compat
