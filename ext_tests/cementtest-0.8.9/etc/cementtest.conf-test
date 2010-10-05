@@ -1,4 +1,0 @@
-[root]
-# This config file is meant for nose testing and should only be modified
-# in a way that will allow nose tests to function. 
-test_option = 'foobar'

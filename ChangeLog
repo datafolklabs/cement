@@ -15,6 +15,9 @@
     run_controller_command()
  -  Don't log.warn when no output_handler is set, just log.debug as the
     output_handler may purposely be set to None.
+ +  Added core.testing.simulate() that assists in testing.  Simulate reads
+    directly from sys.argv to simulate commands run from command line, and
+    is helpful in testing.
 
     
 0.8.8 - Sun Aug 22, 2010
