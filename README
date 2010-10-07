@@ -58,7 +58,7 @@ Development versions of Cement can be checked out of Git:
     $ python setup.py install
     
     
-Additionally, Cement applications, plugins, and helpers can be created via 
+Additionally, Cement applications, and plugins can be created via 
 PasteScript. Once Cement is installed, the following command will create a 
 command line application built on top of the Cement Framework:
 
