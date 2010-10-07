@@ -30,8 +30,10 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
         
         clear_loggers
             Boolean, whether to clean exiting loggers (default: True)
+            
         level
             The log level (info, warn, error, debug, fatal), (default: None)
+            
         to_console
             Boolean, whether or not to log to console
     
@@ -69,7 +71,7 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
     else:
         level = 'INFO'
 
-    log_level = eval("logging.%s" % level.upper())
+    log_level = getattr(logging, level.upper())
     app_log.setLevel(log_level)
     cement_log.setLevel(log_level)
     
