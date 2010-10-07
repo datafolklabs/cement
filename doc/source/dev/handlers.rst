@@ -9,7 +9,7 @@ At application bootstrap, Cement defines the 'output' handler type, and then
 registers the default output handlers to that type (genshi, and json).  As you
 can see, this is useful in that functions will return data to a genshi
 template, but if the '--json' option is passed it is rendered as Json.  
-Additionally, developers can add additional handlers via plugins such as the 
+Developers can add additional handlers via plugins such as the 
 Rosendale YAML Plugin which adds an output handler called 'yaml', and is called 
 when the user passes '--yaml'.  
 
@@ -34,7 +34,7 @@ and can be accessed as the following (from within a loaded cement app):
     handlers['output']
     
 
-Handlers should be defined within you bootstrap process, generally in the 
+Handlers should be defined within your bootstrap process, generally in the 
 root bootstrap.  To define a handler type, add something similar to the 
 following:
 
@@ -80,11 +80,11 @@ How a handler is accessed depends on how the handler is defined.  Does it
 expect arguments?  Does it return data?  This is all for the developer of the
 application to determine, and document.  As an example, lets say we have a
 database handler.  We want to use handlers to setup and provide access to
-two different databases.  One for read operations, and one for write .
+two different databases.  One for read operations, and one for write
 operations.  Please note, this is a psuedo example and will not have any real
 database interaction.  
 
-**helloworld/core/database.py**
+helloworld/core/database.py
 
 .. code-block:: python
 
@@ -101,7 +101,7 @@ database interaction.
             raise NotImplementedError, "Database.query() must be subclassed."            
         
 
-**helloworld/lib/database/mysql.py**
+helloworld/lib/database/mysql.py
 
 .. code-block:: python
 
@@ -117,7 +117,7 @@ database interaction.
             return query_results
             
 
-**helloworld/bootstrap/root.py**
+helloworld/bootstrap/root.py
 
 .. code-block:: python
 
@@ -133,7 +133,9 @@ database interaction.
     register_handler('database', 'write_db', write_db)
     
     
-**helloworld/controller/root.py**
+helloworld/controller/root.py
+
+.. code-block:: python
 
     from cement.core.handler import get_handler
     
@@ -147,6 +149,4 @@ database interaction.
         def update_something(self):
             # do some operation on the write database server
             db = get_handler('database', 'write_db')
-            db.query('some system to update something')
-            
-            
+            db.query('some query to update something')

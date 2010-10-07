@@ -196,7 +196,7 @@ function. And the result?
     In example_hook number 1, weight = 99
 
 
-As you can see, it doesn’t matter what order we place register the hook, the 
+As you can see, it doesn’t matter what order we register the hook, the 
 weight runs then in order from lowest to highest.  Hooks are awesome and 
 provide a little bit of magic to your application.  Be sure to properly 
 document any hooks you define, what their purpose is and where they will 

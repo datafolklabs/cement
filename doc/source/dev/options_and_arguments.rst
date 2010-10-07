@@ -198,7 +198,7 @@ is what is displayed in --help.
     example.options.add_option('-F', '--foo', action='store', dest='foo',
         help='pass value to foo', metavar='STR')
         
-The above sets namespaces['example'].config['foot'] to the value passed at
+The above sets namespaces['example'].config['foo'] to the value passed at
 command line (helloworld --foo=bar), and also sets self.cli_opts.foo the same.
 metavar is an extra option that alters the display in --help (-F STR, --foo=STR).
 
