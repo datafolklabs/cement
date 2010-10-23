@@ -14,10 +14,10 @@ from cement.core.configuration import ensure_api_compat
 
 log = get_logger(__name__)
 
-class CementPlugin(CementNamespace):
-    """Wrapper for CementNamespace."""
-    def __init__(self, *args, **kwargs):
-        CementNamespace.__init__(self, *args, **kwargs)
+#class CementPlugin(CementNamespace):
+#    """Wrapper for CementNamespace."""
+#    def __init__(self, *args, **kwargs):
+#        CementNamespace.__init__(self, *args, **kwargs)
      
 def get_enabled_plugins():
     """

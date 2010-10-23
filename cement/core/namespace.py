@@ -10,9 +10,6 @@ from cement.core.opt import init_parser
 
 log = get_logger(__name__)
 
-def clear_namespaces():
-    namespaces = {}
-    
 def get_namespace(namespace):
     """
     Return the namespace object whose label is 'namespace'.
@@ -26,10 +23,12 @@ def get_namespace(namespace):
     if namespaces.has_key(namespace):
         return namespaces[namespace]
     else:
-        log.fatal("the namespace '%s' doesn't exist" % namespace)
+        raise CementRuntimeError, "the namespace '%s' doesn't exist" % \
+            namespace
 
 def get_config(namespace='root'):
-    """Get a namespace's config.  Returns a ConfigObj object.
+    """
+    Get a namespace's config.  Returns a ConfigObj object.
     
     Optional Arguments:
     
@@ -40,7 +39,8 @@ def get_config(namespace='root'):
     if namespaces.has_key(namespace):
         return namespaces[namespace].config
     else:
-        log.fatal("the namespace '%s' doesn't exist" % namespace)
+        raise CementRuntimeError, "the namespace '%s' doesn't exist" % \
+            namespace
     
 class CementNamespace(object):
     """

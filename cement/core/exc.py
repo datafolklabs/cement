@@ -25,14 +25,8 @@ class CementRuntimeError(CementError):
         code = 1020
         CementError.__init__(self, value, code)
         
-class CementInternalServerError(CementError):
-    """Unknown or private internal errors."""
-    def __init__(self, value):
-        code = 1030
-        CementError.__init__(self, value, code)
-        
 class CementArgumentError(CementError):
     """Argument errors."""
     def __init__(self, value):
-        code = 1040
+        code = 1030
         CementError.__init__(self, value, code)

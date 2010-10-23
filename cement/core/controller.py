@@ -23,7 +23,8 @@ class CementController(object):
 def run_controller_command(namespace, func, cli_opts=None, cli_args=None, 
                            *args, **kw):
     """
-    Cleanly run a command function from a controller.
+    Cleanly run a command function from a controller.  Returns a tuple of
+    (result_dict, output_txt).
     
     Arguments:
     
@@ -56,8 +57,8 @@ def run_controller_command(namespace, func, cli_opts=None, cli_args=None,
         set_config_opts_per_cli_opts(nam, cli_opts)
         
     controller = namespaces[namespace].controller(cli_opts, cli_args)
-    res = getattr(controller, func)(*args, **kw)
-    return res
+    (res, out_txt) = getattr(controller, func)(*args, **kw)
+    return (res, out_txt)
 
 class expose(object):
     """

@@ -95,7 +95,7 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
             from logging.handlers import RotatingFileHandler
             file_handler = RotatingFileHandler(
                 config['log_file'], maxBytes=int(config['log_max_bytes']), 
-                backupCount=int(config['log_max_files'])
+                backupCount=int(config['log_max_bytes'])
                 )
         else:
             from logging import FileHandler

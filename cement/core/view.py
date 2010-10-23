@@ -41,7 +41,8 @@ def render_genshi_output(return_dict, template_content=None):
     from genshi.template import NewTextTemplate
     if template_content:  
         tmpl = NewTextTemplate(template_content)
-        return tmpl.generate(**return_dict).render()
+        res = tmpl.generate(**return_dict).render()
+        return res
     else:
         log.debug('template content is empty.')
         return ''
@@ -90,9 +91,17 @@ class render(object):
     
     Keywork arguments:
     
+        output_handler
+            The name of the output handler to use for rendering
+            
         template
             The module path to the template (default: None)
-                
+            
+    
+    When called, a tuple is returned consisting of (dict, output), meaning
+    the first item is the result dictionary as returned by the original
+    function, and the second is the output as rendered by the output handler.
+    
     """
     def __init__(self, output_handler, template=None):
         self.func = None
@@ -158,9 +167,10 @@ class render(object):
                     elif out and self.config['log_to_console']:
                         out.write(out_txt)
                     
-                    # return res, because we want it to be readable when
-                    # called directly from run_controller_command()
-                    return res
+                    # return res and out_txt, because we want it to be 
+                    # readable when called directly from 
+                    # run_controller_command()
+                    return (res, out_txt)
                 else:
                     raise CementRuntimeError, \
                         "Handler name '%s' " % self.output_handler + \

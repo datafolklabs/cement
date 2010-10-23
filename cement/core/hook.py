@@ -6,8 +6,8 @@ from cement.core.log import get_logger
 
 log = get_logger(__name__)
 
-def clear_hooks():
-    hooks = {}
+#def clear_hooks():
+#    hooks = {}
     
 def define_hook(name):
     """
@@ -70,7 +70,7 @@ class register_hook(object):
         log.debug("registering hook func '%s' from %s into hooks['%s']" % \
             (func.__name__, func.__module__, self.name))
         if not hooks.has_key(self.name):
-            log.warn("Hook name '%s' is not define!" % self.name)
+            log.warn("Hook name '%s' is not defined!" % self.name)
             return func
         # Hooks are as follows: (weight, name, func)
         hooks[self.name].append(
@@ -78,7 +78,7 @@ class register_hook(object):
         )
 
 
-def run_hooks(*args, **kwargs):
+def run_hooks(name, *args, **kwargs):
     """
     Run all defined hooks in the namespace.  Yields the result of each hook
     function run.
@@ -103,13 +103,12 @@ def run_hooks(*args, **kwargs):
             # do something with result from each hook function
             ...
     """
-    name = args[0]
     if not hooks.has_key(name):
-        CementRuntimeError, "Hook name '%s' is not defined!" % name
+        raise CementRuntimeError, "Hook name '%s' is not defined!" % name
     hooks[name].sort() # Will order based on weight
     for hook in hooks[name]:
         log.debug("running hook '%s' from %s" % (name, hook[2].__module__))
-        res = hook[2](*args[1:], **kwargs)
+        res = hook[2](*args, **kwargs)
         
         # Results are yielded, so you must fun a for loop on it, you can not
         # simply call run_hooks().  

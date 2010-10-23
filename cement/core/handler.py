@@ -2,6 +2,7 @@
 
 from cement import handlers
 from cement.core.log import get_logger
+from cement.core.namespace import get_config
 from cement.core.exc import CementRuntimeError
 
 log = get_logger(__name__)
@@ -10,8 +11,8 @@ def get_handler(handler_type, handler_name):
     if handler_type in handlers:
         if handler_name in handlers[handler_type]:
             return handlers[handler_type][handler_name]
-    raise MFRuntimeError, "The handler handlers[%s][%s] does not exist!" \
-        (handler_type, handler_name)
+    raise CementRuntimeError, "The handler handlers[%s][%s] does not exist!" \
+        % (handler_type, handler_name)
     
 def define_handler(type):
     """
@@ -32,6 +33,7 @@ def define_handler(type):
         define_handler('database')
     
     """
+    config = get_config()
     log.debug("defining handler type '%s'", type)
     if handlers.has_key(type):
         raise CementRuntimeError, "Handler type '%s' already defined!" % type

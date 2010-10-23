@@ -11,7 +11,6 @@ from cement.core.exc import CementArgumentError
 
 log = get_logger(__name__)
         
-# FIXME: This method is so effing ugly.
 def run_command(cmd_name=None):
     """
     Run the command or namespace-subcommand as defined by the 'expose()'
@@ -64,9 +63,10 @@ def run_command(cmd_name=None):
     if namespaces[namespace].commands.has_key(actual_cmd):
         cmd = namespaces[namespace].commands[actual_cmd]
         log.debug("executing command '%s'" % actual_cmd)
-        run_controller_command(cmd['controller_namespace'], cmd['func'], 
-                               cli_opts, cli_args)  
-
+        (res, out_txt) = run_controller_command(cmd['controller_namespace'], 
+                                                cmd['func'], 
+                                                cli_opts, cli_args)  
+        return (res, out_txt)
     else:
         raise CementArgumentError, "Unknown command '%s', see --help?" % actual_cmd
         
