@@ -5,7 +5,8 @@ from configobj import ConfigObj, Section
 
 from cement.core.exc import CementRuntimeError, CementConfigError
 
-CEMENT_API = "0.7-0.8:20100210"
+# The use of CEMENT_API is deprecated as of 0.8.9.
+# CEMENT_API = "0.7-0.8:20100210"
 
 def get_default_config():
     """Get a default config dict."""
@@ -38,7 +39,9 @@ handlers = {}
         
 def get_api_version():
     """Get the Cement API Version."""
-    return CEMENT_API
+    #return CEMENT_API
+    print "The use of CEMENT_API is deprecated as of 0.8.9."
+    return None
     
 def ensure_api_compat(module_name, required_api):
     """
@@ -59,12 +62,14 @@ def ensure_api_compat(module_name, required_api):
             Raised if required_api/CEMENT_API do not match.
     
     """
-    if required_api == CEMENT_API:
-        return True
-    else:
-        raise CementRuntimeError, \
-            "%s requires Cement(api:%s) which differs from installed Cement(api:%s)." % \
-                (module_name, required_api, CEMENT_API)
+    #if required_api == CEMENT_API:
+    #    return True
+    #else:
+    #    raise CementRuntimeError, \
+    #        "%s requires Cement(api:%s) which differs from installed Cement(api:%s)." % \
+    #            (module_name, required_api, CEMENT_API)
+    print "WARNING: The use of CEMENT_API is deprecated as of 0.8.9.  Called from %s" % module_name
+    return True
          
 def t_f_pass(value):
     """

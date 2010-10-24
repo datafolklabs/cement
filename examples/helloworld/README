@@ -49,7 +49,7 @@ Create and install the plugin:
     
     $ paster cement-plugin helloworld myplugin
     
-    $ cd helloworld-plugin-myplugin
+    $ cd helloworld.myplugin
     
     $ python setup.py develop
     

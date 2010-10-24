@@ -1,1 +1,2 @@
 recursive-include helloworld/templates *
+recursive-include tests *

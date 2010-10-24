@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.8.9'
+version = '0.8.10'
 
 LONG = """
 Cement is an advanced CLI Application Framework for Python. It promotes code 
@@ -17,9 +17,9 @@ At a minimum, Cement configures the following features for every application:
      * Multiple Configuration file parsing (default: /etc, ~/)
      * Command line argument and option parsing
      * Dual Console/File Logging Support
-     * Full Internal and External (3rd Party) Plugin support
+     * Internal and External (3rd Party) Plugin support
      * Basic "hook" support
-     * Full MVC support for advanced application design
+     * Model/View/Controller support for advanced application design
      * Text output rendering with Genshi templates
      * Json output rendering allows other programs to access your CLI-API
     

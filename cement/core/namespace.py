@@ -2,7 +2,6 @@
 
 from cement import namespaces
 from cement.core.log import get_logger
-from cement.core.configuration import ensure_api_compat
 from cement.core.exc import CementRuntimeError
 from cement.core.configuration import get_default_namespace_config, \
                                       set_config_opts_per_file
@@ -51,43 +50,47 @@ class CementNamespace(object):
         label
             Namespace label.  Class is stored in the global 'namespaces' 
             dict as namespaces['label'].
+
         version
             The version of the application.
-        required_api
-            The required Cement API the application was built on.
         
     Optional Keyword Arguments:
         
         description
             Description of the plugin/namespace (default: '')
+
         commands
             A dict of command functions (default: {})
+
         is_hidden
             Boolean, whether command should display in --help output 
             (default: False)
+
         config
             A configobj object (default: None).  A basic default config will
             be created if none is passed.  For advanced configurations such
             as using a configspec or what have you can be done by passing in
             the configobj object.
+
         banner
             A version banner to display for --version (default: '')
+
+        required_api
+            The required Cement API the application was built on. (Deprecated
+            as of 0.8.9)
             
     """
     def __init__(self, label, **kw):
         if not label == 'root':
             app_name = namespaces['root'].config['app_name']
             self.version = kw.get('version', namespaces['root'].version)
-            self.required_api = kw.get('required_api', namespaces['root'].required_api)
             self.provider = kw.get('provider', namespaces['root'].config['app_module'])
         else:
             self.version = kw.get('version', None)
-            self.required_api = kw.get('required_api', None)
             self.provider = kw.get('provider', None)
 
         try:
             assert self.version, "A namespace version is required!"
-            assert self.required_api, "A required_api version is required!"
             assert self.provider, "A namespace provider is required!"
         except AssertionError, e:
             raise CementRuntimeError, e.__str__()
@@ -152,7 +155,6 @@ def register_namespace(namespace_obj):
         register_namespace(example)
         
     """
-    ensure_api_compat(namespace_obj.label, namespace_obj.required_api)
     define_namespace(namespace_obj.label, namespace_obj)
     
     # Reveal the controller object.

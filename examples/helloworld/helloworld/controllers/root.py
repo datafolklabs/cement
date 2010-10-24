@@ -10,14 +10,14 @@ from cement.core.controller import CementController, expose
 from cement.core.namespace import get_config
 from cement.core.log import get_logger
 
-from helloworld.core.exc import helloworldArgumentError
+from helloworld.core.exc import HelloworldArgumentError
 
 log = get_logger(__name__)
 config = get_config()
 
 class RootController(CementController):
     @expose('helloworld.templates.root.error', is_hidden=True)
-    def error(self, errors=[], *args, **kw):
+    def error(self, errors=[]):
         """
         This can be called when catching exceptions giving the developer a 
         clean way of presenting errors to the user.
@@ -47,33 +47,35 @@ class RootController(CementController):
         return dict(errors=errors)
     
     @expose(is_hidden=True)
-    def default(self, *args, **kw):
+    def nosetests(self):
+        """This method is added for nose testing."""
+        pass
+        
+    @expose(is_hidden=True)
+    def default(self):
         """
         This is the default command method.  If no commands are passed to
         helloworld, this one will be executed.  By default it raises an
         exception.
         
         """
-        raise helloworldArgumentError, "A command is required. See --help?"
+        raise HelloworldArgumentError, "A command is required. See --help?"
     
     @expose('helloworld.templates.root.cmd1')
-    def cmd1(self, *args, **kw):
-        """This is an example 'root' command.  It should be replaced."""
-        foo = 'In helloworld.controllers.root.cmd1()'
-        if self.cli_opts.debug:
-            print 'The --debug option was passed'
-        
+    def cmd1(self):
+        """This is an example 'root' command."""
+        foo = 'bar'
         items = ['one', 'two', 'three']
         return dict(foo=foo, items=items)
     
     @expose()
-    def cmd1_help(self, *args, **kw):
+    def cmd1_help(self):
         """This is an example 'root' -help command.  It should be replaced."""
         foo = 'In helloworld.controllers.root.cmd1_help()'
         return dict(foo=foo)
     
     @expose('helloworld.templates.root.get-started')
-    def get_started(self, *args, **kw):
+    def get_started(self):
         features = [
             'Multiple Configuration file parsing (default: /etc, ~/)',
             'Command line argument and option parsing',

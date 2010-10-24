@@ -10,7 +10,6 @@ from cement.core.log import get_logger, setup_logging_for_plugin_provider
 from cement.core.hook import run_hooks
 from cement.core.configuration import set_config_opts_per_file, t_f_pass
 from cement.core.namespace import CementNamespace, get_config
-from cement.core.configuration import ensure_api_compat
 
 log = get_logger(__name__)
 

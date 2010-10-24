@@ -16,12 +16,8 @@ from helloworld.model.example import ExampleModel
 log = get_logger(__name__)
 
 class ExampleController(CementController):
-    @expose()
-    def test(self, *args, **kw):
-        config = get_config()
-        
     @expose(namespace='example') # no template
-    def ex1(self, *args, **kw):
+    def ex1(self):
         """
         This is how to expose a subcommand because it will be under the 
         'example' namespace.  You would access this subcommand as:
@@ -57,7 +53,7 @@ class ExampleController(CementController):
         return dict(foo='bar')
         
     @expose(namespace='example')
-    def ex1_help(self, *args, **kw):
+    def ex1_help(self):
         """
         Help methods are found by way of <command>_help.  This would be
         executed when you run:
@@ -68,7 +64,7 @@ class ExampleController(CementController):
         print "This is the help method for ex1."
     
     @expose('helloworld.templates.example.ex2', namespace='example')    
-    def ex2(self, *args, **kw): 
+    def ex2(self): 
         """
         This is another command, also in the 'example' namespace but that is
         rendered by a genshi template.  
@@ -105,7 +101,7 @@ class ExampleController(CementController):
         return dict(foo=self.cli_opts.foo, example=example, items=['one', 'two', 'three'])
 
     @expose(namespace='root')
-    def cmd2(self, *args, **kw):
+    def cmd2(self):
         """This command will be displayed under the root namespace."""
         foo = "In helloworld.controllers.example.cmd2()"
         print foo

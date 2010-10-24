@@ -1,9 +1,9 @@
-Versioning and API Compatibility
---------------------------------
+Versioning and Compatibility
+----------------------------
 
 This outline uses fictitious version numbers to avoid confusion between 
 actual releases and this doc. Cement is versioned as follows, using the 
-version 0.2.4 and API version 0.1-0.2:20090115 as the example:
+version 0.2.4 as the example:
 
  * 0 = Code Base
  * 2 = Major Release Version
@@ -24,17 +24,7 @@ that breaks API compatibility would be versioned as 0.3.1 (odd, odd).  Once
 a 'stable enough' version of the development branch reaches releasability, it
 will be released as 0.3.2 (odd, even) meaning the branch is development, but
 it is a semi-stable release.
-
-There is also an API Compatibility Version. In this example that is 
     
- * 0.1-0.2:20090115
-    
-The API version is made up of 'dev-stable:date' or in other words the above
-version says, "This API version changed in the 0.1 development branch, and
-will remain compatible through the 0.2 stable branch".  The date that the
-API compatibility changed is also tacked onto the end of the version for
-clarity.
-
 Any time API compatibility changes we will up the Major Release Version. We 
 handle this in setup.py of Cement applications by doing something like:
 

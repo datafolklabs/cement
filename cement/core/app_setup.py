@@ -5,7 +5,7 @@ import sys
 from cement import namespaces, handlers
 from cement import buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
 from cement.core.exc import CementConfigError
-from cement.core.configuration import CEMENT_API, set_config_opts_per_file
+from cement.core.configuration import set_config_opts_per_file
 from cement.core.configuration import validate_config, get_default_config
 from cement.core.plugin import load_all_plugins
 from cement.core.namespace import CementNamespace, define_namespace, get_config
@@ -129,7 +129,6 @@ def lay_cement(config, **kw):
     namespace = CementNamespace(
         label='root',
         version=version,
-        required_api=CEMENT_API,
         config=get_default_config(),
         banner=banner,
         provider=config['app_module']

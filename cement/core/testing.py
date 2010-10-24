@@ -2,6 +2,7 @@
 
 import os
 import sys
+import re
 from shutil import rmtree
 from tempfile import mkdtemp
 
@@ -46,17 +47,8 @@ def simulate(args=[]):
         namespace = 'root'
         cmd = sys.argv[1]
         
+    cmd = re.sub('-', '_', cmd)
+    
     (opts, args) = parse_options(namespace, ignore_conflicts=True)
     (res_dict, output_txt) = run_controller_command(namespace, cmd, opts, args) 
     return (res_dict, output_txt)
-    
-def setup_func():
-    """A generic setup function for nose testing."""
-    config = get_config()
-    config['datadir'] = mkdtemp()
-    
-def teardown_func():
-    """A generic teardown function for nose testing."""
-    config = get_config()
-    if os.path.exists(config['datadir']):
-        rmtree(config['datadir'])

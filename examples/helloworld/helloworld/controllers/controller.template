@@ -12,6 +12,6 @@ config = get_config()
 
 class ExampleController(CementController):
     @expose('helloworld.templates.example.cmd', namespace='example')
-    def cmd(self, *args, **kw):
+    def cmd(self):
         # do something here
         pass
