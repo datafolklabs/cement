@@ -19,4 +19,5 @@ them in your applications.
    dev/plugin_support
    dev/templates
    dev/cli_api
+   dev/testing
    
