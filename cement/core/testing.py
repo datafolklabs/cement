@@ -10,6 +10,7 @@ from cement import namespaces
 from cement.core.namespace import get_config
 from cement.core.exc import CementRuntimeError
 from cement.core.controller import run_controller_command
+from cement.core.command import run_command
 from cement.core.opt import parse_options
 
 def simulate(args=[]):
@@ -37,18 +38,35 @@ def simulate(args=[]):
         raise CementRuntimeError, "args must be set properly."
         
     sys.argv = args
-    if sys.argv[1] in namespaces:
-        if not len(sys.argv) >= 3:
-            raise CementRuntimeError, "A subcommand (additional arg) is required."
-        else:
-            namespace = sys.argv[1]
-            cmd = sys.argv[2]
-    else:
-        namespace = 'root'
-        cmd = sys.argv[1]
-        
-    cmd = re.sub('-', '_', cmd)
     
-    (opts, args) = parse_options(namespace, ignore_conflicts=True)
-    (res_dict, output_txt) = run_controller_command(namespace, cmd, opts, args) 
+    #namespace = 'root' # default
+    #controller_namespace = 'root' # default
+    #    
+    #if sys.argv[1] in namespaces:
+    #    namespace = sys.argv[1]
+    #    
+    #for nam in namespaces:
+    #    if sys.argv[1] in namespaces[nam].commands:
+    #        controller_namespace = namespaces[nam].commands[sys.argv[1]]['controller_namespace']
+    #        break 
+    
+    # get the command to run
+    #if namespace == 'root':
+    #    cmd = sys.argv[1]
+    #else:
+    #    if not len(sys.argv) >= 3:
+    #        raise CementRuntimeError, "A subcommand (additional arg) is required."
+    #    else:
+    #        cmd = sys.argv[2]
+
+    # unconvert dashes
+    #cmd = re.sub('-', '_', cmd)
+    #
+    #print controller_namespace
+    #print namespace
+    #print cmd
+    
+    #(opts, args) = parse_options(controller_namespace, ignore_conflicts=True)
+    #(res_dict, output_txt) = run_controller_command(controller_namespace, cmd, opts, args) 
+    (res_dict, output_txt) = run_command(cmd_name=sys.argv[1], ignore_conflicts=True)
     return (res_dict, output_txt)

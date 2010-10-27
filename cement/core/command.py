@@ -11,7 +11,7 @@ from cement.core.exc import CementArgumentError
 
 log = get_logger(__name__)
         
-def run_command(cmd_name=None):
+def run_command(cmd_name=None, ignore_conflicts=False):
     """
     Run the command or namespace-subcommand as defined by the 'expose()'
     decorator used on a Controller function.
@@ -40,7 +40,8 @@ def run_command(cmd_name=None):
 
                                
     # Parse cli options and arguments
-    (cli_opts, cli_args) = parse_options(namespace=namespace)
+    (cli_opts, cli_args) = parse_options(namespace=namespace, 
+                                         ignore_conflicts=ignore_conflicts)
 
     # Run all post options hooks
     for res in run_hooks('post_options_hook', cli_opts, cli_args):
