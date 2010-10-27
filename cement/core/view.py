@@ -3,87 +3,132 @@
 import sys
 import os
 import re
-from pkgutil import get_data
 
-from cement import handlers
 from cement import namespaces, SAVED_STDOUT, SAVED_STDERR
-from cement import buf_stdout, buf_stderr
+from cement.core.handler import get_handler
 from cement.core.exc import CementRuntimeError
 from cement.core.log import get_logger
 
 log = get_logger(__name__)
-
-def render_genshi_output(return_dict, template_content=None):
-    """
-    Render output from Genshi template text.  In general, this function 
-    should not be called directly, as it is called from render().
+        
+class CementOutputHandler(object):
+    def __init__(self, data, template=None):
+        """
+        This is the standard class for output handling.  All output handlers
+        should subclass from here.
+        """
+        self.data = data
+        self.template = template
+        self._verify_template()
+        self.tmpl_content = self._parse_template()
+        
+    def _verify_template(self):
+        """
+        Perform any operations to verify that the handler can use the given
+        template.  Should return True if verification is successful or 
+        raise CementRuntimeError if not.
+        """
+        pass
     
-    Required Arguments:
+    def _parse_template(self):
+        """
+        Parse a template file and return the contents of the file.
+        """
+        pass
+        
+    def render(self):
+        """
+        Using the contents of the template file, or from the data dictionary
+        directly, render output.  Will raise NotImplementedError if not 
+        subclassed.
+        """
+        raise NotImplementedError, "CementOutputHandler.render() must be subclassed."
+        
+class GenshiOutputHandler(CementOutputHandler):
+    def __init__(self, data, template=None):
+        """
+        Render output from Genshi template text.  In general, this function 
+        should not be called directly, as it is called from render().
     
-        return_dict
-            The dictionary returned from a controller function.
+        Required Arguments:
+    
+            data
+                The dictionary returned from a controller function.
             
-        template_content
-            The content (text) read from the template file.
-    
-    Usage:
-    
-    .. code-block:: python
-    
-        from cement.core.view import render_genshi_output
-        
-        fake_dict = dict(foo='String', bar=100, list=[1,2,3,4,5])
-        tmpl_content = "$foo $bar {% for i in list %}${i}{% end %}"
-        output = render_genshi_output(fake_dict, tmpl_content)
-        
-    """
-    log.debug("rendering genshi output")
-    from genshi.template import NewTextTemplate
-    if template_content:  
-        tmpl = NewTextTemplate(template_content)
-        res = tmpl.generate(**return_dict).render()
-        return res
-    else:
-        log.debug('template content is empty.')
-        return ''
+            template
+                The template file in module form, such as:
+                (myapp.templates.namespace.file) where the path to the file
+                is actually myapp/templates/namespace/file.txt or similar.
 
-def render_json_output(return_dict, template_content=None):
-    """
-    Render output into JSON.  In general, this function 
-    should not be called directly, as it is called from render().
-    
-    Required Arguments:
-    
-        return_dict
-            The dictionary returned from a controller function.
+        """
+        self.tmpl_file = None
+        self.tmpl_module = None
+        CementOutputHandler.__init__(self, data, template)
+        
+    def _parse_template(self):
+        if self.template:
+            from pkgutil import get_data
+            # Mock up the template path
+            parts = self.template.split('.')
+            self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
+            self.tmpl_module = '.'.join(parts) # left over in between
+            self.tmpl_content = get_data(self.tmpl_module, self.tmpl_file)
+            return self.tmpl_content
             
-        template_content
-            The content (text) read from the template file.
-    
-    Usage:
-    
-    .. code-block:: python
-    
-        from cement.core.view import render_json_output
+    def render(self):
+        log.debug("rendering genshi output")
+        from genshi.template import NewTextTemplate
+        if self.tmpl_content:  
+            tmpl = NewTextTemplate(self.tmpl_content)
+            res = tmpl.generate(**self.data).render()
+            return res
+        else:
+            log.debug('template content is empty.')
+            return ''
         
-        fake_dict = dict(foo='String', bar=100, list=[1,2,3,4,5])
-        output = render_json_output(fake_dict)
+class JsonOutputHandler(CementOutputHandler):
+    def __init__(self, data, template=None):
+        """
+        Render output into JSON from the controller data dictionary.  The
+        template param is ignored.
+    
+        Required Arguments:
+    
+            data
+                The dictionary returned from a controller function.
+            
+            template
+                Ignored by this handler
+    
+        Usage:
+    
+        .. code-block:: python
+    
+            from cement.core.handler import get_handler
         
-    """
-    log.debug("rendering json output")
-    import jsonpickle
-    return_dict['stdout'] = buf_stdout.buffer
-    return_dict['stderr'] = buf_stderr.buffer
-    return jsonpickle.encode(return_dict, unpicklable=False)
+            fake_dict = dict(foo='String', bar=100, list=[1,2,3,4,5])
+            handler = get_handler('output', 'json')(fake_dict)
+            output = handler.render()
+        
+        """
+        CementOutputHandler.__init__(self, data, template)
+        
+    def render(self):
+        log.debug("rendering json output")
+        import jsonpickle
+        from cement import buf_stdout, buf_stderr
+        
+        self.data['stdout'] = buf_stdout.buffer
+        self.data['stderr'] = buf_stderr.buffer
+        return jsonpickle.encode(self.data, unpicklable=False)
     
 class render(object):
     """
-    Class decorator to render data with Genshi text formatting engine or json.
+    Class decorator to render data with the specified output handler.
     Called when the function is decorated, sets up the engine and template for 
-    later use.  If not passed a template, render will do nothing (unless 
-    --json is passed, by which json is returned).
+    later use.
     
-    *Note: This is called form the cement.core.controller.expose() decorator 
+    *Note: This is called from the cement.core.controller.expose() decorator 
     and likely shouldn't ever be needed to call directly.*
     
     *Note: If 'output_file' is passed in the return dictionary from func, then
@@ -109,18 +154,8 @@ class render(object):
         self.tmpl_module = None
         self.tmpl_file = None
         self.config = namespaces['root'].config
-        self.output_handler = output_handler
-            
-        # ?
-        #if self.template and self.template == 'json':
-        #    self.handler = 'json'        
-        #elif self.template:
-        if self.template:
-            # Mock up the template path
-            parts = self.template.split('.')
-            self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
-            self.tmpl_module = '.'.join(parts) # left over in between
-            
+        self.handler = output_handler
+
     def __call__(self, func):
         """
         Called when the command function is actually run.  Expects a 
@@ -132,11 +167,11 @@ class render(object):
         def wrapper(*args, **kw):  
             # honor output_handler_override
             if self.config['output_handler_override']:
-                self.output_handler = self.config['output_handler_override']
+                self.handler = self.config['output_handler_override']
 
             log.debug("decorating '%s' with '%s:%s'" % \
-                (func.__name__, self.output_handler, self.template))  
-                
+                (func.__name__, self.handler, self.template))  
+            
             res = self.func(*args, **kw)
             
             out = SAVED_STDOUT
@@ -148,32 +183,24 @@ class render(object):
                 raise CementRuntimeError, \
                     "Controller functions must return type dict()."
             
-            if self.template:  
-                tmpl_content = get_data(self.tmpl_module, self.tmpl_file)
+            if self.handler:
+                h = get_handler('output', self.handler)(res, self.template)
+                namespaces['root'].config['output_handler'] = self.handler
+                out_txt = h.render()
             
-            if self.output_handler:
-                if self.output_handler in handlers['output']:
-                    handler = handlers['output'][self.output_handler]
-                    namespaces['root'].config['output_handler'] = self.output_handler
-                    out_txt = handler(res, tmpl_content)
+                if not out_txt:
+                    out_txt = ''
                 
-                    if not out_txt:
-                        out_txt = ''
-                    
-                    if res.has_key('output_file') and res['output_file']:
-                        f = open(res['output_file'], 'w+')
-                        f.write(out_txt)
-                        f.close()
-                    elif out and self.config['log_to_console']:
-                        out.write(out_txt)
-                    
-                    # return res and out_txt, because we want it to be 
-                    # readable when called directly from 
-                    # run_controller_command()
-                    return (res, out_txt)
-                else:
-                    raise CementRuntimeError, \
-                        "Handler name '%s' " % self.output_handler + \
-                        "does not exist in handlers['output']."
+                if res.has_key('output_file') and res['output_file']:
+                    f = open(res['output_file'], 'w+')
+                    f.write(out_txt)
+                    f.close()
+                elif out and self.config['log_to_console']:
+                    out.write(out_txt)
+                
+                # return res and out_txt, because we want it to be 
+                # readable when called directly from 
+                # run_controller_command()
+                return (res, out_txt)
                     
         return wrapper

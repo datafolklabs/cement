@@ -7,7 +7,7 @@ from cement.core.exc import CementRuntimeError
 
 log = get_logger(__name__)
 
-def get_handler(handler_type, handler_name):
+def get_handler(handler_type, handler_name, *args, **kw):
     if handler_type in handlers:
         if handler_name in handlers[handler_type]:
             return handlers[handler_type][handler_name]

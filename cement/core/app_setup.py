@@ -13,7 +13,7 @@ from cement.core.log import setup_logging, get_logger
 from cement.core.hook import register_hook, define_hook, run_hooks
 from cement.core.controller import expose
 from cement.core.handler import define_handler, register_handler
-from cement.core.view import render_genshi_output, render_json_output
+from cement.core.view import GenshiOutputHandler, JsonOutputHandler
 
 log = get_logger(__name__)    
                 
@@ -68,8 +68,8 @@ def register_default_handlers():
     Register the default base level handlers required to run a Cement
     application.
     """
-    register_handler('output', 'genshi', render_genshi_output)
-    register_handler('output', 'json', render_json_output)
+    register_handler('output', 'genshi', GenshiOutputHandler)
+    register_handler('output', 'json', JsonOutputHandler)
     
 def lay_cement(config, **kw):
     """
