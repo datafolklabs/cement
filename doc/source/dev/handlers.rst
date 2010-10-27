@@ -58,8 +58,9 @@ file):
 
 .. code-block:: python
     
-    from rosendale.lib.yaml_output import render_yaml_output
-    register_handler('output', 'yaml', render_yaml_output)
+    from rosendale.lib.yaml_output import YamlOutputHandler
+    register_handler('output', 'yaml', YamlOutputHandler)
+    
     
 In this example, the first argument (output) is the handler type, the second 
 (yaml) is the label/name of the output handler you are registering, and finally
@@ -67,7 +68,7 @@ the last argument is the function or class object to store as the handler.
 
 **Note**: The handler can be store as an instantiated function/class or not. 
 This all depends on how the handler is to be used.  For example, you might want
-to use handlers to create a stateful object (instantated once) or not 
+to use handlers to create a stateful object (instantiated once) or not 
 (instantiated every time it is called).  The 'output' handler is an example
 of a handler that is not instantiated, because it is only a function that 
 relies on different arguments everytime it is called.  However, a database

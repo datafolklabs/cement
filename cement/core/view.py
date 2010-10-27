@@ -87,32 +87,30 @@ class GenshiOutputHandler(CementOutputHandler):
             return ''
         
 class JsonOutputHandler(CementOutputHandler):
-    def __init__(self, data, template=None):
-        """
-        Render output into JSON from the controller data dictionary.  The
-        template param is ignored.
-    
-        Required Arguments:
-    
-            data
-                The dictionary returned from a controller function.
-            
-            template
-                Ignored by this handler
-    
-        Usage:
-    
-        .. code-block:: python
-    
-            from cement.core.handler import get_handler
+    """
+    Render output into JSON from the controller data dictionary.  The
+    template param is ignored.
+
+    Required Arguments:
+
+        data
+            The dictionary returned from a controller function.
         
-            fake_dict = dict(foo='String', bar=100, list=[1,2,3,4,5])
-            handler = get_handler('output', 'json')(fake_dict)
-            output = handler.render()
-        
-        """
-        CementOutputHandler.__init__(self, data, template)
-        
+        template
+            Ignored by this handler
+
+    Usage:
+
+    .. code-block:: python
+
+        from cement.core.handler import get_handler
+    
+        fake_dict = dict(foo='String', bar=100, list=[1,2,3,4,5])
+        handler = get_handler('output', 'json')(fake_dict)
+        output = handler.render()
+    
+    """
+
     def render(self):
         log.debug("rendering json output")
         import jsonpickle

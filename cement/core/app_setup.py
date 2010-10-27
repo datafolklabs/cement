@@ -173,10 +173,9 @@ def lay_cement(config, **kw):
     boot = __import__("%s.bootstrap" % namespaces['root'].config['app_module'], 
                           globals(), locals(), ['root'], -1)
     
-
     for res in run_hooks('post_bootstrap_hook'):
         pass
-
+    
     # load all plugins
     load_all_plugins()
     
