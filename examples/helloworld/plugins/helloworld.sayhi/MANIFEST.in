@@ -1,2 +1,0 @@
-recursive-include helloworld/templates/sayhi *
-recursive-include tests *

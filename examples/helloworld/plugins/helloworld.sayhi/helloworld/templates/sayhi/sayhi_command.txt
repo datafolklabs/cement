@@ -1,9 +1,0 @@
-{# This is an example Genshi Text Template.  Documentation is available    #}\
-{# at:                                                                     #}\
-{#                                                                         #}\
-{#    http://genshi.edgewall.org/wiki/Documentation/text-templates.html    #}\
-{#                                                                         #}\
-\
-\
-{# --------------------- 78 character baseline --------------------------- #}\
-${foo} ${bar}

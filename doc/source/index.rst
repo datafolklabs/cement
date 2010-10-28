@@ -16,16 +16,26 @@ Cement Framework.
  
 Other sites that might be helpful:
 
- * http://pypi.python.org/pypi/cement
- * http://github.com/derks/cement
- * http://builtoncement.org
+cement:
+
+ * PyPi: http://pypi.python.org/pypi/cement
+ * Code: http://github.com/derks/cement
+ * Site: http://builtoncement.org
  
+cement.devtools:
+
+ * PyPi: http://pypi.python.org/pypi/cement.devtools
+ * Code: http://github.com/derks/cement.devtools
  
-Also see The Rosendale Project which is focussed on providing shared plugins that can be used
-by any application built on Cement.  It can be found at:
+cement.test:
+ 
+ * Code: http://github.com/derks/cement.test
+ 
+rosendale:
 
  * Doc: http://builtoncement.org/rosendale/1.0/doc/
  * Downloads: http://builtoncement.org/rosendale/1.0/download/
+ 
  
 Contents
 ========
@@ -33,5 +43,6 @@ Contents
    :maxdepth: 2
 
    api
+   
    dev
 

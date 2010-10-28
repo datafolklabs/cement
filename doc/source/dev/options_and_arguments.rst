@@ -21,7 +21,6 @@ registered.  The following comes from the example plugin:
         label='example', 
         controller='ExampleController',
         description='Example Plugin for helloworld',
-        required_api='0.7-0.8:20100210',
         provider='helloworld'
         )
 
@@ -75,7 +74,6 @@ under our 'example' namespace.  This is configurable by the
                 label='example', 
                 controller='ExampleController',
                 description='Example Plugin for helloworld',
-                required_api='0.7-0.8:20100210',
                 provider='helloworld'
                 )
 

@@ -23,7 +23,7 @@ Hook definitions:
     post_bootstrap_hook
         Run just after the root bootstrap is loaded.  Note that Plugins can
         not use this hook because it runs before plugins are loaded.  Use 
-        pose_plugins_hook instead.
+        post_plugins_hook instead.
         
     validate_config_hook
         Run after config options are setup

@@ -1,8 +1,0 @@
-# This configuration is specifically meant to be used for testing
-[root]
-
-# This is how you'd enable a plugin for testing
-[example]
-enable_plugin = true
-provider = helloworld
-foo = 'some value'

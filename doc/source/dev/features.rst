@@ -7,9 +7,9 @@ every application (out of the box):
  * Multiple Configuration file parsing (default: /etc, ~/)
  * Command line argument and option parsing
  * Dual Console/File Logging Support
- * Full Internal and External (3rd Party) Plugin support
+ * Internal and External (3rd Party) Plugin support
  * Basic "hook" support
- * Full MVC support for advanced application design
+ * MVC support for advanced application design
  * Text output rendering with Genshi templates
  * Json output rendering - The Cement CLI-API
     
