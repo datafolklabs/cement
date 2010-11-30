@@ -67,7 +67,10 @@ class GenshiOutputHandler(CementOutputHandler):
         
     def _parse_template(self):
         if self.template:
-            from pkgutil import get_data
+            try:
+                from pkgutil import get_data
+            except ImportError:
+                from cement.core._pkgutil import get_data
             # Mock up the template path
             parts = self.template.split('.')
             self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
