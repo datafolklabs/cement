@@ -1,6 +1,5 @@
 """Methods and classes to handle Cement Controller functions."""
 import re
-import json
 from pkgutil import get_data
 from genshi.template import NewTextTemplate
 
