@@ -137,7 +137,7 @@ def lay_cement(config, **kw):
     namespaces['root'].config.update(config)
     
     root_mod = __import__("%s.controllers.root" % namespaces['root'].config['app_module'], 
-                          globals(), locals(), ['root'], -1)
+                          globals(), locals(), ['root'])
     namespaces['root'].controller = getattr(root_mod, 'RootController')
     
     for cf in namespaces['root'].config['config_files']:
@@ -171,7 +171,7 @@ def lay_cement(config, **kw):
     register_default_handlers()
     
     boot = __import__("%s.bootstrap" % namespaces['root'].config['app_module'], 
-                          globals(), locals(), ['root'], -1)
+                          globals(), locals(), ['root'])
     
     for res in run_hooks('post_bootstrap_hook'):
         pass
