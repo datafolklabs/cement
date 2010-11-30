@@ -9,3 +9,52 @@ examples/CementExample/var
 build
 dist
 doc/build/
+# Gitignores from https://github.com/github/gitignore
+
+# Vi
+*.swp
+*.swo
+
+
+# Vim
+.*.sw[a-z]
+*.un~
+
+
+# OSX
+.DS_Store?
+Icon?
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+
+# Python
+*.py[co]
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+develop-eggs
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+
+# TextMate
+*.tmproj
+*.tmproject
+tmtags
