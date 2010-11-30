@@ -97,7 +97,7 @@ def load_plugin(plugin):
     loaded = False
     try:
         plugin_module = __import__('%s.bootstrap' % provider, 
-            globals(), locals(), [plugin], -1)
+            globals(), locals(), [plugin])
         getattr(plugin_module, plugin)
         if namespaces.has_key(plugin):
             loaded = True
