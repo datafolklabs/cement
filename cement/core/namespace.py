@@ -160,7 +160,7 @@ def register_namespace(namespace_obj):
     # Reveal the controller object.
     base = namespace_obj.provider
     mymod = __import__('%s.controllers.%s' % (base, namespace_obj.label), 
-                       globals(), locals(), [namespace_obj.controller], -1)
+                       globals(), locals(), [namespace_obj.controller])
     cont = getattr(mymod, namespace_obj.controller)                  
     namespaces[namespace_obj.label].controller = cont
     for file in namespaces['root'].config['config_files']:
