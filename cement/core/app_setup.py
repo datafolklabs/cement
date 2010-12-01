@@ -2,7 +2,7 @@
 
 import sys
 
-from cement import namespaces, handlers
+from cement import namespaces
 from cement import buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
 from cement.core.exc import CementConfigError
 from cement.core.configuration import set_config_opts_per_file
@@ -10,8 +10,7 @@ from cement.core.configuration import validate_config, get_default_config
 from cement.core.plugin import load_all_plugins
 from cement.core.namespace import CementNamespace, define_namespace, get_config
 from cement.core.log import setup_logging, get_logger
-from cement.core.hook import register_hook, define_hook, run_hooks
-from cement.core.controller import expose
+from cement.core.hook import define_hook, run_hooks
 from cement.core.handler import define_handler, register_handler
 from cement.core.view import GenshiOutputHandler, JsonOutputHandler
 
@@ -99,7 +98,6 @@ def lay_cement(config, **kw):
         lay_cement(get_default_config())
         
     """    
-    global namespaces
     args = kw.get('args', None)
     banner = kw.get('banner', None)
     version = kw.get('version', None)
@@ -118,8 +116,8 @@ def lay_cement(config, **kw):
         
     try:
         assert config, "default config required!"
-    except AssertionError, e:
-        raise CementConfigError, e.message
+    except AssertionError, error:
+        raise CementConfigError, error.message
      
     if not banner:
         banner = "%s version %s" % (
@@ -136,12 +134,13 @@ def lay_cement(config, **kw):
     define_namespace('root', namespace)
     namespaces['root'].config.update(config)
     
-    root_mod = __import__("%s.controllers.root" % namespaces['root'].config['app_module'], 
+    root_mod = __import__("%s.controllers.root" % \
+                          namespaces['root'].config['app_module'], 
                           globals(), locals(), ['root'])
     namespaces['root'].controller = getattr(root_mod, 'RootController')
     
-    for cf in namespaces['root'].config['config_files']:
-        set_config_opts_per_file('root', 'root', cf)
+    for config_file in namespaces['root'].config['config_files']:
+        set_config_opts_per_file('root', 'root', config_file)
 
     validate_config(namespaces['root'].config)
     
@@ -170,8 +169,8 @@ def lay_cement(config, **kw):
     
     register_default_handlers()
     
-    boot = __import__("%s.bootstrap" % namespaces['root'].config['app_module'], 
-                          globals(), locals(), ['root'])
+    __import__("%s.bootstrap" % namespaces['root'].config['app_module'], 
+               globals(), locals(), ['root'])
     
     for res in run_hooks('post_bootstrap_hook'):
         pass
