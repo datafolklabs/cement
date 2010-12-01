@@ -6,6 +6,8 @@
  +  Python 2.4 compatibility, thanks to Jason Koelker
  +  Display namespaces with underscores '_' in the label as dashes '-'.  
     Also disallow dashes in the name when registering a namespace.
+ -  No longer hide '-help' commands, treat them the same as all other 
+    commands.  Can pass is_hidden=True when exposing them anyway.
 
 
 0.8.10 - Sat Oct 23, 2010

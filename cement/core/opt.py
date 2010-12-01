@@ -69,7 +69,7 @@ def parse_options(namespace='root', ignore_conflicts=False):
     if namespaces[namespace].commands:
         for c in namespaces[namespace].commands:    
             c_with_dashes = re.sub('_', '-', c)
-            if c.endswith('-help') or namespaces[namespace].commands[c]['is_hidden']:
+            if namespaces[namespace].commands[c]['is_hidden']:
                 pass
             else:
                 if line == '    ':

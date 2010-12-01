@@ -31,15 +31,6 @@ def run_command(cmd_name=None, ignore_conflicts=False):
         namespace = cmd_name
     else:
         namespace = 'root'
-    
-    # Handle hidden -help commands
-    m = re.match('(.*)-help', cmd_name)
-    if m and m.group(1) in namespaces.keys():   
-        namespace = m.group(1)
-        raise CementArgumentError, \
-            "'%s' is a namespace*, not a command.  See '%s --help' instead." % \
-                (namespace, namespace)
-
                                
     # Parse cli options and arguments
     (cli_opts, cli_args) = parse_options(namespace=namespace, 
