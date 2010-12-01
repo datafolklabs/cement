@@ -25,6 +25,8 @@ def run_command(cmd_name=None, ignore_conflicts=False):
     """
     log.debug("processing passed command '%s'", cmd_name)
     cmd_name = cmd_name.rstrip('*') # stripped off of namespace if passed
+    cmd_name = re.sub('-', '_', cmd_name)
+    
     if cmd_name in namespaces.keys():
         namespace = cmd_name
     else:
@@ -53,7 +55,7 @@ def run_command(cmd_name=None, ignore_conflicts=False):
         actual_cmd = cmd_name
     else:
         try:
-            actual_cmd = cli_args[1]
+            actual_cmd = re.sub('-', '_', cli_args[1])
         except IndexError:
             raise CementArgumentError, "%s is a namespace* which requires a sub-command.  See '%s --help'" % (namespace, namespace)
     

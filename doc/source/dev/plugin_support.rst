@@ -33,7 +33,7 @@ An internal plugin would consist of the following files:
     * ./yourapp/controllers/your_plugin.py
     * ./yourapp/model/your_plugin.py
     * ./yourapp/templates/your_plugin/
-    * ./yourapp/etc/yourapp/plugins.d/your-plugin.conf
+    * ./yourapp/etc/yourapp/plugins.d/your_plugin.conf
 
 As you can see, plugins have the same layout as the standard application which
 utilizes a Model, View, Controller design as well as a bootstrap file.  For 
@@ -47,21 +47,9 @@ your-plugin.conf within plugins.d.
 Important Note on Naming Conventions
 ------------------------------------
 
-In generally, single word namespace and plugin names are preferred.  That said
+In general, single word namespace and plugin names are preferred.  That said
 sometimes separating the words is necessary.  Meaning, "yourplugin" versus
-"your-plugin" or "your_plugin".  It is important to note the following:
-
-    * Cement namespace names can not include underscores '_'
-    * Python modules/files can not include dashes '-'
-    
-    
-This seems confusing, but it is necessary based on some of the internals of 
-Cement.  Therefore, should you need to separate the name of your namespaces
-or plugins do the following:
-
-    * Python modules/files are named with an underscore: 'your_plugin.py'
-    * Cement namespaces use dashes: 'your-plugin', including config
-      files, and config blocks such as '[your-plugin]'.
+"your_plugin".  In this case, only underscores '_' are allowed, not dashes.
       
       
 External Plugins

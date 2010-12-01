@@ -134,9 +134,6 @@ class expose(object):
     def __call__(self, func):
         (base, controller, con_namespace) = func.__module__.split('.')
         
-        # clean up con_namespace ... '_' becomes '-'
-        con_namespace = re.sub('_', '-', con_namespace)
-        
         self.func = func
         if not self.name:
             self.name = self.func.__name__
@@ -151,7 +148,7 @@ class expose(object):
         # First for the template
         if not self.name:
             self.name = self.func.__name__
-        cmd_name = re.sub('_', '-', self.name)
+
         cmd = {
             'is_hidden' : self.is_hidden,
             'original_func' : func,
@@ -160,7 +157,7 @@ class expose(object):
             }
 
         # Set the command info in the dest namespace
-        namespaces[self.namespace].commands[cmd_name] = cmd
+        namespaces[self.namespace].commands[self.name] = cmd
         self.func = render(self.output_handler, self.template)(self.func)
         return self.func
       

@@ -1,6 +1,8 @@
 """Cement methods and classes to handle cli option/arg parsing."""
 
-import sys, os
+import os
+import sys
+import re
 from optparse import OptionParser, IndentedHelpFormatter, OptionConflictError
 
 from cement import namespaces
@@ -66,16 +68,17 @@ def parse_options(namespace='root', ignore_conflicts=False):
     line = '    '
     if namespaces[namespace].commands:
         for c in namespaces[namespace].commands:    
+            c_with_dashes = re.sub('_', '-', c)
             if c.endswith('-help') or namespaces[namespace].commands[c]['is_hidden']:
                 pass
             else:
                 if line == '    ':
-                    line += '%s' % c
-                elif len(line) + len(c) < 75:
-                    line += ', %s' % c
+                    line += '%s' % c_with_dashes
+                elif len(line) + len(c_with_dashes) < 75:
+                    line += ', %s' % c_with_dashes
                 else:
                     cmd_txt += "%s \n" % line
-                    line = '    %s' % c
+                    line = '    %s' % c_with_dashes
     if line != '    ':
         cmd_txt += "%s\n" % line
         
@@ -85,6 +88,7 @@ def parse_options(namespace='root', ignore_conflicts=False):
     script = os.path.basename(sys.argv[0])
     if namespace == 'root':
         for nam in namespaces: 
+            nam_with_dashes = re.sub('_', '-', nam)
             if nam != 'root' and namespaces[nam].commands:
                 if namespaces[nam].is_hidden:
                     pass
@@ -99,12 +103,12 @@ def parse_options(namespace='root', ignore_conflicts=False):
 
                     if show_namespace:       
                         if line == '    ':
-                            line += '%s*' % nam
-                        elif len(line) + len(nam) < 75:
-                            line += ', %s*' % nam
+                            line += '%s*' % nam_with_dashes
+                        elif len(line) + len(nam_with_dashes) < 75:
+                            line += ', %s*' % nam_with_dashes
                         else:
                             nam_txt += "%s \n" % line
-                            line = '    %s*' % nam
+                            line = '    %s*' % nam_with_dashes
                             
         if line != '    ':
             nam_txt += "%s\n" % line    
