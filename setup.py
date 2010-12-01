@@ -114,7 +114,7 @@ setup(name='cement',
         "jsonpickle",
         "Genshi",
         # Required for documentation
-        #"Sphinx",
+        #"Sphinx >= 1.0",
         #"Pygments",
         ],
     setup_requires=[
