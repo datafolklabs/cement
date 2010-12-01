@@ -103,12 +103,12 @@ def parse_options(namespace='root', ignore_conflicts=False):
 
                     if show_namespace:       
                         if line == '    ':
-                            line += '%s*' % nam_with_dashes
+                            line += '%s' % nam_with_dashes
                         elif len(line) + len(nam_with_dashes) < 75:
-                            line += ', %s*' % nam_with_dashes
+                            line += ', %s' % nam_with_dashes
                         else:
                             nam_txt += "%s \n" % line
-                            line = '    %s*' % nam_with_dashes
+                            line = '    %s' % nam_with_dashes
                             
         if line != '    ':
             nam_txt += "%s\n" % line    

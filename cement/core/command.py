@@ -24,7 +24,6 @@ def run_command(cmd_name=None, ignore_conflicts=False):
                 
     """
     log.debug("processing passed command '%s'", cmd_name)
-    cmd_name = cmd_name.rstrip('*') # stripped off of namespace if passed
     cmd_name = re.sub('-', '_', cmd_name)
     
     if cmd_name in namespaces.keys():
