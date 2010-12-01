@@ -14,7 +14,6 @@ def setup_logging_for_plugin_provider(provider):
             The name of the application (module) providing the shared plugin.
     
     """
-    config = namespaces['root'].config
     provider_log = logging.getLogger(provider)
     cement_log = logging.getLogger('cement')
     

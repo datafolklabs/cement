@@ -48,7 +48,10 @@ def run_command(cmd_name=None, ignore_conflicts=False):
         try:
             actual_cmd = re.sub('-', '_', cli_args[1])
         except IndexError:
-            raise CementArgumentError, "%s is a namespace* which requires a sub-command.  See '%s --help'" % (namespace, namespace)
+            raise CementArgumentError, \
+                "%s is a namespace* " % namespace + \
+                "which requires a sub-command.  See " + \
+                "'%s --help'" % namespace
     
     if namespaces[namespace].commands.has_key(actual_cmd):
         cmd = namespaces[namespace].commands[actual_cmd]
@@ -58,5 +61,6 @@ def run_command(cmd_name=None, ignore_conflicts=False):
                                                 cli_opts, cli_args)  
         return (res, out_txt)
     else:
-        raise CementArgumentError, "Unknown command '%s', see --help?" % actual_cmd
+        raise CementArgumentError, "Unknown command '%s', see --help?" % \
+                                   actual_cmd
         

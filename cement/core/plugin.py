@@ -13,11 +13,6 @@ from cement.core.namespace import CementNamespace, get_config
 
 log = get_logger(__name__)
 
-#class CementPlugin(CementNamespace):
-#    """Wrapper for CementNamespace."""
-#    def __init__(self, *args, **kwargs):
-#        CementNamespace.__init__(self, *args, **kwargs)
-     
 def get_enabled_plugins():
     """
     Open plugin config files from plugin_config_dir and determine if they are
@@ -30,8 +25,8 @@ def get_enabled_plugins():
     # determine enabled plugins
     
     # first from config files
-    for file in config['config_files']:    
-        cnf = ConfigObj(file)
+    for _file in config['config_files']:    
+        cnf = ConfigObj(_file)
         for sect in cnf.sections:
             if sect != 'root' and cnf[sect].has_key('enable_plugin') \
                               and t_f_pass(cnf[sect]['enable_plugin']) == True \
@@ -46,8 +41,8 @@ def get_enabled_plugins():
                     enabled_plugins.append(plugin)
 
     # Then for plugin config files
-    for file in os.listdir(config['plugin_config_dir']):
-        path = os.path.join(config['plugin_config_dir'], file)
+    for _file in os.listdir(config['plugin_config_dir']):
+        path = os.path.join(config['plugin_config_dir'], _file)
         if not path.endswith('.conf'):
             continue
             
@@ -78,10 +73,10 @@ def load_plugin(plugin):
     
     """
     config = namespaces['root'].config
-    m = re.match('(.*)\.plugin\.(.*)', plugin)
-    if m:
-        provider = m.group(1)
-        plugin = m.group(2)
+    match = re.match('(.*)\.plugin\.(.*)', plugin)
+    if match:
+        provider = match.group(1)
+        plugin = match.group(2)
     else:
         provider = config['app_module']
     
@@ -91,8 +86,8 @@ def load_plugin(plugin):
     
     try: 
         __import__(provider)
-    except ImportError, e:
-        raise CementConfigError, 'unable to load plugin provider: %s' % e
+    except ImportError, error:
+        raise CementConfigError, 'unable to load plugin provider: %s' % error
         
     loaded = False
     try:
@@ -102,8 +97,8 @@ def load_plugin(plugin):
         if namespaces.has_key(plugin):
             loaded = True
             log.debug("loaded '%s' plugin" % plugin)
-    except AttributeError, e:
-        log.debug('AttributeError => %s' % e)
+    except AttributeError, error:
+        log.debug('AttributeError => %s' % error)
                                 
     if not loaded:
         raise CementRuntimeError, \
@@ -114,8 +109,8 @@ def load_plugin(plugin):
         )
 
     set_config_opts_per_file(plugin, plugin, plugin_config_file)
-    for file in namespaces['root'].config['config_files']:
-        set_config_opts_per_file(plugin, plugin, file)
+    for _file in namespaces['root'].config['config_files']:
+        set_config_opts_per_file(plugin, plugin, _file)
     
                            
 def load_all_plugins():

@@ -60,25 +60,25 @@ def parse_options(namespace='root', ignore_conflicts=False):
                 else:
                     try:
                         namespaces[namespace].options.add_option(opt)
-                    except OptionConflictError, e:
+                    except OptionConflictError, error:
                         if not ignore_conflicts:
-                            raise OptionConflictError, e
+                            raise OptionConflictError, error
     
     cmd_txt = ''
     line = '    '
     if namespaces[namespace].commands:
-        for c in namespaces[namespace].commands:    
-            c_with_dashes = re.sub('_', '-', c)
-            if namespaces[namespace].commands[c]['is_hidden']:
+        for cmd in namespaces[namespace].commands:    
+            cmd_with_dashes = re.sub('_', '-', cmd)
+            if namespaces[namespace].commands[cmd]['is_hidden']:
                 pass
             else:
                 if line == '    ':
-                    line += '%s' % c_with_dashes
-                elif len(line) + len(c_with_dashes) < 75:
-                    line += ', %s' % c_with_dashes
+                    line += '%s' % cmd_with_dashes
+                elif len(line) + len(cmd_with_dashes) < 75:
+                    line += ', %s' % cmd_with_dashes
                 else:
                     cmd_txt += "%s \n" % line
-                    line = '    %s' % c_with_dashes
+                    line = '    %s' % cmd_with_dashes
     if line != '    ':
         cmd_txt += "%s\n" % line
         
@@ -96,8 +96,8 @@ def parse_options(namespace='root', ignore_conflicts=False):
                     # dirty, but have to account for namespaces with only 
                     # hidden commands... which we don't want to show
                     show_namespace = False
-                    for c in namespaces[nam].commands:
-                        if not namespaces[nam].commands[c]['is_hidden']:
+                    for cmd in namespaces[nam].commands:
+                        if not namespaces[nam].commands[cmd]['is_hidden']:
                             show_namespace = True
                             break
 
@@ -132,7 +132,6 @@ Help?  try '[COMMAND]-help' OR '[NAMESPACE] --help'""" % \
         (script, cmd_txt, nam_txt)
                          
     else: # namespace not root
-        nam_title = ''
         namespaces[namespace].options.usage = """  %s %s <SUBCOMMAND> [ARGS] --(OPTIONS)
 
 Sub-Commands:  

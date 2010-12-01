@@ -3,7 +3,7 @@
 import os
 from configobj import ConfigObj, Section
 
-from cement.core.exc import CementRuntimeError, CementConfigError
+from cement.core.exc import CementConfigError
 
 # The use of CEMENT_API is deprecated as of 0.8.9.
 # CEMENT_API = "0.7-0.8:20100210"
@@ -54,20 +54,8 @@ def ensure_api_compat(module_name, required_api):
             
         required_api
             The Cement API version required by the application.
-    
-    
-    Possible Exceptions:
-    
-        CementRuntimeError
-            Raised if required_api/CEMENT_API do not match.
-    
+        
     """
-    #if required_api == CEMENT_API:
-    #    return True
-    #else:
-    #    raise CementRuntimeError, \
-    #        "%s requires Cement(api:%s) which differs from installed Cement(api:%s)." % \
-    #            (module_name, required_api, CEMENT_API)
     print "WARNING: The use of CEMENT_API is deprecated as of 0.8.9.  Called from %s" % module_name
     return True
          
@@ -175,7 +163,7 @@ def set_config_opts_per_file(namespace, section, config_file):
                             if not type(sec3[opt3]) == Section:
                                 config[opt1][opt2][opt3] = t_f_pass(sec3[opt3])
                                 if opt3.startswith('~'):
-                                    config[opt1][opts][opt3] = os.path.expanduser(sec3[opt3])
+                                    config[opt1][opt2][opt3] = os.path.expanduser(sec3[opt3])
                         
         # overwrite the namespace config
         namespaces[namespace].config = config

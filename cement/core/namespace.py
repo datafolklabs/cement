@@ -84,9 +84,9 @@ class CementNamespace(object):
     """
     def __init__(self, label, **kw):
         if not label == 'root':
-            app_name = namespaces['root'].config['app_name']
             self.version = kw.get('version', namespaces['root'].version)
-            self.provider = kw.get('provider', namespaces['root'].config['app_module'])
+            self.provider = kw.get('provider', 
+                                   namespaces['root'].config['app_module'])
         else:
             self.version = kw.get('version', None)
             self.provider = kw.get('provider', None)
@@ -94,8 +94,8 @@ class CementNamespace(object):
         try:
             assert self.version, "A namespace version is required!"
             assert self.provider, "A namespace provider is required!"
-        except AssertionError, e:
-            raise CementRuntimeError, e.__str__()
+        except AssertionError, error:
+            raise CementRuntimeError, error.__str__()
             
         self.label = label
         self.description = kw.get('description', '')
@@ -128,9 +128,11 @@ def define_namespace(namespace, namespace_obj):
                      
     """
     if namespaces.has_key(namespace):
-        raise CementRuntimeError, "Namespace '%s' already defined!" % namespace
+        raise CementRuntimeError, \
+            "Namespace '%s' already defined!" % namespace
     elif re.search('-', namespace):
-        raise CementRuntimeError, "Namespaces can not have '-', use '_' instead."
+        raise CementRuntimeError, \
+            "Namespaces can not have '-', use '_' instead."
         
     namespaces[namespace] = namespace_obj
     log.debug("namespace '%s' initialized from '%s'." % \
@@ -169,7 +171,7 @@ def register_namespace(namespace_obj):
                        globals(), locals(), [namespace_obj.controller])
     cont = getattr(mymod, namespace_obj.controller)                  
     namespaces[namespace_obj.label].controller = cont
-    for file in namespaces['root'].config['config_files']:
+    for _file in namespaces['root'].config['config_files']:
         set_config_opts_per_file(namespace_obj.label, namespace_obj.label, 
-                                 file)
+                                 _file)
         

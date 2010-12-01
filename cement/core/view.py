@@ -1,10 +1,6 @@
 """Methods and classes that enable Cement templating support."""
 
-import sys
-import os
-import re
-
-from cement import namespaces, SAVED_STDOUT, SAVED_STDERR
+from cement import namespaces, SAVED_STDOUT
 from cement.core.handler import get_handler
 from cement.core.exc import CementRuntimeError
 from cement.core.log import get_logger
@@ -12,11 +8,22 @@ from cement.core.log import get_logger
 log = get_logger(__name__)
         
 class CementOutputHandler(object):
+    """
+    This is the standard class for output handling.  All output handlers
+    should subclass from here.
+
+    Required Arguments:
+    
+        data
+                The dictionary returned from a controller function.
+            
+        template
+            The template file in module form, such as:
+            (myapp.templates.namespace.file) where the path to the file
+            is actually myapp/templates/namespace/file.txt or similar.
+            
+    """
     def __init__(self, data, template=None):
-        """
-        This is the standard class for output handling.  All output handlers
-        should subclass from here.
-        """
         self.data = data
         self.template = template
         self._verify_template()
