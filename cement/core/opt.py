@@ -138,7 +138,7 @@ Help?  try '[COMMAND]-help' OR '[NAMESPACE] --help'""" % \
 Sub-Commands:  
 %s
 Help?  try '[SUBCOMMAND]-help'""" % \
-        (script, namespace, cmd_txt)
+        (script, re.sub('_', '-', namespace), cmd_txt)
         
 
     (opts, args) = namespaces[namespace].options.parse_args()
