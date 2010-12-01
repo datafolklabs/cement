@@ -38,8 +38,17 @@ please be sure to follow the standard naming convention 'HelloWorld Plugin for
 Cement' as an example.  The actual module name should be something like:
 'myapp.plugins.helloworld'. 
 
+
+LICENSE:
+
 The Cement CLI Application Framework is Open Source and is distributed under 
-The MIT License.  
+the MIT License.  Please see the LICENSE file included with this software.  
+
+Cement includes a backport of pkgutil from the Python standard library in 
+order to make the pkgutil.get_data() function available for Python < 2.6.  
+This file (./cement/backports/pkgutil.py) is licensed under the Python 
+Software Foundation license version 2.0.  Please see the LICENSE.psf file 
+included with this software. 
 
 
 GETTING STARTED:
