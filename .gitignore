@@ -1,14 +1,11 @@
-*.pyc
 *egg*
 env/
 var/
 log/
 tmp/
-examples/CementExample/cement_example.log
-examples/CementExample/var
-build
 dist
 doc/build/
+
 # Gitignores from https://github.com/github/gitignore
 
 # Vi
