@@ -1,10 +1,6 @@
 """Methods and classes to handle Cement Controller functions."""
 import re
 
-try:
-    from pkgutil import get_data
-except ImportError:
-    from _pkgutil import get_data
 from genshi.template import NewTextTemplate
 
 from cement import namespaces, SAVED_STDOUT, SAVED_STDERR, \
