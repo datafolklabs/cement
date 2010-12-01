@@ -1,5 +1,7 @@
 """Methods and classes to handle Cement namespace support."""
 
+import re
+
 from cement import namespaces
 from cement.core.log import get_logger
 from cement.core.exc import CementRuntimeError
@@ -127,6 +129,9 @@ def define_namespace(namespace, namespace_obj):
     """
     if namespaces.has_key(namespace):
         raise CementRuntimeError, "Namespace '%s' already defined!" % namespace
+    elif re.search('_', namespace):
+        raise CementRuntimeError, "Namespaces can not have '_', use '-' instead."
+        
     namespaces[namespace] = namespace_obj
     log.debug("namespace '%s' initialized from '%s'." % \
              (namespace, namespace_obj.__module__))
@@ -159,7 +164,10 @@ def register_namespace(namespace_obj):
     
     # Reveal the controller object.
     base = namespace_obj.provider
-    mymod = __import__('%s.controllers.%s' % (base, namespace_obj.label), 
+    
+    # Convert '-' to '_' for module
+    clean_label = re.sub('-', '_', namespace_obj.label)
+    mymod = __import__('%s.controllers.%s' % (base, clean_label), 
                        globals(), locals(), [namespace_obj.controller])
     cont = getattr(mymod, namespace_obj.controller)                  
     namespaces[namespace_obj.label].controller = cont

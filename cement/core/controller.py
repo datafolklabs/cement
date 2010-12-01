@@ -133,6 +133,10 @@ class expose(object):
         
     def __call__(self, func):
         (base, controller, con_namespace) = func.__module__.split('.')
+        
+        # clean up con_namespace ... '_' becomes '-'
+        con_namespace = re.sub('_', '-', con_namespace)
+        
         self.func = func
         if not self.name:
             self.name = self.func.__name__

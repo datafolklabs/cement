@@ -23,7 +23,14 @@ global *namespaces['namespace']* dictionary:
         from the main applications configuration file.
     
     label
-        The name of the namespace (single word).
+        The name of the namespace (single word).  For complex namespaces, or 
+        those that are better fit for two words, you must use a dash ('-')
+        rather than underscore ('_').  The actual module is the oposite as it
+        must use an '_' in the python module/file name.  Cement auto converts
+        a namespace of 'my-namespace' to be associated with a python module
+        or file in the name of 'my_module'.  For example, if the namespace is
+        called 'my-namespace'... on the filesystem the paths would be 
+        'myapp/controllers/my_namespace', and 'myapp/bootstrap/my_namespace'.
         
     version
         The version of the applicaton ('root') or of the plugin.  If not 

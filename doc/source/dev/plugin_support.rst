@@ -29,11 +29,11 @@ A Look at an Internal Plugin
 
 An internal plugin would consist of the following files:
 
-    * ./yourapp/bootstrap/yourplugin.py
-    * ./yourapp/controllers/yourplugin.py
-    * ./yourapp/model/yourplugin.py
-    * ./yourapp/templates/yourplugin/
-    * ./yourapp/etc/yourapp/plugins.d/yourplugin.conf
+    * ./yourapp/bootstrap/your_plugin.py
+    * ./yourapp/controllers/your_plugin.py
+    * ./yourapp/model/your_plugin.py
+    * ./yourapp/templates/your_plugin/
+    * ./yourapp/etc/yourapp/plugins.d/your-plugin.conf
 
 As you can see, plugins have the same layout as the standard application which
 utilizes a Model, View, Controller design as well as a bootstrap file.  For 
@@ -41,8 +41,28 @@ that reason we aren't going to cover much in this section because the plugin
 code is exactly the same as your application.  The only difference is that
 you do not import the plugin's 'bootstrap' file into the root bootstrap like
 you do with the rest of your application, but rather enable the plugin in the
-yourplugin.conf within plugins.d.
+your-plugin.conf within plugins.d.
 
+      
+Important Note on Naming Conventions
+------------------------------------
+
+In generally, single word namespace and plugin names are preferred.  That said
+sometimes separating the words is necessary.  Meaning, "yourplugin" versus
+"your-plugin" or "your_plugin".  It is important to note the following:
+
+    * Cement namespace names can not include underscores '_'
+    * Python modules/files can not include dashes '-'
+    
+    
+This seems confusing, but it is necessary based on some of the internals of 
+Cement.  Therefore, should you need to separate the name of your namespaces
+or plugins do the following:
+
+    * Python modules/files are named with an underscore: 'your_plugin.py'
+    * Cement namespaces use dashes: 'your-plugin', including config
+      files, and config blocks such as '[your-plugin]'.
+      
       
 External Plugins
 ----------------
@@ -77,11 +97,11 @@ Plugins are enabled by first installing them, and then creating a plugin.conf
 within your applications plugins.d directory (set by plugin_config_dir).
 Plugin code is only loaded when 'enable_plugin=yes'.
 
-**/etc/yourapp/plugins.d/yourplugin.conf**    
+**/etc/yourapp/plugins.d/your-plugin.conf**    
     
 .. code-block:: text
 
-    [yourplugin]
+    [your-plugin]
     enable_plugin = true
     some_option = some value
     foo = bar

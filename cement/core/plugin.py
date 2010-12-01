@@ -84,7 +84,10 @@ def load_plugin(plugin):
         plugin = m.group(2)
     else:
         provider = config['app_module']
-        
+    
+    # clean plugin module name for namespaces with a '-' dash    
+    actual_plugin = re.sub('-', '_', plugin)
+    
     log.debug("loading plugin '%s'" % plugin)
     if config.has_key('show_plugin_load') and config['show_plugin_load']:
         print 'loading %s plugin' % plugin
@@ -97,8 +100,8 @@ def load_plugin(plugin):
     loaded = False
     try:
         plugin_module = __import__('%s.bootstrap' % provider, 
-            globals(), locals(), [plugin])
-        getattr(plugin_module, plugin)
+            globals(), locals(), [actual_plugin])
+        getattr(plugin_module, actual_plugin)
         if namespaces.has_key(plugin):
             loaded = True
             log.debug("loaded '%s' plugin" % plugin)

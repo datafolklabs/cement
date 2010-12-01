@@ -4,6 +4,12 @@
 
  +  Development Release 0.8.11
  +  Python 2.4 compatibility, thanks to Jason Koelker
+ +  Add support for namespaces with dashes '-'.  Cement will auto convert a
+    namespace with a '-', to an associated file/module with underscore '_'.  
+    This is a potentially incompatible change for any applications that 
+    currently have namespaces with a '_' underscore in the name as these are
+    no longer allowed when registering a namespace.  Simply change it to a
+    dash '-'.  Resolves GH#43.
 
 
 0.8.10 - Sat Oct 23, 2010
