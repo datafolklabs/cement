@@ -70,7 +70,8 @@ class GenshiOutputHandler(CementOutputHandler):
             try:
                 from pkgutil import get_data
             except ImportError:
-                from cement.core._pkgutil import get_data
+                # backported for < 2.6 compat
+                from cement.backports.pkgutil import get_data
             # Mock up the template path
             parts = self.template.split('.')
             self.tmpl_file = "%s.txt" % parts.pop() # the last item is the file            
