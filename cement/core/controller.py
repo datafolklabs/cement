@@ -1,10 +1,10 @@
 """Methods and classes to handle Cement Controller functions."""
-import re
 
+import re
 from genshi.template import NewTextTemplate
 
-from cement import namespaces, SAVED_STDOUT, SAVED_STDERR, \
-                   buf_stdout, buf_stderr
+from cement import namespaces, SAVED_STDOUT, SAVED_STDERR
+from cement import buf_stdout, buf_stderr
 from cement.core.log import get_logger
 from cement.core.exc import CementRuntimeError
 from cement.core.view import render
