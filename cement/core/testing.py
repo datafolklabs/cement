@@ -1,19 +1,12 @@
 """Helper functions for testing applications built on Cement."""
 
-import os
 import sys
 import re
-from shutil import rmtree
-from tempfile import mkdtemp
 
-from cement import namespaces
-from cement.core.namespace import get_config
 from cement.core.exc import CementRuntimeError
-from cement.core.controller import run_controller_command
 from cement.core.command import run_command
-from cement.core.opt import parse_options
 
-def simulate(args=[]):
+def simulate(args):
     """
     Simulate running a command at command line.  Requires args to have
     the exact args set to it as would be passed at command line.
