@@ -24,6 +24,7 @@ def run_command(cmd_name=None, ignore_conflicts=False):
                 
     """
     log.debug("processing passed command '%s'", cmd_name)
+    orig_cmd = cmd_name
     cmd_name = re.sub('-', '_', cmd_name)
     
     if cmd_name in namespaces.keys():
@@ -61,5 +62,5 @@ def run_command(cmd_name=None, ignore_conflicts=False):
         return (res, out_txt)
     else:
         raise CementArgumentError, "Unknown command '%s', see --help?" % \
-                                   actual_cmd
+                                   orig_cmd
         
