@@ -114,10 +114,13 @@ def set_config_opts_per_file(namespace, section, config_file):
             cnf = ConfigObj(config_file)
             config.update(cnf[section])
             config['config_source'].append(config_file)
-        except IOError:
-            print "Unable to open config '%s': %s" % (_file, error.args[1])
+        except IOError, error:
+            # the file is not readable, so remove it from config_files
+            if config_file in config['config_files']:
+                config['config_files'].remove(config_file)
+                namespaces[namespace].config = config
             return 
-        except KeyError:
+        except KeyError, error:
             # FIX ME: can't log here...  
             # log.debug('missing section %s in %s.' % (section, config_file))
             return

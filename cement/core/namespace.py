@@ -135,8 +135,7 @@ def define_namespace(namespace, namespace_obj):
             "Namespaces can not have '-', use '_' instead."
         
     namespaces[namespace] = namespace_obj
-    log.debug("namespace '%s' initialized from '%s'." % \
-             (namespace, namespace_obj.__module__))
+    log.debug("namespace '%s' initialized" % namespace)
 
 def register_namespace(namespace_obj):
     """

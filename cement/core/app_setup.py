@@ -1,6 +1,7 @@
 """Cement methods to setup the framework for applications using it."""
 
 import sys
+import logging
 
 from cement import namespaces
 from cement import buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
@@ -13,9 +14,7 @@ from cement.core.log import setup_logging, get_logger
 from cement.core.hook import define_hook, run_hooks
 from cement.core.handler import define_handler, register_handler
 from cement.core.view import GenshiOutputHandler, JsonOutputHandler
-
-log = get_logger(__name__)    
-                
+      
 def define_default_hooks():
     """
     Defines Cement framework hooks.
@@ -98,6 +97,7 @@ def lay_cement(config, **kw):
         lay_cement(get_default_config())
         
     """    
+    
     args = kw.get('args', None)
     banner = kw.get('banner', None)
     version = kw.get('version', None)
@@ -123,7 +123,7 @@ def lay_cement(config, **kw):
         banner = "%s version %s" % (
             config['app_name'],
             version)
-    
+        
     namespace = CementNamespace(
         label='root',
         version=version,
@@ -138,7 +138,7 @@ def lay_cement(config, **kw):
                           namespaces['root'].config['app_module'], 
                           globals(), locals(), ['root'])
     namespaces['root'].controller = getattr(root_mod, 'RootController')
-    
+        
     for config_file in namespaces['root'].config['config_files']:
         set_config_opts_per_file('root', 'root', config_file)
 
@@ -161,9 +161,12 @@ def lay_cement(config, **kw):
         sys.stdout = SAVED_STDOUT
         sys.stderr = SAVED_STDERR
         
-    # Setup logging for console and file -- again
+    # Setup logging for console and file
     setup_logging(to_console=namespaces['root'].config['log_to_console'])
-        
+    log = get_logger(__name__)
+    log.debug('logging initialized')
+    log.debug('setup app per the following configs: %s' % \
+              namespaces['root'].config['config_files'])
     define_default_hooks()
     define_default_handler_types()
     
