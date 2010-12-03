@@ -110,10 +110,13 @@ def set_config_opts_per_file(namespace, section, config_file):
         config['config_source'] = []
         
     if os.path.exists(config_file):
-        config['config_source'].append(config_file)
-        cnf = ConfigObj(config_file)
         try:
+            cnf = ConfigObj(config_file)
             config.update(cnf[section])
+            config['config_source'].append(config_file)
+        except IOError:
+            print "Unable to open config '%s': %s" % (_file, error.args[1])
+            return 
         except KeyError:
             # FIX ME: can't log here...  
             # log.debug('missing section %s in %s.' % (section, config_file))

@@ -26,7 +26,13 @@ def get_enabled_plugins():
     
     # first from config files
     for _file in config['config_files']:    
-        cnf = ConfigObj(_file)
+        try:
+            cnf = ConfigObj(_file)
+        except IOError, error:
+            log.warning("Unable to open config '%s': %s" % \
+                (_file, error.args[1]))
+            continue
+            
         for sect in cnf.sections:
             if sect != 'root' and cnf[sect].has_key('enable_plugin') \
                               and t_f_pass(cnf[sect]['enable_plugin']) == True \
