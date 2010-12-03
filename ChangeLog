@@ -8,6 +8,7 @@
     Also disallow dashes in the name when registering a namespace.
  -  No longer hide '-help' commands, treat them the same as all other 
     commands.  Can pass is_hidden=True when exposing them anyway.
+ +  Don't override config['enabled_plugins'], but add to it instead.
 
 
 0.8.10 - Sat Oct 23, 2010

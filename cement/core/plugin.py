@@ -21,7 +21,11 @@ def get_enabled_plugins():
     
     """
     config = get_config()
-    enabled_plugins = []
+    if config.has_key('enabled_plugins'):
+        enabled_plugins = config['enabled_plugins']
+    else:
+        enabled_plugins = []
+        
     # determine enabled plugins
     
     # first from config files
