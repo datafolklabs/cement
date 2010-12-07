@@ -4,11 +4,11 @@ import sys, os
 version = '0.8.13'
 
 LONG = """
-Cement is an advanced CLI Application Framework for Python. It promotes code 
-re-use by way of plugins and helper libraries that can be shared between 
-any application built on Cement.  The MVC and overall framework design is 
-very much inspired by the TurboGears2 web framework.  Its goal is to introduce
-a standard, and feature-full platform for both simple and complex command line 
+Cement is an advanced CLI Application Framework for Python. It promotes code
+re-use by way of a plugin system that enabled plugins to be shared between any 
+application built on Cement.  The MVC and overall framework design is very 
+much inspired by the TurboGears2 web framework.  Its goal is to introduce a 
+standard, and feature-full platform for both simple and complex command line
 applications as well as support rapid development needs without sacrificing
 quality.
 
