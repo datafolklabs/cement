@@ -1,3 +1,4 @@
+
 NAME: Cement
 
 CREATOR/MAINTAINER: BJ Dierkes <wdierkes@5dollarwhitebox.org>
@@ -13,15 +14,15 @@ applications as well as support rapid development needs without sacrificing
 quality.
 
 At a minimum, Cement configures the following features for every application:
-
-    Multiple Configuration file parsing (default: /etc, ~/)
-    Command line argument and option parsing
-    Dual Console/File Logging Support
-    Full Internal and External (3rd Party) Plugin support
-    Basic "hook" support
-    Full MVC support for advanced application design
-    Text output rendering with Genshi templates
-    Json output rendering allows other programs to access your CLI-API
+::
+     * Multiple Configuration file parsing (default: /etc, ~/)
+     * Command line argument and option parsing
+     * Dual Console/File Logging Support
+     * Internal and External (3rd Party) Plugin support
+     * Basic "hook" support
+     * Model/View/Controller support for advanced application design
+     * Text output rendering with Genshi templates
+     * Json output rendering allows other programs to access your CLI-API
     
 
 The above provides any level developer with a solid, and fully functional 
@@ -36,7 +37,7 @@ contribute any plugins back to the project to extend the functionality of
 Cement.  When creating plugins specifically for re-use within the community, 
 please be sure to follow the standard naming convention 'HelloWorld Plugin for 
 Cement' as an example.  The actual module name should be something like:
-'myapp.plugins.helloworld'. 
+'myapp.plugin.helloworld'. 
 
 
 LICENSE:
@@ -54,32 +55,41 @@ included with this software.
 GETTING STARTED:
 
 Stable versions of Cement can be installed via the cheeze shop:
-
+::
     $ easy_install cement
+    
+    # If creating an application
+    $ easy_install cement.devtools
 
 
 Development versions of Cement can be checked out of Git:
-
+::
     $ git clone git://github.com/derks/cement.git
-    
+
     $ cd cement
-    
+
     $ python setup.py install
     
+    $ git clone git://github.com/derks/cement.devtools.git
     
-Additionally, Cement applications, and plugins can be created via 
-PasteScript. Once Cement is installed, the following command will create a 
-command line application built on top of the Cement Framework:
+    $ cd cement.devtools
 
-    $ paster cement-app <myapp>
+    $ python setup.py install
+
+
+With the 'devtools' package, Cement applications, and plugins can be 
+created via PasteScript. Once cement and cement.devtools are installed, 
+the following command will create a command line application built on top of 
+the Cement Framework:
+::
+    $ paster cement-app myapp
 
 
 The following command will create an external plugin for your application:
+::
+    $ paster cement-plugin myapp myplugin
 
-    $ paster cement-plugin <myapp> <myplugin>
 
-
-Have a helper library you want to make pluggable?
-
-    $ paster cement-helper <myapp> <myhelper>
-
+Have an external helper library you want to make plugable?
+::
+    $ paster cement-helper myapp myhelper
