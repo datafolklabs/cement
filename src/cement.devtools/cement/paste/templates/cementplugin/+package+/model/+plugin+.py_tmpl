@@ -1,0 +1,5 @@
+"""{{plugin}} model classes."""
+
+class {{plugin.capitalize()}}Model(object):
+    # define model class
+    pass

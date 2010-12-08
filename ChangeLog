@@ -3,6 +3,8 @@
 -----------------------------------------------------------------------------
 
  +  Development Release 0.8.13
+ +  Moving cement.devtools and cement.test back under main project
+ +  Reorganized project files, python packages are under ./src
 
 
 0.8.12 - Dec 06, 2010

@@ -1,0 +1,28 @@
+{# This is an example Genshi Text Template.  Documentation is available    #}\
+{# at:                                                                     #}\
+{#                                                                         #}\
+{#    http://genshi.edgewall.org/wiki/Documentation/text-templates.html    #}\
+{#                                                                         #}\
+\
+\
+{# --------------------- 78 character baseline --------------------------- #}\
+
+There are a number of things you can do such as conditional statements:
+
+{% if foo %}\
+Label: ${example.label}
+{% end %}\
+
+Or a for loop:
+
+{% for item in items %}\
+  * ${item}
+{% end %}\
+
+And functions:
+
+{% def greeting(name) %}\
+  Hello, ${name}!
+{% end %}\
+${greeting('World')}\
+${greeting('Edward')}

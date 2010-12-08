@@ -1,0 +1,8 @@
+# This configuration is specifically meant to be used for testing
+[root]
+
+# This is how you'd enable a plugin for testing
+[{{plugin}}]
+enable_plugin = true
+provider = {{package}}
+foo = 'some value'

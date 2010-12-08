@@ -1,0 +1,7 @@
+{# --------------------- 78 character baseline --------------------------- #}\
+
+The following errors were encountered:
+-----------------------------------------------------------------------------
+{% for error in errors %}\
+    * ${error[0]} => ${error[1]}
+{% end %}

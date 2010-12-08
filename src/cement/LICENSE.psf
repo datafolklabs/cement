@@ -1,7 +1,7 @@
 
-Cement has included ./cement/backports/pkgutil.py for backward compatibility
-with Python < 2.6 (for pkgutil.get_data()).  That file alone is has the 
-following license:
+Cement has included ./src/cement/backports/pkgutil.py for backward 
+compatibility with Python < 2.6 (for pkgutil.get_data()).  That file alone
+has the following license:
 
 PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2
 --------------------------------------------

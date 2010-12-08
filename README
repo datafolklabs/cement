@@ -63,16 +63,6 @@ Development versions of Cement can be checked out of Git:
 ::
     $ git clone git://github.com/derks/cement.git
 
-    $ cd cement
-
-    $ python setup.py install
-    
-    $ git clone git://github.com/derks/cement.devtools.git
-    
-    $ cd cement.devtools
-
-    $ python setup.py install
-
 
 With the 'devtools' package, Cement applications, and plugins can be 
 created via PasteScript. Once cement and cement.devtools are installed, 
@@ -86,7 +76,3 @@ The following command will create an external plugin for your application:
 ::
     $ paster cement-plugin myapp myplugin
 
-
-Have an external helper library you want to make plugable?
-::
-    $ paster cement-helper myapp myhelper
