@@ -101,6 +101,7 @@ def lay_cement(config, **kw):
     args = kw.get('args', None)
     banner = kw.get('banner', None)
     version = kw.get('version', None)
+    clear_loggers = kw.get('clear_loggers', True)
     
     if not version:
         from pkg_resources import get_distribution
@@ -162,7 +163,8 @@ def lay_cement(config, **kw):
         sys.stderr = SAVED_STDERR
         
     # Setup logging for console and file
-    setup_logging(to_console=namespaces['root'].config['log_to_console'])
+    setup_logging(to_console=namespaces['root'].config['log_to_console'],
+                  clear_loggers=clear_loggers)
     log = get_logger(__name__)
     log.debug('logging initialized')
     log.debug('setup app per the following configs: %s' % \
