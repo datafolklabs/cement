@@ -4,7 +4,7 @@ A Look at The Source Code
 All source 'packages' are available under the './src' directory.  There are
 the following python packages:
 
-    ./src/cement.core/
+    ./src/cement/
         This package provides the core framework required to run an 
         application built on top of Cement.
         

@@ -4,9 +4,13 @@ import sys, os
 VERSION = '0.8.14'
 
 LONG = """
-Cement is an advanced CLI Application Framework for Python. The 'core' 
-package provides the core framework required to run an application built on
-top of Cement.
+Cement is an advanced CLI Application Framework for Python. This package 
+provides the core framework required to run an application built on top of 
+Cement.  Note that this is only part of 'cement' as a whole.  The entire
+source is available from:
+
+    http://builtoncement.org/cement/0.8/download/
+    
 
 The Cement CLI Application Framework is Open Source and is distributed under 
 The MIT License.  
@@ -23,14 +27,14 @@ GETTING STARTED:
 
 Stable versions can be installed via the cheeze shop:
 ::
-    $ easy_install cement.core
+    $ easy_install cement
 
 
 Development versions can be checked out of Git:
 ::
     $ git clone git://github.com/derks/cement.git
     
-    $ cd cement/src/cement.core/
+    $ cd cement/src/cement/
     
     $ python setup.py install
 
@@ -41,7 +45,7 @@ cement.devtools package.
 """
 
 
-setup(name='cement.core',
+setup(name='cement',
     version=VERSION,
     description="CLI Application Framework for Python",
     long_description=LONG,

@@ -10,7 +10,11 @@ additional nose tests to provide unit testing of the framework.  To fully
 test the framework, a running application is required to cover all bits of the
 code.  The 'cement.test' application is simply an application created using
 the paster utility (cement.devtools) with a bit of added code for testing.
-It is only meant to be used in development, for testing.
+It is only meant to be used in development, for testing.  Note that this is 
+only part of 'cement' as a whole.  The entire source is available from:
+
+    http://builtoncement.org/cement/0.8/download/
+    
 
 The Cement CLI Application Framework is Open Source and is distributed under 
 The MIT License.  
@@ -53,7 +57,7 @@ setup(name='cement.test',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "cement.core >=0.8.9, <0.9",
+        "cement >=0.8.9, <0.9",
         "nose",
         "jsonpickle",
         ],

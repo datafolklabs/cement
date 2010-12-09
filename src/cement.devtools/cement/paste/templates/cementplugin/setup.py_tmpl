@@ -1,3 +1,4 @@
+
 from setuptools import setup, find_packages
 import sys, os
 
@@ -16,7 +17,7 @@ setup(name='{{project}}.{{plugin}}',
     zip_safe=False,
     install_requires=[
         "genshi",
-        "cement.core >={{cement_version}}, <{{cement_next_version}}",
+        "cement >={{cement_version}}, <{{cement_next_version}}",
         "{{project}}",
         ],
     setup_requires=[

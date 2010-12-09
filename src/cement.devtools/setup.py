@@ -6,7 +6,11 @@ VERSION = '0.8.14'
 LONG = """
 Cement is an advanced CLI Application Framework for Python. The 'devtools' 
 package provides tools and libraries needed for developing applications that
-are built on Cement.
+are built on Cement.  Note that this is only part of 'cement' as a whole.  The 
+entire source is available from:
+
+    http://builtoncement.org/cement/0.8/download/
+    
 
 The Cement CLI Application Framework is Open Source and is distributed under 
 The MIT License.  
@@ -65,7 +69,7 @@ setup(name='cement.devtools',
     install_requires=[
         "PasteScript", 
         "tempita",
-        "cement.core == %s" % VERSION,
+        "cement == %s" % VERSION,
         ],
     setup_requires=[
         ],

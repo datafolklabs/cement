@@ -112,7 +112,7 @@ Development versions of Cement can be cloned from GitHub:
     $ git clone git://github.com/derks/cement.git
     
     # install cement core framework
-    $ cd cement/src/cement.core
+    $ cd cement/src/cement
     $ python setup.py install
     
     # install devtools

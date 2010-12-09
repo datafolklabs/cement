@@ -15,9 +15,9 @@ Cement Framework.
  * Code: http://github.com/derks/cement
  
 
-Packages are available separately via PyPi:
+The Python packages are available separately via PyPi:
 
- * http://pypi.python.org/pypi/cement.core
+ * http://pypi.python.org/pypi/cement
  * http://pypi.python.org/pypi/cement.devtools
  
 

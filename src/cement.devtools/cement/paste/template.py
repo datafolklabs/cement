@@ -42,7 +42,7 @@ class CementAppTemplate(templates.Template):
     _template_dir = 'templates/cementapp'
     template_renderer = staticmethod(paste_script_template_renderer)
     summary = 'Cement Standard Template'
-    egg_plugins = ['PasteScript', 'cement.core']
+    egg_plugins = ['PasteScript', 'cement']
     vars = [
         templates.var("package", "Package module name", default=''),
         templates.var("cement_version", "Cement version", default=None),
@@ -66,7 +66,7 @@ class CementPluginTemplate(templates.Template):
     _template_dir = 'templates/cementplugin'
     template_renderer = staticmethod(paste_script_template_renderer)
     summary = 'Cement Plugin Standard Template'
-    egg_plugins = ['PasteScript', 'cement.core']
+    egg_plugins = ['PasteScript', 'cement']
     vars = [
         templates.var("plugin", "cement plugin name", default=None),
         templates.var("project", "Parent application this plugin is for", 
