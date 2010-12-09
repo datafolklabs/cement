@@ -5,9 +5,15 @@ version=$(python -c "from pkg_resources import get_distribution ; print get_dist
 dir=~/cement-${version}
 date=$(date)
 tmpfile=$(mktemp /tmp/cementXXXXX)
+status=$(git status --porcelain)
 
 if [ -e "${version}" ]; then
     echo "release dir already exists $dir"
+fi
+
+if [ "${status}" != "" ]; then
+    echo "must commit all changes first"
+    exit 1
 fi
 
 mkdir ${dir}/doc
