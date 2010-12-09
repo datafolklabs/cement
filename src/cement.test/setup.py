@@ -1,24 +1,43 @@
 from setuptools import setup, find_packages
 import sys, os
 
-VERSION = '0.8.13'
+VERSION = '0.8.14'
 
 LONG = """
-The Cement Test application was created to facilitate proper testing of the
-Cement CLI Application Framework.  Most of the features in Cement rely on
-a loaded application to be access them, making testing a bit more 
-complex than simply running nose on the cement module.  
+Cement is an advanced CLI Application Framework for Python. The 'test' 
+package provides an external application built on top of Cement, with 
+additional nose tests to provide unit testing of the framework.  To fully 
+test the framework, a running application is required to cover all bits of the
+code.  The 'cement.test' application is simply an application created using
+the paster utility (cement.devtools) with a bit of added code for testing.
+It is only meant to be used in development, for testing.
 
-The Cement Test application is simply a generic/useless application created
-via the cement.devtools paster template, with a few added lines of code to
-reach more of the framework and assist in testing coverage.  The primary
-use of cement-test is for the nose tests in ./tests.
-
-The Cement Test application is Open Source and is distributed under 
+The Cement CLI Application Framework is Open Source and is distributed under 
 The MIT License.  
+
+
+MORE INFORMATION:
+
+All documentation is available from the official website:
+
+    http://builtoncement.org
+    
+
+GETTING STARTED:
+    
+Development versions can be checked out of Git:
+::
+    $ git clone git://github.com/derks/cement.git
+    
+    $ cd cement/src/cement.test/
+    
+    $ python setup.py install
+    
+    $ nosetests --verbosity 3
+    
 """
 
-setup(name='cement-test',
+setup(name='cement.test',
     version=VERSION,
     description='Comprehensive Testing of the Cement CLI Application Framework',
     long_description=LONG,
@@ -34,7 +53,7 @@ setup(name='cement-test',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "cement >=0.8.9, <0.9",
+        "cement.core >=0.8.9, <0.9",
         "nose",
         "jsonpickle",
         ],

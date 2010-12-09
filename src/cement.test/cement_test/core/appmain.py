@@ -19,7 +19,7 @@ from cement_test.core.config import default_config
 from cement_test.core.exc import CementTestArgumentError, CementTestConfigError, \
                                  CementTestRuntimeError
 
-VERSION = get_distribution('cement_test').version
+VERSION = get_distribution('cement.test').version
 BANNER = """
 cement_test version %s
 """ % VERSION

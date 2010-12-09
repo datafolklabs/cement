@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-VERSION = '0.8.13'
+VERSION = '0.8.14'
 
 LONG = """
 Cement is an advanced CLI Application Framework for Python. The 'devtools' 
@@ -12,34 +12,32 @@ The Cement CLI Application Framework is Open Source and is distributed under
 The MIT License.  
 
 
+MORE INFORMATION:
+
+All documentation is available from the official website:
+
+    http://builtoncement.org    
+    
+
 GETTING STARTED:
 
-Stable versions of Cement can be installed via the cheeze shop:
+Stable versions can be installed via the cheeze shop:
 ::
-    $ easy_install cement
-    
     $ easy_install cement.devtools
 
 
-Development versions of Cement can be checked out of Git:
+Development versions can be checked out of Git:
 ::
     $ git clone git://github.com/derks/cement.git
-
-    $ cd cement/
-
-    $ python setup.py install
-
-    $ git clone git://github.com/derks/cement.devtools.git
     
-    $ cd cement.devtools/
+    $ cd cement/src/cement.devtools/
     
     $ python setup.py install
-    
 
-With the 'devtools' package, Cement applications, and plugins can be 
-created via PasteScript. Once cement.core and cement.devtools are installed, 
-the following command will create a command line application built on top of 
-the Cement Framework:
+
+With the 'devtools' package, Cement applications and plugins can be 
+created via PasteScript. The following command will create a command line 
+application built on top of the Cement Framework:
 ::
     $ paster cement-app myapp
 
@@ -48,7 +46,6 @@ The following command will create an external plugin for your application:
 ::
     $ paster cement-plugin myapp myplugin
 
-    
 """
 
 
@@ -68,7 +65,7 @@ setup(name='cement.devtools',
     install_requires=[
         "PasteScript", 
         "tempita",
-        "cement == %s" % VERSION,
+        "cement.core == %s" % VERSION,
         ],
     setup_requires=[
         ],

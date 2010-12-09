@@ -1,7 +1,7 @@
 
 NAME: Cement
 
-CREATOR/MAINTAINER: BJ Dierkes <wdierkes@5dollarwhitebox.org>
+AUTHOR: BJ Dierkes <wdierkes@5dollarwhitebox.org>
 
 DESCRIPTION:
 
@@ -32,47 +32,24 @@ clean it up later' routine that we all find ourselves in under deadlines.
 
 Any application can utilize existing plugins from The Rosendale Project, or 
 from other 3rd party resources to extend functionality.  The plugin system is 
-designed to allow portability of re-usable code, and it is encouraged to 
-contribute any plugins back to the project to extend the functionality of 
-Cement.  
+designed to allow portability of re-usable code.
 
 
+MORE INFORMATION:
+
+All documentation is available from the official website:
+
+    http://builtoncement.org
+    
+    
 LICENSE:
 
 The Cement CLI Application Framework is Open Source and is distributed under 
 the MIT License.  Please see the LICENSE file included with this software.  
 
-Cement includes a backport of pkgutil from the Python standard library in 
-order to make the pkgutil.get_data() function available for Python < 2.6.  
-This file (./cement/backports/pkgutil.py) is licensed under the Python 
-Software Foundation license version 2.0.  Please see the LICENSE.psf file 
-included with this software. 
-
-
-GETTING STARTED:
-
-Stable versions of Cement can be installed via the cheeze shop:
-::
-    $ easy_install cement
-    
-    # If creating an application
-    $ easy_install cement.devtools
-
-
-Development versions of Cement can be checked out of Git:
-::
-    $ git clone git://github.com/derks/cement.git
-
-
-With the 'devtools' package, Cement applications, and plugins can be 
-created via PasteScript. Once cement and cement.devtools are installed, 
-the following command will create a command line application built on top of 
-the Cement Framework:
-::
-    $ paster cement-app myapp
-
-
-The following command will create an external plugin for your application:
-::
-    $ paster cement-plugin myapp myplugin
+The 'cement.core' package includes a backport of pkgutil from the Python 
+standard library in order to make the pkgutil.get_data() function available 
+for Python < 2.6.  This file (./src/cement.core/backports/pkgutil.py) is 
+licensed under the Python Software Foundation license version 2.0.  Please see 
+the LICENSE.psf file included with this software (./src/cement/LICENSE.psf). 
 

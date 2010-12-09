@@ -19,7 +19,7 @@ prefix = os.path.join(os.environ['HOME'], '.cement_test')
 dcf = ConfigObj() # default config
 dcf['config_source'] = ['defaults']
 dcf['app_name'] = 'cement-test' # name for cli like /etc/<app_name>
-dcf['app_egg_name'] = 'cement-test' # name from setup.py
+dcf['app_egg_name'] = 'cement.test' # name from setup.py
 dcf['app_module'] = 'cement_test' # name of the library dir
 
 dcf['enabled_plugins'] = [] # no default plugins, add via the config file
@@ -50,7 +50,7 @@ def get_nose_config(prefix=None):
     tcf['config_files'] = [os.path.abspath('./config/cement-test.conf')]
     tcf['config_source'] = ['defaults']
     tcf['app_name'] = 'cement_test' 
-    tcf['app_egg_name'] = 'cement_test'
+    tcf['app_egg_name'] = 'cement.test'
     tcf['app_module'] = 'cement_test' 
     tcf['app_basepath'] = os.path.dirname(__file__)
     tcf['nosetests'] = True

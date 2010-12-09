@@ -35,9 +35,6 @@ Copyright (c) 2008 TurboGears Team
 from paste.script import templates
 from tempita import paste_script_template_renderer
 
-import pkg_resources
-from pkg_resources import get_distribution
-
 class CementAppTemplate(templates.Template):
     """
     Cement default paste template class
@@ -45,7 +42,7 @@ class CementAppTemplate(templates.Template):
     _template_dir = 'templates/cementapp'
     template_renderer = staticmethod(paste_script_template_renderer)
     summary = 'Cement Standard Template'
-    egg_plugins = ['PasteScript', 'Cement']
+    egg_plugins = ['PasteScript', 'cement.core']
     vars = [
         templates.var("package", "Package module name", default=''),
         templates.var("cement_version", "Cement version", default=None),
@@ -69,7 +66,7 @@ class CementPluginTemplate(templates.Template):
     _template_dir = 'templates/cementplugin'
     template_renderer = staticmethod(paste_script_template_renderer)
     summary = 'Cement Plugin Standard Template'
-    egg_plugins = ['PasteScript', 'Cement']
+    egg_plugins = ['PasteScript', 'cement.core']
     vars = [
         templates.var("plugin", "cement plugin name", default=None),
         templates.var("project", "Parent application this plugin is for", 

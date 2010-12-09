@@ -16,7 +16,7 @@ setup(name='{{project}}.{{plugin}}',
     zip_safe=False,
     install_requires=[
         "genshi",
-        "cement >={{cement_version}}, <{{cement_next_version}}",
+        "cement.core >={{cement_version}}, <{{cement_next_version}}",
         "{{project}}",
         ],
     setup_requires=[

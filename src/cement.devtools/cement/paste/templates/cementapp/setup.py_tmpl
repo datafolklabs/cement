@@ -17,7 +17,7 @@ setup(name='{{project}}',
         "configobj",
         # remove if not using genshi templating
         "genshi",
-        "cement >={{cement_version}}, <{{cement_next_version}}",
+        "cement.core >={{cement_version}}, <{{cement_next_version}}",
         ],
     setup_requires=[
         # uncomment for nose testing

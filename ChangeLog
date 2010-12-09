@@ -1,10 +1,23 @@
 
+0.8.14 - Tue Dec  8 18:36:05 CST 2010
+------------------------------------------------------------------------------
+
+ +  Stable Release 0.8.14
+
+
 0.8.13 - unreleased
 -----------------------------------------------------------------------------
 
  +  Development Release 0.8.13
- +  Moving cement.devtools and cement.test back under main project
- +  Reorganized project files, python packages are under ./src
+ +  Reorganized project files.  Moved cement.devtools, cement.test back under
+    cement main project.  All packages are under './src'.
+ +  Incompatible: Changed the 'cement' package to 'cement.core'.  This was
+    done to make maintenance between PyPi and distributions easier.  Meaning
+    via PyPi a user needs to install 'cement.core'... however via 
+    distributions, the full source is required (cement-X.Y.Z.tar.gz includes
+    cement.core, cement.devtools, etc).  We are not making a major version 
+    bump for this as the 'fix' for any incompatibility is simply to change
+    the 'install_requires' of 'cement' to 'cement.core'.
 
 
 0.8.12 - Dec 06, 2010
@@ -224,3 +237,4 @@ Incompatible Changes:
     is now a simplified dict of dicts.
  -  Plugin configs now end in .config, no longer .plugin
  -  Boolean config options now only support true/false to limit confusion
+

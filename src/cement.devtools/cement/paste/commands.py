@@ -46,7 +46,7 @@ from paste.script import create_distro
 beginning_letter = re.compile(r"^[^a-z]*")
 valid_only = re.compile(r"[^a-z0-9_\.]")
 
-CEMENT_VERSION = pkg_resources.get_distribution('cement').version
+CEMENT_VERSION = pkg_resources.get_distribution('cement.core').version
 
 (base, major) = CEMENT_VERSION.split('.')[:2]
 CEMENT_MAJOR_VERSION = '.'.join(CEMENT_VERSION.split('.')[:2])
