@@ -1,7 +1,7 @@
 #!/bin/bash
 
 previous=$(git describe | awk -F '-' {' print $1 '})
-version=$(python -c "from pkg_resources import get_distribution ; print get_distribution('cement.core').version")
+version=$(python -c "from pkg_resources import get_distribution ; print get_distribution('cement').version")
 date=$(date)
 tmpfile=$(mktemp /tmp/cementXXXXX)
 status=$(git status --porcelain)

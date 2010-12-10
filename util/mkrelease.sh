@@ -1,7 +1,7 @@
 #!/bin/bash
 
 status=$(git status --porcelain)
-version=$(python -c "from pkg_resources import get_distribution ; print get_distribution('cement.core').version")
+version=$(python -c "from pkg_resources import get_distribution ; print get_distribution('cement').version")
 short=$(echo $version | awk -F . {' print $1"."$2 '})
 dir=~/cement-${version}
 
@@ -19,9 +19,9 @@ mkdir ${dir}/pypi
 git archive HEAD --prefix=cement-${version}/ | gzip > ${dir}/downloads/cement-${version}.tar.gz
 
 # individual
-for i in core devtools test; do
-    pushd src/cement.$i
-    git archive HEAD --prefix=cement.${i}-${version}/ | gzip > ${dir}/pypi/cement.${i}-${version}.tar.gz
+for i in cement cement.devtools cement.test; do
+    pushd src/$i
+    git archive HEAD --prefix=${i}-${version}/ | gzip > ${dir}/pypi/${i}-${version}.tar.gz
     popd
 done
 
