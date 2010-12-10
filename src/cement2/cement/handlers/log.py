@@ -3,7 +3,146 @@ import logging
 from cement.core.exc import CementArgumentError
 
 class CementLogHandler(object):
+    """
+    Create a standard object for logging.  
+    
+    Required Arguments:
+    
+        name
+            The name of the logging namespaces.
+    
+    
+    Usage:
+            
+    .. code-block:: python
+    
+        from cement.handlers.log import CementLogHandler
+        log = CementLogHandler('cement')
+        log.info('this is an info message')
+        
+        
+    This class is largely unimplemented and needs to be subclassed from.
+    
+    """
     def __init__(self, name):
+        self.all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
+        self.name = name
+        self.backend = None
+        
+    def setup_logging(self, level='INFO', **kw):
+        """
+        Setup the logging facility.  Should only be called during initial
+        framework or application initialization.
+        
+        Required Arguments:
+        
+            level
+                The level to log at 'INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL'.
+        
+        Optional Keyword Arguments:
+        
+            clear_loggers
+                Whether to clear existing loggers.
+                
+            to_console
+                Whether to log to the console. Boolean (default: True).  Uses
+                logging.StreamHandler()
+            
+            log_file
+                The log file to log to.  If no file is passed, file logging
+                is disabled.  Uses logging.FileHandler
+                
+            file_formatter
+                A logging 'formatter' object to pass to 'setFormatter()' for
+                the file logger.
+            
+            console_formatter
+                A logging 'formatter' object to pass to 'setFormatter()' for
+                the console logger.
+              
+            max_bytes
+                Maximum number of bytes per log file (if log_file is passed).
+                Uses logging.RotatingFileHandler() if passed.  Default: None.
+            
+            max_files
+                If log_file and max_bytes are passed, this sets the max number
+                of log files to keep.  Default: 4.
+                
+        """
+        raise NotImplementedError
+        
+    @property
+    def level(self):
+        """
+        Return a string representation of the log level.
+        """
+        raise NotImplementedError
+    
+    def info(self, msg):
+        """
+        Log to the 'INFO' facility.
+        
+        Required Arguments:
+        
+            msg
+                The message to log.
+        
+        """
+        raise NotImplementedError
+        
+    def warn(self, msg):
+        """
+        Log to the 'WARN' facility.
+        
+        Required Arguments:
+        
+            msg
+                The message to log.
+        
+        """
+        raise NotImplementedError
+    
+    def error(self, msg):
+        """
+        Log to the 'ERROR' facility.
+        
+        Required Arguments:
+        
+            msg
+                The message to log.
+        
+        """
+        raise NotImplementedError
+    
+    def fatal(self, msg):
+        """
+        Log to the 'FATAL' facility.
+        
+        Required Arguments:
+        
+            msg
+                The message to log.
+        
+        """
+        raise NotImplementedError
+    
+    def debug(self, msg):
+        """
+        Log to the 'DEBUG' facility.
+        
+        Required Arguments:
+        
+            msg
+                The message to log.
+        
+        """
+        raise NotImplementedError
+        
+        
+class LoggingLogHandler(CementLogHandler):
+    def __init__(self, name):
+        CementLogHandler.__init__(self, name)
+        
         self.all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
         self.name = name
         self.backend = logging.getLogger(self.name)
