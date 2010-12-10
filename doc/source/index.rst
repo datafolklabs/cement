@@ -11,34 +11,28 @@ is a guide for developers wishing to build their applications on top of the
 Cement Framework.  
  
  * Doc: http://builtoncement.org/cement/0.8/doc/
- * Stable: http://builtoncement.org/cement/0.8/download/
- 
- 
-Other sites that might be helpful:
-
-cement:
-
- * PyPi: http://pypi.python.org/pypi/cement
+ * Download: http://builtoncement.org/cement/0.8/source/
  * Code: http://github.com/derks/cement
- * Site: http://builtoncement.org
  
-cement.devtools:
 
- * PyPi: http://pypi.python.org/pypi/cement.devtools
- * Code: http://github.com/derks/cement.devtools
- 
-cement.test:
- 
- * Code: http://github.com/derks/cement.test
- 
-rosendale:
+The Python packages are available separately via PyPi:
 
- * Doc: http://builtoncement.org/rosendale/1.0/doc/
- * Downloads: http://builtoncement.org/rosendale/1.0/download/
+ * http://pypi.python.org/pypi/cement
+ * http://pypi.python.org/pypi/cement.devtools
+ 
+
+The Rosendale Project
+---------------------
+
+The Rosendale Project is geared towards providing shared plugins for all 
+applications built on Cement.
+
+ * http://builtoncement.org/rosendale/1.0/doc/
  
  
 Contents
-========
+--------
+
 .. toctree::
    :maxdepth: 2
 

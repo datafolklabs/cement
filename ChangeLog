@@ -1,8 +1,22 @@
+#
+# Tracker Issues and Commits referenced here can be viewed online as:
+#
+#   Commit: https://github.com/derks/cement/commit/XXXXXXX
+#    Issue: https://github.com/derks/cement/issues/#issue/XX
+#
+
+0.8.14 - Wed Dec  8 22:07:31 CST 2010
+------------------------------------------------------------------------------
+
+ +  Stable Release 0.8.14
+
 
 0.8.13 - unreleased
 -----------------------------------------------------------------------------
 
  +  Development Release 0.8.13
+ +  Reorganized project files.  Moved cement.devtools, cement.test back under
+    cement main project.  All packages are under './src'.
 
 
 0.8.12 - Dec 06, 2010
@@ -222,3 +236,4 @@ Incompatible Changes:
     is now a simplified dict of dicts.
  -  Plugin configs now end in .config, no longer .plugin
  -  Boolean config options now only support true/false to limit confusion
+

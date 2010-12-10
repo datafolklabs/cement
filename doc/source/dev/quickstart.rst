@@ -6,7 +6,7 @@ CLI Application Framework.  Throughout this documentation we reference an
 application called 'helloworld'.  For almost all cases, you can replace
 helloworld with the package name of your application.
 
-
+    
 Raw Commands For The Impatient
 ------------------------------
 
@@ -111,14 +111,12 @@ Development versions of Cement can be cloned from GitHub:
 
     $ git clone git://github.com/derks/cement.git
     
-    $ cd cement
-    
+    # install cement core framework
+    $ cd cement/src/cement
     $ python setup.py install
     
-    $ git clone git://github.com/derks/cement.devtools.git
-    
-    $ cd cement.devtools
-    
+    # install devtools
+    $ cd ../cement.devtools
     $ python setup.py install
     
 

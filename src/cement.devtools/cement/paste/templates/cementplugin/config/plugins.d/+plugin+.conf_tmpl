@@ -1,0 +1,14 @@
+# {{plugin.capitalize()}} Configuration Settings
+#
+# Note: Default values can be set via <yourapp>.bootstrap.<plugin>.py
+#
+
+[{{plugin}}]
+enable_plugin = true
+
+# The module name of the provider application
+provider = {{package}}
+
+# Add any configurations here, note that defaults should also be added
+# to this plugins bootstrap file.
+foo = 'some value'
