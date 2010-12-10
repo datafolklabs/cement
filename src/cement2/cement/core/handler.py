@@ -2,7 +2,9 @@
 
 from cement.core.backend import handlers
 from cement.core.exc import CementRuntimeError
-from cement.handlers.log import CementLogHandler
+from cement.handlers.log import LoggingLogHandler
+
+log = LoggingLogHandler(__name__)
 
 def get_handler(handler_type, handler_name):
     """
@@ -48,7 +50,6 @@ def define_handler(handler_type):
         define_handler('database')
     
     """
-    log = CementLogHandler(__name__)
     log.debug("defining handler type '%s'" % handler_type)
     if handlers.has_key(handler_type):
         raise CementRuntimeError, "Handler type '%s' already defined!" % \
@@ -87,7 +88,7 @@ def register_handler(handler_type, name, handler_object):
     if handlers[handler_type].has_key(name):
         raise CementRuntimeError, "Handler of type '%s' and name '%s' already exists" % \
                                   (handler_type, name)
-    #log.debug("registering handler '%s' from %s into handlers['%s']" % \
-    #         (name, handler_object.__module__, handler_type))
+    log.debug("registering handler '%s' from %s into handlers['%s']" % \
+             (name, handler_object.__module__, handler_type))
     handlers[handler_type][name] = handler_object
    
