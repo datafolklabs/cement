@@ -11,7 +11,7 @@ is a guide for developers wishing to build their applications on top of the
 Cement Framework.  
  
  * Doc: http://builtoncement.org/cement/0.8/doc/
- * Download: http://builtoncement.org/cement/0.8/download/
+ * Download: http://builtoncement.org/cement/0.8/source/
  * Code: http://github.com/derks/cement
  
 
