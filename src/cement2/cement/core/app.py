@@ -2,27 +2,32 @@
 
 import sys
 
-from cement.handlers.log import CementLogHandler
-from cement.core.handler import define_handler, register_handler
+from cement.core.handler import define_handler, register_handler, get_handler
+from cement.handlers.log import LoggingLogHandler
 
 def lay_cement(config, **kw):
     """
     Initialize the framework.
+
+    Required Arguments:
     
+        config
+            A config dictionary to work from.
+        
     Optional Keyword Arguments:
-    
+
         argv
             List of args to use.  Default: sys.argv.
-        
-    """
-        
-    argv = kw.get('argv', sys.argv)
     
+    """
+    
+    argv = kw.get('argv', sys.argv)
+
     # basic logging setup first (mostly for debug/error)
     if '--debug' in argv:
         config['log_level'] = 'DEBUG'
 
-    cement_log = CementLogHandler('cement')
+    cement_log = LoggingLogHandler('cement')
     cement_log.setup_logging(
         level=config['log_level'],
         to_console=config['log_to_console'],
@@ -35,7 +40,14 @@ def lay_cement(config, **kw):
         )
 
     define_handler('log')
-    register_handler('log', 'logging', CementLogHandler)
+    define_handler('output')
+    define_handler('option')
+    define_handler('command')
+    define_handler('hook')
+    define_handler('plugin')
+    
+    register_handler('log', 'logging', LoggingLogHandler)
+
         
 class CementApp(object):
     def __init__(self, config):
@@ -44,9 +56,11 @@ class CementApp(object):
         lay_cement(config)
         
         self._validate_config()
-        
-        # setup logging for the app
-        self.log = CementLogHandler(self.config['app_module'])
+        self._setup_logging()
+    
+    def _setup_logging(self):
+        lh = get_handler('log', self.config['log_handler'])
+        self.log = lh(self.config['app_module'])
         self.log.setup_logging(
             level=self.config['log_level'],
             to_console=self.config['log_to_console'],
