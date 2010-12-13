@@ -45,21 +45,39 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
         setup_logging()
         
     """
+
+    config = namespaces['root'].config
+    if clear_loggers:
+        clear_loggers()
+
+
+    if config.has_key('loggers'):
+        setup_configed_logging()
+    else:
+        setup_default_logging(level, to_console)
+
+def clear_loggers():
+    config = namespaces['root'].config
+
+    # Remove any previously setup handlers from other libraries
+    for i in logging.getLogger().handlers:
+        logging.getLogger().removeHandler(i)
+    for i in logging.getLogger(config['app_module']).handlers:
+        logging.getLogger(config['app_module']).removeHandler(i)
+    for i in logging.getLogger('cement').handlers:
+        logging.getLogger('cement').removeHandler(i)
+            
+def setup_configed_logging():
+    import logging.config
+
+    config = namespaces['root'].config
+
+    logging.config.fileConfig(config['config_files'])
+    
+def setup_default_logging(level, to_console):
     config = namespaces['root'].config
     all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
-    
-    # Remove any previously setup handlers from other libraries
-    if clear_loggers:
-        for i in logging.getLogger().handlers:
-            logging.getLogger().removeHandler(i)
-        for i in logging.getLogger(config['app_module']).handlers:
-            logging.getLogger(config['app_module']).removeHandler(i)
-        for i in logging.getLogger('cement').handlers:
-            logging.getLogger('cement').removeHandler(i)
-            
-    app_log = logging.getLogger(config['app_module'])
-    cement_log = logging.getLogger('cement')
-    
+
     # Log level
     if config.has_key('debug') and config['debug']:
         level = 'DEBUG'
@@ -69,6 +87,9 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
         level = config['log_level']
     else:
         level = 'INFO'
+
+    app_log = logging.getLogger(config['app_module'])
+    cement_log = logging.getLogger('cement')
 
     log_level = getattr(logging, level.upper())
     app_log.setLevel(log_level)
