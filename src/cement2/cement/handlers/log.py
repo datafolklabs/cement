@@ -244,7 +244,8 @@ class LoggingLogHandler(CementLogHandler):
                     "%(asctime)s (%(levelname)s) %(name)s : %(message)s"))
             file_handler.setLevel(log_level)   
             self.backend.addHandler(file_handler)
-        self.debug("logging initialized for '%s'" % self.name)
+        self.debug("logging initialized for '%s' using LoggingLogHandler" % \
+                   self.name)
         
     @property
     def level(self):
