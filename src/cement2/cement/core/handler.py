@@ -28,7 +28,7 @@ def get_handler(handler_type, handler_name):
     if handler_type in handlers:
         if handler_name in handlers[handler_type]:
             return handlers[handler_type][handler_name]
-    raise CementRuntimeError, "The handler handlers[%s][%s] does not exist!" \
+    raise CementRuntimeError, "handlers['%s']['%s'] does not exist!" \
         % (handler_type, handler_name)
     
 def define_handler(handler_type):
@@ -52,7 +52,7 @@ def define_handler(handler_type):
     """
     log.debug("defining handler type '%s'" % handler_type)
     if handlers.has_key(handler_type):
-        raise CementRuntimeError, "Handler type '%s' already defined!" % \
+        raise CementRuntimeError, "handler type '%s' already defined!" % \
                                   handler_type
     handlers[handler_type] = {}
     
@@ -86,8 +86,9 @@ def register_handler(handler_type, name, handler_object):
         raise CementRuntimeError, "Handler type '%s' doesn't exist." % \
                                   handler_type
     if handlers[handler_type].has_key(name):
-        raise CementRuntimeError, "Handler of type '%s' and name '%s' already exists" % \
-                                  (handler_type, name)
+        raise CementRuntimeError, \
+            "handlers['%s']['%s'] already exists" % \
+            (handler_type, name)
     log.debug("registering handler '%s' from %s into handlers['%s']" % \
              (name, handler_object.__module__, handler_type))
     handlers[handler_type][name] = handler_object
