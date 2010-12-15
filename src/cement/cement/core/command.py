@@ -48,10 +48,13 @@ def run_command(cmd_name=None, ignore_conflicts=False):
         try:
             actual_cmd = re.sub('-', '_', cli_args[1])
         except IndexError:
-            raise CementArgumentError, \
-                "%s is a namespace* " % namespace + \
-                "which requires a sub-command.  See " + \
-                "'%s --help'" % namespace
+            if namespaces[namespace].commands.has_key('default'):
+                actual_cmd = 'default'
+            else:
+                raise CementArgumentError, \
+                    "%s is a namespace* " % namespace + \
+                    "which requires a sub-command.  See " + \
+                    "'%s --help'" % namespace
     
     if namespaces[namespace].commands.has_key(actual_cmd):
         cmd = namespaces[namespace].commands[actual_cmd]
