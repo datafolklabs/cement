@@ -48,15 +48,15 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
 
     config = namespaces['root'].config
     if clear_loggers:
-        clear_loggers()
+        clear_previous_loggers()
 
 
     if config.has_key('loggers'):
-        setup_configed_logging()
+        setup_logging_per_config()
     else:
         setup_default_logging(level, to_console)
 
-def clear_loggers():
+def clear_previous_loggers():
     config = namespaces['root'].config
 
     # Remove any previously setup handlers from other libraries
@@ -67,7 +67,7 @@ def clear_loggers():
     for i in logging.getLogger('cement').handlers:
         logging.getLogger('cement').removeHandler(i)
             
-def setup_configed_logging():
+def setup_logging_per_config():
     import logging.config
 
     config = namespaces['root'].config
