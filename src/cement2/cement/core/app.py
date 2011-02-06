@@ -2,9 +2,11 @@
 
 import sys
 
+from cement.core.backend import init_config
 from cement.core.exc import CementConfigError
 from cement.core.handler import define_handler, register_handler, get_handler
 from cement.handlers.log import LoggingLogHandler
+from cement.handlers.config import ConfigParserConfigHandler
 
 def lay_cement(config, **kw):
     """
@@ -41,34 +43,48 @@ def lay_cement(config, **kw):
         )
 
     define_handler('log')
+    define_handler('config')
     define_handler('output')
     define_handler('option')
     define_handler('command')
     define_handler('hook')
     define_handler('plugin')
+    define_handler('error')
     
     register_handler('log', 'logging', LoggingLogHandler)
-
-        
-class CementApp(object):
-    def __init__(self, config):
-        self.config = config
-        self.log = None
-        
-        self._validate_required_config()
-        lay_cement(config)
-        
-        self._validate_config()
-        self._setup_logging()
+    register_handler('config', 'configparser', ConfigParserConfigHandler)
     
+class CementApp(object):
+    def __init__(self, app_name, **kw):
+        self.default_config = kw.get('default_config', init_config())
+        self.default_config['app_name'] = app_name
+        
+        self.config = None
+        self.log = None
+        self.options = None
+        self.commands = None
+        
+    def run(self):
+        self._validate_required_config()
+        self._setup_cement()
+        self._setup_config()
+        self._setup_logging()
+
+    def _setup_cement(self):
+        lay_cement(self.config)    
+        
+    def _setup_config(self):
+        handler = get_handler('config', config['config_handler'])
+        self.config = handler(self.default_config)
+        
     def _setup_logging(self):
         # first redo logging for cement (in case the log_handler is diff)
-        lh = get_handler('log', self.config['log_handler'])
-        self.log = lh('cement')
-        self.log.setup_logging(
+        handler = get_handler('log', self.config['log_handler'])
+        cement_log = handler('cement')
+        cement_log.setup_logging(
             level=self.config['log_level'],
             to_console=self.config['log_to_console'],
-            clear_loggers=True,
+            clear_loggers=self.config['log_clear_previous_loggers'],
             log_file=self.config['log_file'],
             max_bytes=self.config['log_max_bytes'],
             max_files=self.config['log_max_files'],
@@ -77,12 +93,12 @@ class CementApp(object):
             )
         
         # then setup logging for the app    
-        lh = get_handler('log', self.config['log_handler'])
-        self.log = lh(self.config['app_module'])
+        handler = get_handler('log', self.config['log_handler'])
+        self.log = handler(self.config['app_module'])
         self.log.setup_logging(
             level=self.config['log_level'],
             to_console=self.config['log_to_console'],
-            clear_loggers=True,
+            clear_loggers=self.config['log_clear_previous_loggers'],
             log_file=self.config['log_file'],
             max_bytes=self.config['log_max_bytes'],
             max_files=self.config['log_max_files'],
@@ -95,7 +111,7 @@ class CementApp(object):
         c = self.config
         
         if not c.has_key('app_name') or not c['app_name']:
-            raise CementConfigError, "config['app_name'] required."
+            raise CementConfigError("config['app_name'] required.")
         if not c.has_key('app_module') or not c['app_module']:
             c['app_module'] = c['app_name']
         if not c.has_key('app_egg') or not c['app_egg']:
@@ -103,5 +119,3 @@ class CementApp(object):
         
         self.config = c
         
-    def _validate_config(self):
-        pass   

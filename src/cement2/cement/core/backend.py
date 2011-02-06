@@ -14,8 +14,16 @@ config['log_max_bytes'] = None
 config['log_max_files'] = 4
 config['log_file_formatter'] = None
 config['log_console_formatter'] = None
+config['log_clear_previous_loggers'] = True
+# default handlers
 config['log_handler'] = 'logging'
-config['output_handler'] = None
+config['config_handler'] = 'configparser'
+config['option_handler'] = 'optparse'
+config['command_handler'] = 'cement'
+config['hook_handler'] = 'cement'
+config['plugin_handler'] = 'cement'
+config['error_handler'] = 'cement'
+
 
 def init_config():
     _config = config.copy()

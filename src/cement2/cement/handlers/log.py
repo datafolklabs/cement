@@ -189,7 +189,7 @@ class LoggingLogHandler(CementLogHandler):
         """
         
         if level not in self.all_levels:
-            raise CementArgumentError, "Unknown log level '%s'." % level
+            raise CementArgumentError("Unknown log level '%s'." % level)
         
         log_level = getattr(logging, level.upper())
                 
