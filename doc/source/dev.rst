@@ -16,6 +16,7 @@ them in your applications.
    dev/handlers
    dev/mvc
    dev/options_and_arguments
+   dev/logging
    dev/plugin_support
    dev/templates
    dev/cli_api

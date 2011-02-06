@@ -5,6 +5,12 @@
 #    Issue: https://github.com/derks/cement/issues/#issue/XX
 #
 
+0.8.15 - unreleased
+------------------------------------------------------------------------------
+ +  Development Release 0.8.15
+ +  [Feature GH#42] Added support fro logging config per file.
+
+
 0.8.14 - Wed Dec  8 22:07:31 CST 2010
 ------------------------------------------------------------------------------
 
