@@ -137,6 +137,10 @@ def setup_default_logging(level, to_console):
     if config.has_key('log_file'):
         if config.has_key('log_max_bytes'):
             from logging.handlers import RotatingFileHandler
+            
+            if not config.has_key('log_max_files'):
+                config['log_max_files'] = 4
+                
             file_handler = RotatingFileHandler(
                 config['log_file'], maxBytes=int(config['log_max_bytes']), 
                 backupCount=int(config['log_max_files'])
