@@ -9,6 +9,8 @@
 ------------------------------------------------------------------------------
  +  Development Release 0.8.15
  +  [Feature GH#42] Added support fro logging config per file.
+ -  [Bug GH#48] log_file 'backupCount' uses wrong config option
+ -  [Bug GH#51] Unknown command error for namespace commands uses wrong arg
 
 
 0.8.14 - Wed Dec  8 22:07:31 CST 2010
