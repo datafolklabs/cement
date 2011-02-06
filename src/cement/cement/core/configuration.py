@@ -19,6 +19,7 @@ def get_default_config():
     dcf['output_engine'] = 'genshi' # deprecated
     dcf['output_handler'] = 'genshi'
     dcf['output_handler_override'] = None
+    dcf['logging_config_file'] = None
     return dcf
 
 def get_default_namespace_config():

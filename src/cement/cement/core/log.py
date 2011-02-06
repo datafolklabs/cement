@@ -3,6 +3,7 @@
 import logging
 
 from cement import namespaces
+from cement.core.exc import CementConfigError
 
 def setup_logging_for_plugin_provider(provider):
     """
@@ -51,12 +52,16 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
         clear_previous_loggers()
 
 
-    if config.has_key('loggers'):
-        setup_logging_per_config()
+    if config['logging_config_file']:
+        setup_logging_per_config(config['logging_config_file'])
     else:
         setup_default_logging(level, to_console)
 
 def clear_previous_loggers():
+    """
+    Clear all previous loggers that have been setup (by this, or other
+    applications).
+    """
     config = namespaces['root'].config
 
     # Remove any previously setup handlers from other libraries
@@ -67,14 +72,33 @@ def clear_previous_loggers():
     for i in logging.getLogger('cement').handlers:
         logging.getLogger('cement').removeHandler(i)
             
-def setup_logging_per_config():
+def setup_logging_per_config(config_file_path):
+    """
+    Setup logging using a logging fileCondfig.  See:
+    http://docs.python.org/library/logging.html#logging.fileConfig
+    """
     import logging.config
+    from ConfigParser import NoSectionError
+    try:
+        logging.config.fileConfig(config_file_path)
+    except NoSectionError, e:
+        raise CementConfigError, \
+            "Invalid logging config file %s - %s" % \
+            (config_file_path, e.args[0])
 
-    config = namespaces['root'].config
-
-    logging.config.fileConfig(config['config_files'])
-    
 def setup_default_logging(level, to_console):
+    """
+    Default logging config.
+    
+    Required Arguments:
+    
+        level
+            The log level to use (['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL'])
+        
+        to_console
+            Whether to setup console logging or not.
+	
+    """
     config = namespaces['root'].config
     all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
 
