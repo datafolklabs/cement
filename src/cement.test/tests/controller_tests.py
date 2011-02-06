@@ -29,6 +29,9 @@ def test_error_handler():
 def test_default_cmd():      
     (res, out) = simulate([__file__, 'default'])
 
+@with_setup(setup_func, teardown_func)
+def test_default_namespace_cmd():      
+    (res, out) = simulate([__file__, 'example'])
         
 @raises(CementArgumentError)
 @with_setup(setup_func, teardown_func)
