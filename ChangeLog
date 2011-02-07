@@ -5,24 +5,19 @@
 #    Issue: https://github.com/derks/cement/issues/#issue/XX
 #
 
-0.8.15 - unreleased
+0.8.15 - Feb 07, 2011
 ------------------------------------------------------------------------------
- +  Development Release 0.8.15
- +  [Feature GH#42] Added support fro logging config per file.
+
+ +  Stable Release 0.8.16
+ +  [Feature GH#42] Added support for logging config per file
  -  [Bug GH#48] log_file 'backupCount' uses wrong config option
  -  [Bug GH#51] Unknown command error for namespace commands uses wrong arg
 
 
-0.8.14 - Wed Dec  8 22:07:31 CST 2010
+0.8.14 - Dec 08, 2010
 ------------------------------------------------------------------------------
 
  +  Stable Release 0.8.14
-
-
-0.8.13 - unreleased
------------------------------------------------------------------------------
-
- +  Development Release 0.8.13
  +  Reorganized project files.  Moved cement.devtools, cement.test back under
     cement main project.  All packages are under './src'.
 
@@ -31,12 +26,6 @@
 -----------------------------------------------------------------------------
 
  +  Stable Release 0.8.12
-
-
-0.8.11 - unreleased
------------------------------------------------------------------------------
-
- +  Development Release 0.8.11
  +  Python 2.4 compatibility, thanks to Jason Koelker
  +  Display namespaces with underscores '_' in the label as dashes '-'.  
     Also disallow dashes in the name when registering a namespace.
@@ -49,11 +38,6 @@
 -----------------------------------------------------------------------------
 
  +  Stable Release 0.8.10
- 
- 
-0.8.9 - unreleased
------------------------------------------------------------------------------
-
  +  Application config file now override plugin configs
  +  Added 'core.handlers' module which includes 'define_handler', and 
     'register_handler'.  
@@ -79,11 +63,6 @@
 -----------------------------------------------------------------------------
 
  +  0.8.8 Stable Release
-
-
-0.8.7 - unreleased
------------------------------------------------------------------------------
-
  -  Added a fix for logging.  Previously, an application using a shared 
     plugin (such as from Rosendale) would be unable to log because there 
     were no handlers setup for the providers module name space.
@@ -99,11 +78,6 @@
 -----------------------------------------------------------------------------
 
  +  0.8.6 Stable Release
-
-
-0.8.5 - unreleased
------------------------------------------------------------------------------
-
  +  Separating 'paste' dev tools to separate 'devtools' package/project.
     
  
@@ -111,11 +85,6 @@
 -----------------------------------------------------------------------------
 
  +  0.8.4 Stable Release
-
-
-0.8.3 - unreleased
------------------------------------------------------------------------------
-
  +  Change module name to lower case 'cement' (non-functional change)
  +  Resolved GH#31 Add link to official dev/stable download locations to doc
  -  Resolved broken app_setup tests (application bootstrap hook)
@@ -144,12 +113,7 @@
 0.8 - Mar 24, 2010
 -----------------------------------------------------------------------------
 
- + 0.8 Stable Release
-
-
-0.7.3 - unreleased
------------------------------------------------------------------------------
-
+ +  0.8 Stable Release
  +  Paster now creates 'yourapp-plugin-yourplugin' rather than a plural 
     '-plugins-' which is more standard.
  -  Removed bogus hooks: bootstrap_plugins_hook
@@ -188,11 +152,6 @@
     override the name of the hook to register too (still uses name of func
     otherwise).
  -  The 'options_hook' has become post_options_hook.
-    
-    
-0.6.1 - unreleased
------------------------------------------------------------------------------
-
  +  Set statedir (all data) to ~/<app_name> rather than ./var/etc.  Only 
     affects new apps (or apps without a config file).
  +  Added an additional config file location of <statedir>/etc/<app>.conf
@@ -203,13 +162,6 @@
 -----------------------------------------------------------------------------
 
  +  Version 0.6 Stable Release.
- 
- 
-0.5.4 - unreleased 
------------------------------------------------------------------------------
-
-New Features:
-
  +  Moving to the MIT License.
  +  Added full API and Developer documentation under ./doc
 
