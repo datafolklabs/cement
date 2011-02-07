@@ -24,6 +24,11 @@ def run_command(cmd_name=None, ignore_conflicts=False):
                 
     """
     log.debug("processing passed command '%s'", cmd_name)
+    
+    # bit of a hack... but if cmd_name starts with - then no command passed
+    if cmd_name.startswith('-'):
+        cmd_name = 'default'
+        
     orig_cmd = cmd_name
     cmd_name = re.sub('-', '_', cmd_name)
     
