@@ -12,6 +12,8 @@
  +  [Feature GH#42] Added support for logging config per file
  -  [Bug GH#48] log_file 'backupCount' uses wrong config option
  -  [Bug GH#51] Unknown command error for namespace commands uses wrong arg
+ +  [Bug] Renamed cement/ module to cementdevtools in devtools source fixes
+    namespace issues (cement/__init__.py has code and can't be a namespace)
 
 
 0.8.14 - Dec 08, 2010
