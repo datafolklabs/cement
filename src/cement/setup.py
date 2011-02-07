@@ -70,5 +70,7 @@ setup(name='cement',
         ],
     entry_points="""
     """,
-    namespace_packages=[],
+    namespace_packages=[
+        'cement'
+        ],
     )
