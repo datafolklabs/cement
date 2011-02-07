@@ -1,1 +1,1 @@
-recursive-include cement/paste/templates *
+recursive-include cementdevtools/paste/templates *
