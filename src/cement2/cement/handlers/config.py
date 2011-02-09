@@ -1,31 +1,74 @@
 
-from cement.core.handler import CementConfigHandler
-from configparser import SafeConfigParser
+import os
+import sys
+from zope.interface import Interface, implements
 
-class ConfigParserConfigHandler(CementConfigHandler):
-    def __init__(self, default_config, section):
-        CementConfigHandler.__init__(self, default_config, section)
-        self.backend = SafeConfigParser(self.default_config)
-        self.backend.add_section(self.section)
-        for key in self.default_config:
-            self.backend.set(self.section, key, self.default_config[key])
-            
+if sys.version_info[0] < 3:
+    from ConfigParser import RawConfigParser
+else:
+    from configparser import RawConfigParser
+    
+class CementConfigHandler(Interface):
+    def __init__(self, default_config):
+        self.default_config = default_config
+        
     def parse_files(self):
         """
-        Parse config file settings from self.default_config['config_files'].
+        Parse all config files in self.default_config['config_files'].
         """
-        self.backend.read(self.default_config['config_files'])
+        for _file in self.default_config['config_files']:
+            self.parse_file(_file)
     
     def parse_file(self, file_path):
         """
         Parse config file settings from file_path.
         """
-        raise NotImplementedError(
-            "CementConfigHandler.parse_file() must be subclassed."
-            )
+        pass
+
+    def has_key(self, section, key):
+        pass
     
-    def __getitem__(self, key):
-        return self.backend.get(self.section, key)
+    def keys(self, section):
+        pass
     
-    def __setitem__(self, key, value):
-        return self.backend.set(self.section, key, value)
+    def has_section(self, section):    
+        pass
+            
+    def sections(self):
+        pass
+           
+    def get(self, section, key):
+        pass
+            
+    def set(self, section, key):
+        pass
+                        
+class ConfigParserConfigHandler(RawConfigParser):
+    implements(CementConfigHandler)
+    
+    def __init__(self, default_config):
+        RawConfigParser.__init__(self, default_config)
+        self.add_section('base')
+        
+    def parse_files(self):
+        """
+        Parse config file settings from self.default_config['config_files'].
+        """
+        for _file in self.get('base', 'config_files'):
+            self.parse_file(_file)
+    
+    def parse_file(self, file_path):
+        """
+        Parse config file settings from file_path.
+        """
+        if not os.path.exists(file_path):
+            log.debug('%s does not exist')
+            return None
+            
+        self.read(file_path)
+    
+    def has_key(self, section, key):
+        return self.has_option(section, key)
+     
+    def keys(self, section):
+        return self.options(section)

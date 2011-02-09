@@ -1,8 +1,14 @@
 
-from cement import init_config, CementApp
+from cement import CementApp
+from cement.core.backend import init_config
 
-c = CementApp('myapp')
+config = init_config()
+config['config_files'] = ['./test.conf']
+
+c = CementApp('myapp', default_config=config)
 c.run()
+print c.config.get('base', 'foo')
+
 c.log.info('blah')
 
 

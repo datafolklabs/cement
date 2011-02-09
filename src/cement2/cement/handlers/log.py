@@ -1,8 +1,10 @@
 
 import logging
+from zope.interface import Interface, implements
+
 from cement.core.exc import CementArgumentError
 
-class CementLogHandler(object):
+class CementLogHandler(Interface):
     """
     Create a standard object for logging.  
     
@@ -71,7 +73,6 @@ class CementLogHandler(object):
         """
         raise NotImplementedError
         
-    @property
     def level(self):
         """
         Return a string representation of the log level.
@@ -139,13 +140,13 @@ class CementLogHandler(object):
         raise NotImplementedError
         
         
-class LoggingLogHandler(CementLogHandler):
+class LoggingLogHandler(object):
+    implements(CementLogHandler)
+    
     def __init__(self, name):
-        CementLogHandler.__init__(self, name)
-        
-        self.all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
         self.name = name
         self.backend = logging.getLogger(self.name)
+        self.all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
         
     def setup_logging(self, level='INFO', **kw):
         """
@@ -247,7 +248,6 @@ class LoggingLogHandler(CementLogHandler):
         self.debug("logging initialized for '%s' using LoggingLogHandler" % \
                    self.name)
         
-    @property
     def level(self):
         return logging.getLevelName(self.backend.level)
     
