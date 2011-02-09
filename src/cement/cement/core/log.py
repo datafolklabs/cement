@@ -3,6 +3,7 @@
 import logging
 
 from cement import namespaces
+from cement.core.exc import CementConfigError
 
 def setup_logging_for_plugin_provider(provider):
     """
@@ -45,21 +46,62 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
         setup_logging()
         
     """
+
+    config = namespaces['root'].config
+    if clear_loggers:
+        clear_previous_loggers()
+
+
+    if config['logging_config_file']:
+        setup_logging_per_config(config['logging_config_file'])
+    else:
+        setup_default_logging(level, to_console)
+
+def clear_previous_loggers():
+    """
+    Clear all previous loggers that have been setup (by this, or other
+    applications).
+    """
+    config = namespaces['root'].config
+
+    # Remove any previously setup handlers from other libraries
+    for i in logging.getLogger().handlers:
+        logging.getLogger().removeHandler(i)
+    for i in logging.getLogger(config['app_module']).handlers:
+        logging.getLogger(config['app_module']).removeHandler(i)
+    for i in logging.getLogger('cement').handlers:
+        logging.getLogger('cement').removeHandler(i)
+            
+def setup_logging_per_config(config_file_path):
+    """
+    Setup logging using a logging fileCondfig.  See:
+    http://docs.python.org/library/logging.html#logging.fileConfig
+    """
+    import logging.config
+    from ConfigParser import NoSectionError
+    try:
+        logging.config.fileConfig(config_file_path)
+    except NoSectionError, e:
+        raise CementConfigError, \
+            "Invalid logging config file %s - %s" % \
+            (config_file_path, e.args[0])
+
+def setup_default_logging(level, to_console):
+    """
+    Default logging config.
+    
+    Required Arguments:
+    
+        level
+            The log level to use (['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL'])
+        
+        to_console
+            Whether to setup console logging or not.
+	
+    """
     config = namespaces['root'].config
     all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
-    
-    # Remove any previously setup handlers from other libraries
-    if clear_loggers:
-        for i in logging.getLogger().handlers:
-            logging.getLogger().removeHandler(i)
-        for i in logging.getLogger(config['app_module']).handlers:
-            logging.getLogger(config['app_module']).removeHandler(i)
-        for i in logging.getLogger('cement').handlers:
-            logging.getLogger('cement').removeHandler(i)
-            
-    app_log = logging.getLogger(config['app_module'])
-    cement_log = logging.getLogger('cement')
-    
+
     # Log level
     if config.has_key('debug') and config['debug']:
         level = 'DEBUG'
@@ -69,6 +111,9 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
         level = config['log_level']
     else:
         level = 'INFO'
+
+    app_log = logging.getLogger(config['app_module'])
+    cement_log = logging.getLogger('cement')
 
     log_level = getattr(logging, level.upper())
     app_log.setLevel(log_level)
@@ -92,9 +137,13 @@ def setup_logging(clear_loggers=True, level=None, to_console=True):
     if config.has_key('log_file'):
         if config.has_key('log_max_bytes'):
             from logging.handlers import RotatingFileHandler
+            
+            if not config.has_key('log_max_files'):
+                config['log_max_files'] = 4
+                
             file_handler = RotatingFileHandler(
                 config['log_file'], maxBytes=int(config['log_max_bytes']), 
-                backupCount=int(config['log_max_bytes'])
+                backupCount=int(config['log_max_files'])
                 )
         else:
             from logging import FileHandler

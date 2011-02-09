@@ -16,7 +16,7 @@ config = get_config()
 @with_setup(setup_func, teardown_func)
 def test_run_command_namespace():  
     # raises cause example is a namespace
-    run_command('example')
+    run_command('example2')
   
 @raises(CementArgumentError)
 @with_setup(setup_func, teardown_func)

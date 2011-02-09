@@ -128,7 +128,11 @@ class expose(object):
             return self.__get__
         
     def __call__(self, func):
-        (base, controller, con_namespace) = func.__module__.split('.')
+        parts = func.__module__.split('.')
+
+        con_namespace = parts[-1]
+        controller = parts[-2]
+        base = '.'.join(parts[:-2])
         
         self.func = func
         if not self.name:

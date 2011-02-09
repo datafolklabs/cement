@@ -3,7 +3,7 @@
 import os
 import sys
 import re
-from optparse import OptionParser, IndentedHelpFormatter, OptionConflictError
+import optparse
 
 from cement import namespaces
 from cement.core.log import get_logger
@@ -23,10 +23,10 @@ def init_parser(banner=None):
     Returns: OptionParser object.
     
     """
-    fmt = IndentedHelpFormatter(
+    fmt = optparse.IndentedHelpFormatter(
             indent_increment=4, max_help_position=32, width=77, short_first=1
             )
-    parser = OptionParser(formatter=fmt, version=banner)
+    parser = optparse.OptionParser(formatter=fmt, version=banner)
     return parser
 
     
@@ -60,9 +60,9 @@ def parse_options(namespace='root', ignore_conflicts=False):
                 else:
                     try:
                         namespaces[namespace].options.add_option(opt)
-                    except OptionConflictError, error:
+                    except optparse.OptionConflictError, error:
                         if not ignore_conflicts:
-                            raise OptionConflictError, error
+                            raise optparse.OptionConflictError, error
     
     cmd_txt = ''
     line = '    '

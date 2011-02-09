@@ -5,9 +5,6 @@ from configobj import ConfigObj, Section
 
 from cement.core.exc import CementConfigError
 
-# The use of CEMENT_API is deprecated as of 0.8.9.
-# CEMENT_API = "0.7-0.8:20100210"
-
 def get_default_config():
     """Get a default config dict."""
     dcf = ConfigObj()
@@ -19,6 +16,7 @@ def get_default_config():
     dcf['output_engine'] = 'genshi' # deprecated
     dcf['output_handler'] = 'genshi'
     dcf['output_handler_override'] = None
+    dcf['logging_config_file'] = None
     return dcf
 
 def get_default_namespace_config():

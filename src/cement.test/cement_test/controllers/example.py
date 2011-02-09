@@ -19,6 +19,10 @@ log = get_logger(__name__)
 
 class ExampleController(CementController):
     @expose(namespace='example')
+    def default(self):
+        print "default command!"
+        
+    @expose(namespace='example')
     def cmd1(self):
         foo='bar'
         print foo

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-VERSION = '0.8.15'
+VERSION = '0.8.16'
 
 LONG = """
 Cement is an advanced CLI Application Framework for Python. The 'devtools' 
@@ -75,11 +75,11 @@ setup(name='cement.devtools',
         ],
     entry_points="""
         [paste.global_paster_command]
-        cement-app = cement.paste.commands:CementAppCommand
-        cement-plugin = cement.paste.commands:CementPluginCommand
+        cement-app = cementdevtools.paste.commands:CementAppCommand
+        cement-plugin = cementdevtools.paste.commands:CementPluginCommand
         [paste.paster_create_template]
-        cementapp = cement.paste.template:CementAppTemplate
-        cementplugin = cement.paste.template:CementPluginTemplate
+        cementapp = cementdevtools.paste.template:CementAppTemplate
+        cementplugin = cementdevtools.paste.template:CementPluginTemplate
     """,
     namespace_packages=[],
     )

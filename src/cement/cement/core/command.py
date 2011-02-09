@@ -24,6 +24,11 @@ def run_command(cmd_name=None, ignore_conflicts=False):
                 
     """
     log.debug("processing passed command '%s'", cmd_name)
+    
+    # bit of a hack... but if cmd_name starts with - then no command passed
+    if cmd_name.startswith('-'):
+        cmd_name = 'default'
+        
     orig_cmd = cmd_name
     cmd_name = re.sub('-', '_', cmd_name)
     
@@ -48,10 +53,13 @@ def run_command(cmd_name=None, ignore_conflicts=False):
         try:
             actual_cmd = re.sub('-', '_', cli_args[1])
         except IndexError:
-            raise CementArgumentError, \
-                "%s is a namespace* " % namespace + \
-                "which requires a sub-command.  See " + \
-                "'%s --help'" % namespace
+            if namespaces[namespace].commands.has_key('default'):
+                actual_cmd = 'default'
+            else:
+                raise CementArgumentError, \
+                    "%s is a namespace* " % namespace + \
+                    "which requires a sub-command.  See " + \
+                    "'%s --help'" % namespace
     
     if namespaces[namespace].commands.has_key(actual_cmd):
         cmd = namespaces[namespace].commands[actual_cmd]
@@ -62,5 +70,5 @@ def run_command(cmd_name=None, ignore_conflicts=False):
         return (res, out_txt)
     else:
         raise CementArgumentError, "Unknown command '%s', see --help?" % \
-                                   orig_cmd
+                                   actual_cmd
         

@@ -6,7 +6,8 @@ from cement import namespaces
 from cement.core.namespace import get_config
 from cement.core.testing import simulate
 from cement.core.configuration import ensure_api_compat, validate_config
-from cement.core.configuration import t_f_pass
+from cement.core.configuration import get_api_version
+from cement.core.configuration import t_f_pass, set_config_opts_per_file
 from cement.core.exc import CementRuntimeError, CementConfigError
 
 from cement_test.core.testing import setup_func, teardown_func
@@ -17,6 +18,10 @@ config = get_config()
 @with_setup(setup_func, teardown_func)
 def test_config_options():  
     eq_(config['test_option'], 'foobar')
+
+@with_setup(setup_func, teardown_func)
+def test_deprecated_api_version():  
+    get_api_version()
 
 @with_setup(setup_func, teardown_func)
 def test_config_options_per_cli_opts():  
