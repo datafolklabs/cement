@@ -31,7 +31,7 @@ def get_handler(handler_type, handler_name):
     raise CementRuntimeError("handlers['%s']['%s'] does not exist!" \
                           % (handler_type, handler_name))
     
-def define_handler(handler_type, base_handler):
+def define_handler(handler_type, handler_interface):
     """
     Define a handler type that plugins can register handler objects under.
     
@@ -40,27 +40,28 @@ def define_handler(handler_type, base_handler):
         handler_type
             The type of the handler, stored as handlers['handler_type']
     
-        base_handler
-            The base handler that handlers of this class must implement.
+        handler_interface
+            The handler interface class that defines the interface to be 
+            implemented.
     
     Usage:
     
     .. code-block:: python
     
         from cement.core.handler import define_handler
-        
-        define_handler('database', MyAppDatabaseHandler)
+
+        define_handler('database', IDatabaseHandler)
     
     """
     log.debug("defining handler type '%s' (%s)" % \
-        (handler_type, base_handler.__name__))
+        (handler_type, handler_interface.__name__))
     if handlers.has_key(handler_type):
         raise CementRuntimeError("handler type '%s' already defined!" % \
                                   handler_type)
-    handlers[handler_type] = {'base' : base_handler}
+    handlers[handler_type] = {'interface' : handler_interface}
     
     
-def register_handler(handler_type, name, handler_object):
+def register_handler(handler_type, handler_name, handler_obj):
     """
     Register a handler object to a handler.
     
@@ -69,10 +70,10 @@ def register_handler(handler_type, name, handler_object):
         handler_type
             The type of the handler to register
         
-        name
+        handler_name
             The name to register the handler object as
             
-        handler_object
+        handler_obj
             The handler object to register
     
     Usage:
@@ -81,22 +82,25 @@ def register_handler(handler_type, name, handler_object):
     
         from cement.core.handler import register_handler
         
-        my_handler_object = SomeTypeOfObject()
-        register_handler('database', 'my_database_handler', my_handler_object)
+        my_handler_obj = SomeTypeOfObject()
+        register_handler('database', 'my_database_handler', my_handler_obj)
     
     """
     log.debug("registering handler '%s' from %s into handlers['%s']" % \
-             (name, handler_object.__module__, handler_type))
+             (handler_name, handler_obj.__module__, handler_type))
     if handler_type not in handlers:
         raise CementRuntimeError("Handler type '%s' doesn't exist." % \
                                  handler_type)
-    if handlers[handler_type].has_key(name):
+    if handlers[handler_type].has_key(handler_name):
         raise CementRuntimeError(
             "handlers['%s']['%s'] already exists" % \
-            (handler_type, name))
-    if not handlers[handler_type]['base'].implementedBy(handler_object):
+            (handler_type, handler_name))
+    if not handlers[handler_type]['interface'].implementedBy(handler_obj):
         raise CementRuntimeError(
-            "%s does not provide a '%s' handler." % (name, handler_type))
+            "%s does not provide a '%s' handler." % \
+            (handler_name, handler_type))
     
-    handlers[handler_type][name] = handler_object
+    handlers[handler_type]['interface'].validateInvariants(handler_obj)
+
+    handlers[handler_type][handler_name] = handler_obj
    

@@ -6,7 +6,7 @@ from cement.core.backend import init_config
 from cement.core.exc import CementConfigError
 from cement.core.handler import define_handler, register_handler, get_handler
 from cement.handlers.log import CementLogHandler, LoggingLogHandler
-from cement.handlers.config import CementConfigHandler, ConfigParserConfigHandler
+from cement.handlers.config import IConfigHandler, ConfigParserConfigHandler
 
 def lay_cement(config, **kw):
     """
@@ -43,7 +43,7 @@ def lay_cement(config, **kw):
         )
 
     define_handler('log', CementLogHandler)
-    define_handler('config', CementConfigHandler)
+    define_handler('config', IConfigHandler)
     #define_handler('output')
     #define_handler('option')
     #define_handler('command')
@@ -51,8 +51,8 @@ def lay_cement(config, **kw):
     #define_handler('plugin')
     #define_handler('error')
     
-    register_handler('log', 'logging', LoggingLogHandler)
-    register_handler('config', 'configparser', ConfigParserConfigHandler)
+    register_handler('log', 'default', LoggingLogHandler)
+    register_handler('config', 'default', ConfigParserConfigHandler)
     
 class CementApp(object):
     def __init__(self, app_name, **kw):
@@ -68,6 +68,7 @@ class CementApp(object):
         self._setup_cement()
         self._setup_config()
         self._validate_required_config()
+        self._validate_config()
         self._setup_logging()
 
     def _setup_cement(self):
@@ -112,14 +113,13 @@ class CementApp(object):
         
     def _validate_required_config(self):
         """
-        Validate core config settings required by cement.
+        Validate base config settings required by cement.
         """
         # need to shorten this a bit
         c = self.config
 
         if not c.has_key('base', 'app_name') or \
            not c.get('base', 'app_name'):
-            print c.get('base', 'app_name')
             raise CementConfigError("config['app_name'] required.")
         if not c.has_key('base', 'app_module') or \
            not c.get('base', 'app_module'):

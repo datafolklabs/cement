@@ -30,3 +30,9 @@ class CementArgumentError(CementError):
     def __init__(self, value):
         code = 1030
         CementError.__init__(self, value, code)
+
+class CementInterfaceError(CementError):
+    """Argument errors."""
+    def __init__(self, value):
+        code = 1040
+        CementError.__init__(self, value, code)

@@ -18,13 +18,13 @@ config['log_file_formatter'] = None
 config['log_console_formatter'] = None
 config['log_clear_previous_loggers'] = True
 # default handlers
-config['log_handler'] = 'logging'
-config['config_handler'] = 'configparser'
-config['option_handler'] = 'optparse'
-config['command_handler'] = 'cement'
-config['hook_handler'] = 'cement'
-config['plugin_handler'] = 'cement'
-config['error_handler'] = 'cement'
+config['log_handler'] = 'default'
+config['config_handler'] = 'default'
+config['option_handler'] = 'default'
+config['command_handler'] = 'default'
+config['hook_handler'] = 'default'
+config['plugin_handler'] = 'default'
+config['error_handler'] = 'default'
 
 
 def init_config():

@@ -1,54 +1,111 @@
 
 import os
 import sys
-from zope.interface import Interface, implements
+from zope import interface
+from cement.handlers.log import LoggingLogHandler
 
 if sys.version_info[0] < 3:
     from ConfigParser import RawConfigParser
 else:
     from configparser import RawConfigParser
     
-class CementConfigHandler(Interface):
-    def __init__(self, default_config):
-        self.default_config = default_config
-        
-    def parse_files(self):
-        """
-        Parse all config files in self.default_config['config_files'].
-        """
-        for _file in self.default_config['config_files']:
-            self.parse_file(_file)
+from cement.core.exc import CementInterfaceError
+
+log = LoggingLogHandler(__name__)
+
+def config_invariant(obj):
+    invalid = []
+    for member in ['keys', 'sections', 'get', 'set', 'parse_file']:
+        if not hasattr(obj, member):
+            invalid.append(member)
     
-    def parse_file(self, file_path):
+    if invalid:
+        raise CementInterfaceError, \
+            "Invalid or Missing: %s in %s" % (invalid, obj)
+                    
+class IConfigHandler(interface.Interface):
+    """
+    This class defines the Config Handler Interface.  Classes that 
+    implement this handler must provide the methods and attributes defined 
+    below.
+    
+    """
+    default = interface.Attribute('Default Configuration Dictionary')
+    interface.invariant(config_invariant)
+    
+    def parse_file(file_path):
         """
         Parse config file settings from file_path.
+        
+        Required Arguments:
+        
+            file_path
+                The path to the config file to parse.
+                
         """
-        pass
 
-    def has_key(self, section, key):
-        pass
-    
-    def keys(self, section):
-        pass
-    
-    def has_section(self, section):    
-        pass
+    def keys(section):
+        """
+        Return a list of configuration keys from `section`.
+        
+        Required Arguments:
+        
+            section
+                The config [section] to pull keys from.
+                
+        Returns: list
+        """
             
-    def sections(self):
-        pass
+    def sections():
+        """
+        Return a list of configuration sections.
+        
+        Returns: list
+                
+        """
            
-    def get(self, section, key):
-        pass
+    def get(section, key):
+        """
+        Return a configuration value based on [section][key].  The return
+        value type is unknown.
+        
+        Required Arguments:
+        
+            section
+                The [section] of the configuration to pull key value from.
             
-    def set(self, section, key):
-        pass
+            key
+                The configuration key to get the value from.
+                
+        Returns: unknown
+        
+        """
+            
+    def set(section, key, value):
+        """
+        Set a configuration value based at [section][key].
+        
+        Required Arguments:
+        
+            section
+                The [section] of the configuration to pull key value from.
+        
+            key
+                The configuration key to set the value at.
+            
+            value
+                The value to set.
+        
+        """
+
                         
 class ConfigParserConfigHandler(RawConfigParser):
-    implements(CementConfigHandler)
+    interface.implements(IConfigHandler)
     
     def __init__(self, default_config):
         RawConfigParser.__init__(self, default_config)
         self.add_section('base')
+        
         
     def parse_files(self):
         """
