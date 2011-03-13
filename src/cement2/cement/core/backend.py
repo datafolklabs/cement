@@ -17,6 +17,7 @@ config['log_max_files'] = 4
 config['log_file_formatter'] = None
 config['log_console_formatter'] = None
 config['log_clear_previous_loggers'] = True
+
 # default handlers
 config['log_handler'] = 'default'
 config['config_handler'] = 'default'
