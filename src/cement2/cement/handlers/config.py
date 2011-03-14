@@ -132,9 +132,6 @@ class ConfigParserConfigHandler(RawConfigParser):
     def __init__(self, defaults={}, dict_type=DICT_TYPE, allow_no_value=False):
         RawConfigParser.__init__(self, defaults, dict_type, allow_no_value)
 
-    def optionxform(self, option):
-        return option
-        
     def merge(self, dict_obj):
         for section in dict_obj.keys():
             if type(dict_obj[section]) == dict:

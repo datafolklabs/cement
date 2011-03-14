@@ -30,8 +30,7 @@ def get_defaults(app_name):
     dcf['base']['log_file_formatter'] = None
     dcf['base']['log_console_formatter'] = None
     dcf['base']['log_clear_loggers'] = True
-    _dcf = dcf.copy()
-    return _dcf
+    return dcf
     
 # global handlers dict
 handlers = {}
