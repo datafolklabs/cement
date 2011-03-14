@@ -2,44 +2,50 @@
 
 import sys
 
-from cement.core.backend import init_config
+from cement.core.backend import get_defaults
 from cement.core.exc import CementConfigError
 from cement.core.handler import define_handler, register_handler, get_handler
 from cement.handlers.log import CementLogHandler, LoggingLogHandler
 from cement.handlers.config import IConfigHandler, ConfigParserConfigHandler
+from cement.handlers.config import ConfigObjConfigHandler
 
-def lay_cement(config, **kw):
+def lay_cement(app_name, *args, **kw):
     """
     Initialize the framework.
 
     Required Arguments:
     
-        config
-            A config dictionary to work from.
+        app_name
+            The name of the application.
+            
         
     Optional Keyword Arguments:
 
+        defaults
+            The default config dictionary (other wise use get_defaults)
+            
         argv
             List of args to use.  Default: sys.argv.
     
     """
     
+    defaults = kw.get('defaults', get_defaults(app_name))
     argv = kw.get('argv', sys.argv)
-
+    
     # basic logging setup first (mostly for debug/error)
     if '--debug' in argv:
-        config['log_level'] = 'DEBUG'
+        defaults['base']['log_level'] = 'DEBUG'
     
     cement_log = LoggingLogHandler('cement')
     cement_log.setup_logging(
-        level=config['log_level'],
-        to_console=config['log_to_console'],
-        clear_loggers=True,
-        log_file=config['log_file'],
-        max_bytes=config['log_max_bytes'],
-        max_files=config['log_max_files'],
-        file_formatter=config['log_file_formatter'],
-        console_formatter=config['log_console_formatter'],
+        level=defaults['base']['log_level'],
+        to_console=defaults['base']['log_to_console'],
+        clear_loggers=defaults['base']['log_clear_loggers'],
+        log_file=defaults['base']['log_file'],
+        max_bytes=defaults['base']['log_max_bytes'],
+        max_files=defaults['base']['log_max_files'],
+        file_formatter=defaults['base']['log_file_formatter'],
+        console_formatter=defaults['base']['log_console_formatter'],
         )
 
     define_handler('log', CementLogHandler)
@@ -51,64 +57,71 @@ def lay_cement(config, **kw):
     #define_handler('plugin')
     #define_handler('error')
     
-    register_handler('log', 'default', LoggingLogHandler)
-    register_handler('config', 'default', ConfigParserConfigHandler)
+    #register_handler(LoggingLogHandler)
+    register_handler(ConfigParserConfigHandler)
+    #register_handler(ConfigObjConfigHandler)
+    
+    app = CementApp(app_name, *args, **kw)
+    return app
     
 class CementApp(object):
     def __init__(self, app_name, **kw):
-        self.default_config = kw.get('default_config', init_config())
-        self.default_config['app_name'] = app_name
-
-        self.config = None
-        self.log = None
+        self.defaults = kw.get('defaults', get_defaults(app_name))
+        
+        # initialize the cement framework
+        #self._setup_cement()
+        
+        # initialize handlers if passed in
+        self.config = kw.get('config', None)
+        self.log = kw.get('log', None)
         self.options = None
         self.commands = None
         
     def run(self):
-        self._setup_cement()
         self._setup_config()
         self._validate_required_config()
         self._validate_config()
-        self._setup_logging()
+        #self._setup_logging()
 
-    def _setup_cement(self):
-        lay_cement(self.default_config)    
+#    def _setup_cement(self):
+#        lay_cement(self.defaults)    
         
     def _setup_config(self):
-        handler = get_handler('config', self.default_config['config_handler'])
-        self.config = handler(self.default_config)
-        self.config.parse_files()
+        if not self.config:
+            h = get_handler('config', self.defaults['base']['config_handler'])
+            self.config = h()
+            self.config.merge(self.defaults)
+
+        for _file in self.config.get('base', 'config_files'):
+            self.config.parse_file(_file)
         
     def _setup_logging(self):
-        # shorter better
-        c = self.config.get
-        
         # first redo logging for cement (in case the log_handler is diff)
-        handler = get_handler('log', c('base', 'log_handler'))
+        handler = get_handler('log', self.config.get('base', 'log_handler'))
         cement_log = handler('cement')
         cement_log.setup_logging(
-            level=c('base', 'log_level'),
-            to_console=c('base', 'log_to_console'),
-            clear_loggers=c('base', 'log_clear_previous_loggers'),
-            log_file=c('base', 'log_file'),
-            max_bytes=c('base', 'log_max_bytes'),
-            max_files=c('base', 'log_max_files'),
-            file_formatter=c('base', 'log_file_formatter'),
-            console_formatter=c('base', 'log_console_formatter'),
+            level=self.config.get('base', 'log_level'),
+            to_console=self.config.get('base', 'log_to_console'),
+            clear_loggers=self.config.get('base', 'log_clear_loggers'),
+            log_file=self.config.get('base', 'log_file'),
+            max_bytes=self.config.get('base', 'log_max_bytes'),
+            max_files=self.config.get('base', 'log_max_files'),
+            file_formatter=self.config.get('base', 'log_file_formatter'),
+            console_formatter=self.config.get('base', 'log_console_formatter'),
             )
         
         # then setup logging for the app    
-        handler = get_handler('log', c('base', 'log_handler'))
-        self.log = handler(c('base', 'app_module'))
+        handler = get_handler('log', self.config.get('base', 'log_handler'))
+        self.log = handler(self.config.get('base', 'app_module'))
         self.log.setup_logging(
-            level=c('base', 'log_level'),
-            to_console=c('base', 'log_to_console'),
-            clear_loggers=c('base', 'log_clear_previous_loggers'),
-            log_file=c('base', 'log_file'),
-            max_bytes=c('base', 'log_max_bytes'),
-            max_files=c('base', 'log_max_files'),
-            file_formatter=c('base', 'log_file_formatter'),
-            console_formatter=c('base', 'log_console_formatter'),
+            level=self.config.get('base', 'log_level'),
+            to_console=self.config.get('base', 'log_to_console'),
+            clear_loggers=self.config.get('base', 'log_clear_loggers'),
+            log_file=self.config.get('base', 'log_file'),
+            max_bytes=self.config.get('base', 'log_max_bytes'),
+            max_files=self.config.get('base', 'log_max_files'),
+            file_formatter=self.config.get('base', 'log_file_formatter'),
+            console_formatter=self.config.get('base', 'log_console_formatter'),
             )
         
     def _validate_required_config(self):

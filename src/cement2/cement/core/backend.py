@@ -1,36 +1,37 @@
 
 import sys
 
-# global config dictionary
-config = {}
-config['app_name'] = None
-config['app_module'] = None
-config['app_egg'] = None
-config['config_files'] = []
-config['config_source'] = ['default']
-config['debug'] = False
-config['log_file'] = None
-config['log_level'] = 'INFO'
-config['log_to_console'] = True
-config['log_max_bytes'] = None
-config['log_max_files'] = 4
-config['log_file_formatter'] = None
-config['log_console_formatter'] = None
-config['log_clear_previous_loggers'] = True
+def get_defaults(app_name):
+    # default backend configuration
+    dcf = {}
+    dcf['base'] = {}
+    dcf['base']['app_name'] = app_name
+    dcf['base']['app_module'] = app_name
+    dcf['base']['app_egg'] = app_name
+    dcf['base']['config_files'] = []
+    dcf['base']['config_source'] = ['default']
 
-# default handlers
-config['log_handler'] = 'default'
-config['config_handler'] = 'default'
-config['option_handler'] = 'default'
-config['command_handler'] = 'default'
-config['hook_handler'] = 'default'
-config['plugin_handler'] = 'default'
-config['error_handler'] = 'default'
+    # default handlers
+    dcf['base']['log_handler'] = 'default'
+    dcf['base']['config_handler'] = 'configparser'
+    dcf['base']['option_handler'] = 'default'
+    dcf['base']['command_handler'] = 'default'
+    dcf['base']['hook_handler'] = 'default'
+    dcf['base']['plugin_handler'] = 'default'
+    dcf['base']['error_handler'] = 'default'
 
-
-def init_config():
-    _config = config.copy()
-    return _config
+    # default application configuration
+    dcf['base']['debug'] = False
+    dcf['base']['log_file'] = None
+    dcf['base']['log_level'] = 'INFO'
+    dcf['base']['log_to_console'] = True
+    dcf['base']['log_max_bytes'] = None
+    dcf['base']['log_max_files'] = 4
+    dcf['base']['log_file_formatter'] = None
+    dcf['base']['log_console_formatter'] = None
+    dcf['base']['log_clear_loggers'] = True
+    _dcf = dcf.copy()
+    return _dcf
     
 # global handlers dict
 handlers = {}

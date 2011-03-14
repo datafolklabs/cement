@@ -1,7 +1,7 @@
 """Cement Handlers configuration."""
 
 from cement.core.backend import handlers
-from cement.core.exc import CementRuntimeError
+from cement.core.exc import CementRuntimeError, CementInterfaceError
 from cement.handlers.log import LoggingLogHandler
 
 log = LoggingLogHandler(__name__)
@@ -61,46 +61,75 @@ def define_handler(handler_type, handler_interface):
     handlers[handler_type] = {'interface' : handler_interface}
     
     
-def register_handler(handler_type, handler_name, handler_obj):
+def register_handler(obj):
     """
     Register a handler object to a handler.
     
     Required Options:
     
-        handler_type
-            The type of the handler to register
-        
-        handler_name
-            The name to register the handler object as
-            
-        handler_obj
+        obj
             The handler object to register
     
     Usage:
     
     .. code-block:: python
     
+        from zope import interface
         from cement.core.handler import register_handler
         
-        my_handler_obj = SomeTypeOfObject()
-        register_handler('database', 'my_database_handler', my_handler_obj)
+        class MyHandler(object):
+            __handler_label__ = 'mysql'
+            __handler_type__ = 'database'
+            interface.implements(IDatabaseHandler)
+            
+            def connect(self):
+            ...
+            
+        register_handler(MyHandler)
     
     """
-    log.debug("registering handler '%s' from %s into handlers['%s']" % \
-             (handler_name, handler_obj.__module__, handler_type))
-    if handler_type not in handlers:
-        raise CementRuntimeError("Handler type '%s' doesn't exist." % \
-                                 handler_type)
-    if handlers[handler_type].has_key(handler_name):
-        raise CementRuntimeError(
-            "handlers['%s']['%s'] already exists" % \
-            (handler_type, handler_name))
-    if not handlers[handler_type]['interface'].implementedBy(handler_obj):
-        raise CementRuntimeError(
-            "%s does not provide a '%s' handler." % \
-            (handler_name, handler_type))
+    if not hasattr(obj, '__handler_label__'):
+        raise CementInterfaceError, \
+            "Invalid interface %s, missing '__handler_label__'." % obj
+    if not hasattr(obj, '__handler_type__'):
+        raise CementInterfaceError, \
+            "Invalid interface %s, missing '__handler_type__'." % obj
+            
+    _type = obj.__handler_type__
+    _label = obj.__handler_label__
     
-    handlers[handler_type]['interface'].validateInvariants(handler_obj)
-
-    handlers[handler_type][handler_name] = handler_obj
+    log.debug("registering handler '%s' into handlers['%s']['%s']" % \
+             (obj, _type, _label))
+             
+    if _type not in handlers:
+        raise CementRuntimeError("Handler type '%s' doesn't exist." % _type)
+    if handlers[_type].has_key(_label):
+        raise CementRuntimeError("handlers['%s']['%s'] already exists" % \
+                                (_type, _label))
+    if not handlers[_type]['interface'].implementedBy(obj):
+        raise CementInterfaceError("%s does not provide a '%s' handler." % \
+                                  (_label, _type))
+                                  
+    handlers[_type]['interface'].validateInvariants(obj)
+    handlers[_type][_label] = obj
    
+def validate_handler_registration(handler_type, handler_name):
+    """
+    Ensure that the handler name is registered to the handler type.
+    
+    Required Arguments:
+    
+        handler_type
+            The type of handler
+            
+        handler_name
+            The name of the handler
+            
+    """
+    if not handler_type in handlers:
+        raise CementRuntimeError, \
+            "Handler type '%s' is not defined." % handler_type
+    if not handler_name in handlers[handler_type]:
+        raise CementRuntimeError, \
+            "Handler name '%s' is not registered to handlers['%s']." % \
+            (handler_name, handler_type)
