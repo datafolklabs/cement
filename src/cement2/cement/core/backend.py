@@ -1,13 +1,13 @@
 
 import sys
 
-def get_defaults(app_name):
+def get_defaults():
     # default backend configuration
     dcf = {}
     dcf['base'] = {}
-    dcf['base']['app_name'] = app_name
-    dcf['base']['app_module'] = app_name
-    dcf['base']['app_egg'] = app_name
+    dcf['base']['app_name'] = None
+    dcf['base']['app_module'] = None
+    dcf['base']['app_egg'] = None
     dcf['base']['config_files'] = []
     dcf['base']['config_source'] = ['default']
 

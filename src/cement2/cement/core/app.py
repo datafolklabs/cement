@@ -29,7 +29,7 @@ def lay_cement(app_name, *args, **kw):
     
     """
     
-    defaults = kw.get('defaults', get_defaults(app_name))
+    defaults = kw.get('defaults', get_defaults())
     argv = kw.get('argv', sys.argv)
     
     # basic logging setup first (mostly for debug/error)
@@ -66,11 +66,10 @@ def lay_cement(app_name, *args, **kw):
     
 class CementApp(object):
     def __init__(self, app_name, **kw):
-        self.defaults = kw.get('defaults', get_defaults(app_name))
-        
-        # initialize the cement framework
-        #self._setup_cement()
-        
+        self.defaults = kw.get('defaults', get_defaults())
+        if not self.defaults['base']['app_name']:
+            self.defaults['base']['app_name'] = app_name
+
         # initialize handlers if passed in
         self.config = kw.get('config', None)
         self.log = kw.get('log', None)
@@ -83,15 +82,12 @@ class CementApp(object):
         self._validate_config()
         #self._setup_logging()
 
-#    def _setup_cement(self):
-#        lay_cement(self.defaults)    
-        
     def _setup_config(self):
         if not self.config:
             h = get_handler('config', self.defaults['base']['config_handler'])
             self.config = h()
-            self.config.merge(self.defaults)
-
+        
+        self.config.merge(self.defaults)
         for _file in self.config.get('base', 'config_files'):
             self.config.parse_file(_file)
         
