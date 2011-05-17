@@ -3,7 +3,7 @@
 import os
 from zope import interface
 from configobj import ConfigObj
-from cement.core.handler import register_handler
+from cement.core import handler
 from cement.core.config import IConfigHandler
 
 class ConfigObjConfigHandler(ConfigObj):
@@ -49,4 +49,4 @@ class ConfigObjConfigHandler(ConfigObj):
     def set(self, section, key, value):
         self[section][key] = value
         
-register_handler(ConfigObjConfigHandler)
+handler.register(ConfigObjConfigHandler)

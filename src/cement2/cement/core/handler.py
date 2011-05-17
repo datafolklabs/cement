@@ -5,7 +5,7 @@ from cement.core.exc import CementRuntimeError, CementInterfaceError
 
 log = get_minimal_logger(__name__)
 
-def get_handler(handler_type, handler_name):
+def get(handler_type, handler_name):
     """
     Get a handler object.
     
@@ -30,7 +30,7 @@ def get_handler(handler_type, handler_name):
     raise CementRuntimeError("handlers['%s']['%s'] does not exist!" \
                           % (handler_type, handler_name))
     
-def define_handler(handler_type, handler_interface):
+def define(handler_type, handler_interface):
     """
     Define a handler type that plugins can register handler objects under.
     
@@ -60,7 +60,7 @@ def define_handler(handler_type, handler_interface):
     handlers[handler_type] = {'interface' : handler_interface}
     
     
-def register_handler(obj):
+def register(obj):
     """
     Register a handler object to a handler.
     
@@ -112,7 +112,7 @@ def register_handler(obj):
     handlers[_type]['interface'].validateInvariants(obj)
     handlers[_type][_label] = obj
    
-def validate_handler_registration(handler_type, handler_name):
+def validate(handler_type, handler_name):
     """
     Ensure that the handler name is registered to the handler type.
     

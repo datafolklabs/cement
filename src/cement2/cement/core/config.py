@@ -10,7 +10,6 @@ else:
 
 from cement.core.backend import handlers, get_minimal_logger
 from cement.core.exc import CementInterfaceError
-from cement.core.handler import validate_handler_registration
 
 log = get_minimal_logger(__name__)
 
