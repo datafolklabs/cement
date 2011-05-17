@@ -19,9 +19,9 @@ def define(name):
     
     .. code-block:: python
     
-        from cement.core.hook import define_hook
+        from cement.core import hook
         
-        define_hook('myhookname_hook')
+        hook.define('myhookname_hook')
     
     """
     log.debug("defining hook '%s'", name)
@@ -47,9 +47,9 @@ class register(object):
     
     .. code-block:: python
         
-        from cement.core.hook import register_hook
+        from cement.core import hook
         
-        @register_hook()
+        @hook.register()
         def my_hook(*args, **kwargs):
             # do something here
             res = 'Something to return'
@@ -93,9 +93,9 @@ def run(name, *args, **kwargs):
     
     .. code-block:: python
     
-        from cement.core.hook import run_hook
+        from cement.core import hook
         
-        for result in run_hooks('hook_name'):
+        for result in hook.run('hook_name'):
             # do something with result from each hook function
             ...
     """
