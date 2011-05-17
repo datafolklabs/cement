@@ -4,7 +4,7 @@ import sys
 
 from cement.core.backend import default_config, get_minimal_logger
 from cement.core.exc import CementConfigError
-from cement.core import handler
+from cement.core import handler, hook
 from cement.core.log import ILogHandler, LoggingLogHandler
 from cement.core.config import IConfigHandler, ConfigParserConfigHandler
 
@@ -37,7 +37,16 @@ def lay_cement(app_name, *args, **kw):
     if '--debug' in argv:
         kw['defaults']['log']['level'] = 'DEBUG'
         kw['defaults']['base']['debug'] = True
-        
+    
+    # define framework hooks
+    hook.define('cement_init_hook')
+    hook.define('cement_post_options_hook')
+    hook.define('cement_validate_config_hook')
+    hook.define('cement_pre_plugins_hook')
+    hook.define('cement_post_plugins_hook')
+    hook.define('cement_post_bootstrap_hook')
+    
+    # define and register handlers    
     handler.define('log', ILogHandler)
     handler.define('config', IConfigHandler)
     #define_handler('output')
