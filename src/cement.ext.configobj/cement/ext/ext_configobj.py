@@ -5,9 +5,6 @@ from zope import interface
 from configobj import ConfigObj
 from cement.core.handler import register_handler
 from cement.core.config import IConfigHandler
-#from cement.core.log import get_logger
-
-#log = get_logger(__name__)
 
 class ConfigObjConfigHandler(ConfigObj):
     __handler_type__ = 'config'

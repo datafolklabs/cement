@@ -160,7 +160,7 @@ class LoggingLogHandler(object):
             level = 'INFO'
 
         # the king trumps all
-        if self.config.get('base', 'debug'):
+        if self.config.get('base', 'debug') in [True, 'True', 'true', '1', 1]:
             level = 'DEBUG'
             
         self.backend.setLevel(getattr(logging, level))
@@ -189,7 +189,7 @@ class LoggingLogHandler(object):
         console = logging.StreamHandler()
         if formatter:
             console.setFormatter(formatter)
-        elif self.level() == logging.DEBUG:
+        elif self.level() == logging.getLevelName(logging.DEBUG):
             console.setFormatter(logging.Formatter(
                 "%(asctime)s (%(levelname)s) %(name)s : %(message)s"))
         else: 
