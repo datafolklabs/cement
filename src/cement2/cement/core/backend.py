@@ -1,7 +1,8 @@
 
 import sys
+import logging
 
-def get_defaults():
+def default_config():
     # default backend configuration
     dcf = {}
     dcf['base'] = {}
@@ -10,9 +11,10 @@ def get_defaults():
     dcf['base']['app_egg'] = None
     dcf['base']['config_files'] = []
     dcf['base']['config_source'] = ['default']
-
+    dcf['base']['debug'] = False
+        
     # default handlers
-    dcf['base']['log_handler'] = 'default'
+    dcf['base']['log_handler'] = 'logging'
     dcf['base']['config_handler'] = 'configparser'
     dcf['base']['option_handler'] = 'default'
     dcf['base']['command_handler'] = 'default'
@@ -21,16 +23,35 @@ def get_defaults():
     dcf['base']['error_handler'] = 'default'
 
     # default application configuration
-    dcf['base']['debug'] = False
-    dcf['base']['log_file'] = None
-    dcf['base']['log_level'] = 'INFO'
-    dcf['base']['log_to_console'] = True
-    dcf['base']['log_max_bytes'] = None
-    dcf['base']['log_max_files'] = 4
-    dcf['base']['log_file_formatter'] = None
-    dcf['base']['log_console_formatter'] = None
-    dcf['base']['log_clear_loggers'] = True
+    dcf['log'] = {}
+    dcf['log']['file'] = None
+    dcf['log']['level'] = 'INFO'
+    dcf['log']['to_console'] = True
+    dcf['log']['max_bytes'] = None
+    dcf['log']['max_files'] = 4
+    dcf['log']['file_formatter'] = None
+    dcf['log']['console_formatter'] = None
+    dcf['log']['clear_loggers'] = True
     return dcf
+    
+def get_minimal_logger(name):
+    """
+    Setup just enough for cement to be able to do debug logging.
+    """
+    log = logging.getLogger(name)
+    formatter = logging.Formatter(
+                "%(asctime)s (%(levelname)s) %(name)s : %(message)s")
+    console = logging.StreamHandler()
+    console.setFormatter(formatter)
+    
+    # FIX ME: really don't want to hard check sys.argv like this but can't
+    # figure any better way get logging started (only for debug) before the
+    # app logging is setup.
+    if '--debug' in sys.argv:
+        console.setLevel(logging.DEBUG)   
+        log.setLevel(logging.DEBUG)
+    log.addHandler(console)
+    return log
     
 # global handlers dict
 handlers = {}
