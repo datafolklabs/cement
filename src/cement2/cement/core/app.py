@@ -3,7 +3,7 @@
 import sys
 
 from cement.core.backend import default_config, minimal_logger
-from cement.core.exc import CementConfigError
+from cement.core import exc
 from cement.core import handler, hook
 from cement.core.log import ILogHandler, LoggingLogHandler
 from cement.core.config import IConfigHandler, ConfigParserConfigHandler
@@ -81,7 +81,11 @@ class CementApp(object):
         self._setup_logging()
         
     def load_ext(self, ext_name):
-        __import__("cement.ext.ext_%s" % ext_name)
+        module = "cement.ext.ext_%s" % ext_name
+        try:
+            __import__(module)
+        except ImportError, e:
+            raise exc.CementRuntimeError, e.args[0]
         
     def _setup_config(self):
         if not self.config:
@@ -106,7 +110,7 @@ class CementApp(object):
 
         if not c.has_key('base', 'app_name') or \
            not c.get('base', 'app_name'):
-            raise CementConfigError("config['app_name'] required.")
+            raise exc.CementConfigError("config['app_name'] required.")
         if not c.has_key('base', 'app_module') or \
            not c.get('base', 'app_module'):
             c.set('base', 'app_module', c.get('base', 'app_name'))

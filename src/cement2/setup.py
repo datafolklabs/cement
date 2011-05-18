@@ -60,15 +60,18 @@ setup(name='cement',
     zip_safe=False,
     test_suite='nose.collector',
     install_requires=[
-        # Required for documentation
-        #"Sphinx >= 1.0",
-        #"Pygments",
+        ### Required to build documentation
+        # "Sphinx >= 1.0",
+        # "Pygments",
+        ### Required for testing
+        # "nose",
+        # "coverage",
         ],
     setup_requires=[
         ],
     entry_points="""
     """,
     namespace_packages=[
-        'cement.ext'
+        #'cement.ext'
         ],
     )

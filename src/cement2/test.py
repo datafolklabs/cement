@@ -19,7 +19,7 @@ def my_hook_three(*args, **kw):
 
 config = default_config()
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
-config['base']['config_handler'] = 'configparser'
+config['base']['config_handler'] = 'configobj'
 config['log']['debug'] = True
 
 app = lay_cement('myapp', defaults=config)
