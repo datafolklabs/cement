@@ -7,7 +7,7 @@ from cement.core.exc import CementArgumentError, CementInterfaceError
 def config_invariant(obj):
     invalid = []
     members = [
-        '__cement_init__', 
+        '__init__', 
         '__handler_label__',
         '__handler_type__',
         'clear_loggers',
@@ -41,10 +41,32 @@ class ILogHandler(interface.Interface):
     __handler_label__ = interface.Attribute('Handler Label Identifier')
     interface.invariant(config_invariant)
     
-    def __cement_init__(config, **kw):
+    def __init__(config_obj, **kw):
         """
-        Take an application config object (not dict, but some config handlers
-        might work like a dict) and do any initializations.
+        The __init__ function emplementation of Cement handlers acts as a 
+        wrapper for initialization.  In general, the implementation simply
+        need to accept the config obj as its first argument.  If the 
+        implementation subclasses from something else it will need to
+        handle passing the proper args/keyword args to that classes __init__
+        function, or you can easily just pass *args, **kw directly to it.
+        
+        Required Arguments:
+        
+            config_obj
+                The application configuration object after it has been parsed
+                and processed.  This is *not* a defaults dictionary, though
+                some config handler implementations may work as a dict.
+        
+        
+        Optional Arguments:
+        
+            *args
+                Additional positional arguments.
+                
+            **kw
+                Additional keyword arguments.
+                
+        Returns: n/a
         
         """
         
@@ -131,7 +153,7 @@ class LoggingLogHandler(object):
     __handler_label__ = 'logging'
     interface.implements(ILogHandler)
     
-    def __cement_init__(self, config, **kw):
+    def __init__(self, config_obj, **kw):
         """
         Setup the logging facility.
         
@@ -147,15 +169,15 @@ class LoggingLogHandler(object):
                 Boolean.  Whether to clear existing loggers.
                 
         """
-        self.config = config
-        self.name = config.get('base', 'app_name')
-        self.max_bytes = config.get('log', 'max_bytes')
-        self.max_files = config.get('log', 'max_files')
+        self.config = config_obj
+        self.name = self.config.get('base', 'app_name')
+        self.max_bytes = self.config.get('log', 'max_bytes')
+        self.max_files = self.config.get('log', 'max_files')
         self.backend = logging.getLogger(self.name)
         self.all_levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
         
         # set the level (config first, **kw overrides, INFO default)
-        level = kw.get('level', config.get('log', 'level')).upper()
+        level = kw.get('level', self.config.get('log', 'level')).upper()
         if level not in self.all_levels:
             level = 'INFO'
 
@@ -170,11 +192,11 @@ class LoggingLogHandler(object):
             self.clear_loggers
             
         # console
-        if kw.get('to_console', config.get('log', 'to_console')):
+        if kw.get('to_console', self.config.get('log', 'to_console')):
             self.setup_console_log()
         
         # file
-        if kw.get('file', config.get('log', 'file')):
+        if kw.get('file', self.config.get('log', 'file')):
             self.setup_file_log()
             
         self.debug("logging initialized for '%s' using LoggingLogHandler" % \

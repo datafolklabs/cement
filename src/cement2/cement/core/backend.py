@@ -34,7 +34,7 @@ def default_config():
     dcf['log']['clear_loggers'] = True
     return dcf
     
-def get_minimal_logger(name):
+def minimal_logger(name, debug=False):
     """
     Setup just enough for cement to be able to do debug logging.
     """
@@ -47,7 +47,7 @@ def get_minimal_logger(name):
     # FIX ME: really don't want to hard check sys.argv like this but can't
     # figure any better way get logging started (only for debug) before the
     # app logging is setup.
-    if '--debug' in sys.argv:
+    if '--debug' in sys.argv or debug:
         console.setLevel(logging.DEBUG)   
         log.setLevel(logging.DEBUG)
     log.addHandler(console)

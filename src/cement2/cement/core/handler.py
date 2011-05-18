@@ -1,9 +1,9 @@
 """Cement Handlers configuration."""
 
-from cement.core.backend import handlers, get_minimal_logger
+from cement.core.backend import handlers, minimal_logger
 from cement.core.exc import CementRuntimeError, CementInterfaceError
 
-log = get_minimal_logger(__name__)
+log = minimal_logger(__name__)
 
 def get(handler_type, handler_name):
     """

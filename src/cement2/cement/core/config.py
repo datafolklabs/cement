@@ -8,15 +8,17 @@ if sys.version_info[0] < 3:
 else:
     from configparser import RawConfigParser
 
-from cement.core.backend import handlers, get_minimal_logger
+from cement.core.backend import handlers, minimal_logger
 from cement.core.exc import CementInterfaceError
 
-log = get_minimal_logger(__name__)
+log = minimal_logger(__name__)
 
 def config_invariant(obj):
     invalid = []
     members = [
-        '__cement_init__',
+        '__init__',
+        '__handler_label__',
+        '__handler_type__',
         'keys', 
         'has_key',
         'sections', 
@@ -24,8 +26,6 @@ def config_invariant(obj):
         'set', 
         'parse_file', 
         'merge',
-        '__handler_label__',
-        '__handler_type__',
         ]
         
     for member in members:
@@ -48,23 +48,31 @@ class IConfigHandler(interface.Interface):
     __handler_label__ = interface.Attribute('Handler Label Identifier')
     interface.invariant(config_invariant)
     
-    def __cement_init__(config, **kw):
+    def __init__(defaults, *args, **kw):
         """
-        This function is called after the handler is instantiated, and before
-        it is accessed in any other way.  It provides a means performing any
-        initialization tasks (that might otherwise happen in __init__ 
-        normally).
+        The __init__ function emplementation of Cement handlers acts as a 
+        wrapper for initialization.  In general, the implementation simply
+        need to accept the defaults dict as its first argument.  If the 
+        implementation subclasses from something else it will need to
+        handle passing the proper args/keyword args to that classes __init__
+        function, or you can easily just pass *args, **kw directly to it.
         
         Required Arguments:
         
             config
-                The application configuration after it has been parsed.
+                The application default config dictionary.  This is *not* a 
+                config object, but rather a dictionary which should be 
+                obvious because the config handler implementation is what
+                provides the application config object.
         
         
         Optional Arguments:
         
+            *args
+                Additional positional arguments.
+                
             **kw
-                Additionally arguments can be passed on a per class basis.
+                Additional keyword arguments.
                 
         Returns: n/a
         
@@ -148,12 +156,13 @@ class ConfigParserConfigHandler(RawConfigParser):
     __handler_type__ = 'config'
     interface.implements(IConfigHandler)
     
-    def __cement_init__(self, config):
+    def __init__(self, defaults, *args, **kw):
         """
         Take the default config dict and merge it into self.
         
         """
-        self.merge(config)
+        RawConfigParser.__init__(self, *args, **kw)
+        self.merge(defaults)
         
     def merge(self, dict_obj):
         for section in dict_obj.keys():

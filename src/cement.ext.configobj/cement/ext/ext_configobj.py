@@ -16,12 +16,14 @@ class ConfigObjConfigHandler(ConfigObj):
     # and fails the invariant tests.
     sections = []
     
-    def __cement_init__(self, config):
+    def __init__(self, defaults, *args, **kw):
         """
-        Take the default config dict and merge it into self.
+        Take the default config dict and merge it into self.  Pass additional
+        *args and **kw directly to ConfigObj.
         
         """
-        self.merge(config)
+        ConfigObj.__init__(self, *args, **kw)
+        self.merge(defaults)
         
     def parse_file(self, file_path):
         """

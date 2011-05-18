@@ -2,13 +2,13 @@
 
 import sys
 
-from cement.core.backend import default_config, get_minimal_logger
+from cement.core.backend import default_config, minimal_logger
 from cement.core.exc import CementConfigError
 from cement.core import handler, hook
 from cement.core.log import ILogHandler, LoggingLogHandler
 from cement.core.config import IConfigHandler, ConfigParserConfigHandler
 
-log = get_minimal_logger(__name__)
+log = minimal_logger(__name__)
 
 def lay_cement(app_name, *args, **kw):
     """
@@ -86,17 +86,16 @@ class CementApp(object):
     def _setup_config(self):
         if not self.config:
             h = handler.get('config', self.defaults['base']['config_handler'])
-            self.config = h()
+            self.config = h(self.defaults)
         
         
-        self.config.__cement_init__(self.defaults)
+        self.config.__init__(self.defaults)
         for _file in self.config.get('base', 'config_files'):
             self.config.parse_file(_file)
 
     def _setup_logging(self):
         h = handler.get('log', self.config.get('base', 'log_handler'))
-        self.log = h()
-        self.log.__cement_init__(self.config)
+        self.log = h(self.config)
         
     def _validate_required_config(self):
         """

@@ -1,9 +1,9 @@
 """Methods and classes to handle Cement Hook support."""
 
-from cement.core.backend import hooks, get_minimal_logger
+from cement.core.backend import hooks, minimal_logger
 from cement.core.exc import CementRuntimeError
 
-log = get_minimal_logger(__name__)
+log = minimal_logger(__name__)
 
 def define(name):
     """
