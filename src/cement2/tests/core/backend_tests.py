@@ -54,9 +54,12 @@ def compare_with_default_config(section, key):
 @with_setup(startup, teardown)
 def test_minimal_logger():
     log = backend.minimal_logger(__name__)
-    sys.argv.append('--debug')
     log = backend.minimal_logger(__name__, debug=True)
-
+    
+    # set logging back to non-debug
+    backend.minimal_logger(__name__, debug=False)
+    pass
+    
 @with_setup(startup, teardown)
 def test_output_buffer():
     out = backend.StdOutBuffer()

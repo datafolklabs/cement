@@ -38,18 +38,22 @@ def minimal_logger(name, debug=False):
     """
     Setup just enough for cement to be able to do debug logging.
     """
+                
     log = logging.getLogger(name)
     formatter = logging.Formatter(
                 "%(asctime)s (%(levelname)s) %(name)s : %(message)s")
     console = logging.StreamHandler()
     console.setFormatter(formatter)
-    
+    console.setLevel(logging.INFO)   
+    log.setLevel(logging.INFO)
+        
     # FIX ME: really don't want to hard check sys.argv like this but can't
     # figure any better way get logging started (only for debug) before the
     # app logging is setup.
     if '--debug' in sys.argv or debug:
         console.setLevel(logging.DEBUG)   
         log.setLevel(logging.DEBUG)
+        
     log.addHandler(console)
     return log
     

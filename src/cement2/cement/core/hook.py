@@ -66,12 +66,11 @@ class register(object):
         log.debug("registering hook func '%s' from %s into hooks['%s']" % \
             (func.__name__, func.__module__, self.name))
         if not hooks.has_key(self.name):
-            log.warn("Hook name '%s' is not defined!" % self.name)
+            log.debug("hook name '%s' is not defined!" % self.name)
             return func
+
         # Hooks are as follows: (weight, name, func)
-        hooks[self.name].append(
-            (int(self.weight), func.__name__, func)
-        )
+        hooks[self.name].append((int(self.weight), func.__name__, func))
 
 
 def run(name, *args, **kwargs):
