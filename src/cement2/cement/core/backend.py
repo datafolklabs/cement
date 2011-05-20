@@ -29,6 +29,7 @@ def default_config(app_name):
     dcf['base']['config_handler'] = 'configparser'
     dcf['base']['log_handler'] = 'logging'
     dcf['base']['plugin_handler'] = 'cement'
+    dcf['base']['output_handler'] = 'cement'
     dcf['base']['option_handler'] = 'default'
     dcf['base']['command_handler'] = 'default'
     dcf['base']['hook_handler'] = 'default'

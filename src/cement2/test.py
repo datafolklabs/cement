@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 
-from cement.core.app import lay_cement
-from cement.core.backend import default_config
-from cement.core import hook
+from cement.core import app, backend, hook
 
-config = default_config('myapp')
+config = backend.default_config('myapp')
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
 config['base']['config_handler'] = 'configobj'
+config['base']['output_handler'] = 'json'
 config['log']['debug'] = True
 
-app = lay_cement('myapp', defaults=config)
-app.load_ext('configobj')
-
+base = app.lay_cement('myapp', defaults=config)
+base.load_ext('configobj')
+base.load_ext('json')
 
 hook.define('myhook')
 
@@ -31,13 +30,15 @@ def my_hook_three(*args, **kw):
 
 
 #app.config = ConfigObjConfigHandler()
-app.run()
-app.config.set('base', 'johnny', 'asdfasfasdf')
+base.run()
+base.config.set('base', 'johnny', 'asdfasfasdf')
 
-app.log.info('JOHNNY')
-app.log.debug('KAPLA')
+base.log.info('JOHNNY')
+base.log.debug('KAPLA')
+print base.output
 #c.log.info('blah')
 
 for i in hook.run('myhook'):
     print i
 
+print base.output.render(dict(foo='bar'))

@@ -3,6 +3,7 @@
 import sys
 
 from cement.core import backend, exc, handler, hook, log, config, plugin
+from cement.core import output
 
 Log = backend.minimal_logger(__name__)
 
@@ -46,7 +47,7 @@ def lay_cement(app_name, *args, **kw):
     handler.define('log', log.ILogHandler)
     handler.define('config', config.IConfigHandler)
     handler.define('plugin', plugin.IPluginHandler)
-    #define_handler('output')
+    handler.define('output', output.IOutputHandler)
     #define_handler('option')
     #define_handler('command')
     #define_handler('hook')
@@ -55,6 +56,7 @@ def lay_cement(app_name, *args, **kw):
     handler.register(config.ConfigParserConfigHandler)
     handler.register(log.LoggingLogHandler)
     handler.register(plugin.CementPluginHandler)
+    handler.register(output.CementOutputHandler)
     
     app = CementApp(app_name, *args, **kw)
     return app
@@ -71,6 +73,7 @@ class CementApp(object):
         self.plugin = None
         self.options = None
         self.commands = None
+        self.output = None
         
         # initialize handlers if passed in and set config to reflect
         if kw.get('config_handler', None):
@@ -78,15 +81,20 @@ class CementApp(object):
             self.config.set('base', 'config_handler', 
                             self.config.__handler_label__)
         
-        if kw.get('log', None):
-            self.log = kw['log']
+        if kw.get('log_handler', None):
+            self.log = kw['log_handler']
             self.config.set('base', 'log_handler', 
                             self.log.__handler_label__)
         
-        if kw.get('plugin', None):
-            self.plugin = kw['plugin']
+        if kw.get('plugin_handler', None):
+            self.plugin = kw['plugin_handler']
             self.config.set('base', 'plugin_handler', 
                             self.plugin.__handler_label__)
+        
+        if kw.get('output_handler', None):
+            self.output = kw['output_handler']
+            self.config.set('base', 'output_handler', 
+                            self.output.__handler_label__)
 
     def run(self):
         Log.debug("now running the '%s' application" % self.app_name)
@@ -95,6 +103,7 @@ class CementApp(object):
         self.validate_config()
         self._setup_log_handler()
         self._setup_plugin_handler()
+        self._setup_output_handler()
         
     def load_ext(self, ext_name):
         module = "cement.ext.ext_%s" % ext_name
@@ -125,7 +134,14 @@ class CementApp(object):
             h = handler.get('plugin', 
                             self.config.get('base', 'plugin_handler'))
             self.plugin = h(self.config)
-            
+    
+    def _setup_output_handler(self):
+        Log.debug("setting up %s.output handler" % self.app_name) 
+        if not self.output:
+            h = handler.get('output', 
+                            self.config.get('base', 'output_handler'))
+            self.output = h(self.config)
+                  
     def _validate_required_config(self):
         """
         Validate base config settings required by cement.

@@ -6,7 +6,7 @@ from cement.core import backend, exc
 
 Log = backend.minimal_logger(__name__)
 
-def config_invariant(obj):
+def plugin_handler_invariant(obj):
     invalid = []
     members = [
         '__init__',
@@ -36,13 +36,13 @@ class IPluginHandler(interface.Interface):
     __handler_type__ = interface.Attribute('Handler Type Identifier')
     __handler_label__ = interface.Attribute('Handler Label Identifier')
     loaded_plugins = interface.Attribute('List of loaded plugins')
-    interface.invariant(config_invariant)
+    interface.invariant(plugin_handler_invariant)
     
     def __init__(config_obj, *args, **kw):
         """
         The __init__ function emplementation of Cement handlers acts as a 
         wrapper for initialization.  In general, the implementation simply
-        need to accept the config object as its first argument.  If the 
+        needs to accept the config object as its first argument.  If the 
         implementation subclasses from something else it will need to
         handle passing the proper args/keyword args to that classes __init__
         function, or you can easily just pass *args, **kw directly to it.

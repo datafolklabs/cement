@@ -13,7 +13,7 @@ from cement.core import backend, exc
 
 Log = backend.minimal_logger(__name__)
 
-def config_invariant(obj):
+def config_handler_invariant(obj):
     invalid = []
     members = [
         '__init__',
@@ -46,13 +46,13 @@ class IConfigHandler(interface.Interface):
     # internal mechanism for handler registration
     __handler_type__ = interface.Attribute('Handler Type Identifier')
     __handler_label__ = interface.Attribute('Handler Label Identifier')
-    interface.invariant(config_invariant)
+    interface.invariant(config_handler_invariant)
     
     def __init__(defaults, *args, **kw):
         """
         The __init__ function emplementation of Cement handlers acts as a 
         wrapper for initialization.  In general, the implementation simply
-        need to accept the defaults dict as its first argument.  If the 
+        needs to accept the defaults dict as its first argument.  If the 
         implementation subclasses from something else it will need to
         handle passing the proper args/keyword args to that classes __init__
         function, or you can easily just pass *args, **kw directly to it.

@@ -3,14 +3,13 @@
 import os
 from zope import interface
 from configobj import ConfigObj
-from cement.core import handler
-from cement.core.config import IConfigHandler
+from cement.core import handler, config
 
 class ConfigObjConfigHandler(ConfigObj):
     __handler_type__ = 'config'
     __handler_label__ = 'configobj'
     
-    interface.implements(IConfigHandler)
+    interface.implements(config.IConfigHandler)
     
     # We put this here because sections is a property in ConfigObj
     # and fails the invariant tests.
