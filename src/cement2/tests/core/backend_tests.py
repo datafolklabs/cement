@@ -8,9 +8,6 @@ from cement2.core import backend
 
 config = {}
 config['base'] = {}
-config['base']['app_name'] = 'cement_nosetests'
-config['base']['app_module'] = 'cement_nosetests'
-config['base']['app_egg'] = 'cement_nosetests'
 config['base']['config_files'] = []
 config['base']['config_source'] = ['default']
 config['base']['debug'] = False
@@ -38,16 +35,16 @@ def teardown():
     pass
     
 @with_setup(startup, teardown)
-def test_verify_default_config():
+def test_verify_defaults():
     for section in config.keys():
         for key in config[section].keys():
-            yield compare_with_default_config, section, key
+            yield compare_with_defaults, section, key
         
-def compare_with_default_config(section, key):
+def compare_with_defaults(section, key):
     """
     Check that the default key value matches that of the known config above.
     """
-    defaults = backend.default_config('cement_nosetests')
+    defaults = backend.defaults()
     ok_(defaults.has_key(section))
     ok_(defaults[section].has_key(key))
     eq_(defaults[section][key], config[section][key])

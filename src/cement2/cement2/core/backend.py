@@ -3,7 +3,7 @@
 import sys
 import logging
 
-def defaults():
+def defaults(app_name=None):
     """
     Get a standard, default config.
     
@@ -16,7 +16,7 @@ def defaults():
     # default backend configuration
     dcf = {}
     dcf['base'] = {}
-    #dcf['base']['app_name'] = app_name
+    dcf['base']['app_name'] = app_name
     #dcf['base']['app_module'] = app_name
     #dcf['base']['app_egg'] = app_name
     dcf['base']['config_files'] = []

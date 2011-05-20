@@ -169,6 +169,7 @@ class ConfigParserConfigHandler(RawConfigParser):
             if type(dict_obj[section]) == dict:
                 if not section in self.sections():
                     self.add_section(section)
+                
                 for key in dict_obj[section].keys():
                     self.set(section, key, dict_obj[section][key])
                 # we don't support nested config blocks, so no need to go 

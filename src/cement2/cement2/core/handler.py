@@ -111,23 +111,23 @@ def register(obj):
     backend.handlers[_type]['interface'].validateInvariants(obj)
     backend.handlers[_type][_label] = obj
    
-def validate(handler_type, handler_name):
+def enabled(handler_type, handler_label):
     """
-    Ensure that the handler name is registered to the handler type.
+    Check if a handler is enabled.
     
     Required Arguments:
     
         handler_type
             The type of handler
             
-        handler_name
-            The name of the handler
-            
+        handler_label
+            The label of the handler
+          
+    Returns: Boolean
+    
     """
-    if not handler_type in backend.handlers:
-        raise exc.CementRuntimeError, \
-            "Handler type '%s' is not defined." % handler_type
-    if not handler_name in backend.handlers[handler_type]:
-        raise exc.CementRuntimeError, \
-            "Handler name '%s' is not registered to handlers['%s']." % \
-            (handler_name, handler_type)
+    if handler_type in backend.handlers and \
+       handler_label in backend.handlers[handler_type]:
+        return True
+
+    return False

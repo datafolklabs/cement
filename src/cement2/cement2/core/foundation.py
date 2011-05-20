@@ -27,13 +27,19 @@ def lay_cement(name, *args, **kw):
     
     """
     Log.debug("laying cement for the '%s' application" % name)
-    defaults = kw.get('defaults', backend.defaults())
+    
+    if kw.get('defaults'):
+        defaults = kw['defaults']
+        del kw['defaults']
+    else:
+        defaults = backend.defaults()
+        
     argv = kw.get('argv', sys.argv)
     
     # basic logging setup first (mostly for debug/error)
     if '--debug' in argv:
-        kw['defaults']['log']['level'] = 'DEBUG'
-        kw['defaults']['base']['debug'] = True
+        defaults['log']['level'] = 'DEBUG'
+        defaults['base']['debug'] = True
     
     # define framework hooks
     hook.define('cement_init_hook')
@@ -60,7 +66,7 @@ def lay_cement(name, *args, **kw):
     handler.register(plugin.CementPluginHandler)
     handler.register(output.CementOutputHandler)
     
-    app = CementApp(name, *args, **kw)
+    app = CementApp(name, defaults=defaults, *args, **kw)
     return app
     
 class CementApp(object):
@@ -79,16 +85,16 @@ class CementApp(object):
         self.output = None
         
         # initialize handlers if passed in and set config to reflect
-        if kw.get('extension_handler', None):
-            self.extension = kw['extension_handler']
-            self.config.set('base', 'extension_handler', 
-                            self.extension.__handler_label__)
-
         if kw.get('config_handler', None):
             self.config = kw['config_handler']
             self.config.set('base', 'config_handler', 
                             self.config.__handler_label__)
         
+        if kw.get('extension_handler', None):
+            self.extension = kw['extension_handler']
+            self.config.set('base', 'extension_handler', 
+                            self.extension.__handler_label__)
+                            
         if kw.get('log_handler', None):
             self.log = kw['log_handler']
             self.config.set('base', 'log_handler', 
