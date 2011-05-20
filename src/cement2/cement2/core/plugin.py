@@ -1,18 +1,20 @@
-"""Cement core output module."""
+"""Cement core plugins module."""
 
 from zope import interface
 
-from cement.core import backend, exc
+from cement2.core import backend, exc
 
 Log = backend.minimal_logger(__name__)
 
-def output_handler_invariant(obj):
+def plugin_handler_invariant(obj):
     invalid = []
     members = [
         '__init__',
         '__handler_label__',
         '__handler_type__',
-        'render',
+        'load_plugin',
+        'load_plugins',
+        'loaded_plugins',
         ]
         
     for member in members:
@@ -23,9 +25,9 @@ def output_handler_invariant(obj):
         raise exc.CementInterfaceError, \
             "Invalid or missing: %s in %s" % (invalid, obj)
     
-class IOutputHandler(interface.Interface):
+class IPluginHandler(interface.Interface):
     """
-    This class defines the Output Handler Interface.  Classes that 
+    This class defines the Plugin Handler Interface.  Classes that 
     implement this handler must provide the methods and attributes defined 
     below.
     
@@ -33,7 +35,8 @@ class IOutputHandler(interface.Interface):
     # internal mechanism for handler registration
     __handler_type__ = interface.Attribute('Handler Type Identifier')
     __handler_label__ = interface.Attribute('Handler Label Identifier')
-    interface.invariant(output_handler_invariant)
+    loaded_plugins = interface.Attribute('List of loaded plugins')
+    interface.invariant(plugin_handler_invariant)
     
     def __init__(config_obj, *args, **kw):
         """
@@ -60,59 +63,54 @@ class IOutputHandler(interface.Interface):
             **kw
                 Additional keyword arguments.
                 
+        Returns: n/a
+        
         """
     
-    def render(self, data_dict, template=None):
+    def load_plugin(self, plugin_name):
         """
-        Render the data_dict into output in some fashion.
+        Load a plugin whose name is 'plugin_name'.
         
         Required Arguments:
         
-            data_dict
-                The dictionary whose data we need to render into output.
+            plugin_name
+                The name of the plugin to load.
                 
-        Optional Paramaters:
+        """
         
-            template
-                A template to use for rendering (in module form).  I.e.
-                myapp.templates.some_command
-                
-                
-        Returns: string or unicode string or None
+    def load_plugins(self, plugin_list):
+        """
+        Load all plugins from plugin_list.
         
-        """        
+        Required Arguments:
+        
+            plugin_list
+                A list of plugin names to load.
+        
+        """
 
-class CementOutputHandler(object):
-    """
-    This class implements the IOutputHandler interface.  It literally does
-    nothing to generate output.
-    
-    """
-    __handler_type__ = 'output'
+class CementPluginHandler(object):
+    __handler_type__ = 'plugin'
     __handler_label__ = 'cement'
-    
-    interface.implements(IOutputHandler)
+    interface.implements(IPluginHandler)
+    loaded_plugins = []
     
     def __init__(self, config_obj, *args, **kw):
+        self.config = config_obj
+        self.enabled_plugins = []
+        
+    def load_plugin(self, plugin_name):
+        Log.debug("loading application plugin '%s'" % plugin_name)
+        pass
+    
+    def load_plugins(self, plugin_list):
         pass
         
-    def render(self, data_dict, template=None):
-        """
-        Take a data dictionary and render it as nothing. 
-        
-        Required Arguments:
-        
-            data_dict
-                The data dictionary to render.
-                
-        Optional Arguments:
-        
-            template
-                A template to not render anything from.
-                
-        Returns: None
-        
-        """
-        Log.debug("not rendering any output")
-        return None
+
+    
+    
+    
+    
+    
+    
         

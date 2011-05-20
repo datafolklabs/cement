@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 
-from cement.core import app, backend, hook
+from cement2.core import app, backend, hook
 
 config = backend.default_config('myapp')
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
+config['base']['extensions'] = ['configobj', 'yaml', 'json']
 config['base']['config_handler'] = 'configobj'
-config['base']['output_handler'] = 'json'
+config['base']['output_handler'] = 'yaml'
+
 config['log']['debug'] = True
 
 base = app.lay_cement('myapp', defaults=config)
-base.load_ext('configobj')
-base.load_ext('json')
+#base.load_ext('configobj')
+#base.load_ext('json')
+#base.load_ext('yaml')
 
 hook.define('myhook')
 

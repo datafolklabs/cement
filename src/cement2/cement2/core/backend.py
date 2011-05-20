@@ -22,6 +22,8 @@ def default_config(app_name):
     dcf['base']['config_files'] = []
     dcf['base']['config_source'] = ['default']
     dcf['base']['debug'] = False
+    dcf['base']['extensions'] = []
+    dcf['base']['plugins'] = []
     dcf['base']['plugin_config_dir'] = None
     dcf['base']['plugin_dir'] = '/usr/lib/%s/plugins' % app_name
     
@@ -29,6 +31,7 @@ def default_config(app_name):
     dcf['base']['config_handler'] = 'configparser'
     dcf['base']['log_handler'] = 'logging'
     dcf['base']['plugin_handler'] = 'cement'
+    dcf['base']['extension_handler'] = 'cement'
     dcf['base']['output_handler'] = 'cement'
     dcf['base']['option_handler'] = 'default'
     dcf['base']['command_handler'] = 'default'

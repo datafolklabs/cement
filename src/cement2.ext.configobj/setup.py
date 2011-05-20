@@ -6,8 +6,8 @@ VERSION = '1.9.1'
 
 LONG = """
 Cement is an advanced CLI Application Framework for Python. This package 
-provides the Json framework extension allowing applications to use
-the Json output handler.
+provides the configobj framework extension allowing applications to use
+the configobj config handler.
 
 The Cement CLI Application Framework is Open Source and is distributed under 
 The MIT License.  
@@ -21,9 +21,9 @@ All documentation is available from the official website:
     
 """
 
-setup(name='cement.ext.json',
+setup(name='cement2.ext.configobj',
     version=VERSION,
-    description="Json Framework Extension for Cement",
+    description="ConfigObj Framework Extension for Cement",
     long_description=LONG,
     classifiers=[], 
     keywords='cli framework cement',
@@ -35,13 +35,14 @@ setup(name='cement.ext.json',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "jsonpickle", 
+        "cement2 >=1.9",
+        "configobj", 
         ],
     setup_requires=[
         ],
     entry_points="""
     """,
     namespace_packages=[
-        'cement.ext'
+        'cement2.ext'
         ],
     )

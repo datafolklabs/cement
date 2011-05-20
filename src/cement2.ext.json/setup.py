@@ -6,8 +6,8 @@ VERSION = '1.9.1'
 
 LONG = """
 Cement is an advanced CLI Application Framework for Python. This package 
-provides the logbook framework extension allowing applications to use
-the logbook log handler.
+provides the Json framework extension allowing applications to use
+the Json output handler.
 
 The Cement CLI Application Framework is Open Source and is distributed under 
 The MIT License.  
@@ -21,9 +21,9 @@ All documentation is available from the official website:
     
 """
 
-setup(name='cement.ext.logbook',
+setup(name='cement2.ext.json',
     version=VERSION,
-    description="LogBook Framework Extension for Cement",
+    description="Json Framework Extension for Cement",
     long_description=LONG,
     classifiers=[], 
     keywords='cli framework cement',
@@ -35,13 +35,14 @@ setup(name='cement.ext.logbook',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "logbook", 
+        "jsonpickle", 
+        "cement2 >=1.9"
         ],
     setup_requires=[
         ],
     entry_points="""
     """,
     namespace_packages=[
-        'cement.ext'
+        'cement2.ext'
         ],
     )

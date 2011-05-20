@@ -45,7 +45,7 @@ cement.devtools package.
 """
 
 
-setup(name='cement',
+setup(name='cement2',
     version=VERSION,
     description="CLI Application Framework for Python",
     long_description=LONG,
@@ -72,6 +72,7 @@ setup(name='cement',
     entry_points="""
     """,
     namespace_packages=[
-        #'cement.ext'
+        #'cement2',
+        #'cement2.ext',
         ],
     )

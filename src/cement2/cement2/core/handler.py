@@ -1,6 +1,6 @@
 """Cement core handlers module."""
 
-from cement.core import backend
+from cement2.core import exc, backend
 
 Log = backend.minimal_logger(__name__)
 

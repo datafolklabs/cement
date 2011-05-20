@@ -4,7 +4,7 @@ import sys
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
-from cement.core import exc
+from cement2.core import exc
     
 def startup():
     pass

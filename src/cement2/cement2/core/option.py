@@ -1,6 +1,6 @@
 """Cement core options module."""
 
-from cement.core.handler import get_handler
+from cement2.core.handler import get_handler
 
 class CementOptionHandler(object):
     def __init__(self, config):

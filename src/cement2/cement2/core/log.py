@@ -3,7 +3,7 @@
 import logging
 from zope import interface
 
-from cement.core import exc
+from cement2.core import exc
         
 def log_handler_invariant(obj):
     invalid = []

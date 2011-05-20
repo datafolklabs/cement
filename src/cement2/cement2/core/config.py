@@ -9,7 +9,7 @@ if sys.version_info[0] < 3:
 else:
     from configparser import RawConfigParser
 
-from cement.core import backend, exc
+from cement2.core import backend, exc
 
 Log = backend.minimal_logger(__name__)
 

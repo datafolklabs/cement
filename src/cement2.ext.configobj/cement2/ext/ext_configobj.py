@@ -3,7 +3,8 @@
 import os
 from zope import interface
 from configobj import ConfigObj
-from cement.core import handler, config
+
+from cement2.core import handler, config
 
 class ConfigObjConfigHandler(ConfigObj):
     __handler_type__ = 'config'

@@ -4,7 +4,7 @@ import os
 import jsonpickle
 from zope import interface
 
-from cement.core import handler, output, backend
+from cement2.core import handler, output, backend
 
 Log = backend.minimal_logger(__name__)
 
