@@ -29,6 +29,13 @@ def cement_hook_one(*args, **kw):
 def cement_hook_two(*args, **kw):
     return 'kapla 2'
     
+@hook.register(name='some_bogus_hook', weight=-1)
+def cement_hook_three(*args, **kw):
+    return 'kapla 2'
+    
+def test_bogus_hook_name_on_register():
+    eq_(len(hook.hooks['cement_test_hook']), 2)
+    
 def test_run():
     results = []
     for res in hook.run('cement_test_hook'):
