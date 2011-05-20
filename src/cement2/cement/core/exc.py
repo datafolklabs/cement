@@ -1,4 +1,5 @@
-"""Cement exception classes."""
+"""Cement core exceptions module."""
+
 
 class CementError(Exception):
     """Generic errors."""

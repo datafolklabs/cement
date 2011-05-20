@@ -1,4 +1,5 @@
-"""Methods and classes to handle Cement Hook support."""
+"""Cement core hooks module."""
+
 
 from cement.core.backend import hooks, minimal_logger
 from cement.core.exc import CementRuntimeError
@@ -63,15 +64,16 @@ class register(object):
     def __call__(self, func):
         if not self.name:
             self.name = func.__name__
-        log.debug("registering hook func '%s' from %s into hooks['%s']" % \
-            (func.__name__, func.__module__, self.name))
+
         if not hooks.has_key(self.name):
             log.debug("hook name '%s' is not defined!" % self.name)
             return func
-
+            
+        log.debug("registering hook func '%s' from %s into hooks['%s']" % \
+            (func.__name__, func.__module__, self.name))
         # Hooks are as follows: (weight, name, func)
         hooks[self.name].append((int(self.weight), func.__name__, func))
-
+        return func
 
 def run(name, *args, **kwargs):
     """

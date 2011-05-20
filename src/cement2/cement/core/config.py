@@ -1,3 +1,4 @@
+"""Cement core config module."""
 
 import os
 import sys

@@ -1,3 +1,4 @@
+"""Cement core options module."""
 
 from cement.core.handler import get_handler
 

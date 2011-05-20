@@ -1,3 +1,4 @@
+"""Cement core backend module."""
 
 import sys
 import logging
@@ -14,12 +15,12 @@ def default_config():
     dcf['base']['debug'] = False
         
     # default handlers
-    dcf['base']['log_handler'] = 'logging'
     dcf['base']['config_handler'] = 'configparser'
+    dcf['base']['log_handler'] = 'logging'
+    dcf['base']['plugin_handler'] = 'cement'
     dcf['base']['option_handler'] = 'default'
     dcf['base']['command_handler'] = 'default'
     dcf['base']['hook_handler'] = 'default'
-    dcf['base']['plugin_handler'] = 'default'
     dcf['base']['error_handler'] = 'default'
 
     # default application configuration

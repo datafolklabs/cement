@@ -1,3 +1,4 @@
+"""Cement core output module."""
 
 from cement.core.handler import get_handler
 from cement.core.exc import CementRuntimeError

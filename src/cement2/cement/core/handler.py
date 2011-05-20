@@ -1,11 +1,12 @@
-"""Cement Handlers configuration."""
+"""Cement core handlers module."""
+
 
 from cement.core.backend import handlers, minimal_logger
 from cement.core.exc import CementRuntimeError, CementInterfaceError
 
 log = minimal_logger(__name__)
 
-def get(handler_type, handler_name):
+def get(handler_type, handler_label):
     """
     Get a handler object.
     
@@ -14,21 +15,21 @@ def get(handler_type, handler_name):
         handler_type
             The type of handler (i.e. 'output')
         
-        handler_name
-            The name of the handler (i.e. 'json')
+        handler_label
+            The label of the handler (i.e. 'json')
             
     Usage:
     
-        from cement.core.handler import get_handler
-        handler = get_handler('output', 'json')(dict(foo=bar))
-        handler.render()
+        from cement.core import handler
+        output = handler.get('output', 'json')
+        output.render(dict(foo='bar'))
 
     """
     if handler_type in handlers:
-        if handler_name in handlers[handler_type]:
-            return handlers[handler_type][handler_name]
+        if handler_label in handlers[handler_type]:
+            return handlers[handler_type][handler_label]
     raise CementRuntimeError("handlers['%s']['%s'] does not exist!" \
-                          % (handler_type, handler_name))
+                          % (handler_type, handler_label))
     
 def define(handler_type, handler_interface):
     """
@@ -47,9 +48,9 @@ def define(handler_type, handler_interface):
     
     .. code-block:: python
     
-        from cement.core.handler import define_handler
+        from cement.core import handler
 
-        define_handler('database', IDatabaseHandler)
+        handler.define('database', IDatabaseHandler)
     
     """
     log.debug("defining handler type '%s' (%s)" % \
@@ -74,17 +75,17 @@ def register(obj):
     .. code-block:: python
     
         from zope import interface
-        from cement.core.handler import register_handler
+        from cement.core import handler
         
         class MyHandler(object):
-            __handler_label__ = 'mysql'
             __handler_type__ = 'database'
+            __handler_label__ = 'mysql'
             interface.implements(IDatabaseHandler)
             
             def connect(self):
             ...
             
-        register_handler(MyHandler)
+        handler.register(MyHandler)
     
     """
     if not hasattr(obj, '__handler_label__'):

@@ -1,3 +1,4 @@
+"""Cement core log module."""
 
 import logging
 from zope import interface

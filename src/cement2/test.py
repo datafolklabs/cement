@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 from cement.core.app import lay_cement
 from cement.core.backend import default_config
