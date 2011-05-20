@@ -1,7 +1,6 @@
 """Cement core output module."""
 
-from cement.core.handler import get_handler
-from cement.core.exc import CementRuntimeError
+from cement.core import exc, handler
 
 class CementOutputHandler(object):
     """
@@ -17,7 +16,7 @@ class CementOutputHandler(object):
     def __init__(self, config, data):
         self.config = config
         self.data = data
-        self.log = get_handler('log', config['log_handler'])(__name__)
+        self.log = handler.get('log', config['log_handler'])(__name__)
         self._verify_data()
         
     def _verify_data(self):
@@ -28,7 +27,7 @@ class CementOutputHandler(object):
         try:
             assert type(self.data) == dict, "data must be of type dict."
         except AssertionError, e:
-            raise CementRuntimeError, e.args[0]
+            raise exc.CementRuntimeError, e.args[0]
             
     def render(self):
         """

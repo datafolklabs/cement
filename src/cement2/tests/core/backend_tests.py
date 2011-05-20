@@ -5,11 +5,12 @@ from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement.core import backend
+
 config = {}
 config['base'] = {}
-config['base']['app_name'] = None
-config['base']['app_module'] = None
-config['base']['app_egg'] = None
+config['base']['app_name'] = 'cement_nosetests'
+config['base']['app_module'] = 'cement_nosetests'
+config['base']['app_egg'] = 'cement_nosetests'
 config['base']['config_files'] = []
 config['base']['config_source'] = ['default']
 config['base']['debug'] = False
@@ -46,7 +47,7 @@ def compare_with_default_config(section, key):
     """
     Check that the default key value matches that of the known config above.
     """
-    defaults = backend.default_config()
+    defaults = backend.default_config('cement_nosetests')
     ok_(defaults.has_key(section))
     ok_(defaults[section].has_key(key))
     eq_(defaults[section][key], config[section][key])

@@ -1,10 +1,8 @@
 """Cement core handlers module."""
 
+from cement.core import backend, handlers
 
-from cement.core.backend import handlers, minimal_logger
-from cement.core.exc import CementRuntimeError, CementInterfaceError
-
-log = minimal_logger(__name__)
+Log = backend.minimal_logger(__name__)
 
 def get(handler_type, handler_label):
     """
@@ -25,10 +23,10 @@ def get(handler_type, handler_label):
         output.render(dict(foo='bar'))
 
     """
-    if handler_type in handlers:
-        if handler_label in handlers[handler_type]:
-            return handlers[handler_type][handler_label]
-    raise CementRuntimeError("handlers['%s']['%s'] does not exist!" \
+    if handler_type in backend.handlers:
+        if handler_label in backend.handlers[handler_type]:
+            return backend.handlers[handler_type][handler_label]
+    raise exc.CementRuntimeError("handlers['%s']['%s'] does not exist!" \
                           % (handler_type, handler_label))
     
 def define(handler_type, handler_interface):
@@ -53,12 +51,12 @@ def define(handler_type, handler_interface):
         handler.define('database', IDatabaseHandler)
     
     """
-    log.debug("defining handler type '%s' (%s)" % \
+    Log.debug("defining handler type '%s' (%s)" % \
         (handler_type, handler_interface.__name__))
-    if handlers.has_key(handler_type):
-        raise CementRuntimeError("handler type '%s' already defined!" % \
+    if backend.handlers.has_key(handler_type):
+        raise exc.CementRuntimeError("handler type '%s' already defined!" % \
                                   handler_type)
-    handlers[handler_type] = {'interface' : handler_interface}
+    backend.handlers[handler_type] = {'interface' : handler_interface}
     
     
 def register(obj):
@@ -89,29 +87,29 @@ def register(obj):
     
     """
     if not hasattr(obj, '__handler_label__'):
-        raise CementInterfaceError, \
+        raise exc.CementInterfaceError, \
             "Invalid interface %s, missing '__handler_label__'." % obj
     if not hasattr(obj, '__handler_type__'):
-        raise CementInterfaceError, \
+        raise exc.CementInterfaceError, \
             "Invalid interface %s, missing '__handler_type__'." % obj
             
     _type = obj.__handler_type__
     _label = obj.__handler_label__
     
-    log.debug("registering handler '%s' into handlers['%s']['%s']" % \
+    Log.debug("registering handler '%s' into handlers['%s']['%s']" % \
              (obj, _type, _label))
              
-    if _type not in handlers:
-        raise CementRuntimeError("Handler type '%s' doesn't exist." % _type)
-    if handlers[_type].has_key(_label):
-        raise CementRuntimeError("handlers['%s']['%s'] already exists" % \
+    if _type not in backend.handlers:
+        raise exc.CementRuntimeError("Handler type '%s' doesn't exist." % _type)
+    if backend.handlers[_type].has_key(_label):
+        raise exc.CementRuntimeError("handlers['%s']['%s'] already exists" % \
                                 (_type, _label))
-    if not handlers[_type]['interface'].implementedBy(obj):
-        raise CementInterfaceError("%s does not provide a '%s' handler." % \
+    if not backend.handlers[_type]['interface'].implementedBy(obj):
+        raise exc.CementInterfaceError("%s does not provide a '%s' handler." % \
                                   (_label, _type))
                                   
-    handlers[_type]['interface'].validateInvariants(obj)
-    handlers[_type][_label] = obj
+    backend.handlers[_type]['interface'].validateInvariants(obj)
+    backend.handlers[_type][_label] = obj
    
 def validate(handler_type, handler_name):
     """
@@ -126,10 +124,10 @@ def validate(handler_type, handler_name):
             The name of the handler
             
     """
-    if not handler_type in handlers:
-        raise CementRuntimeError, \
+    if not handler_type in backend.handlers:
+        raise exc.CementRuntimeError, \
             "Handler type '%s' is not defined." % handler_type
-    if not handler_name in handlers[handler_type]:
-        raise CementRuntimeError, \
+    if not handler_name in backend.handlers[handler_type]:
+        raise exc.CementRuntimeError, \
             "Handler name '%s' is not registered to handlers['%s']." % \
             (handler_name, handler_type)

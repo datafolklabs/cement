@@ -4,14 +4,14 @@ import sys
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
-from cement.core import exc
+from cement.core import exc, backend, hook
 from cement.core import hook
     
 
 hook.define('cement_test_hook')
 
 def test_define():
-    ok_(hook.hooks.has_key('cement_test_hook'))
+    ok_(backend.hooks.has_key('cement_test_hook'))
 
 @raises(exc.CementRuntimeError)
 def test_define_again():
@@ -34,7 +34,7 @@ def cement_hook_three(*args, **kw):
     return 'kapla 2'
     
 def test_bogus_hook_name_on_register():
-    eq_(len(hook.hooks['cement_test_hook']), 2)
+    eq_(len(backend.hooks['cement_test_hook']), 2)
     
 def test_run():
     results = []

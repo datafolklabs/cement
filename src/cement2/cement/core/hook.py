@@ -1,10 +1,9 @@
 """Cement core hooks module."""
 
 
-from cement.core.backend import hooks, minimal_logger
-from cement.core.exc import CementRuntimeError
+from cement.core import backend, exc
 
-log = minimal_logger(__name__)
+Log = backend.minimal_logger(__name__)
 
 def define(name):
     """
@@ -25,10 +24,10 @@ def define(name):
         hook.define('myhookname_hook')
     
     """
-    log.debug("defining hook '%s'", name)
-    if hooks.has_key(name):
-        raise CementRuntimeError, "Hook name '%s' already defined!" % name
-    hooks[name] = []
+    Log.debug("defining hook '%s'", name)
+    if backend.hooks.has_key(name):
+        raise exc.CementRuntimeError, "Hook name '%s' already defined!" % name
+    backend.hooks[name] = []
     
     
 class register(object):
@@ -65,14 +64,14 @@ class register(object):
         if not self.name:
             self.name = func.__name__
 
-        if not hooks.has_key(self.name):
-            log.debug("hook name '%s' is not defined!" % self.name)
+        if not backend.hooks.has_key(self.name):
+            Log.debug("hook name '%s' is not defined!" % self.name)
             return func
             
-        log.debug("registering hook func '%s' from %s into hooks['%s']" % \
+        Log.debug("registering hook func '%s' from %s into hooks['%s']" % \
             (func.__name__, func.__module__, self.name))
         # Hooks are as follows: (weight, name, func)
-        hooks[self.name].append((int(self.weight), func.__name__, func))
+        backend.hooks[self.name].append((int(self.weight), func.__name__, func))
         return func
 
 def run(name, *args, **kwargs):
@@ -100,11 +99,11 @@ def run(name, *args, **kwargs):
             # do something with result from each hook function
             ...
     """
-    if not hooks.has_key(name):
-        raise CementRuntimeError, "Hook name '%s' is not defined!" % name
-    hooks[name].sort() # Will order based on weight
-    for hook in hooks[name]:
-        log.debug("running hook '%s' (%s) from %s" % (name, hook[2], hook[2].__module__))
+    if not backend.hooks.has_key(name):
+        raise exc.CementRuntimeError, "Hook name '%s' is not defined!" % name
+    backend.hooks[name].sort() # Will order based on weight
+    for hook in backend.hooks[name]:
+        Log.debug("running hook '%s' (%s) from %s" % (name, hook[2], hook[2].__module__))
         res = hook[2](*args, **kwargs)
         
         # Results are yielded, so you must fun a for loop on it, you can not

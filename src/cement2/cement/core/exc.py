@@ -1,6 +1,5 @@
 """Cement core exceptions module."""
 
-
 class CementError(Exception):
     """Generic errors."""
     def __init__(self, value, code=1):

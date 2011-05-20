@@ -9,10 +9,9 @@ if sys.version_info[0] < 3:
 else:
     from configparser import RawConfigParser
 
-from cement.core.backend import handlers, minimal_logger
-from cement.core.exc import CementInterfaceError
+from cement.core import backend, exc
 
-log = minimal_logger(__name__)
+Log = backend.minimal_logger(__name__)
 
 def config_invariant(obj):
     invalid = []
@@ -34,7 +33,7 @@ def config_invariant(obj):
             invalid.append(member)
     
     if invalid:
-        raise CementInterfaceError, \
+        raise exc.CementInterfaceError, \
             "Invalid or missing: %s in %s" % (invalid, obj)
     
 class IConfigHandler(interface.Interface):
@@ -184,7 +183,7 @@ class ConfigParserConfigHandler(RawConfigParser):
             self.read(file_path)
             return True
         else:
-            log.debug("config file '%s' does not exist, skipping..." % \
+            Log.debug("config file '%s' does not exist, skipping..." % \
                       file_path)
             return False
      

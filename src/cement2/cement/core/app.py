@@ -2,14 +2,9 @@
 
 import sys
 
-from cement.core.backend import default_config, minimal_logger
-from cement.core import exc
-from cement.core import handler, hook
-from cement.core.log import ILogHandler, LoggingLogHandler
-from cement.core.config import IConfigHandler, ConfigParserConfigHandler
-from cement.core.plugin import IPluginHandler, CementPluginHandler
+from cement.core import backend, exc, handler, hook, log, config, plugin
 
-log = minimal_logger(__name__)
+Log = backend.minimal_logger(__name__)
 
 def lay_cement(app_name, *args, **kw):
     """
@@ -30,8 +25,8 @@ def lay_cement(app_name, *args, **kw):
             List of args to use.  Default: sys.argv.
     
     """
-    
-    defaults = kw.get('defaults', default_config())
+    Log.debug("laying cement for the '%s' application" % app_name)
+    defaults = kw.get('defaults', backend.default_config(app_name))
     argv = kw.get('argv', sys.argv)
     
     # basic logging setup first (mostly for debug/error)
@@ -48,27 +43,27 @@ def lay_cement(app_name, *args, **kw):
     hook.define('cement_post_bootstrap_hook')
     
     # define and register handlers    
-    handler.define('log', ILogHandler)
-    handler.define('config', IConfigHandler)
-    handler.define('plugin', IPluginHandler)
+    handler.define('log', log.ILogHandler)
+    handler.define('config', config.IConfigHandler)
+    handler.define('plugin', plugin.IPluginHandler)
     #define_handler('output')
     #define_handler('option')
     #define_handler('command')
     #define_handler('hook')
     #define_handler('error')
     
-    handler.register(ConfigParserConfigHandler)
-    handler.register(LoggingLogHandler)
-    handler.register(CementPluginHandler)
+    handler.register(config.ConfigParserConfigHandler)
+    handler.register(log.LoggingLogHandler)
+    handler.register(plugin.CementPluginHandler)
     
     app = CementApp(app_name, *args, **kw)
     return app
     
 class CementApp(object):
     def __init__(self, app_name, **kw):
-        self.defaults = kw.get('defaults', default_config())
-        if not self.defaults['base']['app_name']:
-            self.defaults['base']['app_name'] = app_name
+        self.app_name = app_name
+        self.defaults = kw.get('defaults', backend.default_config(app_name))
+        self.defaults['base']['app_name'] = self.app_name
 
         # default all handlers to None
         self.config = None
@@ -94,20 +89,23 @@ class CementApp(object):
                             self.plugin.__handler_label__)
 
     def run(self):
+        Log.debug("now running the '%s' application" % self.app_name)
         self._setup_config_handler()
         self._validate_required_config()
-        self._validate_config()
+        self.validate_config()
         self._setup_log_handler()
         self._setup_plugin_handler()
         
     def load_ext(self, ext_name):
         module = "cement.ext.ext_%s" % ext_name
+        Log.debug("loading the '%s' framework extension" % module)
         try:
             __import__(module)
         except ImportError, e:
             raise exc.CementRuntimeError, e.args[0]
         
     def _setup_config_handler(self):
+        Log.debug("setting up %s.config handler" % self.app_name)
         if not self.config:
             h = handler.get('config', self.defaults['base']['config_handler'])
             self.config = h(self.defaults)
@@ -116,11 +114,13 @@ class CementApp(object):
             self.config.parse_file(_file)
 
     def _setup_log_handler(self):
+        Log.debug("setting up %s.log handler" % self.app_name)
         if not self.log:
             h = handler.get('log', self.config.get('base', 'log_handler'))
             self.log = h(self.config)
         
     def _setup_plugin_handler(self):
+        Log.debug("setting up %s.plugin handler" % self.app_name) 
         if not self.plugin:
             h = handler.get('plugin', 
                             self.config.get('base', 'plugin_handler'))
@@ -130,22 +130,29 @@ class CementApp(object):
         """
         Validate base config settings required by cement.
         """
+        Log.debug("validating required configuration parameters")
         # need to shorten this a bit
         c = self.config
 
-        if not c.has_key('base', 'app_name') or \
-           not c.get('base', 'app_name'):
-            raise exc.CementConfigError("config['app_name'] required.")
+        try:
+            assert c.has_key('base', 'app_name'), \
+                "config['base']['app_name'] required."
+            assert c.get('base', 'app_name'), \
+                "config['base']['app_name'] required."
+
+        except AssertionError, e:
+            raise exc.CementConfigError(e.args[0])
+            
         if not c.has_key('base', 'app_module') or \
            not c.get('base', 'app_module'):
             c.set('base', 'app_module', c.get('base', 'app_name'))
         if not c.has_key('base', 'app_egg') or \
            not c.get('base', 'app_egg'):
             c.set('base', 'app_egg', c.get('base', 'app_name'))
-        
         self.config = c
         
-    def _validate_config(self):
+        
+    def validate_config(self):
         """
         Validate application config settings.
         """

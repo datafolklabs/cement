@@ -3,7 +3,7 @@
 import logging
 from zope import interface
 
-from cement.core.exc import CementArgumentError, CementInterfaceError
+from cement.core import exc
         
 def config_invariant(obj):
     invalid = []
@@ -27,7 +27,7 @@ def config_invariant(obj):
             invalid.append(member)
     
     if invalid:
-        raise CementInterfaceError, \
+        raise exc.CementInterfaceError, \
             "Invalid or missing: %s in %s" % (invalid, obj)
             
 class ILogHandler(interface.Interface):
@@ -285,7 +285,7 @@ class LoggingLogHandler(object):
         """
         
         if level not in self.all_levels:
-            raise CementArgumentError("Unknown log level '%s'." % level)
+            raise exc.CementArgumentError("Unknown log level '%s'." % level)
         
         log_level = getattr(logging, level.upper())
                 

@@ -3,17 +3,28 @@
 import sys
 import logging
 
-def default_config():
+def default_config(app_name):
+    """
+    Get a standard, default config for app_name.
+    
+    Required Arguments:
+    
+        app_name
+            The name of the application.
+            
+    """
     # default backend configuration
     dcf = {}
     dcf['base'] = {}
-    dcf['base']['app_name'] = None
-    dcf['base']['app_module'] = None
-    dcf['base']['app_egg'] = None
+    dcf['base']['app_name'] = app_name
+    dcf['base']['app_module'] = app_name
+    dcf['base']['app_egg'] = app_name
     dcf['base']['config_files'] = []
     dcf['base']['config_source'] = ['default']
     dcf['base']['debug'] = False
-        
+    dcf['base']['plugin_config_dir'] = None
+    dcf['base']['plugin_dir'] = '/usr/lib/%s/plugins' % app_name
+    
     # default handlers
     dcf['base']['config_handler'] = 'configparser'
     dcf['base']['log_handler'] = 'logging'

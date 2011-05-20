@@ -2,10 +2,9 @@
 
 from zope import interface
 
-from cement.core.backend import minimal_logger
-from cement.core.exc import CementInterfaceError
+from cement.core import backend, exc
 
-log = minimal_logger(__name__)
+Log = backend.minimal_logger(__name__)
 
 def config_invariant(obj):
     invalid = []
@@ -15,7 +14,7 @@ def config_invariant(obj):
         '__handler_type__',
         'load_plugin',
         'load_plugins',
-        'enabled_plugins',
+        'loaded_plugins',
         ]
         
     for member in members:
@@ -23,7 +22,7 @@ def config_invariant(obj):
             invalid.append(member)
     
     if invalid:
-        raise CementInterfaceError, \
+        raise exc.CementInterfaceError, \
             "Invalid or missing: %s in %s" % (invalid, obj)
     
 class IPluginHandler(interface.Interface):
@@ -36,9 +35,10 @@ class IPluginHandler(interface.Interface):
     # internal mechanism for handler registration
     __handler_type__ = interface.Attribute('Handler Type Identifier')
     __handler_label__ = interface.Attribute('Handler Label Identifier')
+    loaded_plugins = interface.Attribute('List of loaded plugins')
     interface.invariant(config_invariant)
     
-    def __init__(defaults, *args, **kw):
+    def __init__(config_obj, *args, **kw):
         """
         The __init__ function emplementation of Cement handlers acts as a 
         wrapper for initialization.  In general, the implementation simply
@@ -93,13 +93,14 @@ class CementPluginHandler(object):
     __handler_type__ = 'plugin'
     __handler_label__ = 'cement'
     interface.implements(IPluginHandler)
-    enabled_plugins = []
+    loaded_plugins = []
     
-    def __init__(self, config, *args, **kw):
-        self.config = config
+    def __init__(self, config_obj, *args, **kw):
+        self.config = config_obj
         self.enabled_plugins = []
         
     def load_plugin(self, plugin_name):
+        Log.debug("loading application plugin '%s'" % plugin_name)
         pass
     
     def load_plugins(self, plugin_list):
