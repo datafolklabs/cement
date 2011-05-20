@@ -2,7 +2,7 @@
 
 from cement2.core import foundation, backend, hook
 
-config = backend.default_config('myapp')
+config = backend.defaults()
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
 config['base']['extensions'] = ['configobj', 'yaml', 'json']
 config['base']['config_handler'] = 'configobj'

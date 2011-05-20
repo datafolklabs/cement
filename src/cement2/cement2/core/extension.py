@@ -103,7 +103,7 @@ class CementExtensionHandler(object):
     def load_extension(self, ext_name):
         module = "cement2.ext.ext_%s" % ext_name
         
-        if ext_name in self.loaded_extensions:
+        if module in self.loaded_extensions:
             Log.debug("framework extension '%s' already loaded" % module)
             return 
             
