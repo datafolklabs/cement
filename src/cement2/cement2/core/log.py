@@ -271,10 +271,11 @@ class LoggingLogHandler(object):
             console.setFormatter(formatter)
         elif self.level() == logging.getLevelName(logging.DEBUG):
             format_str = "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+            console.setFormatter(logging.Formatter(format_str))
         else:
             format_str = "%(levelname)s: %(message)s"
+            console.setFormatter(logging.Formatter(format_str))
             
-        console.setFormatter(logging.Formatter(format_str))
         console.setLevel(getattr(logging, self.level()))   
         self.backend.addHandler(console)
     
