@@ -24,7 +24,9 @@ class BogusOutputHandler2(object):
     __handler_label__ = 'bogus_handler'
     #interface.implements(output.IOutputHandler)
     pass
-    
+
+class BogusHandler3(object):
+    pass   
 
 @raises(exc.CementRuntimeError)
 @with_setup(startup, teardown)    

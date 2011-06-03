@@ -33,6 +33,7 @@ app.config.set('base', 'johnny', 'asdfasfasdf')
 
 app.log.info('JOHNNY')
 app.log.debug('KAPLA')
+
 print app.output
 #c.log.info('blah')
 

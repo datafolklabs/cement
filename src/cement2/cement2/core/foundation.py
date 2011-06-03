@@ -142,6 +142,7 @@ class CementApp(object):
         if not self.log:
             h = handler.get('log', self.config.get('base', 'log_handler'))
             self.log = h(self.config)
+            self.log.setup_logging()
            
     def _setup_plugin_handler(self):
         Log.debug("setting up %s.plugin handler" % self.name) 
