@@ -19,6 +19,7 @@ def config_handler_invariant(obj):
         '__init__',
         '__handler_label__',
         '__handler_type__',
+        'setup',
         'keys', 
         'has_key',
         'sections', 
@@ -42,42 +43,38 @@ class IConfigHandler(interface.Interface):
     implement this handler must provide the methods and attributes defined 
     below.
     
+    All implementations must provide sane 'default' functionality when 
+    instantiated with no arguments.  Meaning, it can and should accept 
+    optional parameters that alter how it functions, but can not require
+    any parameters.  When the framework first initializes handlers it does
+    not pass anything too them, though a handler can be instantiated first
+    (with or without parameters) and then passed to 'lay_cement()' already
+    instantiated.
+    
     """
     # internal mechanism for handler registration
     __handler_type__ = interface.Attribute('Handler Type Identifier')
     __handler_label__ = interface.Attribute('Handler Label Identifier')
     interface.invariant(config_handler_invariant)
-    
-    def __init__(defaults, *args, **kw):
+            
+    def setup(defaults):
         """
-        The __init__ function emplementation of Cement handlers acts as a 
-        wrapper for initialization.  In general, the implementation simply
-        needs to accept the defaults dict as its first argument.  If the 
-        implementation subclasses from something else it will need to
-        handle passing the proper args/keyword args to that classes __init__
-        function, or you can easily just pass *args, **kw directly to it.
+        The setup function is called during application initialization and
+        must 'setup' the handler object making it ready for the framework
+        or the application to make further calls to it.
         
         Required Arguments:
         
-            config
+            defaults
                 The application default config dictionary.  This is *not* a 
                 config object, but rather a dictionary which should be 
                 obvious because the config handler implementation is what
                 provides the application config object.
-        
-        
-        Optional Arguments:
-        
-            *args
-                Additional positional arguments.
-                
-            **kw
-                Additional keyword arguments.
                 
         Returns: n/a
         
         """
-        
+
     def parse_file(file_path):
         """
         Parse config file settings from file_path.  Returns True if the file
@@ -156,7 +153,7 @@ class ConfigParserConfigHandler(RawConfigParser):
     __handler_type__ = 'config'
     interface.implements(IConfigHandler)
     
-    def __init__(self, defaults, *args, **kw):
+    def setup(self, defaults, *args, **kw):
         """
         Take the default config dict and merge it into self.
         

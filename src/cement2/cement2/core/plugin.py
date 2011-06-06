@@ -9,9 +9,9 @@ Log = backend.minimal_logger(__name__)
 def plugin_handler_invariant(obj):
     invalid = []
     members = [
-        '__init__',
         '__handler_label__',
         '__handler_type__',
+        'setup',
         'load_plugin',
         'load_plugins',
         'loaded_plugins',
@@ -38,30 +38,19 @@ class IPluginHandler(interface.Interface):
     loaded_plugins = interface.Attribute('List of loaded plugins')
     interface.invariant(plugin_handler_invariant)
     
-    def __init__(config_obj, *args, **kw):
+    def setup(config_obj):
         """
-        The __init__ function emplementation of Cement handlers acts as a 
-        wrapper for initialization.  In general, the implementation simply
-        needs to accept the config object as its first argument.  If the 
-        implementation subclasses from something else it will need to
-        handle passing the proper args/keyword args to that classes __init__
-        function, or you can easily just pass *args, **kw directly to it.
+        The setup function is called during application initialization and
+        must 'setup' the handler object making it ready for the framework
+        or the application to make further calls to it.
         
         Required Arguments:
         
-            config
-                 The application configuration object after it has been parsed
-                and processed.  This is *not* a defaults dictionary, though
-                some config handler implementations may work as a dict.
-        
-        
-        Optional Arguments:
-        
-            *args
-                Additional positional arguments.
-                
-            **kw
-                Additional keyword arguments.
+            config_obj
+                The application configuration object.  This is a config object 
+                that implements the IConfigHandler interface and not a config 
+                dictionary, though some config handler implementations may 
+                also function like a dict (i.e. configobj).
                 
         Returns: n/a
         
@@ -95,7 +84,7 @@ class CementPluginHandler(object):
     interface.implements(IPluginHandler)
     loaded_plugins = []
     
-    def __init__(self, config_obj, *args, **kw):
+    def setup(self, config_obj):
         self.config = config_obj
         self.enabled_plugins = []
         

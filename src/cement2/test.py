@@ -4,9 +4,9 @@ from cement2.core import foundation, backend, hook
 
 config = backend.defaults()
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
-config['base']['extensions'] = ['configobj', 'yaml', 'json', 'example']
+config['base']['extensions'] = ['configobj', 'example']
 config['base']['config_handler'] = 'configobj'
-config['base']['output_handler'] = 'json'
+#config['base']['output_handler'] = 'json'
 
 app = foundation.lay_cement('myapp', defaults=config)
 
@@ -34,10 +34,10 @@ app.config.set('base', 'johnny', 'asdfasfasdf')
 app.log.info('JOHNNY')
 app.log.debug('KAPLA')
 
-print app.output
+#print app.output
 #c.log.info('blah')
 
-for i in hook.run('myhook'):
-    print i
+#for i in hook.run('myhook'):
+#    print i
 
 print app.output.render(dict(foo='bar'))

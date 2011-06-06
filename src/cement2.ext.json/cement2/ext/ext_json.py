@@ -14,8 +14,11 @@ class JsonOutputHandler(object):
     
     interface.implements(output.IOutputHandler)
     
-    def __init__(self, config_obj, *args, **kw):
-        pass
+    def __init__(self):
+        self.config = None
+        
+    def setup(self, config_obj):
+        self.config = config_obj
         
     def render(self, data_dict, template=None, unpicklable=False):
         """

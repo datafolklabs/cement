@@ -125,15 +125,17 @@ class CementApp(object):
         if not self.extension:
             h = handler.get('extension', 
                             self.defaults['base']['extension_handler'])
-            self.extension = h(self.defaults)
+            self.extension = h()
+        self.extension.setup(self.defaults)
         self.extension.load_extensions(self.defaults['base']['extensions'])
         
     def _setup_config_handler(self):
         Log.debug("setting up %s.config handler" % self.name)
         if not self.config:
             h = handler.get('config', self.defaults['base']['config_handler'])
-            self.config = h(self.defaults)
+            self.config = h()
 
+        self.config.setup(self.defaults)
         for _file in self.config.get('base', 'config_files'):
             self.config.parse_file(_file)
 
@@ -141,22 +143,24 @@ class CementApp(object):
         Log.debug("setting up %s.log handler" % self.name)
         if not self.log:
             h = handler.get('log', self.config.get('base', 'log_handler'))
-            self.log = h(self.config)
-            self.log.setup_logging()
+            self.log = h()
+        self.log.setup(self.config)
            
     def _setup_plugin_handler(self):
         Log.debug("setting up %s.plugin handler" % self.name) 
         if not self.plugin:
             h = handler.get('plugin', 
                             self.config.get('base', 'plugin_handler'))
-            self.plugin = h(self.config)
-    
+            self.plugin = h()
+        self.plugin.setup(self.config)
+        
     def _setup_output_handler(self):
         Log.debug("setting up %s.output handler" % self.name) 
         if not self.output:
             h = handler.get('output', 
                             self.config.get('base', 'output_handler'))
-            self.output = h(self.config)
+            self.output = h()
+        self.output.setup(self.config)
                   
     def _validate_required_config(self):
         """

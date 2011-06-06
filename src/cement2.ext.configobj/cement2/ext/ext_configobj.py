@@ -16,13 +16,15 @@ class ConfigObjConfigHandler(ConfigObj):
     # and fails the invariant tests.
     sections = []
     
-    def __init__(self, defaults, *args, **kw):
+    def __init__(self, *args, **kw):
+        ConfigObj.__init__(self, *args, **kw)
+        
+    def setup(self, defaults):
         """
         Take the default config dict and merge it into self.  Pass additional
         *args and **kw directly to ConfigObj.
         
         """
-        ConfigObj.__init__(self, *args, **kw)
         self.merge(defaults)
         
     def parse_file(self, file_path):

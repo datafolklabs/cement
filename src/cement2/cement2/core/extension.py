@@ -12,6 +12,7 @@ def extension_handler_invariant(obj):
         '__init__',
         '__handler_label__',
         '__handler_type__',
+        'setup',
         'load_extension',
         'load_extensions',
         'loaded_extensions',
@@ -38,31 +39,20 @@ class IExtensionHandler(interface.Interface):
     loaded_extensions = interface.Attribute('List of loaded extensions')
     interface.invariant(extension_handler_invariant)
     
-    def __init__(defaults, *args, **kw):
+    def setup(defaults):
         """
-        The __init__ function emplementation of Cement handlers acts as a 
-        wrapper for initialization.  In general, the implementation simply
-        needs to accept the defaults dict as its first argument.  If the 
-        implementation subclasses from something else it will need to
-        handle passing the proper args/keyword args to that classes __init__
-        function, or you can easily just pass *args, **kw directly to it.
+        The setup function is called during application initialization and
+        must 'setup' the handler object making it ready for the framework
+        or the application to make further calls to it.
+        
+        Because the extension handler is called before the application 
+        configuration is setup, the application defaults are passed rather
+        than a config object.
         
         Required Arguments:
         
-            config
-                The application default config dictionary.  This is *not* a 
-                config object, but rather a dictionary which should be 
-                obvious because the config handler implementation is what
-                provides the application config object.
-        
-        
-        Optional Arguments:
-        
-            *args
-                Additional positional arguments.
-                
-            **kw
-                Additional keyword arguments.
+            defaults
+                The applications default config dictionary.
                 
         Returns: n/a
         
@@ -91,14 +81,23 @@ class IExtensionHandler(interface.Interface):
         """
 
 class CementExtensionHandler(object):
+    """
+    This is an implementation of the IExtentionHandler interface.  It handles
+    loading framework extensions.
+    
+    """
+    
     __handler_type__ = 'extension'
     __handler_label__ = 'cement'
     interface.implements(IExtensionHandler)
     loaded_extensions = []
     
-    def __init__(self, config_obj, *args, **kw):
-        self.config = config_obj
+    def __init__(self):
+        self.defaults = {}
         self.enabled_extensions = []
+        
+    def setup(self, defaults):
+        self.defaults = defaults
         
     def load_extension(self, ext_name):
         module = "cement2.ext.ext_%s" % ext_name
