@@ -17,12 +17,16 @@ class ConfigObjConfigHandler(ConfigObj):
     sections = []
     
     def __init__(self, *args, **kw):
+        """
+        This is an implementation of the IConfigHandler interface, which
+        uses the ConfigObj library.  We subclass from ConfigObj, and
+        pass *args, **kwargs directly to it.
+        """
         ConfigObj.__init__(self, *args, **kw)
         
     def setup(self, defaults):
         """
-        Take the default config dict and merge it into self.  Pass additional
-        *args and **kw directly to ConfigObj.
+        Take the default config dict and merge it into self.
         
         """
         self.merge(defaults)
