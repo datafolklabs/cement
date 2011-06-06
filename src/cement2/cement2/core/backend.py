@@ -20,7 +20,7 @@ def defaults(app_name=None):
     dcf['base']['config_files'] = []
     dcf['base']['config_source'] = ['default']
     dcf['base']['debug'] = False
-    dcf['base']['extensions'] = []
+    dcf['base']['extensions'] = ['configparser', 'logging']
     dcf['base']['plugins'] = []
     dcf['base']['plugin_config_dir'] = None
     dcf['base']['plugin_dir'] = None
@@ -42,7 +42,7 @@ def defaults(app_name=None):
     dcf['log']['level'] = 'INFO'
     dcf['log']['to_console'] = True
     dcf['log']['rotate'] = False
-    dcf['log']['max_bytes'] = None
+    dcf['log']['max_bytes'] = 512000
     dcf['log']['max_files'] = 4
     dcf['log']['file_formatter'] = None
     dcf['log']['console_formatter'] = None
@@ -78,19 +78,21 @@ handlers = {}
 # global hooks dict
 hooks = {}
 
-# Save original stdout/stderr for supressing output
-SAVED_STDOUT = sys.stdout
-SAVED_STDERR = sys.stderr
-
-class StdOutBuffer(object):
-    buffer = ''
-    def write(self, text):
-        self.buffer += text
-        
-class StdErrBuffer(object):
-    buffer = ''
-    def write(self, text):
-        self.buffer += text
-
-buf_stdout = StdOutBuffer()
-buf_stderr = StdErrBuffer()
+# Save original stdout/stderr for supressing output.
+# FIX ME: Removing this for now, need a sane way to do it... or not at all
+#
+#SAVED_STDOUT = sys.stdout
+#SAVED_STDERR = sys.stderr
+#
+#class StdOutBuffer(object):
+#    buffer = ''
+#    def write(self, text):
+#        self.buffer += text
+#        
+#class StdErrBuffer(object):
+#    buffer = ''
+#    def write(self, text):
+#        self.buffer += text
+#
+#buf_stdout = StdOutBuffer()
+#buf_stderr = StdErrBuffer()

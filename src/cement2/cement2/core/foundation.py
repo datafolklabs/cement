@@ -60,8 +60,8 @@ def lay_cement(name, *args, **kw):
     #define_handler('hook')
     #define_handler('error')
     
-    handler.register(config.ConfigParserConfigHandler)
-    handler.register(log.LoggingLogHandler)
+    #handler.register(config.ConfigParserConfigHandler)
+    #handler.register(log.LoggingLogHandler)
     handler.register(extension.CementExtensionHandler)
     handler.register(plugin.CementPluginHandler)
     handler.register(output.CementOutputHandler)

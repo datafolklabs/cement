@@ -8,8 +8,16 @@ from nose import SkipTest
 
 from cement2.core import exc, backend, handler, log, config
 
-def startup():    
+if not handler.defined('log'):
     handler.define('log', log.ILogHandler)
+if not handler.defined('config'):
+    handler.define('config', config.IConfigHandler)
+from cement2.ext.ext_logging import LoggingLogHandler
+from cement2.ext.ext_configparser import ConfigParserConfigHandler
+
+def startup():    
+    if not handler.defined('log'):
+        handler.define('log', log.ILogHandler)
 
 def teardown():
     if backend.handlers.has_key('log'):
@@ -31,19 +39,20 @@ def test_unproviding_handler():
 
 @with_setup(startup, teardown)
 def test_logging():
-    handler.register(log.LoggingLogHandler)
+    handler.register(LoggingLogHandler)
     
-    myconfig = config.ConfigParserConfigHandler(backend.defaults())
+    myconfig = ConfigParserConfigHandler()
+    myconfig.setup(backend.defaults())
     myconfig.set('log', 'file', '/dev/null')
     myconfig.set('log', 'to_console', True)
     
     h = handler.get('log', 'logging')
 
-    Log = h(myconfig, 
+    Log = h(
         level='WARN',
         clear_loggers=True,
         )
-    Log.setup_logging()
+    Log.setup(myconfig)
     Log.info('Info Message')
     Log.warn('Warn Message')
     Log.error('Error Message')
@@ -52,36 +61,36 @@ def test_logging():
     
 @with_setup(startup, teardown)
 def test_bogus_test_level():
-    handler.register(log.LoggingLogHandler)
+    handler.register(LoggingLogHandler)
     
-    myconfig = config.ConfigParserConfigHandler(backend.defaults())
+    myconfig = ConfigParserConfigHandler()
+    myconfig.setup(backend.defaults())
     myconfig.set('log', 'file', '/dev/null')
     myconfig.set('log', 'to_console', True)
     
     h = handler.get('log', 'logging')
 
-    Log = h(myconfig, 
+    Log = h(
         level='WARN',
         clear_loggers=True,
         )
-    Log.setup_logging()
+    Log.setup(myconfig)
     Log.set_level('BOGUS')
 
 @with_setup(startup, teardown)
 def test_console_log():
-    handler.register(log.LoggingLogHandler)
+    handler.register(LoggingLogHandler)
+
+    myconfig = ConfigParserConfigHandler()
+    myconfig.setup(backend.defaults())
     
-    myconfig = config.ConfigParserConfigHandler(backend.defaults())
     myconfig.set('base', 'debug', True)
     myconfig.set('log', 'file', '/dev/null')
     myconfig.set('log', 'to_console', True)
     
     h = handler.get('log', 'logging')
-
-    Log = h(myconfig, 
+    Log = h(
         clear_loggers=True,
+        console_formatter=logging.Formatter("%(levelname)s: %(message)s")
         )
-    Log.setup_logging()
-
-    formatter = logging.Formatter("%(levelname)s: %(message)s")
-    Log.setup_console_log(formatter=formatter)
+    Log.setup(myconfig)

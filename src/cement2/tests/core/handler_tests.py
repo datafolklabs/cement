@@ -11,7 +11,8 @@ def startup():
     pass
 
 def teardown():
-    pass
+    if backend.handlers.has_key('output'):
+        del backend.handlers['output']
         
 class BogusOutputHandler(object):
     #__handler_type__ = 'output'

@@ -29,6 +29,23 @@ def get(handler_type, handler_label):
     raise exc.CementRuntimeError("handlers['%s']['%s'] does not exist!" \
                           % (handler_type, handler_label))
     
+def defined(handler_type):
+    """
+    Test whether a handler type is defined.
+    
+    Required Arguments:
+    
+        handler_type
+            The name or 'type' of the handler (I.e. 'logging').
+    
+    Returns: bool
+    
+    """
+    if handler_type in backend.handlers:
+        return True
+    else:
+        return False
+        
 def define(handler_type, handler_interface):
     """
     Define a handler type that plugins can register handler objects under.

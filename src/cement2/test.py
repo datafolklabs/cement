@@ -4,9 +4,14 @@ from cement2.core import foundation, backend, hook
 
 config = backend.defaults()
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
-config['base']['extensions'] = ['configobj', 'example']
-config['base']['config_handler'] = 'configobj'
-#config['base']['output_handler'] = 'json'
+config['base']['config_handler'] = 'configparser'
+config['base']['output_handler'] = 'json'
+
+# extensions
+#config['base']['extensions'].append('configobj')
+#config['base']['extensions'].append('configparser')
+#config['base']['extensions'].append('logging')
+config['base']['extensions'].append('json')
 
 app = foundation.lay_cement('myapp', defaults=config)
 
@@ -14,15 +19,15 @@ hook.define('myhook')
 
 @hook.register(name='myhook', weight=99)
 def my_hook_one(*args, **kw):
-    print 'in my_hook_one'
+    return 'in my_hook_one'
         
 @hook.register(name='myhook', )
 def my_hook_two(*args, **kw):
-    print 'in my_hook_two'
+    return 'in my_hook_two'
 
 @hook.register(name='myhook', weight=-1000)
 def my_hook_three(*args, **kw):
-    print 'in my_hook_three'
+    return 'in my_hook_three'
 
 
 
@@ -37,7 +42,7 @@ app.log.debug('KAPLA')
 #print app.output
 #c.log.info('blah')
 
-#for i in hook.run('myhook'):
-#    print i
+for i in hook.run('myhook'):
+    print i
 
 print app.output.render(dict(foo='bar'))

@@ -22,7 +22,8 @@ config['log'] = {}
 config['log']['file'] = None
 config['log']['level'] = 'INFO'
 config['log']['to_console'] = True
-config['log']['max_bytes'] = None
+config['log']['rotate'] = False
+config['log']['max_bytes'] = 512000
 config['log']['max_files'] = 4
 config['log']['file_formatter'] = None
 config['log']['console_formatter'] = None
@@ -58,12 +59,12 @@ def test_minimal_logger():
     backend.minimal_logger(__name__, debug=False)
     pass
     
-@with_setup(startup, teardown)
-def test_output_buffer():
-    out = backend.StdOutBuffer()
-    out.write('test')
-    eq_(out.buffer, 'test')
-    
-    err = backend.StdErrBuffer()
-    err.write('test')
-    eq_(err.buffer, 'test')
+#@with_setup(startup, teardown)
+#def test_output_buffer():
+#    out = backend.StdOutBuffer()
+#    out.write('test')
+#    eq_(out.buffer, 'test')
+#    
+#    err = backend.StdErrBuffer()
+#    err.write('test')
+#    eq_(err.buffer, 'test')

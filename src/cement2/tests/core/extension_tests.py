@@ -28,12 +28,14 @@ def test_invalid_extension_handler():
 
 def test_load_extensions():
     handler.define('output', output.IOutputHandler)
-    ext = extension.CementExtensionHandler(backend.defaults())
+    ext = extension.CementExtensionHandler()
+    ext.setup(backend.defaults())
     ext.load_extensions(['example'])
     ext.load_extensions(['example'])
     del backend.handlers['output']
 
 @raises(exc.CementRuntimeError)
 def test_load_bogus_extension():
-    ext = extension.CementExtensionHandler(backend.defaults())
+    ext = extension.CementExtensionHandler()
+    ext.setup(backend.defaults())
     ext.load_extensions(['bogus'])

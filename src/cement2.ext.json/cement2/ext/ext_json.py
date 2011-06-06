@@ -39,8 +39,8 @@ class JsonOutputHandler(object):
         """
         Log.debug("rendering json output")
         
-        data_dict['stdout'] = backend.buf_stdout.buffer
-        data_dict['stderr'] = backend.buf_stderr.buffer
+        #data_dict['stdout'] = backend.buf_stdout.buffer
+        #data_dict['stderr'] = backend.buf_stderr.buffer
         return jsonpickle.encode(data_dict, unpicklable=unpicklable)
             
 handler.register(JsonOutputHandler)
