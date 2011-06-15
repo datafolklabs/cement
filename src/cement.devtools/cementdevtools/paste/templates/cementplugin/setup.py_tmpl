@@ -1,6 +1,5 @@
 
 from setuptools import setup, find_packages
-import sys, os
 
 # You probably want to change the name, this is a healthy default for paster
 setup(name='{{project}}.{{plugin}}',

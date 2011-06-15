@@ -1,6 +1,5 @@
 
 from setuptools import setup, find_packages
-import sys, os
 
 setup(name='{{project}}',
     version='0.1',
@@ -12,6 +11,7 @@ setup(name='{{project}}',
     url='{{url}}',
     license='{{license}}',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+    paster_plugins=['PasteScript','cement'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[

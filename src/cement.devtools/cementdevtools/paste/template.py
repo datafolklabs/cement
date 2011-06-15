@@ -45,9 +45,9 @@ class CementAppTemplate(templates.Template):
     egg_plugins = ['PasteScript', 'cement']
     vars = [
         templates.var("package", "Package module name", default=''),
-        templates.var("cement_version", "Cement version", default=None),
+        templates.var("cement_version", "Cement version", default=0.8),
         templates.var("cement_next_version", "Cement Next Version", 
-                      default=None),
+                      default=2.0),
         templates.var("description", "Description", default=''),
         templates.var("creator", "Creator", default=''),
         templates.var("creator_email", "Creator Email", default=''),
@@ -72,9 +72,9 @@ class CementPluginTemplate(templates.Template):
         templates.var("project", "Parent application this plugin is for", 
                       default=None),
         templates.var("package", "Package module name", default=''),
-        templates.var("cement_version", "Cement version", default=None),
+        templates.var("cement_version", "Cement version", default=0.8),
         templates.var("cement_next_version", "Cement Next Version", 
-                      default=None),
+                      default=2.0),
         templates.var("creator", "Creator", default=''),
         templates.var("creator_email", "Creator Email", default=''),
         templates.var("url", "URL", default=''),
