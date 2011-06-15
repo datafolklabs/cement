@@ -1,0 +1,45 @@
+Modules in {{project}}
+======================
+
+bootstrap
+---------
+.. automodule:: {{project}}.bootstrap
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+
+controllers
+-----------
+.. automodule:: {{project}}.controllers
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+core
+----------
+.. automodule:: {{project}}.core
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+helpers
+----------
+.. automodule:: {{project}}.helpers
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+lib
+----------
+.. automodule:: {{project}}.lib
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+model
+----------
+.. automodule:: {{project}}.model
+    :members:
+    :inherited-members:
+    :undoc-members:
