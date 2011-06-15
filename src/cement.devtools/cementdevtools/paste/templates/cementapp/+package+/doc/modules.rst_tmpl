@@ -1,7 +1,5 @@
 Modules in {{project}}
 ======================
-.. autosummary::
-    :toctree:
 
 bootstrap
 ---------
