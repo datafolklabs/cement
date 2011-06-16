@@ -1,0 +1,46 @@
+Testing {{project.capitalize()}}
+==============================================================================
+
+{{project.capitalize()}} uses the Nose testing platform, and can be enabled by
+uncommenting the following lines from setup.py:
+
+.. code-block:: text
+
+    setup_requires=[
+        ### Uncomment for nose testing + coverage
+        "nose",
+        # "coverage",
+        ],
+
+
+To run the tests, simply execute the following:
+
+.. code-block:: text
+
+    $ python setup.py nosetests
+    
+
+Accessing Coverage Reports
+--------------------------
+
+Coverage can be enabled by uncommenting it in setup.py:
+
+.. code-block:: text
+
+    setup_requires=[
+        ### Uncomment for nose testing + coverage
+        "nose",
+        "coverage",
+        ],
+
+
+When running tests, a coverage report will display after completion.  You can
+also generate HTML reports by executing the following:
+
+.. code-block:: text
+
+    $ python setup.py nosetests
+    
+    $ coverage html
+
+The reports will be created at **./htmlcov**.

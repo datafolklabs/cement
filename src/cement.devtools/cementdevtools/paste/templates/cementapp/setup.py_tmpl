@@ -15,14 +15,17 @@ setup(name='{{project}}',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "configobj",
-        # remove if not using genshi templating
+        ### Remove if not using Genshi templates
         "genshi",
         "cement >={{cement_version}}, <{{cement_next_version}}",
+        "configobj",
+        ### Uncomment to build documentation:
+        # "sphinx",
         ],
     setup_requires=[
-        # uncomment for nose testing
+        ### Uncomment for nose testing + coverage
         # "nose",
+        # "coverage",
         ],
     test_suite='nose.collector',
     entry_points="""

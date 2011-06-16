@@ -1,0 +1,26 @@
+
+{{package}}.controllers
+------------------------------------------------------------------------------
+
+.. automodule:: {{package}}.controllers
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+
+{{package}}.controllers.example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: {{package}}.controllers.example
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+{{package}}.controllers.root
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    
+.. automodule:: {{package}}.controllers.root
+    :members:
+    :inherited-members:
+    :undoc-members:
+

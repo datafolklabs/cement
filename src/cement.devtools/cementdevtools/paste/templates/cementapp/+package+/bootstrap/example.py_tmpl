@@ -1,4 +1,9 @@
+"""
+This is an example 'internal' plugin bootstrap file.  It demonstrates how to
+bootstrap a plugin that is shipped as part of the primary application (where
+an external plugin is shipped separately outside the source tree).
 
+"""
 from cement.core.hook import define_hook
 from cement.core.namespace import CementNamespace, register_namespace
 

@@ -1,0 +1,24 @@
+
+{{package}}.model
+------------------------------------------------------------------------------
+
+.. automodule:: {{package}}.model
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+{{package}}.model.example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: {{package}}.model.example
+    :members:
+    :inherited-members:
+    :undoc-members:
+    
+{{package}}.model.root
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: {{package}}.model.root
+    :members:
+    :inherited-members:
+    :undoc-members:

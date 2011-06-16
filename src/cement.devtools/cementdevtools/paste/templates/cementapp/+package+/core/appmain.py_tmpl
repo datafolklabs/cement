@@ -1,7 +1,7 @@
 """
-This is the application's core code.  Unless you know the "ins-and-outs" of
-The Cement CLI Application Framework, you probably should not modify the 
-main() function of this file.
+This is the application's initialization code.  Unless you know the 
+"ins-and-outs" of The Cement CLI Application Framework, you probably should 
+not modify the main() function of this file.
 
 """
 

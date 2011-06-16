@@ -8,7 +8,7 @@ from tempfile import mkdtemp
 from {{package}}.core.config import get_nose_config        
 from {{package}}.core.appmain import nose_main
 
-# use an altername config for testing
+# use an alternate config for testing
 config = get_nose_config(mkdtemp())
 
 # run the initial main, which bootstraps the base application

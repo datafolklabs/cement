@@ -5,6 +5,14 @@
 #    Issue: https://github.com/derks/cement/issues/#issue/XX
 #
 
+0.8.17 - unreleased
+------------------------------------------------------------------------------
+
+ +  Pasted applications now include ./doc with already populated Sphinx 
+    documentation (Thanks to Steve Steiner for contributing the initial
+    phase of that).
+
+
 0.8.16 - Feb 07, 2011
 ------------------------------------------------------------------------------
 

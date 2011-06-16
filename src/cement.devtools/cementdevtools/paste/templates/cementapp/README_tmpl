@@ -21,6 +21,27 @@ Application configuration files are parsed in the following order:
     * /etc/{{package}}/{{package}}.conf
     * ~/.{{package}}.conf
 
+
+TESTING:
+
+Tests require 'nose', and 'coverage' to be installed, and are run via the 
+following command:
+
+    $ python setup.py nosetests
+    
+
+HTML coverage reports can be generated via the command (after running tests):
+
+    $ coverage html
+    
+    
+BUILDING DOCUMENTATION:
+
+The documentation is built as HTML, and located in ./doc/build via the 
+following command:
+
+    $ python setup.py build_sphinx
+    
     
 PLUGIN DEVELOPMENT:
 
