@@ -27,7 +27,7 @@ def test_setup_alternate_logging():
 
 @with_setup(setup_func, teardown_func)
 def test_setup_logging_per_config_file():
-    namespaces['root'].config['logging_config_file'] = './config/cement-test-logging.conf'
+    namespaces['root'].config['logging_config_file'] = '../config/cement-test-logging.conf'
     setup_logging()
 
 @raises(CementConfigError)

@@ -58,10 +58,12 @@ setup(name='cement.test',
         "ConfigObj",
         "Genshi",
         "cement >=0.8.9, <0.9",
-        "nose",
         "jsonpickle",
         ],
     setup_requires=[
+        ### Uncomment for nose testing + coverage
+        "nose",
+        "coverage",
         ],
     test_suite='nose.collector',
     entry_points="""
