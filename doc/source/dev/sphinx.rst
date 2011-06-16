@@ -15,3 +15,6 @@ Then run the following:
 .. code-block:: text
 
     $ python setup.py build_sphinx
+
+
+The documentation will be written to **./doc/build**.
