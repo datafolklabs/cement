@@ -21,4 +21,4 @@ them in your applications.
    dev/templates
    dev/cli_api
    dev/testing
-   
+   dev/sphinx
