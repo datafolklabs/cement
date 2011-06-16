@@ -61,6 +61,15 @@ Then run the following:
     $ python setup.py nosetests    
 
 
+If 'coverage' is installed, you will see a txt report after the tests run.
+You can also generate an HTML report by running:
+
+    $ coverage html
+    
+
+The report will be written to **./htmlcov**.
+
+
 Creating a Nose Test
 --------------------
 
