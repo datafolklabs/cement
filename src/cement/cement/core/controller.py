@@ -1,6 +1,6 @@
 """Methods and classes to handle Cement Controller functions."""
 
-from cement import namespaces
+from cement.core.configuration import namespaces
 from cement.core.log import get_logger
 from cement.core.exc import CementRuntimeError
 from cement.core.view import render

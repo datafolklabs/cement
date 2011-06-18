@@ -33,7 +33,7 @@ Feature Enhancements
  - :issue:`58` - Setup a BaseController(CementController) on pasted apps
    Note that this is not used by pasted plugins by default for backward
    compatibility reasons.
- 
+ - :issue:`63` - Cleanup application imports
  
 Misc Changes
 ^^^^^^^^^^^^

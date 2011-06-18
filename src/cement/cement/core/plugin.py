@@ -4,7 +4,7 @@ import os
 import re
 from configobj import ConfigObj
 
-from cement import namespaces
+from cement.core.configuration import namespaces
 from cement.core.exc import CementConfigError, CementRuntimeError
 from cement.core.log import get_logger, setup_logging_for_plugin_provider
 from cement.core.hook import run_hooks

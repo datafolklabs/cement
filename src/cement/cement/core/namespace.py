@@ -2,7 +2,7 @@
 
 import re
 
-from cement import namespaces
+from cement.core.configuration import namespaces
 from cement.core.log import get_logger
 from cement.core.exc import CementRuntimeError
 from cement.core.configuration import get_default_namespace_config, \

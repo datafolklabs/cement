@@ -2,7 +2,7 @@ Modules in {{package}}
 ======================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    modules/bootstrap
    modules/controllers

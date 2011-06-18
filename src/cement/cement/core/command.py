@@ -2,7 +2,7 @@
 
 import re
 
-from cement import namespaces
+from cement.core.configuration import namespaces
 from cement.core.log import get_logger
 from cement.core.hook import run_hooks
 from cement.core.opt import parse_options
@@ -10,7 +10,7 @@ from cement.core.controller import run_controller_command
 from cement.core.exc import CementArgumentError
 
 log = get_logger(__name__)
-        
+
 def run_command(cmd_name=None, ignore_conflicts=False):
     """
     Run the command or namespace-subcommand as defined by the 'expose()'

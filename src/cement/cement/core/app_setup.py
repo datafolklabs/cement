@@ -3,8 +3,9 @@
 import sys
 import logging
 
-from cement import namespaces
-from cement import buf_stdout, buf_stderr, SAVED_STDOUT, SAVED_STDERR
+from cement.core.configuration import namespaces
+from cement.core.configuration import buf_stdout, buf_stderr
+from cement.core.configuration import SAVED_STDOUT, SAVED_STDERR
 from cement.core.exc import CementConfigError
 from cement.core.configuration import set_config_opts_per_file
 from cement.core.configuration import validate_config, get_default_config
@@ -14,7 +15,21 @@ from cement.core.log import setup_logging, get_logger
 from cement.core.hook import define_hook, run_hooks
 from cement.core.handler import define_handler, register_handler
 from cement.core.view import GenshiOutputHandler, JsonOutputHandler
+from cement.core.command import run_command
       
+def process_args(args):
+    """
+    Process the arg (command line) and pass off to command.run_command.
+    
+    Returns: (result_dict, output_txt)
+    
+    """
+    if not len(args) > 1:
+        args.append('default')
+
+    (res, output_txt) = run_command(args[1])
+    return (res, output_txt)
+    
 def define_default_hooks():
     """
     Defines Cement framework hooks.

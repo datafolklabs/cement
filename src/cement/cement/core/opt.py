@@ -5,7 +5,7 @@ import sys
 import re
 import optparse
 
-from cement import namespaces
+from cement.core.configuration import namespaces
 from cement.core.log import get_logger
             
 log = get_logger(__name__)            

@@ -1,6 +1,6 @@
 """Cement Handlers configuration."""
 
-from cement import handlers
+from cement.core.configuration import handlers
 from cement.core.log import get_logger
 from cement.core.exc import CementRuntimeError
 

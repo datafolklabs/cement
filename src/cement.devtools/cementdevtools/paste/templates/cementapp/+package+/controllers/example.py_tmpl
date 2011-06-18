@@ -9,10 +9,7 @@ under:
   
 """
 
-from cement.core.namespace import get_config
-from cement.core.log import get_logger
-from cement.core.controller import expose
-from cement.core.hook import run_hooks
+from cement import expose, get_config, get_logger, hook
 
 from {{package}}.model.example import ExampleModel
 from {{package}}.core.controller import {{package.capitalize()}}Controller
@@ -54,7 +51,7 @@ class ExampleController({{package.capitalize()}}Controller):
         
         # Here we show how to run a hook that we've defined in
         # {{package}}.bootstrap.example:
-        for res in run_hooks('my_example_hook'):
+        for res in hook.run_hooks('my_example_hook'):
             print res
         
         # This command has no template, but if we return something we

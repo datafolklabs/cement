@@ -1,6 +1,6 @@
 """Methods and classes that enable Cement templating support."""
 
-from cement import namespaces, SAVED_STDOUT
+from cement.core.configuration import namespaces, SAVED_STDOUT
 from cement.core.handler import get_handler
 from cement.core.exc import CementRuntimeError
 from cement.core.log import get_logger

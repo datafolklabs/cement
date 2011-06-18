@@ -3,7 +3,7 @@ This is an example model.  This can be anything, just a straight class
 or perhaps an SQLAlchemy DeclarativeBase, etc.
 """
 
-from cement.core.log import get_logger
+from cement import get_logger
 
 log = get_logger(__name__)
 

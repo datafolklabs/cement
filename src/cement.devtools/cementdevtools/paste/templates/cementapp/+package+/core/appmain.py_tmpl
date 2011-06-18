@@ -8,15 +8,10 @@ not modify the main() function of this file.
 import sys
 from pkg_resources import get_distribution
 
-from cement.core.exc import CementArgumentError, CementConfigError
-from cement.core.exc import CementRuntimeError
-from cement.core.log import get_logger
-from cement.core.app_setup import lay_cement
-from cement.core.command import run_command
+from cement import get_logger, app_setup
+from cement.core import exc as cement_exc
 
-from {{package}}.core.config import default_config
-from {{package}}.core.exc import {{package.capitalize()}}ArgumentError, {{package.capitalize()}}ConfigError
-from {{package}}.core.exc import {{package.capitalize()}}RuntimeError
+from {{package}}.core import config, exc
 
 VERSION = get_distribution('{{project}}').version
 BANNER = """
@@ -28,34 +23,30 @@ def main(args=None):
         if not args:
             args = sys.argv
             
-        lay_cement(config=default_config, banner=BANNER, args=args, 
-                   version=VERSION)
-    
+        app_setup.lay_cement(config=config.default_config, args=args, 
+                             banner=BANNER, version=VERSION)
         log = get_logger(__name__)
         log.debug("Cement Framework Initialized!")
-
-        if not len(args) > 1:
-            args.append('default')
-        
-        run_command(args[1])
+        (res, output_txt) = app_setup.process_args(args)
+        return (res, output_txt)
             
-    except CementArgumentError, e:
+    except cement_exc.CementArgumentError, e:
         # Display the apps exception names instead for the Cement exceptions.
         print("{{package.capitalize()}}ArgumentError > %s" % e)
         sys.exit(e.code)
-    except CementConfigError, e:
+    except cement_exc.CementConfigError, e:
         print("{{package.capitalize()}}ConfigError > %s" % e)
         sys.exit(e.code)
-    except CementRuntimeError, e:
+    except cement_exc.CementRuntimeError, e:
         print("{{package.capitalize()}}RuntimeError > %s" % e)
         sys.exit(e.code)
-    except {{package.capitalize()}}ArgumentError, e:
+    except exc.{{package.capitalize()}}ArgumentError, e:
         print("{{package.capitalize()}}ArgumentError > %s" % e)
         sys.exit(e.code)
-    except {{package.capitalize()}}ConfigError, e:
+    except exc.{{package.capitalize()}}ConfigError, e:
         print("{{package.capitalize()}}ConfigError > %s" % e)
         sys.exit(e.code)
-    except {{package.capitalize()}}RuntimeError, e:
+    except exc.{{package.capitalize()}}RuntimeError, e:
         print("{{package.capitalize()}}RuntimeError > %s" % e)
         sys.exit(e.code)
     sys.exit(0)
@@ -85,14 +76,11 @@ def nose_main(args, test_config):
         
     """
     
-    lay_cement(config=test_config, banner=BANNER, args=args)
+    app_setup.lay_cement(config=test_config, banner=BANNER, args=args)
     log = get_logger(__name__)
     log.debug("Cement Framework Initialized!")
 
-    if not len(args) > 1:
-        args.append('default')
-
-    (res, output_txt) = run_command(args[1])
+    (res, output_txt) = app_setup.process_args(args)
     return (res, output_txt)
          
 if __name__ == '__main__':

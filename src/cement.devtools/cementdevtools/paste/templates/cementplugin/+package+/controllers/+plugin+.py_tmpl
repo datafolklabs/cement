@@ -1,7 +1,6 @@
 """{{plugin}} controller class to expose commands for {{project}}."""
 
 from cement.core.controller import CementController, expose
-
 from {{package}}.model.{{plugin}} import {{plugin.capitalize()}}Model
 
 # NOTE: As of Cement 0.8.17, new applications are created with a 

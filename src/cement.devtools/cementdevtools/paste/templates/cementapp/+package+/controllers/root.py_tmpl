@@ -3,11 +3,9 @@ This is the root controller module, which exposes commands to the 'root'
 namespace.
 
 """
-from cement.core.controller import expose
-from cement.core.namespace import get_config
-from cement.core.log import get_logger
+from cement import expose, get_config, get_logger
 
-from {{package}}.core.exc import {{package.capitalize()}}ArgumentError
+from {{package}}.core import exc
 from {{package}}.core.controller import {{package.capitalize()}}Controller
 
 log = get_logger(__name__)
@@ -70,7 +68,7 @@ class RootController({{package.capitalize()}}Controller):
         exception.
         
         """
-        raise {{project.capitalize()}}ArgumentError, \
+        raise exc.{{project.capitalize()}}ArgumentError, \
             "A command is required. See --help?"
     
     @expose('{{package}}.templates.root.cmd1')

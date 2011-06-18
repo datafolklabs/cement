@@ -7,11 +7,10 @@ by importing additional bootstrap files here.
 
 """
 
-from cement.core.opt import init_parser
-from cement.core.hook import register_hook
+from cement import init_parser, hook
 
 # Register root options
-@register_hook()
+@hook.register_hook()
 def options_hook(*args, **kwargs):
     """
     Using the options_hook, we add options to the root namespace.  Must

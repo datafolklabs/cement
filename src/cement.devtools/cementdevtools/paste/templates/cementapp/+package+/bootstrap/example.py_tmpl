@@ -4,10 +4,10 @@ bootstrap a plugin that is shipped as part of the primary application (where
 an external plugin is shipped separately outside the source tree).
 
 """
-from cement.core.hook import define_hook
+from cement import hook
 from cement.core.namespace import CementNamespace, register_namespace
 
-define_hook('my_example_hook')
+hook.define_hook('my_example_hook')
 
 # Setup the 'example' namespace object
 example = CementNamespace(

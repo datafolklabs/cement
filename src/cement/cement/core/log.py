@@ -2,7 +2,7 @@
 
 import logging
 
-from cement import namespaces
+from cement.core.configuration import namespaces
 from cement.core.exc import CementConfigError
 
 def setup_logging_for_plugin_provider(provider):

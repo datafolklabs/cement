@@ -1,6 +1,6 @@
 """Methods and classes to handle Cement Hook support."""
 
-from cement import hooks
+from cement.core.configuration import hooks
 from cement.core.exc import CementRuntimeError
 from cement.core.log import get_logger
 
