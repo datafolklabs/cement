@@ -204,9 +204,9 @@ class render(object):
                     f = open(res['output_file'], 'w+')
                     f.write(out_txt)
                     f.close()
-                elif out and self.config['log_to_console']:
+                elif out:
                     out.write(out_txt)
-                
+                    
                 # return res and out_txt, because we want it to be 
                 # readable when called directly from 
                 # run_controller_command()

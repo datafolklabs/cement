@@ -22,6 +22,7 @@ is available online at:
 Bug Fixes
 ^^^^^^^^^
  
+ - :issue:`52` - log_to_console seems to disable all console output
  - :issue:`53` - IndexError in cement.core.testing.simulate()
  - :issue:`54` - register_hook() decorator does not return the original func
  - :issue:`57` - ArgumentError references wrong command name
