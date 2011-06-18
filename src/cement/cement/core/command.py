@@ -70,5 +70,5 @@ def run_command(cmd_name=None, ignore_conflicts=False):
         return (res, out_txt)
     else:
         raise CementArgumentError, "Unknown command '%s', see --help?" % \
-                                   actual_cmd
+                                   orig_cmd
         
