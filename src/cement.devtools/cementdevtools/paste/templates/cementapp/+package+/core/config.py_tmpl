@@ -46,16 +46,18 @@ def get_default_config():
     """Return the default application config."""
     return default_config
 
-def get_nose_config(prefix=None):
+def get_nose_config(prefix=None, config_file=None):
     if not prefix:
         from tempfile import mkdtemp
         prefix = mkdtemp()
         
-    _dir = os.path.join(os.path.dirname(__file__), '../',  '../', 'config')
-    _dir = os.path.abspath(_dir)
+    if not config_file:
+        _dir = os.path.join(os.path.dirname(__file__), '../',  '../', 'config')
+        _dir = os.path.abspath(_dir)
+        config_file = os.path.join(_dir, '{{package}}.conf-test')
     
     tcf = ConfigObj() # test config
-    tcf['config_files'] = [os.path.join(_dir, '{{package}}.conf-test')]
+    tcf['config_files'] = [config_file]
     tcf['config_source'] = ['defaults']
     tcf['app_name'] = '{{project}}'
     tcf['app_egg_name'] = '{{project}}'

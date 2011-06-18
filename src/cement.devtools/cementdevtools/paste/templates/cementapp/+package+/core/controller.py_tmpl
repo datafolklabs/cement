@@ -1,0 +1,17 @@
+"""
+This is a base controller module for {{project}}.  It provides a means of 
+customizing the base controller that everything else inherits from.
+
+"""
+
+from cement.core.controller import CementController
+
+class {{package.capitalize()}}Controller(CementController):
+    def __init__(self, cli_opts=None, cli_args=None):
+        """
+        This is the base controller for {{project}}.  It can be customized
+        easily, and should be subclassed from all other controllers in the
+        application.
+        
+        """
+        CementController.__init__(self, cli_opts, cli_args)

@@ -92,10 +92,11 @@ A typical example of this would be
 
 .. code-block:: python
 
-    from cement.core.controller import CementController, expose
+    from cement.core.controller import expose
     from helloworld.model import root as model
+    from helloworld.core.controller import HelloworldController
     
-    class GreetingController(CementController):
+    class GreetingController(HelloworldController):
         @expose('helloworld.templates.greetings.sayhi', namespace='root')
         def sayhi(self):
             user = model.User(first=self.cli_opts.first_name, 
@@ -129,10 +130,11 @@ template rendering:
 
 .. code-block:: python
 
-    from cement.core.controller import CementController, expose
+    from cement.core.controller import expose
     from helloworld.model import root as model
+    from helloworld.core.controller import HelloworldController
     
-    class GreetingController(CementController):
+    class GreetingController(HelloworldController):
         @expose()
         def sayhi(self):
             user = model.User(first=self.cli_opts.first_name, 
@@ -147,6 +149,10 @@ has a Json output engine.  By adding '--json' to the end of your command, all
 output is suppressed and only the return data is rendered via Json.  In 
 addition stdout, and stderr are also added to the Json output.
 
+Note that each application has its own base class (HelloworldController) that
+subclasses CementController.  This provides a means of centralizing 
+customizations to the controller on a per application basis.  All plugins
+and controllers should subclass from your applications base class.
 
 The View
 ^^^^^^^^

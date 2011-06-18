@@ -11,14 +11,15 @@ under:
 
 from cement.core.namespace import get_config
 from cement.core.log import get_logger
-from cement.core.controller import CementController, expose
+from cement.core.controller import expose
 from cement.core.hook import run_hooks
 
 from {{package}}.model.example import ExampleModel
+from {{package}}.core.controller import {{package.capitalize()}}Controller
 
 log = get_logger(__name__)
 
-class ExampleController(CementController):
+class ExampleController({{package.capitalize()}}Controller):
     """
     The ExampleController demonstrates how to expose commands to the Cement
     Framework.

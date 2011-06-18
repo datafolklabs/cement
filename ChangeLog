@@ -28,7 +28,9 @@ Bug Fixes
 Feature Enhancements
 ^^^^^^^^^^^^^^^^^^^^
 
- - None
+ - :issue:`58` - Setup a BaseController(CementController) on pasted apps
+   Note that this is not used by pasted plugins by default for backward
+   compatibility reasons.
  
  
 Misc Changes

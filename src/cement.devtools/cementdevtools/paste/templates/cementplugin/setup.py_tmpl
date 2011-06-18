@@ -18,8 +18,13 @@ setup(name='{{project}}.{{plugin}}',
         "genshi",
         "cement >={{cement_version}}, <{{cement_next_version}}",
         "{{project}}",
+        ### Uncomment to build documentation:
+        # "sphinx",
         ],
     setup_requires=[
+        ### Uncomment for nose testing + coverage
+        # "nose",
+        # "coverage",
         ],
     test_suite='nose.collector',
     entry_points="""

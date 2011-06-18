@@ -3,16 +3,17 @@ This is the root controller module, which exposes commands to the 'root'
 namespace.
 
 """
-from cement.core.controller import CementController, expose
+from cement.core.controller import expose
 from cement.core.namespace import get_config
 from cement.core.log import get_logger
 
 from {{package}}.core.exc import {{package.capitalize()}}ArgumentError
+from {{package}}.core.controller import {{package.capitalize()}}Controller
 
 log = get_logger(__name__)
 config = get_config()
 
-class RootController(CementController):
+class RootController({{package.capitalize()}}Controller):
     """
     This is the RootController for the {{project}} application.  It is
     used to expose commands to the root namespace which will be accessible 

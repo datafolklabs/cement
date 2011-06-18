@@ -30,3 +30,11 @@
     :members:
     :inherited-members:
     :undoc-members:
+
+{{package}}.core.controller
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    
+.. automodule:: {{package}}.core.controller
+    :members:
+    :inherited-members:
+    :undoc-members:

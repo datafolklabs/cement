@@ -4,6 +4,16 @@ from cement.core.controller import CementController, expose
 
 from {{package}}.model.{{plugin}} import {{plugin.capitalize()}}Model
 
+# NOTE: As of Cement 0.8.17, new applications are created with a 
+# base controller in <yourapp>/core/controller.py.  For compatibility, we
+# haven't done that here by default... but if you want to you can
+# use {{package.capitalize()}}Controller instead of CementController 
+# if the app was built on Cement >=0.8.17.
+#
+# from {{package}}.core.controller import {{package.capitalize()}}Controller
+# class {{plugin.capitalize()}}Controller({{package.capitalize()}}Controller):
+#
+
 class {{plugin.capitalize()}}Controller(CementController):
     @expose()              
     def {{plugin}}_command(self):
