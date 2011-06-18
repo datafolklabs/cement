@@ -27,8 +27,7 @@ def main(args=None):
                              banner=BANNER, version=VERSION)
         log = get_logger(__name__)
         log.debug("Cement Framework Initialized!")
-        (res, output_txt) = app_setup.process_args(args)
-        return (res, output_txt)
+        app_setup.process_args(args)
             
     except cement_exc.CementArgumentError, e:
         # Display the apps exception names instead for the Cement exceptions.
