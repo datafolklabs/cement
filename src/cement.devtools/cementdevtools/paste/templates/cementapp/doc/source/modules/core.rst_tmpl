@@ -1,0 +1,32 @@
+
+{{package}}.core
+------------------------------------------------------------------------------
+
+.. automodule:: {{package}}.core
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+{{package}}.core.appmain
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: {{package}}.core.appmain
+    :members:
+    :inherited-members:
+    :undoc-members:
+    
+{{package}}.core.config
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: {{package}}.core.config
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+{{package}}.core.exc
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    
+.. automodule:: {{package}}.core.exc
+    :members:
+    :inherited-members:
+    :undoc-members:

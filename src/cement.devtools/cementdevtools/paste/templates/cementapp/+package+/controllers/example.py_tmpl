@@ -1,6 +1,9 @@
 """
-This is the ExampleController for the {{project}} application.  This can be used
-to expose commands to the example namespace which will be accessible under:
+This is the ExampleController for the {{project}} application.  This can be 
+used to expose commands to the example namespace which will be accessible 
+under:
+
+.. code-block:: text
 
     $ {{package}} example --help
   
@@ -16,6 +19,11 @@ from {{package}}.model.example import ExampleModel
 log = get_logger(__name__)
 
 class ExampleController(CementController):
+    """
+    The ExampleController demonstrates how to expose commands to the Cement
+    Framework.
+    
+    """
     @expose(namespace='example') # no template
     def ex1(self):
         """

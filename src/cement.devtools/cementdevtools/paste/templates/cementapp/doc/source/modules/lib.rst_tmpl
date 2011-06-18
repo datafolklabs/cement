@@ -1,0 +1,8 @@
+
+{{package}}.lib
+------------------------------------------------------------------------------
+
+.. automodule:: {{package}}.lib
+    :members:
+    :inherited-members:
+    :undoc-members:

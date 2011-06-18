@@ -1,0 +1,8 @@
+
+{{package}}.templates
+------------------------------------------------------------------------------
+
+.. automodule:: {{package}}.templates
+    :members:
+    :inherited-members:
+    :undoc-members:

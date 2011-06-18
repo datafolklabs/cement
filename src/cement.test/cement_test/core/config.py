@@ -45,9 +45,11 @@ default_config = dcf
 def get_nose_config(prefix=None):
     if not prefix:
         prefix = mkdtemp()
-        
+    _dir = os.path.join(os.path.dirname(__file__), '../',  '../', 'config')
+    _dir = os.path.abspath(_dir)
+    
     tcf = ConfigObj() # test config
-    tcf['config_files'] = [os.path.abspath('./config/cement-test.conf')]
+    tcf['config_files'] = [os.path.join(_dir, 'cement-test.conf')]
     tcf['config_source'] = ['defaults']
     tcf['app_name'] = 'cement_test' 
     tcf['app_egg_name'] = 'cement.test'
@@ -59,7 +61,7 @@ def get_nose_config(prefix=None):
     tcf['datadir'] = '%s/data' % prefix
     tcf['tmpdir'] = '%s/tmp' % prefix
     tcf['log_file'] = '%s/log/%s.log' % (prefix, tcf['app_name'])
-    tcf['plugin_config_dir'] = './config/plugins.d' 
+    tcf['plugin_config_dir'] = '../config/plugins.d' 
     tcf['log_to_console'] = False
     tcf['output_engine'] = 'genshi'
     tcf['show_plugin_load'] = False

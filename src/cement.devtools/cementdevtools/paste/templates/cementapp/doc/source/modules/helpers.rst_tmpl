@@ -1,0 +1,8 @@
+
+{{package}}.helpers
+------------------------------------------------------------------------------
+
+.. automodule:: {{package}}.helpers
+    :members:
+    :inherited-members: 
+    :undoc-members:

@@ -4,6 +4,7 @@ that need to exist before all controllers are loaded.  It is best used to
 define hooks, setup namespaces, and the like.  The root namespace is 
 already bootstrapped by Cement, however you can extend that functionality
 by importing additional bootstrap files here.
+
 """
 
 from cement.core.opt import init_parser
@@ -12,6 +13,11 @@ from cement.core.hook import register_hook
 # Register root options
 @register_hook()
 def options_hook(*args, **kwargs):
+    """
+    Using the options_hook, we add options to the root namespace.  Must
+    return a tuple in the form of ('namespace', <options_object>)
+    
+    """
     # This hook allows us to append options to the root namespace
     root_options = init_parser()
     root_options.add_option('-R', '--root-option', action ='store_true', 

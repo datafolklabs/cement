@@ -43,18 +43,10 @@ import optparse
 from paste.script import command
 from paste.script import create_distro
 
+from cementdevtools import CEMENT_VERSION, CEMENT_NEXT_VERSION
+
 beginning_letter = re.compile(r"^[^a-z]*")
 valid_only = re.compile(r"[^a-z0-9_\.]")
-
-CEMENT_VERSION = pkg_resources.get_distribution('cement').version
-
-(base, major) = CEMENT_VERSION.split('.')[:2]
-CEMENT_MAJOR_VERSION = '.'.join(CEMENT_VERSION.split('.')[:2])
-
-if int(major)%2==0:
-    CEMENT_NEXT_VERSION = float(CEMENT_MAJOR_VERSION) + 0.1
-else:
-    CEMENT_NEXT_VERSION = float(CEMENT_MAJOR_VERSION) + 0.2
 
 class CementAppCommand(command.Command):
     """Create a new CLI Application using the Cement Framework.

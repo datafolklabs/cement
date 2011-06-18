@@ -51,8 +51,11 @@ def get_nose_config(prefix=None):
         from tempfile import mkdtemp
         prefix = mkdtemp()
         
+    _dir = os.path.join(os.path.dirname(__file__), '../',  '../', 'config')
+    _dir = os.path.abspath(_dir)
+    
     tcf = ConfigObj() # test config
-    tcf['config_files'] = [os.path.abspath('./config/{{package}}.conf-test')]
+    tcf['config_files'] = [os.path.join(_dir, '{{package}}.conf-test')]
     tcf['config_source'] = ['defaults']
     tcf['app_name'] = '{{project}}'
     tcf['app_egg_name'] = '{{project}}'

@@ -4,14 +4,11 @@ Nose Testing Your Application
 Because the majority of features in Cement rely on a loaded application to 
 access them, testing is a bit more complex than simply running nose on your
 source tree.  There are some features built into Cement and the devtools
-templates that provide a semi-standard means of testing our application
+templates that provide a semi-standard means of testing your application.
 
 Obviously, there are other means of testing besides Nose but it is a very
 common standard for testing.  For more information on Nose please see their
 `website <http://somethingaboutorange.com/mrl/projects/nose/0.11.2/>`_.
-
-Configuring Nose Tests
-----------------------
 
 The primary thing to note about nose testing is that your base application 
 needs to be loaded in order to test it, however because nose runs all tests
@@ -43,6 +40,34 @@ only.
 It is important to note that nosetests must be run from the root of your
 applications sources (by default)... and that as the application grows you 
 must add tests to ./tests to test new features.
+
+
+Running Tests
+-------------
+
+To run the included tests, and future tests that get added you need to first
+install the 'nose' package, and also (optionally) install the 'coverage'
+package.
+
+.. code-block:: text
+
+    $ easy_install nose coverage
+    
+
+Then run the following:
+
+.. code-block:: text
+
+    $ python setup.py nosetests    
+
+
+If 'coverage' is installed, you will see a txt report after the tests run.
+You can also generate an HTML report by running:
+
+    $ coverage html
+    
+
+The report will be written to **./htmlcov**.
 
 
 Creating a Nose Test
@@ -90,6 +115,6 @@ starting point to getting basic testing of your application going.
 
 Be sure to look in the ./tests directory of your application to see a working
 example of this documentation (as of 0.8.9).  Additionally, you can review the
-code of the `Cement Test <http://github.com/derks/cement.test>`_ application which provides 95% test coverage of the
-Cement framework.
+code of the `Cement Test <https://github.com/derks/cement/tree/master/src/cement.test>`_ 
+application which provides 95% test coverage of the Cement framework.
 

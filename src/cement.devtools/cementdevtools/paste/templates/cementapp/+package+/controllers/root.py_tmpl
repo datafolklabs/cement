@@ -1,11 +1,8 @@
 """
-This is the RootController for the {{project}} application.  This can be used
-to expose commands to the root namespace which will be accessible under:
+This is the root controller module, which exposes commands to the 'root'
+namespace.
 
-    $ {{package}} --help
-  
 """
-
 from cement.core.controller import CementController, expose
 from cement.core.namespace import get_config
 from cement.core.log import get_logger
@@ -16,11 +13,22 @@ log = get_logger(__name__)
 config = get_config()
 
 class RootController(CementController):
+    """
+    This is the RootController for the {{project}} application.  It is
+    used to expose commands to the root namespace which will be accessible 
+    under:
+
+    .. code-block:: text
+    
+        $ {{package}} --help
+
+    """
+    
     @expose('{{package}}.templates.root.error', is_hidden=True)
     def error(self, errors=[]):
         """
-        This can be called when catching exceptions giving the developer a 
-        clean way of presenting errors to the user.
+        The error() method can be called when catching exceptions giving the 
+        developer a clean way of presenting errors to the user.
         
         Required Arguments:
         
@@ -50,7 +58,7 @@ class RootController(CementController):
     
     @expose(is_hidden=True)
     def nosetests(self):
-        """This method is added for nose testing."""
+        """This method is added for nose testing, and does not do anything."""
         pass
         
     @expose(is_hidden=True)
@@ -61,7 +69,8 @@ class RootController(CementController):
         exception.
         
         """
-        raise {{project.capitalize()}}ArgumentError, "A command is required. See --help?"
+        raise {{project.capitalize()}}ArgumentError, \
+            "A command is required. See --help?"
     
     @expose('{{package}}.templates.root.cmd1')
     def cmd1(self):
@@ -78,6 +87,12 @@ class RootController(CementController):
     
     @expose('{{package}}.templates.root.get-started')
     def get_started(self):
+        """
+        This method provides the 'getting-started' command and demonstrates
+        creating a Cement command and where the output is rendered by 
+        Genshi.
+        
+        """
         features = [
             'Multiple Configuration file parsing (default: /etc, ~/)',
             'Command line argument and option parsing',

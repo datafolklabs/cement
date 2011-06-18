@@ -1,0 +1,24 @@
+
+{{package}}.bootstrap
+------------------------------------------------------------------------------
+
+.. automodule:: {{package}}.bootstrap
+    :members:
+    :inherited-members:
+    :undoc-members:
+
+{{package}}.bootstrap.example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: {{package}}.bootstrap.example
+    :members:
+    :inherited-members:
+    :undoc-members:
+    
+{{package}}.bootstrap.root
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: {{package}}.bootstrap.root
+    :members:
+    :inherited-members:
+    :undoc-members:

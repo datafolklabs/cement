@@ -1,0 +1,13 @@
+Modules in {{package}}
+======================
+
+.. toctree::
+   :maxdepth: 2
+
+   modules/bootstrap
+   modules/controllers
+   modules/core
+   modules/helpers
+   modules/lib
+   modules/model
+   modules/templates
