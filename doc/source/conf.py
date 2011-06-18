@@ -15,7 +15,7 @@ import sys, os
 from pkg_resources import get_distribution
 
 VERSION = '0.8'
-RELEASE = '0.8.16'
+RELEASE = '0.8.17'
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -27,7 +27,12 @@ sys.path.append(os.path.abspath('../../src/cement.devtools/'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.extlinks'
+    ]
+
+extlinks = {'issue' : ('https://github.com/derks/cement/issues/%s', 'Issue #')}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

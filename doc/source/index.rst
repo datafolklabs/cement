@@ -34,8 +34,17 @@ Contents
 --------
 
 .. toctree::
+   :maxdepth: 1
+   
+   changes
+   
+.. toctree::
    :maxdepth: 2
 
    api
+
+.. toctree::
+   :maxdepth: 2
+       
    dev
 

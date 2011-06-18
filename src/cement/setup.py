@@ -62,9 +62,8 @@ setup(name='cement',
         "ConfigObj",
         "jsonpickle",
         "Genshi",
-        # Required for documentation
-        #"Sphinx >= 1.0",
-        #"Pygments",
+        ### Required for documentation
+        # "Sphinx >=1.0",
         ],
     setup_requires=[
         ],
