@@ -21,14 +21,15 @@ is available online at:
 
 Bug Fixes
 ^^^^^^^^^
-
+ 
+ - :issue:`53` - IndexError in cement.core.testing.simulate()
+ - :issue:`57` - ArgumentError references wrong command name
  - :issue:`61` - Set default 'next' version in paster templates
  
 
 Feature Enhancements
 ^^^^^^^^^^^^^^^^^^^^
 
- - :issue:`57` - ArgumentError references wrong command name
  - :issue:`58` - Setup a BaseController(CementController) on pasted apps
    Note that this is not used by pasted plugins by default for backward
    compatibility reasons.

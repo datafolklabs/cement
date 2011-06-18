@@ -17,7 +17,7 @@ from cement.core.namespace import get_config
 from cement.core.testing import simulate
 from cement.core.exc import CementRuntimeError
 
-from {{package}}.core.exc import {{project.capitalize()}}ArgumentError
+from {{package}}.core.exc import {{package.capitalize()}}ArgumentError
 
 config = get_config()
     
@@ -41,8 +41,15 @@ def test_cmd1_output():
     
     # You can test values in the result dictionary directly
     ok_(res_dict['foo'])
-    
-@raises({{project.capitalize()}}ArgumentError)
+
+@raises({{package.capitalize()}}ArgumentError)
+@with_setup(setup_func, teardown_func)
+def test_default_raises_exception():
+    # This fails because only the default command is to raise an exception
+    args = [__file__]
+    (res_dict, output_txt) = simulate(args)
+        
+@raises({{package.capitalize()}}ArgumentError)
 @with_setup(setup_func, teardown_func)
 def test_default_cmd():
     # The default action is to raise an application error if an unknown 

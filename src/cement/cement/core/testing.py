@@ -31,6 +31,10 @@ def simulate(args):
         raise CementRuntimeError, "args must be set properly."
         
     sys.argv = args
-    cmd = re.sub('-', '_', sys.argv[1])
+    try:
+        cmd = re.sub('-', '_', sys.argv[1])
+    except IndexError:
+        cmd = 'default'
+        
     (res_dict, output_txt) = run_command(cmd_name=cmd, ignore_conflicts=True)
     return (res_dict, output_txt)
