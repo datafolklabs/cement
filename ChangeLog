@@ -23,6 +23,7 @@ Bug Fixes
 ^^^^^^^^^
  
  - :issue:`53` - IndexError in cement.core.testing.simulate()
+ - :issue:`54` - register_hook() decorator does not return the original func
  - :issue:`57` - ArgumentError references wrong command name
  - :issue:`61` - Set default 'next' version in paster templates
  

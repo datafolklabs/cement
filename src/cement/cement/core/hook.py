@@ -76,6 +76,7 @@ class register_hook(object):
         hooks[self.name].append(
             (int(self.weight), func.__name__, func)
         )
+        return func
 
 
 def run_hooks(name, *args, **kwargs):
