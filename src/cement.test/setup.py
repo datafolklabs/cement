@@ -61,7 +61,7 @@ setup(name='cement.test',
         "jsonpickle",
         ],
     setup_requires=[
-        ### Uncomment for nose testing + coverage
+        ### Required for nose testing + coverage
         "nose",
         "coverage",
         ],
