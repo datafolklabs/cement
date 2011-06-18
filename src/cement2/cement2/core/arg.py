@@ -16,7 +16,6 @@ def arg_handler_invariant(obj):
         ]
         
     for member in members:
-        print member
         if not hasattr(obj, member):
             invalid.append(member)
     

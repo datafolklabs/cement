@@ -13,6 +13,7 @@ config['base']['extensions'].append('configobj')
 #config['base']['extensions'].append('configparser')
 #config['base']['extensions'].append('logging')
 config['base']['extensions'].append('json')
+config['base']['extensions'].append('yaml')
 #config['base']['extensions'].append('argparse')
 
 app = foundation.lay_cement('myapp', defaults=config)
@@ -62,12 +63,7 @@ app.config.set('base', 'johnny', 'asdfasfasdf')
 app.log.info('JOHNNY')
 app.log.debug('KAPLA')
 
-#print app.output
-#c.log.info('blah')
-
 for i in hook.run('myhook'):
-    print i
-
-print app.output
+    pass
 
 print app.output.render(dict(foo='bar'))

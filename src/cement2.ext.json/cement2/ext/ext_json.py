@@ -1,6 +1,5 @@
-"""ConfigObj Framework Extension for Cement."""
+"""Json Framework Extension for Cement."""
 
-import os
 import sys
 import jsonpickle
 from zope import interface
@@ -19,6 +18,11 @@ class JsonOutputHandler(object):
         This handler implements the IOutputHandler interface.  It provides
         JSON output from a return dictionary and uses jsonpickle to dump it
         to STDOUT.
+        
+        Note: The cement framework detects the '--json' option and suppresses
+        output (same as if passing --quiet).  Therefore, if debugging or 
+        troubleshooting issues you must pass the --debug option to see whats
+        going on .
         
         """
         self.config = None
@@ -42,7 +46,7 @@ class JsonOutputHandler(object):
         
     def render(self, data_dict, template=None, unpicklable=False):
         """
-        Take a data dictionary and render it as Json output.  Not that the
+        Take a data dictionary and render it as Json output.  Note that the
         template option is received here per the interface, however this 
         handler just ignores it.
         
@@ -53,7 +57,7 @@ class JsonOutputHandler(object):
                 
         Optional Arguments:
         
-            templates
+            template
                 This option is completely ignored.
                 
             unpicklable
@@ -62,7 +66,7 @@ class JsonOutputHandler(object):
         Returns: string (json)
         
         """
-        Log.debug("rendering output as JSON via %s" % self.__module__)
+        Log.debug("rendering output as Json via %s" % self.__module__)
         sys.stdout = backend.STDOUT
         sys.stderr = backend.STDERR
         return jsonpickle.encode(data_dict, unpicklable=unpicklable)
