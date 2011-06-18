@@ -41,12 +41,21 @@ def lay_cement(name, *args, **kw):
         defaults['log']['level'] = 'DEBUG'
         defaults['base']['debug'] = True
     elif '--quiet' in argv:
-        defaults['log']['level'] = 'fatal'
-        defaults['base']['debug'] = False
+        defaults['log']['to_console'] = False
         
         # a hack to suppress output
-        sys.stdout = open('/dev/null', 'w')
-        sys.stderr = open('/dev/null', 'w')
+        sys.stdout = open('/dev/null', 'w+')
+        sys.stderr = open('/dev/null', 'w+')
+
+    elif '--json' in argv or '--yaml' in argv:
+        # The framework doesn't provide --json/--yaml options but rather
+        # extensions do.  That said, the --json/--yaml extensions are shipped
+        # with our source so we can add a few hacks here.
+        defaults['log']['to_console'] = False
+        
+        # a hack to suppress output
+        sys.stdout = open('/dev/null', 'w+')
+        sys.stderr = open('/dev/null', 'w+')
         
     # define framework hooks
     hook.define('cement_init_hook')
@@ -204,6 +213,8 @@ class CementApp(object):
         self.arg.setup(self.config)
         self.arg.minimal_add_argument('--debug', dest='debug', 
             action='store_true', help='toggle debug output')
+        self.arg.minimal_add_argument('--quiet', dest='suppress_output', 
+            action='store_true', help='suppress all output')
         for arg_obj in hook.run('cement_add_args_hook', self.config, self.arg):
             pass
                  
