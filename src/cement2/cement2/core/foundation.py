@@ -34,8 +34,8 @@ def lay_cement(name, *args, **kw):
     else:
         defaults = backend.defaults()
         
-    argv = kw.get('argv', sys.argv)
-    
+    argv = kw.get('argv', sys.argv[1:])
+
     # basic logging setup first (mostly for debug/error)
     if '--debug' in argv:
         defaults['log']['level'] = 'DEBUG'
@@ -86,7 +86,7 @@ def lay_cement(name, *args, **kw):
     handler.register(plugin.CementPluginHandler)
     handler.register(output.CementOutputHandler)
     
-    app = CementApp(name, defaults=defaults, *args, **kw)
+    app = CementApp(name, defaults=defaults, argv=argv, *args, **kw)
     return app
     
 class CementApp(object):
@@ -94,7 +94,7 @@ class CementApp(object):
         self.name = name
         self.defaults = kw.get('defaults', backend.defaults())
         self.defaults['base']['app_name'] = self.name
-        self.argv = kw.get('argv', sys.argv)
+        self.argv = kw.get('argv', sys.argv[1:])
         
         # default all handlers to None
         self.extension = None
