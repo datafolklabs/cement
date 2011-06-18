@@ -34,13 +34,66 @@ Coverage can be enabled by uncommenting it in setup.py:
         ],
 
 
-When running tests, a coverage report will display after completion.  You can
-also generate HTML reports by executing the following:
+When running tests, a coverage report will display after completion like the
+following:
 
 .. code-block:: text
 
     $ python setup.py nosetests
+    running nosetests
+    running egg_info
+    writing requirements to {{project}}.egg-info/requires.txt
+    writing {{project}}.egg-info/PKG-INFO
+    writing namespace_packages to {{project}}.egg-info/namespace_packages.txt
+    writing top-level names to {{project}}.egg-info/top_level.txt
+    writing dependency_links to {{project}}.egg-info/dependency_links.txt
+    writing entry points to {{project}}.egg-info/entry_points.txt
+    writing paster_plugins to {{project}}.egg-info/paster_plugins.txt
+    reading manifest file '{{project}}.egg-info/SOURCES.txt'
+    reading manifest template 'MANIFEST.in'
+    writing manifest file '{{project}}.egg-info/SOURCES.txt'
+    running build_ext
+    nose.config: INFO: Set working dir to {{project}}/tests
+    nose.config: INFO: Working directory {{project}}/tests is a package; adding to sys.path
+    nose.plugins.cover: INFO: Coverage report will include only packages: ['{{package}}']
+    tests.00_initialize_tests.test_initialize ... ok
+    tests.example_tests.test_cmd1_output ... ok
+    tests.example_tests.test_default_raises_exception ... ok
+    tests.example_tests.test_default_cmd ... ok
+    tests.example_tests.test_config_cli_options ... ok
+
+    Name                             Stmts   Miss  Cover   Missing
+    --------------------------------------------------------------
+    {{project}}                           1      1     0%   1
+    {{project}}.bootstrap                 1      1     0%   1
+    {{project}}.bootstrap.example         7      0   100%   
+    {{project}}.bootstrap.root            8      0   100%   
+    {{project}}.controllers               1      1     0%   1
+    {{project}}.controllers.example      23     10    57%   55, 70, 98-107, 112-114
+    {{project}}.controllers.root         24      6    75%   56, 84-85, 95-107
+    {{project}}.core                      1      0   100%   
+    {{project}}.core.appmain             42     27    36%   22-51, 86
+    {{project}}.core.config              46      3    93%   47, 51-52
+    {{project}}.core.controller           4      0   100%   
+    {{project}}.core.exc                 21      6    71%   11, 14, 19-20, 25-26
+    {{project}}.helpers                   1      1     0%   1
+    {{project}}.lib                       1      1     0%   1
+    {{project}}.model                     1      1     0%   1
+    {{project}}.model.example             6      0   100%   
+    {{project}}.templates                 1      1     0%   1
+    {{project}}.templates.root            0      0   100%   
+    --------------------------------------------------------------
+    TOTAL                              189     59    69%   
+    ----------------------------------------------------------------------
+    Ran 5 tests in 0.011s
+
+    OK
+
+
+You can also generate HTML reports by running:
     
+.. code-block:: text
+
     $ coverage html
 
 The reports will be created at **./htmlcov**.
