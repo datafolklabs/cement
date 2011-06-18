@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 
+import sys
 from cement2.core import foundation, backend, hook
 
 config = backend.defaults()
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
-config['base']['config_handler'] = 'configparser'
-config['base']['output_handler'] = 'json'
+config['base']['config_handler'] = 'configobj'
+#config['base']['output_handler'] = 'json'
 
 # extensions
-#config['base']['extensions'].append('configobj')
+config['base']['extensions'].append('configobj')
 #config['base']['extensions'].append('configparser')
 #config['base']['extensions'].append('logging')
 config['base']['extensions'].append('json')
+#config['base']['extensions'].append('argparse')
 
 app = foundation.lay_cement('myapp', defaults=config)
 
@@ -30,9 +32,30 @@ def my_hook_three(*args, **kw):
     return 'in my_hook_three'
 
 
+class MyAppBaseController(object):
+    __namespace__ = 'base'
+    
+    def __visible__(self):
+        # return all exposed commands
+        pass
+        
+    def __hidden__(self):
+        # return all hidden commands
+        pass
+        
+    def _hidden_cmd(self):
+        print "in hidden-cmd"
+        
+    def cmd1(self):
+        print 'in cmd1'
+
+#app.controllers.append()
 
 
 #app.config = ConfigObjConfigHandler()
+app.setup()
+app.argv = sys.argv[1:]
+app.arg.minimal_add_argument('-t', dest='t', action='store', help='t var')
 app.run()
 app.config.set('base', 'johnny', 'asdfasfasdf')
 
@@ -44,5 +67,7 @@ app.log.debug('KAPLA')
 
 for i in hook.run('myhook'):
     print i
+
+print app.output
 
 print app.output.render(dict(foo='bar'))

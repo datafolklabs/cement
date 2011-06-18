@@ -20,7 +20,7 @@ def defaults(app_name=None):
     dcf['base']['config_files'] = []
     dcf['base']['config_source'] = ['default']
     dcf['base']['debug'] = False
-    dcf['base']['extensions'] = ['configparser', 'logging']
+    dcf['base']['extensions'] = ['configparser', 'logging', 'argparse']
     dcf['base']['plugins'] = []
     dcf['base']['plugin_config_dir'] = None
     dcf['base']['plugin_dir'] = None
@@ -28,13 +28,11 @@ def defaults(app_name=None):
     # default handlers
     dcf['base']['config_handler'] = 'configparser'
     dcf['base']['log_handler'] = 'logging'
+    dcf['base']['arg_handler'] = 'argparse'
     dcf['base']['plugin_handler'] = 'cement'
     dcf['base']['extension_handler'] = 'cement'
     dcf['base']['output_handler'] = 'cement'
-    dcf['base']['option_handler'] = 'default'
-    dcf['base']['command_handler'] = 'default'
-    dcf['base']['hook_handler'] = 'default'
-    dcf['base']['error_handler'] = 'default'
+    
 
     # default application configuration
     dcf['log'] = {}
@@ -81,8 +79,9 @@ hooks = {}
 # Save original stdout/stderr for supressing output.
 # FIX ME: Removing this for now, need a sane way to do it... or not at all
 #
-#SAVED_STDOUT = sys.stdout
-#SAVED_STDERR = sys.stderr
+SAVED_STDOUT = sys.stdout
+SAVED_STDERR = sys.stderr
+
 #
 #class StdOutBuffer(object):
 #    buffer = ''

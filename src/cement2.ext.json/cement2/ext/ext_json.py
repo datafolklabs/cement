@@ -1,10 +1,11 @@
 """ConfigObj Framework Extension for Cement."""
 
 import os
+import sys
 import jsonpickle
 from zope import interface
 
-from cement2.core import handler, output, backend
+from cement2.core import handler, output, backend, hook
 
 Log = backend.minimal_logger(__name__)
 
@@ -38,12 +39,13 @@ class JsonOutputHandler(object):
         
         """
         Log.debug("rendering json output")
-        
-        #data_dict['stdout'] = backend.buf_stdout.buffer
-        #data_dict['stderr'] = backend.buf_stderr.buffer
+        sys.stdout = backend.SAVED_STDOUT
+        sys.stderr = backend.SAVED_STDERR
         return jsonpickle.encode(data_dict, unpicklable=unpicklable)
             
 handler.register(JsonOutputHandler)
 
-# FIX ME: Add an 'options' hook here to add the --json option and override
-# the config['base']['output_handler'].
+@hook.register()
+def cement_add_args_hook(config, arg_obj):
+    arg_obj.minimal_add_argument('--json', dest='output_handler', 
+        action='store_const', help='toggle json output handler', const='json')
