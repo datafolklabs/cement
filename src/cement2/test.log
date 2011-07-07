@@ -1,0 +1,69 @@
+2011-06-18 06:24:29,211 (INFO) myapp : JOHNNY
+2011-06-18 06:24:35,194 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 06:24:35,195 (INFO) myapp : JOHNNY
+2011-06-18 06:24:35,195 (DEBUG) myapp : KAPLA
+2011-06-18 06:45:43,533 (INFO) myapp : JOHNNY
+2011-06-18 06:46:09,340 (INFO) myapp : JOHNNY
+2011-06-18 07:40:13,306 (INFO) myapp : JOHNNY
+2011-06-18 07:40:20,103 (INFO) myapp : JOHNNY
+2011-06-18 07:42:55,865 (INFO) myapp : JOHNNY
+2011-06-18 07:43:04,997 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 07:43:04,997 (INFO) myapp : JOHNNY
+2011-06-18 07:43:04,998 (DEBUG) myapp : KAPLA
+2011-06-18 07:47:43,359 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 07:48:17,851 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 07:48:27,292 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 07:49:03,532 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 07:51:29,911 (INFO) myapp : JOHNNY
+2011-06-18 07:51:45,379 (INFO) myapp : JOHNNY
+2011-06-18 07:53:03,278 (INFO) myapp : JOHNNY
+2011-06-18 07:54:31,138 (INFO) myapp : JOHNNY
+2011-06-18 07:54:50,978 (INFO) myapp : JOHNNY
+2011-06-18 08:07:34,478 (INFO) myapp : JOHNNY
+2011-06-18 08:09:16,538 (INFO) myapp : JOHNNY
+2011-06-18 08:28:49,418 (INFO) myapp : JOHNNY
+2011-06-18 08:40:42,828 (INFO) myapp : JOHNNY
+2011-06-18 08:40:45,753 (INFO) myapp : JOHNNY
+2011-06-18 08:52:46,300 (INFO) myapp : JOHNNY
+2011-06-18 08:58:35,561 (INFO) myapp : JOHNNY
+2011-06-18 08:59:11,099 (INFO) myapp : JOHNNY
+2011-06-18 09:01:30,043 (INFO) myapp : JOHNNY
+2011-06-18 09:03:59,338 (INFO) myapp : JOHNNY
+2011-06-18 09:04:22,472 (INFO) myapp : JOHNNY
+2011-06-18 09:04:56,384 (INFO) myapp : JOHNNY
+2011-06-18 09:05:37,634 (INFO) myapp : JOHNNY
+2011-06-18 09:09:48,243 (INFO) myapp : JOHNNY
+2011-06-18 09:24:24,083 (INFO) myapp : JOHNNY
+2011-06-18 09:24:42,345 (INFO) myapp : JOHNNY
+2011-06-18 09:28:07,770 (INFO) myapp : JOHNNY
+2011-06-18 09:29:32,309 (INFO) myapp : JOHNNY
+2011-06-18 15:23:50,359 (INFO) myapp : JOHNNY
+2011-06-18 15:25:05,883 (INFO) myapp : JOHNNY
+2011-06-18 15:25:43,429 (INFO) myapp : JOHNNY
+2011-06-18 15:31:21,566 (INFO) myapp : JOHNNY
+2011-06-18 15:35:41,534 (INFO) myapp : JOHNNY
+2011-06-18 15:38:04,235 (INFO) myapp : JOHNNY
+2011-06-18 15:38:11,806 (INFO) myapp : JOHNNY
+2011-06-18 15:42:40,285 (INFO) myapp : JOHNNY
+2011-06-18 15:42:51,120 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 15:42:51,123 (INFO) myapp : JOHNNY
+2011-06-18 15:42:51,123 (DEBUG) myapp : KAPLA
+2011-06-18 15:43:03,397 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 15:43:03,400 (INFO) myapp : JOHNNY
+2011-06-18 15:43:03,400 (DEBUG) myapp : KAPLA
+2011-06-18 15:43:25,607 (INFO) myapp : JOHNNY
+2011-06-18 15:44:09,147 (INFO) myapp : JOHNNY
+2011-06-18 15:45:53,827 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 15:54:37,583 (INFO) myapp : JOHNNY
+2011-06-18 15:54:41,506 (INFO) myapp : JOHNNY
+2011-06-18 15:54:46,470 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 15:54:46,473 (INFO) myapp : JOHNNY
+2011-06-18 15:54:46,474 (DEBUG) myapp : KAPLA
+2011-06-18 15:55:14,224 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 15:55:14,226 (INFO) myapp : JOHNNY
+2011-06-18 15:55:14,226 (DEBUG) myapp : KAPLA
+2011-06-18 15:55:25,976 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+2011-06-18 15:55:25,978 (INFO) myapp : JOHNNY
+2011-06-18 15:55:25,978 (DEBUG) myapp : KAPLA
+2011-06-18 15:57:53,829 (INFO) myapp : JOHNNY
+2011-06-18 15:57:56,840 (INFO) myapp : JOHNNY
