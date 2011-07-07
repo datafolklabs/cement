@@ -64,6 +64,8 @@ Then run the following:
 If 'coverage' is installed, you will see a txt report after the tests run.
 You can also generate an HTML report by running:
 
+.. code-block:: text
+
     $ coverage html
     
 
