@@ -9,12 +9,27 @@ All bugs/feature details can be found at:
 Where XXXXX is the 'Issue #' referenced below.  Additionally, this change log
 is available online at:
 
-    http://builtoncement.org/cement/0.8/doc/changes
+    http://builtoncement.org/cement/0.8/doc/changes.html
 
 .. raw:: html
 
     <BR><BR>
     
+
+0.8.19 - development (will be released as 0.8.20)
+------------------------------------------------------------------------------
+
+Bug Fixes
+^^^^^^^^^
+ 
+ - None
+
+
+Feature Enhancements
+^^^^^^^^^^^^^^^^^^^^
+
+ - None
+
 
 0.8.18 - Wed Jul 06, 2011 
 ------------------------------------------------------------------------------
