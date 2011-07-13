@@ -5,90 +5,12 @@ import sys
 from cement2.core import backend, exc, handler, hook, log, config, plugin
 from cement2.core import output, extension, arg
 
-Log = backend.minimal_logger(__name__)
+Log = backend.minimal_logger(__name__)    
     
-def lay_cement(name, *args, **kw):
-    """
-    Initialize the framework.
-
-    Required Arguments:
-    
-        name
-            The name of the application.
-            
-        
-    Optional Keyword Arguments:
-
-        defaults
-            The default config dictionary, other wise use backend.defaults().
-            
-        argv
-            List of args to use.  Default: sys.argv.
-    
-    """
-    Log.debug("laying cement for the '%s' application" % name)
-    
-    if kw.get('defaults'):
-        defaults = kw['defaults']
-        del kw['defaults']
-    else:
-        defaults = backend.defaults()
-        
-    argv = kw.get('argv', sys.argv[1:])
-
-    # basic logging setup first (mostly for debug/error)
-    if '--debug' in argv:
-        defaults['log']['level'] = 'DEBUG'
-        defaults['base']['debug'] = True
-    elif '--quiet' in argv:
-        defaults['log']['to_console'] = False
-        
-        # a hack to suppress output
-        sys.stdout = open('/dev/null', 'w+')
-        sys.stderr = open('/dev/null', 'w+')
-
-    elif '--json' in argv or '--yaml' in argv:
-        # The framework doesn't provide --json/--yaml options but rather
-        # extensions do.  That said, the --json/--yaml extensions are shipped
-        # with our source so we can add a few hacks here.
-        defaults['log']['to_console'] = False
-        
-        # a hack to suppress output
-        sys.stdout = open('/dev/null', 'w+')
-        sys.stderr = open('/dev/null', 'w+')
-        
-    # define framework hooks
-    hook.define('cement_init_hook')
-    hook.define('cement_add_args_hook')
-    hook.define('cement_post_args_hook')
-    hook.define('cement_validate_config_hook')
-    hook.define('cement_pre_plugins_hook')
-    hook.define('cement_post_plugins_hook')
-    hook.define('cement_post_bootstrap_hook')
-    
-    for res in hook.run('cement_init_hook'):
+class NullOut():
+    def write(self, s):
         pass
         
-    # define and register handlers    
-    handler.define('log', log.ILogHandler)
-    handler.define('config', config.IConfigHandler)
-    handler.define('extension', extension.IExtensionHandler)
-    handler.define('plugin', plugin.IPluginHandler)
-    handler.define('output', output.IOutputHandler)
-    handler.define('arg', arg.IArgumentHandler)
-    #define_handler('command')
-    #define_handler('hook')
-    #define_handler('error')
-    
-    #handler.register(config.ConfigParserConfigHandler)
-    #handler.register(log.LoggingLogHandler)
-    handler.register(extension.CementExtensionHandler)
-    handler.register(plugin.CementPluginHandler)
-    #handler.register(output.CementOutputHandler)
-    
-    app = CementApp(name, defaults=defaults, argv=argv, *args, **kw)
-    return app
-    
 class CementApp(object):
     def __init__(self, name, **kw):
         self.name = name
@@ -232,3 +154,83 @@ class CementApp(object):
         """
         pass
         
+        
+def lay_cement(name, klass=CementApp, *args, **kw):
+    """
+    Initialize the framework.
+
+    Required Arguments:
+    
+        name
+            The name of the application.
+            
+        
+    Optional Keyword Arguments:
+
+        klass
+            The 'CementApp' class to instantiate and return.
+            
+        defaults
+            The default config dictionary, other wise use backend.defaults().
+            
+        argv
+            List of args to use.  Default: sys.argv.
+    
+    """
+    Log.debug("laying cement for the '%s' application" % name)
+    
+    if kw.get('defaults'):
+        defaults = kw['defaults']
+        del kw['defaults']
+    else:
+        defaults = backend.defaults()
+        
+    argv = kw.get('argv', sys.argv[1:])
+
+    # basic logging setup first (mostly for debug/error)
+    if '--debug' in argv:
+        defaults['log']['level'] = 'DEBUG'
+        defaults['base']['debug'] = True
+    elif '--quiet' in argv:
+        defaults['log']['to_console'] = False
+        
+        # a hack to suppress output
+        sys.stdout = NullOut()
+        sys.stderr = NullOut()
+
+    elif '--json' in argv or '--yaml' in argv:
+        # The framework doesn't provide --json/--yaml options but rather
+        # extensions do.  That said, the --json/--yaml extensions are shipped
+        # with our source so we can add a few hacks here.
+        defaults['log']['to_console'] = False
+        
+        # a hack to suppress output
+        sys.stdout = NullOut()
+        sys.stderr = NullOut()
+        
+    # define framework hooks
+    hook.define('cement_init_hook')
+    hook.define('cement_add_args_hook')
+    hook.define('cement_post_args_hook')
+    hook.define('cement_validate_config_hook')
+    hook.define('cement_pre_plugins_hook')
+    hook.define('cement_post_plugins_hook')
+    hook.define('cement_post_bootstrap_hook')
+    
+    for res in hook.run('cement_init_hook'):
+        pass
+        
+    # define and register handlers    
+    handler.define('log', log.ILogHandler)
+    handler.define('config', config.IConfigHandler)
+    handler.define('extension', extension.IExtensionHandler)
+    handler.define('plugin', plugin.IPluginHandler)
+    handler.define('output', output.IOutputHandler)
+    handler.define('arg', arg.IArgumentHandler)
+    
+    # extension handler is the only thing that can't be loaded... as, well, an
+    # extension.  ;)
+    handler.register(extension.CementExtensionHandler)
+    
+    app = klass(name, defaults=defaults, argv=argv, *args, **kw)
+    return app

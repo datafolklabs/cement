@@ -78,22 +78,6 @@ class IPluginHandler(interface.Interface):
         
         """
 
-class CementPluginHandler(object):
-    __handler_type__ = 'plugin'
-    __handler_label__ = 'cement'
-    interface.implements(IPluginHandler)
-    loaded_plugins = []
-    
-    def setup(self, config_obj):
-        self.config = config_obj
-        self.enabled_plugins = []
-        
-    def load_plugin(self, plugin_name):
-        Log.debug("loading application plugin '%s'" % plugin_name)
-        pass
-    
-    def load_plugins(self, plugin_list):
-        pass
         
 
     

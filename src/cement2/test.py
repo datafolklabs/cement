@@ -6,10 +6,13 @@ from cement2.core import foundation, backend, hook
 config = backend.defaults()
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
 config['base']['config_handler'] = 'configobj'
+config['base']['arg_handler'] = 'argparse'
 #config['base']['output_handler'] = 'json'
 
 # extensions
 config['base']['extensions'].append('cement2.ext.ext_configobj')
+config['base']['extensions'].append('cement2.ext.ext_optparse')
+
 #config['base']['extensions'].append('configparser')
 #config['base']['extensions'].append('logging')
 #config['base']['extensions'].append('json')
@@ -67,3 +70,4 @@ for i in hook.run('myhook'):
     pass
 
 print app.output.render(dict(foo='bar'))
+print app.extension.loaded_extensions

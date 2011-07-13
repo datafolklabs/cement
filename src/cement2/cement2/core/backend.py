@@ -22,11 +22,17 @@ def defaults(app_name=None):
     dcf['base']['debug'] = False
     dcf['base']['plugins'] = []
     dcf['base']['plugin_config_dir'] = None
-    dcf['base']['plugin_dir'] = None
+    
+    # FIX ME: need to implement
+    dcf['base']['plugin_bootstrap_module'] = 'helloworld.bootstrap'
+    dcf['base']['plugin_directory'] = '/usr/lib/helloworld/plugins'
+    
+    # FIX ME: Also, Should there be a [plugins] block?
     
     # default extensions
     dcf['base']['extensions'] = [  
         'cement2.ext.ext_cement_output',
+        'cement2.ext.ext_cement_plugin',
         'cement2.ext.ext_configparser', 
         'cement2.ext.ext_logging', 
         'cement2.ext.ext_argparse',
@@ -86,8 +92,8 @@ hooks = {}
 # Save original stdout/stderr for supressing output.
 # FIX ME: Removing this for now, need a sane way to do it... or not at all
 #
-STDOUT = sys.stdout
-STDERR = sys.stderr
+#STDOUT = sys.stdout
+#STDERR = sys.stderr
 
 #
 #class StdOutBuffer(object):

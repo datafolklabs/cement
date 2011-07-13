@@ -116,6 +116,3 @@ class CementExtensionHandler(object):
     def load_extensions(self, ext_list):
         for ext in ext_list:
             self.load_extension(ext)
-        
-
-    
