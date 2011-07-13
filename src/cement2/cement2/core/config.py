@@ -12,7 +12,7 @@ def config_handler_invariant(obj):
         'setup',
         'keys', 
         'has_key',
-        'sections', 
+        'get_sections', 
         'get', 
         'set', 
         'parse_file', 
@@ -91,7 +91,7 @@ class IConfigHandler(interface.Interface):
         Returns: list
         """
             
-    def sections():
+    def get_sections():
         """
         Return a list of configuration sections.
         

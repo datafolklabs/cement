@@ -24,7 +24,7 @@ class ConfigParserConfigHandler(RawConfigParser):
     __handler_label__ = 'configparser'
     __handler_type__ = 'config'
     interface.implements(IConfigHandler)
-    
+        
     def setup(self, defaults, *args, **kw):
         """
         Take the default config dict and merge it into self.
@@ -94,5 +94,8 @@ class ConfigParserConfigHandler(RawConfigParser):
             return True
         else:
             return False
+     
+    def get_sections(self):
+        return self.sections()
             
 handler.register(ConfigParserConfigHandler)

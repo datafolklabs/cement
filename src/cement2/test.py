@@ -9,11 +9,11 @@ config['base']['config_handler'] = 'configobj'
 #config['base']['output_handler'] = 'json'
 
 # extensions
-config['base']['extensions'].append('configobj')
+config['base']['extensions'].append('cement2.ext.ext_configobj')
 #config['base']['extensions'].append('configparser')
 #config['base']['extensions'].append('logging')
-config['base']['extensions'].append('json')
-config['base']['extensions'].append('yaml')
+#config['base']['extensions'].append('json')
+#config['base']['extensions'].append('yaml')
 #config['base']['extensions'].append('argparse')
 
 app = foundation.lay_cement('myapp', defaults=config)

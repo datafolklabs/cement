@@ -12,17 +12,13 @@ class ConfigObjConfigHandler(ConfigObj):
     
     interface.implements(config.IConfigHandler)
     
-    # We put this here because sections is a property in ConfigObj
-    # and fails the invariant tests.
-    sections = []
-    
     def __init__(self, *args, **kw):
         """
         This is an implementation of the IConfigHandler interface, which
         uses the ConfigObj library.  We subclass from ConfigObj, and
         pass *args, **kwargs directly to it.
         """
-        ConfigObj.__init__(self, *args, **kw)
+        super(ConfigObjConfigHandler, self).__init__(*args, **kw)
         
     def setup(self, defaults):
         """
@@ -30,7 +26,11 @@ class ConfigObjConfigHandler(ConfigObj):
         
         """
         self.merge(defaults)
-        
+    
+    def get_sections(self):
+        # ConfigObj sections is a list (not a function)
+        return self.sections
+            
     def parse_file(self, file_path):
         """
         Parse config file settings from file_path, overwriting existing 

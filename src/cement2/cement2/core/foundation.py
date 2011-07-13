@@ -84,7 +84,7 @@ def lay_cement(name, *args, **kw):
     #handler.register(log.LoggingLogHandler)
     handler.register(extension.CementExtensionHandler)
     handler.register(plugin.CementPluginHandler)
-    handler.register(output.CementOutputHandler)
+    #handler.register(output.CementOutputHandler)
     
     app = CementApp(name, defaults=defaults, argv=argv, *args, **kw)
     return app
@@ -153,7 +153,7 @@ class CementApp(object):
         for member in dir(self.arg.result):
             if member.startswith('_'):
                 continue
-            for section in self.config.sections:
+            for section in self.config.get_sections():
                 if member in self.config.keys(section):
                     self.config.set(section, member, 
                                     getattr(self.arg.result, member))

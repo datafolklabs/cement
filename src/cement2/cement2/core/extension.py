@@ -99,17 +99,17 @@ class CementExtensionHandler(object):
     def setup(self, defaults):
         self.defaults = defaults
         
-    def load_extension(self, ext_name):
-        module = "cement2.ext.ext_%s" % ext_name
+    def load_extension(self, ext_module):
+        #module = "cement2.ext.ext_%s" % ext_name
         
-        if module in self.loaded_extensions:
-            Log.debug("framework extension '%s' already loaded" % module)
+        if ext_module in self.loaded_extensions:
+            Log.debug("framework extension '%s' already loaded" % ext_module)
             return 
             
-        Log.debug("loading the '%s' framework extension" % module)
+        Log.debug("loading the '%s' framework extension" % ext_module)
         try:
-            __import__(module)
-            self.loaded_extensions.append(module)
+            __import__(ext_module)
+            self.loaded_extensions.append(ext_module)
         except ImportError, e:
             raise exc.CementRuntimeError, e.args[0]
     

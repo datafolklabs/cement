@@ -18,12 +18,19 @@ def defaults(app_name=None):
     dcf['base'] = {}
     dcf['base']['app_name'] = app_name
     dcf['base']['config_files'] = []
-    dcf['base']['config_source'] = ['default']
+    dcf['base']['config_source'] = ['defaults']
     dcf['base']['debug'] = False
-    dcf['base']['extensions'] = ['configparser', 'logging', 'argparse']
     dcf['base']['plugins'] = []
     dcf['base']['plugin_config_dir'] = None
     dcf['base']['plugin_dir'] = None
+    
+    # default extensions
+    dcf['base']['extensions'] = [  
+        'cement2.ext.ext_cement_output',
+        'cement2.ext.ext_configparser', 
+        'cement2.ext.ext_logging', 
+        'cement2.ext.ext_argparse',
+        ]
     
     # default handlers
     dcf['base']['config_handler'] = 'configparser'
