@@ -1,13 +1,10 @@
 """Cement core log module."""
 
 from zope import interface
-from cement2.core import exc
-        
+from cement2.core import exc, backend
+            
 def log_handler_invariant(obj):
-    invalid = []
     members = [
-        '__handler_label__',
-        '__handler_type__',
         'setup',
         'clear_loggers',
         'set_level',
@@ -18,15 +15,8 @@ def log_handler_invariant(obj):
         'fatal', 
         'debug', 
         ]
-        
-    for member in members:
-        if not hasattr(obj, member):
-            invalid.append(member)
-    
-    if invalid:
-        raise exc.CementInterfaceError, \
-            "Invalid or missing: %s in %s" % (invalid, obj)
-            
+    backend.validate_invariants(obj, members)        
+                
 class ILogHandler(interface.Interface):
     """
     This class defines the Log Handler Interface.  Classes that 
@@ -34,9 +24,7 @@ class ILogHandler(interface.Interface):
     below.
         
     """
-    # internal mechanism for handler registration
-    __handler_type__ = interface.Attribute('Handler Type Identifier')
-    __handler_label__ = interface.Attribute('Handler Label Identifier')
+    meta = interface.Attribute('Handler meta-data')
     interface.invariant(log_handler_invariant)
     
     def setup(config_obj):

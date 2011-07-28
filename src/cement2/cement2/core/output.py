@@ -7,21 +7,11 @@ from cement2.core import backend, exc
 Log = backend.minimal_logger(__name__)
 
 def output_handler_invariant(obj):
-    invalid = []
     members = [
-        '__handler_label__',
-        '__handler_type__',
         'setup',
         'render',
         ]
-        
-    for member in members:
-        if not hasattr(obj, member):
-            invalid.append(member)
-    
-    if invalid:
-        raise exc.CementInterfaceError, \
-            "Invalid or missing: %s in %s" % (invalid, obj)
+    backend.validate_invariants(obj, members)    
     
 class IOutputHandler(interface.Interface):
     """
@@ -30,9 +20,7 @@ class IOutputHandler(interface.Interface):
     below.
     
     """
-    # internal mechanism for handler registration
-    __handler_type__ = interface.Attribute('Handler Type Identifier')
-    __handler_label__ = interface.Attribute('Handler Label Identifier')
+    meta = interface.Attribute('Handler meta-data')
     file_suffix = interface.Attribute('The file suffix (I.e. .txt, etc.)')
     interface.invariant(output_handler_invariant)
     

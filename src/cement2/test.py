@@ -71,5 +71,7 @@ app.log.debug('KAPLA')
 for i in hook.run('myhook'):
     pass
 
+print app.config['log']
+
 print app.render(dict(foo='bar'))
 #print app.extension.loaded_extensions

@@ -1,14 +1,10 @@
 """Cement core config module."""
 
 from zope import interface
-from cement2.core import exc
+from cement2.core import exc, backend
 
 def config_handler_invariant(obj):
-    invalid = []
     members = [
-        '__init__',
-        '__handler_label__',
-        '__handler_type__',
         'setup',
         'keys', 
         'has_key',
@@ -18,14 +14,7 @@ def config_handler_invariant(obj):
         'parse_file', 
         'merge',
         ]
-        
-    for member in members:
-        if not hasattr(obj, member):
-            invalid.append(member)
-    
-    if invalid:
-        raise exc.CementInterfaceError, \
-            "Invalid or missing: %s in %s" % (invalid, obj)
+    backend.validate_invariants(obj, members)
     
 class IConfigHandler(interface.Interface):
     """
@@ -42,9 +31,7 @@ class IConfigHandler(interface.Interface):
     instantiated.
     
     """
-    # internal mechanism for handler registration
-    __handler_type__ = interface.Attribute('Handler Type Identifier')
-    __handler_label__ = interface.Attribute('Handler Label Identifier')
+    meta = interface.Attribute('Handler meta-data')
     interface.invariant(config_handler_invariant)
             
     def setup(defaults):

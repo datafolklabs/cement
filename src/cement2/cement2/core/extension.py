@@ -7,24 +7,13 @@ from cement2.core import backend, exc
 Log = backend.minimal_logger(__name__)
 
 def extension_handler_invariant(obj):
-    invalid = []
     members = [
-        '__init__',
-        '__handler_label__',
-        '__handler_type__',
         'setup',
         'load_extension',
         'load_extensions',
         'loaded_extensions',
         ]
-        
-    for member in members:
-        if not hasattr(obj, member):
-            invalid.append(member)
-    
-    if invalid:
-        raise exc.CementInterfaceError, \
-            "Invalid or missing: %s in %s" % (invalid, obj)
+    backend.validate_invariants(obj, members)
     
 class IExtensionHandler(interface.Interface):
     """
@@ -33,9 +22,7 @@ class IExtensionHandler(interface.Interface):
     below.
     
     """
-    # internal mechanism for handler registration
-    __handler_type__ = interface.Attribute('Handler Type Identifier')
-    __handler_label__ = interface.Attribute('Handler Label Identifier')
+    meta = interface.Attribute('Handler meta-data')
     loaded_extensions = interface.Attribute('List of loaded extensions')
     interface.invariant(extension_handler_invariant)
     
@@ -86,12 +73,13 @@ class CementExtensionHandler(object):
     loading framework extensions.
     
     """
-    
-    __handler_type__ = 'extension'
-    __handler_label__ = 'cement'
     interface.implements(IExtensionHandler)
     loaded_extensions = []
     
+    class meta:
+        type = 'extension'
+        label = 'cement'
+
     def __init__(self):
         self.defaults = {}
         self.enabled_extensions = []

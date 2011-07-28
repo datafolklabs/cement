@@ -8,11 +8,11 @@ from cement2.core import handler, hook, output, backend
 Log = backend.minimal_logger(__name__)
 
 class YamlOutputHandler(object):
-    __handler_type__ = 'output'
-    __handler_label__ = 'yaml'
-    
     interface.implements(output.IOutputHandler)
-    
+    class meta:
+        type = 'output'
+        label = 'yaml'
+        
     def __init__(self):
         """
         This handler implements the IOutputHandler interface.  It provides

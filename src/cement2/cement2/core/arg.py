@@ -6,22 +6,12 @@ from cement2.core import backend, exc
 Log = backend.minimal_logger(__name__)
 
 def arg_handler_invariant(obj):
-    invalid = []
     members = [
-        '__handler_label__',
-        '__handler_type__',
         'setup',
         'parse',
         'result',
         ]
-        
-    for member in members:
-        if not hasattr(obj, member):
-            invalid.append(member)
-    
-    if invalid:
-        raise exc.CementInterfaceError, \
-            "Invalid or missing: %s in %s" % (invalid, obj)
+    backend.validate_invariants(obj, members)
     
 class IArgumentHandler(interface.Interface):
     """
@@ -72,8 +62,12 @@ class IArgumentHandler(interface.Interface):
                 The help test for --help output.
             
             action
-                Must be one of: ['store', 'store_true', 'store_false']
+                Must be one of: ['store', 'store_true', 'store_false', 
+                'store_const']
             
+            const
+                The value stored if action == 'store_const'.
+                
             default
                 The default value.
                 

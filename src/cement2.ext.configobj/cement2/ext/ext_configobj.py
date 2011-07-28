@@ -7,11 +7,11 @@ from configobj import ConfigObj
 from cement2.core import handler, config
 
 class ConfigObjConfigHandler(ConfigObj):
-    __handler_type__ = 'config'
-    __handler_label__ = 'configobj'
-    
     interface.implements(config.IConfigHandler)
-    
+    class meta:
+        type = 'config'
+        label = 'configobj'
+        
     def __init__(self, *args, **kw):
         """
         This is an implementation of the IConfigHandler interface, which

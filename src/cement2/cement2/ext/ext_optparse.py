@@ -7,10 +7,12 @@ from cement2.core import backend, handler, arg
 Log = backend.minimal_logger(__name__)
     
 class OptParseArgumentHandler(OptionParser):
-    __handler_type__ = 'arg'
-    __handler_label__ = 'optparse'
     interface.implements(arg.IArgumentHandler)
     result = None
+    
+    class meta:
+        type = 'arg'
+        label = 'optparse'
     
     def __init__(self, *args, **kw):
         OptionParser.__init__(self, *args, **kw)

@@ -3,6 +3,8 @@
 import sys
 import logging
 
+from cement2.core import exc
+
 def defaults(app_name=None):
     """
     Get a standard, default config.
@@ -48,16 +50,16 @@ def defaults(app_name=None):
     
 
     # default application configuration
-    dcf['log'] = {}
-    dcf['log']['file'] = None
-    dcf['log']['level'] = 'INFO'
-    dcf['log']['to_console'] = True
-    dcf['log']['rotate'] = False
-    dcf['log']['max_bytes'] = 512000
-    dcf['log']['max_files'] = 4
-    dcf['log']['file_formatter'] = None
-    dcf['log']['console_formatter'] = None
-    dcf['log']['clear_loggers'] = True
+    #dcf['log'] = {}
+    #dcf['log']['file'] = None
+    #dcf['log']['level'] = 'INFO'
+    #dcf['log']['to_console'] = True
+    #dcf['log']['rotate'] = False
+    #dcf['log']['max_bytes'] = 512000
+    #dcf['log']['max_files'] = 4
+    #dcf['log']['file_formatter'] = None
+    #dcf['log']['console_formatter'] = None
+    #dcf['log']['clear_loggers'] = True
     return dcf
 
 def minimal_logger(name, debug=False):
@@ -82,29 +84,52 @@ def minimal_logger(name, debug=False):
         
     log.addHandler(console)
     return log
+
+def validate_invariants(obj, members):
+    """
+    A wrapper to validate interfaces.
     
+    Required Arguments:
+    
+        obj
+            The object to validate.
+            
+        members
+            The object members that must exist.
+            
+    Also validates the following (as all interface implementations must
+    have a meta class which includes a type and label (at the minimum)):
+    
+        meta
+        meta.type
+        meta.label
+        
+    """
+    invalid = []
+    
+    for member in members:
+        if not hasattr(obj, member):
+            invalid.append(member)
+    
+    if not hasattr(obj, 'meta'):
+        invalid.append("meta")
+    else:
+        for member in ['type', 'label']:
+            if not hasattr(obj.meta, member):
+                invalid.append("meta.%s" % member)
+            
+    if invalid:
+        raise exc.CementInterfaceError, \
+            "Invalid or missing: %s in %s" % (invalid, obj)
+
 # global handlers dict
 handlers = {}
 
 # global hooks dict
 hooks = {}
 
-# Save original stdout/stderr for supressing output.
-# FIX ME: Removing this for now, need a sane way to do it... or not at all
-#
+# Save original stdout/stderr for supressing output.  This is actually reset
+# in foundation.lay_cement before nullifying output, but we set it here
+# just for a default.
 SAVED_STDOUT = sys.stdout
 SAVED_STDERR = sys.stderr
-
-#
-#class StdOutBuffer(object):
-#    buffer = ''
-#    def write(self, text):
-#        self.buffer += text
-#        
-#class StdErrBuffer(object):
-#    buffer = ''
-#    def write(self, text):
-#        self.buffer += text
-#
-#buf_stdout = StdOutBuffer()
-#buf_stderr = StdErrBuffer()

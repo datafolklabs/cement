@@ -29,32 +29,29 @@ class CementApp(object):
         # initialize handlers if passed in and set config to reflect
         if kw.get('config_handler', None):
             self.config = kw['config_handler']
-            self.config.set('base', 'config_handler', 
-                            self.config.__handler_label__)
+            self.config.set('base', 'config_handler', self.config.meta.label)
         
         if kw.get('extension_handler', None):
             self.extension = kw['extension_handler']
             self.config.set('base', 'extension_handler', 
-                            self.extension.__handler_label__)
+                            self.extension.meta.label)
                             
         if kw.get('log_handler', None):
             self.log = kw['log_handler']
-            self.config.set('base', 'log_handler', 
-                            self.log.__handler_label__)
+            self.config.set('base', 'log_handler', self.log.meta.label)
                                     
         if kw.get('plugin_handler', None):
             self.plugin = kw['plugin_handler']
-            self.config.set('base', 'plugin_handler', 
-                            self.plugin.__handler_label__)
+            self.config.set('base', 'plugin_handler', self.plugin.meta.label)
         
         if kw.get('arg_handler', None):
             self.arg = kw['arg_handler']
-            self.config.set('base', 'arg_handler', self.arg.__handler_label__)
+            self.config.set('base', 'arg_handler', self.arg.meta.label)
             
         if kw.get('output_handler', None):
             self.output = kw['output_handler']
             self.config.set('base', 'output_handler', 
-                            self.output.__handler_label__)
+                            self.output.meta.label)
 
     def setup(self):
         """
@@ -107,7 +104,32 @@ class CementApp(object):
             return ''
         else:
             return self.output.render(data, template)
+            
+    def _set_handler_defaults(self, handler_obj):
+        """
+        Set config defaults per handler defaults if the config key is not 
+        already set.
         
+        Required Arguments:
+        
+            handler_obj
+                An instantiated handler object.
+                
+        """
+        
+        if hasattr(handler_obj.meta, 'defaults'):
+            Log.debug("setting config defaults from handlers['%s']['%s']" % \
+                     (handler_obj.meta.type, 
+                      handler_obj.meta.label)) 
+            for key in handler_obj.meta.defaults:
+                if not self.config.has_key(handler_obj.meta.type, key):
+                    self.config.set(handler_obj.meta.type, key,
+                                    handler_obj.meta.defaults[key])
+        else:
+            Log.debug("no config defaults from handlers['%s']['%s']" % \
+                     (handler_obj.meta.type, 
+                      handler_obj.meta.label))                        
+                     
     def _parse_args(self):
         self.arg.parse(self.argv)
         for member in dir(self.arg.result):
@@ -124,17 +146,21 @@ class CementApp(object):
         
         # If the output handler was changed after parsing args, then
         # we need to set it up again.
-        if self.config.get('base', 'output_handler') \
-            != self.output.__handler_label__:                                  
-            self.output = None
+        if self.output:
+            if self.config.get('base', 'output_handler') \
+                != self.output.meta.label:
+                self.output = None
+                self._setup_output_handler()
+        else:
             self._setup_output_handler()
-        
+            
     def _setup_extension_handler(self):
         Log.debug("setting up %s.extension handler" % self.name) 
         if not self.extension:
             h = handler.get('extension', 
                             self.defaults['base']['extension_handler'])
             self.extension = h()
+        self._set_handler_defaults(self.extension)
         self.extension.setup(self.defaults)
         self.extension.load_extensions(self.defaults['base']['extensions'])
         
@@ -147,12 +173,13 @@ class CementApp(object):
         self.config.setup(self.defaults)
         for _file in self.config.get('base', 'config_files'):
             self.config.parse_file(_file)
-
+                                    
     def _setup_log_handler(self):
         Log.debug("setting up %s.log handler" % self.name)
         if not self.log:
             h = handler.get('log', self.config.get('base', 'log_handler'))
             self.log = h()
+        self._set_handler_defaults(self.log)
         self.log.setup(self.config)
            
     def _setup_plugin_handler(self):
@@ -161,6 +188,7 @@ class CementApp(object):
             h = handler.get('plugin', 
                             self.config.get('base', 'plugin_handler'))
             self.plugin = h()
+        self._set_handler_defaults(self.plugin)
         self.plugin.setup(self.config)
         
     def _setup_output_handler(self):
@@ -171,6 +199,7 @@ class CementApp(object):
             h = handler.get('output', 
                             self.config.get('base', 'output_handler'))
             self.output = h()
+        self._set_handler_defaults(self.output)
         self.output.setup(self.config)
          
     def _setup_arg_handler(self):
@@ -178,6 +207,7 @@ class CementApp(object):
         if not self.arg:
             h = handler.get('arg', self.config.get('base', 'arg_handler'))
             self.arg = h()
+        self._set_handler_defaults(self.arg)
         self.arg.setup(self.config)
         self.arg.minimal_add_argument('--debug', dest='debug', 
             action='store_true', help='toggle debug output')
@@ -236,10 +266,8 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     # basic logging setup first (mostly for debug/error)
     suppress_output = False
     if '--debug' in argv:
-        defaults['log']['level'] = 'DEBUG'
         defaults['base']['debug'] = True
     elif '--quiet' in argv:
-        defaults['log']['to_console'] = False
         suppress_output = True
         
     elif '--json' in argv or '--yaml' in argv:

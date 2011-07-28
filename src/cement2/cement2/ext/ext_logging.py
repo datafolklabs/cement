@@ -6,8 +6,34 @@ from cement2.core import exc, util, handler
 from cement2.core.log import ILogHandler
         
 class LoggingLogHandler(object):  
+    class meta:
+        type = 'log'
+        label = 'logging'
+        defaults = dict(
+            file=None,
+            level='INFO',
+            to_console=True,
+            rotate=False,
+            max_bytes=512000,
+            max_files=4,
+            clear_loggers=True,
+            )
+        
     __handler_type__ = 'log'
     __handler_label__ = 'logging'
+    
+    # these are the default config values, overridden by any '[log]' section
+    # in parsed config files.
+    __defaults__ = dict(
+        file=None,
+        level='INFO',
+        to_console=True,
+        rotate=False,
+        max_bytes=512000,
+        max_files=4,
+        clear_loggers=True,
+        )
+        
     interface.implements(ILogHandler)
     levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
 
@@ -60,7 +86,10 @@ class LoggingLogHandler(object):
             level
                 The level to log at.  Must be one of ['INFO', 'WARN', 'ERROR', 
                 'DEBUG', 'FATAL'].  Default: INFO.
-                
+        
+        
+        Configuration Options
+        
         The following configuration options are recognized in this class:
         
             base.app_name
@@ -71,6 +100,18 @@ class LoggingLogHandler(object):
             log.max_bytes
             log.max_files
             log.clear_loggers
+        
+        A sample config section (in any config file) might look like:
+        
+        .. code-block::text
+        
+            [log]
+            file = /path/to/config/file
+            level = info
+            to_console = true
+            rotate = true
+            max_bytes = 512000
+            max_files = 4
             
         """  
         self.config = kw.get('config', None)

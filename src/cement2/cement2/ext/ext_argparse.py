@@ -8,10 +8,11 @@ Log = backend.minimal_logger(__name__)
 
     
 class ArgParseArgumentHandler(ArgumentParser):
-    __handler_type__ = 'arg'
-    __handler_label__ = 'argparse'
-    result = None
     interface.implements(arg.IArgumentHandler)
+    result = None
+    class meta:
+        type = 'arg'
+        label = 'argparse'
     
     def __init__(self, *args, **kw):
         ArgumentParser.__init__(self, *args, **kw)

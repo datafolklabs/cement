@@ -12,12 +12,13 @@ class CementOutputHandler(object):
     nothing to generate output.
     
     """
-    __handler_type__ = 'output'
-    __handler_label__ = 'cement'
+    interface.implements(output.IOutputHandler)
     file_suffix = None
     
-    interface.implements(output.IOutputHandler)
-    
+    class meta:
+        type = 'output'
+        label = 'cement'
+        
     def setup(self, config_obj):
         self.config = config_obj
         

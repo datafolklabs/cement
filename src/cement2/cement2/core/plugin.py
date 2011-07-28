@@ -7,23 +7,13 @@ from cement2.core import backend, exc
 Log = backend.minimal_logger(__name__)
 
 def plugin_handler_invariant(obj):
-    invalid = []
     members = [
-        '__handler_label__',
-        '__handler_type__',
         'setup',
         'load_plugin',
         'load_plugins',
         'loaded_plugins',
         ]
-        
-    for member in members:
-        if not hasattr(obj, member):
-            invalid.append(member)
-    
-    if invalid:
-        raise exc.CementInterfaceError, \
-            "Invalid or missing: %s in %s" % (invalid, obj)
+    backend.validate_invariants(obj, members)
     
 class IPluginHandler(interface.Interface):
     """
@@ -32,9 +22,7 @@ class IPluginHandler(interface.Interface):
     below.
     
     """
-    # internal mechanism for handler registration
-    __handler_type__ = interface.Attribute('Handler Type Identifier')
-    __handler_label__ = interface.Attribute('Handler Label Identifier')
+    meta = interface.Attribute('Handler meta-data')
     loaded_plugins = interface.Attribute('List of loaded plugins')
     interface.invariant(plugin_handler_invariant)
     

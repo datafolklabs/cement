@@ -8,11 +8,11 @@ from cement2.core import handler, output, backend, hook
 Log = backend.minimal_logger(__name__)
 
 class JsonOutputHandler(object):
-    __handler_type__ = 'output'
-    __handler_label__ = 'json'
-    
     interface.implements(output.IOutputHandler)
-    
+    class meta:
+        type = 'output'
+        label = 'json'
+        
     def __init__(self):
         """
         This handler implements the IOutputHandler interface.  It provides

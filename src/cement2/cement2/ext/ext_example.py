@@ -5,10 +5,11 @@ from zope import interface
 from cement2.core import output, handler
 
 class ExampleOutputHandler(object):
-    __handler_type__ = 'output'
-    __handler_label__ = 'example'
     interface.implements(output.IOutputHandler)
-    
+    class meta:
+        type = 'output'
+        label = 'example'
+        
     def __init__(self):
         self.config = None
     

@@ -21,9 +21,10 @@ class ConfigParserConfigHandler(RawConfigParser):
     ConfigParser library.
     
     """
-    __handler_label__ = 'configparser'
-    __handler_type__ = 'config'
     interface.implements(IConfigHandler)
+    class meta:
+        type = 'config'
+        label = 'configparser'
         
     def setup(self, defaults, *args, **kw):
         """
