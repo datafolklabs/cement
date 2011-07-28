@@ -92,8 +92,8 @@ hooks = {}
 # Save original stdout/stderr for supressing output.
 # FIX ME: Removing this for now, need a sane way to do it... or not at all
 #
-#STDOUT = sys.stdout
-#STDERR = sys.stderr
+SAVED_STDOUT = sys.stdout
+SAVED_STDERR = sys.stderr
 
 #
 #class StdOutBuffer(object):

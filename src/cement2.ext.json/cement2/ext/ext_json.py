@@ -67,8 +67,8 @@ class JsonOutputHandler(object):
         
         """
         Log.debug("rendering output as Json via %s" % self.__module__)
-        sys.stdout = backend.STDOUT
-        sys.stderr = backend.STDERR
+        sys.stdout = backend.SAVED_STDOUT
+        sys.stderr = backend.SAVED_STDERR
         return jsonpickle.encode(data_dict, unpicklable=unpicklable)
             
 handler.register(JsonOutputHandler)

@@ -57,6 +57,16 @@ class CementApp(object):
                             self.output.__handler_label__)
 
     def setup(self):
+        """
+        This function wraps all 'setup' actons in one call.  It is called
+        before self.run(), allowing the application to be setup but not
+        executed (possibly letting the developer perform other actions
+        before full execution.).
+        
+        All handlers should be instantiated and callable after setup() is
+        complete.
+        
+        """
         Log.debug("now setting up the '%s' application" % self.name)
         self._setup_extension_handler()
         self._setup_config_handler()
@@ -68,11 +78,43 @@ class CementApp(object):
         self._setup_output_handler()
         
     def run(self):
+        """
+        This functional wraps everything together (after self.setup() is 
+        called) to run the application.
+        
+        """
         self._parse_args()
+        
+    def render(self, data, template=None):
+        """
+        This is a simple wrapper around self.output.render() which simply
+        returns an empty string if no self.output handler is defined.
+        
+        Required Arguments:
+        
+            data
+                The data dictionary to render.
+                
+        Optional Arguments:
+        
+            template
+                The template to render to.  Default: None (some output 
+                handlers do not use templates).
+                
+        """
+        if not self.output:
+            Log.debug('render() called, but no output handler defined.')
+            return ''
+        else:
+            return self.output.render(data, template)
         
     def _parse_args(self):
         self.arg.parse(self.argv)
         for member in dir(self.arg.result):
+            # ignore None values
+            if member is None:
+                continue
+                
             if member.startswith('_'):
                 continue
             for section in self.config.get_sections():
@@ -80,6 +122,8 @@ class CementApp(object):
                     self.config.set(section, member, 
                                     getattr(self.arg.result, member))
         
+        # If the output handler was changed after parsing args, then
+        # we need to set it up again.
         if self.config.get('base', 'output_handler') \
             != self.output.__handler_label__:                                  
             self.output = None
@@ -122,6 +166,8 @@ class CementApp(object):
     def _setup_output_handler(self):
         Log.debug("setting up %s.output handler" % self.name) 
         if not self.output:
+            if not self.config.get('base', 'output_handler'):
+                return
             h = handler.get('output', 
                             self.config.get('base', 'output_handler'))
             self.output = h()
@@ -188,23 +234,25 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     argv = kw.get('argv', sys.argv[1:])
 
     # basic logging setup first (mostly for debug/error)
+    suppress_output = False
     if '--debug' in argv:
         defaults['log']['level'] = 'DEBUG'
         defaults['base']['debug'] = True
     elif '--quiet' in argv:
         defaults['log']['to_console'] = False
+        suppress_output = True
         
-        # a hack to suppress output
-        sys.stdout = NullOut()
-        sys.stderr = NullOut()
-
     elif '--json' in argv or '--yaml' in argv:
         # The framework doesn't provide --json/--yaml options but rather
         # extensions do.  That said, the --json/--yaml extensions are shipped
         # with our source so we can add a few hacks here.
         defaults['log']['to_console'] = False
+        suppress_output = True
         
-        # a hack to suppress output
+    # a hack to suppress output
+    if suppress_output:
+        backend.SAVED_STDOUT = sys.stdout
+        backend.SAVED_STDERR = sys.stderr
         sys.stdout = NullOut()
         sys.stderr = NullOut()
         
