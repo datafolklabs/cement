@@ -57,4 +57,14 @@ class ConfigObjConfigHandler(ConfigObj):
     def set(self, section, key, value):
         self[section][key] = value
         
+    def has_section(self, section):
+        if section in self.get_sections():
+            return True
+        else:
+            return False
+            
+    def add_section(self, section):
+        if not self.has_section(section):
+            self[section] = dict()
+            
 handler.register(ConfigObjConfigHandler)

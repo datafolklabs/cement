@@ -13,6 +13,8 @@ def config_handler_invariant(obj):
         'set', 
         'parse_file', 
         'merge',
+        'add_section',
+        'has_section',
         ]
     backend.validate_invariants(obj, members)
     
@@ -76,6 +78,7 @@ class IConfigHandler(interface.Interface):
                 The config [section] to pull keys from.
                 
         Returns: list
+        
         """
             
     def get_sections():
@@ -85,7 +88,15 @@ class IConfigHandler(interface.Interface):
         Returns: list
                 
         """
-           
+          
+    def add_section():
+        """
+        Add a new section if it doesn't exist.
+        
+        Returns: None
+        
+        """ 
+        
     def get(section, key):
         """
         Return a configuration value based on [section][key].  The return
@@ -124,4 +135,13 @@ class IConfigHandler(interface.Interface):
         """
         Merges a dict object into the configuration.
         """
+    
+    def has_section(section):
+        """
+        Returns whether or not the section exists.
+        
+        Returns: bool
+        
+        """
+        
                         

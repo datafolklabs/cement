@@ -76,7 +76,7 @@ class CementApp(object):
         
     def run(self):
         """
-        This functional wraps everything together (after self.setup() is 
+        This function wraps everything together (after self.setup() is 
         called) to run the application.
         
         """
@@ -119,16 +119,16 @@ class CementApp(object):
         
         if hasattr(handler_obj.meta, 'defaults'):
             Log.debug("setting config defaults from handlers['%s']['%s']" % \
-                     (handler_obj.meta.type, 
-                      handler_obj.meta.label)) 
+                     (handler_obj.meta.type, handler_obj.meta.label)) 
             for key in handler_obj.meta.defaults:
+                if not self.config.has_section(handler_obj.meta.type):
+                    self.config.add_section(handler_obj.meta.type)
                 if not self.config.has_key(handler_obj.meta.type, key):
                     self.config.set(handler_obj.meta.type, key,
                                     handler_obj.meta.defaults[key])
         else:
             Log.debug("no config defaults from handlers['%s']['%s']" % \
-                     (handler_obj.meta.type, 
-                      handler_obj.meta.label))                        
+                     (handler_obj.meta.type, handler_obj.meta.label))                        
                      
     def _parse_args(self):
         self.arg.parse(self.argv)
