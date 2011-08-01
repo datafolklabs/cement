@@ -73,7 +73,7 @@ setup(name='cement2',
     entry_points="""
     """,
     namespace_packages=[
-        #'cement2',
-        #'cement2.ext',
+        'cement2',
+        'cement2.ext',
         ],
     )

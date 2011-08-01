@@ -6,9 +6,13 @@ from cement2.core import exc, util, handler
 from cement2.core.log import ILogHandler
         
 class LoggingLogHandler(object):  
+    interface.implements(ILogHandler)
     class meta:
         type = 'log'
         label = 'logging'
+        
+        # These are the default config values, overridden by any '[log]' 
+        # section in parsed config files.
         defaults = dict(
             file=None,
             level='INFO',
@@ -18,23 +22,7 @@ class LoggingLogHandler(object):
             max_files=4,
             clear_loggers=True,
             )
-        
-    __handler_type__ = 'log'
-    __handler_label__ = 'logging'
     
-    # these are the default config values, overridden by any '[log]' section
-    # in parsed config files.
-    __defaults__ = dict(
-        file=None,
-        level='INFO',
-        to_console=True,
-        rotate=False,
-        max_bytes=512000,
-        max_files=4,
-        clear_loggers=True,
-        )
-        
-    interface.implements(ILogHandler)
     levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
 
     def __init__(self, **kw):

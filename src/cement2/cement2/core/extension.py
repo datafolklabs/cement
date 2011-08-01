@@ -45,13 +45,14 @@ class IExtensionHandler(interface.Interface):
         
         """
     
-    def load_extension(self, ext_name):
+    def load_extension(self, ext_module):
         """
-        Load an extension whose name is 'ext_name'.
+        Load an extension whose module is 'ext_module'.  For example, 
+        'cement2.ext.ext_configobj'.
         
         Required Arguments:
         
-            ext
+            ext_module
                 The name of the extension to load.
                 
         """
@@ -63,7 +64,8 @@ class IExtensionHandler(interface.Interface):
         Required Arguments:
         
             ext_list
-                A list of extension names to load.
+                A list of extension modules to load.  For example, 
+                ['cement2.ext.ext_configobj', 'cement2.ext.ext_logging'].
         
         """
 
@@ -88,8 +90,6 @@ class CementExtensionHandler(object):
         self.defaults = defaults
         
     def load_extension(self, ext_module):
-        #module = "cement2.ext.ext_%s" % ext_name
-        
         if ext_module in self.loaded_extensions:
             Log.debug("framework extension '%s' already loaded" % ext_module)
             return 
