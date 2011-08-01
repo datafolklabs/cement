@@ -14,7 +14,7 @@ class NullOut():
 class CementApp(object):
     def __init__(self, name, **kw):
         self.name = name
-        self.defaults = kw.get('defaults', backend.defaults())
+        self.defaults = kw.get('defaults', backend.defaults(self.name))
         self.defaults['base']['app_name'] = self.name
         self.argv = kw.get('argv', sys.argv[1:])
         
@@ -251,7 +251,7 @@ def lay_cement(name, klass=CementApp, *args, **kw):
             
         argv
             List of args to use.  Default: sys.argv.
-    
+            
     """
     Log.debug("laying cement for the '%s' application" % name)
     
@@ -259,7 +259,7 @@ def lay_cement(name, klass=CementApp, *args, **kw):
         defaults = kw['defaults']
         del kw['defaults']
     else:
-        defaults = backend.defaults()
+        defaults = backend.defaults(name)
         
     argv = kw.get('argv', sys.argv[1:])
 
@@ -274,7 +274,6 @@ def lay_cement(name, klass=CementApp, *args, **kw):
         # The framework doesn't provide --json/--yaml options but rather
         # extensions do.  That said, the --json/--yaml extensions are shipped
         # with our source so we can add a few hacks here.
-        defaults['log']['to_console'] = False
         suppress_output = True
         
     # a hack to suppress output
@@ -308,5 +307,5 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     # extension.  ;)
     handler.register(extension.CementExtensionHandler)
     
-    app = klass(name, defaults=defaults, argv=argv, *args, **kw)
+    app = klass(name, defaults=defaults, *args, **kw)
     return app

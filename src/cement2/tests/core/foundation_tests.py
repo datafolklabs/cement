@@ -1,57 +1,72 @@
 """Tests for cement.core.setup."""
 
 import sys
+from zope import interface
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import foundation, exc, backend, config, extension, plugin
-from cement2.core import log, output, handler
-from cement2.ext.ext_configparser import ConfigParserConfigHandler
+from cement2.core import log, output, handler, hook, arg
+from cement2 import test_helper as _t
 
-if not handler.defined('config'):
-    handler.define('config', config.IConfigHandler)
-if not handler.defined('log'):
-    handler.define('log', log.ILogHandler)
-from cement2.ext.ext_logging import LoggingLogHandler
-from cement2.ext.ext_configparser import ConfigParserConfigHandler
-
-def startup():
-    pass
+class TestOutputHandler(object):
+    interface.implements(output.IOutputHandler)
+    file_suffix = None
     
-def teardown():
-    if backend.handlers.has_key('log'):
-        del backend.handlers['log']
-    if backend.handlers.has_key('config'):
-        del backend.handlers['config']
+    class meta:
+        type = 'output'
+        label = 'test_output_handler'
+        
+    def setup(self, config_obj):
+        self.config = config_obj
+        
+    def render(self, data_dict, template=None):
+        return None
             
-    for hook in backend.hooks.copy():
-        if hook.startswith('cement'):
-            del backend.hooks[hook]
-    backend.handlers = {}
+def test_default():
+    app = _t.prep('test')
+    app.setup()
+    try:
+        app.run()
+    except BaseException:
+        pass
     
-@with_setup(startup, teardown)
-def test_foundation_default():
-    if backend.handlers.has_key('log'):
-        del backend.handlers['log']
-    if backend.handlers.has_key('config'):
-        del backend.handlers['config']
-    app = foundation.lay_cement('cement_nosetests')
-    handler.register(ConfigParserConfigHandler)
-    handler.register(LoggingLogHandler)
-    app.run()
-    
-def test_foundation_passed_handlers():
-    defaults = backend.defaults('cement_nosetests')
+def test_passed_handlers():
+    defaults = backend.defaults('test')
     defaults['base']['config_files'] = '/dev/null'
-    myconfig = ConfigParserConfigHandler(defaults)
+    
+    from cement2.ext import ext_configparser
+    from cement2.ext import ext_logging
+    from cement2.ext import ext_argparse
+    from cement2.ext import ext_cement_plugin
+    from cement2.ext import ext_cement_output
+    
+    myconfig = ext_configparser.ConfigParserConfigHandler(defaults)
     myconfig.setup(defaults)
-    app = foundation.lay_cement('cement_nosetests',
+    app = _t.prep('test',
         config_handler=myconfig,
-        log_handler=LoggingLogHandler(),
+        log_handler=ext_logging.LoggingLogHandler(),
+        arg_handler=ext_argparse.ArgParseArgumentHandler(),
         extension_handler=extension.CementExtensionHandler(),
-        plugin_handler=plugin.CementPluginHandler(),
-        output_handler=output.CementOutputHandler(),
+        plugin_handler=ext_cement_plugin.CementPluginHandler(),
+        output_handler=ext_cement_output.CementOutputHandler(),
         argv=[__file__, '--debug']
         )
-    
-    app.run()
+    app.setup()
+
+def test_null_out():
+    null = foundation.NullOut()
+    null.write('nonsense')
+
+def test_render():
+    # Render with default
+    app = _t.prep('test')
+    app.setup()
+    app.render(dict(foo='bar'))
+
+    # Render with no output_handler... this is hackish, but there are 
+    # circumstances where app.output would be None.
+    app = _t.prep('test', output_handler=None)
+    app.setup()
+    app.output = None
+    app.render(dict(foo='bar'))

@@ -6,33 +6,25 @@ from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import exc, backend, extension, handler, output
+from cement2 import test_helper as _t
 
-def startup():    
-    handler.define('test_extension', extension.IExtensionHandler)
-
-def teardown():
-    if 'test_extension' in backend.handlers:
-        del backend.handlers['test_extension']
-    
-    
 class BogusExtensionHandler(object):
-    __handler_type__ = 'test_extension'
-    __handler_label__ = 'bogus'
     interface.implements(extension.IExtensionHandler)
-    pass
+    class meta:
+        type = 'test_extension'
+        label = 'bogus'
     
-@raises(exc.CementInterfaceError)
-@with_setup(startup, teardown)    
+@raises(exc.CementRuntimeError)
 def test_invalid_extension_handler():
+    # the handler type test_extension doesn't exist
     handler.register(BogusExtensionHandler)
 
 def test_load_extensions():
+    _t.reset_backend()
     handler.define('output', output.IOutputHandler)
     ext = extension.CementExtensionHandler()
     ext.setup(backend.defaults())
-    ext.load_extensions(['example'])
-    ext.load_extensions(['example'])
-    del backend.handlers['output']
+    ext.load_extensions(['cement2.ext.ext_example'])
 
 @raises(exc.CementRuntimeError)
 def test_load_bogus_extension():

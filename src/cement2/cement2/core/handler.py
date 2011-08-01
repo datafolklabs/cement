@@ -18,7 +18,7 @@ def get(handler_type, handler_label):
             
     Usage:
     
-        from cement.core import handler
+        from cement2.core import handler
         output = handler.get('output', 'json')
         output.render(dict(foo='bar'))
 
@@ -63,7 +63,7 @@ def define(handler_type, handler_interface):
     
     .. code-block:: python
     
-        from cement.core import handler
+        from cement2.core import handler
 
         handler.define('database', IDatabaseHandler)
     
@@ -78,7 +78,10 @@ def define(handler_type, handler_interface):
     
 def register(obj):
     """
-    Register a handler object to a handler.
+    Register a handler object to a handler.  If the same object is already
+    registered then no exception is raised, however if a different object
+    attempts to be registered to the same name a CementRuntimeError is 
+    raised.
     
     Required Options:
     
@@ -90,7 +93,7 @@ def register(obj):
     .. code-block:: python
     
         from zope import interface
-        from cement.core import handler
+        from cement2.core import handler
         
         class MyHandler(object):
             interface.implements(IDatabaseHandler)
@@ -121,7 +124,8 @@ def register(obj):
     if obj.meta.type not in backend.handlers:
         raise exc.CementRuntimeError("Handler type '%s' doesn't exist." % \
                                      obj.meta.type)
-    if backend.handlers[obj.meta.type].has_key(obj.meta.label):
+    if backend.handlers[obj.meta.type].has_key(obj.meta.label) and \
+        backend.handlers[obj.meta.type][obj.meta.label] != obj:
         raise exc.CementRuntimeError("handlers['%s']['%s'] already exists" % \
                                 (obj.meta.type, obj.meta.label))
     if not backend.handlers[obj.meta.type]['interface'].implementedBy(obj):

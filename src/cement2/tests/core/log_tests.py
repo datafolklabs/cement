@@ -7,21 +7,23 @@ from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import exc, backend, handler, log, config
+from cement2 import test_helper as _t
 
-if not handler.defined('log'):
-    handler.define('log', log.ILogHandler)
-if not handler.defined('config'):
-    handler.define('config', config.IConfigHandler)
-from cement2.ext.ext_logging import LoggingLogHandler
-from cement2.ext.ext_configparser import ConfigParserConfigHandler
+_t.prep()
 
-def startup():    
-    if not handler.defined('log'):
-        handler.define('log', log.ILogHandler)
+from cement2.ext import ext_logging, ext_configparser
 
-def teardown():
-    if backend.handlers.has_key('log'):
-        del backend.handlers['log']
+config = {}
+config['log'] = {}
+config['log']['file'] = None
+config['log']['level'] = 'INFO'
+config['log']['to_console'] = True
+config['log']['rotate'] = False
+config['log']['max_bytes'] = 512000
+config['log']['max_files'] = 4
+config['log']['file_formatter'] = None
+config['log']['console_formatter'] = None
+config['log']['clear_loggers'] = True
         
 class BogusHandler1(object):
     __handler_type__ = 'log'
@@ -29,68 +31,44 @@ class BogusHandler1(object):
     interface.implements(log.ILogHandler)
 
 @raises(exc.CementInterfaceError)
-@with_setup(startup, teardown)
 def test_unproviding_handler():
     try:
         handler.register(BogusHandler1)
     except exc.CementInterfaceError:
-        del backend.handlers['log']
         raise
 
-@with_setup(startup, teardown)
 def test_logging():
-    handler.register(LoggingLogHandler)
-    
-    myconfig = ConfigParserConfigHandler()
-    myconfig.setup(backend.defaults())
-    myconfig.set('log', 'file', '/dev/null')
-    myconfig.set('log', 'to_console', True)
-    
-    h = handler.get('log', 'logging')
+    app = _t.prep('test')
+    app.setup()
+    app.config.set('log', 'file', '/dev/null')
+    app.config.set('log', 'to_console', True)
 
-    Log = h(
-        level='WARN',
-        clear_loggers=True,
-        )
-    Log.setup(myconfig)
-    Log.info('Info Message')
-    Log.warn('Warn Message')
-    Log.error('Error Message')
-    Log.fatal('Fatal Message')
-    Log.debug('Debug Message')
+    # setup logging again
+    app.log.setup(app.config)
     
-@with_setup(startup, teardown)
-def test_bogus_test_level():
-    handler.register(LoggingLogHandler)
+    app.log.info('Info Message')
+    app.log.warn('Warn Message')
+    app.log.error('Error Message')
+    app.log.fatal('Fatal Message')
+    app.log.debug('Debug Message')
     
-    myconfig = ConfigParserConfigHandler()
-    myconfig.setup(backend.defaults())
-    myconfig.set('log', 'file', '/dev/null')
-    myconfig.set('log', 'to_console', True)
+def test_bogus_log_level():
+    app = _t.prep('test')
+    app.setup()
+    app.config.set('log', 'file', '/dev/null')
+    app.config.set('log', 'to_console', True)
     
-    h = handler.get('log', 'logging')
+    # setup logging again
+    app.log.setup(app.config)
+    app.log.set_level('BOGUS')
 
-    Log = h(
-        level='WARN',
-        clear_loggers=True,
-        )
-    Log.setup(myconfig)
-    Log.set_level('BOGUS')
-
-@with_setup(startup, teardown)
 def test_console_log():
-    handler.register(LoggingLogHandler)
-
-    myconfig = ConfigParserConfigHandler()
-    myconfig.setup(backend.defaults())
+    app = _t.prep('test')
+    app.setup()
     
-    myconfig.set('base', 'debug', True)
-    myconfig.set('log', 'file', '/dev/null')
-    myconfig.set('log', 'to_console', True)
+    app.config.set('base', 'debug', True)
+    app.config.set('log', 'file', '/dev/null')
+    app.config.set('log', 'to_console', True)
     
-    h = handler.get('log', 'logging')
-    Log = h(
-        clear_loggers=True,
-        console_formatter=logging.Formatter("%(levelname)s: %(message)s")
-        )
-    Log.setup(myconfig)
+    app.log.setup(app.config)
+    app.log.info('Tested.')

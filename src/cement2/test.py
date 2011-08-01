@@ -72,5 +72,6 @@ for i in hook.run('myhook'):
     pass
 
 print app.config.get('log', 'file')
+print app.config.get('base', 'johnny')
 print app.render(dict(foo='bar'))
 #print app.extension.loaded_extensions

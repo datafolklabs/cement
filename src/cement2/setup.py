@@ -1,3 +1,4 @@
+
 from setuptools import setup, find_packages
 import sys, os
 
@@ -63,7 +64,6 @@ setup(name='cement2',
         "zope.interface",
         ### Required to build documentation
         # "Sphinx >= 1.0",
-        # "Pygments",
         ### Required for testing
         # "nose",
         # "coverage",
