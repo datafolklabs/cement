@@ -8,7 +8,7 @@ Log = backend.minimal_logger(__name__)
     
 class OptParseArgumentHandler(OptionParser):
     interface.implements(arg.IArgumentHandler)
-    result = None
+    parsed_args = None
     
     class meta:
         type = 'arg'
@@ -22,11 +22,11 @@ class OptParseArgumentHandler(OptionParser):
         self.config = config_obj
         
     def parse(self, args):
-        self.result = self.parse_args(args)
-        return self.result
+        self.parsed_args = self.parse_args(args)
+        return self.parsed_args
         
-    def minimal_add_argument(self, *args, **kw):
-        return self.add_option(*args, **kw)            
+    def add_argument(self, *args, **kw):
+        return super(OptionParser, self).add_option(*args, **kw)            
 
 handler.register(OptParseArgumentHandler)
     

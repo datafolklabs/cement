@@ -9,7 +9,7 @@ Log = backend.minimal_logger(__name__)
     
 class ArgParseArgumentHandler(ArgumentParser):
     interface.implements(arg.IArgumentHandler)
-    result = None
+    parsed_args = None
     class meta:
         type = 'arg'
         label = 'argparse'
@@ -22,11 +22,11 @@ class ArgParseArgumentHandler(ArgumentParser):
         self.config = config_obj
         
     def parse(self, args):
-        self.result = self.parse_args(args)
-        return self.result
+        self.parsed_args = self.parse_args(args)
+        return self.parsed_args
         
-    def minimal_add_argument(self, *args, **kw):
-        return self.add_argument(*args, **kw)            
+    def add_argument(self, *args, **kw):
+        return super(ArgumentParser, self).add_argument(*args, **kw)            
 
 handler.register(ArgParseArgumentHandler)
     

@@ -79,5 +79,5 @@ def cement_add_args_hook(config, arg_obj):
     Adds the '--json' argument to the argument object.
     
     """
-    arg_obj.minimal_add_argument('--json', dest='output_handler', 
+    arg_obj.add_argument('--json', dest='output_handler', 
         action='store_const', help='toggle json output handler', const='json')

@@ -61,17 +61,14 @@ class MyAppBaseController(object):
 app.setup()
 
 app.argv = sys.argv[1:]
-app.arg.minimal_add_argument('-t', dest='t', action='store', help='t var')
+app.add_arg('-t', dest='t', action='store', help='t var')
+app.args.add_argument('-s', '--status', dest='status', action='store', help='status option', metavar='S')
 app.run()
-app.config.set('base', 'johnny', 'asdfasfasdf')
-
-app.log.info('JOHNNY')
-app.log.debug('KAPLA')
+print app.args.parsed_args.debug
+print app.pargs
 
 for i in hook.run('myhook'):
     pass
 
-print app.config.get('log', 'file')
-print app.config.get('base', 'johnny')
 print app.render(dict(foo='bar'))
 #print app.extension.loaded_extensions

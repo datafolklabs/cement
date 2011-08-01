@@ -16,15 +16,15 @@ class CementApp(object):
         self.name = name
         self.defaults = kw.get('defaults', backend.defaults(self.name))
         self.defaults['base']['app_name'] = self.name
-        self.argv = kw.get('argv', sys.argv[1:])
+        self.argsv = kw.get('argv', sys.argv[1:])
         
         # default all handlers to None
-        self.extension = None
+        self.ext = None
         self.config = None
         self.log = None
         self.plugin = None
-        self.arg = None
-        self.output = None
+        self.args = None
+        self.out = None
         
         # initialize handlers if passed in and set config to reflect
         if kw.get('config_handler', None):
@@ -32,9 +32,9 @@ class CementApp(object):
             self.config.set('base', 'config_handler', self.config.meta.label)
         
         if kw.get('extension_handler', None):
-            self.extension = kw['extension_handler']
+            self.ext = kw['extension_handler']
             self.config.set('base', 'extension_handler', 
-                            self.extension.meta.label)
+                            self.ext.meta.label)
                             
         if kw.get('log_handler', None):
             self.log = kw['log_handler']
@@ -45,13 +45,13 @@ class CementApp(object):
             self.config.set('base', 'plugin_handler', self.plugin.meta.label)
         
         if kw.get('arg_handler', None):
-            self.arg = kw['arg_handler']
-            self.config.set('base', 'arg_handler', self.arg.meta.label)
+            self.args = kw['arg_handler']
+            self.config.set('base', 'arg_handler', self.args.meta.label)
             
         if kw.get('output_handler', None):
-            self.output = kw['output_handler']
+            self.out = kw['output_handler']
             self.config.set('base', 'output_handler', 
-                            self.output.meta.label)
+                            self.out.meta.label)
 
     def setup(self):
         """
@@ -84,8 +84,8 @@ class CementApp(object):
         
     def render(self, data, template=None):
         """
-        This is a simple wrapper around self.output.render() which simply
-        returns an empty string if no self.output handler is defined.
+        This is a simple wrapper around self.out.render() which simply
+        returns an empty string if no self.out handler is defined.
         
         Required Arguments:
         
@@ -99,12 +99,26 @@ class CementApp(object):
                 handlers do not use templates).
                 
         """
-        if not self.output:
+        if not self.out:
             Log.debug('render() called, but no output handler defined.')
             return ''
         else:
-            return self.output.render(data, template)
+            return self.out.render(data, template)
             
+    @property
+    def pargs(self):
+        """
+        A shortcut for self.args.parsed_args.
+        """
+        return self.args.parsed_args
+     
+    def add_arg(self, *args, **kw):
+        """
+        A shortcut for self.args.add_argument.
+        
+        """   
+        self.args.add_argument(*args, **kw)
+        
     def _set_handler_defaults(self, handler_obj):
         """
         Set config defaults per handler defaults if the config key is not 
@@ -131,8 +145,8 @@ class CementApp(object):
                      (handler_obj.meta.type, handler_obj.meta.label))                        
                      
     def _parse_args(self):
-        self.arg.parse(self.argv)
-        for member in dir(self.arg.result):
+        self.args.parse(self.argsv)
+        for member in dir(self.args.parsed_args):
             # ignore None values
             if member is None:
                 continue
@@ -142,27 +156,27 @@ class CementApp(object):
             for section in self.config.get_sections():
                 if member in self.config.keys(section):
                     self.config.set(section, member, 
-                                    getattr(self.arg.result, member))
+                                    getattr(self.args.parsed_args, member))
         
         # If the output handler was changed after parsing args, then
         # we need to set it up again.
-        if self.output:
+        if self.out:
             if self.config.get('base', 'output_handler') \
-                != self.output.meta.label:
-                self.output = None
+                != self.out.meta.label:
+                self.out = None
                 self._setup_output_handler()
         else:
             self._setup_output_handler()
             
     def _setup_extension_handler(self):
         Log.debug("setting up %s.extension handler" % self.name) 
-        if not self.extension:
+        if not self.ext:
             h = handler.get('extension', 
                             self.defaults['base']['extension_handler'])
-            self.extension = h()
-        self._set_handler_defaults(self.extension)
-        self.extension.setup(self.defaults)
-        self.extension.load_extensions(self.defaults['base']['extensions'])
+            self.ext = h()
+        self._set_handler_defaults(self.ext)
+        self.ext.setup(self.defaults)
+        self.ext.load_extensions(self.defaults['base']['extensions'])
         
     def _setup_config_handler(self):
         Log.debug("setting up %s.config handler" % self.name)
@@ -193,27 +207,27 @@ class CementApp(object):
         
     def _setup_output_handler(self):
         Log.debug("setting up %s.output handler" % self.name) 
-        if not self.output:
+        if not self.out:
             if not self.config.get('base', 'output_handler'):
                 return
             h = handler.get('output', 
                             self.config.get('base', 'output_handler'))
-            self.output = h()
-        self._set_handler_defaults(self.output)
-        self.output.setup(self.config)
+            self.out = h()
+        self._set_handler_defaults(self.out)
+        self.out.setup(self.config)
          
     def _setup_arg_handler(self):
         Log.debug("setting up %s.arg handler" % self.name) 
-        if not self.arg:
+        if not self.args:
             h = handler.get('arg', self.config.get('base', 'arg_handler'))
-            self.arg = h()
-        self._set_handler_defaults(self.arg)
-        self.arg.setup(self.config)
-        self.arg.minimal_add_argument('--debug', dest='debug', 
+            self.args = h()
+        self._set_handler_defaults(self.args)
+        self.args.setup(self.config)
+        self.args.add_argument('--debug', dest='debug', 
             action='store_true', help='toggle debug output')
-        self.arg.minimal_add_argument('--quiet', dest='suppress_output', 
+        self.args.add_argument('--quiet', dest='suppress_output', 
             action='store_true', help='suppress all output')
-        for arg_obj in hook.run('cement_add_args_hook', self.config, self.arg):
+        for arg_obj in hook.run('cement_add_args_hook', self.config, self.args):
             pass
                  
     def _validate_required_config(self):

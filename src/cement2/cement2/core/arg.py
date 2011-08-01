@@ -9,7 +9,8 @@ def arg_handler_invariant(obj):
     members = [
         'setup',
         'parse',
-        'result',
+        'parsed_args',
+        'add_argument',
         ]
     backend.validate_invariants(obj, members)
     
@@ -21,7 +22,7 @@ class IArgumentHandler(interface.Interface):
     
     """
     meta = interface.Attribute('Handler meta-data')
-    result = interface.Attribute('Parsed args object')
+    parsed_args = interface.Attribute('Parsed args object')
     interface.invariant(arg_handler_invariant)
     
     def setup(config_obj):
@@ -42,9 +43,9 @@ class IArgumentHandler(interface.Interface):
         
         """
     
-    def minimal_add_argument(self, *args, **kw):
+    def add_argument(self, *args, **kw):
         """
-        A minimal interface to adding an argument.  
+        Add arguments for parsing.  This should be -o/--option or positional.  
         
         Positional Arguments:
         
