@@ -20,9 +20,7 @@ class IArgumentHandler(interface.Interface):
     below.
     
     """
-    # internal mechanism for handler registration
-    __handler_type__ = interface.Attribute('Handler Type Identifier')
-    __handler_label__ = interface.Attribute('Handler Label Identifier')
+    meta = interface.Attribute('Handler meta-data')
     result = interface.Attribute('Parsed args object')
     interface.invariant(arg_handler_invariant)
     

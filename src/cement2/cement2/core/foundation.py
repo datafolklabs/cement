@@ -250,7 +250,7 @@ def lay_cement(name, klass=CementApp, *args, **kw):
             The default config dictionary, other wise use backend.defaults().
             
         argv
-            List of args to use.  Default: sys.argv.
+            List of command line arguments.  Default: sys.argv.
             
     """
     Log.debug("laying cement for the '%s' application" % name)
