@@ -53,5 +53,9 @@ def test_run():
 def test_run_bad_hook():
     for res in hook.run('some_bogus_hook'):
         pass
+
+def test_hook_is_defined():
+    ok_(hook.defined('nosetests_hook'))
+    eq_(hook.defined('some_bogus_hook'), False)
         
 

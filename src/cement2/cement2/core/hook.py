@@ -28,7 +28,23 @@ def define(name):
     if backend.hooks.has_key(name):
         raise exc.CementRuntimeError, "Hook name '%s' already defined!" % name
     backend.hooks[name] = []
+ 
+def defined(hook_name):
+    """
+    Test whether a hook name is defined.
     
+    Required Arguments:
+    
+        hook_type
+            The name of the hook (I.e. 'my_hook_does_awesome_things').
+    
+    Returns: bool
+    
+    """
+    if hook_name in backend.hooks:
+        return True
+    else:
+        return False   
     
 class register(object):
     """
