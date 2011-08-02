@@ -4,7 +4,7 @@ from cement2.core import exc, backend
 
 Log = backend.minimal_logger(__name__)
 
-def get(handler_type, handler_label):
+def get(handler_type, handler_label, *args):
     """
     Get a handler object.
     
@@ -16,6 +16,11 @@ def get(handler_type, handler_label):
         handler_label
             The label of the handler (i.e. 'json')
             
+    Optional Arguments:
+    
+        fallback
+            A fallback value to return if handler_label doesn't exist.
+            
     Usage:
     
         from cement2.core import handler
@@ -23,12 +28,35 @@ def get(handler_type, handler_label):
         output.render(dict(foo='bar'))
 
     """
-    if handler_type in backend.handlers:
-        if handler_label in backend.handlers[handler_type]:
-            return backend.handlers[handler_type][handler_label]
-    raise exc.CementRuntimeError("handlers['%s']['%s'] does not exist!" \
-                          % (handler_type, handler_label))
+    if handler_type not in backend.handlers:
+        raise exc.CementRuntimeError("handler type '%s' does not exist!" % \
+                                     handler_type)
+
+    if handler_label in backend.handlers[handler_type]:
+        return backend.handlers[handler_type][handler_label]
+    elif len(args) > 0:
+        return args[0]
+    else:
+        raise exc.CementRuntimeError("handlers['%s']['%s'] does not exist!" % \
+                                    (handler_type, handler_label))
     
+def list(handler_type):
+    """
+    Return a list of handlers for a given type.
+    
+    Required Arguments:
+    
+        handler_type
+            The type of handler (i.e. 'output')
+    
+    """
+    res = []
+    for label in backend.handlers[handler_type]:
+        if label == 'interface':
+            continue
+        res.append(backend.handlers[handler_type][label])
+    return res
+        
 def defined(handler_type):
     """
     Test whether a handler type is defined.

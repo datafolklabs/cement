@@ -8,7 +8,7 @@ Log = backend.minimal_logger(__name__)
 def controller_handler_invariant(obj):
     members = [
         'setup',
-        'register',
+        'dispatch',
         ]
     backend.validate_invariants(obj, members)
     
@@ -23,79 +23,53 @@ class IControllerHandler(interface.Interface):
     registered_controllers = interface.Attribute('List of registered controllers')
     interface.invariant(controller_handler_invariant)
     
-    def setup(config_obj):
+    def setup(base_app):
         """
-        The setup function is called during application initialization and
-        must 'setup' the handler object making it ready for the framework
+        The setup function is after application initialization and after it
+        is determined that this controller was requested via command line
+        arguments.  Meaning, a controllers setup() function is only called
+        right before it's dispatch() function is called to execute a command.
+        Must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
         Required Arguments:
         
-            config_obj
-                The application configuration object.  This is a config object 
-                that implements the IConfigHandler interface and not a config 
-                dictionary, though some config handler implementations may 
-                also function like a dict (i.e. configobj).
+            base_app
+                The application object, after it has been setup() and run().
                 
         Returns: n/a
         
         """
     
-    def register(self, controller_obj):
+    def dispatch(self):
         """
-        Load an extension whose name is 'ext_name'.
-        
-        Required Arguments:
-        
-            ext
-                The name of the extension to load.
+        Reads the application object's data to dispatch a command from this
+        controller.  For example, reading self.app.pargs to determine what
+        command was passed, and then executing that command function.
                 
         """
-        
-    def load_extensions(self, ext_list):
-        """
-        Load all extensions from ext_list.
-        
-        Required Arguments:
-        
-            ext_list
-                A list of extension names to load.
-        
-        """
 
-class CementExtensionHandler(object):
+class CementControllerHandler(object):
     """
-    This is an implementation of the IExtentionHandler interface.  It handles
-    loading framework extensions.
+    This is an implementation of the IControllerHandler interface, and also
+    acts as a base class that application controllers can subclass from.
     
     """
-    
-    __handler_type__ = 'extension'
-    __handler_label__ = 'cement'
-    interface.implements(IExtensionHandler)
-    loaded_extensions = []
-    
+    interface.implements(IControllerHandler)
+    class meta:
+        type = 'controller'
+        label = None # provided in subclass
+        
     def __init__(self):
-        self.defaults = {}
-        self.enabled_extensions = []
+        pass
         
-    def setup(self, defaults):
-        self.defaults = defaults
+    def setup(self, base_app):
+        self.app = base_app
         
-    def load_extension(self, ext_module):
-        #module = "cement2.ext.ext_%s" % ext_name
+        # shortcuts
+        self.config = self.app.config
+        self.log = self.app.log
+        self.pargs = self.app.pargs
         
-        if ext_module in self.loaded_extensions:
-            Log.debug("framework extension '%s' already loaded" % ext_module)
-            return 
-            
-        Log.debug("loading the '%s' framework extension" % ext_module)
-        try:
-            __import__(ext_module)
-            self.loaded_extensions.append(ext_module)
-        except ImportError, e:
-            raise exc.CementRuntimeError, e.args[0]
-    
-    def load_extensions(self, ext_list):
-        for ext in ext_list:
-            self.load_extension(ext)
+    def dispatch(self):
+        pass

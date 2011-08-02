@@ -3,7 +3,7 @@
 import sys
 
 from cement2.core import backend, exc, handler, hook, log, config, plugin
-from cement2.core import output, extension, arg
+from cement2.core import output, extension, arg, controller
 
 Log = backend.minimal_logger(__name__)    
     
@@ -73,7 +73,29 @@ class CementApp(object):
         self._setup_plugin_handler()
         self._setup_arg_handler()
         self._setup_output_handler()
-        
+        self.collect_controller_args()
+    
+    def collect_controller_args(self):
+        """
+        Read all controllers defined in backend.handlers and add to the 
+        self.args handler.
+        """
+        if len(backend.handlers) > 0:
+            base = handler.get('controller', 'base', None)
+            subparsers = self.args.add_subparsers(title='sub-commands')
+            if base:
+                # FIX ME: this isn't part of the interface
+                for visible in base().__visible__:
+                    subparsers.add_parser(visible[0], help=visible[1])
+            
+            # all other controllers get namespaces
+            for obj in handler.list('controller'):
+                if obj.meta.label == 'base':
+                    continue
+                subparsers.add_parser(obj.meta.label, help=obj.meta.description)
+                
+            #self.args.add_argument('controller', action='store', metavar='sub-command')
+            
     def run(self):
         """
         This function wraps everything together (after self.setup() is 
@@ -81,6 +103,8 @@ class CementApp(object):
         
         """
         self._parse_args()
+        #print handler.get('controller', 'base')
+        #self.controller.dispatch(self)
         
     def render(self, data, template=None):
         """
@@ -316,6 +340,7 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     handler.define('plugin', plugin.IPluginHandler)
     handler.define('output', output.IOutputHandler)
     handler.define('arg', arg.IArgumentHandler)
+    handler.define('controller', controller.IControllerHandler)
     
     # extension handler is the only thing that can't be loaded... as, well, an
     # extension.  ;)

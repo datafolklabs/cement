@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-from cement2.core import foundation, backend, hook
+from cement2.core import foundation, backend, hook, controller, handler
 
 config = backend.defaults()
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
@@ -37,22 +37,33 @@ def my_hook_three(*args, **kw):
     return 'in my_hook_three'
 
 
-class MyAppBaseController(object):
-    __namespace__ = 'base'
-    
-    def __visible__(self):
-        # return all exposed commands
-        pass
+class MyAppBaseController(controller.CementControllerHandler):
+    class meta:
+        type = 'controller'
+        label = 'base'
+        namespace = 'base'
+        description = 'myapp base controller'
+        options = [
+            ('--base', dict(action='store_true')), 
+            ('--fuck', dict(action='store', metavar='FUCK')),
+            ]
         
-    def __hidden__(self):
-        # return all hidden commands
-        pass
+        defaults = dict(foo='bar')
+
+        visible = [
+            ('cmd', dict(help="run some command", alias='c')),
+            ]
         
-    def _hidden_cmd(self):
+        hidden = [
+            ('cmd-help', dict(help="cmd help info")),
+            ]
+
+    def cmd_help(self):
         print "in hidden-cmd"
         
-    def cmd1(self):
+    def cmd(self):
         print 'in cmd1'
+handler.register(MyAppBaseController)
 
 #app.controllers.append()
 
