@@ -20,8 +20,7 @@ Cement2 Core features include (but not limited to):
     * Plugin handler provides an interface to easily extend your application
     * Hook support adds a bit of magic to apps and also ties into framework
     * Handler system connects implementation classes with Interfaces
-    * Output handler interface renders output from dictionary
-    * Json output rendering allows other programs to access your CLI-API
+    * Output handler interface renders return dictionaries to console
     * Core library and extensions have zero external dependencies
     * Extensions with external dependencies packaged separately
     * Oh yeah, Python3 support!
