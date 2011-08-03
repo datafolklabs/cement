@@ -1,30 +1,38 @@
 """Cement core extensions module."""
 
-from zope import interface
+#from zope import interface
 
-from cement2.core import backend, exc
+from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
-
-def extension_handler_invariant(obj):
+    
+def extension_validator(obj):
     members = [
         'setup',
         'load_extension',
         'load_extensions',
         'loaded_extensions',
         ]
-    backend.validate_invariants(obj, members)
+    interface.validate(IExtension, obj, members)
     
-class IExtensionHandler(interface.Interface):
+class IExtension(interface.Interface):
     """
     This class defines the Extension Handler Interface.  Classes that 
     implement this handler must provide the methods and attributes defined 
     below.
     
+    Implementations do *not* subclass from interfaces.
+    
     """
-    meta = interface.Attribute('Handler meta-data')
+    
+    # This is interface meta-deta, not part of the implemention
+    class imeta:
+        label = 'extension'
+        validator = extension_validator
+    
+    # Must be provided by the implementation
+    meta = interface.Attribute('Handler meta-data class')
     loaded_extensions = interface.Attribute('List of loaded extensions')
-    interface.invariant(extension_handler_invariant)
     
     def setup(defaults):
         """
@@ -75,13 +83,13 @@ class CementExtensionHandler(object):
     loading framework extensions.
     
     """
-    interface.implements(IExtensionHandler)
+    #interface.implements(IExtensionHandler)
     loaded_extensions = []
     
     class meta:
-        type = 'extension'
+        interface = IExtension
         label = 'cement'
-
+        
     def __init__(self):
         self.defaults = {}
         self.enabled_extensions = []
@@ -98,8 +106,8 @@ class CementExtensionHandler(object):
         try:
             __import__(ext_module)
             self.loaded_extensions.append(ext_module)
-        except ImportError, e:
-            raise exc.CementRuntimeError, e.args[0]
+        except ImportError as e:
+            raise exc.CementRuntimeError(e.args[0])
     
     def load_extensions(self, ext_list):
         for ext in ext_list:

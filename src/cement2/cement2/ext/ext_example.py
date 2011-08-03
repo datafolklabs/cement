@@ -1,13 +1,10 @@
 """Example framework extension."""
 
-from zope import interface
-
 from cement2.core import output, handler
 
 class ExampleOutputHandler(object):
-    interface.implements(output.IOutputHandler)
     class meta:
-        type = 'output'
+        interface = output.IOutput
         label = 'example'
         
     def __init__(self):

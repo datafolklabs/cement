@@ -1,30 +1,34 @@
 """Cement core plugins module."""
 
-from zope import interface
-
-from cement2.core import backend, exc
+from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
 
-def plugin_handler_invariant(obj):
+def plugin_validator(obj):
     members = [
         'setup',
         'load_plugin',
         'load_plugins',
         'loaded_plugins',
         ]
-    backend.validate_invariants(obj, members)
+    interface.validate(IPlugin, obj, members)
     
-class IPluginHandler(interface.Interface):
+class IPlugin(interface.Interface):
     """
     This class defines the Plugin Handler Interface.  Classes that 
     implement this handler must provide the methods and attributes defined 
     below.
     
+    Implementations do *not* subclass from interfaces.
+    
     """
+    class imeta:
+        label = 'plugin'
+        validator = plugin_validator
+    
+    # Must be provided by the implementation
     meta = interface.Attribute('Handler meta-data')
     loaded_plugins = interface.Attribute('List of loaded plugins')
-    interface.invariant(plugin_handler_invariant)
     
     def setup(config_obj):
         """
@@ -65,13 +69,4 @@ class IPluginHandler(interface.Interface):
                 A list of plugin names to load.
         
         """
-
-        
-
-    
-    
-    
-    
-    
-    
         

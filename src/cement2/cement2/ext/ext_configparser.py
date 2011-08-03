@@ -2,15 +2,13 @@
 
 import os
 import sys
-from zope import interface
 
 if sys.version_info[0] < 3:
-    from ConfigParser import RawConfigParser
+    from configparser import RawConfigParser
 else:
     from configparser import RawConfigParser
 
-from cement2.core import backend, handler
-from cement2.core.config import IConfigHandler
+from cement2.core import backend, handler, config
 
 Log = backend.minimal_logger(__name__)
 
@@ -21,9 +19,8 @@ class ConfigParserConfigHandler(RawConfigParser):
     ConfigParser library.
     
     """
-    interface.implements(IConfigHandler)
     class meta:
-        type = 'config'
+        interface = config.IConfig
         label = 'configparser'
         
     def setup(self, defaults, *args, **kw):
@@ -39,12 +36,12 @@ class ConfigParserConfigHandler(RawConfigParser):
         Merge a dictionary into our config.
         
         """
-        for section in dict_obj.keys():
+        for section in list(dict_obj.keys()):
             if type(dict_obj[section]) == dict:
                 if not section in self.sections():
                     self.add_section(section)
                 
-                for key in dict_obj[section].keys():
+                for key in list(dict_obj[section].keys()):
                     self.set(section, key, dict_obj[section][key])
                 # we don't support nested config blocks, so no need to go 
                 # further down to more nested dicts.

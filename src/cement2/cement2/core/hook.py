@@ -25,8 +25,8 @@ def define(name):
     
     """
     Log.debug("defining hook '%s'", name)
-    if backend.hooks.has_key(name):
-        raise exc.CementRuntimeError, "Hook name '%s' already defined!" % name
+    if name in backend.hooks:
+        raise exc.CementRuntimeError("Hook name '%s' already defined!" % name)
     backend.hooks[name] = []
  
 def defined(hook_name):
@@ -80,7 +80,7 @@ class register(object):
         if not self.name:
             self.name = func.__name__
 
-        if not backend.hooks.has_key(self.name):
+        if self.name not in backend.hooks:
             Log.debug("hook name '%s' is not defined!" % self.name)
             return func
             
@@ -115,8 +115,8 @@ def run(name, *args, **kwargs):
             # do something with result from each hook function
             ...
     """
-    if not backend.hooks.has_key(name):
-        raise exc.CementRuntimeError, "Hook name '%s' is not defined!" % name
+    if name not in backend.hooks:
+        raise exc.CementRuntimeError("Hook name '%s' is not defined!" % name)
     backend.hooks[name].sort() # Will order based on weight
     for hook in backend.hooks[name]:
         Log.debug("running hook '%s' (%s) from %s" % (name, hook[2], hook[2].__module__))

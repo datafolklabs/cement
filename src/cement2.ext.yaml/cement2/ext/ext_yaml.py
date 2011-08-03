@@ -2,15 +2,13 @@
 
 import sys
 import yaml
-from zope import interface
-
 from cement2.core import handler, hook, output, backend
+
 Log = backend.minimal_logger(__name__)
 
 class YamlOutputHandler(object):
-    interface.implements(output.IOutputHandler)
     class meta:
-        type = 'output'
+        interface = output.IOutput
         label = 'yaml'
         
     def __init__(self):
@@ -67,8 +65,8 @@ class YamlOutputHandler(object):
         
         """
         Log.debug("rendering output as Yaml via %s" % self.__module__)
-        sys.stdout = backend.STDOUT
-        sys.stderr = backend.STDERR
+        sys.stdout = backend.SAVED_STDOUT
+        sys.stderr = backend.SAVED_STDERR
         return yaml.dump(data_dict).strip()
             
 handler.register(YamlOutputHandler)
@@ -79,5 +77,5 @@ def cement_add_args_hook(config, arg_obj):
     Adds the '--yaml' argument to the argument object.
     
     """
-    arg_obj.minimal_add_argument('--yaml', dest='output_handler', 
+    arg_obj.add_argument('--yaml', dest='output_handler', 
         action='store_const', help='toggle yaml output handler', const='yaml')

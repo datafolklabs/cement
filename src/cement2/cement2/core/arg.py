@@ -1,29 +1,34 @@
 """Cement core argument module."""
 
-from zope import interface
-from cement2.core import backend, exc
+from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
 
-def arg_handler_invariant(obj):
+def argument_validator(obj):
     members = [
         'setup',
         'parse',
         'parsed_args',
         'add_argument',
         ]
-    backend.validate_invariants(obj, members)
+    interface.validate(IArgument, obj, members)
     
-class IArgumentHandler(interface.Interface):
+class IArgument(interface.Interface):
     """
     This class defines the Argument Handler Interface.  Classes that 
     implement this handler must provide the methods and attributes defined 
     below.
     
+    Implementations do *not* subclass from interfaces.
+    
     """
+    class imeta:
+        label = 'argument'
+        validator = argument_validator
+    
+    # Must be provided by the implementation
     meta = interface.Attribute('Handler meta-data')
     parsed_args = interface.Attribute('Parsed args object')
-    interface.invariant(arg_handler_invariant)
     
     def setup(config_obj):
         """

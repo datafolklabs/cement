@@ -1,9 +1,8 @@
 """Cement core config module."""
 
-from zope import interface
-from cement2.core import exc, backend
+from cement2.core import exc, backend, interface
 
-def config_handler_invariant(obj):
+def config_validator(obj):
     members = [
         'setup',
         'keys', 
@@ -16,9 +15,9 @@ def config_handler_invariant(obj):
         'add_section',
         'has_section',
         ]
-    backend.validate_invariants(obj, members)
+    interface.validate(IConfig, obj, members)
     
-class IConfigHandler(interface.Interface):
+class IConfig(interface.Interface):
     """
     This class defines the Config Handler Interface.  Classes that 
     implement this handler must provide the methods and attributes defined 
@@ -32,9 +31,15 @@ class IConfigHandler(interface.Interface):
     (with or without parameters) and then passed to 'lay_cement()' already
     instantiated.
     
+    Implementations do *not* subclass from interfaces.
+    
     """
+    class imeta:
+        label = 'config'
+        validator = config_validator
+    
+    # Must be provided by the implementation
     meta = interface.Attribute('Handler meta-data')
-    interface.invariant(config_handler_invariant)
             
     def setup(defaults):
         """

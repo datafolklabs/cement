@@ -74,16 +74,13 @@ def defined(handler_type):
     else:
         return False
         
-def define(handler_type, handler_interface):
+def define(interface):
     """
-    Define a handler type that plugins can register handler objects under.
+    Define a handler based on the provided interface.
     
     Required arguments:
-    
-        handler_type
-            The type of the handler, stored as handlers['handler_type']
-    
-        handler_interface
+
+        interface
             The handler interface class that defines the interface to be 
             implemented.
     
@@ -93,16 +90,23 @@ def define(handler_type, handler_interface):
     
         from cement2.core import handler
 
-        handler.define('database', IDatabaseHandler)
+        handler.define(IDatabaseHandler)
     
     """
+    if not hasattr(interface, 'imeta'):
+        raise exc.CementInterfaceError("Invalid %s, " % interface + \
+                                       "missing 'imeta' class.")  
+    if not hasattr(interface.imeta, 'label'):
+        raise exc.CementInterfaceError("Invalid %s, " % interface + \
+                                       "missing 'imeta.label' class.")  
+                                       
     Log.debug("defining handler type '%s' (%s)" % \
-        (handler_type, handler_interface.__name__))
-    if backend.handlers.has_key(handler_type):
-        raise exc.CementRuntimeError("handler type '%s' already defined!" % \
-                                  handler_type)
-    backend.handlers[handler_type] = {'interface' : handler_interface}
-    
+        (interface.imeta.label, interface.__name__))
+                                                                              
+    if interface.imeta.label in backend.handlers:
+        raise exc.CementRuntimeError("Handler type '%s' already defined!" % \
+                                     interface.imeta.label)
+    backend.handlers[interface.imeta.label] = {'__interface__' : interface}
     
 def register(obj):
     """
@@ -120,48 +124,53 @@ def register(obj):
     
     .. code-block:: python
     
-        from zope import interface
         from cement2.core import handler
         
-        class MyHandler(object):
-            interface.implements(IDatabaseHandler)
+        class MyDatabaseHandler(object):
             class meta:
-                type = 'database'
+                interface = IDatabase
                 label = 'mysql'
             
             def connect(self):
             ...
             
-        handler.register(MyHandler)
+        handler.register(MyDatabaseHandler)
     
     """
 
+    # This is redundant with the validator, but if we don't check for them
+    # then we'll get an uncontrolled exception.
     if not hasattr(obj, 'meta'):
-        raise exc.CementInterfaceError, \
-            "Invalid interface %s, missing 'meta' class." % obj       
+        raise exc.CementInterfaceError("Invalid handler %s, " % obj + \
+                                       "missing 'meta' class.")  
     if not hasattr(obj.meta, 'label'):
-        raise exc.CementInterfaceError, \
-            "Invalid interface %s, missing 'meta.label'." % obj
-    if not hasattr(obj.meta, 'type'):
-        raise exc.CementInterfaceError, \
-            "Invalid interface %s, missing 'meta.type'." % obj
+        raise exc.CementInterfaceError("Invalid handler %s, " % obj + \
+                                       "missing 'meta.label'.")
+    if not hasattr(obj.meta, 'interface'):
+        raise exc.CementInterfaceError("Invalid handler %s, " % obj + \
+                                       "missing 'meta.interface'.")
             
+    handler_type = obj.meta.interface.imeta.label
     Log.debug("registering handler '%s' into handlers['%s']['%s']" % \
-             (obj, obj.meta.type, obj.meta.label))
+             (obj, handler_type, obj.meta.label))
              
-    if obj.meta.type not in backend.handlers:
+    if handler_type not in backend.handlers:
         raise exc.CementRuntimeError("Handler type '%s' doesn't exist." % \
-                                     obj.meta.type)
-    if backend.handlers[obj.meta.type].has_key(obj.meta.label) and \
-        backend.handlers[obj.meta.type][obj.meta.label] != obj:
+                                     handler_type)                     
+    if obj.meta.label in backend.handlers[handler_type] and \
+        backend.handlers[handler_type][obj.meta.label] != obj:
         raise exc.CementRuntimeError("handlers['%s']['%s'] already exists" % \
-                                (obj.meta.type, obj.meta.label))
-    if not backend.handlers[obj.meta.type]['interface'].implementedBy(obj):
-        raise exc.CementInterfaceError("%s does not implement a '%s' handler." % \
-                                      (obj, obj.meta.type))
+                                (handler_type, obj.meta.label))
 
-    backend.handlers[obj.meta.type]['interface'].validateInvariants(obj)
-    backend.handlers[obj.meta.type][obj.meta.label] = obj
+    interface = backend.handlers[handler_type]['__interface__']
+    if hasattr(interface.imeta, 'validator'):
+        validate = interface.imeta.validator
+        validate(obj)
+    else:
+        Log.debug("Interface '%s' does not have a validator() function!" % \
+                 interface)
+        
+    backend.handlers[handler_type][obj.meta.label] = obj
    
 def enabled(handler_type, handler_label):
     """

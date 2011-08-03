@@ -84,44 +84,7 @@ def minimal_logger(name, debug=False):
         
     log.addHandler(console)
     return log
-
-def validate_invariants(obj, members):
-    """
-    A wrapper to validate interfaces.
-    
-    Required Arguments:
-    
-        obj
-            The object to validate.
-            
-        members
-            The object members that must exist.
-            
-    Also validates the following (as all interface implementations must
-    have a meta class which includes a type and label (at the minimum)):
-    
-        meta
-        meta.type
-        meta.label
         
-    """
-    invalid = []
-    
-    for member in members:
-        if not hasattr(obj, member):
-            invalid.append(member)
-    
-    if not hasattr(obj, 'meta'):
-        invalid.append("meta")
-    else:
-        for member in ['type', 'label']:
-            if not hasattr(obj.meta, member):
-                invalid.append("meta.%s" % member)
-            
-    if invalid:
-        raise exc.CementInterfaceError, \
-            "Invalid or missing: %s in %s" % (invalid, obj)
-
 # global handlers dict
 handlers = {}
 

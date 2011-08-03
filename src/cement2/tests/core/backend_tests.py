@@ -39,8 +39,8 @@ def teardown():
     
 @with_setup(startup, teardown)
 def test_verify_defaults():
-    for section in config.keys():
-        for key in config[section].keys():
+    for section in list(config.keys()):
+        for key in list(config[section].keys()):
             yield compare_with_defaults, section, key
         
 def compare_with_defaults(section, key):
@@ -48,8 +48,8 @@ def compare_with_defaults(section, key):
     Check that the default key value matches that of the known config above.
     """
     defaults = backend.defaults(app_name='helloworld')
-    ok_(defaults.has_key(section))
-    ok_(defaults[section].has_key(key))
+    ok_(section in defaults)
+    ok_(key in defaults[section])
     eq_(defaults[section][key], config[section][key])
     
 @with_setup(startup, teardown)

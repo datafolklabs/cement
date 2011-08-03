@@ -1,9 +1,8 @@
 """Cement core log module."""
 
-from zope import interface
-from cement2.core import exc, backend
+from cement2.core import exc, backend, interface
             
-def log_handler_invariant(obj):
+def log_validator(obj):
     members = [
         'setup',
         'clear_loggers',
@@ -15,17 +14,23 @@ def log_handler_invariant(obj):
         'fatal', 
         'debug', 
         ]
-    backend.validate_invariants(obj, members)        
+    interface.validate(ILog, obj, members)        
                 
-class ILogHandler(interface.Interface):
+class ILog(interface.Interface):
     """
     This class defines the Log Handler Interface.  Classes that 
     implement this handler must provide the methods and attributes defined 
     below.
         
+    Implementations do *not* subclass from interfaces.
+    
     """
+    class imeta:
+        label = 'log'
+        validator = log_validator
+    
+    # Must be provided by the implementation
     meta = interface.Attribute('Handler meta-data')
-    interface.invariant(log_handler_invariant)
     
     def setup(config_obj):
         """

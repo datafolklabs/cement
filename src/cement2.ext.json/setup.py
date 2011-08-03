@@ -1,4 +1,6 @@
 
+# NOTE: jsonpickle does not currently support Python3
+
 from setuptools import setup, find_packages
 import sys, os
 

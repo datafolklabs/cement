@@ -2,7 +2,6 @@
 
 import sys
 import logging
-from zope import interface
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
@@ -26,9 +25,9 @@ config['log']['console_formatter'] = None
 config['log']['clear_loggers'] = True
         
 class BogusHandler1(object):
-    __handler_type__ = 'log'
-    __handler_label__ = 'bogus'
-    interface.implements(log.ILogHandler)
+    class meta:
+        interface = log.ILog
+        label = 'bogus'
 
 @raises(exc.CementInterfaceError)
 def test_unproviding_handler():

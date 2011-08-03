@@ -13,15 +13,13 @@ _t.prep('test')
 from cement2.ext import ext_cement_output
 
 class BogusOutputHandler(object):
-    interface.implements(output.IOutputHandler)
     class meta:
-        #type = 'output'
+        #interface = IBogus
         label = 'bogus_handler'
 
 class BogusOutputHandler2(object):
-    #interface.implements(output.IOutputHandler)
     class meta:
-        type = 'output'
+        interface = output.IOutput
         label = 'bogus_handler'
 
 class BogusHandler3(object):
@@ -29,7 +27,7 @@ class BogusHandler3(object):
 
 class DuplicateHandler(object):
     class meta:
-        type = 'output'
+        interface = output.IOutput
         label = 'cement'
         
 @raises(exc.CementRuntimeError)

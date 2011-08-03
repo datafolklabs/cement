@@ -1,14 +1,11 @@
 """Logging framework extension."""
 
 import logging
-from zope import interface
-from cement2.core import exc, util, handler
-from cement2.core.log import ILogHandler
+from cement2.core import exc, util, handler, log
         
 class LoggingLogHandler(object):  
-    interface.implements(ILogHandler)
     class meta:
-        type = 'log'
+        interface = log.ILog
         label = 'logging'
         
         # These are the default config values, overridden by any '[log]' 

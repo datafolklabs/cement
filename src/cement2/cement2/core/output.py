@@ -1,28 +1,32 @@
 """Cement core output module."""
 
-from zope import interface
-
-from cement2.core import backend, exc
+from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
 
-def output_handler_invariant(obj):
+def output_validator(obj):
     members = [
         'setup',
         'render',
         ]
-    backend.validate_invariants(obj, members)    
+    interface.validate(IOutput, obj, members)    
     
-class IOutputHandler(interface.Interface):
+class IOutput(interface.Interface):
     """
     This class defines the Output Handler Interface.  Classes that 
     implement this handler must provide the methods and attributes defined 
     below.
     
+    Implementations do *not* subclass from interfaces.
+    
     """
+    class imeta:
+        label = 'output'
+        validator = output_validator
+    
+    # Must be provided by the implementation
     meta = interface.Attribute('Handler meta-data')
     file_suffix = interface.Attribute('The file suffix (I.e. .txt, etc.)')
-    interface.invariant(output_handler_invariant)
     
     def setup(config_obj):
         """

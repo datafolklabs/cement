@@ -1,17 +1,15 @@
 """OptParse framework extension."""
 
-from zope import interface
 from optparse import OptionParser
 from cement2.core import backend, handler, arg
 
 Log = backend.minimal_logger(__name__)
     
 class OptParseArgumentHandler(OptionParser):
-    interface.implements(arg.IArgumentHandler)
     parsed_args = None
     
     class meta:
-        type = 'arg'
+        interface = arg.IArgument
         label = 'optparse'
     
     def __init__(self, *args, **kw):

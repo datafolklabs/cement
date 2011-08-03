@@ -1,27 +1,32 @@
 """Cement core controller module."""
 
-from zope import interface
-from cement2.core import backend, exc
+from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
 
-def controller_handler_invariant(obj):
+def controller_validator(obj):
     members = [
         'setup',
         'dispatch',
         ]
-    backend.validate_invariants(obj, members)
+    interface.validate(IController, obj, members)
     
-class IControllerHandler(interface.Interface):
+class IController(interface.Interface):
     """
     This class defines the Controller Handler Interface.  Classes that 
     implement this handler must provide the methods and attributes defined 
     below.
     
+    Implementations do *not* subclass from interfaces.
+    
     """
+    class imeta:
+        label = 'controller'
+        validator = controller_validator
+    
+    # Must be provided by the implementation
     meta = interface.Attribute('Handler meta-data')
     registered_controllers = interface.Attribute('List of registered controllers')
-    interface.invariant(controller_handler_invariant)
     
     def setup(base_app):
         """
@@ -86,9 +91,8 @@ class CementControllerHandler(object):
     acts as a base class that application controllers can subclass from.
     
     """
-    interface.implements(IControllerHandler)
     class meta:
-        type = 'controller'
+        interface = IController
         label = None # provided in subclass
         options = []
         

@@ -73,9 +73,9 @@ class CementApp(object):
         self._setup_plugin_handler()
         self._setup_arg_handler()
         self._setup_output_handler()
-        self.collect_controller_args()
+        #self._collect_controller_args()
     
-    def collect_controller_args(self):
+    def _collect_controller_args(self):
         """
         Read all controllers defined in backend.handlers and add to the 
         self.args handler.
@@ -163,19 +163,18 @@ class CementApp(object):
                 An instantiated handler object.
                 
         """
+        handler_type = handler_obj.meta.interface.imeta.label
         
         if hasattr(handler_obj.meta, 'defaults'):
-            Log.debug("setting config defaults from handlers['%s']['%s']" % \
-                     (handler_obj.meta.type, handler_obj.meta.label)) 
+            Log.debug("setting config defaults from '%s'" % handler_obj)
             for key in handler_obj.meta.defaults:
-                if not self.config.has_section(handler_obj.meta.type):
-                    self.config.add_section(handler_obj.meta.type)
-                if not self.config.has_key(handler_obj.meta.type, key):
-                    self.config.set(handler_obj.meta.type, key,
+                if not self.config.has_section(handler_type):
+                    self.config.add_section(handler_type)
+                if not self.config.has_key(handler_type, key):
+                    self.config.set(handler_type, key,
                                     handler_obj.meta.defaults[key])
         else:
-            Log.debug("no config defaults from handlers['%s']['%s']" % \
-                     (handler_obj.meta.type, handler_obj.meta.label))                        
+            Log.debug("no config defaults from '%s'" % handler_obj)
                      
     def _parse_args(self):
         self.args.parse(self.argsv)
@@ -252,7 +251,8 @@ class CementApp(object):
     def _setup_arg_handler(self):
         Log.debug("setting up %s.arg handler" % self.name) 
         if not self.args:
-            h = handler.get('arg', self.config.get('base', 'arg_handler'))
+            h = handler.get('argument', 
+                            self.config.get('base', 'arg_handler'))
             self.args = h()
         self._set_handler_defaults(self.args)
         self.args.setup(self.config)
@@ -260,7 +260,7 @@ class CementApp(object):
             action='store_true', help='toggle debug output')
         self.args.add_argument('--quiet', dest='suppress_output', 
             action='store_true', help='suppress all output')
-        for arg_obj in hook.run('cement_add_args_hook', self.config, self.args):
+        for obj in hook.run('cement_add_args_hook', self.config, self.args):
             pass
                  
     def _validate_required_config(self):
@@ -343,13 +343,13 @@ def lay_cement(name, klass=CementApp, *args, **kw):
         pass
         
     # define and register handlers    
-    handler.define('log', log.ILogHandler)
-    handler.define('config', config.IConfigHandler)
-    handler.define('extension', extension.IExtensionHandler)
-    handler.define('plugin', plugin.IPluginHandler)
-    handler.define('output', output.IOutputHandler)
-    handler.define('arg', arg.IArgumentHandler)
-    handler.define('controller', controller.IControllerHandler)
+    handler.define(extension.IExtension)
+    handler.define(log.ILog)
+    handler.define(config.IConfig)
+    handler.define(plugin.IPlugin)
+    handler.define(output.IOutput)
+    handler.define(arg.IArgument)
+    handler.define(controller.IController)
     
     # extension handler is the only thing that can't be loaded... as, well, an
     # extension.  ;)

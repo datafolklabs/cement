@@ -2,15 +2,13 @@
 
 import sys
 import jsonpickle
-from zope import interface
-
 from cement2.core import handler, output, backend, hook
+
 Log = backend.minimal_logger(__name__)
 
 class JsonOutputHandler(object):
-    interface.implements(output.IOutputHandler)
     class meta:
-        type = 'output'
+        interface = output.IOutput
         label = 'json'
         
     def __init__(self):

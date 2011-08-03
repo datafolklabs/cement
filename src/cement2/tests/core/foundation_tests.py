@@ -1,7 +1,6 @@
 """Tests for cement.core.setup."""
 
 import sys
-from zope import interface
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
@@ -10,11 +9,10 @@ from cement2.core import log, output, handler, hook, arg
 from cement2 import test_helper as _t
 
 class TestOutputHandler(object):
-    interface.implements(output.IOutputHandler)
     file_suffix = None
     
     class meta:
-        type = 'output'
+        interface = output.IOutput
         label = 'test_output_handler'
         
     def setup(self, config_obj):

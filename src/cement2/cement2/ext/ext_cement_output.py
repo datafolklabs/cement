@@ -1,7 +1,5 @@
 """Cement basic output handler extension."""
 
-from zope import interface
-
 from cement2.core import backend, handler, output
 
 Log = backend.minimal_logger(__name__)
@@ -12,11 +10,10 @@ class CementOutputHandler(object):
     nothing to generate output.
     
     """
-    interface.implements(output.IOutputHandler)
     file_suffix = None
     
     class meta:
-        type = 'output'
+        interface = output.IOutput
         label = 'cement'
         
     def setup(self, config_obj):

@@ -11,13 +11,13 @@ _t.prep()
 
 def test_define():
     hook.define('nosetests_hook')
-    ok_(backend.hooks.has_key('nosetests_hook'))
+    ok_('nosetests_hook' in backend.hooks)
 
 @raises(exc.CementRuntimeError)
 def test_define_again():
     try:
         hook.define('nosetests_hook')
-    except exc.CementRuntimeError, e:
+    except exc.CementRuntimeError as e:
         eq_(e.msg, "Hook name 'nosetests_hook' already defined!")
         raise
 
