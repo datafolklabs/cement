@@ -5,12 +5,12 @@ import sys, os
 VERSION = '1.9.1'
 
 LONG = """
-Cement is an advanced CLI Application Framework for Python. This package 
+Cement2 is an advanced CLI Application Framework for Python. This package 
 provides the core framework required to run an application built on top of 
 Cement.  Note that this is only part of 'cement' as a whole.  The entire
 source is available from:
 
-    http://builtoncement.org/cement/0.8/download/
+    http://builtoncement.org/cement/1.9/download/
     
 
 The Cement CLI Application Framework is Open Source and is distributed under 
@@ -28,14 +28,16 @@ GETTING STARTED:
 
 Stable versions can be installed via the cheeze shop:
 ::
-    $ easy_install cement
+    $ easy_install cement2
 
 
 Development versions can be checked out of Git:
 ::
     $ git clone git://github.com/derks/cement.git
     
-    $ cd cement/src/cement/
+    $ git checkout --track -b portland origin/portland
+    
+    $ cd cement/src/cement2/
     
     $ python setup.py install
 
