@@ -36,7 +36,7 @@ def my_hook_two(*args, **kw):
 def my_hook_three(*args, **kw):
     return 'in my_hook_three'
 
-
+    
 class MyAppBaseController(controller.CementControllerHandler):
     class meta:
         type = 'controller'
@@ -57,7 +57,22 @@ class MyAppBaseController(controller.CementControllerHandler):
         hidden = [
             ('cmd-help', dict(help="cmd help info")),
             ]
+    
+    @property
+    def __visible__(self):
+        visible = []
+        for member in dir(self):
+            if member == '__visible__':
+                continue
 
+            if hasattr(getattr(self, member), 'exposed'):
+                visible.append(member)
+        return visible
+            
+    @controller.expose(hide=True, help='default command', aliases=['run'])
+    def default(self):
+        raise NotImplementedError
+        
     def cmd_help(self):
         print "in hidden-cmd"
         
@@ -66,7 +81,6 @@ class MyAppBaseController(controller.CementControllerHandler):
 handler.register(MyAppBaseController)
 
 #app.controllers.append()
-
 
 #app.config = ConfigObjConfigHandler()
 app.setup()

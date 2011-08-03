@@ -84,9 +84,18 @@ class CementApp(object):
             base = handler.get('controller', 'base', None)
             subparsers = self.args.add_subparsers(title='sub-commands')
             if base:
+                controller = base()
+                
                 # FIX ME: this isn't part of the interface
-                for visible in base().__visible__:
-                    subparsers.add_parser(visible[0], help=visible[1])
+                for visible in controller.__visible__:
+                    func = getattr(controller, visible)
+                    # default commands don't support aliases
+                    subparsers.add_parser(func.label, 
+                        action='store_const', 
+                        const='command', 
+                        help=func.help, 
+                        aliases=func.aliases
+                        )
             
             # all other controllers get namespaces
             for obj in handler.list('controller'):

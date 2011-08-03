@@ -49,6 +49,37 @@ class IControllerHandler(interface.Interface):
                 
         """
 
+class expose(object):
+    def __init__(self, hide=False, help='', aliases=[]):
+        """
+        Used to expose controller functions to be listed as commands, and to 
+        decorate the function with meta data for the argument parser.
+        
+        Optional Argumnets:
+        
+            hide
+                Whether the command should be visible
+            
+            help
+                Help text.
+            
+            alias
+                An alias to this command.
+                
+        """
+        self.hide = hide
+        self.help = help
+        self.aliases = aliases
+
+    def __call__(self, func):
+        self.func = func
+        self.func.label = self.func.__name__
+        self.func.exposed = True
+        self.func.hide = self.hide
+        self.func.help = self.help
+        self.func.aliases = self.aliases
+        return self.func
+        
 class CementControllerHandler(object):
     """
     This is an implementation of the IControllerHandler interface, and also
@@ -59,6 +90,7 @@ class CementControllerHandler(object):
     class meta:
         type = 'controller'
         label = None # provided in subclass
+        options = []
         
     def __init__(self):
         pass
