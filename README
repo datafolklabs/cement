@@ -33,12 +33,6 @@ Cement2 Core Extensions includes:
     * ConfigObj config handler extension replaces ConfigParser
     
 
-The above provides any level developer with a solid, and fully functional 
-cli application from the very start with more or less a single command via 
-the paster utility.  Cement brings an end to the 'hack it out, and [maybe] 
-clean it up later' routine that we all find ourselves in under deadlines.
-
-
 MORE INFORMATION:
 
 All documentation is available from the official website:
