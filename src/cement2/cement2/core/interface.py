@@ -45,12 +45,12 @@ def validate(interface, obj, members, **kw):
     
         meta
             A list of members to validate in the handler classes meta class.
-            Defaults to ['type', 'label'].
+            Defaults to ['interface', 'label'].
             
     """
     invalid = []
     meta = kw.get('meta', ['interface', 'label'])
-    attributes = kw.get('attributes', )
+
     if interface != obj.meta.interface:
         raise exc.CementInterfaceError("%s does not implement '%s'." % \
                                       (obj, interface))

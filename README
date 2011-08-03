@@ -23,6 +23,8 @@ Cement2 Core features include (but not limited to):
     * Output handler interface renders return dictionaries to console
     * Core library and extensions have zero external dependencies
     * Extensions with external dependencies packaged separately
+    * Significant Nose test coverage
+    * Extensive Sphinx documentation, complete with examples
     * Oh yeah, Python3 support!
     
 
