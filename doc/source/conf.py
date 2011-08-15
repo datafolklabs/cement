@@ -19,8 +19,8 @@ RELEASE = '0.8.19'
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.append(0, os.path.abspath('../../src/cement/'))
-sys.path.append(0, os.path.abspath('../../src/cement.devtools/'))
+sys.path.insert(0, os.path.abspath('../../src/cement/'))
+sys.path.insert(0, os.path.abspath('../../src/cement.devtools/'))
 
 # -- General configuration -----------------------------------------------------
 
