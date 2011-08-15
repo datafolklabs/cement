@@ -4,6 +4,7 @@ import sys
 from cement2.core import foundation, backend, hook, controller, handler
 
 config = backend.defaults()
+config['base']['debug'] = True
 config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
 config['base']['config_handler'] = 'configparser'
 config['base']['arg_handler'] = 'argparse'
@@ -88,6 +89,8 @@ app.setup()
 app.argv = sys.argv[1:]
 app.add_arg('-t', dest='t', action='store', help='t var')
 app.args.add_argument('-s', '--status', dest='status', action='store', help='status option', metavar='S')
+app.log.info('This is my application log')
+
 app.run()
 print(app.args.parsed_args.debug)
 print(app.pargs)
