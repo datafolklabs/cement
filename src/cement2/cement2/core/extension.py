@@ -6,7 +6,7 @@ from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
     
-def extension_validator(obj):
+def extension_validator(klass, obj):
     members = [
         'setup',
         'load_extension',

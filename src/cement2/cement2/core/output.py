@@ -4,7 +4,7 @@ from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
 
-def output_validator(obj):
+def output_validator(klass, obj):
     members = [
         'setup',
         'render',

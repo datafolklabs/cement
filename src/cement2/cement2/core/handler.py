@@ -164,8 +164,8 @@ def register(obj):
 
     interface = backend.handlers[handler_type]['__interface__']
     if hasattr(interface.imeta, 'validator'):
-        validate = interface.imeta.validator
-        validate(obj)
+        interface.imeta().validator(obj)
+        #validate(obj)
     else:
         Log.debug("Interface '%s' does not have a validator() function!" % \
                  interface)

@@ -4,7 +4,7 @@ from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
 
-def argument_validator(obj):
+def argument_validator(klass, obj):
     members = [
         'setup',
         'parse',

@@ -4,7 +4,7 @@ from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
 
-def plugin_validator(obj):
+def plugin_validator(klass, obj):
     members = [
         'setup',
         'load_plugin',

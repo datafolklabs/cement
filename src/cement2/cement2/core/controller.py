@@ -4,7 +4,7 @@ from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)
 
-def controller_validator(obj):
+def controller_validator(klass, obj):
     members = [
         'setup',
         'dispatch',

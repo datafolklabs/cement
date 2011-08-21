@@ -2,7 +2,7 @@
 
 from cement2.core import exc, backend, interface
 
-def config_validator(obj):
+def config_validator(klass, obj):
     members = [
         'setup',
         'keys', 

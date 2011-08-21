@@ -2,7 +2,7 @@
 
 from cement2.core import exc, backend, interface
             
-def log_validator(obj):
+def log_validator(klass, obj):
     members = [
         'setup',
         'clear_loggers',

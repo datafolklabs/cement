@@ -4,7 +4,7 @@ import os
 import sys
 
 if sys.version_info[0] < 3:
-    from configparser import RawConfigParser
+    from ConfigParser import RawConfigParser
 else:
     from configparser import RawConfigParser
 
