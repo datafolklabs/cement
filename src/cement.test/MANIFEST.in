@@ -1,2 +1,0 @@
-recursive-include cement_test/templates *
-recursive-include tests *
