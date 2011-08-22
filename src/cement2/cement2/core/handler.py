@@ -52,7 +52,7 @@ def list(handler_type):
     """
     res = []
     for label in backend.handlers[handler_type]:
-        if label == 'interface':
+        if label == '__interface__':
             continue
         res.append(backend.handlers[handler_type][label])
     return res

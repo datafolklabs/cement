@@ -38,7 +38,7 @@ def my_hook_three(*args, **kw):
     return 'in my_hook_three'
 
     
-class MyAppBaseController(controller.CementControllerHandler):
+class MyAppBaseController(controller.CementBaseController):
     class meta:
         interface = controller.IController
         label = 'base'
@@ -62,7 +62,7 @@ class MyAppBaseController(controller.CementControllerHandler):
     def cmd(self):
         print('in cmd1')
         
-class SecondController(controller.CementControllerHandler):
+class SecondController(controller.CementBaseController):
     class meta:
         interface = controller.IController
         label = 'second'
@@ -79,7 +79,7 @@ class SecondController(controller.CementControllerHandler):
     def default(self):
         print("Second Controller Default!!!!!")
 
-class ThirdController(controller.CementControllerHandler):
+class ThirdController(controller.CementBaseController):
     class meta:
         interface = controller.IController
         label = 'third'
@@ -95,6 +95,9 @@ class ThirdController(controller.CementControllerHandler):
     def default(self):
         print("Third Controller Default!!!!!")
 
+    @controller.expose(help='cmd3 does awesome things')
+    def cmd3(self):
+        print('in cmd3')
             
 handler.register(MyAppBaseController)
 handler.register(SecondController)

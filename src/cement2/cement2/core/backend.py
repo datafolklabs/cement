@@ -49,18 +49,6 @@ def defaults(app_name=None):
     dcf['base']['output_handler'] = 'cement'
     dcf['base']['controller_handler'] = 'base'
     
-
-    # default application configuration
-    #dcf['log'] = {}
-    #dcf['log']['file'] = None
-    #dcf['log']['level'] = 'INFO'
-    #dcf['log']['to_console'] = True
-    #dcf['log']['rotate'] = False
-    #dcf['log']['max_bytes'] = 512000
-    #dcf['log']['max_files'] = 4
-    #dcf['log']['file_formatter'] = None
-    #dcf['log']['console_formatter'] = None
-    #dcf['log']['clear_loggers'] = True
     return dcf
 
 def minimal_logger(name, debug=False):
