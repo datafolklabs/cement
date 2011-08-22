@@ -42,16 +42,15 @@ class MyAppBaseController(controller.CementControllerHandler):
     class meta:
         interface = controller.IController
         label = 'base'
-        namespace = 'base'
         description = 'myapp base controller'
         arguments = [
-            ('--base', dict(action='store_true')), 
-            ('--fuck', dict(action='store', metavar='FUCK')),
+            ('--option1', dict(action='store_true', help="some option")), 
+            ('--option2', dict(action='store', metavar='VAL')),
             ]
         
         defaults = dict(foo='bar')
 
-    @controller.expose(hide=True, help='default command', aliases=['run'])
+    @controller.expose(hide=False, help='default command', aliases=['run'])
     def default(self):
         print("Hello World!!!!!")
         
@@ -63,27 +62,42 @@ class MyAppBaseController(controller.CementControllerHandler):
     def cmd(self):
         print('in cmd1')
         
+class SecondController(controller.CementControllerHandler):
+    class meta:
+        interface = controller.IController
+        label = 'second'
+        description = 'myapp second controller'
+        stacked_on = 'base'
+        arguments = [
+            ('--option3', dict(action='store_true', help="some option")), 
+            ('--option4', dict(action='store', metavar='VAL')),
+            ]
+        
+        defaults = dict(foo2='bar2')
+
+    @controller.expose(hide=True, help='default command', aliases=['2'])
+    def default(self):
+        print("Second Controller Default!!!!!")
+
+class ThirdController(controller.CementControllerHandler):
+    class meta:
+        interface = controller.IController
+        label = 'third'
+        description = 'myapp third controller'
+        arguments = [
+            ('--option5', dict(action='store_true', help="some option")), 
+            ('--option6', dict(action='store', metavar='VAL')),
+            ]
+        
+        defaults = dict(foo3='bar3')
+
+    @controller.expose(hide=True, help='default command', aliases=['2'])
+    def default(self):
+        print("Third Controller Default!!!!!")
+
+            
 handler.register(MyAppBaseController)
-
-#app.controllers.append()
-
-#app.config = ConfigObjConfigHandler()
+handler.register(SecondController)
+handler.register(ThirdController)
 app.setup()
-
-app.argv = sys.argv[1:]
-app.add_arg('-t', dest='t', action='store', help='t var')
-app.args.add_argument('-s', '--status', dest='status', action='store', help='status option', metavar='S')
-app.log.info('This is my application log')
-
-print('a')
 app.run()
-print('b')
-print(app.config.get('base', 'foo'))
-#print(app.args.parsed_args.debug)
-#print(app.pargs)
-
-for i in hook.run('myhook'):
-    pass
-
-#print(app.render(dict(foo='bar')))
-#print app.extension.loaded_extensions
