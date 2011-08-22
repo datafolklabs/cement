@@ -47,6 +47,7 @@ def defaults(app_name=None):
     dcf['base']['plugin_handler'] = 'cement'
     dcf['base']['extension_handler'] = 'cement'
     dcf['base']['output_handler'] = 'cement'
+    dcf['base']['controller_handler'] = 'base'
     
 
     # default application configuration

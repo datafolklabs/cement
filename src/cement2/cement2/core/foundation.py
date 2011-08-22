@@ -16,7 +16,7 @@ class CementApp(object):
         self.name = name
         self.defaults = kw.get('defaults', backend.defaults(self.name))
         self.defaults['base']['app_name'] = self.name
-        self.argsv = kw.get('argv', sys.argv[1:])
+        self.argv = kw.get('argv', sys.argv[1:])
         
         # default all handlers to None
         self.ext = None
@@ -25,6 +25,7 @@ class CementApp(object):
         self.plugin = None
         self.args = None
         self.out = None
+        self.controller = None
         
         # initialize handlers if passed in and set config to reflect
         if kw.get('config_handler', None):
@@ -73,6 +74,7 @@ class CementApp(object):
         self._setup_plugin_handler()
         self._setup_arg_handler()
         self._setup_output_handler()
+        self._setup_controller_handler()
         #self._collect_controller_args()
     
     def _collect_controller_args(self):
@@ -80,13 +82,14 @@ class CementApp(object):
         Read all controllers defined in backend.handlers and add to the 
         self.args handler.
         """
-        if len(backend.handlers) > 0:
+        # FIX ME: this isn't part of the interface
+        if len(backend.handlers['controller']) > 0:
             base = handler.get('controller', 'base', None)
             subparsers = self.args.add_subparsers(title='sub-commands')
             if base:
                 controller = base()
                 
-                # FIX ME: this isn't part of the interface
+                
                 for visible in controller.__visible__:
                     func = getattr(controller, visible)
                     # default commands don't support aliases
@@ -111,7 +114,26 @@ class CementApp(object):
         called) to run the application.
         
         """
-        self._parse_args()
+        
+        # First chop off the controller namespace
+        #controller = handler.get('controller', 'base', None)
+        #if len(self.argv) > 0:
+        #    _handler = handler.get('controller', self.argv[0], None)
+        #    if _handler:
+        #        controller = _handler
+        #
+        
+        
+        # If controller exists, then pass controll to it
+        if self.controller:
+            #self._set_handler_defaults(controller)
+            #controller = controller()
+            #controller.setup(self)
+            #controller.app._parse_args()
+            self.controller.dispatch()
+        else:
+            self._parse_args()
+        
         #print handler.get('controller', 'base')
         #self.controller.dispatch(self)
         
@@ -168,6 +190,13 @@ class CementApp(object):
         if hasattr(handler_obj.meta, 'defaults'):
             Log.debug("setting config defaults from '%s'" % handler_obj)
             for key in handler_obj.meta.defaults:
+                # special handling for controller defaults
+                if handler_type == 'controller':
+                    if handler_obj.meta.label == 'base':
+                        self.config.set('base', key,
+                            handler_obj.meta.defaults[key])
+                            
+                # standard handling
                 if not self.config.has_section(handler_type):
                     self.config.add_section(handler_type)
                 if not self.config.has_key(handler_type, key):
@@ -177,7 +206,8 @@ class CementApp(object):
             Log.debug("no config defaults from '%s'" % handler_obj)
                      
     def _parse_args(self):
-        self.args.parse(self.argsv)
+        self.args.parse(self.argv)
+        
         for member in dir(self.args.parsed_args):
             # ignore None values
             if member is None:
@@ -263,6 +293,33 @@ class CementApp(object):
         for obj in hook.run('cement_add_args_hook', self.config, self.args):
             pass
                  
+    def _setup_controller_handler(self):
+        Log.debug("setting up %s.controller handler" % self.name) 
+        
+        # Use self.controller first(it was passed in)
+        if not self.controller:
+            # Only use the config'd controller if no self.controller
+            h = handler.get('controller', 
+                            self.config.get('base', 'controller_handler'), 
+                            None)
+            if h:
+                self.controller = h()
+                
+        # Trump all with whats passed at the command line, and pop off the
+        # arg
+        if len(self.argv) > 0:
+            h = handler.get('controller', self.argv[0], None)
+            if h:
+                self.controller = h()
+                self.argv.pop(0)
+                
+        # if no handler can be found, that's ok
+        if self.controller:
+            self._set_handler_defaults(self.controller)
+            self.controller.setup(self)
+        else:
+            Log.debug("no controller could be found.")
+            
     def _validate_required_config(self):
         """
         Validate base config settings required by cement.

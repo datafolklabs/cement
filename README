@@ -25,7 +25,7 @@ Cement2 Core features include (but not limited to):
     * Extensions with external dependencies packaged separately
     * Significant Nose test coverage
     * Extensive Sphinx documentation, complete with examples
-    * Oh yeah, Python3 support!
+    * Supported on Python 2.6+ and 3!
     
 
 Cement2 Core Extensions includes:

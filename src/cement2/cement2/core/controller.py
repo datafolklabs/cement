@@ -94,18 +94,78 @@ class CementControllerHandler(object):
     class meta:
         interface = IController
         label = None # provided in subclass
-        options = []
+        arguments = [] # list of tuple (*args, *kwargs)
+    
+    ignored = []
         
     def __init__(self):
         pass
         
     def setup(self, base_app):
         self.app = base_app
+        self.command = 'default'
+        
+        if len(self.app.argv) > 0:
+            if self.app.argv[0] in self.visible_commands:
+                self.command = self.app.argv.pop(0)
+        
+        # setup controller args
+        for _args,_kwargs in self.meta.arguments:
+            self.app.args.add_argument(_args, **_kwargs)
+        
+        self.app._parse_args()
         
         # shortcuts
         self.config = self.app.config
         self.log = self.app.log
         self.pargs = self.app.pargs
-        
+            
     def dispatch(self):
-        pass
+        if not self.command:
+            Log.debug("no command to dispatch")
+        elif not hasattr(self, self.command):
+            Log.debug("no function named %s" % self.command)
+            
+        Log.debug("dispatching command: %s" % self.command)
+        func = getattr(self, self.command)
+        func()
+    
+    @expose(hide=True, help='default command', aliases=['run'])
+    def default(self):
+        raise NotImplementedError
+
+    ignored = ['visible_commands', 'hidden_commands', 'exposed_commands']
+    
+    @property
+    def visible_commands(self):
+        visible = []
+        for member in dir(self):
+            if member in self.ignored or member.startswith('_'):
+                continue
+
+            if hasattr(getattr(self, member), 'exposed'):
+                visible.append(member)
+        return visible
+    
+    @property
+    def hidden_commands(self):
+        hidden = []
+        for member in dir(self):
+            if member in self.ignored or member.startswith('_'):
+                continue
+
+            if hasattr(getattr(self, member), 'exposed') \
+                and getattr(self, member).hide == True:
+                hidden.append(member)
+        return hidden
+        
+    @property
+    def exposed_commands(self):
+        exposed = []
+        for member in dir(self):
+            if member in self.ignored or member.startswith('_'):
+                continue
+
+            if hasattr(getattr(self, member), 'exposed'):
+                exposed.append(member)
+        return exposed

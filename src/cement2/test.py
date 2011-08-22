@@ -44,41 +44,25 @@ class MyAppBaseController(controller.CementControllerHandler):
         label = 'base'
         namespace = 'base'
         description = 'myapp base controller'
-        options = [
+        arguments = [
             ('--base', dict(action='store_true')), 
             ('--fuck', dict(action='store', metavar='FUCK')),
             ]
         
         defaults = dict(foo='bar')
 
-        visible = [
-            ('cmd', dict(help="run some command", alias='c')),
-            ]
-        
-        hidden = [
-            ('cmd-help', dict(help="cmd help info")),
-            ]
-    
-    @property
-    def __visible__(self):
-        visible = []
-        for member in dir(self):
-            if member == '__visible__':
-                continue
-
-            if hasattr(getattr(self, member), 'exposed'):
-                visible.append(member)
-        return visible
-            
     @controller.expose(hide=True, help='default command', aliases=['run'])
     def default(self):
-        raise NotImplementedError
+        print("Hello World!!!!!")
         
+    @controller.expose(hide=True, help='cmd1 help info')
     def cmd_help(self):
         print("in hidden-cmd")
-        
+    
+    @controller.expose(help='cmd1 does awesome things')
     def cmd(self):
         print('in cmd1')
+        
 handler.register(MyAppBaseController)
 
 #app.controllers.append()
@@ -91,12 +75,15 @@ app.add_arg('-t', dest='t', action='store', help='t var')
 app.args.add_argument('-s', '--status', dest='status', action='store', help='status option', metavar='S')
 app.log.info('This is my application log')
 
+print('a')
 app.run()
-print(app.args.parsed_args.debug)
-print(app.pargs)
+print('b')
+print(app.config.get('base', 'foo'))
+#print(app.args.parsed_args.debug)
+#print(app.pargs)
 
 for i in hook.run('myhook'):
     pass
 
-print(app.render(dict(foo='bar')))
+#print(app.render(dict(foo='bar')))
 #print app.extension.loaded_extensions
