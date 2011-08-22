@@ -4,7 +4,6 @@ var/
 log/
 tmp/
 dist
-doc/build/
 __pycache__/
 
 # Gitignores from https://github.com/github/gitignore
