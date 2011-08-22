@@ -10,7 +10,7 @@ rewrite of Cement version 0.x/1.x.  Its goal is to introduce a standard, and
 feature-full platform for both simple and complex command line applications as 
 well as support rapid development needs without sacrificing quality.
 
-Cement2 Core features include (but not limited to):
+Cement2 Core features include (but are not limited to):
 
     * Core pieces of the framework are customizable via handlers/interfaces
     * Extension handler interface to easily extend framework functionality
@@ -23,6 +23,7 @@ Cement2 Core features include (but not limited to):
     * Output handler interface renders return dictionaries to console
     * Core library and extensions have zero external dependencies
     * Extensions with external dependencies packaged separately
+    * Controller handler supports sub-commands, and nested controllers
     * Significant Nose test coverage
     * Extensive Sphinx documentation, complete with examples
     * Supported on Python 2.6+ and 3!
@@ -45,4 +46,5 @@ All documentation is available from the official website:
 LICENSE:
 
 The Cement CLI Application Framework is Open Source and is distributed under 
-the MIT License.  Please see the LICENSE file included with this software.  
+the BSD License (three clause).  Please see the LICENSE file included with 
+this software.  
