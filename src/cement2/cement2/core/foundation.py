@@ -12,7 +12,10 @@ class NullOut():
         pass
         
 class CementApp(object):
-    def __init__(self, name, **kw):
+    def __init__(self, name, **kw):        
+        for res in hook.run('cement_init_hook'):
+            pass
+            
         self.name = name
         self.defaults = kw.get('defaults', backend.defaults(self.name))
         self.defaults['base']['app_name'] = self.name
@@ -325,8 +328,8 @@ class CementApp(object):
         Validate base config settings required by cement.
         """
         Log.debug("validating required configuration parameters")
-        # FIX ME: do something here
-        pass
+        for obj in hook.run('cement_validate_config_hook', self.config):
+            pass
         
     def validate_config(self):
         """
@@ -390,14 +393,11 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     # define framework hooks
     hook.define('cement_init_hook')
     hook.define('cement_add_args_hook')
-    hook.define('cement_post_args_hook')
+    # hook.define('cement_post_args_hook')
     hook.define('cement_validate_config_hook')
-    hook.define('cement_pre_plugins_hook')
-    hook.define('cement_post_plugins_hook')
-    hook.define('cement_post_bootstrap_hook')
-    
-    for res in hook.run('cement_init_hook'):
-        pass
+    #hook.define('cement_pre_plugins_hook')
+    #hook.define('cement_post_plugins_hook')
+    #hook.define('cement_post_bootstrap_hook')
         
     # define and register handlers    
     handler.define(extension.IExtension)

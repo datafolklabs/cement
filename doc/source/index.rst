@@ -19,7 +19,7 @@ The Python packages are available separately via PyPi:
 
  * http://pypi.python.org/pypi/cement2
  * http://pypi.python.org/pypi/cement2.devtools
- * http://pypi.python.org/pypi/cement2.ext.some_extension
+
  
 Contents
 --------
@@ -29,6 +29,7 @@ Contents
    
    changes
    versions
+   features
 
 .. toctree::
    :maxdepth: 2

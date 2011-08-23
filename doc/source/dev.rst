@@ -7,11 +7,10 @@ them in your applications.
 
 .. toctree::
    :maxdepth: 20
-
-   dev/features
-
-..
+   
    dev/quickstart
+   
+..
    dev/understanding_your_application
    dev/namespaces
    dev/hooks
