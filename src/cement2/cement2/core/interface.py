@@ -1,3 +1,4 @@
+"""Cement core interface module."""
 
 from cement2.core import exc
 

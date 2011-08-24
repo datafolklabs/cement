@@ -32,6 +32,13 @@ source for development of the next major version of Cement.
     
     (helloworld) $ python setup.py install
     
+
+To run tests for the framework, do the following:
+
+.. code-block:: text
+    
+    (helloworld) $ easy_install nose
+    
     (helloworld) $ python setup.py nosetests
 
 

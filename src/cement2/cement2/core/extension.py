@@ -1,7 +1,5 @@
 """Cement core extensions module."""
 
-#from zope import interface
-
 from cement2.core import backend, exc, interface
 
 Log = backend.minimal_logger(__name__)

@@ -1,7 +1,6 @@
 """Tests for cement.core.handler."""
 
 import sys
-from zope import interface
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 

@@ -1,6 +1,5 @@
 """ArgParse framework extension."""
 
-from zope import interface
 from argparse import ArgumentParser
 from cement2.core import backend, handler, arg
 

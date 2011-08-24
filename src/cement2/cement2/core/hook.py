@@ -1,6 +1,5 @@
 """Cement core hooks module."""
 
-
 from cement2.core import backend, exc
 
 Log = backend.minimal_logger(__name__)
