@@ -24,13 +24,15 @@ source for development of the next major version of Cement.
 
     $ cd src/cement2/
     
-    $ virtualenv --no-site-packages ~/env/cement/
+    $ virtualenv --no-site-packages ~/env/helloworld/
     
-    $ source ~/env/cement/bin/activate
+    $ source ~/env/helloworld/bin/activate
     
-    (cement) $ python setup.py install
+    (helloworld) $ cd src/cement2/
     
-    (cement) $ python setup.py nosetests
+    (helloworld) $ python setup.py install
+    
+    (helloworld) $ python setup.py nosetests
 
 
 A Simple Hello World Application
