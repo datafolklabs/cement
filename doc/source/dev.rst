@@ -9,6 +9,7 @@ them in your applications.
    :maxdepth: 20
    
    dev/quickstart
+   dev/configuration
    
 ..
    dev/understanding_your_application

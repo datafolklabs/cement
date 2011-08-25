@@ -4,6 +4,14 @@ Quick Start
 The following outlines installation of Cement2, as well as quick starting a
 new 'helloworld' application.
 
+Development Environment
+-----------------------
+
+It is recommended to work out of a `VirtualENV <http://pypi.python.org/pypi/virtualenv>`_ 
+for development, which is reference throughout this documentation.  VirtualENV
+is easily installed on most platforms either with 'easy_install' or 'pip' or
+via the your OS distributions packaging system (yum, apt, brew, etc).
+
 
 Installing From Git
 -------------------

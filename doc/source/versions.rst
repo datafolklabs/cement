@@ -32,7 +32,7 @@ handle this in setup.py of Cement applications by doing something like:
 .. code-block:: python
 
     install_requires=[
-        "cement.core >=0.2.4, <0.3"
+        "cement2 >=0.2.4, <0.3"
         ]
 
 This means, if you write an application on top of cement == 0.2.4 then your 
