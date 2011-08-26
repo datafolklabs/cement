@@ -10,6 +10,7 @@ them in your applications.
    
    dev/quickstart
    dev/configuration
+   dev/logging
    
 ..
    dev/understanding_your_application

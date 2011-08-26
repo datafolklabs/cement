@@ -1,4 +1,10 @@
-"""Logging framework extension."""
+"""
+.. _logging-extension:
+
+Logging Framework Extension
+---------------------------
+
+"""
 
 import logging
 from cement2.core import exc, util, handler, log

@@ -37,14 +37,13 @@ Contents
    changes
    versions
    features
-
-.. toctree::
-   :maxdepth: 2
-       
-   dev
       
 .. toctree::
    :maxdepth: 2
 
    api
 
+.. toctree::
+   :maxdepth: 2
+       
+   dev

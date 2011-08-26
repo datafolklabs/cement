@@ -15,8 +15,29 @@ Please note that there are other handler's that implement the IConfig
 interface.  The documentation below only references usage based on the 
 interface and not the full capabilities of the implementation.
 
+The following config handlers are included and maintained with Cement2, though
+may need to be installed via an external extension:
+
+    * ConfigParserConfigHandler (default)
+    * ConfigObjConfigHandler
+    
+    
+Configuration Ordering
+----------------------
+
+An applications configuration is made up of a number of things, including
+default settings, handler defaults, config file settings, etc.  The following
+is the order in which configurations are discoverred:
+
+    * Loaded from backend.defaults()
+    * Extended by any handler defaults (not overridden)
+    * Overridden by a defaults dict passed to foundation.lay_cement()
+    * Overridden by the configuration files
+    * Overridden by command line options that match the same key name
+
+
 Application Default Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------
 
 Cement requires a number of basic default settings in order to operate.  These
 settings are found under the 'base' section of the config, and overridden by
@@ -60,7 +81,7 @@ like a dict, not all do (i.e. ConfigParser).  Please see the documentation
 for the config handler you use for their full usage.   
 
 Accessing Configuration Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------
 
 After application creation, you can access the config handler via the 
 'config' object.  For example:
@@ -102,7 +123,7 @@ After application creation, you can access the config handler via the
     
     
 Parsing Config Files
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 
 Most applications benefit from allowing their users to customize runtime via
 a configuration file.  This can be done by:
@@ -120,7 +141,7 @@ a configuration file.  This can be done by:
     
     
 Overriding Configurations with Command Line Options
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------------------------------
 
 Config settings are automatically overridden if a passed command line option
 matches the name.  Note that this happens in *all* sections:
@@ -148,7 +169,7 @@ option will override the 'foo' setting under the 'base' (or any other) section.
 
 
 Customizing Configuration Handlers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------
 
 Some config handlers might allow customizations, or accept additional 
 arguments that you might want to pass and take advantage of.  Please note that
