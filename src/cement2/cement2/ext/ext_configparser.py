@@ -31,7 +31,7 @@ class ConfigParserConfigHandler(RawConfigParser):
         RawConfigParser.__init__(self, *args, **kw)
         self.merge(defaults)
         
-    def merge(self, dict_obj):
+    def merge(self, dict_obj, override=True):
         """
         Merge a dictionary into our config.
         
@@ -42,7 +42,13 @@ class ConfigParserConfigHandler(RawConfigParser):
                     self.add_section(section)
                 
                 for key in list(dict_obj[section].keys()):
-                    self.set(section, key, dict_obj[section][key])
+                    if override:
+                        self.set(section, key, dict_obj[section][key])
+                    else:
+                        # only set it if the key doesn't exist
+                        if not self.has_key(section, key):
+                            self.set(section, key, dict_obj[section][key])
+                            
                 # we don't support nested config blocks, so no need to go 
                 # further down to more nested dicts.
                 
