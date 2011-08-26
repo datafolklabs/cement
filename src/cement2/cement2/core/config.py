@@ -136,9 +136,20 @@ class IConfig(interface.Interface):
         
         """
 
-    def merge(dict_obj):
+    def merge(dict_obj, override=True):
         """
         Merges a dict object into the configuration.
+        
+        Required Arguments:
+        
+            dict_obj
+                The dict to merge into the config
+                
+        Optional Arguments:
+        
+            override 
+                Whether to override existing values.  Default: True
+                
         """
     
     def has_section(section):

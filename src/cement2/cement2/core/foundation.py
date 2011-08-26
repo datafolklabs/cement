@@ -78,38 +78,6 @@ class CementApp(object):
         self._setup_arg_handler()
         self._setup_output_handler()
         self._setup_controller_handler()
-        #self._collect_controller_args()
-    
-    def _collect_controller_args(self):
-        """
-        Read all controllers defined in backend.handlers and add to the 
-        self.args handler.
-        """
-        # FIX ME: this isn't part of the interface
-        if len(backend.handlers['controller']) > 0:
-            base = handler.get('controller', 'base', None)
-            subparsers = self.args.add_subparsers(title='sub-commands')
-            if base:
-                controller = base()
-                
-                
-                for visible in controller.__visible__:
-                    func = getattr(controller, visible)
-                    # default commands don't support aliases
-                    subparsers.add_parser(func.label, 
-                        action='store_const', 
-                        const='command', 
-                        help=func.help, 
-                        aliases=func.aliases
-                        )
-            
-            # all other controllers get namespaces
-            for obj in handler.list('controller'):
-                if obj.meta.label == 'base':
-                    continue
-                subparsers.add_parser(obj.meta.label, help=obj.meta.description)
-                
-            #self.args.add_argument('controller', action='store', metavar='sub-command')
             
     def run(self):
         """
@@ -117,28 +85,11 @@ class CementApp(object):
         called) to run the application.
         
         """
-        
-        # First chop off the controller namespace
-        #controller = handler.get('controller', 'base', None)
-        #if len(self.argv) > 0:
-        #    _handler = handler.get('controller', self.argv[0], None)
-        #    if _handler:
-        #        controller = _handler
-        #
-        
-        
         # If controller exists, then pass controll to it
         if self.controller:
-            #self._set_handler_defaults(controller)
-            #controller = controller()
-            #controller.setup(self)
-            #controller.app._parse_args()
             self.controller.dispatch()
         else:
             self._parse_args()
-        
-        #print handler.get('controller', 'base')
-        #self.controller.dispatch(self)
         
     def render(self, data, template=None):
         """
@@ -188,26 +139,23 @@ class CementApp(object):
                 An instantiated handler object.
                 
         """
-        handler_type = handler_obj.meta.interface.imeta.label
-        
-        if hasattr(handler_obj.meta, 'defaults'):
-            Log.debug("setting config defaults from '%s'" % handler_obj)
-            for key in handler_obj.meta.defaults:
-                # special handling for controller defaults
-                if handler_type == 'controller':
-                    if handler_obj.meta.label == 'base':
-                        self.config.set('base', key,
-                            handler_obj.meta.defaults[key])
-                            
-                # standard handling
-                if not self.config.has_section(handler_type):
-                    self.config.add_section(handler_type)
-                if not self.config.has_key(handler_type, key):
-                    self.config.set(handler_type, key,
-                                    handler_obj.meta.defaults[key])
-        else:
+        if not hasattr(handler_obj.meta, 'defaults'):
             Log.debug("no config defaults from '%s'" % handler_obj)
-                     
+            return 
+                    
+        handler_type = handler_obj.meta.interface.imeta.label
+        dict_obj = {}
+        dict_obj[handler_type] = handler_obj.meta.defaults
+
+        Log.debug("setting config defaults from '%s'" % handler_obj)
+
+        # special handling for controller defaults
+        if handler_type == 'controller':
+            if getattr(handler_obj.meta, 'stacked_on', None):
+                # If its stacked, then add the defaults to the parent config
+                dict_obj[handler_obj.meta.stacked_on] = dict_obj[handler_type]
+        self.config.merge(dict_obj, override=False)
+        
     def _parse_args(self):
         self.args.parse(self.argv)
         
