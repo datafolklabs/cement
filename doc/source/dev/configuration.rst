@@ -139,6 +139,20 @@ a configuration file.  This can be done by:
     # Parse a configuration file
     app.config.parse_file('/path/to/some/file.conf')
     
+Note that Cement automatically parses any config files listed in the 'base -> 
+config_files' section.  For example:
+
+.. code-block:: python
+
+    from cement2.core import foundation, backend
+    
+    defaults = backend.defaults()
+    defaults['base']['config_files'] = ['/path/to/config1', '/path/to/config2']
+    app = foundation.lay_cement('myapp', defaults=defaults)
+    
+    # First setup the application
+    app.setup()
+    
     
 Overriding Configurations with Command Line Options
 ---------------------------------------------------
