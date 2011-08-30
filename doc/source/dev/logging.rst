@@ -1,11 +1,9 @@
 Log Handling
 ============
 
-Cement provides a log interface called 'ILog', as well as a default log 
-handler that implements that interface.  
-
-By default, Cement loads the cement2.ext.ext_logging framework extension
-which provides the LoggingLogHandler implementation of ILog.  This 
+Cement defines a logging interface called :ref:`ILog <cement2.core.log>`, 
+as well as the default :ref:`LoggingLogHandler <cement2.ext.ext_logging>` 
+that implements the interface.   This 
 handler is built on top of the `Logging <http://docs.python.org/library/logging.html>`_ 
 module which is included in the Python standard library.  
 
@@ -15,14 +13,15 @@ interface and not the full capabilities of the implementation.
 
 The following log handlers are included and maintained with Cement2:
 
-    * :doc:`LoggingLogHandler </api/extensions/logging>`
+    * :ref:`LoggingLogHandler <cement2.ext.ext_logging>`
     
     
 Overriding Default Config Settings
 ----------------------------------
+
 All handlers have an optional 'defaults' dictionary that is merged into the
 application configuration.  For example, the 'logging' handler's defaults are
-loaded into 'config -> log' where 'log' is the type of handler that 'loggin'
+loaded into 'config -> log' where 'log' is the type of handler that 'logging'
 provides.  You can override these settings by doing the following:
 
 .. code-block:: python
@@ -192,7 +191,7 @@ application do not affect it.
 Logging to Console
 ------------------
 
-The default log handler configuration enabled logging to console.  For example:
+The default log handler configuration enables logging to console.  For example:
 
 .. code-block:: python
 
@@ -254,4 +253,94 @@ that log.
 Customizing a Log Handler
 -------------------------
 
-FIX ME
+Customizing the log handler all depends on what log handler you are using,
+however in general you would need to do something like the following:
+
+.. code-block:: python
+
+    from cement2.core import foundation
+    
+    # First create the application
+    app = foundation.lay_cement('myapp')
+
+    # Before we setup the application, override the log handler
+    import logging
+    from cement2.ext.ext_logging import LoggingLogHandler
+
+    format = "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+    formatter = logging.Formatter(format)
+    app.log = LoggingLogHandler(console_formatter=formatter)
+    
+    # Then setup the application
+    app.setup()
+
+    # Then run the application
+    app.run()
+
+    # Call the log object like normal
+    app.log.info('This is my info message')
+
+
+As you can see above, we overrode the default console formatter to be a bit
+more verbose.  Which now looks like:
+
+.. code-block:: text
+
+    $ python test.py
+    2011-08-29 16:14:26,365 (INFO) myapp : This is my info message
+    
+
+In addition to customizing an existing handler, you can also use your own
+handler class:
+
+.. code-block:: python
+
+    from cement2.core import foundation, backend, log, handler
+
+    # Set the log_handler via our default config
+    defaults = backend.defaults()
+    defaults['base']['log_handler'] = 'mylog'
+
+    # First create the application
+    app = foundation.lay_cement('myapp', defaults=defaults)
+
+    # Before we setup the application, register the log handler 
+    from cement2.ext.ext_logging import LoggingLogHandler
+
+    class MyLogHandler(LoggingLogHandler):
+        class meta:
+            interface = log.ILog
+            label = 'mylog'
+        
+            # These are the default config values, overridden by any '[log]' 
+            # section in parsed config files.
+            defaults = dict(
+                file='./my.log',
+                level='INFO',
+                to_console=True,
+                rotate=False,
+                max_bytes=512000,
+                max_files=4,
+                clear_loggers=True,
+                )
+
+        def some_custom_function(self):
+            pass
+
+    handler.register(MyLogHandler)
+
+    # Then setup the application... which will use our 'mylog' handler
+    app.setup()
+
+    # Then run the application
+    app.run()
+
+    # Call the log object like normal
+    app.log.info('Using %s log handler' % app.log.meta.label)
+
+And we get:
+
+.. code-block:: text
+
+    $ python test.py 
+    INFO: Using mylog log handler

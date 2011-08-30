@@ -1,12 +1,15 @@
 Cement2 Core Modules
 ====================
 
+.. _cement2.core.arg:
+
 :mod:`cement2.core.arg`
 -----------------------
 
 .. automodule:: cement2.core.arg
     :members:
 
+.. _cement2.core.backend:
 
 :mod:`cement2.core.backend`
 ---------------------------
@@ -14,7 +17,7 @@ Cement2 Core Modules
 .. automodule:: cement2.core.backend
     :members:
 
-.. _api.config:
+.. _cement2.core.config:
 
 :mod:`cement2.core.config`
 --------------------------
@@ -22,6 +25,7 @@ Cement2 Core Modules
 .. automodule:: cement2.core.config
     :members:
     
+.. _cement2.core.controller:
 
 :mod:`cement2.core.controller`
 ------------------------------
@@ -29,6 +33,7 @@ Cement2 Core Modules
 .. automodule:: cement2.core.controller
     :members:
     
+.. _cement2.core.exc:
     
 :mod:`cement2.core.exc`
 -----------------------
@@ -36,6 +41,7 @@ Cement2 Core Modules
 .. automodule:: cement2.core.exc
     :members:    
     
+.. _cement2.core.extension:
 
 :mod:`cement2.core.extension`
 -----------------------------
@@ -43,6 +49,7 @@ Cement2 Core Modules
 .. automodule:: cement2.core.extension
     :members:    
     
+.. _cement2.core.foundation:
     
 :mod:`cement2.core.foundation`
 ------------------------------
@@ -50,6 +57,7 @@ Cement2 Core Modules
 .. automodule:: cement2.core.foundation
     :members:    
     
+.. _cement2.core.handler:
     
 :mod:`cement2.core.handler`
 ---------------------------
@@ -57,6 +65,7 @@ Cement2 Core Modules
 .. automodule:: cement2.core.handler
     :members:    
     
+.. _cement2.core.hook:
 
 :mod:`cement2.core.hook`
 ------------------------
@@ -64,6 +73,7 @@ Cement2 Core Modules
 .. automodule:: cement2.core.hook
     :members:    
     
+.. _cement2.core.interface:
     
 :mod:`cement2.core.interface`
 -----------------------------
@@ -71,6 +81,7 @@ Cement2 Core Modules
 .. automodule:: cement2.core.interface
     :members:    
 
+.. _cement2.core.log:
 
 :mod:`cement2.core.log`
 -----------------------
@@ -79,6 +90,8 @@ Cement2 Core Modules
     :members:    
 
 
+.. _cement2.core.output:
+
 :mod:`cement2.core.output`
 --------------------------
 
@@ -86,12 +99,15 @@ Cement2 Core Modules
     :members:    
 
 
+.. _cement2.core.plugin:
+
 :mod:`cement2.core.plugin`
 --------------------------
 
 .. automodule:: cement2.core.plugin
     :members:    
     
+.. _cement2.core.util:    
 
 :mod:`cement2.core.util`
 ------------------------

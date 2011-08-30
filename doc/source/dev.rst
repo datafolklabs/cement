@@ -9,9 +9,10 @@ them in your applications.
    :maxdepth: 20
    
    dev/quickstart
+   dev/interfaces_and_handlers
    dev/configuration
    dev/logging
-   
+   dev/args
 ..
    dev/understanding_your_application
    dev/namespaces

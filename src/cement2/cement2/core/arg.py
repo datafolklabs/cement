@@ -1,4 +1,7 @@
-"""Cement core argument module."""
+"""
+Cement core arg module.
+
+"""
 
 from cement2.core import backend, exc, interface
 

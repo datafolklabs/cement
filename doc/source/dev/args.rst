@@ -1,0 +1,118 @@
+Argument and Option Handling
+============================
+
+Cement defines an argument interface called :ref:`IArgument <cement2.core.arg>`, 
+as well as the default :ref:`ArgParseArgumentHandler <cement2.ext.ext_argparse>` 
+that implements the interface.  This handler is built on top of the 
+`ArgParse <http://docs.python.org/library/argparse.html>`_ module which is 
+included in the Python standard library.  
+
+Please note that there may be other handler's that implement the IArgument
+interface.  The documentation below only references usage based on the 
+interface and not the full capabilities of the implementation.
+
+The following argument handlers are included and maintained with Cement2:
+
+    * :ref:`ArgParseArgumentHandler <cement2.ext.ext_argparse>`
+    
+
+Overriding Default Argument Settings
+------------------------------------
+
+There are currently no default configuration settings for argument handlers.
+That said, alternative argument handler may have defaults that can be 
+overridden.  This would be done the same as for any other handler:
+
+.. code-block:: python
+
+    from cement2.core import foundation, backend
+
+    defaults = backend.defaults()
+    defaults['args'] = dict(
+        some_param='some_value',
+        )
+
+    app = foundation.lay_cement('myapp', defaults=defaults)
+    app.setup()
+
+
+Adding Arguments
+----------------
+
+The IArgument interface is loosely based on ArgParse directly.  That said,
+it only defines a minimal set of params that must be honored by the 
+handler implementation, even though the handler itself may except more than
+that.  The following shows some basic examples of adding
+arguments based on the interface (meaning, these examples should work 
+regardless of what the handler is):
+
+.. code-block:: python
+
+    from cement2.core import foundation
+
+    # Create the application
+    app = foundation.lay_cement('myapp')
+
+    # Then setup the application... which will use our 'mylog' handler
+    app.setup()
+
+    # Add any arguments after setup(), and before run()
+    app.args.add_argument('-f', '--foo', action='store', dest='foo',
+                          help='the notorious foo option')
+    app.args.add_argument('-V', action='store_true', dest='vendetta',
+                          help='V for Vendetta')
+    app.args.add_argument('-A', action='store_const', const=12345,
+                          help='the A option')
+
+    # Then run the application
+    app.run()
+
+    # Access the parsed args from the app.pargs shortcut
+    if app.pargs.foo:
+        print "Received foo option with value %s" % app.pargs.foo
+    if app.pargs.vendetta:
+        print "Received V for Vendetta!"
+    if app.pargs.A:
+        print "Received the A option with value %s" % app.pargs.A
+
+
+Here we setup a basic application, and then add a '-f/--foo' optional argument
+to the parser.  
+
+.. code-block:: text
+
+    $ python test.py --help
+    usage: test.py [-h] [--debug] [--quiet] [-f FOO] [-V] [-A]
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      --debug            toggle debug output
+      --quiet            suppress all output
+      -f FOO, --foo FOO  the notorious foo option
+      -V                 V for Vendetta
+      -A                 the A option
+    
+    $ python test.py --foo=bar
+    Received foo option with value bar
+    
+    $ python test.py -V
+    Received V for Vendetta!
+    
+
+Accessing Parsed Arguments
+--------------------------
+
+The IArgument interface defines that the 'parse()' function return any type 
+of object that stores the name of the argument as a member.  Meaning, when
+adding the 'foo' option with action='store' and the value is stored as the 
+'foo' destination... that would be accessible as app.pargs.foo.  In the case
+of the ArgParseArgumentHandler the return object is exactly what you would 
+expect by calling parser.parse_args().. but maybe different with other handler
+implementations.
+
+The parsed arguments are actually stored as 'app.args.parsed_args', but with a 
+shortcut setup as 'app.pargs' for ease of use.
+
+Accessing app.pargs can be seen in the examples above.
+
+

@@ -1,12 +1,10 @@
 Configuration Handling
 ======================
 
-Cement provides a configuration interface called 'IConfig', as well as a
-default config handler that implements that interface.  
-
-By default, Cement loads the cement2.ext.ext_configparser framework extension
-which provides the ConfigParserConfigHandler implementation of IConfig.  This 
-handler is built on top of `ConfigParser <http://docs.python.org/library/configparser.html>`_ 
+Cement defines a configuration interface called :ref:`IConfig <cement2.core.config>`, 
+as well as the default :ref:`ConfigParserConfigHandler <cement2.ext.ext_configparser>` 
+that implements the interface.  This handler is built on top of 
+`ConfigParser <http://docs.python.org/library/configparser.html>`_ 
 which is included in the Python standard library.  Therefor, this class will
 work much like ConfigParser but with any added functions necessary to
 meet the requirements of the IConfig interface.
@@ -18,8 +16,8 @@ interface and not the full capabilities of the implementation.
 The following config handlers are included and maintained with Cement2, though
 may need to be installed via an external extension:
 
-    * ConfigParserConfigHandler (default)
-    * ConfigObjConfigHandler
+    * :ref:`ConfigParserConfigHandler <cement2.ext.ext_configparser>` (default)
+    * :ref:`ConfigObjConfigHandler <cement2.ext.ext_configobj>`
     
     
 Configuration Ordering

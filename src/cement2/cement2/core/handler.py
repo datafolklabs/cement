@@ -1,4 +1,7 @@
-"""Cement core handlers module."""
+"""
+Cement core handler module.
+
+"""
 
 from cement2.core import exc, backend
 
