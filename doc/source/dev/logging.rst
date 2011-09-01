@@ -15,7 +15,10 @@ The following log handlers are included and maintained with Cement2:
 
     * :ref:`LoggingLogHandler <cement2.ext.ext_logging>`
     
-    
+
+Please reference the :ref:`ILog <cement2.core.config>` interface 
+documentation for writing your own log handler.
+
 Overriding Default Config Settings
 ----------------------------------
 

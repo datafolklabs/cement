@@ -15,12 +15,14 @@ The following argument handlers are included and maintained with Cement2:
 
     * :ref:`ArgParseArgumentHandler <cement2.ext.ext_argparse>`
     
+Please reference the :ref:`IArgument <cement2.core.arg>` interface 
+documentation for writing your own argument handler.
 
 Overriding Default Argument Settings
 ------------------------------------
 
 There are currently no default configuration settings for argument handlers.
-That said, alternative argument handler may have defaults that can be 
+That said, alternative argument handlers may have defaults that can be 
 overridden.  This would be done the same as for any other handler:
 
 .. code-block:: python

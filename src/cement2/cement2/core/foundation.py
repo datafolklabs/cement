@@ -27,7 +27,7 @@ class CementApp(object):
         self.log = None
         self.plugin = None
         self.args = None
-        self.out = None
+        self.output = None
         self.controller = None
         
         # initialize handlers if passed in and set config to reflect
@@ -53,9 +53,9 @@ class CementApp(object):
             self.config.set('base', 'arg_handler', self.args.meta.label)
             
         if kw.get('output_handler', None):
-            self.out = kw['output_handler']
+            self.output = kw['output_handler']
             self.config.set('base', 'output_handler', 
-                            self.out.meta.label)
+                            self.output.meta.label)
 
     def setup(self):
         """
@@ -93,8 +93,8 @@ class CementApp(object):
         
     def render(self, data, template=None):
         """
-        This is a simple wrapper around self.out.render() which simply
-        returns an empty string if no self.out handler is defined.
+        This is a simple wrapper around self.output.render() which simply
+        returns an empty string if no self.output handler is defined.
         
         Required Arguments:
         
@@ -108,11 +108,11 @@ class CementApp(object):
                 handlers do not use templates).
                 
         """
-        if not self.out:
+        if not self.output:
             Log.debug('render() called, but no output handler defined.')
             return ''
         else:
-            return self.out.render(data, template)
+            return self.output.render(data, template)
             
     @property
     def pargs(self):
@@ -173,10 +173,10 @@ class CementApp(object):
         
         # If the output handler was changed after parsing args, then
         # we need to set it up again.
-        if self.out:
+        if self.output:
             if self.config.get('base', 'output_handler') \
-                != self.out.meta.label:
-                self.out = None
+                != self.output.meta.label:
+                self.output = None
                 self._setup_output_handler()
         else:
             self._setup_output_handler()
@@ -220,14 +220,14 @@ class CementApp(object):
         
     def _setup_output_handler(self):
         Log.debug("setting up %s.output handler" % self.name) 
-        if not self.out:
+        if not self.output:
             if not self.config.get('base', 'output_handler'):
                 return
             h = handler.get('output', 
                             self.config.get('base', 'output_handler'))
-            self.out = h()
-        self._set_handler_defaults(self.out)
-        self.out.setup(self.config)
+            self.output = h()
+        self._set_handler_defaults(self.output)
+        self.output.setup(self.config)
          
     def _setup_arg_handler(self):
         Log.debug("setting up %s.arg handler" % self.name) 

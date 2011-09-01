@@ -20,6 +20,9 @@ may need to be installed via an external extension:
     * :ref:`ConfigObjConfigHandler <cement2.ext.ext_configobj>`
     
     
+Please reference the :ref:`IConfig <cement2.core.config>` interface 
+documentation for writing your own config handler.
+    
 Configuration Ordering
 ----------------------
 

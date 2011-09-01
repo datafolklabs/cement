@@ -1,5 +1,11 @@
 Versioning and Compatibility
-----------------------------
+============================
+
+This document outlines versioning of the Cement framework, and extensions
+that are included with the official source.  
+
+Versioning
+----------
 
 This outline uses fictitious version numbers to avoid confusion between 
 actual releases and this doc. Cement is versioned as follows, using the 
@@ -36,12 +42,12 @@ handle this in setup.py of Cement applications by doing something like:
         ]
 
 This means, if you write an application on top of cement == 0.2.4 then your 
-application should be compatible with all versions of 0.2.x, however would not 
-be compatible with anything >=0.3 because 0.3 is the next development version
-where API compatibility changes.  For that reason the next major development 
-branch is 0.3 (odd) currently, and the next major stable branch of cement will 
-be 0.4 (even).  Both 0.3 (development) and 0.4 (stable) break compatibility 
-with previous versions of Cement < 0.3.
+application should be compatible with all versions of 0.2.x, however *may*
+experience incompatibilities with versions >=0.3 because 0.3 is the next 
+development version where API compatibility changes.  For that reason the next 
+major development branch is 0.3 (odd) currently, and the next major stable 
+branch of cement will be 0.4 (even).  Both 0.3 (development) and 0.4 (stable) 
+break compatibility with previous versions of Cement < 0.3.
 
 The 'Code Base' version more or less designates a 'full rewrite'.  Meaning
 that within the same code base (i.e. '0') even in the next major version that
@@ -55,3 +61,10 @@ two Git repos.
 
  * master: development that is API compatible with current stable.
  * portland: development that is API incompatible with current stable.
+
+Python Compatibility
+--------------------
+
+The Cement2 Core library is compatible with Python 2.6+ and Python 3+.  Some
+extensions may not be Python 3 compatible and would therefore be packaged 
+separately (though still part of the official source).  

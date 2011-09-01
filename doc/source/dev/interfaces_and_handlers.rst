@@ -155,7 +155,7 @@ is a handler that implements the MyInterface above:
 The above is a simple class that meets all the expectations of the interface.
 When calling handler.register(), MyHandler is passed to the validator (if 
 defined in the interface) and if it passes validation will be registered into
-the backend.handlers dictionary.  
+the cement2.core.backend.handlers dictionary.  
 
 Using Handlers
 --------------
@@ -188,3 +188,71 @@ like so:
     
     log_handler = handler.get('log', 'logging')
     log = log_handler()
+
+
+Overriding Default Handlers
+---------------------------
+
+Cement sets up a number of default handlers for logging, config parsing, etc.
+These can be overridden in a number of ways.  The first way is to set the
+configuration setting for that handler via the application defaults like so:
+
+.. code-block:: python
+    
+    from cement2.core import foundation, backend, interface, log
+    
+    # Set defaults
+    defaults = backend.defaults()
+    defaults['base']['log_handler'] = 'mylog'
+    
+    # Create the application
+    app = foundation.lay_cement('myapp', defaults=defaults)
+    
+    # Define the 'mylog' handler here
+    class MyLog(object):
+        class meta:
+            interface = log.ILog
+            label = 'mylog'
+            
+        def some_function(self):
+            ...
+     
+    handler.register(MyLog)   
+    
+    # Setup the application
+    app.setup()
+    
+This may seem a little backwards that we are setting the 'mylog' log_handler
+in the default config, and then defining it after the application is created.
+The key thing to note is that nothing is actually called until after 
+'app.setup()' and also that no handlers can be created until 
+'foundation.lay_cement()' is called.  
+
+The second way to override a handler is by passing it to 
+'foundation.lay_cement()'.  This is useful if you do not desire to register a
+handler (for whatever reason):
+
+.. code-block:: python
+    
+    FIX ME
+    
+Multiple Registered Handlers
+----------------------------
+
+All handlers and interfaces are unique.  In most cases, where the framework
+is concerned, only one handler is used.  For example, whatever is configured
+for the 'log_handler' will be used and setup as 'app.log'.  However, take for
+example an Output handler.  You might have a default output_handler of 
+'genshi' (a text templating language) but may also want to override that 
+handler with the 'json' output handler when '--json' is passed at command
+line.  In order to allow this functionality, both the 'genshi' and 'json'
+output handlers must be registered.  
+
+Any number of handlers can be registered to an interface.  You might have a 
+use case for an Interface/Handler that may provide different compatibility
+base on the operating system, or perhaps based on simply how the application
+is called.  A good example would be an application that automates building
+packages for Linux distributions.  An interface would define what a build 
+handler needs to provide, but the build handler would be different based on
+the OS.  The application might have an 'rpm' build handler, or a 'debian' 
+build handler to perform the build process differently.
