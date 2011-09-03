@@ -13,6 +13,11 @@ them in your applications.
    dev/configuration
    dev/logging
    dev/args
+   dev/output
+   dev/controllers
+   dev/hooks
+   dev/plugins
+   
 ..
    dev/understanding_your_application
    dev/namespaces

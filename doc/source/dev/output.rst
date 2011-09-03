@@ -118,6 +118,14 @@ something happen:
     data = dict(foo='bar')
     app.render(data)
 
+Which looks like:
+
+.. code-block:: text
+
+    $ python test.py
+    foo => bar
+    
+    
 Customizing Output Handlers
 ---------------------------
 

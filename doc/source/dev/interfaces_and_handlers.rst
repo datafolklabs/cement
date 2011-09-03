@@ -36,8 +36,11 @@ The following defines a basic interface:
 
 .. code-block:: python
 
-    from cement2.core import interface, handler
+    from cement2.core import foundation, interface, handler
 
+    # You must lay_cement() before any handlers can be registered
+    app = foundation.lay_cement('myapp')
+    
     class MyInterface(interface.Interface):
         class imeta:
             label = 'myinterface'
@@ -94,8 +97,11 @@ like this:
 
 .. code-block:: python
 
-    from cement2.core import interface, handler
+    from cement2.core import foundation, interface, handler
 
+    # You must lay_cement() before any handlers can be registered
+    app = foundation.lay_cement('myapp')
+    
     def my_validator(klass, obj):
         members = [
             'setup',
@@ -128,7 +134,10 @@ is a handler that implements the MyInterface above:
 
 .. code-block:: python
 
-    from cement2.core import interface
+    from cement2.core import foundation, interface
+    
+    # You must lay_cement() before any handlers can be registered
+    app = foundation.lay_cement('myapp')
     
     class MyHandler(object):
         class meta:
@@ -234,8 +243,18 @@ handler (for whatever reason):
 
 .. code-block:: python
     
-    FIX ME
+    from cement2.core import foundation
+    from myapp.log import MyLog
     
+    app = foundation.lay_cement('myapp', log_handler=MyLog())
+    
+Some things to note are:
+
+    * The class passed must be instantiated
+    * Cement will call .setup() on the object when app.setup() is called.
+    * This handler will *not* be registered in backend.handlers
+    
+
 Multiple Registered Handlers
 ----------------------------
 
