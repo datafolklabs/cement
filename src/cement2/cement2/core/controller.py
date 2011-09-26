@@ -272,7 +272,7 @@ class CementBaseController(object):
                     else:
                         if not getattr(controller.meta, 'hide', False):
                             self.visible[label] = func_dicts[label]
-               
+          
     @property
     def usage_text(self):
         if self.meta.label == 'base':
@@ -286,7 +286,14 @@ class CementBaseController(object):
     @property
     def help_text(self):
         cmd_txt = ''
+        
+        # hack it up to keep commands in alphabetical order
+        sorted_labels = []
         for label in self.visible:
+            sorted_labels.append(label)
+        sorted_labels.sort()
+        
+        for label in sorted_labels:
             func = self.visible[label]
             if len(func['aliases']) > 0:
                 cmd_txt = cmd_txt + "  %s (aliases: %s)\n" % \
