@@ -17,7 +17,7 @@ Please note that current Cement2 is under heavy, active development out of the
 Other sites that might be helpful.
 
  * Doc: http://cement.readthedocs.org/en/portland/
- * Code: http://github.com/derks/cement (porland branch)
+ * Code: http://github.com/derks/cement (portland branch)
  
 
 Older Versions of Cement:
@@ -35,6 +35,7 @@ Contents
    :maxdepth: 1
    
    changes
+   license
    versions
    features
       

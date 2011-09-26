@@ -49,9 +49,9 @@ small applications can get away with print() statements.  However, anyone
 who has ever built a bigger application that produces a lot of output will 
 know that this can get ugly very quickly in your code.   
 
-Uses an output handler allows the develop to keep there logic clean, and 
+Using an output handler allows the developer to keep their logic clean, and 
 offload the display of relevant data to an output handler, possibly by 
-templates or similar.
+templates or other means (GUI?).
 
 An output handler has a 'render()' function that takes a data dictionary that
 it uses to produce output.  Some output handler may also accept a 'template' 
