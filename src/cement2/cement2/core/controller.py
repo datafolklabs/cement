@@ -122,6 +122,7 @@ class CementBaseController(object):
     def setup(self, base_app):
         self.app = base_app
         self._collect()
+        self._add_arguments_to_parser()
         
         # chop off a command argument if it matches an exposed command
         if len(self.app.argv) > 0 and not self.app.argv[0].startswith('-'):
@@ -171,6 +172,15 @@ class CementBaseController(object):
     def default(self):
         raise NotImplementedError
     
+    def _add_arguments_to_parser(self):
+        """
+        Run after _collect().  Add the collected arguments to the apps
+        argument parser.
+        
+        """
+        for _args,_kwargs in self.arguments:
+            self.app.args.add_argument(_args, **_kwargs)
+            
     def _collect(self):
         """
         Collects all commands and arguments from this controller, and other
@@ -185,7 +195,8 @@ class CementBaseController(object):
         # collect our meta arguments
         Log.debug('collecting arguments from %s controller' % self.meta.label)
         for _args,_kwargs in self.meta.arguments:
-            self.app.args.add_argument(_args, **_kwargs)
+            self.arguments.append((_args, _kwargs))
+            #self.app.args.add_argument(_args, **_kwargs)
             
         # collect exposed commands from ourself
         Log.debug('collecting commands from %s controller' % self.meta.label)
@@ -238,18 +249,28 @@ class CementBaseController(object):
                 Log.debug('collecting arguments from %s controller (stacked)' % \
                           controller.meta.label)
                 for _args,_kwargs in controller.meta.arguments:
-                    self.app.args.add_argument(_args, **_kwargs)
+                    #self.app.args.add_argument(_args, **_kwargs)
+                    self.arguments.append((_args, _kwargs))
                     
                 # add stacked commands into ours
                 Log.debug('collecting commands from %s controller (stacked)' % \
                           controller.meta.label)
-                func_dicts = controller().visible
+                          
+                # need to collect on the controller
+                contr = controller()
+                
+                # this is a hack, but we don't want to run full setup() on
+                # the stacked controllers.
+                contr.app = self.app
+                
+                contr._collect()
+                func_dicts = contr.visible
                 for label in func_dicts:
                     self.exposed[label] = func_dicts[label]
                     if func_dicts[label]['hide']:
                         self.hidden[label] = func_dicts[label]
                     else:
-                        if not getattr(controller.meta, 'hide', None):
+                        if not getattr(controller.meta, 'hide', False):
                             self.visible[label] = func_dicts[label]
                
     @property
