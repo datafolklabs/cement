@@ -217,6 +217,8 @@ class CementApp(object):
             self.plugin = h()
         self._set_handler_defaults(self.plugin)
         self.plugin.setup(self.config)
+        self.config.set('base', 'plugins', self.plugin.enabled_plugins)
+        self.plugin.load_plugins(self.config.get('base', 'plugins'))
         
     def _setup_output_handler(self):
         Log.debug("setting up %s.output handler" % self.name) 

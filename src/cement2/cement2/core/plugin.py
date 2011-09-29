@@ -29,12 +29,17 @@ class IPlugin(interface.Interface):
     # Must be provided by the implementation
     meta = interface.Attribute('Handler meta-data')
     loaded_plugins = interface.Attribute('List of loaded plugins')
+    enabled_plugins = interface.Attribute('List of enabled plugins')
+    disabled_plugins = interface.Attribute('List of disabled plugins')
     
     def setup(config_obj):
         """
         The setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
+        
+        This function must populate the enabled_plugins, and disabled_plugins
+        lists.
         
         Required Arguments:
         

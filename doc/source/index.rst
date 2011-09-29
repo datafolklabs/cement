@@ -11,8 +11,8 @@ rewrite of Cement version 0.x/1.x.  Its goal is to introduce a standard, and
 feature-full platform for both simple and complex command line applications as 
 well as support rapid development needs without sacrificing quality.
 
-Please note that current Cement2 is under heavy, active development out of the
-'portland' branch.  An initial beta release is coming soon!
+Please note that currently Cement2 is under heavy, active development out of 
+the 'portland' branch.  An initial beta release is coming soon!
 
 Other sites that might be helpful.
 

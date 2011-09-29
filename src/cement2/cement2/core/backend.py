@@ -22,14 +22,12 @@ def defaults(app_name=None):
     dcf['base']['config_files'] = []
     dcf['base']['config_source'] = ['defaults']
     dcf['base']['debug'] = False
-    dcf['base']['plugins'] = []
-    dcf['base']['plugin_config_dir'] = None
     
     # FIX ME: need to implement
+    dcf['base']['plugins'] = []
+    dcf['base']['plugin_config_dir'] = None
     dcf['base']['plugin_bootstrap_module'] = '%s.bootstrap' % app_name
     dcf['base']['plugin_directory'] = '/usr/lib/%s/plugins' % app_name
-    
-    # FIX ME: Also, Should there be a [plugins] block?
     
     # default extensions
     dcf['base']['extensions'] = [  
