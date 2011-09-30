@@ -1,8 +1,10 @@
 """Cement basic plugin handler extension."""
 
 import os
+import sys
 import glob
-from cement2.core import backend, handler, plugin, util
+import imp
+from cement2.core import backend, handler, plugin, util, exc
 
 Log = backend.minimal_logger(__name__)
 
@@ -28,6 +30,7 @@ class CementPluginHandler(object):
         
         # parse all app configs for plugins
         for config in glob.glob("%s/*.conf" % self.plugin_config_dir):
+            Log.debug("loading plugin config from '%s'." % config)
             pconfig = config_handler()
             pconfig.parse_file(config)
             plugin = pconfig.sections()[0]
@@ -44,12 +47,49 @@ class CementPluginHandler(object):
                     self.config.set(plugin, key, pconfig.get(plugin, key))
         
         
+    def _load_plugin_from_dir(self, plugin_name, plugin_dir):
+        full_path = os.path.join(plugin_dir, "%s.py" % plugin_name)
+        if not os.path.exists(full_path):
+            Log.debug("plugin file '%s' does not exist." % full_path)
+            return False
+            
+        Log.debug("attempting to load '%s' from '%s'" % (plugin_name, 
+                                                         plugin_dir))
+        
+        # We don't catch this because it would make debugging a nightmare
+        f, path, desc = imp.find_module(plugin_name, [plugin_dir])
+        imp.load_module(plugin_name, f, path, desc)
+        return True
+            
+    def _load_plugin_from_module(self, plugin_name, plugin_module):
+        full_module = '%s.%s' % (plugin_module, plugin_name)
+        Log.debug("attempting to load '%s' from '%s'" % (plugin_name, 
+                                                         plugin_module))
+        
+        # We don't catch this because it would make debugging a nightmare
+        __import__(full_module, globals(), locals(), [], -1)
+        return True
+            
     def load_plugin(self, plugin_name):
         Log.debug("loading application plugin '%s'" % plugin_name)
-        pass
+        plugin_dir = self.config.get('base', 'plugin_dir')
+        plugin_module = self.config.get('base', 'plugin_bootstrap_module')
+        
+        # first attempt to load from plugin_dir, then from a bootstrap module
+        
+        if self._load_plugin_from_dir(plugin_name, plugin_dir):
+            return True
+        elif self._load_plugin_from_module(plugin_name, plugin_module):
+            return True
+        else:
+            import traceback
+            traceback.print_exc(file=sys.stdout)
+            raise exc.CementConfigError(
+                "Unable to import plugin '%s'." % plugin_name
+                )
     
     def load_plugins(self, plugin_list):
-        print plugin_list
-        pass
+        for plugin_name in plugin_list:
+            self.load_plugin(plugin_name)
         
 handler.register(CementPluginHandler)

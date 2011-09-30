@@ -196,7 +196,6 @@ class CementBaseController(object):
         Log.debug('collecting arguments from %s controller' % self.meta.label)
         for _args,_kwargs in self.meta.arguments:
             self.arguments.append((_args, _kwargs))
-            #self.app.args.add_argument(_args, **_kwargs)
             
         # collect exposed commands from ourself
         Log.debug('collecting commands from %s controller' % self.meta.label)
@@ -245,32 +244,40 @@ class CementBaseController(object):
                         self.visible[controller.meta.label] = func_dict
                         
             elif controller.meta.stacked_on == self.meta.label:
+                # Need to collect on the controller
+                contr = controller()
+                
+                # This is a hack, but we don't want to run full setup() on
+                # the stacked controllers.
+                contr.app = self.app
+                contr._collect()
+                
                 # add stacked arguments into ours
                 Log.debug('collecting arguments from %s controller (stacked)' % \
                           controller.meta.label)
-                for _args,_kwargs in controller.meta.arguments:
-                    #self.app.args.add_argument(_args, **_kwargs)
+                for _args,_kwargs in contr.arguments:
                     self.arguments.append((_args, _kwargs))
                     
                 # add stacked commands into ours
                 Log.debug('collecting commands from %s controller (stacked)' % \
                           controller.meta.label)
                           
-                # need to collect on the controller
-                contr = controller()
                 
-                # this is a hack, but we don't want to run full setup() on
-                # the stacked controllers.
-                contr.app = self.app
-                
-                contr._collect()
                 func_dicts = contr.visible
                 for label in func_dicts:
                     self.exposed[label] = func_dicts[label]
                     if func_dicts[label]['hide']:
+                        if label in self.hidden:
+                            raise exc.CementRuntimeError(
+                                "Hidden command '%s' already exists." % label
+                                )
                         self.hidden[label] = func_dicts[label]
                     else:
                         if not getattr(controller.meta, 'hide', False):
+                            if label in self.visible:
+                                raise exc.CementRuntimeError(
+                                    "Command '%s' already exists." % label
+                                    )
                             self.visible[label] = func_dicts[label]
           
     @property
