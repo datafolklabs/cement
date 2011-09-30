@@ -272,3 +272,8 @@ and '--foo3' option created under Controller3.
 
 Whether to use 'stacked' controllers, or subcontroller namespaces is 
 completely up to you and really depends on the application.
+
+Note: Controllers can be stacked upon other controllers that are also stacked.
+For example if Controller1 is stacked on the base controller, and 
+Controller2 is stacked on Controller1... then the commands and arguments for
+Controller2 will also appear under the 'base' namespace.
