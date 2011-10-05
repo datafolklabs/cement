@@ -5,6 +5,8 @@ from cement2.core import backend, exc, interface
 Log = backend.minimal_logger(__name__)
 
 def output_validator(klass, obj):
+    """Validates an handler implementation against the IOutput interface."""
+    
     members = [
         'setup',
         'render',
@@ -18,6 +20,18 @@ class IOutput(interface.Interface):
     below.
     
     Implementations do *not* subclass from interfaces.
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement2.core import output
+        
+        class MyOutputHandler(object):
+            class meta:
+                interface = output.IOutput
+                label = 'my_output_handler'
+            ...
     
     """
     class imeta:

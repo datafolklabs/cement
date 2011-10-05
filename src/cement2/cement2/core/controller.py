@@ -1,5 +1,6 @@
 """Cement core controller module."""
 
+import re
 import textwrap
 import argparse
 from cement2.core import backend, exc, interface, handler
@@ -7,11 +8,22 @@ from cement2.core import backend, exc, interface, handler
 Log = backend.minimal_logger(__name__)
 
 def controller_validator(klass, obj):
+    """
+    Validates an handler implementation against the IController interface.
+    
+    """
     members = [
         'setup',
         'dispatch',
         ]
-    interface.validate(IController, obj, members)
+    meta = [
+        'label',
+        'interface',
+        'description',
+        'defaults',
+        'arguments',
+        ]
+    interface.validate(IController, obj, members, meta=meta)
     
 class IController(interface.Interface):
     """
@@ -21,6 +33,18 @@ class IController(interface.Interface):
     
     Implementations do *not* subclass from interfaces.
     
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement2.core import controller
+        
+        class MyBaseController(object):
+            class meta:
+                interface = controller.IController
+                label = 'my_base_controller'
+            ...
+            
     """
     class imeta:
         label = 'controller'
@@ -57,7 +81,7 @@ class IController(interface.Interface):
         """
 
 class expose(object):
-    def __init__(self, hide=False, help='', aliases=[], alt=None):
+    def __init__(self, hide=False, help='', aliases=[]):
         """
         Used to expose controller functions to be listed as commands, and to 
         decorate the function with meta data for the argument parser.
@@ -70,9 +94,31 @@ class expose(object):
             help
                 Help text.
             
-            alias
-                An alias to this command.
-                
+            aliases
+                List of aliases to this command.
+             
+        Usage:
+        
+        .. code-block:: python
+        
+            from cement2.core import controller
+           
+            class MyAppBaseController(controller.CementBaseController):
+                class meta:
+                    interface = controller.IController
+                    label = 'base'
+                    description = 'MyApp is awesome'
+                    defaults = dict()
+                    arguments = []
+                  
+                @controller.expose(hide=True, aliases=['run'])
+                def default(self):
+                    print("In MyAppBaseController.default()")
+       
+                @controller.expose()
+                def my_command(self):
+                    print("In MyAppBaseController.my_command()")
+                   
         """
         self.hide = hide
         self.help = help
@@ -97,6 +143,21 @@ class CementBaseController(object):
     argparse.  If using an alternative argument handler you will need to 
     write your own controller.
     
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement2.core import controller
+           
+        class MyAppBaseController(controller.CementBaseController):
+            class meta:
+                interface = controller.IController
+                label = 'base'
+                description = 'MyApp is awesome'
+                defaults = dict()
+                arguments = []
+            ...
+            
     """
     class meta:
         interface = IController
@@ -126,8 +187,12 @@ class CementBaseController(object):
         
         # chop off a command argument if it matches an exposed command
         if len(self.app.argv) > 0 and not self.app.argv[0].startswith('-'):
-            if self.app.argv[0] in self.exposed:
-                self.command = self.app.argv.pop(0)
+            
+            # translate dashes back to underscores
+            cmd = re.sub('-', '_', self.app.argv[0])
+            if cmd in self.exposed:
+                self.command = cmd
+                self.app.argv.pop(0)
             else:
                 for label in self.exposed:
                     func = self.exposed[label]
@@ -179,7 +244,7 @@ class CementBaseController(object):
         
         """
         for _args,_kwargs in self.arguments:
-            self.app.args.add_argument(_args, **_kwargs)
+            self.app.args.add_argument(*_args, **_kwargs)
             
     def _collect(self):
         """
@@ -296,17 +361,21 @@ class CementBaseController(object):
         
         # hack it up to keep commands in alphabetical order
         sorted_labels = []
-        for label in self.visible:
+        for label in self.visible.keys():
+            old_label = label
+            label = re.sub('_', '-', label)
             sorted_labels.append(label)
+            self.visible[label] = self.visible[old_label]
+            del self.visible[old_label]
         sorted_labels.sort()
         
         for label in sorted_labels:
             func = self.visible[label]
             if len(func['aliases']) > 0:
                 cmd_txt = cmd_txt + "  %s (aliases: %s)\n" % \
-                            (func['label'], ', '.join(func['aliases']))
+                            (label, ', '.join(func['aliases']))
             else:
-                cmd_txt = cmd_txt + "  %s\n" % func['label']
+                cmd_txt = cmd_txt + "  %s\n" % label
             
             if func['help']:
                 cmd_txt = cmd_txt + "    %s\n\n" % func['help']

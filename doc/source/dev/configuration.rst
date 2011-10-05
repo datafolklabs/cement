@@ -58,7 +58,7 @@ Is equivalent to:
 .. code-block:: python
 
     from cement2.core import foundation, backend
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     app = foundation.lay_cement('myapp', defaults=defaults)
     
 
@@ -69,7 +69,7 @@ so:
 
     from cement2.core import foundation, backend
     
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     defaults['base']['debug'] = True
     defaults['base']['foo'] = 'bar'
     
@@ -147,7 +147,7 @@ config_files' section.  For example:
 
     from cement2.core import foundation, backend
     
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     defaults['base']['config_files'] = ['/path/to/config1', '/path/to/config2']
     app = foundation.lay_cement('myapp', defaults=defaults)
     
@@ -165,7 +165,7 @@ matches the name.  Note that this happens in *all* sections:
 
     from cement2.core import foundation
     
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     defaults['base']['foo'] = 'bar'
     app = foundation.lay_cement('myapp')
     

@@ -1,5 +1,5 @@
 """
-Cement core arg module.
+Cement core argument module.
 
 """
 
@@ -8,6 +8,7 @@ from cement2.core import backend, exc, interface
 Log = backend.minimal_logger(__name__)
 
 def argument_validator(klass, obj):
+    """Validates an handler implementation against the IArgument interface."""
     members = [
         'setup',
         'parse',
@@ -20,10 +21,21 @@ class IArgument(interface.Interface):
     """
     This class defines the Argument Handler Interface.  Classes that 
     implement this handler must provide the methods and attributes defined 
-    below.
+    below.  Implementations do *not* subclass from interfaces.
     
-    Implementations do *not* subclass from interfaces.
+    Example:
     
+    .. code-block:: python
+    
+        from cement2.core import interface, arg
+
+        class MyArgumentHandler(object):
+            class meta:
+                interface = arg.IArgument
+                label = 'my_argument_handler'
+
+            ...
+                
     """
     class imeta:
         label = 'argument'
@@ -78,6 +90,9 @@ class IArgument(interface.Interface):
             default
                 The default value.
                 
+        
+        Returns: n/a
+        
         """
         
     def parse(self, args):
@@ -86,6 +101,8 @@ class IArgument(interface.Interface):
         long as it's members contain those of the added arguments.  For 
         example, if adding a '-v/--version' option that stores to the dest of
         'version', then the member must be callable as 'Object().version'.
+        
+        Must also set self.parsed_args to what is being returned.
         
         Required Arguments:
         

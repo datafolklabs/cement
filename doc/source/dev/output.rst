@@ -32,7 +32,7 @@ overridden.  This would be done the same as for any other handler:
 
     from cement2.core import foundation, backend
 
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     defaults['output'] = dict(
         some_param='some_value',
         )
@@ -85,7 +85,7 @@ something happen:
     from cement2.core import foundation, backend, handler, output
 
     # Create the application with defaults for our handlers
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     defaults['base']['output_handler'] = 'myoutput'
 
     app = foundation.lay_cement('myapp', defaults=defaults)

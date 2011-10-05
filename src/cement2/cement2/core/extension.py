@@ -5,6 +5,10 @@ from cement2.core import backend, exc, interface
 Log = backend.minimal_logger(__name__)
     
 def extension_validator(klass, obj):
+    """
+    Validates an handler implementation against the IExtension interface.
+    
+    """
     members = [
         'setup',
         'load_extension',
@@ -21,6 +25,18 @@ class IExtension(interface.Interface):
     
     Implementations do *not* subclass from interfaces.
     
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement2.core import extension
+        
+        class MyExtensionHandler(object):
+            class meta:
+                interface = extension.IExtension
+                label = 'my_extension_handler'
+            ...
+            
     """
     
     # This is interface meta-deta, not part of the implemention
@@ -76,12 +92,6 @@ class IExtension(interface.Interface):
         """
 
 class CementExtensionHandler(object):
-    """
-    This is an implementation of the IExtentionHandler interface.  It handles
-    loading framework extensions.
-    
-    """
-    #interface.implements(IExtensionHandler)
     loaded_extensions = []
     
     class meta:
@@ -89,13 +99,39 @@ class CementExtensionHandler(object):
         label = 'cement'
         
     def __init__(self):
+        """
+        This is an implementation of the IExtentionHandler interface.  It handles
+        loading framework extensions.
+    
+        """
         self.defaults = {}
         self.enabled_extensions = []
         
     def setup(self, defaults):
+        """
+        Given a defaults dictionary, setup the extension handler in preparation
+        for further calls from the framework.
+        
+        Required Arguments:
+        
+            defaults
+                The application defaults dictionary (not a config object).
+                
+        """
         self.defaults = defaults
         
     def load_extension(self, ext_module):
+        """
+        Given an extension module name, load or in other-words 'import' the 
+        extension.
+        
+        Required Arguments:
+        
+            ext_module
+                The extension module name.  For example 
+                'cement2.ext.ext_logging'.
+                
+        """
         if ext_module in self.loaded_extensions:
             Log.debug("framework extension '%s' already loaded" % ext_module)
             return 
@@ -108,5 +144,15 @@ class CementExtensionHandler(object):
             raise exc.CementRuntimeError(e.args[0])
     
     def load_extensions(self, ext_list):
+        """
+        Given a list of extension modules, iterate over the list and pass
+        individually to self.load_extension().
+        
+        Required Arguments:
+        
+            ext_list
+                A list of extension modules.
+                
+        """
         for ext in ext_list:
             self.load_extension(ext)

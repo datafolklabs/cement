@@ -47,8 +47,8 @@ handle command dispatch and rapid development.
                 )
             
             arguments = [
-                ('--foo', dict(action='store', help='the notorious foo option')),
-                ('-C', dict(action='store_true', help='the big C option'))
+                (['--foo'], dict(action='store', help='the notorious foo option')),
+                (['-C'], dict(action='store_true', help='the big C option'))
                 ]
         
         @controller.expose(hide=True, aliases=['run'])
@@ -152,8 +152,8 @@ and the other is not.  Pay attention to how this looks at the command line:
                 )
 
             arguments = [
-                ('--foo', dict(action='store', help='the notorious foo option')),
-                ('-C', dict(action='store_true', help='the big C option')),
+                (['-f', '--foo'], dict(action='store', help='the notorious foo option')),
+                (['-C'], dict(action='store_true', help='the big C option')),
                 ]
 
         @controller.expose(hide=True, aliases=['run'])
@@ -176,7 +176,7 @@ and the other is not.  Pay attention to how this looks at the command line:
             defaults = dict()
 
             arguments = [
-                ('--foo2', dict(action='store', help='the notorious foo option')),
+                (['--foo2'], dict(action='store', help='the notorious foo option')),
                 ]
 
         @controller.expose(hide=False, help='A command from a stacked controller')
@@ -191,7 +191,7 @@ and the other is not.  Pay attention to how this looks at the command line:
             defaults = dict()
 
             arguments = [
-                ('--foo3', dict(action='store', help='the notorious foo option')),
+                (['--foo3'], dict(action='store', help='the notorious foo option')),
                 ]
 
         @controller.expose(hide=True)

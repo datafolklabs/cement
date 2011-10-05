@@ -1,5 +1,6 @@
 """Cement core application module."""
 
+import re
 import sys
 
 from cement2.core import backend, exc, handler, hook, log, config, plugin
@@ -15,8 +16,11 @@ class CementApp(object):
     def __init__(self, name, **kw):        
         for res in hook.run('cement_init_hook'):
             pass
-            
+        
         self.name = name
+        if not self.name:
+            raise exc.CementRuntimeError("Application name missing.")
+        
         self.defaults = kw.get('defaults', backend.defaults(self.name))
         self.defaults['base']['app_name'] = self.name
         self.argv = kw.get('argv', sys.argv[1:])
@@ -261,7 +265,10 @@ class CementApp(object):
         # Trump all with whats passed at the command line, and pop off the
         # arg
         if len(self.argv) > 0:
-            h = handler.get('controller', self.argv[0], None)
+            # translate dashes to underscore
+            contr = re.sub('-', '_', self.argv[0])
+            
+            h = handler.get('controller', contr, None)
             if h:
                 self.controller = h()
                 self.argv.pop(0)

@@ -149,7 +149,7 @@ application features.
     from cement2.core import backend, foundation, hook
 
     # set default config options
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     defaults['base']['debug'] = False
     defaults['base']['foo'] = 'bar'
 
@@ -166,7 +166,7 @@ application features.
     app.setup()
 
     # add arguments
-    app.args.add_argument('--foo', action='store', metavar='STR',
+    app.args.add_argument(['-f', '--foo'], action='store', metavar='STR',
                           help='the notorious foo option')
 
     # run the application
@@ -188,7 +188,7 @@ application features.
       -h, --help  show this help message and exit
       --debug     toggle debug output
       --quiet     suppress all output
-      --foo STR   the notorious foo option
+      -f, --foo STR   the notorious foo option
     
     $ python scripts/example.py --foo=bar
     INFO: Received the 'foo' option with value 'bar'.
@@ -220,8 +220,8 @@ handle command dispatch and rapid development.
                 )
             
             arguments = [
-                ('--foo', dict(action='store', help='the notorious foo option')),
-                ('-C', dict(action='store_true', help='the big C option'))
+                (['-f', '--foo'], dict(action='store', help='the notorious foo option')),
+                (['-C'], dict(action='store_true', help='the big C option'))
                 ]
         
         @controller.expose(hide=True, aliases=['run'])
@@ -269,7 +269,7 @@ via a controller class.  Lets see what this looks like:
       -h, --help  show this help message and exit
       --debug     toggle debug output
       --quiet     suppress all output
-      --foo FOO   the notorious foo option
+      -f,     --foo FOO   the notorious foo option
       -C          the big C option
       
       

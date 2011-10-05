@@ -211,7 +211,7 @@ configuration setting for that handler via the application defaults like so:
     from cement2.core import foundation, backend, interface, log
     
     # Set defaults
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     defaults['base']['log_handler'] = 'mylog'
     
     # Create the application

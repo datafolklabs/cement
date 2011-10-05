@@ -5,6 +5,8 @@ from cement2.core import backend, exc, interface
 Log = backend.minimal_logger(__name__)
 
 def plugin_validator(klass, obj):
+    """Validates an handler implementation against the IPlugin interface."""
+    
     members = [
         'setup',
         'load_plugin',
@@ -20,6 +22,18 @@ class IPlugin(interface.Interface):
     below.
     
     Implementations do *not* subclass from interfaces.
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement2.core import plugin
+        
+        class MyPluginHandler(object):
+            class meta:
+                interface = plugin.IPlugin
+                label = 'my_plugin_handler'
+            ...
     
     """
     class imeta:

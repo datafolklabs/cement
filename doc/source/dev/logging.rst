@@ -31,7 +31,7 @@ provides.  You can override these settings by doing the following:
 
     from cement2.core import foundation, backend
 
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     defaults['log'] = dict(
         file='/path/to/my.log',
         to_console=False,

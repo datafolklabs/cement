@@ -3,6 +3,7 @@
 from cement2.core import exc, backend, interface
 
 def config_validator(klass, obj):
+    """Validates an handler implementation against the IConfig interface."""
     members = [
         'setup',
         'keys', 
@@ -33,6 +34,18 @@ class IConfig(interface.Interface):
     
     Implementations do *not* subclass from interfaces.
     
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement2.core import config
+        
+        class MyConfigHandler(object):
+            class meta:
+                interface = config.IConfig
+                label = 'my_config_handler'
+            ...
+            
     """
     class imeta:
         label = 'config'
@@ -88,7 +101,8 @@ class IConfig(interface.Interface):
             
     def get_sections():
         """
-        Return a list of configuration sections.
+        Return a list of configuration sections.  These are designated by a
+        [block] label in a config file.
         
         Returns: list
                 

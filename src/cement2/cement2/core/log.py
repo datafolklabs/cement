@@ -3,6 +3,8 @@
 from cement2.core import exc, backend, interface
             
 def log_validator(klass, obj):
+    """Validates an handler implementation against the ILog interface."""
+    
     members = [
         'setup',
         'clear_loggers',
@@ -24,6 +26,18 @@ class ILog(interface.Interface):
         
     Implementations do *not* subclass from interfaces.
     
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement2.core import log
+        
+        class MyLogHandler(object):
+            class meta:
+                interface = log.ILog
+                label = 'my_log_handler'
+            ...
+            
     """
     class imeta:
         label = 'log'

@@ -3,6 +3,7 @@ Cement core handler module.
 
 """
 
+import re
 from cement2.core import exc, backend
 
 Log = backend.minimal_logger(__name__)
@@ -79,7 +80,8 @@ def defined(handler_type):
         
 def define(interface):
     """
-    Define a handler based on the provided interface.
+    Define a handler based on the provided interface.  Defines a handler type
+    based on <interface>.imeta.label.
     
     Required arguments:
 
@@ -152,7 +154,10 @@ def register(obj):
     if not hasattr(obj.meta, 'interface'):
         raise exc.CementInterfaceError("Invalid handler %s, " % obj + \
                                        "missing 'meta.interface'.")
-            
+
+    # translate dashes to underscores
+    obj.meta.label = re.sub('-', '_', obj.meta.label)
+    
     handler_type = obj.meta.interface.imeta.label
     Log.debug("registering handler '%s' into handlers['%s']['%s']" % \
              (obj, handler_type, obj.meta.label))

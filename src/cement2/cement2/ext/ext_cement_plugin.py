@@ -22,13 +22,21 @@ class CementPluginHandler(object):
         self.plugin_config_dir = self.config.get('base', 'plugin_config_dir')
         config_handler = handler.get('config', self.config.get
                                     ('base', 'config_handler'))
-        
-        if not os.path.exists(self.plugin_config_dir):
-            Log.debug('plugin config dir %s does not exist.' % 
-                      self.plugin_config_dir)
-            return
-        
+
         # parse all app configs for plugins
+        for section in self.config.sections():
+            if not self.config.has_key(section, 'enable_plugin'):
+                continue
+            if util.is_true(self.config.get(section, 'enable_plugin')):
+                self.enabled_plugins.append(section)
+
+        # parse plugin config dir for enabled plugins, or return 
+        if self.plugin_config_dir:
+            if not os.path.exists(self.plugin_config_dir):
+                Log.debug('plugin config dir %s does not exist.' % 
+                          self.plugin_config_dir)
+                return
+        
         for config in glob.glob("%s/*.conf" % self.plugin_config_dir):
             Log.debug("loading plugin config from '%s'." % config)
             pconfig = config_handler()

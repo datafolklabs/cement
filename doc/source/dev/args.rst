@@ -29,7 +29,7 @@ overridden.  This would be done the same as for any other handler:
 
     from cement2.core import foundation, backend
 
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     defaults['args'] = dict(
         some_param='some_value',
         )

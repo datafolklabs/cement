@@ -77,7 +77,7 @@ options and commands via an application controller:
             defaults = dict(foo='bar')
     
             arguments = [
-                ('--foo', dict(action='store', help='the infamous foo option')),
+                (['--foo'], dict(action='store', help='the infamous foo option')),
                 ]
 
         @controller.expose(help="This is my command.")
@@ -137,8 +137,8 @@ application shows how to configure an application to load plugins:
                 )
 
             arguments = [
-                ('--foo', dict(action='store', help='the notorious foo option')),
-                ('-C', dict(action='store_true', help='the big C option')),
+                (['--foo'], dict(action='store', help='the notorious foo option')),
+                (['-C'], dict(action='store_true', help='the big C option')),
                 ]
 
         @controller.expose(hide=True, aliases=['run'])
@@ -194,7 +194,7 @@ for example:
             defaults = dict(some_option='some_value')
 
             arguments = [
-                ('--some-option', dict(action='store')),
+                (['--some-option'], dict(action='store')),
                 ]
 
         @controller.expose(help="This is my command.")

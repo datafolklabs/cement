@@ -1,5 +1,4 @@
 """
-
 Cement core interface module.
 
 """
