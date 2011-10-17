@@ -107,8 +107,8 @@ The following shows logging to each of the defined log levels.
     
 
 
-The above is displayed in order or 'severity' you can say.  If the log level
-is set to 'INFO', you will receive all messages *above* 'info'.. including
+The above is displayed in order of 'severity' you can say.  If the log level
+is set to 'INFO', you will receive all 'info' messages and above .. including
 warning, error, and fatal.  However, you will not receive DEBUG level messages.
 The same goes for a log level of 'WARN', where you will receive warning, error,
 and fatal... but you will not receive INFO, or DEBUG level messages.

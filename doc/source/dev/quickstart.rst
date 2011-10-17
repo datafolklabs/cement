@@ -30,8 +30,6 @@ source for development of the next major version of Cement.
     Branch portland set up to track remote branch portland from origin.
     Switched to a new branch 'portland'
 
-    $ cd src/cement2/
-    
     $ virtualenv --no-site-packages ~/env/helloworld/
     
     $ source ~/env/helloworld/bin/activate
@@ -228,7 +226,7 @@ handle command dispatch and rapid development.
         def default(self):
             self.log.info('Inside base.default function.')
             if self.pargs.foo:
-                self.log.info("Recieved option 'foot' with value '%s'." % \
+                self.log.info("Recieved option 'foo' with value '%s'." % \
                               self.pargs.foo)
                           
         @controller.expose(help="this command does relatively nothing useful.")
