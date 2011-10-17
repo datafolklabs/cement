@@ -164,7 +164,7 @@ application features.
     app.setup()
 
     # add arguments
-    app.args.add_argument(['-f', '--foo'], action='store', metavar='STR',
+    app.args.add_argument('-f', '--foo', action='store', metavar='STR',
                           help='the notorious foo option')
 
     # run the application
