@@ -14,26 +14,59 @@ Log = backend.minimal_logger(__name__)
 
 class ConfigParserConfigHandler(RawConfigParser):
     """
-    This class is an implementation of the IConfigHandler interface.  It
-    handles configuration file parsing and the like using the standard
-    ConfigParser library.
+    This class is an implementation of the :ref:`IConfig <cement2.core.config>` 
+    interface.  It handles configuration file parsing and the like by 
+    sub-classing from the standard `ConfigParser <http://docs.python.org/library/configparser.html>`_ 
+    library.  Please see the ConfigParser documentation for full usage of the
+    class.
     
+    Additional arguments and keyword arguments are passed directly to 
+    RawConfigParser on initialization.
     """
     class meta:
         interface = config.IConfig
         label = 'configparser'
+    
+    def __init__(self, *args, **kw):
+        super(ConfigParserConfigHandler, self).__init__(*args, **kw)
         
-    def setup(self, defaults, *args, **kw):
+    def setup(self, defaults):
         """
-        Take the default config dict and merge it into self.
+        Sets up the class for use by the framework, then calls self.merge() 
+        with the passed defaults.  
+        
+        Required Arguments:
+        
+            defaults
+                The application default config dictionary.  This is *not* a 
+                config object, but rather a dictionary which should be 
+                obvious because the config handler implementation is what
+                provides the application config object.
+                
+        Returns: n/a
         
         """
-        RawConfigParser.__init__(self, *args, **kw)
         self.merge(defaults)
         
     def merge(self, dict_obj, override=True):
         """
-        Merge a dictionary into our config.
+        Merge a dictionary into our config.  If override is True then 
+        existing config values are overridden by those passed in.
+        
+        Required Arguments:
+        
+            dict_obj
+                A dictionary of configuration keys/values to merge into our
+                existing config (self).
+            
+        Optional Arguments:
+        
+            override
+                Whether or not to override existing values in the config.
+                Defaults: True.
+                
+        
+        Returns: None
         
         """
         for section in list(dict_obj.keys()):
@@ -55,7 +88,16 @@ class ConfigParserConfigHandler(RawConfigParser):
     def parse_file(self, file_path):
         """
         Parse config file settings from file_path, overwriting existing 
-        config settings.
+        config settings.  If the file does not exist, returns False.
+        
+        Required Arguments:
+            
+            file_path
+                The file system path to the configuration file.
+                
+        
+        Returns: Bool
+        
         """
         if os.path.exists(file_path):
             self.read(file_path)
@@ -100,6 +142,12 @@ class ConfigParserConfigHandler(RawConfigParser):
             return False
      
     def get_sections(self):
+        """
+        Return a list of configuration sections or [blocks].
+        
+        Returns: list
+        
+        """
         return self.sections()
             
 handler.register(ConfigParserConfigHandler)

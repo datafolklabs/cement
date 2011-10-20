@@ -10,6 +10,91 @@ import logging
 from cement2.core import exc, util, handler, log
         
 class LoggingLogHandler(object):  
+    """
+    This class is an implementation of the :ref:`ILog <cement2.core.log>` 
+    interface, and sets up the logging facility using the standard Python
+    `logging <http://docs.python.org/library/logging.html>`_ module. 
+    
+    Optional Arguments:
+        
+        config
+            The application configuration object.
+            
+        namespace
+            The logging namespace.  Default: application name.
+            
+        backend
+            The logging backend.  Default: logging.getLogger().
+        
+        file
+            The log file path. Default: None.
+            
+        to_console
+            Whether to log to the console.  Default: True.
+        
+        rotate
+            Whether to rotate the log file.  Default: False.
+        
+        max_bytes
+            The number of bytes at which to rotate the log file.
+            Default: 512000.
+        
+        max_files
+            The max number of files to keep when rotation the log file.
+            Default: 4
+            
+        file_formatter
+            The logging formatter to use for the log file.
+            
+        console_formatter
+            The logging formatter to use for the console output.
+            
+        debug_formatter
+            The logging formatter to use for debug output.
+            
+        clear_loggers
+            Whether or not to clear previous loggers first.  
+            Default: False.
+           
+        level
+            The level to log at.  Must be one of ['INFO', 'WARN', 'ERROR', 
+            'DEBUG', 'FATAL'].  Default: INFO.
+    
+    
+    Configuration Options
+    
+    The following configuration options are recognized in this class:
+    
+        base.app_name
+        
+        base.debug
+        
+        log.file
+        
+        log.to_console
+        
+        log.rotate
+        
+        log.max_bytes
+        
+        log.max_files
+        
+        log.clear_loggers
+    
+    
+    A sample config section (in any config file) might look like:
+    
+    .. code-block::text
+    
+        [log]
+        file = /path/to/config/file
+        level = info
+        to_console = true
+        rotate = true
+        max_bytes = 512000
+        max_files = 4
+        
+    """
     class meta:
         interface = log.ILog
         label = 'logging'
@@ -29,82 +114,6 @@ class LoggingLogHandler(object):
     levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
 
     def __init__(self, **kw):
-        """
-        This is an implementation of the ILogHandler interface, and sets up 
-        the logging facility using the standard 'logging' module.
-
-        Optional Arguments:
-        
-            config
-                The application configuration object.
-                
-            namespace
-                The logging namespace.  Default: application name.
-                
-            backend
-                The logging backend.  Default: logging.getLogger().
-            
-            file
-                The log file path. Default: None.
-                
-            to_console
-                Whether to log to the console.  Default: True.
-            
-            rotate
-                Whether to rotate the log file.  Default: False.
-            
-            max_bytes
-                The number of bytes at which to rotate the log file.
-                Default: 512000.
-            
-            max_files
-                The max number of files to keep when rotation the log file.
-                Default: 4
-                
-            file_formatter
-                The logging formatter to use for the log file.
-                
-            console_formatter
-                The logging formatter to use for the console output.
-                
-            debug_formatter
-                The logging formatter to use for debug output.
-                
-            clear_loggers
-                Whether or not to clear previous loggers first.  
-                Default: False.
-               
-            level
-                The level to log at.  Must be one of ['INFO', 'WARN', 'ERROR', 
-                'DEBUG', 'FATAL'].  Default: INFO.
-        
-        
-        Configuration Options
-        
-        The following configuration options are recognized in this class:
-        
-            base.app_name
-            base.debug
-            log.file
-            log.to_console
-            log.rotate
-            log.max_bytes
-            log.max_files
-            log.clear_loggers
-        
-        A sample config section (in any config file) might look like:
-        
-        .. code-block::text
-        
-            [log]
-            file = /path/to/config/file
-            level = info
-            to_console = true
-            rotate = true
-            max_bytes = 512000
-            max_files = 4
-            
-        """  
         self.config = kw.get('config', None)
         self.namespace = kw.get('namespace', None)
         self.backend = kw.get('backend', None)
@@ -120,6 +129,26 @@ class LoggingLogHandler(object):
         self._level = kw.get('level', None)
         
     def setup(self, config_obj):
+        """
+        Sets up the class for use by the framework.  It first configures 
+        itself by any parameters passed on initialization, then defaults to
+        configuration settings.  Based on how the class is initialized, the
+        logging facility is then setup and ready to be accessed by the 
+        application.
+        
+        Required Arguments:
+        
+            config_obj
+                The application configuration object.  This is a config object 
+                that implements the :ref:`IConfig <cement2.core.config>` 
+                interface and not a config dictionary, though some config 
+                handler implementations may also function like a dict 
+                (i.e. configobj).
+                
+        Returns: n/a
+        
+        """
+        
         self.config = config_obj
         
         # first handle anything passed to __init__, fall back on config.
@@ -175,6 +204,11 @@ class LoggingLogHandler(object):
                    self.namespace)
                  
     def set_level(self, level):
+        """
+        Set the log level.  Must be one of the log levels configured in 
+        self.levels which are ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL'].
+        
+        """
         if level not in self.levels:
             level = 'INFO'
         level = getattr(logging, level.upper())
@@ -185,6 +219,10 @@ class LoggingLogHandler(object):
             handler.setLevel(level)
             
     def clear_loggers(self):
+        """
+        Clear any previously configured logging namespaces.
+        
+        """
         if not self.namespace:
             # setup() probably wasn't run
             return
@@ -194,6 +232,10 @@ class LoggingLogHandler(object):
             self.backend = logging.getLogger(self.namespace)
     
     def _setup_console_log(self):
+        """
+        Add a console log handler.
+        
+        """
         console_handler = logging.StreamHandler()
         if self.level() == logging.getLevelName(logging.DEBUG):
             console_handler.setFormatter(self.debug_formatter)
@@ -204,6 +246,10 @@ class LoggingLogHandler(object):
         self.backend.addHandler(console_handler)
     
     def _setup_file_log(self):
+        """
+        Add a file log handler.
+        
+        """
         if self.rotate:
             from logging.handlers import RotatingFileHandler
             file_handler = RotatingFileHandler(
@@ -224,21 +270,70 @@ class LoggingLogHandler(object):
         self.backend.addHandler(file_handler)
         
     def level(self):
+        """
+        Returns the current log level.
+        
+        """
         return logging.getLevelName(self.backend.level)
     
     def info(self, msg):
+        """
+        Log to the INFO facility.
+        
+        Required Arguments:
+        
+            msg
+                The message the log.
+        
+        """
         self.backend.info(msg)
         
     def warn(self, msg):
+        """
+        Log to the WARN facility.
+        
+        Required Arguments:
+        
+            msg
+                The message the log.
+        
+        """
         self.backend.warn(msg)
     
     def error(self, msg):
+        """
+        Log to the ERROR facility.
+        
+        Required Arguments:
+        
+            msg
+                The message the log.
+        
+        """
         self.backend.error(msg)
     
     def fatal(self, msg):
+        """
+        Log to the FATAL (aka CRITICAL) facility.
+        
+        Required Arguments:
+        
+            msg
+                The message the log.
+        
+        """
         self.backend.fatal(msg)
     
     def debug(self, msg):
+        """
+        Log to the DEBUG facility.
+        
+        Required Arguments:
+        
+            msg
+                The message the log.
+        
+        """
         self.backend.debug(msg)
         
 handler.register(LoggingLogHandler)

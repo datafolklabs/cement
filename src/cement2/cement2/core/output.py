@@ -52,9 +52,10 @@ class IOutput(interface.Interface):
         
             config_obj
                 The application configuration object.  This is a config object 
-                that implements the IConfigHandler interface and not a config 
-                dictionary, though some config handler implementations may 
-                also function like a dict (i.e. configobj).
+                that implements the :ref:`IConfig` <cement2.core.config>` 
+                interface and not a config dictionary, though some config 
+                handler implementations may also function like a dict 
+                (i.e. configobj).
                 
         Returns: n/a
         

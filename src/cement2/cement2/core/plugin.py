@@ -52,16 +52,14 @@ class IPlugin(interface.Interface):
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
-        This function must populate the enabled_plugins, and disabled_plugins
-        lists.
-        
         Required Arguments:
         
             config_obj
                 The application configuration object.  This is a config object 
-                that implements the IConfigHandler interface and not a config 
-                dictionary, though some config handler implementations may 
-                also function like a dict (i.e. configobj).
+                that implements the :ref:`IConfig` <cement2.core.config>` 
+                interface and not a config dictionary, though some config 
+                handler implementations may also function like a dict 
+                (i.e. configobj).
                 
         Returns: n/a
         

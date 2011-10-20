@@ -139,7 +139,7 @@ Damn son, WTF?  Don't worry, we'll explain everything in the rest of the doc.
 Getting Warmer
 --------------
 
-The following is a more advanced example that show cases some of the default
+The following is a more advanced example that showcases some of the default
 application features.
 
 .. code-block:: python

@@ -6,8 +6,9 @@ Log = backend.minimal_logger(__name__)
 
 class CementOutputHandler(object):
     """
-    This class implements the IOutputHandler interface.  It literally does
-    nothing to generate output.
+    This class is an internal implementation of the 
+    :ref:`IOutput <cement2.core.output>` interface. It does not take any 
+    parameters on initialization.
     
     """
     file_suffix = None
@@ -17,11 +18,28 @@ class CementOutputHandler(object):
         label = 'cement'
         
     def setup(self, config_obj):
+        """
+        Sets up the class for use by the framework.  Little is done here in
+        this implementation.
+        
+        Required Arguments:
+        
+            config_obj
+                The application configuration object.  This is a config object 
+                that implements the :ref:`IConfig <cement2.core.config>` 
+                interface and not a config dictionary, though some config 
+                handler implementations may also function like a dict 
+                (i.e. configobj).
+                
+        Returns: n/a
+        
+        """
         self.config = config_obj
         
     def render(self, data_dict, template=None):
         """
-        Take a data dictionary and render it as nothing. 
+        This implementation does not actually render anything to output, but
+        rather logs it to the debug facility.
         
         Required Arguments:
         
@@ -31,12 +49,14 @@ class CementOutputHandler(object):
         Optional Arguments:
         
             template
-                A template to not render anything from.
+                The template parameter is not used by this implementation at
+                all.
                 
         Returns: None
         
         """
-        Log.debug("not rendering any output")
+        Log.debug("not rendering any output to console")
+        Log.debug("DATA: %s" % data_dict)
         return None
         
 handler.register(CementOutputHandler)
