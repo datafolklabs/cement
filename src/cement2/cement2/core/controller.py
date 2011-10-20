@@ -361,7 +361,7 @@ class CementBaseController(object):
         
         # hack it up to keep commands in alphabetical order
         sorted_labels = []
-        for label in self.visible.keys():
+        for label in list(self.visible.keys()):
             old_label = label
             label = re.sub('_', '-', label)
             sorted_labels.append(label)
