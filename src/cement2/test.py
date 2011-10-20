@@ -3,49 +3,16 @@
 import sys
 from cement2.core import foundation, backend, hook, controller, handler
 
-config = backend.defaults()
-config['base']['debug'] = True
-config['base']['config_files'] = ['./test.conf', 'asdfasdfasdf.conf']
-config['base']['config_handler'] = 'configparser'
-config['base']['arg_handler'] = 'argparse'
-config['base']['output_handler'] = 'yaml'
+app = foundation.lay_cement('myapp')
 
-# extensions
-#config['base']['extensions'].append('cement2.ext.ext_configobj')
-#config['base']['extensions'].append('cement2.ext.ext_optparse')
-config['base']['extensions'].append('cement2.ext.ext_yaml')
-
-#config['base']['extensions'].append('configparser')
-#config['base']['extensions'].append('logging')
-#config['base']['extensions'].append('json')
-#config['base']['extensions'].append('yaml')
-#config['base']['extensions'].append('argparse')
-
-app = foundation.lay_cement('myapp', defaults=config)
-
-hook.define('myhook')
-
-@hook.register(name='myhook', weight=99)
-def my_hook_one(*args, **kw):
-    return 'in my_hook_one'
-        
-@hook.register(name='myhook', )
-def my_hook_two(*args, **kw):
-    return 'in my_hook_two'
-
-@hook.register(name='myhook', weight=-1000)
-def my_hook_three(*args, **kw):
-    return 'in my_hook_three'
-
-    
 class MyAppBaseController(controller.CementBaseController):
     class meta:
         interface = controller.IController
         label = 'base'
         description = 'myapp base controller'
         arguments = [
-            ('--option1', dict(action='store_true', help="some option")), 
-            ('--option2', dict(action='store', metavar='VAL')),
+            (['--option1'], dict(action='store_true', help="some option")), 
+            (['--option2'], dict(action='store', metavar='VAL')),
             ]
         
         defaults = dict(foo='bar')
@@ -69,29 +36,29 @@ class SecondController(controller.CementBaseController):
         description = 'myapp second controller'
         stacked_on = 'base'
         arguments = [
-            ('--option3', dict(action='store_true', help="some option")), 
-            ('--option4', dict(action='store', metavar='VAL')),
+            (['--option3'], dict(action='store', metavar='VAL')), 
+            (['--option4'], dict(action='store', metavar='VAL')),
             ]
         
         defaults = dict(foo2='bar2')
-
-    @controller.expose(hide=True, help='default command', aliases=['2'])
-    def default(self):
-        print("Second Controller Default!!!!!")
-
+    
+    @controller.expose()
+    def cmd2():
+        pass
+        
 class ThirdController(controller.CementBaseController):
     class meta:
         interface = controller.IController
         label = 'third'
         description = 'myapp third controller'
         arguments = [
-            ('--option5', dict(action='store_true', help="some option")), 
-            ('--option6', dict(action='store', metavar='VAL')),
+            (['--option5'], dict(action='store_true', help="some option")), 
+            (['--option6'], dict(action='store', metavar='VAL')),
             ]
         
         defaults = dict(foo3='bar3')
 
-    @controller.expose(hide=True, help='default command', aliases=['2'])
+    @controller.expose(hide=True, help='default command', aliases=['cmd'])
     def default(self):
         print("Third Controller Default!!!!!")
 

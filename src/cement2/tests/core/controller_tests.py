@@ -20,10 +20,6 @@ class TestBaseController(controller.CementBaseController):
         defaults = {}
         arguments = []
         hide = False
-        
-    @controller.expose(hide=True)
-    def default(self):
-        pass
     
     @controller.expose(aliases=['mycmd'])
     def my_command(self):
@@ -66,6 +62,43 @@ class TestSecondaryController(controller.CementBaseController):
     def my_secondary_command(self):
         pass
 
+class TestDuplicateController(controller.CementBaseController):
+    class meta:
+        interface = controller.IController
+        label = 'test_duplicate'
+        description = 'Test Duplicate Controller'
+        stacked_on = 'base'
+        
+        defaults = dict(
+            foo='bar',
+            )
+
+        arguments = [
+            (['-f2', '--foo2'], dict(action='store'))
+            ]
+    
+    @controller.expose()
+    def my_command(self):
+        pass
+         
+class TestDuplicate2Controller(controller.CementBaseController):
+    class meta:
+        interface = controller.IController
+        label = 'test_duplicate2'
+        description = 'Test Duplicate2 Controller'
+        stacked_on = 'base'
+        
+        defaults = dict(
+            foo='bar',
+            )
+
+        arguments = [
+            (['-f2', '--foo2'], dict(action='store'))
+            ]
+    
+    @controller.expose(hide=True)
+    def my_command(self):
+        pass
         
 @raises(exc.CementInterfaceError)
 def test_invalid_controller():
@@ -74,7 +107,7 @@ def test_invalid_controller():
 
 def test_base_controller():
     app = _t.prep()
-    app.argv = ['default']
+    app.argv = ['my-command']
     handler.register(TestBaseController)
     app.controller = TestBaseController()
     app.setup()
@@ -82,7 +115,7 @@ def test_base_controller():
 
 def test_stacked_controller():
     app = _t.prep()
-    app.argv = ['default']
+    app.argv = ['my-command']
     handler.register(TestBaseController)
     handler.register(TestStackedController)
     app.controller = TestBaseController()
@@ -91,7 +124,7 @@ def test_stacked_controller():
 
 def test_secondary_controller():
     app = _t.prep()
-    app.argv = ['default']
+    app.argv = ['my-command']
     handler.register(TestBaseController)
     handler.register(TestSecondaryController)
     app.controller = TestBaseController()
@@ -110,7 +143,21 @@ def test_bad_command():
         app.run()
     except SystemExit:
         raise
-        
+
+@raises(NotImplementedError) 
+def test_default_command():
+    app = _t.prep()
+    app.argv = ['default']
+    handler.register(TestBaseController)
+    app.controller = TestBaseController()
+    app.setup()
+    app.run()
+    
+    try:
+        app.run()
+    except NotImplementedError:
+        raise
+       
 def test_command_alias():
     app = _t.prep()
     app.argv = ['mycmd']
@@ -118,6 +165,43 @@ def test_command_alias():
     app.controller = TestBaseController()
     app.setup()
     app.run()
+   
+def test_stacked_command():
+    app = _t.prep()
+    app.argv = ['my-stacked-command']
+    handler.register(TestBaseController)
+    handler.register(TestStackedController)
+    app.controller = TestBaseController()
+    app.setup()
+    app.run()
+     
+@raises(exc.CementRuntimeError)
+def test_duplicate_command():
+    app = _t.prep()
+    app.argv = ['my-command']
+    handler.register(TestBaseController)
+    handler.register(TestDuplicateController)
+    app.controller = TestBaseController()
+    app.setup()
+    
+    try:
+        app.run()
+    except exc.CementRuntimeError:
+        raise
+
+@raises(exc.CementRuntimeError)
+def test_duplicate_hidden_command():
+    app = _t.prep()
+    app.argv = ['my-command']
+    handler.register(TestBaseController)
+    handler.register(TestDuplicate2Controller)
+    app.controller = TestBaseController()
+    app.setup()
+    
+    try:
+        app.run()
+    except exc.CementRuntimeError:
+        raise
     
 def test_bogus_dispatch():
     app = _t.prep()

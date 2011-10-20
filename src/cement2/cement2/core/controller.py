@@ -244,6 +244,16 @@ class CementBaseController(object):
         
         """
         for _args,_kwargs in self.arguments:
+            if not type(_args) is list:
+                raise exc.CementRuntimeError(
+                    "Controller arguments must be a tuple.  I.e. " + \
+                    "(['-f', '--foo'], dict(action='store'))"
+                    )
+            if not type(_kwargs) is dict:
+                raise exc.CementRuntimeError(
+                    "Controller arguments must be a list of tuples.  I.e. " + \
+                    "[ (['-f', '--foo'], dict(action='store')), ]"
+                    )
             self.app.args.add_argument(*_args, **_kwargs)
             
     def _collect(self):
@@ -277,13 +287,17 @@ class CementBaseController(object):
                     aliases=func.aliases,
                     hide=func.hide,
                     )
+                if func.label in self.exposed.keys():
+                    raise exc.CementRuntimeError(
+                        "Exposed command '%s' already exists!" % func.label
+                        )
                 self.exposed[func.label] = func_dict
                 if func.hide:
                     self.hidden[func.label] = func_dict
                 else:
                     if not getattr(self.meta, 'hide', None):
                         self.visible[func.label] = func_dict
-        
+                        
         # then handle stacked, and not stacked controllers
         for controller in handler.list('controller'):
             if controller.meta.label == self.meta.label:
@@ -294,19 +308,18 @@ class CementBaseController(object):
             if not hasattr(controller.meta, 'stacked_on'):
                 if getattr(controller.meta, 'label', None) == 'base':
                     continue
-                    
+                
+                Log.debug('exposing %s controller' % controller.meta.label)
+                func_dict = dict(
+                    controller=controller.meta.label,
+                    label=controller.meta.label,
+                    help=controller.meta.description,
+                    aliases=[],
+                    hide=False,
+                    )
+                self.exposed[controller.meta.label] = func_dict
                 if not getattr(controller.meta, 'hide', None):
-                    Log.debug('exposing %s controller' % controller.meta.label)
-                    func_dict = dict(
-                        controller=controller.meta.label,
-                        label=controller.meta.label,
-                        help=controller.meta.description,
-                        aliases=[],
-                        hide=False,
-                        )
-                    self.exposed[controller.meta.label] = func_dict
-                    if not getattr(controller.meta, 'hide', None):
-                        self.visible[controller.meta.label] = func_dict
+                    self.visible[controller.meta.label] = func_dict
                         
             elif controller.meta.stacked_on == self.meta.label:
                 # Need to collect on the controller
@@ -328,23 +341,42 @@ class CementBaseController(object):
                           controller.meta.label)
                           
                 
-                func_dicts = contr.visible
+                func_dicts = contr.exposed
                 for label in func_dicts:
-                    self.exposed[label] = func_dicts[label]
-                    if func_dicts[label]['hide']:
-                        if label in self.hidden:
-                            raise exc.CementRuntimeError(
-                                "Hidden command '%s' already exists." % label
+                    if label in self.exposed:
+                        if label == 'default':
+                            Log.debug(
+                                "ignoring duplicate command '%s' " % label + \
+                                "found in '%s' " % controller.meta.label + \
+                                "controller."
                                 )
+                            continue
+                        else:
+                            raise exc.CementRuntimeError(
+                                "Duplicate command '%s' " % label + \
+                                "found in '%s' " % controller.meta.label + \
+                                "controller."
+                                )
+                    if func_dicts[label]['hide']:
                         self.hidden[label] = func_dicts[label]
-                    else:
-                        if not getattr(controller.meta, 'hide', False):
-                            if label in self.visible:
-                                raise exc.CementRuntimeError(
-                                    "Command '%s' already exists." % label
-                                    )
-                            self.visible[label] = func_dicts[label]
-          
+                    elif not getattr(controller.meta, 'hide', False):
+                        self.visible[label] = func_dicts[label]
+                    self.exposed[label] = func_dicts[label]
+                    
+        self._check_for_duplicates()
+        
+    def _check_for_duplicates(self):
+        for label in self.exposed:
+            func = self.exposed[label]
+            for alias in func['aliases']:
+                if alias in self.exposed.keys():
+                    raise exc.CementRuntimeError(
+                        "Alias '%s' " % alias + \
+                        "from the '%s' controller " % func['controller'] + \
+                        "colides with a command in the " + \
+                        "'%s' " % self.exposed[alias]['controller'] + \
+                        "controller."
+                        )
     @property
     def usage_text(self):
         if self.meta.label == 'base':
@@ -365,8 +397,10 @@ class CementBaseController(object):
             old_label = label
             label = re.sub('_', '-', label)
             sorted_labels.append(label)
-            self.visible[label] = self.visible[old_label]
-            del self.visible[old_label]
+            
+            if label != old_label:
+                self.visible[label] = self.visible[old_label]
+                del self.visible[old_label]
         sorted_labels.sort()
         
         for label in sorted_labels:
