@@ -24,6 +24,6 @@ def test_invalid_config_handler():
 def test_has_key():
     _t.prep()
     myconfig = ConfigParserConfigHandler()
-    myconfig.setup(backend.defaults())
+    myconfig.setup(backend.defaults('helloworld'))
     ok_(myconfig.has_key('base', 'config_handler'))
     eq_(myconfig.has_key('base', 'bogus_option'), False)

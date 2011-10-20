@@ -28,7 +28,9 @@ class ConfigParserConfigHandler(RawConfigParser):
         label = 'configparser'
     
     def __init__(self, *args, **kw):
-        super(ConfigParserConfigHandler, self).__init__(*args, **kw)
+        # ConfigParser is not a new style object, so you can't call super()
+        # super(ConfigParserConfigHandler, self).__init__(*args, **kw)
+        RawConfigParser.__init__(self, *args, **kw)
         
     def setup(self, defaults):
         """

@@ -1,22 +1,26 @@
 """Tests for cement.core.backend."""
 
+import os
 import sys
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
-from cement2.core import backend
+from cement2.core import backend, exc
 
 app_name = 'helloworld'
 config = {}
 config['base'] = {}
 config['base']['app_name'] = app_name
-config['base']['config_files'] = []
+config['base']['config_files'] = [
+    os.path.join('/', 'etc', app_name, '%s.conf' % app_name),
+    os.path.join(os.environ['HOME'], '.%s.conf' % app_name),
+    ]
 config['base']['config_source'] = ['defaults']
 config['base']['debug'] = False
 config['base']['plugins'] = []
-config['base']['plugin_config_dir'] = None
+config['base']['plugin_config_dir'] = '/etc/helloworld/plugins.d'
 config['base']['plugin_bootstrap_module'] = '%s.bootstrap' % app_name
-config['base']['plugin_directory'] = '/usr/lib/%s/plugins' % app_name
+config['base']['plugin_dir'] = '/usr/lib/%s/plugins' % app_name
 config['base']['config_handler'] = 'configparser'
 config['base']['log_handler'] = 'logging'
 config['base']['arg_handler'] = 'argparse'
@@ -60,4 +64,11 @@ def test_minimal_logger():
     # set logging back to non-debug
     backend.minimal_logger(__name__, debug=False)
     pass
+
+def test_appname_underscore():
+    defaults = backend.defaults('my_app_name')
     
+@raises(exc.CementRuntimeError)
+def test_bad_appname_chars():
+    defaults = backend.defaults('my-app-name')
+    _eq(defaults['app_name'], 'my_app_name')

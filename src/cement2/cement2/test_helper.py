@@ -13,7 +13,6 @@ def register_all_extensions(import_modules=True):
         from cement2.ext import ext_cement_output
         from cement2.ext import ext_cement_plugin
         from cement2.ext import ext_configparser
-        from cement2.ext import ext_example
         from cement2.ext import ext_logging
         from cement2.ext import ext_optparse
         
@@ -21,7 +20,6 @@ def register_all_extensions(import_modules=True):
     handler.register(ext_cement_output.CementOutputHandler)
     handler.register(ext_cement_plugin.CementPluginHandler)
     handler.register(ext_configparser.ConfigParserConfigHandler)
-    handler.register(ext_example.ExampleOutputHandler)
     handler.register(ext_logging.LoggingLogHandler)
     handler.register(ext_optparse.OptParseArgumentHandler)
     
