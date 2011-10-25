@@ -193,7 +193,12 @@ class CementBaseController(object):
         self.arguments = []
         
     def setup(self, base_app):
+        # shortcuts
         self.app = base_app                        
+        self.config = self.app.config
+        self.log = self.app.log
+        self.pargs = self.app.pargs
+        
         self._collect()
              
     def _parse_args(self):
@@ -219,11 +224,6 @@ class CementBaseController(object):
         self.app.args.formatter_class=argparse.RawDescriptionHelpFormatter
 
         self.app._parse_args()
-        
-        # shortcuts
-        self.config = self.app.config
-        self.log = self.app.log
-        self.pargs = self.app.pargs
         
     def dispatch(self):
         """
