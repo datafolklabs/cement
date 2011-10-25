@@ -25,6 +25,18 @@ def controller_validator(klass, obj):
         ]
     interface.validate(IController, obj, members, meta=meta)
     
+    # also check meta.arguments values
+    errmsg = "Controller arguments must be a list of tuples.  I.e. " + \
+             "[ (['-f', '--foo'], dict(action='store')), ]"
+    try:
+        for _args,_kwargs in obj.meta.arguments:
+            if not type(_args) is list:
+                raise exc.CementInterfaceError(errmsg)
+            if not type(_kwargs) is dict:
+                raise exc.CementInterfaceError(errmsg)
+    except ValueError:
+        raise exc.CementInterfaceError(errmsg)
+            
 class IController(interface.Interface):
     """
     This class defines the Controller Handler Interface.  Classes that 
@@ -181,10 +193,10 @@ class CementBaseController(object):
         self.arguments = []
         
     def setup(self, base_app):
-        self.app = base_app
+        self.app = base_app                        
         self._collect()
-        self._add_arguments_to_parser()
-        
+             
+    def _parse_args(self):
         # chop off a command argument if it matches an exposed command
         if len(self.app.argv) > 0 and not self.app.argv[0].startswith('-'):
             
@@ -201,6 +213,7 @@ class CementBaseController(object):
                         self.app.argv.pop(0)
                         break
                         
+        
         self.app.args.description = self.help_text
         self.app.args.usage = self.usage_text
         self.app.args.formatter_class=argparse.RawDescriptionHelpFormatter
@@ -211,17 +224,18 @@ class CementBaseController(object):
         self.config = self.app.config
         self.log = self.app.log
         self.pargs = self.app.pargs
-                
+        
     def dispatch(self):
         """
         Takes the remaining arguments from self.app.argv and parses for a
         command to dispatch, and if so... dispatches it.
         
         """
+        self._add_arguments_to_parser()
+        self._parse_args()
+                       
         if not self.command:
             Log.debug("no command to dispatch")
-        elif self.command not in self.exposed:
-            Log.debug("no function named %s" % self.command)
         else:    
             func = self.exposed[self.command]     
             Log.debug("dispatching command: %s.%s" % \
@@ -231,6 +245,7 @@ class CementBaseController(object):
                 getattr(self, func['label'])()
             else:
                 controller = handler.get('controller', func['controller'])()
+                controller.setup(self.app)
                 getattr(controller, func['label'])()
 
     @expose(hide=True, help='default command')
@@ -244,16 +259,6 @@ class CementBaseController(object):
         
         """
         for _args,_kwargs in self.arguments:
-            if not type(_args) is list:
-                raise exc.CementRuntimeError(
-                    "Controller arguments must be a tuple.  I.e. " + \
-                    "(['-f', '--foo'], dict(action='store'))"
-                    )
-            if not type(_kwargs) is dict:
-                raise exc.CementRuntimeError(
-                    "Controller arguments must be a list of tuples.  I.e. " + \
-                    "[ (['-f', '--foo'], dict(action='store')), ]"
-                    )
             self.app.args.add_argument(*_args, **_kwargs)
             
     def _collect(self):
@@ -287,10 +292,23 @@ class CementBaseController(object):
                     aliases=func.aliases,
                     hide=func.hide,
                     )
-                if func.label in self.exposed.keys():
+
+                if func_dict['label'] == self.meta.label:
                     raise exc.CementRuntimeError(
-                        "Exposed command '%s' already exists!" % func.label
+                        "Controller command '%s' " % func_dict['label'] + \
+                        "matches controller label.  Use 'default' instead."
                         )
+                        
+                # This would never happen, because that would mean two
+                # functions of the same name on one controller.. which python 
+                # will only use the last defined.
+                #
+                # if func.label in self.exposed.keys():
+                #     raise exc.CementRuntimeError(
+                #         "Exposed command '%s' already exists!" % func.label
+                #         )
+                #
+                
                 self.exposed[func.label] = func_dict
                 if func.hide:
                     self.hidden[func.label] = func_dict
@@ -316,18 +334,24 @@ class CementBaseController(object):
                     help=controller.meta.description,
                     aliases=[],
                     hide=False,
+                    is_namespace=True # how to show this is a controller
                     )
+                # expose the controller label as a sub command
                 self.exposed[controller.meta.label] = func_dict
                 if not getattr(controller.meta, 'hide', None):
                     self.visible[controller.meta.label] = func_dict
                         
             elif controller.meta.stacked_on == self.meta.label:
+                # The controller is stacked on self 
+                
                 # Need to collect on the controller
                 contr = controller()
                 
                 # This is a hack, but we don't want to run full setup() on
                 # the stacked controllers.
-                contr.app = self.app
+                #contr.app = self.app
+                #contr._collect()
+                contr.setup(self.app)
                 contr._collect()
                 
                 # add stacked arguments into ours
@@ -340,10 +364,14 @@ class CementBaseController(object):
                 Log.debug('collecting commands from %s controller (stacked)' % \
                           controller.meta.label)
                           
-                
+
+                # determine hidden vs. visible commands
                 func_dicts = contr.exposed
                 for label in func_dicts:
-                    if label in self.exposed:
+                    # if this is a controller namespace, continue
+                    if 'is_namespace' in func_dicts[label].keys():
+                        continue
+                    elif label in self.exposed:  
                         if label == 'default':
                             Log.debug(
                                 "ignoring duplicate command '%s' " % label + \
@@ -363,9 +391,9 @@ class CementBaseController(object):
                         self.visible[label] = func_dicts[label]
                     self.exposed[label] = func_dicts[label]
                     
-        self._check_for_duplicates()
+        self._check_for_duplicates_on_aliases()
         
-    def _check_for_duplicates(self):
+    def _check_for_duplicates_on_aliases(self):
         for label in self.exposed:
             func = self.exposed[label]
             for alias in func['aliases']:
@@ -376,6 +404,11 @@ class CementBaseController(object):
                         "colides with a command in the " + \
                         "'%s' " % self.exposed[alias]['controller'] + \
                         "controller."
+                        )
+                elif alias == func['controller']:
+                    raise exc.CementRuntimeError(
+                        "Alias '%s' of the command '%s' " % (alias, label) + \
+                        "matches the controller label.  Use 'default' instead."
                         )
     @property
     def usage_text(self):

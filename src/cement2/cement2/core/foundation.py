@@ -135,7 +135,10 @@ class CementApp(object):
     def _set_handler_defaults(self, handler_obj):
         """
         Set config defaults per handler defaults if the config key is not 
-        already set.
+        already set.  The configurations are set under a [section] whose
+        name is that of the handlers interface type/label.  The exception
+        is for handlers of type 'controllers', by which case the label of the
+        controller is used.
         
         Required Arguments:
         
@@ -146,20 +149,24 @@ class CementApp(object):
         if not hasattr(handler_obj.meta, 'defaults'):
             Log.debug("no config defaults from '%s'" % handler_obj)
             return 
-                    
-        handler_type = handler_obj.meta.interface.imeta.label
-        dict_obj = {}
-        dict_obj[handler_type] = handler_obj.meta.defaults
-
-        Log.debug("setting config defaults from '%s'" % handler_obj)
-
-        # special handling for controller defaults
-        if handler_type == 'controller':
-            if getattr(handler_obj.meta, 'stacked_on', None):
-                # If its stacked, then add the defaults to the parent config
-                dict_obj[handler_obj.meta.stacked_on] = dict_obj[handler_type]
-        self.config.merge(dict_obj, override=False)
         
+        Log.debug("setting config defaults from '%s'" % handler_obj)
+        
+        dict_obj = dict()
+        handler_type = handler_obj.meta.interface.imeta.label
+        
+        if handler_type == 'controller':
+            # If its stacked, then add the defaults to the parent config
+            if getattr(handler_obj.meta, 'stacked_on', None):
+                key = handler_obj.meta.stacked_on
+            else:
+                key = handler_obj.meta.label
+        else:
+            key = handler_type
+            
+        dict_obj[key] = handler_obj.meta.defaults
+        self.config.merge(dict_obj, override=False)
+            
     def _parse_args(self):
         self.args.parse(self.argv)
         
@@ -275,10 +282,13 @@ class CementApp(object):
                 
         # if no handler can be found, that's ok
         if self.controller:
-            self._set_handler_defaults(self.controller)
             self.controller.setup(self)
         else:
             Log.debug("no controller could be found.")
+
+        # set handler defaults for all controllers
+        for contr in handler.list('controller'):
+            self._set_handler_defaults(contr)
             
     def _validate_required_config(self):
         """

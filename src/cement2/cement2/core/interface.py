@@ -55,7 +55,7 @@ def validate(interface, obj, members, **kw):
     invalid = []
     meta = kw.get('meta', ['interface', 'label'])
 
-    if interface != obj.meta.interface:
+    if hasattr(obj, 'meta') and interface != obj.meta.interface:
         raise exc.CementInterfaceError("%s does not implement '%s'." % \
                                       (obj, interface))
         
