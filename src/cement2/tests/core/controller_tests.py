@@ -150,11 +150,25 @@ class SameNameController(controller.CementBaseController):
         description = 'Same Name Controller'
         defaults = dict()
         arguments = []
-    
+        stacked_on = 'base'
+        
     @controller.expose()
     def same_name(self):
         pass
 
+class SameNameAliasController(controller.CementBaseController):
+    class meta:
+        interface = controller.IController
+        label = 'same_name_alias'
+        description = 'Same Name Alias Controller'
+        defaults = dict()
+        arguments = []
+        stacked_on = 'base'
+    
+    @controller.expose(aliases=['test_secondary'])
+    def test_command(self):
+        pass
+        
 @raises(exc.CementInterfaceError)
 def test_invalid_controller():
     _t.prep()
@@ -330,7 +344,7 @@ def test_controller_defaults():
     eq_(app.config.get('base', 'test_stacked_default'), 2)
     eq_(app.config.get('test_secondary', 'test_secondary_default'), 3)
     
-#@raises(exc.CementRuntimeError)
+@raises(exc.CementRuntimeError)
 def test_same_name_controller():
     app = _t.prep()
     app.argv = ['my-command']
@@ -338,5 +352,14 @@ def test_same_name_controller():
     handler.register(TestBaseController)
     handler.register(SameNameController)
     app.setup()
-    app.run()
     
+@raises(exc.CementRuntimeError)
+def test_same_name_alias_controller():
+    app = _t.prep()
+    app.argv = ['my-command']
+    app.controller = TestBaseController()
+    handler.register(TestBaseController)
+    handler.register(TestSecondaryController)
+    handler.register(SameNameAliasController)
+    app.setup()
+    app.run()

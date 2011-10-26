@@ -195,20 +195,19 @@ Cement Framework Hooks
 
 Cement has a number of hooks that tie into the framework.
 
-cement_init_hook
+cement_setup_hook
 ^^^^^^^^^^^^^^^^
         
-Called immediately after the 'CementApp' class is instantiated.  This happens 
-at the end of 'lay_cement()'.  No arguments are passed to this hook, and 
-nothing is expected in return.
+Run when CementApp.setup() is called.  No arguments are passed to this hook, 
+and nothing is expected in return.
 
 .. code-block:: python
 
     from cement2.core import hook
     
-    @hook.register(name='cement_init_hook')
-    def my_init_hook():
-        # do something on application initialization
+    @hook.register(name='cement_setup_hook')
+    def my_setup_hook():
+        # do something on application setup()
         pass
         
 

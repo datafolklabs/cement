@@ -173,7 +173,8 @@ class CementBaseController(object):
     """
     class meta:
         interface = IController
-        label = None # provided in subclass
+        label = 'base' # provided in subclass
+        description = 'Cement Base Controller'
         defaults = {} # default config options
         arguments = [] # list of tuple (*args, *kwargs)
         stacked_on = None # controller name to merge commands/options into
@@ -250,6 +251,11 @@ class CementBaseController(object):
 
     @expose(hide=True, help='default command')
     def default(self):
+        """
+        This is the default action if no arguments (sub-commands) are passed
+        at command line.
+        
+        """
         raise NotImplementedError
     
     def _add_arguments_to_parser(self):
@@ -260,18 +266,8 @@ class CementBaseController(object):
         """
         for _args,_kwargs in self.arguments:
             self.app.args.add_argument(*_args, **_kwargs)
-            
-    def _collect(self):
-        """
-        Collects all commands and arguments from this controller, and other
-        availble controllers.
-        """
-        self.visible = {}
-        self.hidden = {}
-        self.exposed = {}
-        self.arguments = []
-    
         
+    def _collect_from_self(self):
         # collect our meta arguments
         Log.debug('collecting arguments from %s controller' % self.meta.label)
         for _args,_kwargs in self.meta.arguments:
@@ -298,99 +294,98 @@ class CementBaseController(object):
                         "Controller command '%s' " % func_dict['label'] + \
                         "matches controller label.  Use 'default' instead."
                         )
-                        
-                # This would never happen, because that would mean two
-                # functions of the same name on one controller.. which python 
-                # will only use the last defined.
-                #
-                # if func.label in self.exposed.keys():
-                #     raise exc.CementRuntimeError(
-                #         "Exposed command '%s' already exists!" % func.label
-                #         )
-                #
                 
                 self.exposed[func.label] = func_dict
+                    
                 if func.hide:
                     self.hidden[func.label] = func_dict
                 else:
                     if not getattr(self.meta, 'hide', None):
                         self.visible[func.label] = func_dict
                         
-        # then handle stacked, and not stacked controllers
+    def _collect_from_non_stacked_controller(self, controller):
+        Log.debug('exposing %s controller' % controller.meta.label)
+        if getattr(controller.meta, 'label', None) == 'base':
+            return
+                
+        func_dict = dict(
+            controller=controller.meta.label,
+            label=controller.meta.label,
+            help=controller.meta.description,
+            aliases=[],
+            hide=False,
+            is_namespace=True # how to show this is a controller
+            )
+        # expose the controller label as a sub command
+        self.exposed[controller.meta.label] = func_dict
+        if not getattr(controller.meta, 'hide', None):
+            self.visible[controller.meta.label] = func_dict
+                            
+    def _collect_from_stacked_controller(self, controller):                
+        contr = controller()
+        contr.setup(self.app)
+        contr._collect()
+        
+        # add stacked arguments into ours
+        Log.debug('collecting arguments from %s controller (stacked)' % \
+                  controller.meta.label)
+        for _args,_kwargs in contr.arguments:
+            self.arguments.append((_args, _kwargs))
+            
+        # add stacked commands into ours
+        Log.debug('collecting commands from %s controller (stacked)' % \
+                  controller.meta.label)
+                  
+
+        # determine hidden vs. visible commands
+        func_dicts = contr.exposed
+        for label in func_dicts:
+            # if this is a controller namespace, continue
+            if 'is_namespace' in func_dicts[label].keys():
+                continue
+            elif label in self.exposed:  
+                if label == 'default':
+                    Log.debug(
+                        "ignoring duplicate command '%s' " % label + \
+                        "found in '%s' " % controller.meta.label + \
+                        "controller."
+                        )
+                    continue
+                else:
+                    raise exc.CementRuntimeError(
+                        "Duplicate command '%s' " % label + \
+                        "found in '%s' " % controller.meta.label + \
+                        "controller."
+                        )
+            if func_dicts[label]['hide']:
+                self.hidden[label] = func_dicts[label]
+            elif not getattr(controller.meta, 'hide', False):
+                self.visible[label] = func_dicts[label]
+            self.exposed[label] = func_dicts[label]
+
+    def _collect_from_controllers(self):
         for controller in handler.list('controller'):
             if controller.meta.label == self.meta.label:
                 continue
                 
-            # expose other controllers as commands also (that aren't stacked
-            # onto another controller)
+            # expose other controllers as commands also
             if not hasattr(controller.meta, 'stacked_on'):
-                if getattr(controller.meta, 'label', None) == 'base':
-                    continue
-                
-                Log.debug('exposing %s controller' % controller.meta.label)
-                func_dict = dict(
-                    controller=controller.meta.label,
-                    label=controller.meta.label,
-                    help=controller.meta.description,
-                    aliases=[],
-                    hide=False,
-                    is_namespace=True # how to show this is a controller
-                    )
-                # expose the controller label as a sub command
-                self.exposed[controller.meta.label] = func_dict
-                if not getattr(controller.meta, 'hide', None):
-                    self.visible[controller.meta.label] = func_dict
-                        
+                self._collect_from_non_stacked_controller(controller)                        
             elif controller.meta.stacked_on == self.meta.label:
-                # The controller is stacked on self 
-                
-                # Need to collect on the controller
-                contr = controller()
-                
-                # This is a hack, but we don't want to run full setup() on
-                # the stacked controllers.
-                #contr.app = self.app
-                #contr._collect()
-                contr.setup(self.app)
-                contr._collect()
-                
-                # add stacked arguments into ours
-                Log.debug('collecting arguments from %s controller (stacked)' % \
-                          controller.meta.label)
-                for _args,_kwargs in contr.arguments:
-                    self.arguments.append((_args, _kwargs))
-                    
-                # add stacked commands into ours
-                Log.debug('collecting commands from %s controller (stacked)' % \
-                          controller.meta.label)
-                          
+                self._collect_from_stacked_controller(controller)
 
-                # determine hidden vs. visible commands
-                func_dicts = contr.exposed
-                for label in func_dicts:
-                    # if this is a controller namespace, continue
-                    if 'is_namespace' in func_dicts[label].keys():
-                        continue
-                    elif label in self.exposed:  
-                        if label == 'default':
-                            Log.debug(
-                                "ignoring duplicate command '%s' " % label + \
-                                "found in '%s' " % controller.meta.label + \
-                                "controller."
-                                )
-                            continue
-                        else:
-                            raise exc.CementRuntimeError(
-                                "Duplicate command '%s' " % label + \
-                                "found in '%s' " % controller.meta.label + \
-                                "controller."
-                                )
-                    if func_dicts[label]['hide']:
-                        self.hidden[label] = func_dicts[label]
-                    elif not getattr(controller.meta, 'hide', False):
-                        self.visible[label] = func_dicts[label]
-                    self.exposed[label] = func_dicts[label]
-                    
+    def _collect(self):
+        """
+        Collects all commands and arguments from this controller, and other
+        availble controllers.
+        """
+        self.visible = {}
+        self.hidden = {}
+        self.exposed = {}
+        self.arguments = []
+        
+        self._collect_from_self()
+        self._collect_from_controllers()
         self._check_for_duplicates_on_aliases()
         
     def _check_for_duplicates_on_aliases(self):
@@ -401,15 +396,11 @@ class CementBaseController(object):
                     raise exc.CementRuntimeError(
                         "Alias '%s' " % alias + \
                         "from the '%s' controller " % func['controller'] + \
-                        "colides with a command in the " + \
+                        "colides with the " + \
                         "'%s' " % self.exposed[alias]['controller'] + \
                         "controller."
                         )
-                elif alias == func['controller']:
-                    raise exc.CementRuntimeError(
-                        "Alias '%s' of the command '%s' " % (alias, label) + \
-                        "matches the controller label.  Use 'default' instead."
-                        )
+                        
     @property
     def usage_text(self):
         if self.meta.label == 'base':

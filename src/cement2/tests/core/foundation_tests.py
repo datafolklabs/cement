@@ -5,9 +5,9 @@ from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import foundation, exc, backend, config, extension, plugin
-from cement2.core import log, output, handler, hook, arg
+from cement2.core import log, output, handler, hook, arg, controller
 from cement2 import test_helper as _t
-    
+       
 class TestOutputHandler(object):
     file_suffix = None
     
@@ -78,3 +78,61 @@ def test_add_arg_shortcut():
     app.setup()
     app.add_arg('--foo', action='store')
     
+def test_reset_output_handler():
+    app = _t.prep('test')
+    app.argv = []
+    app.setup()
+    app.output = TestOutputHandler()
+    app.run()
+    
+    app.output = None
+    app.run()
+    
+    app.config.set('base', 'output_handler', None)
+    app._setup_output_handler()
+    app.run()
+
+def test_controller_handler():
+    app = _t.prep('test')
+    handler.register(controller.CementBaseController)
+    
+    app.setup()
+    app.controller = None
+    app.config.set('base', 'controller_handler', 'base')
+    app._setup_controller_handler()
+    
+    app = _t.prep('test')
+    handler.register(controller.CementBaseController)
+    
+    app.argv = ['base', 'default']
+    app.controller = controller.CementBaseController()
+    app.setup()
+    try:
+        app.run()
+    except NotImplementedError:
+        pass
+
+def test_lay_cement():
+    _t.reset_backend()
+    defaults = backend.defaults('test')
+    argv = ['--quiet']
+    app = foundation.lay_cement('test', defaults=defaults, argv=argv)
+    
+    _t.reset_backend()
+    defaults = backend.defaults('test')
+    argv = ['--json', '--yaml']
+    app = foundation.lay_cement('test', defaults=defaults, argv=argv)
+    
+def test_hook(*args, **kw):
+    return True
+        
+def test_framework_hooks():
+    app = _t.prep()
+    
+    hook_tuple = (0, test_hook.__name__, test_hook)    
+    backend.hooks['cement_setup_hook'].append(hook_tuple)
+    backend.hooks['cement_validate_config_hook'].append(hook_tuple)
+    backend.hooks['cement_add_args_hook'].append(hook_tuple)
+    
+    #raise Exception(backend.hooks)
+    app.setup()

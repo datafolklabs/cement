@@ -13,10 +13,7 @@ class NullOut():
         pass
         
 class CementApp(object):
-    def __init__(self, name, **kw):        
-        for res in hook.run('cement_init_hook'):
-            pass
-        
+    def __init__(self, name, **kw):                
         self.name = name
         if not self.name:
             raise exc.CementRuntimeError("Application name missing.")
@@ -73,6 +70,10 @@ class CementApp(object):
         
         """
         Log.debug("now setting up the '%s' application" % self.name)
+        
+        for res in hook.run('cement_setup_hook'):
+            pass
+
         self._setup_extension_handler()
         self._setup_config_handler()
         self._validate_required_config()
@@ -329,7 +330,7 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     """
     Log.debug("laying cement for the '%s' application" % name)
     
-    if kw.get('defaults'):
+    if kw.get('defaults', None):
         defaults = kw['defaults']
         del kw['defaults']
     else:
@@ -358,7 +359,7 @@ def lay_cement(name, klass=CementApp, *args, **kw):
         sys.stderr = NullOut()
         
     # define framework hooks
-    hook.define('cement_init_hook')
+    hook.define('cement_setup_hook')
     hook.define('cement_add_args_hook')
     # hook.define('cement_post_args_hook')
     hook.define('cement_validate_config_hook')
