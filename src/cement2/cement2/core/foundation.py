@@ -172,14 +172,10 @@ class CementApp(object):
         self.args.parse(self.argv)
         
         for member in dir(self.args.parsed_args):
-            # ignore None values
-            if member is None:
-                continue
-                
-            if member.startswith('_'):
+            if member and member.startswith('_'):
                 continue
             for section in self.config.get_sections():
-                if member in self.config.keys(section):
+                if member and member in self.config.keys(section):
                     self.config.set(section, member, 
                                     getattr(self.args.parsed_args, member))
         

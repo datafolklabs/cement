@@ -133,6 +133,18 @@ def test_framework_hooks():
     backend.hooks['cement_setup_hook'].append(hook_tuple)
     backend.hooks['cement_validate_config_hook'].append(hook_tuple)
     backend.hooks['cement_add_args_hook'].append(hook_tuple)
-    
-    #raise Exception(backend.hooks)
     app.setup()
+
+def test_none_member():
+    class Test(object):
+        var = None
+    
+    app = _t.prep()
+    app.setup()    
+    app.args.parsed_args = Test()
+    try:
+        app._parse_args()
+    except SystemExit:
+        pass
+    
+    
