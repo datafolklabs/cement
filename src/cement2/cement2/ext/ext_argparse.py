@@ -7,7 +7,6 @@ from argparse import ArgumentParser
 from cement2.core import backend, handler, arg
 
 Log = backend.minimal_logger(__name__)
-
     
 class ArgParseArgumentHandler(ArgumentParser):
     """

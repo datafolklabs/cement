@@ -151,5 +151,5 @@ class ConfigParserConfigHandler(RawConfigParser):
         
         """
         return self.sections()
-            
+
 handler.register(ConfigParserConfigHandler)

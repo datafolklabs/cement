@@ -8,7 +8,7 @@ Logging Framework Extension
 
 import logging
 from cement2.core import exc, util, handler, log
-        
+
 class LoggingLogHandler(object):  
     """
     This class is an implementation of the :ref:`ILog <cement2.core.log>` 
@@ -335,5 +335,5 @@ class LoggingLogHandler(object):
         
         """
         self.backend.debug(msg)
-        
+
 handler.register(LoggingLogHandler)

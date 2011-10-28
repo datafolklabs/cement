@@ -10,6 +10,7 @@ them in your applications.
    
    dev/quickstart
    dev/interfaces_and_handlers
+   dev/extensions
    dev/configuration
    dev/logging
    dev/args
@@ -17,17 +18,3 @@ them in your applications.
    dev/controllers
    dev/hooks
    dev/plugins
-   
-..
-   dev/understanding_your_application
-   dev/namespaces
-   dev/hooks
-   dev/handlers
-   dev/mvc
-   dev/options_and_arguments
-   dev/logging
-   dev/plugin_support
-   dev/templates
-   dev/cli_api
-   dev/testing
-   dev/sphinx

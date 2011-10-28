@@ -170,5 +170,5 @@ class ConfigObjConfigHandler(ConfigObj):
         """
         if not self.has_section(section):
             self[section] = dict()
-            
+
 handler.register(ConfigObjConfigHandler)

@@ -1,6 +1,6 @@
 """Cement core extensions module."""
 
-from cement2.core import backend, exc, interface
+from cement2.core import backend, exc, interface, handler
 
 Log = backend.minimal_logger(__name__)
     
@@ -138,8 +138,9 @@ class CementExtensionHandler(object):
             
         Log.debug("loading the '%s' framework extension" % ext_module)
         try:
-            __import__(ext_module)
+            __import__(ext_module, globals(), locals(), [])
             self.loaded_extensions.append(ext_module)
+   
         except ImportError as e:
             raise exc.CementRuntimeError(e.args[0])
     

@@ -187,5 +187,5 @@ class CementPluginHandler(object):
         """
         for plugin_name in plugin_list:
             self.load_plugin(plugin_name)
-        
+
 handler.register(CementPluginHandler)

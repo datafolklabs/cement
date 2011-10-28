@@ -4,7 +4,7 @@ from optparse import OptionParser
 from cement2.core import backend, handler, arg
 
 Log = backend.minimal_logger(__name__)
-    
+
 class OptParseArgumentHandler(OptionParser):
     """
     This class implements the :ref:`IArgument <cement2.core.arg>` 
@@ -69,5 +69,3 @@ class OptParseArgumentHandler(OptionParser):
         return super(OptionParser, self).add_option(*args, **kw)            
 
 handler.register(OptParseArgumentHandler)
-    
-    

@@ -58,5 +58,5 @@ class CementOutputHandler(object):
         Log.debug("not rendering any output to console")
         Log.debug("DATA: %s" % data_dict)
         return None
-        
+
 handler.register(CementOutputHandler)

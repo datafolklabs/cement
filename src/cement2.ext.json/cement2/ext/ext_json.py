@@ -70,9 +70,9 @@ class JsonOutputHandler(object):
         sys.stdout = backend.SAVED_STDOUT
         sys.stderr = backend.SAVED_STDERR
         return jsonpickle.encode(data_dict, unpicklable=unpicklable)
-            
-handler.register(JsonOutputHandler)
 
+handler.register(JsonOutputHandler)
+            
 @hook.register()
 def cement_add_args_hook(config, arg_obj):
     """
@@ -81,3 +81,4 @@ def cement_add_args_hook(config, arg_obj):
     """
     arg_obj.add_argument('--json', dest='output_handler', 
         action='store_const', help='toggle json output handler', const='json')
+
