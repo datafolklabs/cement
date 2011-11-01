@@ -15,14 +15,21 @@ class CementPluginHandler(object):
     parameters on initialization.
     
     """
-    loaded_plugins = []
-    enabled_plugins = []
-    disabled_plugins = []
+    
+    # Listed here to satisfy the validator
+    loaded_plugins = None
+    enabled_plugins = None
+    disabled_plugins = None
     
     class meta:
         interface = plugin.IPlugin
         label = 'cement'
     
+    def __init__(self):
+       self.loaded_plugins = []
+       self.enabled_plugins = []
+       self.disabled_plugins = []
+     
     def setup(self, config_obj):
         """
         Sets up the class for use by the framework, including parsing the
@@ -167,12 +174,15 @@ class CementPluginHandler(object):
         elif self._load_plugin_from_module(plugin_name, plugin_module):
             self.loaded_plugins.append(plugin_name)
             return True
-        else:
-            import traceback
-            traceback.print_exc(file=sys.stdout)
-            raise exc.CementConfigError(
-                "Unable to import plugin '%s'." % plugin_name
-                )
+        
+        # This doesn't seem likely to be triggerable because the second load
+        # from module will raise an ImportError
+        #else:
+        #    import traceback
+        #    traceback.print_exc(file=sys.stdout)
+        #    raise exc.CementConfigError(
+        #        "Unable to import plugin '%s'." % plugin_name
+        #        )
     
     def load_plugins(self, plugin_list):
         """

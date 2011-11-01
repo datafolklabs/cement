@@ -8,16 +8,17 @@ from cement2.core import handler, backend, log
 from cement2 import test_helper as _t
 
 def test_rotate():
-    app = _t.prep()
-    app.setup()
+    app = _t.prep('myapp')
+    app.setup()    
     app.config.set('base', 'debug', True)
     app.config.set('log', 'file', '/dev/null')
     app.config.set('log', 'rotate', True)
     app.config.set('log', 'to_console', True)
     app.log.setup(app.config)
     
+    
 def test_bad_level():
-    app = _t.prep()
+    app = _t.prep('myapp')
     app.setup()
     app.config.set('log', 'file', '/dev/null')
     app.config.set('log', 'rotate', True)

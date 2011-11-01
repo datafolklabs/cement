@@ -46,7 +46,6 @@ def defaults(app_name):
     dcf['base']['config_source'] = ['defaults']
     dcf['base']['debug'] = False
     
-    # FIX ME: need to implement
     dcf['base']['plugins'] = []
     dcf['base']['plugin_config_dir'] = '/etc/%s/plugins.d' % app_name
     dcf['base']['plugin_bootstrap_module'] = '%s.bootstrap' % app_name

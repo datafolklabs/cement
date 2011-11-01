@@ -6,7 +6,7 @@ def reset_backend():
         del backend.handlers[_handler]
     for _hook in backend.hooks.copy():
         del backend.hooks[_hook]
-        
+            
 def register_all_extensions(import_modules=True):
     if import_modules:
         from cement2.ext import ext_argparse
