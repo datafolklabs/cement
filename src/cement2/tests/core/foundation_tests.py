@@ -36,7 +36,7 @@ def test_passed_handlers():
     from cement2.ext import ext_configparser
     from cement2.ext import ext_logging
     from cement2.ext import ext_argparse
-    from cement2.ext import ext_cement_plugin
+    from cement2.ext import ext_plugin
     from cement2.ext import ext_nulloutput
     
     myconfig = ext_configparser.ConfigParserConfigHandler(defaults)
@@ -46,7 +46,7 @@ def test_passed_handlers():
         log_handler=ext_logging.LoggingLogHandler(),
         arg_handler=ext_argparse.ArgParseArgumentHandler(),
         extension_handler=extension.CementExtensionHandler(),
-        plugin_handler=ext_cement_plugin.CementPluginHandler(),
+        plugin_handler=ext_plugin.CementPluginHandler(),
         output_handler=ext_nulloutput.NullOutputHandler(),
         argv=[__file__, '--debug']
         )

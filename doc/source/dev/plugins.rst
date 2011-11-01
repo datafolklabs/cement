@@ -2,7 +2,7 @@ Application Plugins
 ===================
 
 Cement defines a plugin interface called :ref:`IPlugin <cement2.core.plugin>`, 
-as well as the default :ref:`CementPluginHandler <cement2.ext.ext_cement_plugin>` 
+as well as the default :ref:`CementPluginHandler <cement2.ext.ext_plugin>` 
 that implements the interface.  
 
 Please note that there may be other handler's that implement the IPlugin
@@ -11,7 +11,7 @@ interface and not the full capabilities of the implementation.
 
 The following output handlers are included and maintained with Cement2:
 
-    * :ref:`CementPluginHandler <cement2.ext.ext_cement_plugin>`
+    * :ref:`CementPluginHandler <cement2.ext.ext_plugin>`
 
 Please reference the :ref:`IPlugin <cement2.core.plugin>` interface 
 documentation for writing your own plugin handler.
@@ -237,13 +237,13 @@ understanding of how that happened:
 
     $ python test.py --help --debug 2>&1 | grep -i plugin
     2011-10-03 18:21:22,003 (DEBUG) cement2.core.handler : defining handler type 'plugin' (IPlugin)
-    2011-10-03 18:21:22,005 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_cement_plugin' framework extension
-    2011-10-03 18:21:22,008 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_cement_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
+    2011-10-03 18:21:22,005 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_plugin' framework extension
+    2011-10-03 18:21:22,008 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
     2011-10-03 18:21:22,014 (DEBUG) cement2.core.foundation : setting up helloworld.plugin handler
-    2011-10-03 18:21:22,014 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.ext.ext_cement_plugin.CementPluginHandler object at 0x1005da390>'
-    2011-10-03 18:21:22,014 (DEBUG) cement2.ext.ext_cement_plugin : loading plugin config from './config/plugins.d/myplugin.conf'.
-    2011-10-03 18:21:22,015 (DEBUG) cement2.ext.ext_cement_plugin : loading application plugin 'myplugin'
-    2011-10-03 18:21:22,015 (DEBUG) cement2.ext.ext_cement_plugin : attempting to load 'myplugin' from './plugins'
+    2011-10-03 18:21:22,014 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.ext.ext_plugin.CementPluginHandler object at 0x1005da390>'
+    2011-10-03 18:21:22,014 (DEBUG) cement2.ext.ext_plugin : loading plugin config from './config/plugins.d/myplugin.conf'.
+    2011-10-03 18:21:22,015 (DEBUG) cement2.ext.ext_plugin : loading application plugin 'myplugin'
+    2011-10-03 18:21:22,015 (DEBUG) cement2.ext.ext_plugin : attempting to load 'myplugin' from './plugins'
     2011-10-03 18:21:22,015 (DEBUG) cement2.core.handler : registering handler '<class 'myplugin.MyPluginController'>' into handlers['controller']['myplugin']
     2011-10-03 18:21:22,017 (DEBUG) cement2.core.controller : collecting arguments from myplugin controller
     2011-10-03 18:21:22,018 (DEBUG) cement2.core.controller : collecting commands from myplugin controller

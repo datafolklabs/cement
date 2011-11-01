@@ -29,7 +29,7 @@ config['base']['extension_handler'] = 'cement'
 config['base']['output_handler'] = 'null'
 config['base']['extensions'] = [  
     'cement2.ext.ext_nulloutput',
-    'cement2.ext.ext_cement_plugin',
+    'cement2.ext.ext_plugin',
     'cement2.ext.ext_configparser', 
     'cement2.ext.ext_logging', 
     'cement2.ext.ext_argparse',

@@ -40,7 +40,6 @@ class IOutput(interface.Interface):
     
     # Must be provided by the implementation
     meta = interface.Attribute('Handler meta-data')
-    file_suffix = interface.Attribute('The file suffix (I.e. .txt, etc.)')
     
     def setup(config_obj):
         """

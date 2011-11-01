@@ -11,14 +11,14 @@ def register_all_extensions(import_modules=True):
     if import_modules:
         from cement2.ext import ext_argparse
         from cement2.ext import ext_nulloutput
-        from cement2.ext import ext_cement_plugin
+        from cement2.ext import ext_plugin
         from cement2.ext import ext_configparser
         from cement2.ext import ext_logging
         from cement2.ext import ext_optparse
         
     handler.register(ext_argparse.ArgParseArgumentHandler)
     handler.register(ext_nulloutput.NullOutputHandler)
-    handler.register(ext_cement_plugin.CementPluginHandler)
+    handler.register(ext_plugin.CementPluginHandler)
     handler.register(ext_configparser.ConfigParserConfigHandler)
     handler.register(ext_logging.LoggingLogHandler)
     handler.register(ext_optparse.OptParseArgumentHandler)

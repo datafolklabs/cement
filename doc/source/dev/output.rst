@@ -2,7 +2,7 @@ Output Handling
 ===============
 
 Cement defines an output interface called :ref:`IOutput <cement2.core.output>`, 
-as well as the default :ref:`CementOutputHandler <cement2.ext.ext_cement_output>` 
+as well as the default :ref:`NullOutputHandler <cement2.ext.ext_nulloutput>` 
 that implements the interface.  This handler is part of Cement, and actually 
 does nothing to produce output.  Therefore it can be said that by default
 a Cement application does not handle rendering output to the console, but 
@@ -14,7 +14,7 @@ interface and not the full capabilities of the implementation.
 
 The following output handlers are included and maintained with Cement2:
 
-    * :ref:`CementOutputHandler <cement2.ext.ext_cement_output>`
+    * :ref:`NullOutputHandler <cement2.ext.ext_nulloutput>`
     * :ref:`JsonOutputHandler <cement2.ext.ext_json>`
     * :ref:`YamlOutputHandler <cement2.ext.ext_yaml>`
 

@@ -47,7 +47,7 @@ def defined(hook_name):
     
 class register(object):
     """
-    Decorator function for plugins to register hooks.  Used as:
+    Decorator function for plugins to register hooks.
     
     Optional keyword arguments:
     

@@ -53,8 +53,8 @@ def defaults(app_name):
     
     # default extensions
     dcf['base']['extensions'] = [  
-        'cement2.ext.ext_cement_output',
-        'cement2.ext.ext_cement_plugin',
+        'cement2.ext.ext_nulloutput',
+        'cement2.ext.ext_plugin',
         'cement2.ext.ext_configparser', 
         'cement2.ext.ext_logging', 
         'cement2.ext.ext_argparse',
@@ -66,7 +66,7 @@ def defaults(app_name):
     dcf['base']['arg_handler'] = 'argparse'
     dcf['base']['plugin_handler'] = 'cement'
     dcf['base']['extension_handler'] = 'cement'
-    dcf['base']['output_handler'] = 'cement'
+    dcf['base']['output_handler'] = 'null'
     dcf['base']['controller_handler'] = 'base'
     
     return dcf

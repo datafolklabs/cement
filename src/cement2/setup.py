@@ -76,5 +76,6 @@ setup(name='cement2',
     namespace_packages=[
         'cement2',
         'cement2.ext',
+        'cement2.lib',
         ],
     )

@@ -199,7 +199,7 @@ class CementBaseController(object):
         self.config = self.app.config
         self.log = self.app.log
         self.pargs = self.app.pargs
-        
+        self.render = self.app.render
         self._collect()
              
     def _parse_args(self):
