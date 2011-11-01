@@ -138,7 +138,7 @@ class CementExtensionHandler(object):
             
         Log.debug("loading the '%s' framework extension" % ext_module)
         try:
-            __import__(ext_module, globals(), locals(), [])
+            __import__(ext_module, globals(), locals(), [])                
             self.loaded_extensions.append(ext_module)
    
         except ImportError as e:

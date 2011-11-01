@@ -43,6 +43,7 @@ setup(name='cement2.ext.yaml',
     entry_points="""
     """,
     namespace_packages=[
-        'cement2.ext'
+        'cement2.ext',
+        'cement2.lib'
         ],
     )

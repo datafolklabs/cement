@@ -1,6 +1,7 @@
 """Tests for cement2.ext.ext_logging."""
 
 import logging
+from tempfile import mkstemp
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
@@ -20,8 +21,27 @@ def test_rotate():
 def test_bad_level():
     app = _t.prep('myapp')
     app.setup()
-    app.config.set('log', 'file', '/dev/null')
-    app.config.set('log', 'rotate', True)
-    app.config.set('log', 'to_console', True)
     app.config.set('log', 'level', 'BOGUS')
-    app.log.setup(app.config)
+    
+    han = handler.get('log', 'logging')
+    Log = han()
+    Log.setup(app.config)
+
+    eq_(Log.level(), 'INFO')
+
+def test_clear_loggers():
+    app = _t.prep('myapp')
+    app.setup()
+    
+    han = handler.get('log', 'logging')
+    Log = han()
+    Log.clear_loggers()
+
+def test_rotate():
+    app = _t.prep('myapp')
+    app.setup()
+    
+    han = handler.get('log', 'logging')
+    Log = han(rotate=True, file=mkstemp()[1])
+    Log.setup(app.config)
+    

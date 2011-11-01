@@ -12,4 +12,5 @@ Cement2 Extensions
    extensions/configobj
    extensions/json
    extensions/logging
+   extensions/optparse
    extensions/yaml

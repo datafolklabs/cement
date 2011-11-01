@@ -1,4 +1,4 @@
-"""Cement basic plugin handler extension."""
+"""Cement Plugin Framework Extension Library."""
 
 import os
 import sys
@@ -59,7 +59,7 @@ class CementPluginHandler(object):
                                     ('base', 'config_handler'))
 
         # parse all app configs for plugins
-        for section in self.config.sections():
+        for section in self.config.get_sections():
             if not self.config.has_key(section, 'enable_plugin'):
                 continue
             if util.is_true(self.config.get(section, 'enable_plugin')):
@@ -197,5 +197,3 @@ class CementPluginHandler(object):
         """
         for plugin_name in plugin_list:
             self.load_plugin(plugin_name)
-
-handler.register(CementPluginHandler)
