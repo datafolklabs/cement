@@ -9,7 +9,7 @@ from cement2 import test_helper as _t
 
 _t.prep('test')
 
-from cement2.ext import ext_cement_output
+from cement2.ext import ext_nulloutput
 
 class BogusOutputHandler(object):
     class meta:
@@ -32,7 +32,13 @@ class BogusHandler4(object):
 class DuplicateHandler(object):
     class meta:
         interface = output.IOutput
-        label = 'cement'
+        label = 'null'
+
+    def setup(self, config_obj):
+        pass
+    
+    def render(self, data_dict, template=None):
+        pass
         
 class BogusInterface1(object):
     pass
@@ -73,7 +79,7 @@ def test_register_invalid_handler_no_meta_label():
 @raises(exc.CementRuntimeError)
 def test_register_duplicate_handler():
     _t.prep('test')
-    handler.register(ext_cement_output.CementOutputHandler)
+    handler.register(ext_nulloutput.NullOutputHandler)
     try:
         handler.register(DuplicateHandler)
     except exc.CementRuntimeError:
@@ -90,8 +96,8 @@ def test_register_unproviding_handler():
 
 def test_verify_handler():
     _t.prep('test')
-    handler.register(ext_cement_output.CementOutputHandler)
-    ok_(handler.enabled('output', 'cement'))
+    handler.register(ext_nulloutput.NullOutputHandler)
+    ok_(handler.enabled('output', 'null'))
     eq_(handler.enabled('output', 'bogus_handler'), False)
     eq_(handler.enabled('bogus_type', 'bogus_handler'), False)
 

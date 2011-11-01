@@ -26,9 +26,9 @@ config['base']['log_handler'] = 'logging'
 config['base']['arg_handler'] = 'argparse'
 config['base']['plugin_handler'] = 'cement'
 config['base']['extension_handler'] = 'cement'
-config['base']['output_handler'] = 'cement'
+config['base']['output_handler'] = 'null'
 config['base']['extensions'] = [  
-    'cement2.ext.ext_cement_output',
+    'cement2.ext.ext_nulloutput',
     'cement2.ext.ext_cement_plugin',
     'cement2.ext.ext_configparser', 
     'cement2.ext.ext_logging', 
