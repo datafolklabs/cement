@@ -69,4 +69,4 @@ class YamlOutputHandler(object):
         Log.debug("rendering output as Yaml via %s" % self.__module__)
         sys.stdout = backend.SAVED_STDOUT
         sys.stderr = backend.SAVED_STDERR
-        return yaml.dump(data_dict).strip()
+        return yaml.dump(data_dict)
