@@ -10,23 +10,15 @@ All bugs/feature details can be found at:
 Where XXXXX is the 'Issue #' referenced below.  Additionally, this change log
 is available online at:
 
-    http://builtoncement.org/cement/0.9/doc/changes.html
+    http://cement.readthedocs.org/en/portland/changes/
 
 .. raw:: html
 
     <BR><BR>
     
 
-0.9.1 - development (will be released as 0.9.2)
+1.9.2 - Wed Nov 02, 2011
 ------------------------------------------------------------------------------
 
-Bug Fixes
-^^^^^^^^^
- 
- - None
-
-
-Feature Enhancements
-^^^^^^^^^^^^^^^^^^^^
-
- - None
+This is an initial beta release of Cement2, and therefore no bugs or features
+are listed.  Future releases will detail all changes.

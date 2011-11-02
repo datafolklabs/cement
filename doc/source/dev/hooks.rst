@@ -196,7 +196,7 @@ Cement Framework Hooks
 Cement has a number of hooks that tie into the framework.
 
 cement_setup_hook
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
         
 Run when CementApp.setup() is called.  No arguments are passed to this hook, 
 and nothing is expected in return.
