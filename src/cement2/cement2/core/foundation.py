@@ -174,8 +174,14 @@ class CementApp(object):
         for member in dir(self.args.parsed_args):
             if member and member.startswith('_'):
                 continue
+            
+            # don't override config values for options that weren't passed
+            # or in otherwords are None
+            elif getattr(self.args.parsed_args, member) is None:
+                continue
+                
             for section in self.config.get_sections():
-                if member and member in self.config.keys(section):
+                if member in self.config.keys(section):
                     self.config.set(section, member, 
                                     getattr(self.args.parsed_args, member))
         

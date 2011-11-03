@@ -225,6 +225,7 @@ class CementBaseController(object):
         self.app.args.formatter_class=argparse.RawDescriptionHelpFormatter
 
         self.app._parse_args()
+        self.pargs = self.app.pargs
         
     def dispatch(self):
         """
