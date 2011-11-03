@@ -105,7 +105,7 @@ class CementExtensionHandler(object):
     
         """
         self.defaults = {}
-        self.enabled_extensions = []
+        self.loaded_extensions = []
         
     def setup(self, defaults):
         """
