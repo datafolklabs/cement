@@ -81,6 +81,107 @@ Meaning, though some config handlers (i.e. ConfigObj) might also be accessible
 like a dict, not all do (i.e. ConfigParser).  Please see the documentation
 for the config handler you use for their full usage.   
 
+Builtin Defaults
+----------------
+
+The following are the builtin default settings provided by backend.defaults()
+and are accessible under the 'base' section of the config:
+
+    app_name
+        The application name passed to backend.defaults()
+    
+    config_files
+        A list of configuration files to parse settings from when app.setup()
+        is called.
+
+        Value: [ '/etc/<app_name>/<app_name>.conf', '~/.<app_name>.conf' ]
+        
+    config_source
+        This is used internally to identify where configuration settings
+        were parsed from (config files only)... in the order they were parsed.
+        The list starts with ['defaults'], and any configuration files that
+        were parsed are appended to this list.
+    
+        Value: [ 'defaults' ]
+        
+    debug
+        Toggles full debug mode (more or less trumps whatever the log
+        handler log level is set to).
+        
+        Value: True
+    
+    plugins
+        A list of enabled plugins as provided by the plugin_handler.
+    
+        Value: [ ]
+    
+    plugin_config_dir
+        A directory path to search for plugin configuration files.
+        
+        Value: '/etc/<app_name>/plugins.d/'
+    
+    plugin_bootstrap_module
+        A pythonic module path to load plugins from 
+        (i.e. myapp.bootstrap.myplugin).
+        
+        Value: '<app_name>.bootstrap'
+    
+    plugin_dir
+        A directory path to load plugin modules from.
+        
+        Value: '/usr/lib/<app_name>/plugins'
+    
+    extensions
+        Default extensions to load.  This list can easily be appended, rather
+        than overridden entirely in order to ensure that all required default 
+        handlers are loaded (primarily when Cement is updated and might add
+        new handlers).
+        
+        Value: [ 
+            'cement2.ext.ext_nulloutput',
+            'cement2.ext.ext_plugin',
+            'cement2.ext.ext_configparser', 
+            'cement2.ext.ext_logging', 
+            'cement2.ext.ext_argparse',
+            ]
+    
+    config_handler
+        The default config handler.
+        
+        Value: 'configparser'
+    
+    log_handler
+        The default log handler.
+        
+        Value: 'logging'
+    
+    arg_handler
+        The default argument handler.
+        
+        Value: 'argparse'
+    
+    plugin_handler
+        The default plugin handler.
+        
+        Value: 'cement'
+    
+    extension_handler
+        The default extension handler.
+        
+        Value: 'cement'
+    
+    output_handler
+        The default output handler.
+        
+        Value: 'null'
+    
+    controller_handler
+        The default controller handler.
+        
+        Value: 'base'
+    
+
+    
 Accessing Configuration Settings
 --------------------------------
 
@@ -153,6 +254,14 @@ config_files' section.  For example:
     
     # First setup the application
     app.setup()
+    
+
+The default 'config_files' setting already looks for config files in standard
+locations (for Unix/Linux anyway).  For example, for an application called
+'helloworld', the default config_files are:
+
+    * /etc/helloworld/helloworld.conf
+    * ~/.helloworld.conf
     
     
 Overriding Configurations with Command Line Options
