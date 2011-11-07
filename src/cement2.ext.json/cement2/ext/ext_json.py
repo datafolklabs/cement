@@ -11,11 +11,11 @@ from cement2.lib.ext_json import JsonOutputHandler
 handler.register(JsonOutputHandler)
             
 @hook.register()
-def cement_add_args_hook(config, arg_obj):
+def cement_post_setup_hook(app):
     """
     Adds the '--json' argument to the argument object.
     
     """
-    arg_obj.add_argument('--json', dest='output_handler', 
+    app.args.add_argument('--json', dest='output_handler', 
         action='store_const', help='toggle json output handler', const='json')
 
