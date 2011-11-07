@@ -12,7 +12,7 @@ provides the configobj framework extension allowing applications to use
 the configobj config handler.
 
 The Cement CLI Application Framework is Open Source and is distributed under 
-The MIT License.  
+The BSD "three-clause" License.  
 
 
 MORE INFORMATION:
@@ -32,7 +32,7 @@ setup(name='cement2.ext.configobj',
     author='BJ Dierkes',
     author_email='wdierkes@5dollarwhitebox.org',
     url='http://builtoncement.org',
-    license='MIT',
+    license='BSD',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     zip_safe=False,

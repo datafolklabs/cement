@@ -10,7 +10,7 @@ provides the Json framework extension allowing applications to use
 the Json output handler.
 
 The Cement CLI Application Framework is Open Source and is distributed under 
-The MIT License.  
+The BSD "three-clause" License.  
 
 
 MORE INFORMATION:
@@ -30,7 +30,7 @@ setup(name='cement2.ext.yaml',
     author='BJ Dierkes',
     author_email='wdierkes@5dollarwhitebox.org',
     url='http://builtoncement.org',
-    license='MIT',
+    license='BSD',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     zip_safe=False,

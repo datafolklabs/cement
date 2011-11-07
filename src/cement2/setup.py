@@ -14,7 +14,7 @@ source is available from:
     
 
 The Cement CLI Application Framework is Open Source and is distributed under 
-The MIT License.  
+The BSD "three-clause" License.  
 
 
 MORE INFORMATION:
@@ -43,7 +43,7 @@ Development versions can be checked out of Git:
 
 
 For development, and actually building applications on Cement, please see the
-cement.devtools package.
+cement2.devtools package.
 
 """
 
@@ -57,7 +57,7 @@ setup(name='cement2',
     author='BJ Dierkes',
     author_email='wdierkes@5dollarwhitebox.org',
     url='http://builtoncement.org',
-    license='MIT',
+    license='BSD',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
     zip_safe=False,
