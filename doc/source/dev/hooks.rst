@@ -195,56 +195,69 @@ Cement Framework Hooks
 
 Cement has a number of hooks that tie into the framework.
 
-cement_setup_hook
-^^^^^^^^^^^^^^^^^
+cement_pre_setup_hook
+^^^^^^^^^^^^^^^^^^^^^
         
-Run when CementApp.setup() is called.  No arguments are passed to this hook, 
-and nothing is expected in return.
+Run before CementApp.setup() is called.  The application object object is
+passed as an argument.
 
 .. code-block:: python
 
     from cement2.core import hook
     
-    @hook.register(name='cement_setup_hook')
-    def my_setup_hook():
-        # do something on application setup()
+    @hook.register(name='cement_pre_setup_hook')
+    def my_setup_hook(app):
+        # do something before application setup()
         pass
+
+cement_post_setup_hook
+^^^^^^^^^^^^^^^^^^^^^^
         
-
-cement_add_args_hook
-^^^^^^^^^^^^^^^^^^^^
-
-Called after the 'argument' handler is setup.  The application configuration
-object is passed as the first argument, and the argument handler object is 
-passed as the second argument to each hook that is called.  Nothing is 
-expected in return.
+Run after CementApp.setup() is called.  The application object object is
+passed as an argument.
 
 .. code-block:: python
 
     from cement2.core import hook
     
-    @hook.register(name='cement_add_args_hook')
-    def my_args_hook(config, args):
-        # do something with config and/or args objects
-        args.add_argument('-f', '--foo', dest='foo', action='store_true')
-
-Note: This hook is useful for framework extensions to be able to add options
-to the argument handler.  
-
-
-cement_validate_config_hook
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Called after the application is fully setup.  The application 'config' handler
-object is passed as the first argument.  It does not expect anything in 
-return.
+    @hook.register(name='cement_post_setup_hook')
+    def my_setup_hook(app):
+        app.args.add_argument('-f', '--foo', dest='foo', action='store_true')
         
+
+NOTE: This hook deprecated the cement_add_args_hook in version 1.9.2.
+
+cement_pre_run_hook
+^^^^^^^^^^^^^^^^^^^
+        
+Run before CementApp.run() is called.  The application object object is
+passed as an argument.
+
 .. code-block:: python
 
     from cement2.core import hook
     
-    @hook.register(name='cement_validate_config_hook')
-    def my_config_hook(config):
-        # do something to validate the config
-        if not config.has_key('base', 'foo'):
+    @hook.register(name='cement_pre_run_hook')
+    def my_pre_run_hook(app):
+        # do something before application run()
+        if not app.config.has_key('base', 'foo'):
             raise MyAppConfigError, "Required configuration 'foo' missing."
+
+Note: This hook deprecated the cement_validate_config_hook in version 1.9.2.
+
+cement_post_run_hook
+^^^^^^^^^^^^^^^^^^^^
+        
+Run after CementApp.run() is called.  The application object object is
+passed as an argument.  Note that if an application 'base' controller exists,
+this hook may never get called as it is run after runtime is passed to the
+base controller.
+
+.. code-block:: python
+
+    from cement2.core import hook
+    
+    @hook.register(name='cement_post_run_hook')
+    def my_post_run_hook(app):
+        # Do something after application run() is called.
+        pass

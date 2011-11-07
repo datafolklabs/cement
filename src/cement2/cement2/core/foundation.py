@@ -71,7 +71,7 @@ class CementApp(object):
         """
         Log.debug("now setting up the '%s' application" % self.name)
         
-        for res in hook.run('cement_setup_hook'):
+        for res in hook.run('cement_pre_setup_hook', self):
             pass
 
         self._setup_extension_handler()
@@ -83,19 +83,28 @@ class CementApp(object):
         self._setup_arg_handler()
         self._setup_output_handler()
         self._setup_controller_handler()
-            
+           
+        for res in hook.run('cement_post_setup_hook', self):
+            pass
+             
     def run(self):
         """
         This function wraps everything together (after self.setup() is 
         called) to run the application.
         
         """
+        for res in hook.run('cement_pre_run_hook', self):
+            pass
+            
         # If controller exists, then pass controll to it
         if self.controller:
             self.controller.dispatch()
         else:
             self._parse_args()
         
+        for res in hook.run('cement_post_run_hook', self):
+            pass
+            
     def render(self, data, template=None):
         """
         This is a simple wrapper around self.output.render() which simply
@@ -214,7 +223,7 @@ class CementApp(object):
         self.config.setup(self.defaults)
         for _file in self.config.get('base', 'config_files'):
             self.config.parse_file(_file)
-                                    
+                                  
     def _setup_log_handler(self):
         Log.debug("setting up %s.log handler" % self.name)
         if not self.log:
@@ -257,8 +266,6 @@ class CementApp(object):
             action='store_true', help='toggle debug output')
         self.args.add_argument('--quiet', dest='suppress_output', 
             action='store_true', help='suppress all output')
-        for obj in hook.run('cement_add_args_hook', self.config, self.args):
-            pass
                  
     def _setup_controller_handler(self):
         Log.debug("setting up %s.controller handler" % self.name) 
@@ -298,8 +305,6 @@ class CementApp(object):
         Validate base config settings required by cement.
         """
         Log.debug("validating required configuration parameters")
-        for obj in hook.run('cement_validate_config_hook', self.config):
-            pass
         
     def validate_config(self):
         """
@@ -361,13 +366,10 @@ def lay_cement(name, klass=CementApp, *args, **kw):
         sys.stderr = NullOut()
         
     # define framework hooks
-    hook.define('cement_setup_hook')
-    hook.define('cement_add_args_hook')
-    # hook.define('cement_post_args_hook')
-    hook.define('cement_validate_config_hook')
-    #hook.define('cement_pre_plugins_hook')
-    #hook.define('cement_post_plugins_hook')
-    #hook.define('cement_post_bootstrap_hook')
+    hook.define('cement_pre_setup_hook')
+    hook.define('cement_post_setup_hook')
+    hook.define('cement_pre_run_hook')
+    hook.define('cement_post_run_hook')
         
     # define and register handlers    
     handler.define(extension.IExtension)
