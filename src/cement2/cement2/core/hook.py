@@ -1,5 +1,6 @@
 """Cement core hooks module."""
 
+import operator
 from cement2.core import backend, exc
 
 Log = backend.minimal_logger(__name__)
@@ -88,7 +89,7 @@ class register(object):
         # Hooks are as follows: (weight, name, func)
         backend.hooks[self.name].append((int(self.weight), func.__name__, func))
         return func
-
+    
 def run(name, *args, **kwargs):
     """
     Run all defined hooks in the namespace.  Yields the result of each hook
@@ -116,7 +117,9 @@ def run(name, *args, **kwargs):
     """
     if name not in backend.hooks:
         raise exc.CementRuntimeError("Hook name '%s' is not defined!" % name)
-    backend.hooks[name].sort() # Will order based on weight
+
+    # Will order based on weight (the first item in the tuple)
+    backend.hooks[name].sort(key=operator.itemgetter(0)) 
     for hook in backend.hooks[name]:
         Log.debug("running hook '%s' (%s) from %s" % (name, hook[2], hook[2].__module__))
         res = hook[2](*args, **kwargs)

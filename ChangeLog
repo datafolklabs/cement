@@ -21,11 +21,17 @@ is available online at:
 
 Bug Fixes:
 
-    - None
+    - :issue:`73` - Hooks broken in Python 3
     
-Feature Enhancements
+Feature Enhancements:
 
-    - None
+    - :issue:`72` - Added new framework hooks.
+
+Incompatible Changes:
+
+    - :issue:`72` - The framework hooks 'cement_add_args_hook' and
+    'cement_validate_config' were removed in favor of the new pre/post setup
+    and run hooks.
     
     
 

@@ -123,18 +123,34 @@ def test_lay_cement():
     argv = ['--json', '--yaml']
     app = foundation.lay_cement('test', defaults=defaults, argv=argv)
     
-def test_hook(*args, **kw):
-    return True
+def my_hook_one(app):
+    return 1
         
+def my_hook_two(app):
+    return 2
+
+def my_hook_three(app):
+    return 3
+    
 def test_framework_hooks():
     app = _t.prep()
     
-    hook_tuple = (0, test_hook.__name__, test_hook)    
-    backend.hooks['cement_setup_hook'].append(hook_tuple)
-    backend.hooks['cement_validate_config_hook'].append(hook_tuple)
-    backend.hooks['cement_add_args_hook'].append(hook_tuple)
+    hook_tuple = (0, my_hook_one.__name__, my_hook_one)    
+    hook_tuple_two = (99, my_hook_two.__name__, my_hook_two)    
+    hook_tuple_three = (-99, my_hook_three.__name__, my_hook_three)    
+    backend.hooks['cement_pre_setup_hook'].append(hook_tuple)
+    backend.hooks['cement_pre_setup_hook'].append(hook_tuple_two)
+    backend.hooks['cement_pre_setup_hook'].append(hook_tuple_three)
+    backend.hooks['cement_post_setup_hook'].append(hook_tuple)
+    backend.hooks['cement_pre_run_hook'].append(hook_tuple)
+    backend.hooks['cement_post_run_hook'].append(hook_tuple)
     app.setup()
 
+    # check weight ordering
+    eq_(backend.hooks['cement_pre_setup_hook'][0][1], 'my_hook_three')
+    eq_(backend.hooks['cement_pre_setup_hook'][1][1], 'my_hook_one')
+    eq_(backend.hooks['cement_pre_setup_hook'][2][1], 'my_hook_two')
+    
 def test_none_member():
     class Test(object):
         var = None
