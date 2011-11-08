@@ -26,7 +26,9 @@ Bug Fixes:
 Feature Enhancements:
 
     - :issue:`72` - Added new framework hooks.
-
+    - :issue:`65` - Added 'daemon' extension.  Process is daemonized by 
+    passing the '--daemon' option.  
+    
 Incompatible Changes:
 
     - :issue:`72` - The framework hooks 'cement_add_args_hook' and
