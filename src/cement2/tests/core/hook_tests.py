@@ -58,4 +58,12 @@ def test_hook_is_defined():
     ok_(hook.defined('nosetests_hook'))
     eq_(hook.defined('some_bogus_hook'), False)
         
-
+def test_framework_hooks():
+    app = _t.prep('myapp')
+    app.argv = ['--quiet']
+    hook.register(name='cement_pre_setup_hook')(cement_hook_one)
+    hook.register(name='cement_post_setup_hook')(cement_hook_one)
+    hook.register(name='cement_pre_run_hook')(cement_hook_one)
+    hook.register(name='cement_post_run_hook')(cement_hook_one)
+    app.setup()
+    app.run()

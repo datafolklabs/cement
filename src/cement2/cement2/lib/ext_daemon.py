@@ -46,7 +46,7 @@ class Context(object):
                                 
         try:
             self.user = pwd.getpwnam(self.user_name)
-        except KeyError, e:
+        except KeyError as e:
             raise exc.CementRuntimeError("Daemon user '%s' doesn't exist." % \
                                          self.user_name)
                                          
@@ -54,7 +54,7 @@ class Context(object):
             self.group_name = kw.get('group_name', 
                                      grp.getgrgid(self.user.pw_gid))
             self.group = grp.getgrnam(self.group_name)
-        except KeyError, e:
+        except KeyError as e:
             raise exc.CementRuntimeError("Daemon group '%s' doesn't exist." % \
                                          self.group_name)
         
@@ -74,9 +74,9 @@ class Context(object):
         os.setgid(self.group.gr_gid)
         os.setuid(self.user.pw_uid)
         os.environ['HOME'] = self.user.pw_dir
-        if os.path.exists(self.pid_file):
-            raise exc.CementRuntimeError, \
-                "Process already running (%s)" % self.pid_file
+        if self.pid_file and os.path.exists(self.pid_file):
+            raise exc.CementRuntimeError("Process already running (%s)" % \
+                                         self.pid_file)
         else:
             self.write_pid_file()
           
@@ -104,8 +104,9 @@ class Context(object):
             pid = os.fork()
             if pid > 0:
                 sys.exit(0)   # Exit first parent.
-        except OSError, e:
-            sys.stderr.write("Fork #1 failed: (%d) %s\n" % (e.errno, e.strerror))
+        except OSError as e:
+            sys.stderr.write("Fork #1 failed: (%d) %s\n" % \
+                            (e.errno, e.strerror))
             sys.exit(1)
 
         # Decouple from parent environment.
@@ -118,17 +119,22 @@ class Context(object):
             pid = os.fork()
             if pid > 0:
                 sys.exit(0)   # Exit second parent.
-        except OSError, e:
-            sys.stderr.write("Fork #2 failed: (%d) %s\n" % (e.errno, e.strerror))
+        except OSError as e:
+            sys.stderr.write("Fork #2 failed: (%d) %s\n" % \
+                            (e.errno, e.strerror))
             sys.exit(1)
 
         # Redirect standard file descriptors.
         stdin = open(self.stdin, 'r')
         stdout = open(self.stdout, 'a+')
         stderr = open(self.stderr, 'a+', 0)
-        os.dup2(stdin.fileno(), sys.stdin.fileno())
-        os.dup2(stdout.fileno(), sys.stdout.fileno())
-        os.dup2(stderr.fileno(), sys.stderr.fileno())       
+        
+        if hasattr(sys.stdin, 'fileno'):
+            os.dup2(stdin.fileno(), sys.stdin.fileno())
+        if hasattr(sys.stdout, 'fileno'):
+            os.dup2(stdout.fileno(), sys.stdout.fileno())
+        if hasattr(sys.stderr, 'fileno'):    
+            os.dup2(stderr.fileno(), sys.stderr.fileno())       
                  
         # Update our pid file
         self.write_pid_file()

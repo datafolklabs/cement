@@ -46,12 +46,12 @@ def cement_post_setup_hook(app):
     defaults['daemon']['pid_file'] = None
     defaults['daemon']['dir'] = os.curdir
     app.config.merge(defaults, override=False)
-    
+
 @hook.register()
 def cement_pre_run_hook(app):
     # pargs aren't available in pre_run... so we just do a little dirty hack
-    # here with sys.argv
-    if not '--daemon' in sys.argv:
+    # here with argv
+    if not '--daemon' in app.argv:
         return
     global CEMENT_DAEMON_CTX 
     
@@ -67,6 +67,15 @@ def cement_pre_run_hook(app):
     signal.signal(signal.SIGINT, signal_handler)
     
     CEMENT_DAEMON_CTX.switch()
-    CEMENT_DAEMON_CTX.daemonize()
     
+    if not os.environ.get('CEMENT_TEST'):
+        CEMENT_DAEMON_CTX.daemonize()
     
+@hook.register()
+def cement_post_run_hook(app):
+    global CEMENT_DAEMON_CTX
+    
+    if CEMENT_DAEMON_CTX and CEMENT_DAEMON_CTX.pid_file:
+        if os.path.exists(CEMENT_DAEMON_CTX.pid_file):
+            os.remove(CEMENT_DAEMON_CTX.pid_file)
+

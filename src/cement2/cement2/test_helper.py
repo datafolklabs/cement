@@ -1,5 +1,5 @@
 
-from cement2.core import backend, foundation, handler
+from cement2.core import backend, foundation, handler, hook
 
 def reset_backend():
     for _handler in backend.handlers.copy():
@@ -7,7 +7,7 @@ def reset_backend():
     for _hook in backend.hooks.copy():
         del backend.hooks[_hook]
             
-def register_all_extensions(import_modules=True):
+def register_default_extensions(import_modules=True):
     if import_modules:
         from cement2.ext import ext_argparse
         from cement2.ext import ext_nulloutput
@@ -15,7 +15,9 @@ def register_all_extensions(import_modules=True):
         from cement2.ext import ext_configparser
         from cement2.ext import ext_logging
         from cement2.ext import ext_optparse
+        from cement2.ext import ext_daemon
         
+    # handlers
     handler.register(ext_argparse.ArgParseArgumentHandler)
     handler.register(ext_nulloutput.NullOutputHandler)
     handler.register(ext_plugin.CementPluginHandler)
@@ -26,6 +28,6 @@ def register_all_extensions(import_modules=True):
 def prep(app_name='test', *args, **kw):
     reset_backend()
     dummy_app = foundation.lay_cement(app_name, *args, **kw)
-    register_all_extensions()
+    register_default_extensions()
     return dummy_app
 
