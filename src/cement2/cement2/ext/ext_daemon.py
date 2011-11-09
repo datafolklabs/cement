@@ -11,18 +11,18 @@ import pwd
 import grp
 import signal
 from cement2.core import handler, hook, backend
-from cement2.lib.ext_daemon import Context
+from cement2.lib.ext_daemon import Environment
 
 Log = backend.minimal_logger(__name__)
-CEMENT_DAEMON_CTX = None
+CEMENT_DAEMON_ENV = None
            
 def signal_handler(signum, frame):
-    global CEMENT_DAEMON_CTX
+    global CEMENT_DAEMON_ENV
     
     Log.debug('Caught signal %s, shutting down clean...' % signum)
-    if CEMENT_DAEMON_CTX and CEMENT_DAEMON_CTX.pid_file:
-        if os.path.exists(CEMENT_DAEMON_CTX.pid_file):
-            os.remove(CEMENT_DAEMON_CTX.pid_file)
+    if CEMENT_DAEMON_ENV and CEMENT_DAEMON_ENV.pid_file:
+        if os.path.exists(CEMENT_DAEMON_ENV.pid_file):
+            os.remove(CEMENT_DAEMON_ENV.pid_file)
     
     sys.exit()
     
@@ -53,9 +53,9 @@ def cement_pre_run_hook(app):
     # here with argv
     if not '--daemon' in app.argv:
         return
-    global CEMENT_DAEMON_CTX 
+    global CEMENT_DAEMON_ENV 
     
-    CEMENT_DAEMON_CTX = Context(
+    CEMENT_DAEMON_ENV = Environment(
         user_name=app.config.get('daemon', 'user'),
         group_name=app.config.get('daemon', 'group'),
         pid_file=app.config.get('daemon', 'pid_file'),
@@ -66,16 +66,14 @@ def cement_pre_run_hook(app):
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
     
-    CEMENT_DAEMON_CTX.switch()
-    
-    if not os.environ.get('CEMENT_TEST'):
-        CEMENT_DAEMON_CTX.daemonize()
+    CEMENT_DAEMON_ENV.switch()
+    CEMENT_DAEMON_ENV.daemonize()
     
 @hook.register()
 def cement_post_run_hook(app):
-    global CEMENT_DAEMON_CTX
+    global CEMENT_DAEMON_ENV
     
-    if CEMENT_DAEMON_CTX and CEMENT_DAEMON_CTX.pid_file:
-        if os.path.exists(CEMENT_DAEMON_CTX.pid_file):
-            os.remove(CEMENT_DAEMON_CTX.pid_file)
+    if CEMENT_DAEMON_ENV and CEMENT_DAEMON_ENV.pid_file:
+        if os.path.exists(CEMENT_DAEMON_ENV.pid_file):
+            os.remove(CEMENT_DAEMON_ENV.pid_file)
 

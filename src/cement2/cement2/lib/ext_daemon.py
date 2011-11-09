@@ -1,24 +1,6 @@
 """
 Daemon Framework Extension Library.
 
-This module is used to fork the current process into a daemon.
-
-Almost none of this is necessary (or advisable) if your daemon is being started
-by inetd. In that case, stdin, stdout and stderr are all set up for you to
-refer to the network connection, and the fork()s and session manipulation
-should not be done (to avoid confusing inetd). Only the chdir() and umask()
-steps remain useful.
-
-References:
-
-    UNIX Programming FAQ
-        1.7 How do I get my program to act like a daemon?
-        http://www.unixguide.net/unix/programming/1.7.shtml
-        http://www.faqs.org/faqs/unix-faq/programmer/faq/
-
-    Advanced Programming in the Unix Environment
-        W. Richard Stevens, 1992, Addison-Wesley, ISBN 0-201-56317-7.
-
 """
 
 import sys
@@ -29,7 +11,7 @@ from cement2.core import backend, exc
 
 Log = backend.minimal_logger(__name__)
 
-class Context(object):
+class Environment(object):
     def __init__(self, **kw):
         self.stdin = kw.get('stdin', '/dev/null')
         self.stdout = kw.get('stdout', '/dev/null')
@@ -81,7 +63,7 @@ class Context(object):
             self.write_pid_file()
           
         # change directory
-        os.chdir(os.path.abspath(self.dir))
+        os.chdir(self.dir)
          
     def daemonize(self):
         """
@@ -110,7 +92,7 @@ class Context(object):
             sys.exit(1)
 
         # Decouple from parent environment.
-        os.chdir('/')
+        os.chdir(self.dir)
         os.umask(0)
         os.setsid()
 
