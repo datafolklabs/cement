@@ -16,7 +16,7 @@ class Environment(object):
         self.stdin = kw.get('stdin', '/dev/null')
         self.stdout = kw.get('stdout', '/dev/null')
         self.stderr = kw.get('stderr', '/dev/null')
-        self.dir = kw.get('directory', os.curdir)
+        self.dir = kw.get('dir', os.curdir)
         self.pid_file = kw.get('pid_file', None)
         self.user_name = kw.get('user_name', 
                                 os.environ['USER'])
@@ -34,7 +34,7 @@ class Environment(object):
                                          
         try:
             self.group_name = kw.get('group_name', 
-                                     grp.getgrgid(self.user.pw_gid))
+                                     grp.getgrgid(self.user.pw_gid).gr_name)
             self.group = grp.getgrnam(self.group_name)
         except KeyError as e:
             raise exc.CementRuntimeError("Daemon group '%s' doesn't exist." % \
@@ -56,14 +56,12 @@ class Environment(object):
         os.setgid(self.group.gr_gid)
         os.setuid(self.user.pw_uid)
         os.environ['HOME'] = self.user.pw_dir
+        os.chdir(self.dir)
         if self.pid_file and os.path.exists(self.pid_file):
             raise exc.CementRuntimeError("Process already running (%s)" % \
                                          self.pid_file)
         else:
             self.write_pid_file()
-          
-        # change directory
-        os.chdir(self.dir)
          
     def daemonize(self):
         """
@@ -83,9 +81,10 @@ class Environment(object):
     
         # Do first fork.
         try:
-            pid = os.fork()
-            if pid > 0:
-                sys.exit(0)   # Exit first parent.
+            if not os.environ.has_key('CEMENT_TEST'):
+                pid = os.fork()
+                if pid > 0:
+                    sys.exit(0)   # Exit first parent.
         except OSError as e:
             sys.stderr.write("Fork #1 failed: (%d) %s\n" % \
                             (e.errno, e.strerror))
@@ -94,13 +93,16 @@ class Environment(object):
         # Decouple from parent environment.
         os.chdir(self.dir)
         os.umask(0)
-        os.setsid()
+        
+        if not os.environ.has_key('CEMENT_TEST'):
+            os.setsid()
 
         # Do second fork.
         try:
-            pid = os.fork()
-            if pid > 0:
-                sys.exit(0)   # Exit second parent.
+            if not os.environ.has_key('CEMENT_TEST'):
+                pid = os.fork()
+                if pid > 0:
+                    sys.exit(0)   # Exit second parent.
         except OSError as e:
             sys.stderr.write("Fork #2 failed: (%d) %s\n" % \
                             (e.errno, e.strerror))

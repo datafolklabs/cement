@@ -24,7 +24,7 @@ def signal_handler(signum, frame):
         if os.path.exists(CEMENT_DAEMON_ENV.pid_file):
             os.remove(CEMENT_DAEMON_ENV.pid_file)
     
-    sys.exit()
+    sys.exit(0)
     
 @hook.register()
 def cement_post_setup_hook(app):
@@ -49,10 +49,8 @@ def cement_post_setup_hook(app):
 
 @hook.register()
 def cement_pre_run_hook(app):
-    # pargs aren't available in pre_run... so we just do a little dirty hack
-    # here with argv
-    if not '--daemon' in app.argv:
-        return
+    # We want to honor the runtime user/group/etc even if --daemon is not
+    # passed... but only daemonize if it is.
     global CEMENT_DAEMON_ENV 
     
     CEMENT_DAEMON_ENV = Environment(
@@ -67,7 +65,9 @@ def cement_pre_run_hook(app):
     signal.signal(signal.SIGINT, signal_handler)
     
     CEMENT_DAEMON_ENV.switch()
-    CEMENT_DAEMON_ENV.daemonize()
+    
+    if '--daemon' in app.argv:
+        CEMENT_DAEMON_ENV.daemonize()
     
 @hook.register()
 def cement_post_run_hook(app):
