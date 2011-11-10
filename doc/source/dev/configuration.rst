@@ -287,6 +287,9 @@ matches the name.  Note that this happens in *all* sections:
     # Run the application (this parsed command line, among other things)
     app.run()
 
+    # close the application
+    app.close()
+    
 At the command line, running the application and passing the '--foo=some_value'
 option will override the 'foo' setting under the 'base' (or any other) section.
 

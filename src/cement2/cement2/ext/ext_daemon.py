@@ -88,7 +88,7 @@ def cement_pre_run_hook(app):
         CEMENT_DAEMON_ENV.daemonize()
     
 @hook.register()
-def cement_post_run_hook(app):
+def cement_on_close_hook(app):
     """
     After application run time, this hook just attempts to clean up the
     pid_file if one was set, and exists.

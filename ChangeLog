@@ -21,19 +21,25 @@ is available online at:
 
 Bug Fixes:
 
-    - :issue:`73` - Hooks broken in Python 3
+    * :issue:`73` - Hooks broken in Python 3
     
 Feature Enhancements:
 
-    - :issue:`72` - Added new framework hooks.
-    - :issue:`65` - Added 'daemon' extension.  Process is daemonized by 
-    passing the '--daemon' option.  
+    * :issue:`72` - Added new framework hooks.
+    * :issue:`65` - Added 'daemon' extension.  Process is daemonized by 
+      passing the '--daemon' option.  Handles switching the run user/group, as
+      well as managing a pid file.
+    * :issue:`76` - Add app.close() functionality including a 
+      cement_on_close_hook() allowing plugins/extensions/etc to be able to
+      cleanup on application exit.
+
     
 Incompatible Changes:
 
-    - :issue:`72` - The framework hooks 'cement_add_args_hook' and
-    'cement_validate_config' were removed in favor of the new pre/post setup
-    and run hooks.
+    * :issue:`72` - The framework hooks 'cement_add_args_hook' and 
+      'cement_validate_config' were removed in favor of the new pre/post setup 
+      and run hooks.
+
     
     
 

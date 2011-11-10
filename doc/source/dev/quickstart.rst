@@ -56,10 +56,14 @@ The following is a bare minimum 'helloworld' application.
 .. code-block:: python
 
     from cement2.core import foundation
+    
     app = foundation.lay_cement('helloworld')
     app.setup()
     app.run()
+    
     print('Hello World')
+    
+    app.close()
     
 And execution:
 
@@ -177,6 +181,9 @@ application features.
     else:
         app.log.warn("Did not receive a value for 'foo' option.")
     
+    # close the application
+    app.close()
+    
 .. code-block:: text
 
     $ python scripts/example.py --help
@@ -244,6 +251,9 @@ handle command dispatch and rapid development.
 
     # run the application
     app.run()
+    
+    # close the application
+    app.close()
 
 As you can see, we're able to build out the core functionality of our app
 via a controller class.  Lets see what this looks like:

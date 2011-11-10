@@ -55,7 +55,8 @@ The following example shows how to alter these settings for your application:
     app = foundation.lay_cement('myapp', defaults=defaults)
     app.setup()
     app.run()
-
+    app.close()
+    
 You can also always use the default 'extensions' list, but add any additional
 extensions to it:
 
@@ -144,7 +145,8 @@ of extensions:
     app = foundation.lay_cement('myapp', defaults=defaults)
     app.setup()
     app.run()
-
+    app.close()
+    
 To cleanup unecessary code, we also removed the default handler 
 'cement2.ext.ext_cement_output'.  This isn't always necessary, or desired.
 Depending on the handler, there may still be a need for it to be loaded even

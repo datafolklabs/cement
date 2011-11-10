@@ -160,6 +160,10 @@ application shows how to configure an application to load plugins:
     # run the application
     app.run()
 
+    # close the application
+    app.close()
+    
+    
 As you can see, we modified the default settings for 'plugin_config_dir' and
 'plugin_dir'.  Note that the default config setting for 
 'plugin_bootstrap_module' would be 'helloworld.bootstrap' which is what we 

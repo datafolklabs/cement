@@ -73,7 +73,7 @@ class CementApp(object):
         
         for res in hook.run('cement_pre_setup_hook', self):
             pass
-
+        
         self._setup_extension_handler()
         self._setup_config_handler()
         self._validate_required_config()
@@ -83,7 +83,7 @@ class CementApp(object):
         self._setup_arg_handler()
         self._setup_output_handler()
         self._setup_controller_handler()
-           
+
         for res in hook.run('cement_post_setup_hook', self):
             pass
              
@@ -95,14 +95,23 @@ class CementApp(object):
         """
         for res in hook.run('cement_pre_run_hook', self):
             pass
-            
+        
         # If controller exists, then pass controll to it
         if self.controller:
             self.controller.dispatch()
         else:
             self._parse_args()
-        
+
         for res in hook.run('cement_post_run_hook', self):
+            pass
+
+    def close(self):
+        """
+        Close the application.  This runs the cement_on_close_hook() allowing
+        plugins/extensions/etc to 'cleanup' at the end of program execution.
+        
+        """
+        for res in hook.run('cement_on_close_hook', self):
             pass
             
     def render(self, data, template=None):
@@ -370,7 +379,8 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     hook.define('cement_post_setup_hook')
     hook.define('cement_pre_run_hook')
     hook.define('cement_post_run_hook')
-        
+    hook.define('cement_on_close_hook')
+    
     # define and register handlers    
     handler.define(extension.IExtension)
     handler.define(log.ILog)

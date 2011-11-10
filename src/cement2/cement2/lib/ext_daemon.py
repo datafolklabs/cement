@@ -12,6 +12,36 @@ from cement2.core import backend, exc
 Log = backend.minimal_logger(__name__)
 
 class Environment(object):
+    """
+    This class provides a mechanism for altering the running processes
+    environment.
+    
+    Optional Arguments:
+    
+        stdin
+            A file to read STDIN from.  Default: /dev/null
+            
+        stdout
+            A file to write STDOUT to.  Default: /dev/null
+        
+        stderr
+            A file to write STDERR to.  Default: /dev/null
+            
+        dir
+            The directory to run the process in.
+        
+        pid_file
+            The filesystem path to where the PID (Process ID) should be 
+            written to.  Default: None
+        
+        user_name
+            The user name to run the process as.  Default: os.environ['USER']
+        
+        group_name
+            The group name to run the process as.  Default: The primary group
+            of os.environ['USER'].
+        
+    """
     def __init__(self, **kw):
         self.stdin = kw.get('stdin', '/dev/null')
         self.stdout = kw.get('stdout', '/dev/null')
@@ -40,7 +70,11 @@ class Environment(object):
             raise exc.CementRuntimeError("Daemon group '%s' doesn't exist." % \
                                          self.group_name)
         
-    def write_pid_file(self):
+    def _write_pid_file(self):
+        """
+        Writes os.getpid() out to self.pid_file.
+        
+        """
         pid = str(os.getpid())
         Log.debug('writing pid (%s) out to %s' % (pid, self.pid_file))
         
@@ -53,6 +87,12 @@ class Environment(object):
                      self.user.pw_uid, self.group.gr_gid)
         
     def switch(self):
+        """
+        Switch the current process's user/group to self.user_name, and 
+        self.group_name.  Change directory to self.dir, and write the 
+        current pid out to self.pid_file.
+        
+        """
         # set the running uid/gid
         Log.debug('setting process uid(%s) and gid(%s)' % \
                  (self.user.pw_uid, self.group.gr_gid))
@@ -64,11 +104,11 @@ class Environment(object):
             raise exc.CementRuntimeError("Process already running (%s)" % \
                                          self.pid_file)
         else:
-            self.write_pid_file()
+            self._write_pid_file()
          
     def daemonize(self):
         """
-        This forks the current process into a daemon.
+        Fork the current process into a daemon.
         
         References:
 
@@ -126,4 +166,4 @@ class Environment(object):
             os.dup2(stderr.fileno(), sys.stderr.fileno())       
                  
         # Update our pid file
-        self.write_pid_file()
+        self._write_pid_file()

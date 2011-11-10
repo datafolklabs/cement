@@ -6,11 +6,12 @@ Cement2 Extensions
    :maxdepth: 1
    
    extensions/argparse
-   extensions/nulloutput
    extensions/cement_plugin
    extensions/configparser
    extensions/configobj
+   extensions/daemon
    extensions/json
    extensions/logging
+   extensions/nulloutput
    extensions/optparse
    extensions/yaml

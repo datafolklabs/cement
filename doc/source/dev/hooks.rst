@@ -177,6 +177,9 @@ a custom application hook:
     # run the application
     app.run()
 
+    # close the application
+    app.close()
+    
 And the result is:
 
 .. code-block:: text
@@ -249,9 +252,7 @@ cement_post_run_hook
 ^^^^^^^^^^^^^^^^^^^^
         
 Run after CementApp.run() is called.  The application object object is
-passed as an argument.  Note that if an application 'base' controller exists,
-this hook may never get called as it is run after runtime is passed to the
-base controller.
+passed as an argument.  
 
 .. code-block:: python
 
@@ -261,3 +262,9 @@ base controller.
     def my_post_run_hook(app):
         # Do something after application run() is called.
         pass
+
+cement_on_close_hook
+^^^^^^^^^^^^^^^^^^^^
+
+Run when app.close() is called.  This hook should be used by plugins and 
+extensions to do any 'cleanup' at the end of program execution.

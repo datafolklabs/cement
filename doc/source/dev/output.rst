@@ -75,6 +75,8 @@ accessible by the application object.
     data = dict(foo='bar')
     app.render(data)
 
+    # Close the application
+    app.close()
 
 The above example uses the default output handler, therefore nothing is 
 displayed on screen.  That said, if we write our own quickly we can see 
@@ -118,6 +120,9 @@ something happen:
     data = dict(foo='bar')
     app.render(data)
 
+    # close the application
+    app.close()
+    
 Which looks like:
 
 .. code-block:: text

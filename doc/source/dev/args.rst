@@ -77,6 +77,8 @@ regardless of what the handler is):
     if app.pargs.A:
         print "Received the A option with value %s" % app.pargs.A
 
+    # Close the application
+    app.close()
 
 Here we setup a basic application, and then add a '-f/--foo' optional argument
 to the parser.  

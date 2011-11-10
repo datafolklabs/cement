@@ -104,7 +104,8 @@ The following shows logging to each of the defined log levels.
     # Log an fatal error message
     app.log.fatal('This is a fatal message.')
     
-    
+    # Close the application
+    app.close()
 
 
 The above is displayed in order of 'severity' you can say.  If the log level
@@ -203,7 +204,7 @@ The default log handler configuration enables logging to console.  For example:
     app.setup()
     app.run()
     app.log.info('This is my info message')
-    
+    app.close()
 
 When running this script at command line you would get:
 
@@ -234,7 +235,7 @@ defaults, or via a configuration file.
     app.setup()
     app.run()
     app.log.info('This is my info message')
-
+    app.close()
 
 Running this we will see:
 
@@ -283,6 +284,8 @@ however in general you would need to do something like the following:
     # Call the log object like normal
     app.log.info('This is my info message')
 
+    # close the application
+    app.close()
 
 As you can see above, we overrode the default console formatter to be a bit
 more verbose.  Which now looks like:
@@ -341,6 +344,9 @@ handler class:
     # Call the log object like normal
     app.log.info('Using %s log handler' % app.log.meta.label)
 
+    # close the application
+    app.close()
+    
 And we get:
 
 .. code-block:: text
