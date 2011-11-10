@@ -41,14 +41,17 @@ class Environment(object):
                                          self.group_name)
         
     def write_pid_file(self):
+        pid = str(os.getpid())
+        Log.debug('writing pid (%s) out to %s' % (pid, self.pid_file))
+        
         # setup pid
         if self.pid_file:            
             f = open(self.pid_file, 'w')
-            f.write(str(os.getpid()))
+            f.write(pid)
             f.close()
             os.chown(os.path.dirname(self.pid_file), 
                      self.user.pw_uid, self.group.gr_gid)
-                                 
+        
     def switch(self):
         # set the running uid/gid
         Log.debug('setting process uid(%s) and gid(%s)' % \
@@ -78,12 +81,13 @@ class Environment(object):
             W. Richard Stevens, 1992, Addison-Wesley, ISBN 0-201-56317-7.
 
         """
-    
+        Log.debug('attempting to daemonize the current process')
         # Do first fork.
         try:
             if not os.environ.has_key('CEMENT_TEST'):
                 pid = os.fork()
                 if pid > 0:
+                    Log.debug('successfully detached from first parent')
                     sys.exit(0)   # Exit first parent.
         except OSError as e:
             sys.stderr.write("Fork #1 failed: (%d) %s\n" % \
@@ -102,6 +106,7 @@ class Environment(object):
             if not os.environ.has_key('CEMENT_TEST'):
                 pid = os.fork()
                 if pid > 0:
+                    Log.debug('successfully detached from second parent')
                     sys.exit(0)   # Exit second parent.
         except OSError as e:
             sys.stderr.write("Fork #2 failed: (%d) %s\n" % \

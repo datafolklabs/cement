@@ -1,7 +1,7 @@
 """
-This module provides any dynamically loadable code for the JSON 
+This module provides any dynamically loadable code for the Daemon 
 Framework Extension such as hook and handler registration.  Additional 
-classes and functions exist in cement2.lib.ext_json.
+classes and functions exist in cement2.lib.ext_daemon.
     
 """
 
@@ -17,6 +17,10 @@ Log = backend.minimal_logger(__name__)
 CEMENT_DAEMON_ENV = None
            
 def signal_handler(signum, frame):
+    """
+    This handler attempts to clean up the pid file (if it is set, and exists)
+    when called.  It will then exit with a code of '0' (clean).
+    """
     global CEMENT_DAEMON_ENV
     
     Log.debug('Caught signal %s, shutting down clean...' % signum)
@@ -49,6 +53,20 @@ def cement_post_setup_hook(app):
 
 @hook.register()
 def cement_pre_run_hook(app):
+    """
+    Before the application runs, this hook switches the running user/group
+    to that configured in config['daemon']['user'] and 
+    config['daemon']['group'].  The default user is os.environ['USER'] and the
+    default group is that user's primary group.  A pid_file and directory
+    to run in is also passed to the environment.
+    
+    It is important to note that with the daemon extension enabled, the 
+    environment will switch user/group/set pid/etc regardless of whether
+    the --daemon option was passed at command line or not.  However, the 
+    process will only 'daemonize' if the option is passed to do so.  This 
+    allows the program to run exactly the same in forground or background.
+    
+    """
     # We want to honor the runtime user/group/etc even if --daemon is not
     # passed... but only daemonize if it is.
     global CEMENT_DAEMON_ENV 
@@ -71,6 +89,11 @@ def cement_pre_run_hook(app):
     
 @hook.register()
 def cement_post_run_hook(app):
+    """
+    After application run time, this hook just attempts to clean up the
+    pid_file if one was set, and exists.
+    
+    """
     global CEMENT_DAEMON_ENV
     
     if CEMENT_DAEMON_ENV and CEMENT_DAEMON_ENV.pid_file:
