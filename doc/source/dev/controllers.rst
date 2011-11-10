@@ -74,6 +74,9 @@ handle command dispatch and rapid development.
     # run the application
     app.run()
 
+    # close the application
+    app.close()
+    
 As you can see, we're able to build out the core functionality of our app
 via a controller class.  Lets see what this looks like:
 
@@ -213,6 +216,8 @@ and the other is not.  Pay attention to how this looks at the command line:
     # run the application
     app.run()
     
+    # close the application
+    app.close()
 
 From our 'base' namespace this looks like:
 
