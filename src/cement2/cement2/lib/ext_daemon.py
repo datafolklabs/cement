@@ -1,11 +1,6 @@
 """
 Daemon Framework Extension Library.
-
-Example:
-
-.. code-block:: python
-    
-    
+        
 """
 
 import sys
@@ -46,6 +41,9 @@ class Environment(object):
             The group name to run the process as.  Default: The primary group
             of os.environ['USER'].
         
+        umask
+            The umask to pass to os.umask().  Default: 0
+        
     """
     def __init__(self, **kw):
         self.stdin = kw.get('stdin', '/dev/null')
@@ -53,6 +51,7 @@ class Environment(object):
         self.stderr = kw.get('stderr', '/dev/null')
         self.dir = kw.get('dir', os.curdir)
         self.pid_file = kw.get('pid_file', None)
+        self.umask = kw.get('umask', 0)
         self.user_name = kw.get('user_name', 
                                 os.environ['USER'])
             
@@ -141,7 +140,7 @@ class Environment(object):
 
         # Decouple from parent environment.
         os.chdir(self.dir)
-        os.umask(0)
+        os.umask(int(self.umask))
         
         if not os.environ.has_key('CEMENT_TEST'):
             os.setsid()
