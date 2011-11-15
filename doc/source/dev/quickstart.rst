@@ -59,11 +59,12 @@ The following is a bare minimum 'helloworld' application.
     
     app = foundation.lay_cement('helloworld')
     app.setup()
-    app.run()
     
-    print('Hello World')
-    
-    app.close()
+    try:
+        app.run()
+        print('Hello World')
+    finally:
+        app.close()
     
 And execution:
 
@@ -93,48 +94,49 @@ Oh nice, ok... ArgParse is already setup with a few options I see.  What else?
 .. code-block:: text
 
     $ python helloworld.py --debug
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.foundation : laying cement for the 'helloworld' application
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.hook : defining hook 'cement_init_hook'
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.hook : defining hook 'cement_add_args_hook'
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.hook : defining hook 'cement_post_args_hook'
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.hook : defining hook 'cement_validate_config_hook'
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.hook : defining hook 'cement_pre_plugins_hook'
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.hook : defining hook 'cement_post_plugins_hook'
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.hook : defining hook 'cement_post_bootstrap_hook'
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.handler : defining handler type 'extension' (IExtension)
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.handler : defining handler type 'log' (ILog)
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.handler : defining handler type 'config' (IConfig)
-    2011-08-23 13:01:00,462 (DEBUG) cement2.core.handler : defining handler type 'plugin' (IPlugin)
-    2011-08-23 13:01:00,463 (DEBUG) cement2.core.handler : defining handler type 'output' (IOutput)
-    2011-08-23 13:01:00,463 (DEBUG) cement2.core.handler : defining handler type 'argument' (IArgument)
-    2011-08-23 13:01:00,463 (DEBUG) cement2.core.handler : defining handler type 'controller' (IController)
-    2011-08-23 13:01:00,463 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
-    2011-08-23 13:01:00,463 (DEBUG) cement2.core.foundation : now setting up the 'helloworld' application
-    2011-08-23 13:01:00,463 (DEBUG) cement2.core.foundation : setting up helloworld.extension handler
-    2011-08-23 13:01:00,463 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.core.extension.CementExtensionHandler object at 0x100581a50>'
-    2011-08-23 13:01:00,463 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_cement_output' framework extension
-    2011-08-23 13:01:00,464 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_cement_output.CementOutputHandler'>' into handlers['output']['cement']
-    2011-08-23 13:01:00,464 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_cement_plugin' framework extension
-    2011-08-23 13:01:00,464 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_cement_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
-    2011-08-23 13:01:00,464 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_configparser' framework extension
-    2011-08-23 13:01:00,468 (DEBUG) cement2.core.handler : registering handler 'cement2.ext.ext_configparser.ConfigParserConfigHandler' into handlers['config']['configparser']
-    2011-08-23 13:01:00,468 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_logging' framework extension
-    2011-08-23 13:01:00,469 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
-    2011-08-23 13:01:00,469 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_argparse' framework extension
-    2011-08-23 13:01:00,474 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
-    2011-08-23 13:01:00,474 (DEBUG) cement2.core.foundation : setting up helloworld.config handler
-    2011-08-23 13:01:00,475 (DEBUG) cement2.core.foundation : validating required configuration parameters
-    2011-08-23 13:01:00,475 (DEBUG) cement2.core.foundation : setting up helloworld.log handler
-    2011-08-23 13:01:00,475 (DEBUG) cement2.core.foundation : setting config defaults from '<cement2.ext.ext_logging.LoggingLogHandler object at 0x100418050>'
-    2011-08-23 13:01:00,476 (DEBUG) helloworld : logging initialized for 'helloworld' using LoggingLogHandler
-    2011-08-23 13:01:00,476 (DEBUG) cement2.core.foundation : setting up helloworld.plugin handler
-    2011-08-23 13:01:00,476 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.ext.ext_cement_plugin.CementPluginHandler object at 0x1005c5250>'
-    2011-08-23 13:01:00,476 (DEBUG) cement2.core.foundation : setting up helloworld.arg handler
-    2011-08-23 13:01:00,477 (DEBUG) cement2.core.foundation : no config defaults from 'ArgParseArgumentHandler(prog='helloworld.py', usage=None, description=None, version=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)'
-    2011-08-23 13:01:00,477 (DEBUG) cement2.core.foundation : setting up helloworld.output handler
-    2011-08-23 13:01:00,477 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.ext.ext_cement_output.CementOutputHandler object at 0x1005c55d0>'
-    2011-08-23 13:01:00,478 (DEBUG) cement2.core.foundation : setting up helloworld.controller handler
-    2011-08-23 13:01:00,478 (DEBUG) cement2.core.foundation : no controller could be found.
+    2011-11-15 15:19:35,157 (DEBUG) cement2.core.foundation : laying cement for the 'helloworld' application
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.hook : defining hook 'cement_pre_setup_hook'
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.hook : defining hook 'cement_post_setup_hook'
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.hook : defining hook 'cement_pre_run_hook'
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.hook : defining hook 'cement_post_run_hook'
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.hook : defining hook 'cement_on_close_hook'
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.handler : defining handler type 'extension' (IExtension)
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.handler : defining handler type 'log' (ILog)
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.handler : defining handler type 'config' (IConfig)
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.handler : defining handler type 'plugin' (IPlugin)
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.handler : defining handler type 'output' (IOutput)
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.handler : defining handler type 'argument' (IArgument)
+    2011-11-15 15:19:35,158 (DEBUG) cement2.core.handler : defining handler type 'controller' (IController)
+    2011-11-15 15:19:35,159 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
+    2011-11-15 15:19:35,159 (DEBUG) cement2.core.foundation : now setting up the 'helloworld' application
+    2011-11-15 15:19:35,159 (DEBUG) cement2.core.foundation : setting up helloworld.extension handler
+    2011-11-15 15:19:35,159 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.core.extension.CementExtensionHandler object at 0x1005b2e10>'
+    2011-11-15 15:19:35,159 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_nulloutput' framework extension
+    2011-11-15 15:19:35,159 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.lib.ext_nulloutput.NullOutputHandler'>' into handlers['output']['null']
+    2011-11-15 15:19:35,160 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_plugin' framework extension
+    2011-11-15 15:19:35,161 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.lib.ext_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
+    2011-11-15 15:19:35,161 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_configparser' framework extension
+    2011-11-15 15:19:35,164 (DEBUG) cement2.core.handler : registering handler 'cement2.lib.ext_configparser.ConfigParserConfigHandler' into handlers['config']['configparser']
+    2011-11-15 15:19:35,164 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_logging' framework extension
+    2011-11-15 15:19:35,165 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.lib.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
+    2011-11-15 15:19:35,165 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_argparse' framework extension
+    2011-11-15 15:19:35,165 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.lib.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
+    2011-11-15 15:19:35,165 (DEBUG) cement2.core.foundation : setting up helloworld.config handler
+    2011-11-15 15:19:35,166 (DEBUG) cement2.lib.ext_configparser : config file '/etc/helloworld/helloworld.conf' does not exist, skipping...
+    2011-11-15 15:19:35,166 (DEBUG) cement2.lib.ext_configparser : config file '/Users/wdierkes/.helloworld.conf' does not exist, skipping...
+    2011-11-15 15:19:35,166 (DEBUG) cement2.core.foundation : validating required configuration parameters
+    2011-11-15 15:19:35,166 (DEBUG) cement2.core.foundation : setting up helloworld.log handler
+    2011-11-15 15:19:35,166 (DEBUG) cement2.core.foundation : setting config defaults from '<cement2.lib.ext_logging.LoggingLogHandler object at 0x100419050>'
+    2011-11-15 15:19:35,167 (DEBUG) helloworld : logging initialized for 'helloworld' using LoggingLogHandler
+    2011-11-15 15:19:35,167 (DEBUG) cement2.core.foundation : setting up helloworld.plugin handler
+    2011-11-15 15:19:35,167 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.lib.ext_plugin.CementPluginHandler object at 0x1005c9890>'
+    2011-11-15 15:19:35,167 (DEBUG) cement2.lib.ext_plugin : plugin config dir /etc/helloworld/plugins.d does not exist.
+    2011-11-15 15:19:35,167 (DEBUG) cement2.core.foundation : setting up helloworld.arg handler
+    2011-11-15 15:19:35,169 (DEBUG) cement2.core.foundation : no config defaults from 'ArgParseArgumentHandler(prog='test.py', usage=None, description=None, version=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)'
+    2011-11-15 15:19:35,169 (DEBUG) cement2.core.foundation : setting up helloworld.output handler
+    2011-11-15 15:19:35,169 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.lib.ext_nulloutput.NullOutputHandler object at 0x1005c9c50>'
+    2011-11-15 15:19:35,169 (DEBUG) cement2.core.foundation : setting up helloworld.controller handler
+    2011-11-15 15:19:35,169 (DEBUG) cement2.core.foundation : no controller could be found.
     Hello World
     
 
@@ -172,17 +174,19 @@ application features.
                           help='the notorious foo option')
 
     # run the application
-    app.log.debug("About to run my example application!")
-    app.run()
+    try:
+        app.log.debug("About to run my example application!")
+        app.run()
 
-    # add application logic
-    if app.pargs.foo:
-        app.log.info("Received the 'foo' option with value '%s'." % app.pargs.foo)
-    else:
-        app.log.warn("Did not receive a value for 'foo' option.")
-    
-    # close the application
-    app.close()
+        # add application logic
+        if app.pargs.foo:
+            app.log.info("Received the 'foo' option with value '%s'." % app.pargs.foo)
+        else:
+            app.log.warn("Did not receive a value for 'foo' option.")
+
+    finally:
+        # close the application
+        app.close()
     
 .. code-block:: text
 
@@ -249,11 +253,12 @@ handle command dispatch and rapid development.
     # setup the application
     app.setup()
 
-    # run the application
-    app.run()
-    
-    # close the application
-    app.close()
+    try:
+        # run the application
+        app.run()
+    finally:
+        # close the application
+        app.close()
 
 As you can see, we're able to build out the core functionality of our app
 via a controller class.  Lets see what this looks like:

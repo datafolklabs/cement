@@ -18,3 +18,4 @@ them in your applications.
    dev/controllers
    dev/hooks
    dev/plugins
+   dev/cleanup
