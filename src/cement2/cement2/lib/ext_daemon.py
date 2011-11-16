@@ -132,7 +132,7 @@ class Environment(object):
                 pid = os.fork()
                 if pid > 0:
                     Log.debug('successfully detached from first parent')
-                    sys.exit(0)   # Exit first parent.
+                    os._exit(0)
         except OSError as e:
             sys.stderr.write("Fork #1 failed: (%d) %s\n" % \
                             (e.errno, e.strerror))
@@ -151,7 +151,7 @@ class Environment(object):
                 pid = os.fork()
                 if pid > 0:
                     Log.debug('successfully detached from second parent')
-                    sys.exit(0)   # Exit second parent.
+                    os._exit(0)
         except OSError as e:
             sys.stderr.write("Fork #2 failed: (%d) %s\n" % \
                             (e.errno, e.strerror))

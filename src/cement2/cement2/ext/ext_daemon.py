@@ -60,7 +60,7 @@ def daemonize():
         group_name=app.config.get('daemon', 'group'),
         pid_file=app.config.get('daemon', 'pid_file'),
         dir=app.config.get('daemon', 'dir'),
-        umask=app.config.get('daemon', 'umask')
+        umask=app.config.get('daemon', 'umask'),
         )
     
     # register signal handlers
