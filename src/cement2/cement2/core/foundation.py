@@ -278,7 +278,11 @@ class CementApp(object):
                  
     def _setup_controller_handler(self):
         Log.debug("setting up %s.controller handler" % self.name) 
-        
+
+        # set handler defaults for all controllers
+        for contr in handler.list('controller'):
+            self._set_handler_defaults(contr)
+            
         # Use self.controller first(it was passed in)
         if not self.controller:
             # Only use the config'd controller if no self.controller
@@ -304,11 +308,7 @@ class CementApp(object):
             self.controller.setup(self)
         else:
             Log.debug("no controller could be found.")
-
-        # set handler defaults for all controllers
-        for contr in handler.list('controller'):
-            self._set_handler_defaults(contr)
-            
+    
     def _validate_required_config(self):
         """
         Validate base config settings required by cement.
