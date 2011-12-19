@@ -13,7 +13,7 @@ from cement2.ext import ext_daemon
 def import_daemon():
     from cement2.ext import ext_daemon
     hook.register()(ext_daemon.cement_post_setup_hook)
-    hook.register()(ext_daemon.cement_pre_run_hook)
+    hook.register()(ext_daemon.cement_on_close_hook)
     
 # FIX ME:
 #
@@ -98,7 +98,7 @@ def test_daemon():
     try:
         app.run()
     finally:
-        ext_daemon.cement_post_run_hook(app)
+        ext_daemon.cement_on_close_hook(app)
 
 def test_daemon_not_passed():
     defaults = backend.defaults('myapp')    
@@ -112,7 +112,7 @@ def test_daemon_not_passed():
     try:
         app.run()
     finally:
-        ext_daemon.cement_post_run_hook(app)
+        ext_daemon.cement_on_close_hook(app)
 
 def test_signal_handling():
     (_, tmpfile) = tempfile.mkstemp()
