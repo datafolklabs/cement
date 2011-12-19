@@ -170,7 +170,7 @@ application features.
     app.setup()
 
     # add arguments
-    app.args.add_argument('-f', '--foo', action='store', metavar='STR',
+    app.args.add_argument('-f', '--foo', action='store', Metavar='STR',
                           help='the notorious foo option')
 
     # run the application
@@ -218,7 +218,7 @@ handle command dispatch and rapid development.
 
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
-        class meta:
+        class Meta:
             interface = controller.IController
             label = 'base'
             description = "My Application does amazing things!"

@@ -18,7 +18,7 @@ class JsonOutputHandler(object):
     going on.
     
     """
-    class meta:
+    class Meta:
         interface = output.IOutput
         label = 'json'
         

@@ -41,7 +41,9 @@ Incompatible Changes:
     * :issue:`72` - The framework hooks 'cement_add_args_hook' and 
       'cement_validate_config' were removed in favor of the new pre/post setup 
       and run hooks.
-
+    * :issue`82` - Change 'meta' classes to Python-proper 'Meta', and 
+      interfaces to use 'IMeta'.  Old functionality will be completely removed
+      before Cement2 stable release.
     
     
 

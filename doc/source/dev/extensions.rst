@@ -85,7 +85,7 @@ is part of our 'myapp' application, so the extension module would be
     Log = backend.minimal_logger(__name__)
 
     class MyAppOutputHandler(object):
-        class meta:
+        class Meta:
             interface = output.IOutput
             label = 'myapp_output'
         

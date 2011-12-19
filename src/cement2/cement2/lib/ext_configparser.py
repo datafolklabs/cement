@@ -23,7 +23,7 @@ class ConfigParserConfigHandler(RawConfigParser):
     Additional arguments and keyword arguments are passed directly to 
     RawConfigParser on initialization.
     """
-    class meta:
+    class Meta:
         interface = config.IConfig
         label = 'configparser'
     

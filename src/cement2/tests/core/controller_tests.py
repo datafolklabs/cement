@@ -8,12 +8,12 @@ from cement2.core import exc, controller, handler
 from cement2 import test_helper as _t
 
 class BogusController(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'bogus'
   
 class BogusController2(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'bogus2'
         description = 'Bogus Base Controller2'
@@ -23,7 +23,7 @@ class BogusController2(controller.CementBaseController):
         stacked_on = 'base'
 
 class BogusController3(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'bogus3'
         description = 'Bogus Base Controller3'
@@ -33,7 +33,7 @@ class BogusController3(controller.CementBaseController):
         stacked_on = 'base'
 
 class BogusController4(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'bogus4'
         description = 'Bogus Base Controller4'
@@ -43,7 +43,7 @@ class BogusController4(controller.CementBaseController):
         stacked_on = 'base'
           
 class TestBaseController(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'base'
         description = 'Test Base Controller'
@@ -56,7 +56,7 @@ class TestBaseController(controller.CementBaseController):
         pass
      
 class TestBaseController2(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'base'
         description = 'Test Base Controller2'
@@ -73,7 +73,7 @@ class TestBaseController2(controller.CementBaseController):
         pass
         
 class TestStackedController(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'test_stacked'
         description = 'Test Stacked Controller'
@@ -91,7 +91,7 @@ class TestStackedController(controller.CementBaseController):
         pass
 
 class TestSecondaryController(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'test_secondary'
         description = 'Test Secondary Controller'
@@ -106,7 +106,7 @@ class TestSecondaryController(controller.CementBaseController):
         pass
 
 class TestDuplicateController(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'test_duplicate'
         description = 'Test Duplicate Controller'
@@ -125,7 +125,7 @@ class TestDuplicateController(controller.CementBaseController):
         pass
          
 class TestDuplicate2Controller(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'test_duplicate2'
         description = 'Test Duplicate2 Controller'
@@ -144,7 +144,7 @@ class TestDuplicate2Controller(controller.CementBaseController):
         pass
 
 class SameNameController(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'same_name'
         description = 'Same Name Controller'
@@ -157,7 +157,7 @@ class SameNameController(controller.CementBaseController):
         pass
 
 class SameNameAliasController(controller.CementBaseController):
-    class meta:
+    class Meta:
         interface = controller.IController
         label = 'same_name_alias'
         description = 'Same Name Alias Controller'

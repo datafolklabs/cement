@@ -32,20 +32,20 @@ class IExtension(interface.Interface):
         from cement2.core import extension
         
         class MyExtensionHandler(object):
-            class meta:
+            class Meta:
                 interface = extension.IExtension
                 label = 'my_extension_handler'
             ...
             
     """
     
-    # This is interface meta-deta, not part of the implemention
-    class imeta:
+    # This is interface Meta-deta, not part of the implemention
+    class IMeta:
         label = 'extension'
         validator = extension_validator
     
     # Must be provided by the implementation
-    meta = interface.Attribute('Handler meta-data class')
+    Meta = interface.Attribute('Handler Meta-data class')
     loaded_extensions = interface.Attribute('List of loaded extensions')
     
     def setup(defaults):
@@ -94,7 +94,7 @@ class IExtension(interface.Interface):
 class CementExtensionHandler(object):
     loaded_extensions = []
     
-    class meta:
+    class Meta:
         interface = IExtension
         label = 'cement'
         

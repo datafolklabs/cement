@@ -11,7 +11,7 @@ class NullOutputHandler(object):
     parameters on initialization.
     
     """
-    class meta:
+    class Meta:
         interface = output.IOutput
         label = 'null'
         

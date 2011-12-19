@@ -47,15 +47,15 @@ def validate(interface, obj, members, **kw):
             
     Optional Arguments:
     
-        meta
-            A list of members to validate in the handler classes meta class.
+        Meta
+            A list of members to validate in the handler classes Meta class.
             Defaults to ['interface', 'label'].
             
     """
     invalid = []
-    meta = kw.get('meta', ['interface', 'label'])
+    Meta = kw.get('Meta', ['interface', 'label'])
 
-    if hasattr(obj, 'meta') and interface != obj.meta.interface:
+    if hasattr(obj, 'Meta') and interface != obj.Meta.interface:
         raise exc.CementInterfaceError("%s does not implement '%s'." % \
                                       (obj, interface))
         
@@ -63,12 +63,12 @@ def validate(interface, obj, members, **kw):
         if not hasattr(obj, member):
             invalid.append(member)
     
-    if not hasattr(obj, 'meta'):
-        invalid.append("meta")
+    if not hasattr(obj, 'Meta'):
+        invalid.append("Meta")
     else:
-        for member in meta:
-            if not hasattr(obj.meta, member):
-                invalid.append("meta.%s" % member)
+        for member in Meta:
+            if not hasattr(obj.Meta, member):
+                invalid.append("Meta.%s" % member)
             
     if invalid:
         raise exc.CementInterfaceError("Invalid or missing: %s in %s" % \

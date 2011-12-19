@@ -39,7 +39,7 @@ PLUGIN = """
 from cement2.core import handler, output
 
 class TestOutputHandler(object):
-    class meta:
+    class Meta:
         interface = output.IOutput
         label = 'test_output_handler'
     
@@ -72,7 +72,7 @@ def test_load_plugins_from_files():
     
     try:
         han = handler.get('output', 'test_output_handler')
-        eq_(han.meta.label, 'test_output_handler')
+        eq_(han.Meta.label, 'test_output_handler')
     finally:
         shutil.rmtree(tmpdir)
         
@@ -95,7 +95,7 @@ def test_load_plugins_from_config():
     
     try:
         han = handler.get('output', 'test_output_handler')
-        eq_(han.meta.label, 'test_output_handler')
+        eq_(han.Meta.label, 'test_output_handler')
     finally:
         shutil.rmtree(tmpdir)
     

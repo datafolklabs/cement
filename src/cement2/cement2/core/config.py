@@ -41,18 +41,18 @@ class IConfig(interface.Interface):
         from cement2.core import config
         
         class MyConfigHandler(object):
-            class meta:
+            class Meta:
                 interface = config.IConfig
                 label = 'my_config_handler'
             ...
             
     """
-    class imeta:
+    class IMeta:
         label = 'config'
         validator = config_validator
     
     # Must be provided by the implementation
-    meta = interface.Attribute('Handler meta-data')
+    Meta = interface.Attribute('Handler Meta-data')
             
     def setup(defaults):
         """

@@ -94,7 +94,7 @@ something happen:
 
     # Create a custom output handler
     class MyOutput(object):
-        class meta:
+        class Meta:
             interface = output.IOutput
             label = 'myoutput'
 

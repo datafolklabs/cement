@@ -33,18 +33,18 @@ class ILog(interface.Interface):
         from cement2.core import log
         
         class MyLogHandler(object):
-            class meta:
+            class Meta:
                 interface = log.ILog
                 label = 'my_log_handler'
             ...
             
     """
-    class imeta:
+    class IMeta:
         label = 'log'
         validator = log_validator
     
     # Must be provided by the implementation
-    meta = interface.Attribute('Handler meta-data')
+    Meta = interface.Attribute('Handler Meta-data')
     
     def setup(config_obj):
         """

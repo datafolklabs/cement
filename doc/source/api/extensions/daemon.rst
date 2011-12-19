@@ -119,7 +119,7 @@ For example:
 
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
-        class meta:
+        class Meta:
             interface = controller.IController
             label = 'base'
             description = "My Application does amazing things!"

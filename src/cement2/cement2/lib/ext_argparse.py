@@ -20,7 +20,7 @@ class ArgParseArgumentHandler(ArgumentParser):
     """
     
     parsed_args = None
-    class meta:
+    class Meta:
         interface = arg.IArgument
         label = 'argparse'
     

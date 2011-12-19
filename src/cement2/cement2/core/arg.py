@@ -30,19 +30,19 @@ class IArgument(interface.Interface):
         from cement2.core import interface, arg
 
         class MyArgumentHandler(object):
-            class meta:
+            class Meta:
                 interface = arg.IArgument
                 label = 'my_argument_handler'
 
             ...
                 
     """
-    class imeta:
+    class IMeta:
         label = 'argument'
         validator = argument_validator
     
     # Must be provided by the implementation
-    meta = interface.Attribute('Handler meta-data')
+    Meta = interface.Attribute('Handler Meta-data')
     parsed_args = interface.Attribute('Parsed args object')
     
     def setup(config_obj):

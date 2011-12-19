@@ -25,7 +25,7 @@ config['log']['console_formatter'] = None
 config['log']['clear_loggers'] = True
         
 class BogusHandler1(object):
-    class meta:
+    class Meta:
         interface = log.ILog
         label = 'bogus'
 

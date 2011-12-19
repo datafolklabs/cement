@@ -21,7 +21,7 @@ class CementPluginHandler(object):
     enabled_plugins = None
     disabled_plugins = None
     
-    class meta:
+    class Meta:
         interface = plugin.IPlugin
         label = 'cement'
     

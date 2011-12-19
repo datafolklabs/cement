@@ -11,7 +11,7 @@ from cement2 import test_helper as _t
 class TestOutputHandler(object):
     file_suffix = None
     
-    class meta:
+    class Meta:
         interface = output.IOutput
         label = 'test_output_handler'
         

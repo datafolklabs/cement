@@ -42,11 +42,11 @@ The following defines a basic interface:
     app = foundation.lay_cement('myapp')
     
     class MyInterface(interface.Interface):
-        class imeta:
+        class iMeta:
             label = 'myinterface'
 
         # Must be provided by the implementation
-        meta = interface.Attribute('Handler meta-data')
+        Meta = interface.Attribute('Handler Meta-data')
         my_var = interface.Attribute('A variable of epic proportions.')
     
         def setup(config_obj):
@@ -80,19 +80,19 @@ functionality, and should never been used directly.  This is why the class
 functions do not have an argument of 'self', nor do they contain any code
 other than comments.
 
-That said, what is required is an 'imeta' class that is used to interact
+That said, what is required is an 'iMeta' class that is used to interact
 with the interface.  At the very least, this must include a unique 'label'
 to identify the interface.  This can also be considered the 'handler type'.  
 For example, the ILog interface has a label of 'log'.
 
-Notice that we defined 'meta' and 'my_var' as Interface Attributes.  This is
+Notice that we defined 'Meta' and 'my_var' as Interface Attributes.  This is
 a simple identifier that describes an attribute that an implementation is 
 expected to provide.
 
 Validating Interfaces
 ---------------------
 
-A validator call back function can be defined in the interfaces imeta class
+A validator call back function can be defined in the interfaces iMeta class
 like this:
 
 .. code-block:: python
@@ -111,7 +111,7 @@ like this:
         interface.validate(MyInterface, obj, members)
 
     class MyInterface(interface.Interface):
-        class imeta:
+        class iMeta:
             label = 'myinterface'
             validator = my_validator
         ...
@@ -140,7 +140,7 @@ is a handler that implements the MyInterface above:
     app = foundation.lay_cement('myapp')
     
     class MyHandler(object):
-        class meta:
+        class Meta:
             interface = MyInterface
             label = 'my_handler'
             description = 'This handler implements MyInterface'
@@ -219,7 +219,7 @@ configuration setting for that handler via the application defaults like so:
     
     # Define the 'mylog' handler here
     class MyLog(object):
-        class meta:
+        class Meta:
             interface = log.ILog
             label = 'mylog'
             

@@ -12,7 +12,7 @@ _t.prep()
 from cement2.ext.ext_configparser import ConfigParserConfigHandler
 
 class BogusConfigHandler(object):
-    class meta:
+    class Meta:
         interface = config.IConfig
         label = 'bogus'
     

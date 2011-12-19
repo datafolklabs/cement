@@ -28,18 +28,18 @@ class IOutput(interface.Interface):
         from cement2.core import output
         
         class MyOutputHandler(object):
-            class meta:
+            class Meta:
                 interface = output.IOutput
                 label = 'my_output_handler'
             ...
     
     """
-    class imeta:
+    class IMeta:
         label = 'output'
         validator = output_validator
     
     # Must be provided by the implementation
-    meta = interface.Attribute('Handler meta-data')
+    Meta = interface.Attribute('Handler Meta-data')
     
     def setup(config_obj):
         """

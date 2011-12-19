@@ -89,7 +89,7 @@ class LoggingLogHandler(object):
         max_files = 4
         
     """
-    class meta:
+    class Meta:
         interface = log.ILog
         label = 'logging'
         

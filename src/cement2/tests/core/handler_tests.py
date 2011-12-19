@@ -12,12 +12,12 @@ _t.prep('test')
 from cement2.ext import ext_nulloutput
 
 class BogusOutputHandler(object):
-    class meta:
+    class Meta:
         #interface = IBogus
         label = 'bogus_handler'
 
 class BogusOutputHandler2(object):
-    class meta:
+    class Meta:
         interface = output.IOutput
         label = 'bogus_handler'
 
@@ -25,12 +25,12 @@ class BogusHandler3(object):
     pass   
 
 class BogusHandler4(object):
-    class meta:
+    class Meta:
         interface = output.IOutput
         # label = 'bogus4'
 
 class DuplicateHandler(object):
-    class meta:
+    class Meta:
         interface = output.IOutput
         label = 'null'
 
@@ -44,15 +44,15 @@ class BogusInterface1(object):
     pass
     
 class BogusInterface2(object):
-    class imeta:
+    class IMeta:
         pass
     
 class TestInterface(object):
-    class imeta:
+    class IMeta:
         label = 'test'
         
 class TestHandler(object):
-    class meta:
+    class Meta:
         interface = TestInterface
         label = 'test'
         
@@ -67,12 +67,12 @@ def test_register_invalid_handler():
     handler.register(BogusOutputHandler)
 
 @raises(exc.CementInterfaceError)
-def test_register_invalid_handler_no_meta():
+def test_register_invalid_handler_no_Meta():
     _t.prep()
     handler.register(BogusHandler3)
 
 @raises(exc.CementInterfaceError)
-def test_register_invalid_handler_no_meta_label():
+def test_register_invalid_handler_no_Meta_label():
     _t.prep()
     handler.register(BogusHandler4)
     
@@ -124,11 +124,11 @@ def is_defined(handler_type):
     eq_(handler.defined(handler_type), True)
 
 @raises(exc.CementInterfaceError)
-def test_bogus_interface_no_imeta():
+def test_bogus_interface_no_IMeta():
     handler.define(BogusInterface1)
 
 @raises(exc.CementInterfaceError)
-def test_bogus_interface_no_imeta_label():
+def test_bogus_interface_no_IMeta_label():
     handler.define(BogusInterface2)
 
 @raises(exc.CementRuntimeError)

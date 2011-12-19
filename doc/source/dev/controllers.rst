@@ -36,7 +36,7 @@ handle command dispatch and rapid development.
 
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
-        class meta:
+        class Meta:
             interface = controller.IController
             label = 'base'
             description = "My Application does amazing things!"
@@ -144,7 +144,7 @@ and the other is not.  Pay attention to how this looks at the command line:
 
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
-        class meta:
+        class Meta:
             interface = controller.IController
             label = 'base'
             description = "My Application does amazing things!"
@@ -171,7 +171,7 @@ and the other is not.  Pay attention to how this looks at the command line:
             self.log.info("Inside base.command1 function.")
 
     class Controller2(controller.CementBaseController):
-        class meta:
+        class Meta:
             interface = controller.IController
             label = 'controller2'
             stacked_on = 'base'
@@ -187,7 +187,7 @@ and the other is not.  Pay attention to how this looks at the command line:
             self.log.info('Inside controller2.command2 function.')
 
     class Controller3(controller.CementBaseController):
-        class meta:
+        class Meta:
             interface = controller.IController
             label = 'controller3'
             description = 'This is the description for controller3.'

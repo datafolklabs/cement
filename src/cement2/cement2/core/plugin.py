@@ -30,18 +30,18 @@ class IPlugin(interface.Interface):
         from cement2.core import plugin
         
         class MyPluginHandler(object):
-            class meta:
+            class Meta:
                 interface = plugin.IPlugin
                 label = 'my_plugin_handler'
             ...
     
     """
-    class imeta:
+    class IMeta:
         label = 'plugin'
         validator = plugin_validator
     
     # Must be provided by the implementation
-    meta = interface.Attribute('Handler meta-data')
+    Meta = interface.Attribute('Handler Meta-data')
     loaded_plugins = interface.Attribute('List of loaded plugins')
     enabled_plugins = interface.Attribute('List of enabled plugins')
     disabled_plugins = interface.Attribute('List of disabled plugins')

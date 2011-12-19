@@ -68,7 +68,7 @@ options and commands via an application controller:
     from cement2.core import handler, controller
 
     class MyPluginController(controller.CementBaseController):
-        class meta:
+        class Meta:
             interface = controller.IController
             label = 'myplugin'
             description = 'This is my plugin controller.'
@@ -126,7 +126,7 @@ application shows how to configure an application to load plugins:
 
     # define an application base controller
     class HelloWorldBaseController(controller.CementBaseController):
-        class meta:
+        class Meta:
             interface = controller.IController
             label = 'base'
             description = "HelloWorld does amazing things!"
@@ -189,7 +189,7 @@ for example:
     from cement2.core import handler, controller
 
     class MyPluginController(controller.CementBaseController):
-        class meta:
+        class Meta:
             interface = controller.IController
             label = 'myplugin'
             description = 'This is my plugin controller.'

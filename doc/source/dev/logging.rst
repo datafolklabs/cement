@@ -314,7 +314,7 @@ handler class:
     from cement2.ext.ext_logging import LoggingLogHandler
 
     class MyLogHandler(LoggingLogHandler):
-        class meta:
+        class Meta:
             interface = log.ILog
             label = 'mylog'
         
@@ -342,7 +342,7 @@ handler class:
     app.run()
 
     # Call the log object like normal
-    app.log.info('Using %s log handler' % app.log.meta.label)
+    app.log.info('Using %s log handler' % app.log.Meta.label)
 
     # close the application
     app.close()

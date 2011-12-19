@@ -18,7 +18,7 @@ class YamlOutputHandler(object):
     going on.
     
     """
-    class meta:
+    class Meta:
         interface = output.IOutput
         label = 'yaml'
         

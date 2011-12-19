@@ -17,7 +17,7 @@ class ConfigObjConfigHandler(ConfigObj):
     Arguments and Keyword arguments are passed directly to ConfigObj
     on initialization.
     """
-    class meta:
+    class Meta:
         interface = config.IConfig
         label = 'configobj'
         

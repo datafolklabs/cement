@@ -8,11 +8,11 @@ from cement2.core import exc, backend, extension, handler, output, interface
 from cement2 import test_helper as _t
 
 class IBogus(interface.Interface):
-    class imeta:
+    class IMeta:
         label = 'bogus'
         
 class BogusExtensionHandler(object):
-    class meta:
+    class Meta:
         interface = IBogus
         label = 'bogus'
     
