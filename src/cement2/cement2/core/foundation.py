@@ -15,7 +15,8 @@ class NullOut():
         
 def cement_signal_handler(signum, frame):
     """
-    Run the cement_on_close_hook.
+    Catch a signal, and then raise an exception allowing the app to handle
+    logic elsewhere.
     
     """      
     Log.debug('Caught signal %s' % signum)  
