@@ -113,25 +113,3 @@ def test_daemon_not_passed():
         app.run()
     finally:
         ext_daemon.cement_on_close_hook(app)
-
-def test_signal_handling():
-    (_, tmpfile) = tempfile.mkstemp()
-    os.remove(tmpfile)
-    
-    defaults = backend.defaults('myapp')    
-    app = _t.prep('myapp')
-    import_daemon()
-    
-    app.argv = ['--daemon']
-    app.setup()    
-    app.config.set('daemon', 'pid_file', tmpfile)
-    
-    try:
-        app.run()
-        ext_daemon.signal_handler(15, None)
-    except SystemExit as e:
-        eq_(e.code, 0)
-    finally:
-        # signal handler should have cleaned up the pid
-        res = os.path.exists(tmpfile)
-        eq_(res, False)

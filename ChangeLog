@@ -34,7 +34,7 @@ Feature Enhancements:
     * :issue:`76` - Add app.close() functionality including a 
       cement_on_close_hook() allowing plugins/extensions/etc to be able to
       cleanup on application exit.
-
+    * :issue:`77` - Add signal handler for SIGINT/SIGTERM/Etc
     
 Incompatible Changes:
 

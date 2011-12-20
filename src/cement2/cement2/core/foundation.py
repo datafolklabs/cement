@@ -2,6 +2,7 @@
 
 import re
 import sys
+import signal
 
 from cement2.core import backend, exc, handler, hook, log, config, plugin
 from cement2.core import output, extension, arg, controller
@@ -12,7 +13,55 @@ class NullOut():
     def write(self, s):
         pass
         
+def cement_signal_handler(signum, frame):
+    """
+    Run the cement_on_close_hook.
+    
+    """      
+    Log.debug('Caught signal %s' % signum)  
+    raise exc.CementSignalError(signum, frame)
+        
 class CementApp(object):
+    """
+    The CementApp is the primary application class used and returned by
+    lay_cement().
+    
+    Required Arguments:
+    
+        name
+            The name of the application.
+            
+    Optional Arguments:
+    
+        argv
+            A list of arguments to use.  Default: sys.argv
+            
+        defaults
+            Default configuration dictionary.
+            
+        catch_signals
+            List of signals to catch, and raise exc.CementSignalError for.
+            Default: [signals.SIGTERM, signals.SIGINT]
+                
+        config_handler
+            An instantiated config handler object.
+            
+        extension_handler
+            An instantiated extension handler object.
+        
+        log_handler
+            An instantiated log handler object.
+            
+        plugin_handler
+            An instantiated plugin handler object.
+        
+        arg_handler
+            An instantiated argument handler object.
+        
+        output_handler
+            An instantiated output handler object.
+            
+    """
     def __init__(self, name, **kw):                
         self.name = name
         if not self.name:
@@ -21,7 +70,9 @@ class CementApp(object):
         self.defaults = kw.get('defaults', backend.defaults(self.name))
         self.defaults['base']['app_name'] = self.name
         self.argv = kw.get('argv', sys.argv[1:])
-        
+        self.catch_signals = kw.get('catch_signals', 
+                                    [signal.SIGTERM, signal.SIGINT])
+                                    
         # default all handlers to None
         self.ext = None
         self.config = None
@@ -74,6 +125,7 @@ class CementApp(object):
         for res in hook.run('cement_pre_setup_hook', self):
             pass
         
+        self._setup_signals()
         self._setup_extension_handler()
         self._setup_config_handler()
         self._validate_required_config()
@@ -213,6 +265,11 @@ class CementApp(object):
         else:
             self._setup_output_handler()
             
+    def _setup_signals(self):
+        for signum in self.catch_signals:
+            Log.debug("adding signal handler for signal %s" % signum)
+            signal.signal(signum, cement_signal_handler)
+    
     def _setup_extension_handler(self):
         Log.debug("setting up %s.extension handler" % self.name) 
         if not self.ext:
@@ -324,7 +381,8 @@ class CementApp(object):
         
 def lay_cement(name, klass=CementApp, *args, **kw):
     """
-    Initialize the framework.
+    Initialize the framework.  All *args, and **kwargs are passed to the 
+    klass() object.
 
     Required Arguments:
     

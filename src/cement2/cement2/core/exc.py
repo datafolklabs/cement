@@ -2,10 +2,9 @@
 
 class CementError(Exception):
     """Generic errors."""
-    def __init__(self, value, code=1):
+    def __init__(self, msg):
         Exception.__init__(self)
-        self.msg = value
-        self.code = code
+        self.msg = msg
     
     def __str__(self):
         return self.msg
@@ -14,25 +13,21 @@ class CementError(Exception):
         return str(self.msg)
             
 class CementConfigError(CementError):
-    """Config parsing and setup errors."""
-    def __init__(self, value):
-        code = 1010
-        CementError.__init__(self, value, code)
+    pass
 
 class CementRuntimeError(CementError):
-    """Runtime errors."""
-    def __init__(self, value):
-        code = 1020
-        CementError.__init__(self, value, code)
+    pass
         
 class CementArgumentError(CementError):
-    """Argument errors."""
-    def __init__(self, value):
-        code = 1030
-        CementError.__init__(self, value, code)
+    pass
 
 class CementInterfaceError(CementError):
-    """Interface errors."""
-    def __init__(self, value):
-        code = 1040
-        CementError.__init__(self, value, code)
+    pass
+    
+class CementSignalError(CementError):
+    """Signal errors."""
+    def __init__(self, signum, frame):
+        msg = 'Caught signal %s' % signum
+        super(CementSignalError, self).__init__(msg)
+        self.signum = signum
+        self.frame = frame        

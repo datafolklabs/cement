@@ -50,7 +50,7 @@ def defaults(app_name):
     dcf['base']['plugin_config_dir'] = '/etc/%s/plugins.d' % app_name
     dcf['base']['plugin_bootstrap_module'] = '%s.bootstrap' % app_name
     dcf['base']['plugin_dir'] = '/usr/lib/%s/plugins' % app_name
-    
+
     # default extensions
     dcf['base']['extensions'] = [  
         'cement2.ext.ext_nulloutput',
