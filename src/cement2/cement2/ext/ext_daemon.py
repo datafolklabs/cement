@@ -17,23 +17,23 @@ Log = backend.minimal_logger(__name__)
 CEMENT_DAEMON_ENV = None
 CEMENT_DAEMON_APP = None
            
-def signal_handler(signum, frame):
-    """
-    This handler attempts to clean up the pid file (if it is set, and exists)
-    when called.  It will then exit with a code of '0' (clean).
-    """
-    global CEMENT_DAEMON_ENV
-    
-    Log.debug('Caught signal %s, shutting down clean...' % signum)
-    if CEMENT_DAEMON_ENV and CEMENT_DAEMON_ENV.pid_file:
-        if os.path.exists(CEMENT_DAEMON_ENV.pid_file):
-            pid = open(CEMENT_DAEMON_ENV.pid_file, 'r').read().strip()
-            
-            # only remove it if we created it.
-            if int(pid) == int(os.getpid()):
-                os.remove(CEMENT_DAEMON_ENV.pid_file)
-    
-    sys.exit(0)
+#def signal_handler(signum, frame):
+#    """
+#    This handler attempts to clean up the pid file (if it is set, and exists)
+#    when called.  It will then exit with a code of '0' (clean).
+#    """
+#    global CEMENT_DAEMON_ENV
+#    
+#    Log.debug('Caught signal %s, shutting down clean...' % signum)
+#    if CEMENT_DAEMON_ENV and CEMENT_DAEMON_ENV.pid_file:
+#        if os.path.exists(CEMENT_DAEMON_ENV.pid_file):
+#            pid = open(CEMENT_DAEMON_ENV.pid_file, 'r').read().strip()
+#            
+#            # only remove it if we created it.
+#            if int(pid) == int(os.getpid()):
+#                os.remove(CEMENT_DAEMON_ENV.pid_file)
+#    
+#    sys.exit(0)
 
 def daemonize():
     """
@@ -64,8 +64,8 @@ def daemonize():
         )
     
     # register signal handlers
-    signal.signal(signal.SIGTERM, signal_handler)
-    signal.signal(signal.SIGINT, signal_handler)
+    #signal.signal(signal.SIGTERM, signal_handler)
+    #signal.signal(signal.SIGINT, signal_handler)
     
     CEMENT_DAEMON_ENV.switch()
     
@@ -110,6 +110,7 @@ def cement_on_close_hook(app):
     
     if CEMENT_DAEMON_ENV and CEMENT_DAEMON_ENV.pid_file:
         if os.path.exists(CEMENT_DAEMON_ENV.pid_file):
+            Log.debug('Cleaning up pid_file...')
             pid = open(CEMENT_DAEMON_ENV.pid_file, 'r').read().strip()
             
             # only remove it if we created it.
