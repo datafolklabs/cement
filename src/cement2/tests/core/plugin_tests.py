@@ -195,8 +195,8 @@ def test_load_plugin_from_module():
     
     shutil.rmtree(tmpdir)
     
-@raises(ImportError)
-def test_load_bogus_plugin():
-    app = _t.prep('myapp')
-    app.setup()
-    app.plugin.load_plugin('bogus_plugin')
+#@raises(ImportError)
+#def test_load_bogus_plugin():
+#    app = _t.prep('myapp')
+#    app.setup()
+#    app.plugin.load_plugin('bogus_plugin')

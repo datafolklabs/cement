@@ -128,11 +128,10 @@ class Environment(object):
         Log.debug('attempting to daemonize the current process')
         # Do first fork.
         try:
-            if not os.environ.has_key('CEMENT_TEST'):
-                pid = os.fork()
-                if pid > 0:
-                    Log.debug('successfully detached from first parent')
-                    os._exit(os.EX_OK)
+            pid = os.fork()
+            if pid > 0:
+                Log.debug('successfully detached from first parent')
+                os._exit(os.EX_OK)
         except OSError as e:
             sys.stderr.write("Fork #1 failed: (%d) %s\n" % \
                             (e.errno, e.strerror))
@@ -141,17 +140,14 @@ class Environment(object):
         # Decouple from parent environment.
         os.chdir(self.dir)
         os.umask(int(self.umask))
-        
-        if not os.environ.has_key('CEMENT_TEST'):
-            os.setsid()
+        os.setsid()
 
         # Do second fork.
         try:
-            if not os.environ.has_key('CEMENT_TEST'):
-                pid = os.fork()
-                if pid > 0:
-                    Log.debug('successfully detached from second parent')
-                    os._exit(os.EX_OK)
+            pid = os.fork()
+            if pid > 0:
+                Log.debug('successfully detached from second parent')
+                os._exit(os.EX_OK)
         except OSError as e:
             sys.stderr.write("Fork #2 failed: (%d) %s\n" % \
                             (e.errno, e.strerror))

@@ -12,5 +12,6 @@ def test_optparse():
     defaults['base']['extensions'].append('optparse')
     
     app = _t.prep('myapp', defaults=defaults)
+    app.argv = ['default']
     app.setup()    
     app.run()

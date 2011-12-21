@@ -37,6 +37,7 @@ Feature Enhancements:
     * :issue:`77` - Added default signal handler for SIGINT/SIGTERM as well as
       the cement_signal_hook which is called when any catch_signals are 
       encountered.
+    * :issue:`84` - Ability to run all tests from utils/run_tests.sh
     
 Incompatible Changes:
 

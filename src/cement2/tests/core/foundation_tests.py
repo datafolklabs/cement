@@ -172,4 +172,10 @@ def test_cement_signal_handler():
         eq_(e.signum, signal.SIGTERM)
         eq_(e.frame, 5)
         raise
+
+def test_cement_without_signals():
+    app = _t.prep()
+    app.catch_signals = None
+    app.setup()
+    
     

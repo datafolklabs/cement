@@ -35,7 +35,7 @@ def daemonize():
     # passed... but only daemonize if it is.
     global CEMENT_DAEMON_ENV 
     global CEMENT_DAEMON_APP
-    
+        
     app = CEMENT_DAEMON_APP
     CEMENT_DAEMON_ENV = Environment(
         user_name=app.config.get('daemon', 'user'),

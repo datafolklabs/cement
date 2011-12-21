@@ -219,7 +219,6 @@ class CementBaseController(object):
                         self.app.argv.pop(0)
                         break
                         
-        
         self.app.args.description = self.help_text
         self.app.args.usage = self.usage_text
         self.app.args.formatter_class=argparse.RawDescriptionHelpFormatter

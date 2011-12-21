@@ -50,7 +50,7 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 htmlcov
-coverage_html
+coverage_html_report
 .tox
 
 # TextMate

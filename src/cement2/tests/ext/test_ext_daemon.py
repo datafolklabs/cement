@@ -96,6 +96,8 @@ def test_daemon():
     app.config.set('daemon', 'pid_file', tmpfile)
     
     try:
+        ### FIX ME: Can't daemonize, because now loses sight of it
+        app.daemonize()
         app.run()
     finally:
         ext_daemon.cement_on_close_hook(app)

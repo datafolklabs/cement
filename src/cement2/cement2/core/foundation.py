@@ -373,7 +373,7 @@ class CementApp(object):
             if h:
                 self.controller = h()
                 self.argv.pop(0)
-                
+
         # if no handler can be found, that's ok
         if self.controller:
             self.controller.setup(self)

@@ -4,9 +4,9 @@ import os
 import sys
 
 if sys.version_info[0] < 3:
-    from ConfigParser import RawConfigParser
+    from ConfigParser import RawConfigParser # pragma: no cover
 else:
-    from configparser import RawConfigParser
+    from configparser import RawConfigParser # pragma: no cover
 
 from cement2.core import backend, config
 
