@@ -66,7 +66,6 @@ class JsonOutputHandler(object):
         Returns: string (json)
         
         """
-        print("sdfsadfasdddss")
         Log.debug("rendering output as Json via %s" % self.__module__)
         sys.stdout = backend.SAVED_STDOUT
         sys.stderr = backend.SAVED_STDERR

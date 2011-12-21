@@ -132,6 +132,10 @@ class CementExtensionHandler(object):
                 'cement2.ext.ext_logging'.
                 
         """
+        # If its not a full module path then preppend our default path
+        if ext_module.find('.') == -1:
+            ext_module = 'cement2.ext.ext_%s' % ext_module
+            
         if ext_module in self.loaded_extensions:
             Log.debug("framework extension '%s' already loaded" % ext_module)
             return 

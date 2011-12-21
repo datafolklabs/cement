@@ -33,6 +33,9 @@ def cement_hook_three(*args, **kw):
     
 def nosetests_hook(*args, **kw):
     return 'kapla 4'
+
+def cement_hook_five(app, data):
+    return data
     
 def test_hooks_registered():
     hook.register(name='nosetests_hook', weight=99)(cement_hook_one)
@@ -68,8 +71,13 @@ def test_framework_hooks():
     hook.register(name='cement_post_run_hook')(cement_hook_one)
     hook.register(name='cement_on_close_hook')(cement_hook_one)
     hook.register(name='cement_signal_hook')(cement_hook_one)
+    hook.register(name='cement_pre_render_hook')(cement_hook_one)
+    hook.register(name='cement_pre_render_hook')(cement_hook_five)
+    hook.register(name='cement_post_render_hook')(cement_hook_one)
+    hook.register(name='cement_post_render_hook')(cement_hook_five)
     app.setup()
     app.run()
+    app.render(dict(foo='bar'))
     app.close()
     
     # this is where cement_signal_hook is run

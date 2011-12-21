@@ -201,8 +201,8 @@ Cement has a number of hooks that tie into the framework.
 cement_pre_setup_hook
 ^^^^^^^^^^^^^^^^^^^^^
         
-Run before CementApp.setup() is called.  The application object is
-passed as an argument.  
+Run first when CementApp.setup() is called.  The application object is
+passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
 
@@ -216,8 +216,8 @@ passed as an argument.
 cement_post_setup_hook
 ^^^^^^^^^^^^^^^^^^^^^^
         
-Run after CementApp.setup() is called.  The application object object is
-passed as an argument.
+Run last when CementApp.setup() is called.  The application object object is
+passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
 
@@ -233,8 +233,8 @@ NOTE: This hook deprecated the cement_add_args_hook in version 1.9.2.
 cement_pre_run_hook
 ^^^^^^^^^^^^^^^^^^^
         
-Run before CementApp.run() is called.  The application object object is
-passed as an argument.
+Run first when CementApp.run() is called.  The application object object is
+passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
 
@@ -251,8 +251,8 @@ Note: This hook deprecated the cement_validate_config_hook in version 1.9.2.
 cement_post_run_hook
 ^^^^^^^^^^^^^^^^^^^^
         
-Run after CementApp.run() is called.  The application object object is
-passed as an argument.  
+Run last when CementApp.run() is called.  The application object object is
+passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
 
@@ -263,11 +263,46 @@ passed as an argument.
         # Do something after application run() is called.
         return
 
+cement_pre_render_hook
+^^^^^^^^^^^^^^^^^^^^^^
+
+Run first when CementApp.render() is called.  The application object, and
+data dictionary are passed as arguments.  Must return either the original
+data dictionary, or a modified one.
+
+.. code-block:: python
+
+    from cement2.core import hook
+    
+    @hook.register(name='cement_pre_render_hook')
+    def my_pre_render_hook(app, data):
+        # Do something with data.
+        return data
+        
+Note: This does not affect anything that is 'printed' to console.
+
+cement_post_render_hook
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Run last when CementApp.render() is called.  The application object, and 
+rendered output text are passed as arguments.  Must return either the original
+output text, or a modified version.
+
+.. code-block:: python
+
+    from cement2.core import hook
+    
+    @hook.register(name='cement_post_render_hook')
+    def my_post_render_hook(app, output_text):
+        # Do something with output_text.
+        return output_text
+
 cement_on_close_hook
 ^^^^^^^^^^^^^^^^^^^^
 
 Run when app.close() is called.  This hook should be used by plugins and 
-extensions to do any 'cleanup' at the end of program execution.
+extensions to do any 'cleanup' at the end of program execution.  Nothing is
+expected in return.
 
 .. code-block:: python
 
@@ -283,7 +318,8 @@ cement_signal_hook
 
 Run when signal handling is enabled, and the defined signal handler callback
 is executed.  This hook should be used by the application, plugins, and
-extensions to perform any actions when a specific signal is caught.
+extensions to perform any actions when a specific signal is caught.  Nothing
+is expected in return.
 
 .. code-block:: python
 

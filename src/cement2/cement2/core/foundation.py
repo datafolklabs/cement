@@ -193,12 +193,26 @@ class CementApp(object):
                 handlers do not use templates).
                 
         """
+        for res in hook.run('cement_pre_render_hook', self, data):
+            if not type(res) is dict:
+                Log.debug("pre_render_hook did not return a dict().")
+            else:
+                data = res
+            
         if not self.output:
             Log.debug('render() called, but no output handler defined.')
-            return ''
+            out_text = ''
         else:
-            return self.output.render(data, template)
+            out_text = self.output.render(data, template)
             
+        for res in hook.run('cement_post_render_hook', self, out_text):
+            if not type(res) is str:
+                Log.debug('post_render_hook did not return a str()')
+            else:
+                out_text = str(res)
+        
+        return out_text
+        
     @property
     def pargs(self):
         """
@@ -453,6 +467,8 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     hook.define('cement_post_run_hook')
     hook.define('cement_on_close_hook')
     hook.define('cement_signal_hook')
+    hook.define('cement_pre_render_hook')
+    hook.define('cement_post_render_hook')
     
     # define and register handlers    
     handler.define(extension.IExtension)
