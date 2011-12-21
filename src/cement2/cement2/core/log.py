@@ -1,4 +1,7 @@
-"""Cement core log module."""
+"""
+Cement core log module.
+
+"""
 
 from cement2.core import exc, backend, interface
             

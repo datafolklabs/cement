@@ -201,8 +201,8 @@ Cement has a number of hooks that tie into the framework.
 cement_pre_setup_hook
 ^^^^^^^^^^^^^^^^^^^^^
         
-Run before CementApp.setup() is called.  The application object object is
-passed as an argument.
+Run before CementApp.setup() is called.  The application object is
+passed as an argument.  
 
 .. code-block:: python
 
@@ -261,10 +261,36 @@ passed as an argument.
     @hook.register(name='cement_post_run_hook')
     def my_post_run_hook(app):
         # Do something after application run() is called.
-        pass
+        return
 
 cement_on_close_hook
 ^^^^^^^^^^^^^^^^^^^^
 
 Run when app.close() is called.  This hook should be used by plugins and 
 extensions to do any 'cleanup' at the end of program execution.
+
+.. code-block:: python
+
+    from cement2.core import hook
+    
+    @hook.register(name='cement_on_close_hook')
+    def my_cleanup_hook(app):
+        # Do something when the application close() is called.
+        return
+        
+cement_signal_hook
+^^^^^^^^^^^^^^^^^^
+
+Run when signal handling is enabled, and the defined signal handler callback
+is executed.  This hook should be used by the application, plugins, and
+extensions to perform any actions when a specific signal is caught.
+
+.. code-block:: python
+
+    from cement2.core import hook
+    
+    @hook.register(name='cement_signal_hook')
+    def my_signal_hook(signum, frame):
+        # do something with signum/frame
+        return
+        

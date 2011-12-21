@@ -87,8 +87,7 @@ Cement2 Core Modules
 -----------------------
 
 .. automodule:: cement2.core.log
-    :members:    
-
+    :members:
 
 .. _cement2.core.output:
 
@@ -97,7 +96,6 @@ Cement2 Core Modules
 
 .. automodule:: cement2.core.output
     :members:    
-
 
 .. _cement2.core.plugin:
 

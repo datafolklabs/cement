@@ -20,8 +20,12 @@ def cement_signal_handler(signum, frame):
     
     """      
     Log.debug('Caught signal %s' % signum)  
-    raise exc.CementSignalError(signum, frame)
+    
+    for res in hook.run('cement_signal_hook', signum, frame):
+        pass
         
+    raise exc.CementSignalError(signum, frame)
+                 
 class CementApp(object):
     """
     The CementApp is the primary application class used and returned by
@@ -44,6 +48,10 @@ class CementApp(object):
             List of signals to catch, and raise exc.CementSignalError for.
             Default: [signals.SIGTERM, signals.SIGINT]
                 
+        signal_handler
+            Func to handle any caught signals. 
+            Default: cement.core.foundation.cement_signal_handler
+            
         config_handler
             An instantiated config handler object.
             
@@ -73,7 +81,8 @@ class CementApp(object):
         self.argv = kw.get('argv', sys.argv[1:])
         self.catch_signals = kw.get('catch_signals', 
                                     [signal.SIGTERM, signal.SIGINT])
-                                    
+        self.signal_handler = kw.get('signal_handler', cement_signal_handler)
+        
         # default all handlers to None
         self.ext = None
         self.config = None
@@ -267,9 +276,13 @@ class CementApp(object):
             self._setup_output_handler()
             
     def _setup_signals(self):
+        if not self.catch_signals:
+            Log.debug("catch_signals=None... not handling any signals")
+            return
+            
         for signum in self.catch_signals:
             Log.debug("adding signal handler for signal %s" % signum)
-            signal.signal(signum, cement_signal_handler)
+            signal.signal(signum, self.signal_handler)
     
     def _setup_extension_handler(self):
         Log.debug("setting up %s.extension handler" % self.name) 
@@ -382,15 +395,15 @@ class CementApp(object):
         
 def lay_cement(name, klass=CementApp, *args, **kw):
     """
-    Initialize the framework.  All *args, and **kwargs are passed to the 
+    Initialize the framework.  All args, and kwargs are passed to the 
     klass() object.
 
     Required Arguments:
     
         name
             The name of the application.
-            
-        
+
+
     Optional Keyword Arguments:
 
         klass
@@ -439,6 +452,7 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     hook.define('cement_pre_run_hook')
     hook.define('cement_post_run_hook')
     hook.define('cement_on_close_hook')
+    hook.define('cement_signal_hook')
     
     # define and register handlers    
     handler.define(extension.IExtension)

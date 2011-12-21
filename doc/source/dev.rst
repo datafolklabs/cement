@@ -18,4 +18,5 @@ them in your applications.
    dev/controllers
    dev/hooks
    dev/plugins
+   dev/signal_handling
    dev/cleanup
