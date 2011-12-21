@@ -370,7 +370,8 @@ class CementBaseController(object):
                 continue
                 
             # expose other controllers as commands also
-            if not hasattr(controller.Meta, 'stacked_on'):
+            if not hasattr(controller.Meta, 'stacked_on') \
+               or controller.Meta.stacked_on is None:
                 self._collect_from_non_stacked_controller(controller)                        
             elif controller.Meta.stacked_on == self.Meta.label:
                 self._collect_from_stacked_controller(controller)

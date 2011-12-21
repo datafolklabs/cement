@@ -20,3 +20,4 @@ them in your applications.
    dev/plugins
    dev/signal_handling
    dev/cleanup
+   dev/examples
