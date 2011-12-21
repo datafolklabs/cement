@@ -163,4 +163,13 @@ def test_none_member():
     except SystemExit:
         pass
     
+@raises(exc.CementSignalError)
+def test_cement_signal_handler():
+    import signal
+    try:
+        foundation.cement_signal_handler(signal.SIGTERM, 5)
+    except exc.CementSignalError as e:
+        eq_(e.signum, signal.SIGTERM)
+        eq_(e.frame, 5)
+        raise
     

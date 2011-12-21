@@ -55,3 +55,14 @@ def test_cement_interface_error():
         eq_(e.__str__(), "CementInterfaceError Test")
         eq_(e.__unicode__(), "CementInterfaceError Test")
         raise
+
+@raises(exc.CementSignalError)
+@with_setup(startup, teardown)
+def test_cement_signal_error():
+    try:
+        import signal
+        raise exc.CementSignalError(signal.SIGTERM, 5)
+    except exc.CementSignalError as e:
+        eq_(e.signum, signal.SIGTERM)
+        eq_(e.frame, 5)
+        raise

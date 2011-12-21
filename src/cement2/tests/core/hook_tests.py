@@ -66,6 +66,7 @@ def test_framework_hooks():
     hook.register(name='cement_pre_run_hook')(cement_hook_one)
     hook.register(name='cement_post_run_hook')(cement_hook_one)
     hook.register(name='cement_on_close_hook')(cement_hook_one)
+    hook.register(name='cement_signal_hook')(cement_hook_one)
     app.setup()
     app.run()
     app.close()
