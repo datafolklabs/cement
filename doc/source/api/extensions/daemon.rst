@@ -187,10 +187,15 @@ scenes:
 
 .. code-block:: text
 
-    2011-11-10 18:14:06,330 (DEBUG) cement2.lib.ext_daemon : setting process uid(501) and gid(20)
-    2011-11-10 18:14:06,330 (DEBUG) cement2.lib.ext_daemon : writing pid (37476) out to /var/run/myapp/myapp.pid
-    C2011-11-10 18:14:10,490 (DEBUG) cement2.ext.ext_daemon : Caught signal 2, shutting down clean...
-    2011-11-10 18:14:10,491 (DEBUG) cement2.core.hook : running hook 'cement_on_close_hook' (<function cement_on_close_hook at 0x1005e0500>) from cement2.ext.ext_daemon
+    2011-12-21 17:44:14,348 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_daemon' framework extension
+    2011-12-21 17:44:14,349 (DEBUG) cement2.core.hook : registering hook func 'cement_post_setup_hook' from cement2.ext.ext_daemon into hooks['cement_post_setup_hook']
+    2011-12-21 17:44:14,349 (DEBUG) cement2.core.hook : registering hook func 'cement_on_close_hook' from cement2.ext.ext_daemon into hooks['cement_on_close_hook']
+    2011-12-21 17:44:14,353 (DEBUG) cement2.core.hook : running hook 'cement_post_setup_hook' (<function cement_post_setup_hook at 0x1005bf938>) from cement2.ext.ext_daemon
+    2011-12-21 17:44:14,354 (DEBUG) cement2.lib.ext_daemon : setting process uid(501) and gid(20)
+    2011-12-21 17:44:14,355 (DEBUG) cement2.lib.ext_daemon : writing pid (42662) out to /Users/wdierkes/tmp/myapp.pid
+    2011-12-21 17:44:14,355 (DEBUG) cement2.lib.ext_daemon : attempting to daemonize the current process
+    2011-12-21 17:44:14,356 (DEBUG) cement2.lib.ext_daemon : successfully detached from first parent
+    2011-12-21 17:44:14,358 (DEBUG) cement2.lib.ext_daemon : successfully detached from second parent
 
 
 API Reference

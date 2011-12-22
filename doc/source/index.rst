@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Cement CLI Application Framework v2
-===================================
+Cement CLI Application Framework v2 Beta
+========================================
 
 Cement2 is an advanced CLI Application Framework for Python, and a complete
 rewrite of Cement version 0.x/1.x.  Its goal is to introduce a standard, and 
