@@ -19,7 +19,15 @@ is available online at:
 1.9.5 - development version (will be released as 1.9.6) 
 ------------------------------------------------------------------------------
 
-None
+Bug Fixes:
+
+    None
+    
+Feature Enhancements:
+
+    * :issue:`88` - Add cement2.ext.genshi extension, provides Genshi Text
+      Templating Launguage support.
+
 
 
 1.9.4 - Wed Dec 21, 2011

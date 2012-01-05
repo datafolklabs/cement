@@ -50,14 +50,23 @@ class GenshiOutputHandler(object):
                 The data dictionary to render.
 
             template
-                This option is completely ignored.
+                The file system path to the template file, *after* within the
+                template_module.  For example, if the template module were
+                'myapp.templates' (a.k.a. 'myapp/templates/__init__.py') then
+                and the full template file path were 
+                'myapp/templates/users/display.txt' then you would only pass
+                'users/display.txt'.
                 
         Returns: string
         
         """
         tmpl_module = self.config.get('genshi', 'template_module')
         Log.debug("genshi template module is '%s'" % tmpl_module)
-        Log.debug("rendering output using '%s' as a template." % template)
+        
+        if template is None:
+            raise exc.CementRuntimeError("Invalid template 'None'.")
+        
+        template = template.lstrip('/')
         
         # get the template content
         tmpl_content = pkgutil.get_data(tmpl_module, template)
@@ -66,10 +75,9 @@ class GenshiOutputHandler(object):
             raise exc.CementRuntimeError(
                 "Template file '%s' does not exist in module '%s'." % \
                 (template, tmpl_module))
-            res = ''
         else:
+            Log.debug("rendering output using '%s' as a template." % template)
             tmpl = NewTextTemplate(tmpl_content)
             res = tmpl.generate(**data_dict).render()
             return res
             
-        return res

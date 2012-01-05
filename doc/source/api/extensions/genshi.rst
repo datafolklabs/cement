@@ -22,8 +22,9 @@ The configurations can be passed as defaults:
     from cement2.core import foundation, backend
     
     defaults = backend.defaults('myapp')
-    defaults['genshi'] = dict()
-    defaults['genshi']['template_module'] = 'myapp.cli.templates'
+    defaults['genshi'] = dict(
+        template_module='myapp.cli.templates'
+        )
     
     app = foundation.lay_cement('myapp', defaults=defaults)
     
@@ -40,7 +41,61 @@ following:
 Example Usage
 -------------
 
-FIX ME
+The following is an example application within a python package.
+
+*myapp/appmain.py*
+
+.. code-block:: python
+
+    from cement2.core import foundation, controller, handler, backend
+
+    # create the application
+    defaults = backend.defaults('myapp')
+    defaults['base']['extensions'].append('genshi')
+    defaults['base']['output_handler'] = 'genshi'
+    app = foundation.lay_cement('myapp', defaults=defaults)
+
+    # define application controllers
+    class MyAppBaseController(controller.CementBaseController):
+        class Meta:
+            label = 'base'
+            interface = controller.IController
+            description = "My Application Does Amazing Things"
+            defaults = dict()
+            arguments = []
+
+        @controller.expose(help="base controller default command", hide=True)
+        def default(self):
+            data = dict(
+                controller='base',
+                command='default'
+                )
+        
+            print self.render(data, 'default.txt')
+      
+    # register the controllers
+    handler.register(MyAppBaseController)        
+
+    # setup the application
+    app.setup()
+
+    try:
+        app.run()
+    finally:
+        app.close()
+    
+
+*myapp/templates/default.txt*
+
+.. code-block:: text
+
+    Inside the ${controller}.${command} function!
+    
+
+And the output:
+
+>>> from myapp import appmain
+Inside the base.default function!
 
 
 Genshi Syntax Basics
