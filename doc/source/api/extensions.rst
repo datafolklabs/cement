@@ -10,6 +10,7 @@ Cement2 Extensions
    extensions/configparser
    extensions/configobj
    extensions/daemon
+   extensions/genshi
    extensions/json
    extensions/logging
    extensions/nulloutput
