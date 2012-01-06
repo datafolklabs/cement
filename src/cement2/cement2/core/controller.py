@@ -180,6 +180,7 @@ class CementBaseController(object):
         stacked_on = None # controller name to merge commands/options into
         hide = False # whether to hide controller completely
         
+    ### FIX ME: What is this used for???
     ignored = ['visible', 'hidden', 'exposed']
           
     def __init__(self):
@@ -371,7 +372,9 @@ class CementBaseController(object):
             # expose other controllers as commands also
             if not hasattr(controller.Meta, 'stacked_on') \
                or controller.Meta.stacked_on is None:
-                self._collect_from_non_stacked_controller(controller)                        
+                # only show non-stacked controllers under base
+                if self.Meta.label == 'base':
+                    self._collect_from_non_stacked_controller(controller)                        
             elif controller.Meta.stacked_on == self.Meta.label:
                 self._collect_from_stacked_controller(controller)
 

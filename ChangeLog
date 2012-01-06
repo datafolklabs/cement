@@ -21,7 +21,7 @@ is available online at:
 
 Bug Fixes:
 
-    None
+    * :issue:`89` - Secondary controllers display under other controllers
     
 Feature Enhancements:
 
