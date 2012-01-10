@@ -247,6 +247,10 @@ class LoggingLogHandler(object):
         
         """
         self.file = os.path.abspath(os.path.expanduser(self.file))
+        log_dir = os.path.dirname(self.file)
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+            
         if self.rotate:
             from logging.handlers import RotatingFileHandler
             file_handler = RotatingFileHandler(
