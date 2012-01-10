@@ -22,6 +22,7 @@ is available online at:
 Bug Fixes:
 
     * :issue:`89` - Secondary controllers display under other controllers
+    * :issue:`90` - Logging to file doesn't expand '~'
     
 Feature Enhancements:
 

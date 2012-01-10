@@ -1,5 +1,6 @@
 """Logging Framework Extension Library."""
 
+import os
 import logging
 from cement2.core import exc, util, log
 
@@ -245,6 +246,7 @@ class LoggingLogHandler(object):
         Add a file log handler.
         
         """
+        self.file = os.path.abspath(os.path.expanduser(self.file))
         if self.rotate:
             from logging.handlers import RotatingFileHandler
             file_handler = RotatingFileHandler(
