@@ -3,7 +3,7 @@ Cement core log module.
 
 """
 
-from cement2.core import exc, backend, interface
+from cement2.core import exc, backend, interface, meta
             
 def log_validator(klass, obj):
     """Validates an handler implementation against the ILog interface."""
@@ -140,3 +140,7 @@ class ILog(interface.Interface):
                 The message to log.
         
         """
+
+class CementLogHandler(meta.MetaMixin):
+    def __init__(self, *args, **kw):
+        super(CementLogHandler, self).__init__(*args, **kw)

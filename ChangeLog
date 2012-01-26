@@ -29,9 +29,13 @@ Feature Enhancements:
 
     * :issue:`88` - Add cement2.ext.genshi extension, provides Genshi Text
       Templating Launguage support.
-    * :Issue:`93` - Add epilog support for CementBaseController.
+    * :issue:`93` - Add epilog support for CementBaseController.
 
+Refactoring:
 
+    * :issue:`87` - Refactor Meta handling
+    
+    
 1.9.4 - Wed Dec 21, 2011
 ------------------------------------------------------------------------------
 

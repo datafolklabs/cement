@@ -1,6 +1,6 @@
 """Cement core output module."""
 
-from cement2.core import backend, exc, interface
+from cement2.core import backend, exc, interface, meta
 
 Log = backend.minimal_logger(__name__)
 
@@ -78,4 +78,9 @@ class IOutput(interface.Interface):
                 
         Returns: string or unicode string or None
         
-        """        
+        """    
+
+class CementOutputHandler(meta.MetaMixin):
+    def __init__(self, *args, **kw):
+        super(CementOutputHandler, self).__init__(*args, **kw)
+    

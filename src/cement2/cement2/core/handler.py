@@ -98,13 +98,6 @@ def define(interface):
         handler.define(IDatabaseHandler)
     
     """
-    
-    ### FIX ME: Remove before Cement2 stable release
-    if hasattr(interface, 'imeta'):
-        interface.IMeta = interface.imeta
-        print("CementDeprecationWarning -> Interface.imeta is deprecated.  Use 'IMeta' instead.")
-        
-        
     if not hasattr(interface, 'IMeta'):
         raise exc.CementInterfaceError("Invalid %s, " % interface + \
                                        "missing 'IMeta' class.")  
@@ -149,38 +142,40 @@ def register(obj):
         handler.register(MyDatabaseHandler)
     
     """
-    
-    ### FIX ME: Remove before Cement2 stable release
-    if hasattr(obj, 'meta'):
-        obj.Meta = obj.meta
-        print("CementDeprecationWarning -> Handler.meta is deprecated.  Use 'Meta' instead.")
-        
     # This is redundant with the validator, but if we don't check for them
     # then we'll get an uncontrolled exception.
-    if not hasattr(obj, 'Meta'):
-        raise exc.CementInterfaceError("Invalid handler %s, " % obj + \
-                                       "missing 'Meta' class.")  
-    if not hasattr(obj.Meta, 'label'):
-        raise exc.CementInterfaceError("Invalid handler %s, " % obj + \
-                                       "missing 'Meta.label'.")
-    if not hasattr(obj.Meta, 'interface'):
-        raise exc.CementInterfaceError("Invalid handler %s, " % obj + \
-                                       "missing 'Meta.interface'.")
-
-    # translate dashes to underscores
-    obj.Meta.label = re.sub('-', '_', obj.Meta.label)
+    #if not hasattr(obj, 'Meta'):
+    #    raise exc.CementInterfaceError("Invalid handler %s, " % obj + \
+    #                                   "missing 'Meta' class.")  
     
-    handler_type = obj.Meta.interface.IMeta.label
+    orig_obj = obj
+    
+    # translate dashes to underscores
+    orig_obj.Meta.label = re.sub('-', '_', obj.Meta.label)
+    
+    # for checks
+    obj = orig_obj()
+    
+    if not hasattr(obj._meta, 'label'):
+        raise exc.CementInterfaceError("Invalid handler %s, " % orig_obj + \
+                                       "missing '_meta.label'.")
+    if not hasattr(obj._meta, 'interface'):
+        raise exc.CementInterfaceError("Invalid handler %s, " % orig_obj + \
+                                       "missing '_meta.interface'.")
+
+    
+    
+    handler_type = obj._meta.interface.IMeta.label
     Log.debug("registering handler '%s' into handlers['%s']['%s']" % \
-             (obj, handler_type, obj.Meta.label))
+             (orig_obj, handler_type, obj._meta.label))
              
     if handler_type not in backend.handlers:
         raise exc.CementRuntimeError("Handler type '%s' doesn't exist." % \
                                      handler_type)                     
-    if obj.Meta.label in backend.handlers[handler_type] and \
-        backend.handlers[handler_type][obj.Meta.label] != obj:
+    if obj._meta.label in backend.handlers[handler_type] and \
+        backend.handlers[handler_type][obj._meta.label] != obj:
         raise exc.CementRuntimeError("handlers['%s']['%s'] already exists" % \
-                                (handler_type, obj.Meta.label))
+                                    (handler_type, obj._meta.label))
 
     interface = backend.handlers[handler_type]['__interface__']
     if hasattr(interface.IMeta, 'validator'):
@@ -189,7 +184,7 @@ def register(obj):
         Log.debug("Interface '%s' does not have a validator() function!" % \
                  interface)
         
-    backend.handlers[handler_type][obj.Meta.label] = obj
+    backend.handlers[handler_type][obj.Meta.label] = orig_obj
    
 def enabled(handler_type, handler_label):
     """

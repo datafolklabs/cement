@@ -4,7 +4,7 @@ from cement2.core import backend, output
 
 Log = backend.minimal_logger(__name__)
 
-class NullOutputHandler(object):
+class NullOutputHandler(output.CementOutputHandler):
     """
     This class is an internal implementation of the 
     :ref:`IOutput <cement2.core.output>` interface. It does not take any 

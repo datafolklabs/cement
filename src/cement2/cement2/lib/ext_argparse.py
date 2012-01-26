@@ -8,7 +8,7 @@ from cement2.core import backend, arg
 
 Log = backend.minimal_logger(__name__)
     
-class ArgParseArgumentHandler(ArgumentParser):
+class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
     """
     This class implements the :ref:`IArgument <cement2.core.arg>` 
     interface, and sub-classes from `argparse.ArgumentParser <http://docs.python.org/dev/library/argparse.html>`_.
@@ -25,7 +25,7 @@ class ArgParseArgumentHandler(ArgumentParser):
         label = 'argparse'
     
     def __init__(self, *args, **kw):
-        ArgumentParser.__init__(self, *args, **kw)
+        super(ArgParseArgumentHandler, self).__init__(*args, **kw)
         self.config = None
         
     def setup(self, config_obj):

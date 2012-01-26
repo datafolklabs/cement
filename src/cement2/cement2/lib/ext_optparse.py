@@ -5,7 +5,7 @@ from cement2.core import backend, arg
 
 Log = backend.minimal_logger(__name__)
 
-class OptParseArgumentHandler(OptionParser):
+class OptParseArgumentHandler(arg.CementArgumentHandler, OptionParser):
     """
     This class implements the :ref:`IArgument <cement2.core.arg>` 
     interface, and sub-classes from `optparse.OptionParser <http://docs.python.org/library/optparse.html>`_.
@@ -22,6 +22,7 @@ class OptParseArgumentHandler(OptionParser):
     
     def __init__(self, *args, **kw):     
         OptionParser.__init__(self, *args, **kw)
+        arg.CementArgumentHandler.__init__(self, *args, **kw)
         self.config = None
         
     def setup(self, config_obj):

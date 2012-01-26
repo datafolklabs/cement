@@ -6,7 +6,7 @@ from cement2.core import output, backend, hook
 
 Log = backend.minimal_logger(__name__)
 
-class JsonOutputHandler(object):
+class JsonOutputHandler(output.CementOutputHandler):
     """
     This class implements the :ref:`IOutput <cement2.core.output>` 
     interface.  It provides JSON output from a data dictionary and uses 
@@ -22,7 +22,8 @@ class JsonOutputHandler(object):
         interface = output.IOutput
         label = 'json'
         
-    def __init__(self):
+    def __init__(self, *args, **kw):
+        super(JsonOutputHandler, self).__init__(*args, **kw)
         self.config = None
         
     def setup(self, config_obj):

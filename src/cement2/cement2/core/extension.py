@@ -1,6 +1,6 @@
 """Cement core extensions module."""
 
-from cement2.core import backend, exc, interface, handler
+from cement2.core import backend, exc, interface, handler, meta
 
 Log = backend.minimal_logger(__name__)
     
@@ -91,7 +91,7 @@ class IExtension(interface.Interface):
         
         """
 
-class CementExtensionHandler(object):
+class CementExtensionHandler(meta.MetaMixin):
     loaded_extensions = []
     
     class Meta:
@@ -104,6 +104,7 @@ class CementExtensionHandler(object):
         loading framework extensions.
     
         """
+        super(CementExtensionHandler, self).__init__()
         self.defaults = {}
         self.loaded_extensions = []
         

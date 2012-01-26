@@ -7,7 +7,7 @@ from cement2.core import output, backend, exc
 
 Log = backend.minimal_logger(__name__)
     
-class GenshiOutputHandler(object):
+class GenshiOutputHandler(output.CementOutputHandler):
     """
     This class implements the :ref:`IOutput <cement2.core.output>` 
     interface.  It provides text output from template and uses the 
@@ -18,7 +18,8 @@ class GenshiOutputHandler(object):
         interface = output.IOutput
         label = 'genshi'
         
-    def __init__(self):
+    def __init__(self, *args, **kw):
+        super(GenshiOutputHandler, self).__init__(*args, **kw)
         self.config = None
         
     def setup(self, config_obj):

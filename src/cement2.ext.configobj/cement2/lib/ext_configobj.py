@@ -7,7 +7,7 @@ from cement2.core import config, backend
 
 Log = backend.minimal_logger(__name__)
 
-class ConfigObjConfigHandler(ConfigObj):
+class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
     """
     This class implements the :ref:`IConfig <cement2.core.config>` 
     interface, and sub-classes from `configobj.ConfigObj <http://www.voidspace.org.uk/python/configobj.html>`_,

@@ -8,7 +8,8 @@ from cement2.core import backend, handler, plugin, util, exc
 
 Log = backend.minimal_logger(__name__)
 
-class CementPluginHandler(object):
+### FIX ME: This is a redundant name... ?
+class CementPluginHandler(plugin.CementPluginHandler):
     """
     This class is an internal implementation of the 
     :ref:`IPlugin <cement2.core.plugin>` interface. It does not take any 
@@ -26,9 +27,10 @@ class CementPluginHandler(object):
         label = 'cement'
     
     def __init__(self):
-       self.loaded_plugins = []
-       self.enabled_plugins = []
-       self.disabled_plugins = []
+        super(CementPluginHandler, self).__init__()
+        self.loaded_plugins = []
+        self.enabled_plugins = []
+        self.disabled_plugins = []
      
     def setup(self, config_obj):
         """

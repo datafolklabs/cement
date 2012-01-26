@@ -6,7 +6,7 @@ from cement2.core import output, backend
 
 Log = backend.minimal_logger(__name__)
 
-class YamlOutputHandler(object):
+class YamlOutputHandler(output.CementOutputHandler):
     """
     This class implements the :ref:`IOutput <cement2.core.output>` 
     interface.  It provides YAML output from a data dictionary and uses 
@@ -22,7 +22,8 @@ class YamlOutputHandler(object):
         interface = output.IOutput
         label = 'yaml'
         
-    def __init__(self):
+    def __init__(self, *args, **kw):
+        super(YamlOutputHandler, self).__init__(*args, **kw)
         self.config = None
         
     def setup(self, config_obj):

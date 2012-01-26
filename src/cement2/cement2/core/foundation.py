@@ -95,29 +95,29 @@ class CementApp(object):
         # initialize handlers if passed in and set config to reflect
         if kw.get('config_handler', None):
             self.config = kw['config_handler']
-            self.config.set('base', 'config_handler', self.config.Meta.label)
+            self.config.set('base', 'config_handler', self.config._meta.label)
         
         if kw.get('extension_handler', None):
             self.ext = kw['extension_handler']
             self.config.set('base', 'extension_handler', 
-                            self.ext.Meta.label)
+                            self.ext._meta.label)
                             
         if kw.get('log_handler', None):
             self.log = kw['log_handler']
-            self.config.set('base', 'log_handler', self.log.Meta.label)
+            self.config.set('base', 'log_handler', self.log._meta.label)
                                     
         if kw.get('plugin_handler', None):
             self.plugin = kw['plugin_handler']
-            self.config.set('base', 'plugin_handler', self.plugin.Meta.label)
+            self.config.set('base', 'plugin_handler', self.plugin._meta.label)
         
         if kw.get('arg_handler', None):
             self.args = kw['arg_handler']
-            self.config.set('base', 'arg_handler', self.args.Meta.label)
+            self.config.set('base', 'arg_handler', self.args._meta.label)
             
         if kw.get('output_handler', None):
             self.output = kw['output_handler']
             self.config.set('base', 'output_handler', 
-                            self.output.Meta.label)
+                            self.output._meta.label)
 
     def setup(self):
         """
@@ -242,25 +242,25 @@ class CementApp(object):
                 An instantiated handler object.
                 
         """
-        if not hasattr(handler_obj.Meta, 'defaults'):
+        if not hasattr(handler_obj._meta, 'defaults'):
             Log.debug("no config defaults from '%s'" % handler_obj)
             return 
         
         Log.debug("setting config defaults from '%s'" % handler_obj)
         
         dict_obj = dict()
-        handler_type = handler_obj.Meta.interface.IMeta.label
+        handler_type = handler_obj._meta.interface.IMeta.label
         
         if handler_type == 'controller':
             # If its stacked, then add the defaults to the parent config
-            if getattr(handler_obj.Meta, 'stacked_on', None):
-                key = handler_obj.Meta.stacked_on
+            if getattr(handler_obj._meta, 'stacked_on', None):
+                key = handler_obj._meta.stacked_on
             else:
-                key = handler_obj.Meta.label
+                key = handler_obj._meta.label
         else:
             key = handler_type
             
-        dict_obj[key] = handler_obj.Meta.defaults
+        dict_obj[key] = handler_obj._meta.defaults
         self.config.merge(dict_obj, override=False)
             
     def _parse_args(self):
@@ -284,7 +284,7 @@ class CementApp(object):
         # we need to set it up again.
         if self.output:
             if self.config.get('base', 'output_handler') \
-                != self.output.Meta.label:
+                != self.output._meta.label:
                 self.output = None
                 self._setup_output_handler()
         else:
@@ -367,7 +367,7 @@ class CementApp(object):
 
         # set handler defaults for all controllers
         for contr in handler.list('controller'):
-            self._set_handler_defaults(contr)
+            self._set_handler_defaults(contr())
             
         # Use self.controller first(it was passed in)
         if not self.controller:

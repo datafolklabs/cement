@@ -12,7 +12,7 @@ from cement2.core import backend, config
 
 Log = backend.minimal_logger(__name__)
 
-class ConfigParserConfigHandler(RawConfigParser):
+class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
     """
     This class is an implementation of the :ref:`IConfig <cement2.core.config>` 
     interface.  It handles configuration file parsing and the like by 
@@ -31,6 +31,7 @@ class ConfigParserConfigHandler(RawConfigParser):
         # ConfigParser is not a new style object, so you can't call super()
         # super(ConfigParserConfigHandler, self).__init__(*args, **kw)
         RawConfigParser.__init__(self, *args, **kw)
+        super(ConfigParserConfigHandler, self).__init__(*args, **kw)
         
     def setup(self, defaults):
         """
@@ -151,3 +152,19 @@ class ConfigParserConfigHandler(RawConfigParser):
         
         """
         return self.sections()
+    
+    def get_section_dict(self, section):
+        """
+        Return a dict representation of a section.
+        
+        Required Arguments:
+        
+            section:
+                The section of the configuration.  I.e. [block_section]
+                
+        """
+        dict_obj = dict()
+        for key in self.keys(section):
+            dict_obj[key] = self.get(section, key)
+        return dict_obj
+        

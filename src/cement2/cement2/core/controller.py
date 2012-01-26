@@ -3,7 +3,7 @@
 import re
 import textwrap
 import argparse
-from cement2.core import backend, exc, interface, handler
+from cement2.core import backend, exc, interface, handler, meta
 
 Log = backend.minimal_logger(__name__)
 
@@ -16,20 +16,20 @@ def controller_validator(klass, obj):
         'setup',
         'dispatch',
         ]
-    Meta = [
+    meta = [
         'label',
         'interface',
         'description',
         'defaults',
         'arguments',
         ]
-    interface.validate(IController, obj, members, Meta=Meta)
+    interface.validate(IController, obj, members, meta=meta)
     
     # also check Meta.arguments values
     errmsg = "Controller arguments must be a list of tuples.  I.e. " + \
              "[ (['-f', '--foo'], dict(action='store')), ]"
     try:
-        for _args,_kwargs in obj.Meta.arguments:
+        for _args,_kwargs in obj._meta.arguments:
             if not type(_args) is list:
                 raise exc.CementInterfaceError(errmsg)
             if not type(_kwargs) is dict:
@@ -145,7 +145,7 @@ class expose(object):
         self.func.aliases = self.aliases
         return self.func
 
-class CementBaseController(object):
+class CementBaseController(meta.MetaMixin):
     """
     This is an implementation of the IControllerHandler interface, but as a
     base class that application controllers need to subclass from.  
@@ -210,7 +210,9 @@ class CementBaseController(object):
     ### FIX ME: What is this used for???
     ignored = ['visible', 'hidden', 'exposed']
           
-    def __init__(self):
+    def __init__(self, *args, **kw):
+        super(CementBaseController, self).__init__(*args, **kw)
+        
         self.app = None
         self.command = 'default'
         self.config = None

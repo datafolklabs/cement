@@ -3,7 +3,7 @@ Cement core argument module.
 
 """
 
-from cement2.core import backend, exc, interface
+from cement2.core import backend, exc, interface, meta
 
 Log = backend.minimal_logger(__name__)
 
@@ -113,3 +113,8 @@ class IArgument(interface.Interface):
         Returns: Callable
         
         """
+
+class CementArgumentHandler(meta.MetaMixin):
+    def __init__(self, *args, **kw):
+        super(CementArgumentHandler, self).__init__(*args, **kw)
+        
