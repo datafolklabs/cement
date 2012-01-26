@@ -173,6 +173,7 @@ class CementApp(object):
         plugins/extensions/etc to 'cleanup' at the end of program execution.
         
         """
+        Log.debug("closing the application")
         for res in hook.run('cement_on_close_hook', self):
             pass
             

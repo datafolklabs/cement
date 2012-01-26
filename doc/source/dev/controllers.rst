@@ -40,7 +40,8 @@ handle command dispatch and rapid development.
             interface = controller.IController
             label = 'base'
             description = "My Application does amazing things!"
-
+            epilog = "This is the text at the bottom of --help."
+            
             defaults = dict(
                 foo='bar',
                 some_other_option='my default value',
@@ -71,11 +72,12 @@ handle command dispatch and rapid development.
     # setup the application
     app.setup()
 
-    # run the application
-    app.run()
-
-    # close the application
-    app.close()
+    try:
+        # run the application
+        app.run()
+    finally:
+        # close the application
+        app.close()
     
 As you can see, we're able to build out the core functionality of our app
 via a controller class.  Lets see what this looks like:
@@ -102,7 +104,9 @@ via a controller class.  Lets see what this looks like:
       --foo FOO   the notorious foo option
       -C          the big C option
       
-      
+    This is the text at the bottom of --help.
+    
+    
     $ python example2.py 
     INFO: Inside base.default function.
     
@@ -213,11 +217,12 @@ and the other is not.  Pay attention to how this looks at the command line:
     # setup the application
     app.setup()
 
-    # run the application
-    app.run()
-    
-    # close the application
-    app.close()
+    try:
+        # run the application
+        app.run()
+    finally:
+        # close the application
+        app.close()
 
 From our 'base' namespace this looks like:
 

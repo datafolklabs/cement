@@ -1,5 +1,6 @@
 """Tests for cement2.ext.ext_logging."""
 
+import os
 import logging
 from tempfile import mkstemp
 from nose.tools import with_setup, ok_, eq_, raises
@@ -44,4 +45,15 @@ def test_rotate():
     han = handler.get('log', 'logging')
     Log = han(rotate=True, file=mkstemp()[1])
     Log.setup(app.config)
-    
+
+def test_missing_log_dir():
+    _, tmp_path = mkstemp()
+    if os.path.exists(tmp_path):
+        os.remove(tmp_path)
+        
+    defaults = backend.defaults('myapp')
+    defaults['log'] = dict()
+    defaults['log']['file'] = os.path.join(tmp_path, 'myapp.log')
+    app = _t.prep('myapp', defaults=defaults)
+    app.setup()
+        

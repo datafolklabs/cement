@@ -122,7 +122,7 @@ class expose(object):
                     description = 'MyApp is awesome'
                     defaults = dict()
                     arguments = []
-                  
+                    
                 @controller.expose(hide=True, aliases=['run'])
                 def default(self):
                     print("In MyAppBaseController.default()")
@@ -168,7 +168,33 @@ class CementBaseController(object):
                 description = 'MyApp is awesome'
                 defaults = dict()
                 arguments = []
+                epilog = "This is the text at the bottom of --help."
             ...
+        
+    Supported Meta Data:
+    
+        interface
+            The interface that this controller implements (IController).
+            
+        label
+            The label of the controller.  Will be used as the sub-command
+            name for 'stacked' controllers.
+            
+        description
+            The description showed at the top of '--help'.
+            
+        defaults
+            Configuration defaults (type: dict) that are merged into 
+            config->'controller' where controller is the label defined above.
+            
+        arguments
+            Arguments to pass to the argument_handler.  The format is a list
+            of tuples whos items are a ( list, dict ).  Meaning:
+            
+                [ ( ['-f', '--foo'], dict(dest='foo', help='foo option') ), ]
+
+        epilog
+            The text that is displayed at the bottom when '--help' is passed.
             
     """
     class Meta:
@@ -179,6 +205,7 @@ class CementBaseController(object):
         arguments = [] # list of tuple (*args, *kwargs)
         stacked_on = None # controller name to merge commands/options into
         hide = False # whether to hide controller completely
+        epilog = None
         
     ### FIX ME: What is this used for???
     ignored = ['visible', 'hidden', 'exposed']
@@ -204,6 +231,10 @@ class CementBaseController(object):
         self._collect()
              
     def _parse_args(self):
+        """
+        Parse command line arguments and determine a command to dispatch.
+        
+        """
         # chop off a command argument if it matches an exposed command
         if len(self.app.argv) > 0 and not self.app.argv[0].startswith('-'):
             
@@ -269,13 +300,20 @@ class CementBaseController(object):
             self.app.args.add_argument(*_args, **_kwargs)
         
     def _collect_from_self(self):
+        """
+        Collect arguments from this controller.
+        """
         # collect our Meta arguments
-        Log.debug('collecting arguments from %s controller' % self.Meta.label)
         for _args,_kwargs in self.Meta.arguments:
             self.arguments.append((_args, _kwargs))
-            
+           
+        # epilog only good for non-stacked controllers
+        if hasattr(self.Meta, 'epilog'):
+            if  not hasattr(self.Meta, 'stacked_on') or \
+                not self.Meta.stacked_on:
+                self.app.args.epilog = self.Meta.epilog
+             
         # collect exposed commands from ourself
-        Log.debug('collecting commands from %s controller' % self.Meta.label)
         for member in dir(self):
             if member in self.ignored or member.startswith('_'):
                 continue
@@ -305,9 +343,16 @@ class CementBaseController(object):
                         self.visible[func.label] = func_dict
                         
     def _collect_from_non_stacked_controller(self, controller):
+        """
+        Collect arguments from non-stacked controllers.
+        
+        Required Arguments:
+        
+            controller
+                The controller to collect arguments from.
+                
+        """
         Log.debug('exposing %s controller' % controller.Meta.label)
-        if getattr(controller.Meta, 'label', None) == 'base':
-            return
                 
         func_dict = dict(
             controller=controller.Meta.label,
@@ -315,36 +360,36 @@ class CementBaseController(object):
             help=controller.Meta.description,
             aliases=[],
             hide=False,
-            is_namespace=True # how to show this is a controller
             )
         # expose the controller label as a sub command
         self.exposed[controller.Meta.label] = func_dict
         if not getattr(controller.Meta, 'hide', None):
             self.visible[controller.Meta.label] = func_dict
                             
-    def _collect_from_stacked_controller(self, controller):                
+    def _collect_from_stacked_controller(self, controller):     
+        """
+        Collect arguments from stacked controllers.
+        
+        Required Arguments:
+        
+            controller
+                The controller to collect arguments from.
+                
+        """           
         contr = controller()
         contr.setup(self.app)
         contr._collect()
         
         # add stacked arguments into ours
-        Log.debug('collecting arguments from %s controller (stacked)' % \
-                  controller.Meta.label)
         for _args,_kwargs in contr.arguments:
             self.arguments.append((_args, _kwargs))
             
-        # add stacked commands into ours
-        Log.debug('collecting commands from %s controller (stacked)' % \
-                  controller.Meta.label)
-                  
+        # add stacked commands into ours              
 
         # determine hidden vs. visible commands
         func_dicts = contr.exposed
         for label in func_dicts:
-            # if this is a controller namespace, continue
-            if 'is_namespace' in func_dicts[label].keys():
-                continue
-            elif label in self.exposed:  
+            if label in self.exposed:  
                 if label == 'default':
                     Log.debug(
                         "ignoring duplicate command '%s' " % label + \
@@ -365,6 +410,10 @@ class CementBaseController(object):
             self.exposed[label] = func_dicts[label]
 
     def _collect_from_controllers(self):
+        """
+        Collect arguments from all controllers.
+        
+        """
         for controller in handler.list('controller'):
             if controller.Meta.label == self.Meta.label:
                 continue
@@ -383,6 +432,10 @@ class CementBaseController(object):
         Collects all commands and arguments from this controller, and other
         availble controllers.
         """
+        
+        Log.debug("collecting arguments and commands from '%s' controller" % \
+                  self)
+                  
         self.visible = {}
         self.hidden = {}
         self.exposed = {}
@@ -407,6 +460,10 @@ class CementBaseController(object):
                         
     @property
     def usage_text(self):
+        """
+        Returns the usage text displayed when '--help' is passed.
+        
+        """
         if self.Meta.label == 'base':
             txt = "%s <CMD> -opt1 --opt2=VAL [arg1] [arg2] ..." % \
                 self.app.args.prog
@@ -417,6 +474,10 @@ class CementBaseController(object):
         
     @property
     def help_text(self):
+        """
+        Returns the help text displayed when '--help' is passed.
+        
+        """
         cmd_txt = ''
         
         # hack it up to keep commands in alphabetical order

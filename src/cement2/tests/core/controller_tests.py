@@ -90,6 +90,19 @@ class TestStackedController(controller.CementBaseController):
     def my_stacked_command(self):
         pass
 
+class DoubleStackedController(controller.CementBaseController):
+    class Meta:
+        interface = controller.IController
+        label = 'double_stacked'
+        description = 'Double Stacked Controller'
+        defaults = dict()
+        arguments = []
+        stacked_on = 'test_stacked'
+    
+    @controller.expose()
+    def double_stacked_command(self):
+        pass
+        
 class TestSecondaryController(controller.CementBaseController):
     class Meta:
         interface = controller.IController
@@ -220,6 +233,7 @@ def test_stacked_controller():
     app.argv = ['my-command']
     handler.register(TestBaseController)
     handler.register(TestStackedController)
+    handler.register(DoubleStackedController)
     app.controller = TestBaseController()
     app.setup()
     app.run()
