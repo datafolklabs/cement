@@ -1,11 +1,12 @@
 """Tests for cement.core.exc."""
 
-import sys
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import exc
-    
+from cement2 import test_helper as _t
+_t.prep()
+
 def startup():
     pass
 
@@ -20,7 +21,6 @@ def test_cement_config_error():
     except exc.CementConfigError as e:
         eq_(e.msg, "CementConfigError Test")
         eq_(e.__str__(), "CementConfigError Test")
-        eq_(e.__unicode__(), "CementConfigError Test")
         raise
         
 @raises(exc.CementRuntimeError)
@@ -31,7 +31,6 @@ def test_cement_runtime_error():
     except exc.CementRuntimeError as e:
         eq_(e.msg, "CementRuntimeError Test")
         eq_(e.__str__(), "CementRuntimeError Test")
-        eq_(e.__unicode__(), "CementRuntimeError Test")
         raise
         
 @raises(exc.CementArgumentError)
@@ -42,7 +41,6 @@ def test_cement_argument_error():
     except exc.CementArgumentError as e:
         eq_(e.msg, "CementArgumentError Test")
         eq_(e.__str__(), "CementArgumentError Test")
-        eq_(e.__unicode__(), "CementArgumentError Test")
         raise
 
 @raises(exc.CementInterfaceError)
@@ -53,7 +51,6 @@ def test_cement_interface_error():
     except exc.CementInterfaceError as e:
         eq_(e.msg, "CementInterfaceError Test")
         eq_(e.__str__(), "CementInterfaceError Test")
-        eq_(e.__unicode__(), "CementInterfaceError Test")
         raise
 
 @raises(exc.CementSignalError)

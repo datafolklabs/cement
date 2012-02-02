@@ -1,5 +1,6 @@
 """Tests for cement2.ext.ext_genshi."""
 
+import sys
 import random
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
@@ -7,6 +8,9 @@ from nose import SkipTest
 from cement2.core import exc, foundation, handler, backend, controller
 from cement2 import test_helper as _t
 
+if sys.version_info[0] >= 3:
+    raise SkipTest('Genshi does not support Python 3') # pragma: no cover
+    
 # create the application
 defaults = backend.defaults('myapp')
 defaults['base']['extensions'].append('genshi')

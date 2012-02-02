@@ -1,8 +1,7 @@
 """ConfigParser Framework Extension Library."""
-
+        
 import os
 import sys
-
 if sys.version_info[0] < 3:
     from ConfigParser import RawConfigParser # pragma: no cover
 else:

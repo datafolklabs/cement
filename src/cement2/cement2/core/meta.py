@@ -11,8 +11,8 @@ class Meta(object):
         self._merge(kwargs)
 
     def _merge(self, dict_obj):
-        for key, value in dict_obj.iteritems():
-            setattr(self, key, value)
+        for key in dict_obj.keys():
+            setattr(self, key, dict_obj[key])
             
 class MetaMixin(object):
     """
@@ -40,5 +40,5 @@ class MetaMixin(object):
 
         self._meta = Meta(**final_meta)
 
-        # Finally Pass anything unused along the MRO
-        super(MetaMixin, self).__init__(*args, **kwargs)
+        # FIX ME: object.__init__() doesn't take params without exception
+        super(MetaMixin, self).__init__()

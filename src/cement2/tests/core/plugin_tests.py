@@ -1,7 +1,6 @@
 """Tests for cement.core.plugin."""
 
 import os
-import sys
 import shutil
 from tempfile import mkdtemp
 from nose.tools import with_setup, ok_, eq_, raises
@@ -9,6 +8,7 @@ from nose import SkipTest
 
 from cement2.core import exc, backend, plugin, handler
 from cement2 import test_helper as _t
+_t.prep()
 
 CONF = """
 [myplugin]
@@ -38,7 +38,7 @@ PLUGIN = """
 
 from cement2.core import handler, output
 
-class TestOutputHandler(object):
+class TestOutputHandler(output.CementOutputHandler):
     class Meta:
         interface = output.IOutput
         label = 'test_output_handler'

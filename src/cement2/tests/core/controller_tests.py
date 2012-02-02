@@ -1,16 +1,16 @@
 """Tests for cement.core.controller."""
 
-import sys
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import exc, controller, handler
 from cement2 import test_helper as _t
+_t.prep()
 
 class BogusController(controller.CementBaseController):
     class Meta:
         interface = controller.IController
-        label = 'bogus'
+        label = None
   
 class BogusController2(controller.CementBaseController):
     class Meta:

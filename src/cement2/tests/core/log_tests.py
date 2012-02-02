@@ -1,16 +1,14 @@
 """Tests for cement.core.log."""
 
-import sys
 import logging
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import exc, backend, handler, log, config
 from cement2 import test_helper as _t
-
 _t.prep()
 
-from cement2.ext import ext_logging, ext_configparser
+#from cement2.ext import ext_logging, ext_configparser
 
 config = {}
 config['log'] = {}
@@ -24,7 +22,7 @@ config['log']['file_formatter'] = None
 config['log']['console_formatter'] = None
 config['log']['clear_loggers'] = True
         
-class BogusHandler1(object):
+class BogusHandler1(log.CementLogHandler):
     class Meta:
         interface = log.ILog
         label = 'bogus'

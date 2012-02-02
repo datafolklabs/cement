@@ -1,14 +1,14 @@
 """Tests for cement.core.setup."""
 
-import sys
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import foundation, exc, backend, config, extension, plugin
 from cement2.core import log, output, handler, hook, arg, controller
 from cement2 import test_helper as _t
+_t.prep()
        
-class TestOutputHandler(object):
+class TestOutputHandler(output.CementOutputHandler):
     file_suffix = None
     
     class Meta:
@@ -33,11 +33,11 @@ def test_passed_handlers():
     defaults = backend.defaults('test')
     defaults['base']['config_files'] = '/dev/null'
     
-    from cement2.ext import ext_configparser
-    from cement2.ext import ext_logging
-    from cement2.ext import ext_argparse
-    from cement2.ext import ext_plugin
-    from cement2.ext import ext_nulloutput
+    from cement2.lib import ext_configparser
+    from cement2.lib import ext_logging
+    from cement2.lib import ext_argparse
+    from cement2.lib import ext_plugin
+    from cement2.lib import ext_nulloutput
     
     myconfig = ext_configparser.ConfigParserConfigHandler(defaults)
     myconfig.setup(defaults)

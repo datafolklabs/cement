@@ -10,7 +10,7 @@ Development Environment
 It is recommended to work out of a `VirtualENV <http://pypi.python.org/pypi/virtualenv>`_ 
 for development, which is reference throughout this documentation.  VirtualENV
 is easily installed on most platforms either with 'easy_install' or 'pip' or
-via the your OS distributions packaging system (yum, apt, brew, etc).
+via your OS distributions packaging system (yum, apt, brew, etc).
 
 
 Installing From Git
@@ -39,13 +39,13 @@ source for development of the next major version of Cement.
     (helloworld) $ python setup.py install
     
 
-To run tests for the framework, do the following:
+To run tests, do the following from the 'root' directory:
 
 .. code-block:: text
     
-    (helloworld) $ easy_install nose
+    (helloworld) $ pip install nose
     
-    (helloworld) $ python setup.py nosetests
+    (helloworld) $ ./utils/run_tests.sh
 
 
 A Simple Hello World Application

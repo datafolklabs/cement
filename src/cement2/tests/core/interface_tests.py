@@ -1,24 +1,22 @@
 """Tests for cement.core.interface."""
 
-import sys
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
-from cement2.core import exc, interface, output, handler
+from cement2.core import exc, interface, output, handler, meta
 from cement2 import test_helper as _t
+_t.prep() 
 
-_t.prep()    
-
-class TestInterface():
+class TestInterface(meta.MetaMixin):
     class IMeta:
         label = 'test'
 
-class TestHandler():
+class TestHandler(meta.MetaMixin):
     class Meta:
         interface = TestInterface
         label = 'test'
         
-class TestHandler2():
+class TestHandler2(meta.MetaMixin):
     class Meta:
         interface = output.IOutput
         label = 'test2'
@@ -43,19 +41,9 @@ def test_validate_bad_interface():
     interface.validate(TestInterface, TestHandler2(), [])
 
 @raises(exc.CementInterfaceError)
-def test_validate_bad_interface_no_Meta():
+def test_validate_bad_interface_no_meta():
     interface.validate(TestInterface, TestHandler3(), [])
-    
-### FIX ME: Remove before Cement2 stable release
-class OldInterface(interface.Interface):
-    class imeta:
-        label = 'old_interface'
-        
-class OldHandler(object):
-    class meta:
-        label = 'old_handler'
-        interface = OldInterface
-        
-def test_old_interface_imeta():
-    handler.define(OldInterface)
-    handler.register(OldHandler)
+
+@raises(exc.CementInterfaceError)
+def test_validate_bad_interface_missing_meta():
+    interface.validate(TestInterface, TestHandler3(), [], ['missing_meta'])

@@ -9,6 +9,7 @@ def config_validator(klass, obj):
         'keys', 
         'has_key',
         'get_sections', 
+        'get_section_dict',
         'get', 
         'set', 
         'parse_file', 
@@ -105,6 +106,14 @@ class IConfig(interface.Interface):
         [block] label in a config file.
         
         Returns: list
+                
+        """
+        
+    def get_section_dict():
+        """
+        Return a dict of configuration parameters for [section].
+        
+        Returns: dict
                 
         """
           

@@ -1,17 +1,15 @@
 """Tests for cement.core.config."""
 
-import sys
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import exc, backend, config, handler
 from cement2 import test_helper as _t
-
 _t.prep()
 
-from cement2.ext.ext_configparser import ConfigParserConfigHandler
+from cement2.lib.ext_configparser import ConfigParserConfigHandler
 
-class BogusConfigHandler(object):
+class BogusConfigHandler(config.CementConfigHandler):
     class Meta:
         interface = config.IConfig
         label = 'bogus'

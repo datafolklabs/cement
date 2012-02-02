@@ -6,6 +6,8 @@ from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import backend, exc
+from cement2 import test_helper as _t
+_t.prep()
 
 app_name = 'helloworld'
 config = {}

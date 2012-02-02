@@ -3,8 +3,9 @@ Daemon Framework Extension Library.
         
 """
 
-import sys
 import os
+import io
+import sys
 import pwd
 import grp
 from cement2.core import backend, exc
@@ -156,14 +157,26 @@ class Environment(object):
         # Redirect standard file descriptors.
         stdin = open(self.stdin, 'r')
         stdout = open(self.stdout, 'a+')
-        stderr = open(self.stderr, 'a+', 0)
+        stderr = open(self.stderr, 'a+')
         
         if hasattr(sys.stdin, 'fileno'):
-            os.dup2(stdin.fileno(), sys.stdin.fileno())
+            try:
+                os.dup2(stdin.fileno(), sys.stdin.fileno())
+            except io.UnsupportedOperation as e:
+                # FIXME: ?
+                pass
         if hasattr(sys.stdout, 'fileno'):
-            os.dup2(stdout.fileno(), sys.stdout.fileno())
+            try:
+                os.dup2(stdout.fileno(), sys.stdout.fileno())
+            except io.UnsupportedOperation as e:
+                # FIXME: ?
+                pass
         if hasattr(sys.stderr, 'fileno'):    
-            os.dup2(stderr.fileno(), sys.stderr.fileno())       
+            try:
+                os.dup2(stderr.fileno(), sys.stderr.fileno())       
+            except io.UnsupportedOperation as e:
+                # FIXME: ?
+                pass
                  
         # Update our pid file
         self._write_pid_file()

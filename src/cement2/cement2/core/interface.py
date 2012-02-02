@@ -30,7 +30,7 @@ class Attribute(object):
     def __repr__(self):
         return "<interface.Attribute - '%s'>" % self.description
         
-def validate(interface, obj, members, **kw):
+def validate(interface, obj, members=[], meta=['interface', 'label']):
     """
     A wrapper to validate interfaces.
     
@@ -41,19 +41,17 @@ def validate(interface, obj, members, **kw):
             
         obj
             The object to validate.
-            
+
+    Optional Arguments:
+                
         members
             The object members that must exist.
             
-    Optional Arguments:
-    
         meta
-            A list of members to validate in the handler classes Meta class.
-            Defaults to ['interface', 'label'].
+            The meta object members that must exist.
             
     """
     invalid = []
-    meta = kw.get('meta', ['interface', 'label'])
 
     if hasattr(obj, '_meta') and interface != obj._meta.interface:
         raise exc.CementInterfaceError("%s does not implement '%s'." % \

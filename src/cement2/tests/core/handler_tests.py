@@ -1,35 +1,34 @@
 """Tests for cement.core.handler."""
 
-import sys
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
-from cement2.core import exc, backend, handler, handler, output
+from cement2.core import exc, backend, handler, handler, output, meta
+from cement2.core import interface
 from cement2 import test_helper as _t
-
-_t.prep('test')
+_t.prep()
 
 from cement2.ext import ext_nulloutput
 
-class BogusOutputHandler(object):
+class BogusOutputHandler(meta.MetaMixin):
     class Meta:
         #interface = IBogus
         label = 'bogus_handler'
 
-class BogusOutputHandler2(object):
+class BogusOutputHandler2(meta.MetaMixin):
     class Meta:
         interface = output.IOutput
         label = 'bogus_handler'
 
-class BogusHandler3(object):
+class BogusHandler3(meta.MetaMixin):
     pass   
 
-class BogusHandler4(object):
+class BogusHandler4(meta.MetaMixin):
     class Meta:
         interface = output.IOutput
         # label = 'bogus4'
 
-class DuplicateHandler(object):
+class DuplicateHandler(output.CementOutputHandler):
     class Meta:
         interface = output.IOutput
         label = 'null'
@@ -40,18 +39,18 @@ class DuplicateHandler(object):
     def render(self, data_dict, template=None):
         pass
         
-class BogusInterface1(object):
+class BogusInterface1(interface.Interface):
     pass
     
-class BogusInterface2(object):
+class BogusInterface2(interface.Interface):
     class IMeta:
         pass
     
-class TestInterface(object):
+class TestInterface(interface.Interface):
     class IMeta:
         label = 'test'
         
-class TestHandler(object):
+class TestHandler(meta.MetaMixin):
     class Meta:
         interface = TestInterface
         label = 'test'
@@ -67,7 +66,7 @@ def test_register_invalid_handler():
     handler.register(BogusOutputHandler)
 
 @raises(exc.CementInterfaceError)
-def test_register_invalid_handler_no_Meta():
+def test_register_invalid_handler_no_meta():
     _t.prep()
     handler.register(BogusHandler3)
 
@@ -96,7 +95,7 @@ def test_register_unproviding_handler():
 
 def test_verify_handler():
     _t.prep('test')
-    handler.register(ext_nulloutput.NullOutputHandler)
+    #handler.register(ext_nulloutput.NullOutputHandler)
     ok_(handler.enabled('output', 'null'))
     eq_(handler.enabled('output', 'bogus_handler'), False)
     eq_(handler.enabled('bogus_type', 'bogus_handler'), False)

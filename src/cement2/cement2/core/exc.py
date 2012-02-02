@@ -8,9 +8,7 @@ class CementError(Exception):
     
     def __str__(self):
         return self.msg
-    
-    def __unicode__(self):
-        return str(self.msg)
+
             
 class CementConfigError(CementError):
     pass

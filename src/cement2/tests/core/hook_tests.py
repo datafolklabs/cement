@@ -1,14 +1,12 @@
 """Tests for cement.core.hook."""
 
-import sys
 import signal
 from nose.tools import with_setup, ok_, eq_, raises
 from nose import SkipTest
 
 from cement2.core import exc, backend, hook, foundation
 from cement2 import test_helper as _t
-
-_t.prep()    
+_t.prep()
 
 def test_define():
     hook.define('nosetests_hook')

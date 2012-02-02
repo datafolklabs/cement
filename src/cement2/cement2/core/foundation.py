@@ -461,6 +461,10 @@ def lay_cement(name, klass=CementApp, *args, **kw):
         sys.stdout = NullOut()
         sys.stderr = NullOut()
         
+    # start clean
+    backend.hooks = {}
+    backend.handlers = {}
+
     # define framework hooks
     hook.define('cement_pre_setup_hook')
     hook.define('cement_post_setup_hook')

@@ -4,7 +4,7 @@ import os
 import logging
 from cement2.core import exc, util, log
 
-class LoggingLogHandler(log.CementLogHandler):  
+class LoggingLogHandlerOLD(log.CementLogHandler):  
     """
     This class is an implementation of the :ref:`ILog <cement2.core.log>` 
     interface, and sets up the logging facility using the standard Python
@@ -108,8 +108,8 @@ class LoggingLogHandler(log.CementLogHandler):
     
     levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
 
-    def __init__(self, **kw):
-        super(LoggingLogHandler, self).__init__(**kw)
+    def __init__(self, *args, **kw):
+        super(LoggingLogHandler, self).__init__(*args, **kw)
         
         self.config = kw.get('config', None)
         self.namespace = kw.get('namespace', None)
@@ -339,13 +339,13 @@ class LoggingLogHandler(log.CementLogHandler):
         """
         self.backend.debug(msg)
         
-class LoggingLogHandler2(log.CementLogHandler):  
+class LoggingLogHandler(log.CementLogHandler):  
     """
     This class is an implementation of the :ref:`ILog <cement2.core.log>` 
     interface, and sets up the logging facility using the standard Python
     `logging <http://docs.python.org/library/logging.html>`_ module. 
     
-    Optional Arguments:
+    Optional Arguments / Meta:
         
         config
             The application configuration object.
@@ -427,7 +427,7 @@ class LoggingLogHandler2(log.CementLogHandler):
     """
     class Meta:
         interface = log.ILog
-        label = 'logging2'
+        label = 'logging'
         namespace = None
         file_format = "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
         console_format = "%(levelname)s: %(message)s"
@@ -449,7 +449,7 @@ class LoggingLogHandler2(log.CementLogHandler):
     levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
 
     def __init__(self, *args, **kw):
-        super(LoggingLogHandler2, self).__init__(*args, **kw)
+        super(LoggingLogHandler, self).__init__(*args, **kw)
         
         self.config = None
         #self.namespace = kw.get('namespace', None)

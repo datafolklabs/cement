@@ -149,21 +149,20 @@ def register(obj):
     #                                   "missing 'Meta' class.")  
     
     orig_obj = obj
-    
-    # translate dashes to underscores
-    orig_obj.Meta.label = re.sub('-', '_', obj.Meta.label)
-    
+
     # for checks
     obj = orig_obj()
-    
-    if not hasattr(obj._meta, 'label'):
+        
+    if not hasattr(obj._meta, 'label') or not obj._meta.label:
         raise exc.CementInterfaceError("Invalid handler %s, " % orig_obj + \
                                        "missing '_meta.label'.")
-    if not hasattr(obj._meta, 'interface'):
+    if not hasattr(obj._meta, 'interface') or not obj._meta.interface:
         raise exc.CementInterfaceError("Invalid handler %s, " % orig_obj + \
                                        "missing '_meta.interface'.")
 
-    
+    # translate dashes to underscores
+    orig_obj.Meta.label = re.sub('-', '_', obj._meta.label)
+    obj._meta.label = re.sub('-', '_', obj._meta.label)
     
     handler_type = obj._meta.interface.IMeta.label
     Log.debug("registering handler '%s' into handlers['%s']['%s']" % \

@@ -1,9 +1,13 @@
 """ConfigObj Framework Extension Library"""
 
 import os
-from configobj import ConfigObj
+import sys
+from cement2.core import config, backend, exc
 
-from cement2.core import config, backend
+if sys.version_info[0] >= 3:
+    raise exc.CementRuntimeError('ConfigObj does not support Python 3.') # pragma: no cover
+    
+from configobj import ConfigObj
 
 Log = backend.minimal_logger(__name__)
 
@@ -16,6 +20,7 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
 
     Arguments and Keyword arguments are passed directly to ConfigObj
     on initialization.
+    
     """
     class Meta:
         interface = config.IConfig
@@ -49,6 +54,21 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
         """
         return self.sections
             
+    def get_section_dict(self, section):
+        """
+        Return a dict representation of a section.
+        
+        Required Arguments:
+        
+            section:
+                The section of the configuration.  I.e. [block_section]
+                
+        """
+        dict_obj = dict()
+        for key in self.keys(section):
+            dict_obj[key] = self.get(section, key)
+        return dict_obj
+        
     def parse_file(self, file_path):
         """
         Parse config file settings from file_path, overwriting existing 

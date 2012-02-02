@@ -1,6 +1,7 @@
 """Tests for cement2.ext.ext_daemon."""
 
 import os
+import sys
 import tempfile
 from random import random
 from nose.tools import with_setup, ok_, eq_, raises
@@ -8,6 +9,8 @@ from nose import SkipTest
 
 from cement2.core import handler, backend, log, hook, exc
 from cement2 import test_helper as _t
+_t.prep()
+
 from cement2.ext import ext_daemon
 
 def import_daemon():
