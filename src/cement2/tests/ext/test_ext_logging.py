@@ -8,8 +8,17 @@ from nose import SkipTest
 
 from cement2.core import handler, backend, log
 from cement2 import test_helper as _t
+from cement2.lib import ext_logging
 _t.prep()
 
+class MyLog(ext_logging.LoggingLogHandler):
+    class Meta:
+        label = 'mylog'
+        level = 'INFO'
+    
+    def __init__(self, *args, **kw):
+        super(MyLog, self).__init__(*args, **kw)
+    
 def test_rotate():
     app = _t.prep('myapp')
     app.setup()    
@@ -40,11 +49,13 @@ def test_clear_loggers():
     Log.clear_loggers()
 
 def test_rotate():
+    
     app = _t.prep('myapp')
     app.setup()
-    
+    app.config.set('log', 'rotate', True)
+    app.config.set('log', 'file', mkstemp()[1])
     han = handler.get('log', 'logging')
-    Log = han(rotate=True, file=mkstemp()[1])
+    Log = han()
     Log.setup(app.config)
 
 def test_missing_log_dir():
@@ -57,4 +68,3 @@ def test_missing_log_dir():
     defaults['log']['file'] = os.path.join(tmp_path, 'myapp.log')
     app = _t.prep('myapp', defaults=defaults)
     app.setup()
-        

@@ -54,7 +54,7 @@ def validate(interface, obj, members=[], meta=['interface', 'label']):
     invalid = []
 
     if hasattr(obj, '_meta') and interface != obj._meta.interface:
-        raise exc.CementInterfaceError("%s does not implement '%s'." % \
+        raise exc.CementInterfaceError("%s does not implement %s." % \
                                       (obj, interface))
         
     for member in members:

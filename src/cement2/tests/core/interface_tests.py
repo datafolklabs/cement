@@ -27,7 +27,11 @@ class TestHandler3():
 
 @raises(exc.CementInterfaceError)
 def test_interface_class():
-    i = interface.Interface()
+    try:
+        i = interface.Interface()
+    except exc.CementInterfaceError as e:
+        eq_(e.msg, "Interfaces can not be used directly.")
+        raise
 
 def test_attribute_class():
     i = interface.Attribute('Test attribute')
@@ -38,12 +42,27 @@ def test_validator():
     
 @raises(exc.CementInterfaceError)
 def test_validate_bad_interface():
-    interface.validate(TestInterface, TestHandler2(), [])
-
+    han = TestHandler2()
+    try:
+        interface.validate(TestInterface, han, [])
+    except exc.CementInterfaceError as e:
+        eq_(e.msg, "%s does not implement %s." % (han, TestInterface))
+        raise
+        
 @raises(exc.CementInterfaceError)
 def test_validate_bad_interface_no_meta():
-    interface.validate(TestInterface, TestHandler3(), [])
+    han = TestHandler3()
+    try:
+        interface.validate(TestInterface, han, [])
+    except exc.CementInterfaceError as e:
+        eq_(e.msg, "Invalid or missing: ['_meta'] in %s" % han)
+        raise 
 
 @raises(exc.CementInterfaceError)
 def test_validate_bad_interface_missing_meta():
-    interface.validate(TestInterface, TestHandler3(), [], ['missing_meta'])
+    han = TestHandler()
+    try:
+        interface.validate(TestInterface, han, [], ['missing_meta'])
+    except exc.CementInterfaceError as e:
+        eq_(e.msg, "Invalid or missing: ['_meta.missing_meta'] in %s" % han)
+        raise

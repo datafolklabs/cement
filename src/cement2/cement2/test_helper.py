@@ -35,27 +35,8 @@ def reset_backend():
     for _hook in backend.hooks.copy():
         del backend.hooks[_hook]
 
-def register_default_extensions():
-    #if import_modules:
-    
-        
-    # handlers
-    if not 'configparser' in backend.handlers['config']:
-        handler.register(ext_configparser.ConfigParserConfigHandler)
-    if not 'argparse' in backend.handlers['argument']:
-        handler.register(ext_argparse.ArgParseArgumentHandler)
-    if not 'null' in backend.handlers['output']:
-        handler.register(ext_nulloutput.NullOutputHandler)
-    if not 'cement_plugin' in backend.handlers['plugin']:
-        handler.register(ext_plugin.CementPluginHandler)
-    if not 'logging' in backend.handlers['log']:
-        handler.register(ext_logging.LoggingLogHandler)
-    if not 'optparse' in backend.handlers['argument']:
-        handler.register(ext_optparse.OptParseArgumentHandler)
-
 def prep(app_name='test', *args, **kw):
     reset_backend()
     dummy_app = foundation.lay_cement(app_name, klass=TestApp, *args, **kw)
-    #register_default_extensions()
     return dummy_app
 

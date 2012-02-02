@@ -71,6 +71,9 @@ class CementApp(object):
             An instantiated output handler object.
             
     """
+    #class Meta:
+        #config_handler = ext_configparser.ConfigParserConfigHandler
+        
     def __init__(self, name, **kw):                
         self.name = name
         if not self.name:
@@ -95,30 +98,22 @@ class CementApp(object):
         # initialize handlers if passed in and set config to reflect
         if kw.get('config_handler', None):
             self.config = kw['config_handler']
-            self.config.set('base', 'config_handler', self.config._meta.label)
         
         if kw.get('extension_handler', None):
             self.ext = kw['extension_handler']
-            self.config.set('base', 'extension_handler', 
-                            self.ext._meta.label)
                             
         if kw.get('log_handler', None):
             self.log = kw['log_handler']
-            self.config.set('base', 'log_handler', self.log._meta.label)
                                     
         if kw.get('plugin_handler', None):
             self.plugin = kw['plugin_handler']
-            self.config.set('base', 'plugin_handler', self.plugin._meta.label)
         
         if kw.get('arg_handler', None):
             self.args = kw['arg_handler']
-            self.config.set('base', 'arg_handler', self.args._meta.label)
             
         if kw.get('output_handler', None):
             self.output = kw['output_handler']
-            self.config.set('base', 'output_handler', 
-                            self.output._meta.label)
-
+        
     def setup(self):
         """
         This function wraps all 'setup' actons in one call.  It is called
