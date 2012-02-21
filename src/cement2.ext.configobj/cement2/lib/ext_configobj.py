@@ -29,7 +29,7 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
     def __init__(self, *args, **kw):
         super(ConfigObjConfigHandler, self).__init__(*args, **kw)
         
-    def setup(self, defaults):
+    def _setup(self, defaults):
         """
         Sets up the class for use by the framework, then calls self.merge() 
         with the passed defaults.  

@@ -10,7 +10,7 @@ Log = backend.minimal_logger(__name__)
 def argument_validator(klass, obj):
     """Validates an handler implementation against the IArgument interface."""
     members = [
-        'setup',
+        '_setup',
         'parse',
         'parsed_args',
         'add_argument',
@@ -45,9 +45,9 @@ class IArgument(interface.Interface):
     Meta = interface.Attribute('Handler Meta-data')
     parsed_args = interface.Attribute('Parsed args object')
     
-    def setup(config_obj):
+    def _setup(config_obj):
         """
-        The setup function is called during application initialization and
+        The _setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         

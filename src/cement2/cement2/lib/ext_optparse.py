@@ -25,7 +25,7 @@ class OptParseArgumentHandler(arg.CementArgumentHandler, OptionParser):
         arg.CementArgumentHandler.__init__(self, *args, **kw)
         self.config = None
         
-    def setup(self, config_obj):
+    def _setup(self, config_obj):
         """
         Sets up the class for use by the framework.  Little is done here in
         this implementation.

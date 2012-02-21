@@ -33,7 +33,7 @@ class DuplicateHandler(output.CementOutputHandler):
         interface = output.IOutput
         label = 'null'
 
-    def setup(self, config_obj):
+    def _setup(self, config_obj):
         pass
     
     def render(self, data_dict, template=None):

@@ -30,7 +30,7 @@ class JsonOutputHandler(output.CementOutputHandler):
         super(JsonOutputHandler, self).__init__(*args, **kw)
         self.config = None
         
-    def setup(self, config_obj):
+    def _setup(self, config_obj):
         """
         Sets up the class for use by the framework.  Little is done here in
         this implementation.

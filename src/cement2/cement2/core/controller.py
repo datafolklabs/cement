@@ -13,8 +13,8 @@ def controller_validator(klass, obj):
     
     """
     members = [
-        'setup',
-        'dispatch',
+        '_setup',
+        '_dispatch',
         ]
     meta = [
         'label',
@@ -66,12 +66,12 @@ class IController(interface.Interface):
     Meta = interface.Attribute('Handler Meta-data')
     registered_controllers = interface.Attribute('List of registered controllers')
     
-    def setup(base_app):
+    def _setup(base_app):
         """
-        The setup function is after application initialization and after it
+        The _setup function is after application initialization and after it
         is determined that this controller was requested via command line
-        arguments.  Meaning, a controllers setup() function is only called
-        right before it's dispatch() function is called to execute a command.
+        arguments.  Meaning, a controllers _setup() function is only called
+        right before it's _dispatch() function is called to execute a command.
         Must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
@@ -84,7 +84,7 @@ class IController(interface.Interface):
         
         """
     
-    def dispatch(self):
+    def _dispatch(self):
         """
         Reads the application object's data to dispatch a command from this
         controller.  For example, reading self.app.pargs to determine what
@@ -223,7 +223,7 @@ class CementBaseController(meta.MetaMixin):
         self.exposed = {}
         self.arguments = []
         
-    def setup(self, base_app):
+    def _setup(self, base_app):
         # shortcuts
         self.app = base_app                        
         self.config = self.app.config
@@ -253,14 +253,14 @@ class CementBaseController(meta.MetaMixin):
                         self.app.argv.pop(0)
                         break
                         
-        self.app.args.description = self.help_text
-        self.app.args.usage = self.usage_text
+        self.app.args.description = self._help_text
+        self.app.args.usage = self._usage_text
         self.app.args.formatter_class=argparse.RawDescriptionHelpFormatter
 
         self.app._parse_args()
         self.pargs = self.app.pargs
         
-    def dispatch(self):
+    def _dispatch(self):
         """
         Takes the remaining arguments from self.app.argv and parses for a
         command to dispatch, and if so... dispatches it.
@@ -280,7 +280,7 @@ class CementBaseController(meta.MetaMixin):
                 getattr(self, func['label'])()
             else:
                 controller = handler.get('controller', func['controller'])()
-                controller.setup(self.app)
+                controller._setup(self.app)
                 getattr(controller, func['label'])()
 
     @expose(hide=True, help='default command')
@@ -380,7 +380,7 @@ class CementBaseController(meta.MetaMixin):
                 
         """           
         contr = controller()
-        contr.setup(self.app)
+        contr._setup(self.app)
         contr._collect()
         
         # add stacked arguments into ours
@@ -463,7 +463,7 @@ class CementBaseController(meta.MetaMixin):
                         )
                         
     @property
-    def usage_text(self):
+    def _usage_text(self):
         """
         Returns the usage text displayed when '--help' is passed.
         
@@ -477,7 +477,7 @@ class CementBaseController(meta.MetaMixin):
         return txt
         
     @property
-    def help_text(self):
+    def _help_text(self):
         """
         Returns the help text displayed when '--help' is passed.
         

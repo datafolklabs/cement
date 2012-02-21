@@ -26,7 +26,7 @@ def test_rotate():
     app.config.set('log', 'file', '/dev/null')
     app.config.set('log', 'rotate', True)
     app.config.set('log', 'to_console', True)
-    app.log.setup(app.config)
+    app.log._setup(app.config)
     
     
 def test_bad_level():
@@ -36,7 +36,7 @@ def test_bad_level():
     
     han = handler.get('log', 'logging')
     Log = han()
-    Log.setup(app.config)
+    Log._setup(app.config)
 
     eq_(Log.level(), 'INFO')
 
@@ -56,7 +56,7 @@ def test_rotate():
     app.config.set('log', 'file', mkstemp()[1])
     han = handler.get('log', 'logging')
     Log = han()
-    Log.setup(app.config)
+    Log._setup(app.config)
 
 def test_missing_log_dir():
     _, tmp_path = mkstemp()

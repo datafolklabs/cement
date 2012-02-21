@@ -41,7 +41,7 @@ def test_logging():
     app.config.set('log', 'to_console', True)
 
     # setup logging again
-    app.log.setup(app.config)
+    app.log._setup(app.config)
     
     app.log.info('Info Message')
     app.log.warn('Warn Message')
@@ -56,7 +56,7 @@ def test_bogus_log_level():
     app.config.set('log', 'to_console', True)
     
     # setup logging again
-    app.log.setup(app.config)
+    app.log._setup(app.config)
     app.log.set_level('BOGUS')
 
 def test_console_log():
@@ -67,5 +67,5 @@ def test_console_log():
     app.config.set('log', 'file', '/dev/null')
     app.config.set('log', 'to_console', True)
     
-    app.log.setup(app.config)
+    app.log._setup(app.config)
     app.log.info('Tested.')

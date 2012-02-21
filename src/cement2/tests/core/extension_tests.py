@@ -25,19 +25,19 @@ def test_load_extensions():
     _t.reset_backend()
     handler.define(output.IOutput)
     ext = extension.CementExtensionHandler()
-    ext.setup(backend.defaults('nosetests'))
+    ext._setup(backend.defaults('nosetests'))
     ext.load_extensions(['cement2.ext.ext_configparser'])
 
 def test_load_extensions_again():
     _t.reset_backend()
     handler.define(output.IOutput)
     ext = extension.CementExtensionHandler()
-    ext.setup(backend.defaults('nosetests'))
+    ext._setup(backend.defaults('nosetests'))
     ext.load_extensions(['cement2.ext.ext_configparser'])
     ext.load_extensions(['cement2.ext.ext_configparser'])
     
 @raises(exc.CementRuntimeError)
 def test_load_bogus_extension():
     ext = extension.CementExtensionHandler()
-    ext.setup(backend.defaults('nosetests'))
+    ext._setup(backend.defaults('nosetests'))
     ext.load_extensions(['bogus'])

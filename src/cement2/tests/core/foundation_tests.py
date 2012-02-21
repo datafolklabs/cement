@@ -15,7 +15,7 @@ class TestOutputHandler(output.CementOutputHandler):
         interface = output.IOutput
         label = 'test_output_handler'
         
-    def setup(self, config_obj):
+    def _setup(self, config_obj):
         self.config = config_obj
         
     def render(self, data_dict, template=None):
@@ -40,7 +40,7 @@ def test_passed_handlers():
     from cement2.lib import ext_nulloutput
     
     myconfig = ext_configparser.ConfigParserConfigHandler(defaults)
-    myconfig.setup(defaults)
+    myconfig._setup(defaults)
     app = _t.prep('test',
         config_handler=myconfig,
         log_handler=ext_logging.LoggingLogHandler(),

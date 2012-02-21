@@ -116,7 +116,7 @@ class LoggingLogHandler(log.CementLogHandler):
         super(LoggingLogHandler, self).__init__(*args, **kw)
         self.config = None
         
-    def setup(self, config_obj):
+    def _setup(self, config_obj):
         """
         Sets up the class for use by the framework.  It first configures 
         itself by any parameters passed on initialization, then defaults to
@@ -193,7 +193,7 @@ class LoggingLogHandler(log.CementLogHandler):
         
         """
         if not self._meta.namespace:
-            # setup() probably wasn't run
+            # _setup() probably wasn't run
             return
             
         for i in logging.getLogger(self._meta.namespace).handlers:

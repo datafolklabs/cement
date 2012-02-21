@@ -9,7 +9,7 @@ def log_validator(klass, obj):
     """Validates an handler implementation against the ILog interface."""
     
     members = [
-        'setup',
+        '_setup',
         'clear_loggers',
         'set_level',
         'level',
@@ -49,7 +49,7 @@ class ILog(interface.Interface):
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data')
     
-    def setup(config_obj):
+    def _setup(config_obj):
         """
         The setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework

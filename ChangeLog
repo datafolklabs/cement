@@ -35,6 +35,12 @@ Refactoring:
 
     * :issue:`87` - Refactor Meta handling
     
+Incompatible Changes:
+
+    * :issue:`96` - Move 'setup()' functions to '_setup()'
+    * Moved CementBaseController.dispatch() to _dispatch()
+    * Moved CementBaseController.usage_text to _usage_text()
+    * Moved CementBaseController.help_text to _help_text()
     
 1.9.4 - Wed Dec 21, 2011
 ------------------------------------------------------------------------------

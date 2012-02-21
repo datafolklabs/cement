@@ -8,7 +8,7 @@ def plugin_validator(klass, obj):
     """Validates an handler implementation against the IPlugin interface."""
     
     members = [
-        'setup',
+        '_setup',
         'load_plugin',
         'load_plugins',
         'loaded_plugins',
@@ -46,7 +46,7 @@ class IPlugin(interface.Interface):
     enabled_plugins = interface.Attribute('List of enabled plugins')
     disabled_plugins = interface.Attribute('List of disabled plugins')
     
-    def setup(config_obj):
+    def _setup(config_obj):
         """
         The setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework

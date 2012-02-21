@@ -5,7 +5,7 @@ from cement2.core import exc, backend, interface, meta
 def config_validator(klass, obj):
     """Validates an handler implementation against the IConfig interface."""
     members = [
-        'setup',
+        '_setup',
         'keys', 
         'has_key',
         'get_sections', 
@@ -55,9 +55,9 @@ class IConfig(interface.Interface):
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data')
             
-    def setup(defaults):
+    def _setup(defaults):
         """
-        The setup function is called during application initialization and
+        The _setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         

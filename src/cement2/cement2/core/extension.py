@@ -10,7 +10,7 @@ def extension_validator(klass, obj):
     
     """
     members = [
-        'setup',
+        '_setup',
         'load_extension',
         'load_extensions',
         'loaded_extensions',
@@ -48,9 +48,9 @@ class IExtension(interface.Interface):
     Meta = interface.Attribute('Handler Meta-data class')
     loaded_extensions = interface.Attribute('List of loaded extensions')
     
-    def setup(defaults):
+    def _setup(defaults):
         """
-        The setup function is called during application initialization and
+        The _setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
@@ -108,7 +108,7 @@ class CementExtensionHandler(meta.MetaMixin):
         self.defaults = {}
         self.loaded_extensions = []
         
-    def setup(self, defaults):
+    def _setup(self, defaults):
         """
         Given a defaults dictionary, setup the extension handler in preparation
         for further calls from the framework.

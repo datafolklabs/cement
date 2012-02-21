@@ -32,7 +32,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         self.enabled_plugins = []
         self.disabled_plugins = []
      
-    def setup(self, config_obj):
+    def _setup(self, config_obj):
         """
         Sets up the class for use by the framework, including parsing the
         application config, and plugin config files for enabled plugins

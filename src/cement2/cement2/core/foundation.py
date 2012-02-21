@@ -116,12 +116,12 @@ class CementApp(object):
         
     def setup(self):
         """
-        This function wraps all 'setup' actons in one call.  It is called
-        before self.run(), allowing the application to be setup but not
+        This function wraps all '_setup' actons in one call.  It is called
+        before self.run(), allowing the application to be _setup but not
         executed (possibly letting the developer perform other actions
         before full execution.).
         
-        All handlers should be instantiated and callable after setup() is
+        All handlers should be instantiated and callable after _setup() is
         complete.
         
         """
@@ -146,7 +146,7 @@ class CementApp(object):
              
     def run(self):
         """
-        This function wraps everything together (after self.setup() is 
+        This function wraps everything together (after self._setup() is 
         called) to run the application.
         
         """
@@ -155,7 +155,7 @@ class CementApp(object):
         
         # If controller exists, then pass controll to it
         if self.controller:
-            self.controller.dispatch()
+            self.controller._dispatch()
         else:
             self._parse_args()
 
@@ -301,7 +301,7 @@ class CementApp(object):
                             self.defaults['base']['extension_handler'])
             self.ext = h()
         self._set_handler_defaults(self.ext)
-        self.ext.setup(self.defaults)
+        self.ext._setup(self.defaults)
         self.ext.load_extensions(self.defaults['base']['extensions'])
         
     def _setup_config_handler(self):
@@ -310,7 +310,7 @@ class CementApp(object):
             h = handler.get('config', self.defaults['base']['config_handler'])
             self.config = h()
 
-        self.config.setup(self.defaults)
+        self.config._setup(self.defaults)
         for _file in self.config.get('base', 'config_files'):
             self.config.parse_file(_file)
                                   
@@ -320,7 +320,7 @@ class CementApp(object):
             h = handler.get('log', self.config.get('base', 'log_handler'))
             self.log = h()
         self._set_handler_defaults(self.log)
-        self.log.setup(self.config)
+        self.log._setup(self.config)
            
     def _setup_plugin_handler(self):
         Log.debug("setting up %s.plugin handler" % self.name) 
@@ -329,7 +329,7 @@ class CementApp(object):
                             self.config.get('base', 'plugin_handler'))
             self.plugin = h()
         self._set_handler_defaults(self.plugin)
-        self.plugin.setup(self.config)
+        self.plugin._setup(self.config)
         self.config.set('base', 'plugins', self.plugin.enabled_plugins)
         self.plugin.load_plugins(self.config.get('base', 'plugins'))
         
@@ -342,7 +342,7 @@ class CementApp(object):
                             self.config.get('base', 'output_handler'))
             self.output = h()
         self._set_handler_defaults(self.output)
-        self.output.setup(self.config)
+        self.output._setup(self.config)
          
     def _setup_arg_handler(self):
         Log.debug("setting up %s.arg handler" % self.name) 
@@ -351,7 +351,7 @@ class CementApp(object):
                             self.config.get('base', 'arg_handler'))
             self.args = h()
         self._set_handler_defaults(self.args)
-        self.args.setup(self.config)
+        self.args._setup(self.config)
         self.args.add_argument('--debug', dest='debug', 
             action='store_true', help='toggle debug output')
         self.args.add_argument('--quiet', dest='suppress_output', 
@@ -386,7 +386,7 @@ class CementApp(object):
 
         # if no handler can be found, that's ok
         if self.controller:
-            self.controller.setup(self)
+            self.controller._setup(self)
         else:
             Log.debug("no controller could be found.")
     
@@ -436,7 +436,7 @@ def lay_cement(name, klass=CementApp, *args, **kw):
         
     argv = kw.get('argv', sys.argv[1:])
 
-    # basic logging setup first (mostly for debug/error)
+    # basic logging _setup first (mostly for debug/error)
     suppress_output = False
     if '--debug' in argv:
         defaults['base']['debug'] = True

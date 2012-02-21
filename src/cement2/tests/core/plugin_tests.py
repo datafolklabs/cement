@@ -43,7 +43,7 @@ class TestOutputHandler(output.CementOutputHandler):
         interface = output.IOutput
         label = 'test_output_handler'
     
-    def setup(self, config_obj):
+    def _setup(self, config_obj):
         self.config = config_obj
     
     def render(self, data_dict, template=None):
