@@ -142,5 +142,8 @@ class ILog(interface.Interface):
         """
 
 class CementLogHandler(meta.MetaMixin):
+    class Meta:
+        interface = ILog
+        
     def __init__(self, *args, **kw):
         super(CementLogHandler, self).__init__(*args, **kw)

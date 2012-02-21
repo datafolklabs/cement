@@ -88,5 +88,8 @@ class IPlugin(interface.Interface):
         """
         
 class CementPluginHandler(meta.MetaMixin):
+    class Meta:
+        interface = IPlugin
+        
     def __init__(self, *args, **kw):
         super(CementPluginHandler, self).__init__(*args, **kw)

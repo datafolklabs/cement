@@ -184,6 +184,9 @@ class IConfig(interface.Interface):
         """
         
 class CementConfigHandler(meta.MetaMixin):
+    class Meta:
+        interface = IConfig
+        
     def __init__(self, *args, **kw):
         super(CementConfigHandler, self).__init__(*args, **kw)              
 

@@ -115,6 +115,9 @@ class IArgument(interface.Interface):
         """
 
 class CementArgumentHandler(meta.MetaMixin):
+    class Meta:
+        interface = IArgument
+        
     def __init__(self, *args, **kw):
         super(CementArgumentHandler, self).__init__(*args, **kw)
         

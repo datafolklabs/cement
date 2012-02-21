@@ -81,6 +81,9 @@ class IOutput(interface.Interface):
         """    
 
 class CementOutputHandler(meta.MetaMixin):
+    class Meta:
+        interface = IOutput
+        
     def __init__(self, *args, **kw):
         super(CementOutputHandler, self).__init__(*args, **kw)
     

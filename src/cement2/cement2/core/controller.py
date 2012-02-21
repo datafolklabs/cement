@@ -200,7 +200,7 @@ class CementBaseController(meta.MetaMixin):
     class Meta:
         interface = IController
         label = 'base' # provided in subclass
-        description = 'Cement Base Controller'
+        description = 'Application Base Controller'
         defaults = {} # default config options
         arguments = [] # list of tuple (*args, *kwargs)
         stacked_on = None # controller name to merge commands/options into
