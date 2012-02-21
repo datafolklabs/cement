@@ -25,7 +25,7 @@ def controller_validator(klass, obj):
         ]
     interface.validate(IController, obj, members, meta=meta)
     
-    # also check Meta.arguments values
+    # also check _meta.arguments values
     errmsg = "Controller arguments must be a list of tuples.  I.e. " + \
              "[ (['-f', '--foo'], dict(action='store')), ]"
     try:
@@ -276,7 +276,7 @@ class CementBaseController(meta.MetaMixin):
             Log.debug("dispatching command: %s.%s" % \
                       (func['controller'], func['label']))
             
-            if func['controller'] == self.Meta.label:
+            if func['controller'] == self._meta.label:
                 getattr(self, func['label'])()
             else:
                 controller = handler.get('controller', func['controller'])()
@@ -306,14 +306,14 @@ class CementBaseController(meta.MetaMixin):
         Collect arguments from this controller.
         """
         # collect our Meta arguments
-        for _args,_kwargs in self.Meta.arguments:
+        for _args,_kwargs in self._meta.arguments:
             self.arguments.append((_args, _kwargs))
            
         # epilog only good for non-stacked controllers
-        if hasattr(self.Meta, 'epilog'):
-            if  not hasattr(self.Meta, 'stacked_on') or \
-                not self.Meta.stacked_on:
-                self.app.args.epilog = self.Meta.epilog
+        if hasattr(self._meta, 'epilog'):
+            if  not hasattr(self._meta, 'stacked_on') or \
+                not self._meta.stacked_on:
+                self.app.args.epilog = self._meta.epilog
              
         # collect exposed commands from ourself
         for member in dir(self):
@@ -323,14 +323,14 @@ class CementBaseController(meta.MetaMixin):
             func = getattr(self, member)
             if hasattr(func, 'exposed'):
                 func_dict = dict(
-                    controller=self.Meta.label,
+                    controller=self._meta.label,
                     label=func.label,
                     help=func.help,
                     aliases=func.aliases,
                     hide=func.hide,
                     )
 
-                if func_dict['label'] == self.Meta.label:
+                if func_dict['label'] == self._meta.label:
                     raise exc.CementRuntimeError(
                         "Controller command '%s' " % func_dict['label'] + \
                         "matches controller label.  Use 'default' instead."
@@ -341,7 +341,7 @@ class CementBaseController(meta.MetaMixin):
                 if func.hide:
                     self.hidden[func.label] = func_dict
                 else:
-                    if not getattr(self.Meta, 'hide', None):
+                    if not getattr(self._meta, 'hide', None):
                         self.visible[func.label] = func_dict
                         
     def _collect_from_non_stacked_controller(self, controller):
@@ -354,19 +354,20 @@ class CementBaseController(meta.MetaMixin):
                 The controller to collect arguments from.
                 
         """
-        Log.debug('exposing %s controller' % controller.Meta.label)
+        contr = controller()
+        Log.debug('exposing %s controller' % contr._meta.label)
                 
         func_dict = dict(
-            controller=controller.Meta.label,
-            label=controller.Meta.label,
-            help=controller.Meta.description,
+            controller=contr._meta.label,
+            label=contr._meta.label,
+            help=contr._meta.description,
             aliases=[],
             hide=False,
             )
         # expose the controller label as a sub command
-        self.exposed[controller.Meta.label] = func_dict
-        if not getattr(controller.Meta, 'hide', None):
-            self.visible[controller.Meta.label] = func_dict
+        self.exposed[contr._meta.label] = func_dict
+        if not getattr(contr._meta, 'hide', None):
+            self.visible[contr._meta.label] = func_dict
                             
     def _collect_from_stacked_controller(self, controller):     
         """
@@ -395,19 +396,19 @@ class CementBaseController(meta.MetaMixin):
                 if label == 'default':
                     Log.debug(
                         "ignoring duplicate command '%s' " % label + \
-                        "found in '%s' " % controller.Meta.label + \
+                        "found in '%s' " % contr._meta.label + \
                         "controller."
                         )
                     continue
                 else:
                     raise exc.CementRuntimeError(
                         "Duplicate command '%s' " % label + \
-                        "found in '%s' " % controller.Meta.label + \
+                        "found in '%s' " % contr._meta.label + \
                         "controller."
                         )
             if func_dicts[label]['hide']:
                 self.hidden[label] = func_dicts[label]
-            elif not getattr(controller.Meta, 'hide', False):
+            elif not getattr(contr._meta, 'hide', False):
                 self.visible[label] = func_dicts[label]
             self.exposed[label] = func_dicts[label]
 
@@ -417,16 +418,17 @@ class CementBaseController(meta.MetaMixin):
         
         """
         for controller in handler.list('controller'):
-            if controller.Meta.label == self.Meta.label:
+            contr = controller()
+            if contr._meta.label == self._meta.label:
                 continue
                 
             # expose other controllers as commands also
-            if not hasattr(controller.Meta, 'stacked_on') \
-               or controller.Meta.stacked_on is None:
+            if not hasattr(contr._meta, 'stacked_on') \
+               or contr._meta.stacked_on is None:
                 # only show non-stacked controllers under base
-                if self.Meta.label == 'base':
+                if self._meta.label == 'base':
                     self._collect_from_non_stacked_controller(controller)                        
-            elif controller.Meta.stacked_on == self.Meta.label:
+            elif contr._meta.stacked_on == self._meta.label:
                 self._collect_from_stacked_controller(controller)
 
     def _collect(self):
@@ -466,12 +468,12 @@ class CementBaseController(meta.MetaMixin):
         Returns the usage text displayed when '--help' is passed.
         
         """
-        if self.Meta.label == 'base':
+        if self._meta.label == 'base':
             txt = "%s <CMD> -opt1 --opt2=VAL [arg1] [arg2] ..." % \
                 self.app.args.prog
         else:
             txt = "%s %s <CMD> -opt1 --opt2=VAL [arg1] [arg2] ..." % \
-                  (self.app.args.prog, self.Meta.label)
+                  (self.app.args.prog, self._meta.label)
         return txt
         
     @property
@@ -514,6 +516,6 @@ commands:
 %s
 
         
-        ''' % (self.Meta.description, cmd_txt)
+        ''' % (self._meta.description, cmd_txt)
         
         return textwrap.dedent(txt)        
