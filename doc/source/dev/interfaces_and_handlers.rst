@@ -11,8 +11,8 @@ between.
 The Cement Interface code is loosely modeled after `Zope Interface <http://old.zope.org/Products/ZopeInterface>`_
 which allows a developer to define an interface that other developers can then
 create implementations for.  For example, an interface might define that a 
-class have a function called 'setup()'.  Any implementation of that interface
-must provide a function called 'setup()', and perform the expected actions
+class have a function called '_setup()'.  Any implementation of that interface
+must provide a function called '_setup()', and perform the expected actions
 when called.
 
 In Cement2, we call the implementation of interfaces 'handlers' and provide the 
@@ -49,7 +49,7 @@ The following defines a basic interface:
         Meta = interface.Attribute('Handler Meta-data')
         my_var = interface.Attribute('A variable of epic proportions.')
     
-        def setup(config_obj):
+        def _setup(config_obj):
             """
             The setup function is called during application initialization and
             must 'setup' the handler object making it ready for the framework
@@ -104,7 +104,7 @@ like this:
     
     def my_validator(klass, obj):
         members = [
-            'setup',
+            '_setup',
             'do_something',
             'my_var',
             ]
@@ -153,7 +153,7 @@ is a handler that implements the MyInterface above:
         def __init__(self):
             self.config = None
             
-        def setup(config_obj):
+        def _setup(config_obj):
             self.config = config_obj
             
         def do_something(self):
@@ -251,7 +251,7 @@ handler (for whatever reason):
 Some things to note are:
 
     * The class passed must be instantiated
-    * Cement will call .setup() on the object when app.setup() is called.
+    * Cement will call ._setup() on the object when app.setup() is called.
     * This handler will *not* be registered in backend.handlers
     
 
