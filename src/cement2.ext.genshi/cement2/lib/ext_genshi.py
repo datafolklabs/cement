@@ -71,7 +71,7 @@ class GenshiOutputHandler(output.CementOutputHandler):
         
         # get the template content
         tmpl_content = pkgutil.get_data(tmpl_module, template)
-                
+
         if tmpl_content is None:  
             raise exc.CementRuntimeError(
                 "Template file '%s' does not exist in module '%s'." % \
