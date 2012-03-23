@@ -25,8 +25,8 @@ Cement2 Core features include (but are not limited to):
     * Extensions with external dependencies packaged separately
     * Controller handler supports sub-commands, and nested controllers
     * 98% Nose test coverage
-    * Extensive Sphinx documentation, complete with examples
-    * Supported on Python 2.6+ and 3!
+    * Extensive Sphinx documentation
+    * Tested on all major versions of Python 2.6 through 3.2
     
 
 Cement2 Core Extensions includes:

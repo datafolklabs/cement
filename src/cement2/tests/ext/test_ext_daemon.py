@@ -18,11 +18,6 @@ def import_daemon():
     hook.register()(ext_daemon.cement_post_setup_hook)
     hook.register()(ext_daemon.cement_on_close_hook)
     
-# FIX ME:
-#
-# Actually forking a daemon process causes strange output with coverage
-# at console, but not in the HTML.
-    
 def test_switch():
     import_daemon()
     env = ext_daemon.Environment()

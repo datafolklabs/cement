@@ -17,19 +17,18 @@ released.
 
 Other sites that might be helpful.
 
- * Docs: http://cement.readthedocs.org/en/portland/
- * Code: https://github.com/derks/cement/tree/portland
- * PyPi: http://pypi.python.org/pypi/cement2
-
+ * RTFD: http://cement.rtfd.org/en/portland/
+ * CODE: https://github.com/derks/cement/tree/portland
+ * PYPI: http://pypi.python.org/pypi/cement2
+ *   CI: http://travis-ci.org/#!/derks/cement
 
 Older Versions of Cement:
 
 The current stable branch of Cement is 0.8. 
 
- * Docs: http://cement.readthedocs.org/en/latest/
- * Code: http://github.com/derks/cement
- * PyPi: http://pypi.python.org/pypi/cement
- 
+ * RTFD: http://cement.rtfd.org/en/latest/
+ * CODE: http://github.com/derks/cement
+ * PYPI: http://pypi.python.org/pypi/cement
  
 Contents
 --------

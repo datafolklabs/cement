@@ -88,9 +88,13 @@ class Environment(object):
             f = open(self.pid_file, 'w')
             f.write(pid)
             f.close()
-            os.chown(os.path.dirname(self.pid_file), 
-                     self.user.pw_uid, self.group.gr_gid)
-        
+            try:
+                os.chown(os.path.dirname(self.pid_file), 
+                         self.user.pw_uid, self.group.gr_gid)
+            except OSError as e:
+                Log.debug("unable to chown %s:%s %s" % \
+                         (self.user.pw_uid, self.group.gr_gid, self.pid_file))
+                         
     def switch(self):
         """
         Switch the current process's user/group to self.user_name, and 
