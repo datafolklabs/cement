@@ -21,12 +21,12 @@ Cement2 Core features include (but are not limited to):
     * Hook support adds a bit of magic to apps and also ties into framework
     * Handler system connects implementation classes with Interfaces
     * Output handler interface renders return dictionaries to console
-    * Core library and extensions have zero external dependencies
+    * Core library and extensions have zero external dependencies*
     * Extensions with external dependencies packaged separately
     * Controller handler supports sub-commands, and nested controllers
     * 98% Nose test coverage
     * Extensive Sphinx documentation
-    * Tested on all major versions of Python 2.7 through 3.2
+    * Tested on all major versions of Python 2.6 through 3.2
     
 
 Cement2 Core Extensions includes:
@@ -36,6 +36,10 @@ Cement2 Core Extensions includes:
     * ConfigObj config handler extension replaces ConfigParser
     * Damemon extension handles background processes (adds --daemon option)
     * Genshi output handler extension provides Text Templating
+
+
+*Note that argparse is required as an external dependency for Python < 2.7 
+and < 3.2.
 
 
 MORE INFORMATION:
