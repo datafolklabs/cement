@@ -2,7 +2,6 @@ language: python
 before_script: ./utils/travis/bootstrap.sh
 script: ./utils/run_tests.sh
 python:
-  - "2.6"
   - "2.7"
   - "3.0"
   - "3.1"

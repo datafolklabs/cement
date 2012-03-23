@@ -11,9 +11,33 @@ rewrite of Cement version 0.x/1.x.  Its goal is to introduce a standard, and
 feature-full platform for both simple and complex command line applications as 
 well as support rapid development needs without sacrificing quality.
 
-Please note that currently Cement2 is under development out of the 'portland' 
-branch on GitHub, and is being released as beta until 2.0.0 stable is 
-released.  
+Cement2 Core features include (but are not limited to):
+
+    * Core pieces of the framework are customizable via handlers/interfaces
+    * Extension handler interface to easily extend framework functionality
+    * Config handler supports parsing multiple config files into one config
+    * Argument handler parses command line arguments and merges with config
+    * Log handler supports console and file logging
+    * Plugin handler provides an interface to easily extend your application
+    * Hook support adds a bit of magic to apps and also ties into framework
+    * Handler system connects implementation classes with Interfaces
+    * Output handler interface renders return dictionaries to console
+    * Core library and extensions have zero external dependencies
+    * Extensions with external dependencies packaged separately
+    * Controller handler supports sub-commands, and nested controllers
+    * 98% Nose test coverage
+    * Extensive Sphinx documentation
+    * Tested on all major versions of Python 2.7 through 3.2
+    
+
+Cement2 Core Extensions includes:
+
+    * JSON output handler extension (adds --json option)
+    * YAML output handler extension (adds --yaml option)
+    * ConfigObj config handler extension replaces ConfigParser
+    * Damemon extension handles background processes (adds --daemon option)
+    * Genshi output handler extension provides Text Templating
+
 
 Other sites that might be helpful.
 
