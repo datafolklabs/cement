@@ -17,6 +17,7 @@ done
 
 coverage erase
 coverage run `which nosetests` --verbosity=3 $SOURCES
+RET=$?
 
 # This is a hack to wait for tests to run
 sleep 5
@@ -25,3 +26,4 @@ coverage combine
 coverage html
 
 coverage report
+exit $RET
