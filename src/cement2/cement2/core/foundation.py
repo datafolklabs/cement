@@ -5,7 +5,9 @@ import sys
 import signal
 
 from cement2.core import backend, exc, handler, hook, log, config, plugin
-from cement2.core import output, extension, arg, controller
+from cement2.core import output, extension, arg, controller, meta
+from cement2.lib import ext_configparser, ext_argparse, ext_logging
+from cement2.lib import ext_nulloutput, ext_plugin
 
 Log = backend.minimal_logger(__name__)    
     
@@ -26,7 +28,7 @@ def cement_signal_handler(signum, frame):
         
     raise exc.CementSignalError(signum, frame)
                  
-class CementApp(object):
+class CementApp(meta.MetaMixin):
     """
     The CementApp is the primary application class used and returned by
     lay_cement().
@@ -46,7 +48,7 @@ class CementApp(object):
             
         catch_signals
             List of signals to catch, and raise exc.CementSignalError for.
-            Default: [signals.SIGTERM, signals.SIGINT]
+            Default: [signal.SIGTERM, signal.SIGINT]
                 
         signal_handler
             Func to handle any caught signals. 
@@ -71,22 +73,39 @@ class CementApp(object):
             An instantiated output handler object.
             
     """
-    #class Meta:
-        #config_handler = ext_configparser.ConfigParserConfigHandler
+    class Meta:
+        app_name = None
+        config_files = []
+        plugins = []
+        plugin_config_dir = None
+        argv = sys.argv[1:]
+        defaults = backend.defaults()
+        catch_signals = [signal.SIGTERM, signal.SIGINT]
+        signal_handler = cement_signal_handler
+        config_handler = ext_configparser.ConfigParserConfigHandler
+        extension_handler = extension.CementExtensionHandler
+        log_handler = ext_logging.LoggingLogHandler
+        plugin_handler = ext_plugin.CementPluginHandler
+        argument_handler = ext_argparse.ArgParseArgumentHandler
+        output_handler = ext_nulloutput.NullOutputHandler
+        controller_handler = None
+        extensions = []        
+        core_extensions = [  
+            'cement2.ext.ext_nulloutput',
+            'cement2.ext.ext_plugin',
+            'cement2.ext.ext_configparser', 
+            'cement2.ext.ext_logging', 
+            'cement2.ext.ext_argparse',
+            ]
+            
+    def __init__(self, name=None, **kw):                
+        super(CementApp, self).__init__(**kw)
         
-    def __init__(self, name, **kw):                
-        self.name = name
-        if not self.name:
-            raise exc.CementRuntimeError("Application name missing.")
+        # for convenience we translate this to _meta
+        if name:
+            self._meta.app_name = name
+        self._validate_name()
         
-        self.defaults = kw.get('defaults', backend.defaults(self.name))
-        self.defaults['base']['app_name'] = self.name
-        self.argv = kw.get('argv', sys.argv[1:])
-        self.catch_signals = kw.get('catch_signals', 
-                                    [signal.SIGTERM, signal.SIGINT])
-        self.signal_handler = kw.get('signal_handler', cement_signal_handler)
-        
-        # default all handlers to None
         self.ext = None
         self.config = None
         self.log = None
@@ -95,25 +114,49 @@ class CementApp(object):
         self.output = None
         self.controller = None
         
+        #self.defaults = kw.get('defaults', backend.defaults(self._meta.app_name))
+        #self.defaults['base']['app_name'] = self._meta.app_name
+        #self.argv = kw.get('argv', sys.argv[1:])
+        #self.catch_signals = kw.get('catch_signals', 
+        #                            [signal.SIGTERM, signal.SIGINT])
+        #self.signal_handler = kw.get('signal_handler', cement_signal_handler)
+        
         # initialize handlers if passed in and set config to reflect
-        if kw.get('config_handler', None):
-            self.config = kw['config_handler']
+        #if kw.get('config_handler', None):
+        #    self.config = kw['config_handler']
+        #
+        #if kw.get('extension_handler', None):
+        #    self.ext = kw['extension_handler']
+        #                    
+        #if kw.get('log_handler', None):
+        #    self.log = kw['log_handler']
+        #                            
+        #if kw.get('plugin_handler', None):
+        #    self.plugin = kw['plugin_handler']
+        #       
+        #if kw.get('arg_handler', None):
+        #    self.args = kw['arg_handler']
+        #    
+        #if kw.get('output_handler', None):
+        #    self.output = kw['output_handler']
         
-        if kw.get('extension_handler', None):
-            self.ext = kw['extension_handler']
-                            
-        if kw.get('log_handler', None):
-            self.log = kw['log_handler']
-                                    
-        if kw.get('plugin_handler', None):
-            self.plugin = kw['plugin_handler']
+        self._lay_cement()
         
-        if kw.get('arg_handler', None):
-            self.args = kw['arg_handler']
+    def _validate_name(self):
+        if not self._meta.app_name:
+            raise exc.CementRuntimeError("Application name missing.")
+        
+        # validate the name is ok
+        ok = ['_']
+        for char in self._meta.app_name:
+            if char in ok:
+                continue
             
-        if kw.get('output_handler', None):
-            self.output = kw['output_handler']
-        
+            if not char.isalnum():
+                raise exc.CementRuntimeError(
+                    "App name can only contain alpha-numeric, or underscores."
+                    )
+                    
     def setup(self):
         """
         This function wraps all '_setup' actons in one call.  It is called
@@ -125,7 +168,7 @@ class CementApp(object):
         complete.
         
         """
-        Log.debug("now setting up the '%s' application" % self.name)
+        Log.debug("now setting up the '%s' application" % self._meta.app_name)
         
         for res in hook.run('cement_pre_setup_hook', self):
             pass
@@ -223,6 +266,60 @@ class CementApp(object):
         """   
         self.args.add_argument(*args, **kw)
         
+    def _lay_cement(self):
+        """
+        Initialize the framework.
+        """
+        Log.debug("laying cement for the '%s' application" % \
+                  self._meta.app_name)
+
+        # hacks to suppress console output
+        suppress_output = False
+        if '--debug' in self._meta.argv:
+            self._meta.defaults['base']['debug'] = True
+        else:
+            for flag in ['--quiet', '--json', '--yaml']:
+                if flag in self._meta.argv:
+                    suppress_output = True
+                    break
+
+        if suppress_output:
+            Log.debug('suppressing all console output per runtime config')
+            backend.SAVED_STDOUT = sys.stdout
+            backend.SAVED_STDERR = sys.stderr
+            sys.stdout = NullOut()
+            sys.stderr = NullOut()
+            
+        # start clean
+        backend.hooks = {}
+        backend.handlers = {}
+
+        # define framework hooks
+        hook.define('cement_pre_setup_hook')
+        hook.define('cement_post_setup_hook')
+        hook.define('cement_pre_run_hook')
+        hook.define('cement_post_run_hook')
+        hook.define('cement_on_close_hook')
+        hook.define('cement_signal_hook')
+        hook.define('cement_pre_render_hook')
+        hook.define('cement_post_render_hook')
+    
+        # define and register handlers    
+        handler.define(extension.IExtension)
+        handler.define(log.ILog)
+        handler.define(config.IConfig)
+        handler.define(plugin.IPlugin)
+        handler.define(output.IOutput)
+        handler.define(arg.IArgument)
+        handler.define(controller.IController)
+    
+        # extension handler is the only thing that can't be loaded... as, 
+        # well, an extension.  ;)
+        handler.register(extension.CementExtensionHandler)
+    
+        #app = klass(name, defaults=defaults, *args, **kw)
+        #return app
+    
     def _set_handler_defaults(self, handler_obj):
         """
         Set config defaults per handler defaults if the config key is not 
@@ -286,55 +383,65 @@ class CementApp(object):
             self._setup_output_handler()
             
     def _setup_signals(self):
-        if not self.catch_signals:
+        if not self._meta.catch_signals:
             Log.debug("catch_signals=None... not handling any signals")
             return
             
-        for signum in self.catch_signals:
+        for signum in self._meta.catch_signals:
             Log.debug("adding signal handler for signal %s" % signum)
-            signal.signal(signum, self.signal_handler)
+            signal.signal(signum, self._meta.signal_handler)
     
+    def _resolve_handler(self, handler_type, handler_def):
+        """
+        Resolves the actual handler as it can be either a string identifying
+        the handler to load from backend.handlers, or it can be an 
+        instantiated or non-instantiated handler class.
+        
+        Returns: The instantiated handler object.
+        
+        """
+        han = None
+        if type(handler_def) == str:
+            han = handler.get(handler_type, handler_def)
+        elif hasattr(handler_def, '_meta'):
+            if not handler.registered(handler_type, handler_def._meta.label):
+                handler.register(handler_def.__class__)
+            han = handler_def
+        elif hasattr(handler_def, 'Meta'):
+            if not handler.registered(handler_type, handler_def.Meta.label):
+                handler.register(handler_def)
+            han = handler_def()
+
+        self._set_handler_defaults(han)
+        han._setup(self)
+        return han
+            
     def _setup_extension_handler(self):
-        Log.debug("setting up %s.extension handler" % self.name) 
-        if not self.ext:
-            h = handler.get('extension', 
-                            self.defaults['base']['extension_handler'])
-            self.ext = h()
-        self._set_handler_defaults(self.ext)
-        self.ext._setup(self.defaults)
-        self.ext.load_extensions(self.defaults['base']['extensions'])
+        Log.debug("setting up %s.extension handler" % self._meta.app_name) 
+        self.ext = self._resolve_handler('extension', 
+                                         self._meta.extension_handler)
+        self.ext.load_extensions(self._meta.core_extensions)
+        self.ext.load_extensions(self._meta.extensions)
         
     def _setup_config_handler(self):
-        Log.debug("setting up %s.config handler" % self.name)
-        if not self.config:
-            h = handler.get('config', self.defaults['base']['config_handler'])
-            self.config = h()
-
-        self.config._setup(self.defaults)
-        for _file in self.config.get('base', 'config_files'):
+        Log.debug("setting up %s.config handler" % self._meta.app_name)
+        self.config = self._resolve_handler('config', 
+                                            self._meta.config_handler)
+        for _file in self._meta.config_files:
             self.config.parse_file(_file)
                                   
     def _setup_log_handler(self):
-        Log.debug("setting up %s.log handler" % self.name)
-        if not self.log:
-            h = handler.get('log', self.config.get('base', 'log_handler'))
-            self.log = h()
-        self._set_handler_defaults(self.log)
-        self.log._setup(self.config)
+        Log.debug("setting up %s.log handler" % self._meta.app_name)
+        self.log = self._resolve_handler('log', self._meta.log_handler)
            
     def _setup_plugin_handler(self):
-        Log.debug("setting up %s.plugin handler" % self.name) 
-        if not self.plugin:
-            h = handler.get('plugin', 
-                            self.config.get('base', 'plugin_handler'))
-            self.plugin = h()
-        self._set_handler_defaults(self.plugin)
-        self.plugin._setup(self.config)
-        self.config.set('base', 'plugins', self.plugin.enabled_plugins)
+        Log.debug("setting up %s.plugin handler" % self._meta.app_name) 
+        self.plugin = self._resolve_handler('plugin', 
+                                            self._meta.plugin_handler)
         self.plugin.load_plugins(self.config.get('base', 'plugins'))
         
     def _setup_output_handler(self):
-        Log.debug("setting up %s.output handler" % self.name) 
+        Log.debug("setting up %s.output handler" % self._meta.app_name) 
         if not self.output:
             if not self.config.get('base', 'output_handler'):
                 return
@@ -345,7 +452,7 @@ class CementApp(object):
         self.output._setup(self.config)
          
     def _setup_arg_handler(self):
-        Log.debug("setting up %s.arg handler" % self.name) 
+        Log.debug("setting up %s.arg handler" % self._meta.app_name) 
         if not self.args:
             h = handler.get('argument', 
                             self.config.get('base', 'arg_handler'))
@@ -358,7 +465,7 @@ class CementApp(object):
             action='store_true', help='suppress all output')
                  
     def _setup_controller_handler(self):
-        Log.debug("setting up %s.controller handler" % self.name) 
+        Log.debug("setting up %s.controller handler" % self._meta.app_name) 
 
         # set handler defaults for all controllers
         for contr in handler.list('controller'):
@@ -485,3 +592,4 @@ def lay_cement(name, klass=CementApp, *args, **kw):
     
     app = klass(name, defaults=defaults, *args, **kw)
     return app
+

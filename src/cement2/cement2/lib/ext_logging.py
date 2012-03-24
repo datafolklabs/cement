@@ -114,45 +114,19 @@ class LoggingLogHandler(log.CementLogHandler):
 
     def __init__(self, *args, **kw):
         super(LoggingLogHandler, self).__init__(*args, **kw)
-        self.config = None
+        self.app = None
         
-    def _setup(self, config_obj):
-        """
-        Sets up the class for use by the framework.  It first configures 
-        itself by any parameters passed on initialization, then defaults to
-        configuration settings.  Based on how the class is initialized, the
-        logging facility is then setup and ready to be accessed by the 
-        application.
-        
-        Required Arguments:
-        
-            config_obj
-                The application configuration object.  This is a config object 
-                that implements the :ref:`IConfig <cement2.core.config>` 
-                interface and not a config dictionary, though some config 
-                handler implementations may also function like a dict 
-                (i.e. configobj).
-                
-        Returns: n/a
-        
-        """
-        
-        self.config = config_obj
-        
-        config_dict = self.config.get_section_dict(self._meta.interface.IMeta.label)
-        self._meta._merge(config_dict)
+    def _setup(self, app_obj):
+        self.app = app_obj
+        self._meta._merge(self.app.config.get_section_dict('log'))
         
         if self._meta.namespace is None:
-            self._meta.namespace = self.config.get('base', 'app_name')
-        #if self._meta.level is 'BLAH':
-        #    self._meta.level = self.config.get('log', 'level').upper()
-        #    if self._meta.level not in self.levels:
-        #        self._meta.level = 'INFO'
+            self._meta.namespace = self.app._meta.app_name
 
         self.backend = logging.getLogger(self._meta.namespace)
         
         # the king trumps all
-        if util.is_true(self.config.get('base', 'debug')):
+        if util.is_true(self.app.config.get('base', 'debug')):
             self._meta.level = 'DEBUG'
             
         self.set_level(self._meta.level)

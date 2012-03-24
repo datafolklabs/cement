@@ -31,24 +31,11 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         # super(ConfigParserConfigHandler, self).__init__(*args, **kw)
         RawConfigParser.__init__(self, *args, **kw)
         super(ConfigParserConfigHandler, self).__init__(*args, **kw)
+        self.app = None
         
-    def _setup(self, defaults):
-        """
-        Sets up the class for use by the framework, then calls self.merge() 
-        with the passed defaults.  
-        
-        Required Arguments:
-        
-            defaults
-                The application default config dictionary.  This is *not* a 
-                config object, but rather a dictionary which should be 
-                obvious because the config handler implementation is what
-                provides the application config object.
-                
-        Returns: n/a
-        
-        """
-        self.merge(defaults)
+    def _setup(self, app_obj):
+        self.app = app_obj
+        self.merge(self.app._meta.defaults)
         
     def merge(self, dict_obj, override=True):
         """

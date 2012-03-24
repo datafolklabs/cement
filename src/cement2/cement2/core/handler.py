@@ -184,10 +184,19 @@ def register(obj):
                  interface)
         
     backend.handlers[handler_type][obj.Meta.label] = orig_obj
-   
+
 def enabled(handler_type, handler_label):
     """
-    Check if a handler is enabled.
+    Deprecated as of 1.9.5.  Use handler.registered().
+    
+    """   
+    Log.warn("DEPRECATION WARNING: handler.enabled() is deprecated.  " + \
+             "Use handler.registered() instead.")
+    registered(handler_type, handler_label)
+    
+def registered(handler_type, handler_label):
+    """
+    Check if a handler is registered.
     
     Required Arguments:
     
@@ -205,3 +214,4 @@ def enabled(handler_type, handler_label):
         return True
 
     return False
+

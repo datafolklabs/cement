@@ -6,68 +6,49 @@ import logging
 
 from cement2.core import exc
 
-def defaults(app_name):
+def defaults():
     """
-    Get a standard, default config.
+    Get a standard, default config dictionary for the [base] section.
     
-    Required Arguments:
-    
-        app_name
-            The name of the application.  This is a single, alpha-numeric
-            string (underscores allowed).
-            
     Usage:
     
     .. code-block:: python
     
-        from cement2.core import foundation, backend
-        defaults = backend.defaults('myapp_name')
-        app = foundation.lay_cement('myapp_name', defaults=defaults)
+        from cement2.core import backend, foundation
         
-    """
-    ok = ['_']
-    for char in app_name:
-        if char in ok:
-            continue
-            
-        if not char.isalnum():
-            raise exc.CementRuntimeError(
-                "app_name must be alpha-numeric, or underscore."
-                )
-            
-    # default backend configuration
+        defaults = backend.defaults()
+        defaults['base']['debug'] = False
+        
+        app = foundation.CementApp('myapp', defaults=defaults)
+        
+    """        
     dcf = {}
     dcf['base'] = {}
-    dcf['base']['app_name'] = app_name
-    dcf['base']['config_files'] = [
-        os.path.join('/', 'etc', app_name, '%s.conf' % app_name),
-        os.path.join(os.environ['HOME'], '.%s.conf' % app_name),
-        ]
-    dcf['base']['config_source'] = ['defaults']
-    dcf['base']['debug'] = False
+    dcf['base']['debug'] = False  
     
-    dcf['base']['plugins'] = []
-    dcf['base']['plugin_config_dir'] = '/etc/%s/plugins.d' % app_name
-    dcf['base']['plugin_bootstrap_module'] = '%s.bootstrap' % app_name
-    dcf['base']['plugin_dir'] = '/usr/lib/%s/plugins' % app_name
+    # FIX ME: This should go under a [plugin] block handled by the plugin
+    # handler  
+    #dcf['base']['plugin_config_dir'] = '/etc/%s/plugins.d' % app_name
+    #dcf['base']['plugin_bootstrap_module'] = '%s.bootstrap' % app_name
+    #dcf['base']['plugin_dir'] = '/usr/lib/%s/plugins' % app_name
 
     # default extensions
-    dcf['base']['extensions'] = [  
-        'cement2.ext.ext_nulloutput',
-        'cement2.ext.ext_plugin',
-        'cement2.ext.ext_configparser', 
-        'cement2.ext.ext_logging', 
-        'cement2.ext.ext_argparse',
-        ]
+    #dcf['base']['extensions'] = [  
+    #    'cement2.ext.ext_nulloutput',
+    #    'cement2.ext.ext_plugin',
+    #    'cement2.ext.ext_configparser', 
+    #    'cement2.ext.ext_logging', 
+    #    'cement2.ext.ext_argparse',
+    #    ]
     
     # default handlers
-    dcf['base']['config_handler'] = 'configparser'
-    dcf['base']['log_handler'] = 'logging'
-    dcf['base']['arg_handler'] = 'argparse'
-    dcf['base']['plugin_handler'] = 'cement'
-    dcf['base']['extension_handler'] = 'cement'
-    dcf['base']['output_handler'] = 'null'
-    dcf['base']['controller_handler'] = 'base'
+    #dcf['base']['config_handler'] = 'configparser'
+    #dcf['base']['log_handler'] = 'logging'
+    #dcf['base']['arg_handler'] = 'argparse'
+    #dcf['base']['plugin_handler'] = 'cement'
+    #dcf['base']['extension_handler'] = 'cement'
+    #dcf['base']['output_handler'] = 'null'
+    #dcf['base']['controller_handler'] = 'base'
     
     return dcf
 

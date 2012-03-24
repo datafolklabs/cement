@@ -46,21 +46,17 @@ class IPlugin(interface.Interface):
     enabled_plugins = interface.Attribute('List of enabled plugins')
     disabled_plugins = interface.Attribute('List of disabled plugins')
     
-    def _setup(config_obj):
+    def _setup(app_obj):
         """
-        The setup function is called during application initialization and
+        The _setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
         Required Arguments:
         
-            config_obj
-                The application configuration object.  This is a config object 
-                that implements the :ref:`IConfig` <cement2.core.config>` 
-                interface and not a config dictionary, though some config 
-                handler implementations may also function like a dict 
-                (i.e. configobj).
-                
+            app_obj
+                The application object. 
+                                
         Returns: n/a
         
         """

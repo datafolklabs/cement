@@ -48,21 +48,17 @@ class IExtension(interface.Interface):
     Meta = interface.Attribute('Handler Meta-data class')
     loaded_extensions = interface.Attribute('List of loaded extensions')
     
-    def _setup(defaults):
+    def _setup(app_obj):
         """
         The _setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
-        Because the extension handler is called before the application 
-        configuration is setup, the application defaults are passed rather
-        than a config object.
-        
         Required Arguments:
         
-            defaults
-                The applications default config dictionary.
-                
+            app_obj
+                The application object. 
+                                
         Returns: n/a
         
         """
@@ -105,21 +101,15 @@ class CementExtensionHandler(meta.MetaMixin):
     
         """
         super(CementExtensionHandler, self).__init__()
-        self.defaults = {}
-        self.loaded_extensions = []
+        self.app = None
+        self._loaded_extensions = []
         
-    def _setup(self, defaults):
-        """
-        Given a defaults dictionary, setup the extension handler in preparation
-        for further calls from the framework.
-        
-        Required Arguments:
-        
-            defaults
-                The application defaults dictionary (not a config object).
-                
-        """
-        self.defaults = defaults
+    def _setup(self, app_obj):
+        self.app = app_obj
+    
+    @property
+    def loaded_extensions(self):
+        return self._loaded_extensions
         
     def load_extension(self, ext_module):
         """

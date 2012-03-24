@@ -55,7 +55,7 @@ class IConfig(interface.Interface):
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data')
             
-    def _setup(defaults):
+    def _setup(app_obj):
         """
         The _setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework
@@ -63,12 +63,9 @@ class IConfig(interface.Interface):
         
         Required Arguments:
         
-            defaults
-                The application default config dictionary.  This is *not* a 
-                config object, but rather a dictionary which should be 
-                obvious because the config handler implementation is what
-                provides the application config object.
-                
+            app_obj
+                The application object. 
+                                
         Returns: n/a
         
         """
