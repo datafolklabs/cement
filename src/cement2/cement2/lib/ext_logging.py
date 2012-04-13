@@ -121,7 +121,7 @@ class LoggingLogHandler(log.CementLogHandler):
         self._meta._merge(self.app.config.get_section_dict('log'))
         
         if self._meta.namespace is None:
-            self._meta.namespace = self.app._meta.app_name
+            self._meta.namespace = self.app._meta.label
 
         self.backend = logging.getLogger(self._meta.namespace)
         

@@ -70,7 +70,7 @@ def test_render():
     app.render(dict(foo='bar'))
 
 @raises(exc.CementRuntimeError)
-def test_bad_app_name():
+def test_bad_label():
     app = foundation.CementApp(None)
 
 def test_add_arg_shortcut():

@@ -35,8 +35,8 @@ def reset_backend():
     for _hook in backend.hooks.copy():
         del backend.hooks[_hook]
 
-def prep(app_name='test', *args, **kw):
+def prep(label='test', *args, **kw):
     reset_backend()
-    dummy_app = foundation.lay_cement(app_name, klass=TestApp, *args, **kw)
+    dummy_app = foundation.lay_cement(label, klass=TestApp, *args, **kw)
     return dummy_app
 

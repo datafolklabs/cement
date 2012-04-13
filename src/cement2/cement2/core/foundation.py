@@ -74,7 +74,7 @@ class CementApp(meta.MetaMixin):
             
     """
     class Meta:
-        app_name = None
+        label = None
         config_files = []
         plugins = []
         plugin_config_dir = None
@@ -103,7 +103,7 @@ class CementApp(meta.MetaMixin):
         
         # for convenience we translate this to _meta
         if name:
-            self._meta.app_name = name
+            self._meta.label = name
         self._validate_name()
         
         self.ext = None
@@ -114,8 +114,11 @@ class CementApp(meta.MetaMixin):
         self.output = None
         self.controller = None
         
-        #self.defaults = kw.get('defaults', backend.defaults(self._meta.app_name))
-        #self.defaults['base']['app_name'] = self._meta.app_name
+        # attributes
+        self.argv = list(self._meta.argv)
+        
+        #self.defaults = kw.get('defaults', backend.defaults(self._meta.label))
+        #self.defaults['base']['label'] = self._meta.label
         #self.argv = kw.get('argv', sys.argv[1:])
         #self.catch_signals = kw.get('catch_signals', 
         #                            [signal.SIGTERM, signal.SIGINT])
@@ -143,12 +146,12 @@ class CementApp(meta.MetaMixin):
         self._lay_cement()
         
     def _validate_name(self):
-        if not self._meta.app_name:
+        if not self._meta.label:
             raise exc.CementRuntimeError("Application name missing.")
         
         # validate the name is ok
         ok = ['_']
-        for char in self._meta.app_name:
+        for char in self._meta.label:
             if char in ok:
                 continue
             
@@ -168,7 +171,7 @@ class CementApp(meta.MetaMixin):
         complete.
         
         """
-        Log.debug("now setting up the '%s' application" % self._meta.app_name)
+        Log.debug("now setting up the '%s' application" % self._meta.label)
         
         for res in hook.run('cement_pre_setup_hook', self):
             pass
@@ -271,7 +274,7 @@ class CementApp(meta.MetaMixin):
         Initialize the framework.
         """
         Log.debug("laying cement for the '%s' application" % \
-                  self._meta.app_name)
+                  self._meta.label)
 
         # hacks to suppress console output
         suppress_output = False
@@ -374,13 +377,13 @@ class CementApp(meta.MetaMixin):
         
         # If the output handler was changed after parsing args, then
         # we need to set it up again.
-        if self.output:
-            if self.config.get('base', 'output_handler') \
-                != self.output._meta.label:
-                self.output = None
-                self._setup_output_handler()
-        else:
+        if self.output and self.output._meta.label != self.output._meta.label:
+            self.output = None
             self._setup_output_handler()
+        
+        # FIX ME: really?  This probably shouldn't be here
+        #else:
+        #    self._setup_output_handler()
             
     def _setup_signals(self):
         if not self._meta.catch_signals:
@@ -391,7 +394,7 @@ class CementApp(meta.MetaMixin):
             Log.debug("adding signal handler for signal %s" % signum)
             signal.signal(signum, self._meta.signal_handler)
     
-    def _resolve_handler(self, handler_type, handler_def):
+    def _resolve_handler(self, handler_type, handler_def, raise_error=True):
         """
         Resolves the actual handler as it can be either a string identifying
         the handler to load from backend.handlers, or it can be an 
@@ -411,90 +414,90 @@ class CementApp(meta.MetaMixin):
             if not handler.registered(handler_type, handler_def.Meta.label):
                 handler.register(handler_def)
             han = handler_def()
-
-        self._set_handler_defaults(han)
-        han._setup(self)
-        return han
             
+        msg = "Unable to resolve handler type '%s' with label '%s'" % \
+              (handler_type, handler_def)
+        if han:
+            self._set_handler_defaults(han)
+            han._setup(self)
+            return han
+        elif not han and raise_error:
+            raise exc.CementRuntimeError(msg)
+        elif not han:
+            Log.debug(msg)
+        
     def _setup_extension_handler(self):
-        Log.debug("setting up %s.extension handler" % self._meta.app_name) 
+        Log.debug("setting up %s.extension handler" % self._meta.label) 
         self.ext = self._resolve_handler('extension', 
                                          self._meta.extension_handler)
         self.ext.load_extensions(self._meta.core_extensions)
         self.ext.load_extensions(self._meta.extensions)
         
     def _setup_config_handler(self):
-        Log.debug("setting up %s.config handler" % self._meta.app_name)
+        Log.debug("setting up %s.config handler" % self._meta.label)
         self.config = self._resolve_handler('config', 
                                             self._meta.config_handler)
         for _file in self._meta.config_files:
             self.config.parse_file(_file)
                                   
     def _setup_log_handler(self):
-        Log.debug("setting up %s.log handler" % self._meta.app_name)
+        Log.debug("setting up %s.log handler" % self._meta.label)
         self.log = self._resolve_handler('log', self._meta.log_handler)
            
     def _setup_plugin_handler(self):
-        Log.debug("setting up %s.plugin handler" % self._meta.app_name) 
+        Log.debug("setting up %s.plugin handler" % self._meta.label) 
         self.plugin = self._resolve_handler('plugin', 
                                             self._meta.plugin_handler)
-        self.plugin.load_plugins(self.config.get('base', 'plugins'))
+        #self.plugin.load_plugins(self.config.get('base', 'plugins'))
+        self.plugin.load_plugins(self._meta.plugins)
         
     def _setup_output_handler(self):
-        Log.debug("setting up %s.output handler" % self._meta.app_name) 
-        if not self.output:
-            if not self.config.get('base', 'output_handler'):
-                return
-            h = handler.get('output', 
-                            self.config.get('base', 'output_handler'))
-            self.output = h()
-        self._set_handler_defaults(self.output)
-        self.output._setup(self.config)
+        Log.debug("setting up %s.output handler" % self._meta.label) 
+        self.output = self._resolve_handler('output', 
+                                            self._meta.output_handler)
          
     def _setup_arg_handler(self):
-        Log.debug("setting up %s.arg handler" % self._meta.app_name) 
-        if not self.args:
-            h = handler.get('argument', 
-                            self.config.get('base', 'arg_handler'))
-            self.args = h()
-        self._set_handler_defaults(self.args)
-        self.args._setup(self.config)
+        Log.debug("setting up %s.arg handler" % self._meta.label) 
+        self.args = self._resolve_handler('argument', 
+                                           self._meta.argument_handler)
         self.args.add_argument('--debug', dest='debug', 
             action='store_true', help='toggle debug output')
         self.args.add_argument('--quiet', dest='suppress_output', 
             action='store_true', help='suppress all output')
                  
     def _setup_controller_handler(self):
-        Log.debug("setting up %s.controller handler" % self._meta.app_name) 
+        Log.debug("setting up %s.controller handler" % self._meta.label) 
 
         # set handler defaults for all controllers
         for contr in handler.list('controller'):
             self._set_handler_defaults(contr())
             
         # Use self.controller first(it was passed in)
-        if not self.controller:
-            # Only use the config'd controller if no self.controller
-            h = handler.get('controller', 
-                            self.config.get('base', 'controller_handler'), 
-                            None)
-            if h:
-                self.controller = h()
-                
+        #if not self.controller:
+        #    # Only use the config'd controller if no self.controller
+        #    h = handler.get('controller', 
+        #                    self.config.get('base', 'controller_handler'), 
+        #                    None)
+        #    if h:
+        #        self.controller = h()
+         
+        if self._meta.controller_handler:
+            self.controller = self._resolve_handler('controller', 
+                                                self._meta.controller_handler)
+                                                   
         # Trump all with whats passed at the command line, and pop off the
         # arg
         if len(self.argv) > 0:
             # translate dashes to underscore
             contr = re.sub('-', '_', self.argv[0])
-            
+                               
             h = handler.get('controller', contr, None)
             if h:
                 self.controller = h()
                 self.argv.pop(0)
 
         # if no handler can be found, that's ok
-        if self.controller:
-            self.controller._setup(self)
-        else:
+        if not self.controller:
             Log.debug("no controller could be found.")
     
     def _validate_required_config(self):
