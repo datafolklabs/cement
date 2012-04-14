@@ -117,32 +117,6 @@ class CementApp(meta.MetaMixin):
         # attributes
         self.argv = list(self._meta.argv)
         
-        #self.defaults = kw.get('defaults', backend.defaults(self._meta.label))
-        #self.defaults['base']['label'] = self._meta.label
-        #self.argv = kw.get('argv', sys.argv[1:])
-        #self.catch_signals = kw.get('catch_signals', 
-        #                            [signal.SIGTERM, signal.SIGINT])
-        #self.signal_handler = kw.get('signal_handler', cement_signal_handler)
-        
-        # initialize handlers if passed in and set config to reflect
-        #if kw.get('config_handler', None):
-        #    self.config = kw['config_handler']
-        #
-        #if kw.get('extension_handler', None):
-        #    self.ext = kw['extension_handler']
-        #                    
-        #if kw.get('log_handler', None):
-        #    self.log = kw['log_handler']
-        #                            
-        #if kw.get('plugin_handler', None):
-        #    self.plugin = kw['plugin_handler']
-        #       
-        #if kw.get('arg_handler', None):
-        #    self.args = kw['arg_handler']
-        #    
-        #if kw.get('output_handler', None):
-        #    self.output = kw['output_handler']
-        
         self._lay_cement()
         
     def _validate_name(self):
