@@ -405,7 +405,7 @@ class CementApp(meta.MetaMixin):
         """
         han = None
         if type(handler_def) == str:
-            han = handler.get(handler_type, handler_def)
+            han = handler.get(handler_type, handler_def)()
         elif hasattr(handler_def, '_meta'):
             if not handler.registered(handler_type, handler_def._meta.label):
                 handler.register(handler_def.__class__)
@@ -471,22 +471,12 @@ class CementApp(meta.MetaMixin):
         # set handler defaults for all controllers
         for contr in handler.list('controller'):
             self._set_handler_defaults(contr())
-            
-        # Use self.controller first(it was passed in)
-        #if not self.controller:
-        #    # Only use the config'd controller if no self.controller
-        #    h = handler.get('controller', 
-        #                    self.config.get('base', 'controller_handler'), 
-        #                    None)
-        #    if h:
-        #        self.controller = h()
-         
+
         if self._meta.controller_handler:
             self.controller = self._resolve_handler('controller', 
                                                 self._meta.controller_handler)
                                                    
-        # Trump all with whats passed at the command line, and pop off the
-        # arg
+        # Trump all with whats passed at the command line, and pop off the arg
         if len(self.argv) > 0:
             # translate dashes to underscore
             contr = re.sub('-', '_', self.argv[0])
