@@ -225,6 +225,9 @@ class ControllerTestCase(unittest.TestCase):
         handler.register(DoubleStackedController)
         self.app.setup()
         self.app.run()
+        print self.app.controller
+        print self.app.argv
+        raise Exception
 
     def test_secondary_controller(self):
         app = _t.prep(
