@@ -220,11 +220,14 @@ class ControllerTestCase(unittest.TestCase):
         self.app.run()
 
     def test_stacked_controller(self):
-        self.app._meta.argv = ['my-stacked-command']
+        app = _t.prep(
+            argv=['my-stacked-command',], 
+            base_controller=TestBaseController,
+            )
         handler.register(TestStackedController)
         handler.register(DoubleStackedController)
-        self.app.setup()
-        self.app.run()
+        app.setup()
+        app.run()
         print self.app.controller
         print self.app.argv
         raise Exception
