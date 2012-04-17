@@ -35,12 +35,12 @@ Cement2 Core Extensions includes:
     * JSON output handler extension (adds --json option)
     * YAML output handler extension (adds --yaml option)
     * ConfigObj config handler extension replaces ConfigParser
-    * Damemon extension handles background processes (adds --daemon option)
+    * Daemon extension handles background processes (adds --daemon option)
     * Genshi output handler extension provides Text Templating
 
 
 *Note that argparse is required as an external dependency for Python < 2.7 
-and < 3.2.
+and < 3.2.*
 
 Other sites that might be helpful.
 

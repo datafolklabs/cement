@@ -32,6 +32,8 @@ enable_plugin = true
 foo = bar
 """
 
+CONF5 = ''
+
 PLUGIN = """
 
 from cement2.core import handler, output
@@ -148,6 +150,11 @@ class PluginTestCase(unittest.TestCase):
         f.write(CONF3)
         f.close()
     
+        # do this for coverage... empty config file
+        f = open(os.path.join(tmpdir, 'bogus.conf'), 'w')
+        f.write(CONF5)
+        f.close()
+        
         app = _t.prep('myapp',
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,

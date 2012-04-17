@@ -129,4 +129,15 @@ class HandlerTestCase(unittest.TestCase):
         handler.define(TestInterface)
         handler.register(TestHandler)
     
+    def test_handler_defined(self):
+        handler.defined('output')
+    
+    def test_handler_not_defined(self):
+        eq_(handler.defined('bogus'), False)
+        
+    def test_handler_registered(self):
+        eq_(handler.registered('output', 'null'), True)
+    
+    def test_handler_enabled(self):
+        eq_(handler.enabled('output', 'null'), True)
     

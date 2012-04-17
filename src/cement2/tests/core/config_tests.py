@@ -1,9 +1,16 @@
 """Tests for cement.core.config."""
 
+import os
 import unittest
+from tempfile import mkstemp
 from nose.tools import ok_, eq_, raises
 from cement2.core import exc, config, handler
 from cement2 import test_helper as _t
+
+CONFIG = """
+[my_section]
+my_param = my_value
+"""
 
 class BogusConfigHandler(config.CementConfigHandler):
     class Meta:
@@ -21,3 +28,16 @@ class ConfigTestCase(unittest.TestCase):
         self.app.setup()
         ok_(self.app.config.has_key('base', 'debug'))
         eq_(self.app.config.get('base', 'debug'), False)
+
+    def test_parse_file_bad_path(self):
+        self.app._meta.config_files = ['./some_bogus_path']
+        self.app.setup()
+        
+    def test_parse_file(self):
+        _, tmppath = mkstemp()
+        f = open(tmppath, 'w+')
+        f.write(CONFIG)
+        f.close()
+        self.app._meta.config_files = [tmppath]
+        self.app.setup()
+        eq_(self.app.config.get('my_section', 'my_param'), 'my_value')

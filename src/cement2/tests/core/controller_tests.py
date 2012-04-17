@@ -53,11 +53,11 @@ class TestBaseController(controller.CementBaseController):
     
     @controller.expose()
     def default(self):
-        print 'Default'
+        print('Default')
         
     @controller.expose(aliases=['mycmd'])
     def my_command(self):
-        print 'My Command'
+        print('My Command')
      
 class TestBaseController2(controller.CementBaseController):
     class Meta:
@@ -160,6 +160,25 @@ class TestDuplicate2Controller(controller.CementBaseController):
     def mycmd(self):
         pass
 
+class TestDuplicate3Controller(controller.CementBaseController):
+    class Meta:
+        interface = controller.IController
+        label = 'test_duplicate3'
+        description = 'Test Duplicate3 Controller'
+        stacked_on = 'base'
+        
+        defaults = dict(
+            foo='bar',
+            )
+
+        arguments = [
+            (['-f2', '--foo2'], dict(action='store'))
+            ]
+    
+    @controller.expose(hide=True, aliases=['mycmd'])
+    def dup3(self):
+        pass
+        
 class SameNameController(controller.CementBaseController):
     class Meta:
         interface = controller.IController
@@ -228,9 +247,6 @@ class ControllerTestCase(unittest.TestCase):
         handler.register(DoubleStackedController)
         app.setup()
         app.run()
-        print self.app.controller
-        print self.app.argv
-        raise Exception
 
     def test_secondary_controller(self):
         app = _t.prep(
@@ -267,14 +283,14 @@ class ControllerTestCase(unittest.TestCase):
         app.run()
      
     @raises(exc.CementRuntimeError)
-    def test_duplicate_alias(self):
+    def test_duplicate_command(self):
         handler.register(TestDuplicateController)
         self.app.setup()
     
         try:
             self.app.run()
-        except exc.CementRuntimeError:
-            # FIX ME: Check the error message is right error
+        except exc.CementRuntimeError as e:
+            ok_(e.msg.find('duplicate'))
             raise
 
     @raises(exc.CementRuntimeError)
@@ -318,7 +334,6 @@ class ControllerTestCase(unittest.TestCase):
         self.app = _t.prep(
             argv=['my-command'], 
             base_controller=TestBaseController,
-            
             )
         handler.register(TestStackedController)
         handler.register(TestSecondaryController)
@@ -339,3 +354,14 @@ class ControllerTestCase(unittest.TestCase):
         handler.register(SameNameAliasController)
         self.app.setup()
         self.app.run()
+    
+    @raises(exc.CementRuntimeError)
+    def test_duplicate_alias(self):
+        handler.register(TestSecondaryController)
+        handler.register(TestDuplicate3Controller)
+        self.app.setup()
+        try:
+            self.app.run()
+        except exc.CementRuntimeError as e:
+            ok_(e.msg.find('collides'))
+            raise

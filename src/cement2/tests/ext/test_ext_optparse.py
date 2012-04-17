@@ -12,7 +12,8 @@ class OptParseExtTestCase(unittest.TestCase):
     def test_optparse(self):    
         app = _t.prep('myapp', 
             extensions=['optparse'],
-            arg_handler='optparse',
-            argv=['my-command']
+            argument_handler='optparse',
+            argv=['test-command']
             )
         app.setup()    
+        app.run()

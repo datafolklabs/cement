@@ -61,23 +61,6 @@ def list(handler_type):
         res.append(backend.handlers[handler_type][label])
     return res
         
-def defined(handler_type):
-    """
-    Test whether a handler type is defined.
-    
-    Required Arguments:
-    
-        handler_type
-            The name or 'type' of the handler (I.e. 'logging').
-    
-    Returns: bool
-    
-    """
-    if handler_type in backend.handlers:
-        return True
-    else:
-        return False
-        
 def define(interface):
     """
     Define a handler based on the provided interface.  Defines a handler type
@@ -113,6 +96,23 @@ def define(interface):
                                      interface.IMeta.label)
     backend.handlers[interface.IMeta.label] = {'__interface__' : interface}
     
+def defined(handler_type):
+    """
+    Test whether a handler type is defined.
+    
+    Required Arguments:
+    
+        handler_type
+            The name or 'type' of the handler (I.e. 'logging').
+    
+    Returns: bool
+    
+    """
+    if handler_type in backend.handlers:
+        return True
+    else:
+        return False
+        
 def register(obj):
     """
     Register a handler object to a handler.  If the same object is already
@@ -192,7 +192,7 @@ def enabled(handler_type, handler_label):
     """   
     Log.warn("DEPRECATION WARNING: handler.enabled() is deprecated.  " + \
              "Use handler.registered() instead.")
-    registered(handler_type, handler_label)
+    return registered(handler_type, handler_label)
     
 def registered(handler_type, handler_label):
     """

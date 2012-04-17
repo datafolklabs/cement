@@ -1,7 +1,8 @@
 """Tests for cement.core.setup."""
 
 import unittest
-from nose.tools import eq_, raises
+from nose.tools import ok_, eq_, raises
+from nose import SkipTest
 from cement2.core import foundation, exc, backend, config, extension, plugin
 from cement2.core import log, output, handler, hook, arg, controller
 from cement2 import test_helper as _t
@@ -30,7 +31,22 @@ def my_hook_three(app):
                 
 class FoundationTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = _t.prep()
+        self.app = _t.prep('my_app')
+        
+    def test_old_lay_cement(self):
+        self.app = foundation.lay_cement('myapp')
+        self.app.setup()
+        
+    @raises(exc.CementRuntimeError)
+    def test_resolve_handler_bad_handler(self):
+        class Bogus(object):
+            pass
+            
+        try:
+            self.app._resolve_handler('output', Bogus)
+        except exc.CementRuntimeError as e:
+            ok_(e.msg.find('resolve'))
+            raise
         
     @raises(SystemExit)
     def test_default(self):
@@ -47,13 +63,16 @@ class FoundationTestCase(unittest.TestCase):
         from cement2.lib import ext_plugin
         from cement2.lib import ext_nulloutput
     
-        app = _t.prep('test',
+        # forces CementApp._resolve_handler to register the handler
+        from cement2.lib import ext_yaml
+        
+        app = _t.prep('my-app-test',
             config_handler=ext_configparser.ConfigParserConfigHandler,
             log_handler=ext_logging.LoggingLogHandler(),
             arg_handler=ext_argparse.ArgParseArgumentHandler(),
             extension_handler=extension.CementExtensionHandler(),
             plugin_handler=ext_plugin.CementPluginHandler(),
-            output_handler=ext_nulloutput.NullOutputHandler(),
+            output_handler=ext_yaml.YamlOutputHandler(),
             argv=[__file__, '--debug']
             )
         app.setup()
@@ -80,6 +99,14 @@ class FoundationTestCase(unittest.TestCase):
             app = foundation.CementApp(None)
         except exc.CementRuntimeError as e:
             # FIX ME: verify error msg
+            raise
+    
+    @raises(exc.CementRuntimeError)
+    def test_bad_label_chars(self):
+        try:
+            app = foundation.CementApp('some!bogus()label')
+        except exc.CementRuntimeError as e:
+            ok_(e.msg.find('alpha-numeric'))
             raise
             
     def test_add_arg_shortcut(self):

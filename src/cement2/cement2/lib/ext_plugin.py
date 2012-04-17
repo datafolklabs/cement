@@ -15,13 +15,6 @@ class CementPluginHandler(plugin.CementPluginHandler):
     :ref:`IPlugin <cement2.core.plugin>` interface. It does not take any 
     parameters on initialization.
     
-    Configurations:
-    
-    This handler honors the following configuration settings:
-    
-    [plugin]
-    config_dir = /path/to/plugin/config/dir/
-    
     """
     
     class Meta:
@@ -76,7 +69,6 @@ class CementPluginHandler(plugin.CementPluginHandler):
                 continue
                 
             plugin = pconfig.get_sections()[0]
-            print plugin
             if not pconfig.has_key(plugin, 'enable_plugin'):
                 continue
 

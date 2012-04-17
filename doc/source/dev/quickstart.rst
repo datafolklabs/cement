@@ -57,10 +57,9 @@ The following is a bare minimum 'helloworld' application.
 
     from cement2.core import foundation
     
-    app = foundation.lay_cement('helloworld')
-    app.setup()
-    
     try:
+        app = foundation.CementApp('helloworld')
+        app.setup()
         app.run()
         print('Hello World')
     finally:
@@ -158,13 +157,13 @@ application features.
     defaults['base']['foo'] = 'bar'
 
     # create an application
-    app = foundation.lay_cement('example', defaults=defaults)
+    app = foundation.CementApp('example', defaults=defaults)
 
     # register any framework hook functions after app creation, and before 
     # app.setup()
     @hook.register()
-    def cement_validate_config_hook(config):
-        assert config.has_key('base', 'foo')
+    def cement_post_setup_hook(app):
+        assert app.config.has_key('base', 'foo')
     
     # setup the application
     app.setup()
@@ -213,13 +212,9 @@ handle command dispatch and rapid development.
 
     from cement2.core import backend, foundation, controller, handler
 
-    # create an application
-    app = foundation.lay_cement('example')
-
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
         class Meta:
-            interface = controller.IController
             label = 'base'
             description = "My Application does amazing things!"
 
@@ -247,8 +242,27 @@ handle command dispatch and rapid development.
         @controller.expose(aliases=['cmd2'], help="more of nothing.")
         def command2(self):
             self.log.info("Inside base.command2 function.")
-        
-    handler.register(MyAppBaseController)
+
+    # define a second controller
+    class MySecondController(controller.CementBaseController):
+        class Meta:
+            label = 'secondary'
+            stacked_on = 'base'
+            
+        @controller.expose(help='this is some command', aliases=['some-cmd'])
+        def some_other_command(self):
+            pass
+            
+    class MyApp(foundation.CementApp):
+        class Meta:
+            label = 'helloworld'
+            base_controller = MyAppBaseController
+    
+    # create the app      
+    app = MyApp()
+      
+    # Register any handlers that aren't passed directly to CementApp
+    handler.register(MySecondController)
 
     # setup the application
     app.setup()
@@ -278,6 +292,9 @@ via a controller class.  Lets see what this looks like:
       command2 (aliases: cmd2)
         more of nothing.
 
+      some-other-command (aliases: some-cmd)
+        this is some command
+        
     optional arguments:
       -h, --help  show this help message and exit
       --debug     toggle debug output

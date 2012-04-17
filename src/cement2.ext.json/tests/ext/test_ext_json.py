@@ -8,10 +8,10 @@ from nose import SkipTest
 from cement2.core import handler, backend, hook
 from cement2 import test_helper as _t
 
-if sys.version_info[0] >= 3:
-    raise SkipTest('jsonpickle does not support Python 3') # pragma: no cover
-else:
+if sys.version_info[0] < 3:
     import jsonpickle
+else:
+    raise SkipTest('jsonpickle does not support Python 3') # pragma: no cover
 
 _t.prep()
 from cement2.ext import ext_json
