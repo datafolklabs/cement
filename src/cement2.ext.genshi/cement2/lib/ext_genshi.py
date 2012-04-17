@@ -13,34 +13,27 @@ class GenshiOutputHandler(output.CementOutputHandler):
     interface.  It provides text output from template and uses the 
     `Genshi Text Templating Language <http://genshi.edgewall.org/wiki/Documentation/text-templates.html>`_.  
     
+    Optional / Meta Arguments:
+    
+        template_module
+            The python (base) module where templates are loaded from.  This 
+            defaults to 'app_name.templates'.
+            
     """
     class Meta:
         interface = output.IOutput
         label = 'genshi'
+        template_module = None
         
     def __init__(self, *args, **kw):
         super(GenshiOutputHandler, self).__init__(*args, **kw)
         self.config = None
         
-    def _setup(self, config_obj):
-        """
-        Sets up the class for use by the framework.  Little is done here in
-        this implementation.
-        
-        Required Arguments:
-        
-            config_obj
-                The application configuration object.  This is a config object 
-                that implements the :ref:`IConfig <cement2.core.config>` 
-                interface and not a config dictionary, though some config 
-                handler implementations may also function like a dict 
-                (i.e. configobj).
-                
-        Returns: n/a
-        
-        """
-        self.config = config_obj
-        
+    def _setup(self, app_obj):
+        self.app = app_obj
+        if self._meta.template_module is None:
+            self._meta.template_module = '%s.templates' % self.app._meta.label
+            
     def render(self, data_dict, template):
         """
         Take a data dictionary and render it using the given template file.
@@ -61,7 +54,7 @@ class GenshiOutputHandler(output.CementOutputHandler):
         Returns: string
         
         """
-        tmpl_module = self.config.get('genshi', 'template_module')
+        tmpl_module = self._meta.template_module
         Log.debug("genshi template module is '%s'" % tmpl_module)
         
         if template is None:

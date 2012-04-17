@@ -18,6 +18,7 @@ def defaults():
         
         defaults = backend.defaults()
         defaults['base']['debug'] = False
+        defaults['base']['some_param'] = 'some_value'
         
         app = foundation.CementApp('myapp', defaults=defaults)
         

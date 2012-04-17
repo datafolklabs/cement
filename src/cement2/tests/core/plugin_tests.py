@@ -2,13 +2,11 @@
 
 import os
 import shutil
+import unittest
 from tempfile import mkdtemp
 from nose.tools import with_setup, ok_, eq_, raises
-from nose import SkipTest
-
 from cement2.core import exc, backend, plugin, handler
 from cement2 import test_helper as _t
-_t.prep()
 
 CONF = """
 [myplugin]
@@ -43,8 +41,8 @@ class TestOutputHandler(output.CementOutputHandler):
         interface = output.IOutput
         label = 'test_output_handler'
     
-    def _setup(self, config_obj):
-        self.config = config_obj
+    def _setup(self, app_obj):
+        self.app = app_obj
     
     def render(self, data_dict, template=None):
         pass
@@ -53,150 +51,151 @@ handler.register(TestOutputHandler)
 
 """
 
-def test_load_plugins_from_files():
-    tmpdir = mkdtemp()
-    f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
-    f.write(CONF)
-    f.close()
-    
-    f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
-    f.write(PLUGIN)
-    f.close()
-    
-    defaults = backend.defaults('myapp')
-    defaults['base']['plugin_config_dir'] = tmpdir
-    defaults['base']['plugin_dir'] = tmpdir
-    defaults['base']['plugin_bootstrap_module'] = None
-    app = _t.prep('myapp', defaults=defaults)
-    app.setup()
-    
-    try:
-        han = handler.get('output', 'test_output_handler')
-        eq_(han.Meta.label, 'test_output_handler')
-    finally:
-        shutil.rmtree(tmpdir)
-        
-def test_load_plugins_from_config():
-    tmpdir = mkdtemp()
-    f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
-    f.write(PLUGIN)
-    f.close()
-    
-    defaults = backend.defaults('myapp')
-    defaults['base']['plugin_config_dir'] = tmpdir
-    defaults['base']['plugin_dir'] = tmpdir
-    defaults['base']['plugin_bootstrap_module'] = None
-    defaults['myplugin'] = dict()
-    defaults['myplugin']['enable_plugin'] = True
-    defaults['myplugin2'] = dict()
-    defaults['myplugin2']['enable_plugin'] = False
-    app = _t.prep('myapp', defaults=defaults)
-    app.setup()
-    
-    try:
-        han = handler.get('output', 'test_output_handler')
-        eq_(han.Meta.label, 'test_output_handler')
-    finally:
-        shutil.rmtree(tmpdir)
-    
-    # some more checks
-    res = 'myplugin' in app.plugin.enabled_plugins
-    ok_(res)
-    
-    res = 'myplugin' in app.plugin.loaded_plugins
-    ok_(res)
-        
-    res = 'myplugin2' in app.plugin.disabled_plugins
-    ok_(res)
-    
-    res = 'myplugin2' not in app.plugin.enabled_plugins
-    ok_(res)
-    
-    res = 'myplugin2' not in app.plugin.loaded_plugins
-    ok_(res)
-    
-    res = 'myplugin' in app.config.get('base', 'plugins')        
-    ok_(res)
-    
-def test_disabled_plugins_from_files():
-    tmpdir = mkdtemp()
-    f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
-    f.write(CONF2)
-    f.close()
-    
-    f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
-    f.write(PLUGIN)
-    f.close()
-    
-    defaults = backend.defaults('myapp')
-    defaults['base']['plugin_config_dir'] = tmpdir
-    defaults['base']['plugin_dir'] = tmpdir
-    defaults['base']['plugin_bootstrap_module'] = None
-    app = _t.prep('myapp', defaults=defaults)
-    app.setup()
-    shutil.rmtree(tmpdir)
-    
-    res = 'test_output_handler' not in backend.handlers['output']
-    ok_(res)
+class PluginTestCase(unittest.TestCase):
+    def setUp(self):
+        self.app = _t.prep()
 
-    res = 'myplugin2' not in app.config.get('base', 'plugins')        
-    ok_(res)
+    def test_load_plugins_from_files(self):
+        tmpdir = mkdtemp()
+        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f.write(CONF)
+        f.close()
     
-def test_bogus_plugin_from_files():
-    tmpdir = mkdtemp()
-    f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
-    f.write(CONF3)
-    f.close()
+        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f.write(PLUGIN)
+        f.close()
     
-    defaults = backend.defaults('myapp')
-    defaults['base']['plugin_config_dir'] = tmpdir
-    defaults['base']['plugin_dir'] = tmpdir
-    defaults['base']['plugin_bootstrap_module'] = None
-    app = _t.prep('myapp', defaults=defaults)
-    app.setup()
-    shutil.rmtree(tmpdir)
-    
-    res = 'bogus_plugin' not in app.config.get('base', 'plugins')        
-    ok_(res)
-
-@raises(ImportError)
-def test_bad_plugin_dir():
-    tmpdir = mkdtemp()
-    f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
-    f.write(CONF)
-    f.close()
-    
-    defaults = backend.defaults('myapp')
-    defaults['base']['plugin_config_dir'] = tmpdir
-    defaults['base']['plugin_dir'] = './some/bogus/path'
-    defaults['base']['plugin_bootstrap_module'] = None
-    app = _t.prep('myapp', defaults=defaults)
-    try:
+        app = _t.prep('myapp',
+            plugin_config_dir=tmpdir,
+            plugin_dir=tmpdir,
+            plugin_bootstrap_module=None,
+            )
         app.setup()
-    except ImportError:
-        raise
-    finally:
+
+        try:
+            han = handler.get('output', 'test_output_handler')()
+            eq_(han._meta.label, 'test_output_handler')
+        finally:
+            shutil.rmtree(tmpdir)
+        
+    def test_load_plugins_from_config(self):
+        tmpdir = mkdtemp()
+        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f.write(PLUGIN)
+        f.close()
+    
+        defaults = backend.defaults()
+        defaults['myplugin'] = dict()
+        defaults['myplugin']['enable_plugin'] = True
+        defaults['myplugin2'] = dict()
+        defaults['myplugin2']['enable_plugin'] = False
+        app = _t.prep('myapp', defaults=defaults,
+            plugin_config_dir=tmpdir,
+            plugin_dir=tmpdir,
+            plugin_bootstrap_module=None,
+            )
+        app.setup()
+    
+        try:
+            han = handler.get('output', 'test_output_handler')()
+            eq_(han._meta.label, 'test_output_handler')
+        finally:
+            shutil.rmtree(tmpdir)
+    
+        # some more checks
+        res = 'myplugin' in app.plugin.enabled_plugins
+        ok_(res)
+    
+        res = 'myplugin' in app.plugin.loaded_plugins
+        ok_(res)
+        
+        res = 'myplugin2' in app.plugin.disabled_plugins
+        ok_(res)
+    
+        res = 'myplugin2' not in app.plugin.enabled_plugins
+        ok_(res)
+    
+        res = 'myplugin2' not in app.plugin.loaded_plugins
+        ok_(res)
+    
+    def test_disabled_plugins_from_files(self):
+        tmpdir = mkdtemp()
+        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f.write(CONF2)
+        f.close()
+    
+        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f.write(PLUGIN)
+        f.close()
+    
+        app = _t.prep('myapp',
+            plugin_config_dir=tmpdir,
+            plugin_dir=tmpdir,
+            plugin_bootstrap_module=None,
+            )
+        app.setup()
         shutil.rmtree(tmpdir)
     
-def test_load_plugin_from_module():
-    # We mock this out by loading a cement ext, but it is essentially the
-    # same type of code.
-    tmpdir = mkdtemp()
-    f = open(os.path.join(tmpdir, 'ext_optparse.conf'), 'w')
-    f.write(CONF4)
-    f.close()
+        res = 'test_output_handler' not in backend.handlers['output']
+        ok_(res)
+
+        res = 'myplugin2' not in app.plugin.enabled_plugins
+        ok_(res)
     
-    defaults = backend.defaults('myapp')
-    defaults['base']['plugin_config_dir'] = tmpdir
-    defaults['base']['plugin_dir'] = tmpdir
-    defaults['base']['plugin_bootstrap_module'] = 'cement2.ext'
-    app = _t.prep('myapp', defaults=defaults)
-    app.setup()
+    def test_bogus_plugin_from_files(self):
+        tmpdir = mkdtemp()
+        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f.write(CONF3)
+        f.close()
     
-    shutil.rmtree(tmpdir)
+        app = _t.prep('myapp',
+            plugin_config_dir=tmpdir,
+            plugin_dir=tmpdir,
+            plugin_bootstrap_module=None,
+            )
+        app.setup()
+        shutil.rmtree(tmpdir)
     
-#@raises(ImportError)
-#def test_load_bogus_plugin():
-#    app = _t.prep('myapp')
-#    app.setup()
-#    app.plugin.load_plugin('bogus_plugin')
+        res = 'bogus_plugin' not in app.plugin.enabled_plugins
+        ok_(res)
+
+    @raises(exc.CementRuntimeError)
+    def test_bad_plugin_dir(self):
+        tmpdir = mkdtemp()
+        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f.write(CONF)
+        f.close()
+
+        app = _t.prep('myapp',
+            plugin_config_dir=tmpdir,
+            plugin_dir='./some/bogus/path',
+            plugin_bootstrap_module=None,
+            )
+        try:
+            app.setup()
+        except ImportError as e:
+            raise
+        except exc.CementRuntimeError as e:
+            raise 
+        finally:
+            shutil.rmtree(tmpdir)
+    
+    def test_load_plugin_from_module(self):
+        # We mock this out by loading a cement ext, but it is essentially the
+        # same type of code.
+        tmpdir = mkdtemp()
+        f = open(os.path.join(tmpdir, 'ext_optparse.conf'), 'w')
+        f.write(CONF4)
+        f.close()
+    
+        app = _t.prep('myapp',
+            plugin_config_dir=tmpdir,
+            plugin_dir=tmpdir,
+            plugin_bootstrap_module='cement2.ext',
+            )
+        app.setup()
+        
+        res = 'ext_optparse' in app.plugin.enabled_plugins
+        ok_(res)
+        
+        shutil.rmtree(tmpdir)

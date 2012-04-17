@@ -64,7 +64,6 @@ class IController(interface.Interface):
     
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data')
-    registered_controllers = interface.Attribute('List of registered controllers')
     
     def _setup(base_app):
         """
@@ -193,6 +192,13 @@ class CementBaseController(meta.MetaMixin):
             
                 [ ( ['-f', '--foo'], dict(dest='foo', help='foo option') ), ]
 
+        stacked_on
+            A label of another controller to 'stack' commands/arguments on 
+            top of.
+            
+        hide
+            Whether or not to hide the controller entirely.
+            
         epilog
             The text that is displayed at the bottom when '--help' is passed.
             
@@ -426,7 +432,7 @@ class CementBaseController(meta.MetaMixin):
             if not hasattr(contr._meta, 'stacked_on') \
                or contr._meta.stacked_on is None:
                 # only show non-stacked controllers under base
-                if self._meta.label == 'base':
+                if self.__class__ == self.app._meta.base_controller:
                     self._collect_from_non_stacked_controller(controller)                        
             elif contr._meta.stacked_on == self._meta.label:
                 self._collect_from_stacked_controller(controller)
@@ -450,17 +456,26 @@ class CementBaseController(meta.MetaMixin):
         self._check_for_duplicates_on_aliases()
         
     def _check_for_duplicates_on_aliases(self):
+        known_aliases = {}
         for label in self.exposed:
             func = self.exposed[label]
             for alias in func['aliases']:
-                if alias in self.exposed.keys():
+                if alias in known_aliases:
                     raise exc.CementRuntimeError(
                         "Alias '%s' " % alias + \
                         "from the '%s' controller " % func['controller'] + \
-                        "colides with the " + \
+                        "collides with an alias of the same name " + \
+                        "in the '%s' controller." % known_aliases[alias]['controller']
+                        )
+                elif alias in self.exposed.keys():
+                    raise exc.CementRuntimeError(
+                        "Alias '%s' " % alias + \
+                        "from the '%s' controller " % func['controller'] + \
+                        "collides with a command of the same name in the " + \
                         "'%s' " % self.exposed[alias]['controller'] + \
                         "controller."
                         )
+                known_aliases[alias] = func
                         
     @property
     def _usage_text(self):
@@ -468,7 +483,7 @@ class CementBaseController(meta.MetaMixin):
         Returns the usage text displayed when '--help' is passed.
         
         """
-        if self._meta.label == 'base':
+        if self == self.app._meta.base_controller:
             txt = "%s <CMD> -opt1 --opt2=VAL [arg1] [arg2] ..." % \
                 self.app.args.prog
         else:

@@ -35,7 +35,6 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         
     def _setup(self, app_obj):
         self.app = app_obj
-        self.merge(self.app._meta.defaults)
         
     def merge(self, dict_obj, override=True):
         """
@@ -88,6 +87,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         Returns: Bool
         
         """
+        file_path = os.path.abspath(os.path.expanduser(file_path))
         if os.path.exists(file_path):
             self.read(file_path)
             return True

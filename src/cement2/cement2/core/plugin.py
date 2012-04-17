@@ -12,6 +12,8 @@ def plugin_validator(klass, obj):
         'load_plugin',
         'load_plugins',
         'loaded_plugins',
+        'enabled_plugins',
+        'disabled_plugins',
         ]
     interface.validate(IPlugin, obj, members)
     

@@ -78,6 +78,8 @@ class CementApp(meta.MetaMixin):
         config_files = []
         plugins = []
         plugin_config_dir = None
+        plugin_bootstrap_module = None
+        plugin_dir = None
         argv = sys.argv[1:]
         defaults = backend.defaults()
         catch_signals = [signal.SIGTERM, signal.SIGINT]
@@ -88,7 +90,7 @@ class CementApp(meta.MetaMixin):
         plugin_handler = ext_plugin.CementPluginHandler
         argument_handler = ext_argparse.ArgParseArgumentHandler
         output_handler = ext_nulloutput.NullOutputHandler
-        controller_handler = None
+        base_controller = None
         extensions = []        
         core_extensions = [  
             'cement2.ext.ext_nulloutput',
@@ -159,7 +161,7 @@ class CementApp(meta.MetaMixin):
         self._setup_plugin_handler()
         self._setup_arg_handler()
         self._setup_output_handler()
-        self._setup_controller_handler()
+        self._setup_controllers()
 
         for res in hook.run('cement_post_setup_hook', self):
             pass
@@ -385,19 +387,19 @@ class CementApp(meta.MetaMixin):
                 handler.register(handler_def.__class__)
             han = handler_def
         elif hasattr(handler_def, 'Meta'):
-            if not handler.registered(handler_type, handler_def.Meta.label):
-                handler.register(handler_def)
             han = handler_def()
+            if not handler.registered(handler_type, han._meta.label):
+                handler.register(handler_def)
             
-        msg = "Unable to resolve handler type '%s' with label '%s'" % \
-              (handler_type, handler_def)
-        if han:
+        msg = "Unable to resolve handler '%s' of type '%s'" % \
+              (handler_def, handler_type)
+        if han is not None:
             self._set_handler_defaults(han)
             han._setup(self)
             return han
-        elif not han and raise_error:
+        elif han is None and raise_error:
             raise exc.CementRuntimeError(msg)
-        elif not han:
+        elif han is None:
             Log.debug(msg)
         
     def _setup_extension_handler(self):
@@ -411,6 +413,7 @@ class CementApp(meta.MetaMixin):
         Log.debug("setting up %s.config handler" % self._meta.label)
         self.config = self._resolve_handler('config', 
                                             self._meta.config_handler)
+        self.config.merge(self._meta.defaults)
         for _file in self._meta.config_files:
             self.config.parse_file(_file)
                                   
@@ -420,15 +423,31 @@ class CementApp(meta.MetaMixin):
            
     def _setup_plugin_handler(self):
         Log.debug("setting up %s.plugin handler" % self._meta.label) 
+        
+        # modify app defaults if not set
+        if not self._meta.plugin_config_dir:
+            self._meta.plugin_config_dir = '/etc/%s/plugins.d/' % self._meta.label
+            
+        # hack up plugin settings per _meta or default with app label
+        if not self._meta.plugin_config_dir:
+            self._meta.plugin_config_dir = '/etc/%s/plugins.d' % \
+                                            self._meta.label
+        #if not self._meta.plugin_bootstrap_module:
+        #    self._meta.plugin_bootstrap_module = '%s.bootstrap' % \
+        #                                         self._meta.label
+        if not self._meta.plugin_dir:
+            self._meta.plugin_dir = '/usr/lib/%s/plugins' % self._meta.label
+
         self.plugin = self._resolve_handler('plugin', 
                                             self._meta.plugin_handler)
-        #self.plugin.load_plugins(self.config.get('base', 'plugins'))
         self.plugin.load_plugins(self._meta.plugins)
+        self.plugin.load_plugins(self.plugin.enabled_plugins)
         
     def _setup_output_handler(self):
         Log.debug("setting up %s.output handler" % self._meta.label) 
         self.output = self._resolve_handler('output', 
-                                            self._meta.output_handler)
+                                            self._meta.output_handler,
+                                            raise_error=False)
          
     def _setup_arg_handler(self):
         Log.debug("setting up %s.arg handler" % self._meta.label) 
@@ -439,17 +458,18 @@ class CementApp(meta.MetaMixin):
         self.args.add_argument('--quiet', dest='suppress_output', 
             action='store_true', help='suppress all output')
                  
-    def _setup_controller_handler(self):
-        Log.debug("setting up %s.controller handler" % self._meta.label) 
+    def _setup_controllers(self):
+        Log.debug("setting up application controllers") 
 
         # set handler defaults for all controllers
         for contr in handler.list('controller'):
             self._set_handler_defaults(contr())
 
-        if self._meta.controller_handler:
+        if self._meta.base_controller:
             self.controller = self._resolve_handler('controller', 
-                                                self._meta.controller_handler)
-                                                   
+                                                self._meta.base_controller) 
+            self._meta.base_controller = self.controller
+                
         # Trump all with whats passed at the command line, and pop off the arg
         if len(self.argv) > 0:
             # translate dashes to underscore
@@ -458,6 +478,7 @@ class CementApp(meta.MetaMixin):
             h = handler.get('controller', contr, None)
             if h:
                 self.controller = h()
+                self.controller._setup(self)
                 self.argv.pop(0)
 
         # if no handler can be found, that's ok

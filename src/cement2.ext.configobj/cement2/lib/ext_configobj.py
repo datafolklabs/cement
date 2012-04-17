@@ -28,24 +28,10 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
         
     def __init__(self, *args, **kw):
         super(ConfigObjConfigHandler, self).__init__(*args, **kw)
+        self.app = None
         
-    def _setup(self, defaults):
-        """
-        Sets up the class for use by the framework, then calls self.merge() 
-        with the passed defaults.  
-        
-        Required Arguments:
-        
-            defaults
-                The application default config dictionary.  This is *not* a 
-                config object, but rather a dictionary which should be 
-                obvious because the config handler implementation is what
-                provides the application config object.
-                
-        Returns: n/a
-        
-        """
-        self.merge(defaults)
+    def _setup(self, app_obj):
+        self.app = app_obj
     
     def get_sections(self):
         """
@@ -83,9 +69,10 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
         Returns: Bool
         
         """
+        file_path = os.path.abspath(os.path.expanduser(file_path))
         if os.path.exists(file_path):
             _c = ConfigObj(file_path)
-            self.merge(_c)
+            self.merge(_c.dict())
             return True
         else:
             Log.debug("file '%s' does not exist, skipping..." % \

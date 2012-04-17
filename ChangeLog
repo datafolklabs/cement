@@ -41,6 +41,11 @@ Incompatible Changes:
     * Moved CementBaseController.dispatch() to _dispatch()
     * Moved CementBaseController.usage_text to _usage_text()
     * Moved CementBaseController.help_text to _help_text()
+    * backend.defaults() no longer accepts an app name as an argument.
+    * foundation.lay_cement() is deprecated.  Use foundation.CementApp() 
+      directly.
+    * No longer pass anything but 'app' object to handlers _setup() functions.
+    * handler.enabled() is deprecated.  Use handler.registered().
     
 1.9.4 - Wed Dec 21, 2011
 ------------------------------------------------------------------------------
