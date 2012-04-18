@@ -7,37 +7,22 @@ console output from text templates.
 Configuration
 -------------
 
-The genshi extension is configurable with the following config settings under
-the [genshi] section.
-
-    template_module   
-        The template module to look for template files in.  
-        Default: <app_name>.templates
-        
-
-The configurations can be passed as defaults:
+By default, templates are search for in the '<app_label>.templates' python
+module.  To override this, you can subclass and pass to CementApp().
 
 .. code-block:: python
     
     from cement2.core import foundation, backend
+    from cement2.lib.ext_genshi import GenshiOutputHandler
     
-    defaults = backend.defaults('myapp')
-    defaults['genshi'] = dict(
-        template_module='myapp.cli.templates'
-        )
+    class MyOutputHandler(GenshiOutputHandler):
+        class Meta:
+            label = 'my_output_handler'
+            template_module = 'myapp.cli.templates'
+            
+    app = foundation.CementApp('myapp', output_handler=MyOutputHandler)
     
-    app = foundation.lay_cement('myapp', defaults=defaults)
-    
 
-Additionally, an application configuration file might have a section like the
-following:
-
-.. code-block:: text
-
-    [genshi]
-    template_module = myapp.templates
-
-        
 Example Usage
 -------------
 
@@ -49,17 +34,10 @@ The following is an example application within a python package.
 
     from cement2.core import foundation, controller, handler, backend
 
-    # create the application
-    defaults = backend.defaults('myapp')
-    defaults['base']['extensions'].append('genshi')
-    defaults['base']['output_handler'] = 'genshi'
-    app = foundation.lay_cement('myapp', defaults=defaults)
-
     # define application controllers
     class MyAppBaseController(controller.CementBaseController):
         class Meta:
             label = 'base'
-            interface = controller.IController
             description = "My Application Does Amazing Things"
             defaults = dict()
             arguments = []
@@ -68,18 +46,21 @@ The following is an example application within a python package.
         def default(self):
             data = dict(
                 controller='base',
-                command='default'
+                command='default',
                 )
-        
             print self.render(data, 'default.txt')
-      
-    # register the controllers
-    handler.register(MyAppBaseController)        
 
-    # setup the application
-    app.setup()
-
+    # define the application
+    class MyApp(foundation.CementApp):
+        class Meta:
+            label = 'myapp'
+            output_handler = 'genshi'
+            extensions = ['genshi']
+            base_controller = MyAppBaseController
+            
     try:
+        app = MyApp()
+        app.setup()
         app.run()
     finally:
         app.close()

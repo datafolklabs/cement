@@ -17,7 +17,7 @@ class GenshiOutputHandler(output.CementOutputHandler):
     
         template_module
             The python (base) module where templates are loaded from.  This 
-            defaults to 'app_name.templates'.
+            defaults to 'label.templates'.
             
     """
     class Meta:

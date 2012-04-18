@@ -18,26 +18,6 @@ The following argument handlers are included and maintained with Cement2:
 Please reference the :ref:`IArgument <cement2.core.arg>` interface 
 documentation for writing your own argument handler.
 
-Overriding Default Argument Settings
-------------------------------------
-
-There are currently no default configuration settings for argument handlers.
-That said, alternative argument handlers may have defaults that can be 
-overridden.  This would be done the same as for any other handler:
-
-.. code-block:: python
-
-    from cement2.core import foundation, backend
-
-    defaults = backend.defaults('myapp')
-    defaults['args'] = dict(
-        some_param='some_value',
-        )
-
-    app = foundation.lay_cement('myapp', defaults=defaults)
-    app.setup()
-
-
 Adding Arguments
 ----------------
 
@@ -53,7 +33,7 @@ regardless of what the handler is):
     from cement2.core import foundation
 
     # Create the application
-    app = foundation.lay_cement('myapp')
+    app = foundation.CementApp('myapp')
 
     # Then setup the application... which will use our 'mylog' handler
     app.setup()

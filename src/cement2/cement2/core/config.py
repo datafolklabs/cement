@@ -30,7 +30,7 @@ class IConfig(interface.Interface):
     optional parameters that alter how it functions, but can not require
     any parameters.  When the framework first initializes handlers it does
     not pass anything too them, though a handler can be instantiated first
-    (with or without parameters) and then passed to 'lay_cement()' already
+    (with or without parameters) and then passed to 'CementApp()' already
     instantiated.
     
     Implementations do *not* subclass from interfaces.

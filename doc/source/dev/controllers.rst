@@ -31,9 +31,6 @@ handle command dispatch and rapid development.
 
     from cement2.core import backend, foundation, controller, handler
 
-    # create an application
-    app = foundation.lay_cement('example')
-
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
         class Meta:
@@ -66,13 +63,16 @@ handle command dispatch and rapid development.
         @controller.expose(aliases=['cmd2'], help="more of nothing.")
         def command2(self):
             self.log.info("Inside base.command2 function.")
-        
-    handler.register(MyAppBaseController)
-
-    # setup the application
-    app.setup()
-
+    
     try:
+        # create an application
+        app = foundation.CementApp('example', 
+            base_controller=MyAppBaseController
+            )
+
+        # setup the application
+        app.setup()
+        
         # run the application
         app.run()
     finally:
@@ -143,9 +143,6 @@ and the other is not.  Pay attention to how this looks at the command line:
 
     from cement2.core import backend, foundation, controller, handler
 
-    # create an application
-    app = foundation.lay_cement('example')
-
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
         class Meta:
@@ -209,15 +206,18 @@ and the other is not.  Pay attention to how this looks at the command line:
         def command3(self):
             self.log.info('Inside controller3.command3 function.')
 
-
-    handler.register(MyAppBaseController)
-    handler.register(Controller2)
-    handler.register(Controller3)
-
-    # setup the application
-    app.setup()
-
     try:
+        # create an application
+        app = foundation.CementApp('example', 
+            base_controller=MyAppBaseController
+            )
+    
+        handler.register(Controller2)
+        handler.register(Controller3)
+
+        # setup the application
+        app.setup()
+        
         # run the application
         app.run()
     finally:

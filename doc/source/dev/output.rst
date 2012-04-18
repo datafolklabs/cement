@@ -21,26 +21,6 @@ The following output handlers are included and maintained with Cement2:
 Please reference the :ref:`IOutput <cement2.core.output>` interface 
 documentation for writing your own output handler.
 
-Overriding Default Argument Settings
-------------------------------------
-
-There are currently no default configuration settings for output handlers.
-That said, alternative output handlers may have defaults that can be 
-overridden.  This would be done the same as for any other handler:
-
-.. code-block:: python
-
-    from cement2.core import foundation, backend
-
-    defaults = backend.defaults('myapp')
-    defaults['output'] = dict(
-        some_param='some_value',
-        )
-
-    app = foundation.lay_cement('myapp', defaults=defaults)
-    app.setup()
-
-
 Rending Output
 --------------
 
@@ -63,7 +43,7 @@ accessible by the application object.
     from cement2.core import foundation, output
 
     # Create the application
-    app = foundation.lay_cement('myapp')
+    app = foundation.CementApp('myapp')
 
     # Setup the application
     app.setup()
@@ -84,13 +64,7 @@ something happen:
 
 .. code-block:: python
 
-    from cement2.core import foundation, backend, handler, output
-
-    # Create the application with defaults for our handlers
-    defaults = backend.defaults('myapp')
-    defaults['base']['output_handler'] = 'myoutput'
-
-    app = foundation.lay_cement('myapp', defaults=defaults)
+    from cement2.core import foundation, handler, output
 
     # Create a custom output handler
     class MyOutput(object):
@@ -108,57 +82,11 @@ something happen:
             for key in data:
                 print "%s => %s" % (key, data[key])
 
-    handler.register(MyOutput)
+    app = foundation.CementApp('myapp', output_handler=MyOutputHandler)
 
-    # Setup the application
-    app.setup()
-
-    # Run the application
-    app.run()
-
-    # Add application logic
-    data = dict(foo='bar')
-    app.render(data)
-
-    # close the application
-    app.close()
-    
 Which looks like:
 
 .. code-block:: text
 
     $ python test.py
     foo => bar
-    
-    
-Customizing Output Handlers
----------------------------
-
-Some output handlers might allow customizations, or accept additional 
-arguments that you might want to pass and take advantage of.  Please note that
-this is based on the handler implementation, and not the IOutput interface.
-
-For example:
-
-.. code-block:: python
-
-    from cement2.core import foundation
-    from myapp.output import MyOutputHandler
-    
-    myoutput = MyOutputHandler(some_keywork='some_value')
-    
-    # do something else with myoutput handler
-    
-
-Note that, at this point the output handler is instantiated, but it is not 
-setup for use by the framework, meaning that some functions might not work
-as expected.  Cement calls 'setup()' on all handlers when app.setup() is 
-called.  Now you just need to pass the handler when creating a new 
-application.
-
-.. code-block:: python
-    
-    app = foundation.lay_cement('myapp', output_handler=myoutput)
-
-
-    

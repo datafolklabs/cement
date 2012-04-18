@@ -26,31 +26,6 @@ def defaults():
     dcf = {}
     dcf['base'] = {}
     dcf['base']['debug'] = False  
-    
-    # FIX ME: This should go under a [plugin] block handled by the plugin
-    # handler  
-    #dcf['base']['plugin_config_dir'] = '/etc/%s/plugins.d' % label
-    #dcf['base']['plugin_bootstrap_module'] = '%s.bootstrap' % label
-    #dcf['base']['plugin_dir'] = '/usr/lib/%s/plugins' % label
-
-    # default extensions
-    #dcf['base']['extensions'] = [  
-    #    'cement2.ext.ext_nulloutput',
-    #    'cement2.ext.ext_plugin',
-    #    'cement2.ext.ext_configparser', 
-    #    'cement2.ext.ext_logging', 
-    #    'cement2.ext.ext_argparse',
-    #    ]
-    
-    # default handlers
-    #dcf['base']['config_handler'] = 'configparser'
-    #dcf['base']['log_handler'] = 'logging'
-    #dcf['base']['arg_handler'] = 'argparse'
-    #dcf['base']['plugin_handler'] = 'cement'
-    #dcf['base']['extension_handler'] = 'cement'
-    #dcf['base']['output_handler'] = 'null'
-    #dcf['base']['controller_handler'] = 'base'
-    
     return dcf
 
 def minimal_logger(name, debug=False):
@@ -95,7 +70,7 @@ handlers = {}
 hooks = {}
 
 # Save original stdout/stderr for supressing output.  This is actually reset
-# in foundation.lay_cement before nullifying output, but we set it here
-# just for a default.
+# in foundation.CementApp.lay_cement() before nullifying output, but we set 
+# it here just for a default.
 SAVED_STDOUT = sys.stdout
 SAVED_STDERR = sys.stderr

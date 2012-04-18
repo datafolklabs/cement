@@ -36,11 +36,8 @@ The following defines a basic interface:
 
 .. code-block:: python
 
-    from cement2.core import foundation, interface, handler
+    from cement2.core import interface, handler
 
-    # You must lay_cement() before any handlers can be registered
-    app = foundation.lay_cement('myapp')
-    
     class MyInterface(interface.Interface):
         class iMeta:
             label = 'myinterface'
@@ -49,7 +46,7 @@ The following defines a basic interface:
         Meta = interface.Attribute('Handler Meta-data')
         my_var = interface.Attribute('A variable of epic proportions.')
     
-        def _setup(config_obj):
+        def _setup(app_obj):
             """
             The setup function is called during application initialization and
             must 'setup' the handler object making it ready for the framework
@@ -57,11 +54,8 @@ The following defines a basic interface:
         
             Required Arguments:
         
-                config_obj
-                    The application configuration object.  This is a config object 
-                    that implements the IConfigHandler interface and not a config 
-                    dictionary, though some config handler implementations may 
-                    also function like a dict (i.e. configobj).
+                app_obj
+                    The application object.
                 
             Returns: n/a
         
@@ -83,7 +77,8 @@ other than comments.
 That said, what is required is an 'iMeta' class that is used to interact
 with the interface.  At the very least, this must include a unique 'label'
 to identify the interface.  This can also be considered the 'handler type'.  
-For example, the ILog interface has a label of 'log'.
+For example, the ILog interface has a label of 'log' and any handlers 
+registered to that interface are stored in backend.handlers['log'].
 
 Notice that we defined 'Meta' and 'my_var' as Interface Attributes.  This is
 a simple identifier that describes an attribute that an implementation is 
@@ -97,11 +92,8 @@ like this:
 
 .. code-block:: python
 
-    from cement2.core import foundation, interface, handler
+    from cement2.core import interface, handler
 
-    # You must lay_cement() before any handlers can be registered
-    app = foundation.lay_cement('myapp')
-    
     def my_validator(klass, obj):
         members = [
             '_setup',
@@ -117,13 +109,13 @@ like this:
         ...
 
 When 'handler.register()' is called to register a handler to an interface,
-the validator is called and the handler obj is passed to the validator.  In
+the validator is called and the handler object is passed to the validator.  In
 the above example, we simply define what members we want to validate for and
 then call interface.validate() which will raise 
 cement2.core.exc.CementInterfaceError if validation fails.  It is not 
-necessary to use interface.validate() but it is useful.  In general, the key
-thing to note is that a validator either raises CementInterfaceError or does
-nothing if validation passes.
+necessary to use interface.validate() but it is useful and recommended.  In 
+general, the key thing to note is that a validator either raises 
+CementInterfaceError or does nothing if validation passes.
 
 Registering Handlers to an Interface
 ------------------------------------
@@ -134,10 +126,8 @@ is a handler that implements the MyInterface above:
 
 .. code-block:: python
 
-    from cement2.core import foundation, interface
-    
-    # You must lay_cement() before any handlers can be registered
-    app = foundation.lay_cement('myapp')
+    from cement2.core import handler
+    from myapp.interfaces import MyInterface
     
     class MyHandler(object):
         class Meta:
@@ -151,10 +141,10 @@ is a handler that implements the MyInterface above:
         my_var = 'This is my var'
         
         def __init__(self):
-            self.config = None
+            self.app = None
             
-        def _setup(config_obj):
-            self.config = config_obj
+        def _setup(app_obj):
+            self.app = app_obj
             
         def do_something(self):
             print "Doing work!"
@@ -176,7 +166,8 @@ The following are a few examples of working with handlers:
     from cement2.core import handler
     
     # Get a log handler called 'logging'
-    handler.get('log', 'logging')
+    log_handler = handler.get('log', 'logging')
+    log = log_handler()
     
     # List all handlers of type 'config'
     handler.list('config')
@@ -185,7 +176,7 @@ The following are a few examples of working with handlers:
     handler.defined('output')
     
     # Check if the handler 'argparse' is registered to the 'argument' interface
-    handler.enabled('argument', 'argparse')
+    handler.registered('argument', 'argparse')
     
 It is important to note that handlers are stored in backend.handlers as 
 uninstantiated objects.  Meaning you must instantiate them after retrieval 
@@ -198,62 +189,58 @@ like so:
     log_handler = handler.get('log', 'logging')
     log = log_handler()
 
+Or shorter:
+
+log = handler.get('log', 'logging')()
+
 
 Overriding Default Handlers
 ---------------------------
 
 Cement sets up a number of default handlers for logging, config parsing, etc.
-These can be overridden in a number of ways.  The first way is to set the
-configuration setting for that handler via the application defaults like so:
-
-.. code-block:: python
-    
-    from cement2.core import foundation, backend, interface, log
-    
-    # Set defaults
-    defaults = backend.defaults('myapp')
-    defaults['base']['log_handler'] = 'mylog'
-    
-    # Create the application
-    app = foundation.lay_cement('myapp', defaults=defaults)
-    
-    # Define the 'mylog' handler here
-    class MyLog(object):
-        class Meta:
-            interface = log.ILog
-            label = 'mylog'
-            
-        def some_function(self):
-            ...
-     
-    handler.register(MyLog)   
-    
-    # Setup the application
-    app.setup()
-    
-This may seem a little backwards that we are setting the 'mylog' log_handler
-in the default config, and then defining it after the application is created.
-The key thing to note is that nothing is actually called until after 
-'app.setup()' and also that no handlers can be created until 
-'foundation.lay_cement()' is called.  
-
-The second way to override a handler is by passing it to 
-'foundation.lay_cement()'.  This is useful if you do not desire to register a
-handler (for whatever reason):
+These can be overridden in a number of ways.  The first way is by passing 
+them as keyword arguments to CementApp():
 
 .. code-block:: python
     
     from cement2.core import foundation
-    from myapp.log import MyLog
+    from myapp.log import MyLogHandler
     
-    app = foundation.lay_cement('myapp', log_handler=MyLog())
+    # Create the application
+    app = foundation.CementApp('myapp', log_handler=MyLogHandler)
     
-Some things to note are:
+The second way to override a handler is by setting it directly in the 
+CementApp meta data:
 
-    * The class passed must be instantiated
-    * Cement will call ._setup() on the object when app.setup() is called.
-    * This handler will *not* be registered in backend.handlers
+.. code-block:: python
     
+    from cement2.core import foundation
+    from myapp.log import MyLogHandler
+    
+    class MyApp(foundation.CementApp):
+        class Meta:
+            label = 'myapp'
+            log_handler = MyLogHandler
+
+    app = MyApp()
+    
+There are times that you may want to pre-instantiate handlers before 
+passing them to CementApp().  The following works just the same:
+
+.. code-block:: python
+    
+    from cement2.core import foundation
+    from myapp.log import MyLogHandler
+    
+    my_log = MyLogHandler(some_param='some_value')
+    
+    class MyApp(foundation.CementApp):
+        class Meta:
+            label = 'myapp'
+            log_handler = my_log
+
+    app = MyApp()
+
 
 Multiple Registered Handlers
 ----------------------------
@@ -275,3 +262,67 @@ packages for Linux distributions.  An interface would define what a build
 handler needs to provide, but the build handler would be different based on
 the OS.  The application might have an 'rpm' build handler, or a 'debian' 
 build handler to perform the build process differently.
+
+Customizing Handlers
+--------------------
+
+The most common way to customize a handler is to subclass it, and then pass
+it to CementApp():
+
+.. code-block:: python
+
+    from cement2.core import foundation
+    from cement2.ext import ext_logging
+    
+    class MyLogHandler(ext_logging.LoggingLogHandler):
+        class Meta:
+            label = 'mylog'
+            
+        def info(self, msg):
+            # do something to customize this function, here...
+            super(MyLogHandler, selt).info(msg)
+            
+    app = foundation.CementApp('myapp', log_handler=MyLogHandler)
+    
+Hander Default Configuration Settings
+-------------------------------------
+
+All handlers can define default config file settings via the 'defaults' 
+meta option.  These will be merged into the app.config under the 
+'<handler_label>' section.  These settings are overridden in the following
+order.  
+
+ * The defaults dictionary passed to CementApp()
+ * Via any application config files with a [<handler_type>] block
+ 
+The following shows how to override defaults by passing them with the defaults
+dictionary to AppCement():
+            
+The f is to pass the overrides via the defaults dictionary passed to the
+CementApp().
+
+.. code-block:: python
+
+    from cement2.core import foundation, backend
+
+    defaults = backend.defaults()
+    defaults['log'] = dict(
+        file='/path/to/my.log',
+        to_console=False,
+        )
+
+    app = foundation.CementApp('myapp', defaults=defaults)
+
+Cement will use all defaults set via LoggingLogHandler.Meta.defaults (for this
+example), and then override just what is passed via defaults['log'].  You 
+should use this approach only to modify the global defaults for your 
+application.  The second way is to then set configuration file defaults 
+under the [<handler_type>] section.  For example:
+
+*my.config*
+
+.. code-block:: text
+
+    [log]
+    file = /path/to/my.log
+    to_console = False

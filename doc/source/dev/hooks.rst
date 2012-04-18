@@ -28,7 +28,7 @@ A hook can be defined as follows:
     from cement2.core import foundation, hook
     
     # First create the application
-    app = foundation.lay_cement('myapp')
+    app = foundation.CementApp('myapp')
     
     # Then define any application hooks
     hook.define('my_example_hook')
@@ -38,7 +38,7 @@ A hook can be defined as follows:
     
 
 Hooks should be defined as early on in the bootstrap process as possible,
-after 'lay_cement()' is called.            
+after the CementApp() is instantiated, but before 'app.setup()' is called.
 
 
 Registering Functions to a Hook
@@ -54,7 +54,7 @@ obviously).
     from cement2.core import foundation, hook
     
     # First create the application
-    app = foundation.lay_cement('myapp')
+    app = foundation.CementApp('myapp')
     
     # Then define any application hooks
     hook.define('my_example_hook')
@@ -134,12 +134,6 @@ a custom application hook:
 
     from cement2.core import backend, foundation, controller, handler, hook
 
-    # create an application
-    app = foundation.lay_cement('myapp')
-
-    # define a hook
-    hook.define('myapp_default_command_hook')
-
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
         class Meta:
@@ -155,12 +149,13 @@ a custom application hook:
             for res in hook.run('myapp_default_command_hook', self.app):
                 pass
 
-    handler.register(MyAppBaseController)
+    # create an application
+    app = foundation.CementApp('myapp', base_controller=MyAppBaseController)
 
-    # setup the application
-    app.setup()
+    # define a hook
+    hook.define('myapp_default_command_hook')
 
-    # register some hooks
+    # register some hook functions
 
     @hook.register(name='myapp_default_command_hook', weight=0)
     def hook1(app):
@@ -174,11 +169,17 @@ a custom application hook:
     def hook3(app):
         print 'Inside hook3 of %s.' % app.name
     
-    # run the application
-    app.run()
+    
+    try:
+        # setup the application
+        app.setup()
+    
+        # run the application
+        app.run()
 
-    # close the application
-    app.close()
+    finally:
+        # close the application
+        app.close()
     
 And the result is:
 

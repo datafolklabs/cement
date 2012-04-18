@@ -51,7 +51,7 @@ A basic application using default handling might look like:
     import signal
     from cement2.core import foundation, exc
     
-    app = foundation.lay_cement('myapp')
+    app = foundation.CementApp('myapp')
     app.setup()
     
     try:
@@ -86,7 +86,7 @@ is encountered.
     import signal
     from cement2.core import foundation, exc, hook
     
-    app = foundation.lay_cement('myapp') 
+    app = foundation.CementApp('myapp') 
     app.setup()
 
     @hook.register(name='cement_signal_hook')
@@ -123,7 +123,7 @@ Configuring Which Signals To Catch
 ----------------------------------
 
 You can define other signals to catch by passing a list of 'catch_signals' to
-foundation.lay_cement():
+foundation.CementApp():
 
 .. code-block:: python
 
@@ -132,7 +132,7 @@ foundation.lay_cement():
     
     SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
 
-    app = foundation.lay_cement('myapp', catch_signals=SIGNALS)
+    app = foundation.CementApp('myapp', catch_signals=SIGNALS)
     ...
     
 What happens is, Cement iterates over the catch_signals list and adds a 
@@ -164,7 +164,7 @@ callback.
         for res in hook.run('cement_signal_hook', signum, frame):
             pass 
 
-    app = foundation.lay_cement('myapp', 
+    app = foundation.CementApp('myapp', 
                                 catch_signals=SIGNALS,
                                 signal_handler=my_signal_handler)
     ...
@@ -181,4 +181,4 @@ performed, just set 'catch_signals=None'.
     import signal
     from cement2.core import foundation, exc
 
-    app = foundation.lay_cement('myapp', catch_signals=None)
+    app = foundation.CementApp('myapp', catch_signals=None)

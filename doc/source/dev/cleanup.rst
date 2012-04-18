@@ -17,10 +17,9 @@ For example:
     from cement2.core import foundation, hook
     from cement2.core.exc import CementRuntimeError
     
-    app = foundation.lay_cement('helloworld')
-    app.setup()
-
     try:
+        app = foundation.CementApp('helloworld')
+        app.setup()
         app.run()
         print('Hello World')
     except CementRuntimeError as e:

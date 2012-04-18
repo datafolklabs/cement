@@ -12,9 +12,6 @@ Multiple Stacked and Non-Stacked Controllers
 
     from cement2.core import foundation, controller, handler
 
-    # create the application
-    app = foundation.lay_cement('myapp')
-
     # define application controllers
     class MyAppBaseController(controller.CementBaseController):
         class Meta:
@@ -90,16 +87,18 @@ Multiple Stacked and Non-Stacked Controllers
         def command4(self):
             print "Inside FourthController.command4()"
           
-    # register the controllers
-    handler.register(MyAppBaseController)        
-    handler.register(SecondController)        
-    handler.register(ThirdController)        
-    handler.register(FourthController)        
-
-    # setup the application
-    app.setup()
-
     try:
+        # create the application
+        app = foundation.CementApp('myapp', base_controller=MyAppBaseController)
+    
+        # register non-base controllers      
+        handler.register(SecondController)        
+        handler.register(ThirdController)        
+        handler.register(FourthController)        
+
+        # setup the application
+        app.setup()
+
         app.run()
     finally:
         app.close()

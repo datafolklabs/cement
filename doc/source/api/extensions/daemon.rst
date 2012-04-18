@@ -40,7 +40,7 @@ The configurations can be passed as defaults:
     
     from cement2.core import foundation, backend
     
-    defaults = backend.defaults('myapp')
+    defaults = backend.defaults()
     defaults['daemon'] = dict()
     defaults['daemon']['user'] = 'myuser'
     defaults['daemon']['group'] = 'mygroup'
@@ -48,7 +48,7 @@ The configurations can be passed as defaults:
     defaults['daemon']['pid_file'] = '/var/run/myapp/myapp.pid'
     defaults['daemon']['umask'] = 0
     
-    app = foundation.lay_cement('myapp', defaults=defaults)
+    app = foundation.CementApp('myapp', defaults=defaults)
     
 
 Additionally, an application configuration file might have a section like the
@@ -75,12 +75,9 @@ trigger daemon functionality before app.run() is called.
     from time import sleep
     from cement2.core import foundation, backend
 
-    defaults = backend.defaults('myapp')
-    defaults['base']['extensions'].append('cement2.ext.ext_daemon')
-    app = foundation.lay_cement('myapp', defaults=defaults)
-    app.setup()
-
     try:    
+        app = foundation.CementApp('myapp', extensions=['daemon'])
+        app.setup()
         app.daemonize()
         app.run()
         
@@ -113,9 +110,7 @@ For example:
     from cement2.core import backend, foundation, controller, handler
     
     # create an application
-    defaults = backend.defaults('myapp')
-    defaults['base']['extensions'].append('cement2.ext.ext_daemon')
-    app = foundation.lay_cement('myapp', defaults=defaults)
+    app = foundation.CementApp('myapp', extensions=['daemon'])
 
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):

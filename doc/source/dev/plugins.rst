@@ -89,7 +89,7 @@ options and commands via an application controller:
 
 As you can see, this is very similar to an application that has a base 
 controller, however as you'll note we do not create an application object
-via foundation.lay_cement() like we do in our application.  This code/file
+via foundation.CementApp() like we do in our application.  This code/file
 would then be saved to a location defined by your applications configuration
 that determines where plugins are loaded from (See the next section).
 
@@ -116,13 +116,6 @@ application shows how to configure an application to load plugins:
 
     import sys
     from cement2.core import backend, foundation, controller, handler
-
-    defaults = backend.defaults('helloworld')
-    defaults['base']['plugin_config_dir'] = './config/plugins.d'
-    defaults['base']['plugin_dir'] = './plugins'
-
-    # create an application
-    app = foundation.lay_cement('helloworld', defaults=defaults)
 
     # define an application base controller
     class HelloWorldBaseController(controller.CementBaseController):
@@ -152,16 +145,23 @@ application shows how to configure an application to load plugins:
         def command1(self):
             self.log.info("Inside base.command1 function.")
     
-    handler.register(HelloWorldBaseController)
+    try:
+        # create an application
+        app = foundation.CementApp('helloworld', 
+            base_controller=HelloWorldBaseController,
+            plugin_config_dir='./config/plugins.d'
+            plugin_dir='./plugins'
+            )
 
-    # setup the application
-    app.setup()
+        # setup the application
+        app.setup()
 
-    # run the application
-    app.run()
+        # run the application
+        app.run()
 
-    # close the application
-    app.close()
+    finally:
+        # close the application
+        app.close()
     
     
 As you can see, we modified the default settings for 'plugin_config_dir' and
