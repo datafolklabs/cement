@@ -1,6 +1,7 @@
 """Cement core application module."""
 
 import re
+import os
 import sys
 import signal
 
