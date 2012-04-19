@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-VERSION = '1.9.6'
+VERSION = '1.9.7'
 
 LONG = """
 Cement2 is an advanced CLI Application Framework for Python. This package 
