@@ -37,8 +37,8 @@ This is simply an external location where plugins can be loaded from.  This is
 usually something like '/var/lib/myapp/plugins' or similar.  Plugins here must
 be a single file.
 
-plugin_bootstrap_module
-^^^^^^^^^^^^^^^^^^^^^^^
+plugin_bootstrap
+^^^^^^^^^^^^^^^^
 
 For internal plugins, or plugins that tie into the actual python namespace
 as the application.  For example, via Setuptools you can define 
@@ -109,7 +109,7 @@ Loading a Plugin
 ----------------
 
 Plugins are looked for first in the 'plugin_dir', and if not found then 
-Cement attempts to load them from the 'plugin_bootstrap_module'.  The following
+Cement attempts to load them from the 'plugin_bootstrap'.  The following
 application shows how to configure an application to load plugins:
 
 .. code-block:: python
@@ -166,7 +166,7 @@ application shows how to configure an application to load plugins:
     
 As you can see, we modified the default settings for 'plugin_config_dir' and
 'plugin_dir'.  Note that the default config setting for 
-'plugin_bootstrap_module' would be 'helloworld.bootstrap' which is what we 
+'plugin_bootstrap' would be 'helloworld.bootstrap' which is what we 
 want here anyway so it is left the default.  
 
 Running this application will do nothing particularly special, however by 

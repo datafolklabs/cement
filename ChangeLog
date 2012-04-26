@@ -19,7 +19,9 @@ is available online at:
 1.9.7 - development version (will be released as 1.9.8) 
 ------------------------------------------------------------------------------
 
-None
+Incompatible Changes:
+
+    * :issue:`103 - plugin_bootstrap_module renamed as plugin_bootstrap.
 
 
 1.9.6 - Wed Apr 18, 2012

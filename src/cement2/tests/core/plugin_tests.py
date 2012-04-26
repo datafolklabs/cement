@@ -70,7 +70,7 @@ class PluginTestCase(unittest.TestCase):
         app = _t.prep('myapp',
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
-            plugin_bootstrap_module=None,
+            plugin_bootstrap=None,
             )
         app.setup()
 
@@ -94,7 +94,7 @@ class PluginTestCase(unittest.TestCase):
         app = _t.prep('myapp', defaults=defaults,
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
-            plugin_bootstrap_module=None,
+            plugin_bootstrap=None,
             )
         app.setup()
     
@@ -133,7 +133,7 @@ class PluginTestCase(unittest.TestCase):
         app = _t.prep('myapp',
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
-            plugin_bootstrap_module=None,
+            plugin_bootstrap=None,
             )
         app.setup()
         shutil.rmtree(tmpdir)
@@ -158,7 +158,7 @@ class PluginTestCase(unittest.TestCase):
         app = _t.prep('myapp',
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
-            plugin_bootstrap_module=None,
+            plugin_bootstrap=None,
             )
         app.setup()
         shutil.rmtree(tmpdir)
@@ -176,7 +176,7 @@ class PluginTestCase(unittest.TestCase):
         app = _t.prep('myapp',
             plugin_config_dir=tmpdir,
             plugin_dir='./some/bogus/path',
-            plugin_bootstrap_module=None,
+            plugin_bootstrap=None,
             )
         try:
             app.setup()
@@ -198,7 +198,7 @@ class PluginTestCase(unittest.TestCase):
         app = _t.prep('myapp',
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
-            plugin_bootstrap_module='cement2.ext',
+            plugin_bootstrap='cement2.ext',
             )
         app.setup()
         

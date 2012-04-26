@@ -62,7 +62,7 @@ class CementApp(meta.MetaMixin):
             A directory path where plugin code (modules) can be loaded from.
             Default: '/usr/lib/<app_label>/plugins/'.
         
-        plugin_bootstrap_module
+        plugin_bootstrap
             A python package (dotted import path) where plugin code can be
             loaded from.  This is generally something like 'myapp.bootstrap'.
             Default: None.
@@ -190,7 +190,7 @@ class CementApp(meta.MetaMixin):
         config_files = []
         plugins = []
         plugin_config_dir = None
-        plugin_bootstrap_module = None
+        plugin_bootstrap = None
         plugin_dir = None
         argv = sys.argv[1:]
         defaults = backend.defaults()

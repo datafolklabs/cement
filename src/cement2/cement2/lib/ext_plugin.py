@@ -20,11 +20,6 @@ class CementPluginHandler(plugin.CementPluginHandler):
     class Meta:
         interface = plugin.IPlugin
         label = 'cement'
-        defaults = dict(
-            config_dir = None,
-            bootstrap_module = None,
-            load_dir = None
-            )
             
     def __init__(self):
         super(CementPluginHandler, self).__init__()
@@ -35,7 +30,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
     def _setup(self, app_obj):
         self.app = app_obj
         self.config_dir = self.app._meta.plugin_config_dir
-        self.bootstrap_module = self.app._meta.plugin_bootstrap_module
+        self.bootstrap = self.app._meta.plugin_bootstrap
         self.load_dir = self.app._meta.plugin_dir
 
         # grab a generic config handler object
@@ -144,7 +139,8 @@ class CementPluginHandler(plugin.CementPluginHandler):
         """
         Load a plugin whose name is 'plugin_name'.  First attempt to load
         from a plugin directory (plugin_dir), secondly attempt to load from a 
-        bootstrap module (plugin_bootstrap_module) determined by self.app.config.
+        bootstrap module (plugin_bootstrap) determined by 
+        self.app._meta.plugin_bootstrap.
         
         Upon successful loading of a plugin, the plugin name is appended to
         the self._loaded_plugins list.
@@ -162,7 +158,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         if self._load_plugin_from_dir(plugin_name, self.load_dir):
             self._loaded_plugins.append(plugin_name)
             return True
-        elif self._load_plugin_from_module(plugin_name, self.bootstrap_module):
+        elif self._load_plugin_from_module(plugin_name, self.bootstrap):
             self._loaded_plugins.append(plugin_name)
             return True
         else:
