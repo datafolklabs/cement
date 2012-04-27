@@ -39,83 +39,121 @@ class CementApp(meta.MetaMixin):
             The name of the application.  This should be the common name as
             you would see and use at the command line.  For example 
             'helloworld', or 'my-awesome-app'.
+            
+            Default: None
     
         argv
-            A list of arguments to use.  Default: sys.argv
+            A list of arguments to use for parsing command line arguments
+            and options.
+            
+            Default: sys.argv
             
         defaults
             Default configuration dictionary.
             
+            Default: cement2.core.backend.defaults()
+            
         config_files
-            List of config files to parse.  Default: [].
+            List of config files to parse.  
+            
+            Default: None
             
         plugins
             A list of plugins to load.  This is generally considered bad 
             practice since plugins should be dynamically enabled/disabled
-            via a plugin config file.  Default: [].
+            via a plugin config file.  
+            
+            Default: []
         
         plugin_config_dir
             A directory path where plugin config files can be found.  Files
-            must end in '.conf'.  Default: '/etc/<app_label>/plugins.d/'.
+            must end in '.conf'.  By default, this setting is also overridden
+            by the '[base] -> plugin_config_dir' config setting parsed in any
+            of the application configuration files.
+            
+            Default: None
+            
+            Note: Thought the meta default is None, Cement will set this to
+            '/etc/<app_label>/plugins.d/' if not set during app.setup().
         
         plugin_dir
             A directory path where plugin code (modules) can be loaded from.
-            Default: '/usr/lib/<app_label>/plugins/'.
+            By default, this setting is also overridden by the 
+            '[base] -> plugin_dir' config setting parsed in any of the 
+            application configuration files.
+            
+            Default: None
+            
+            Note: Thought the meta default is None, Cement will set this to
+            '/usr/lib/<app_label>/plugins/' if not set during app.setup()
         
         plugin_bootstrap
             A python package (dotted import path) where plugin code can be
             loaded from.  This is generally something like 'myapp.bootstrap'.
-            Default: None.
+            
+            Default: None
             
         catch_signals
             List of signals to catch, and raise exc.CementSignalError for.
-            Default: [signal.SIGTERM, signal.SIGINT].  Can be set to None
-            to disable signal handling.
+            Can be set to None to disable signal handling.
+
+            Default: [
+                signal.SIGTERM, 
+                signal.SIGINT
+                ].
                 
         signal_handler
             A function that is called to handle any caught signals. 
-            Default: cement.core.foundation.cement_signal_handler
+            
+            Default: cement2.core.foundation.cement_signal_handler
             
         config_handler
             A handler class that implements the IConfig interface.  This can
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
-            Default: ConfigParserConfigHandler.
+
+            Default: cement2.lib.ext_configparser.ConfigParserConfigHandler
             
         extension_handler
             A handler class that implements the IExtension interface.  This can
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
-            Default: CementExtensionHandler.
+            
+            Default: cement2.core.extension.CementExtensionHandler
         
         log_handler
             A handler class that implements the ILog interface.  This can
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
-            Default: LoggingLogHandler.
+
+            Default: cement2.lib.ext_logging.LoggingLogHandler
             
         plugin_handler
             A handler class that implements the IPlugin interface.  This can
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
-            Default: CementPluginHandler.
+
+            Default: cement2.lib.ext_plugin.CementPluginHandler
         
         argument_handler
             A handler class that implements the IArgument interface.  This can
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
-            Default: ArgParseArgumentHandler.
+
+            Default: cement2.lib.ext_argparse.ArgParseArgumentHandler
         
         output_handler
             A handler class that implements the IOutput interface.  This can
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
-            Default: NullOutputHandler.
+
+            Default: cement2.lib.ext_nulloutput.NullOutputHandler
             
         base_controller
             This is the base application controller.  If a controller is set,
             runtime operations are passed to the controller for command 
             dispatch and argument parsing when CementApp.run() is called.
+
             Default: None
         
         core_extensions
@@ -127,9 +165,38 @@ class CementApp(meta.MetaMixin):
             not necessary (for example if using your own log handler 
             extension you likely don't want/need LoggingLogHandler to be 
             registered).
+            
+            Default: [  
+                'cement2.ext.ext_nulloutput',
+                'cement2.ext.ext_plugin',
+                'cement2.ext.ext_configparser', 
+                'cement2.ext.ext_logging', 
+                'cement2.ext.ext_argparse',
+                ]
         
         extensions
             List of additional framework extensions to load.
+            
+            Default: []
+        
+        core_meta_override
+            List of meta options that can/will be overridden by config options
+            of the '[base]' config section.  These overrides are required by 
+            the framework to function properly and should not be used by end 
+            user (developers) unless you really know what you're doing.  To 
+            add your own extended meta overrides please use 
+            'meta_override'.
+            
+            Default: [
+                'debug', 
+                'plugin_config_dir', 
+                'plugin_dir'
+                ]
+            
+        meta_override
+            List of meta options that can/will be overridden by config options
+            of the '[base]' config section.
+            
             Default: []
             
     
@@ -187,7 +254,7 @@ class CementApp(meta.MetaMixin):
     """
     class Meta:
         label = None
-        config_files = []
+        config_files = None
         plugins = []
         plugin_config_dir = None
         plugin_bootstrap = None
@@ -211,6 +278,12 @@ class CementApp(meta.MetaMixin):
             'cement2.ext.ext_logging', 
             'cement2.ext.ext_argparse',
             ]
+        core_meta_override = [
+            'debug', 
+            'plugin_config_dir', 
+            'plugin_dir'
+            ]
+        meta_override = []
             
     def __init__(self, label=None, **kw):                
         super(CementApp, self).__init__(**kw)
@@ -408,9 +481,6 @@ class CementApp(meta.MetaMixin):
         # well, an extension.  ;)
         handler.register(extension.CementExtensionHandler)
     
-        #app = klass(name, defaults=defaults, *args, **kw)
-        #return app
-    
     def _set_handler_defaults(self, handler_obj):
         """
         Set config defaults per handler defaults if the config key is not 
@@ -517,7 +587,7 @@ class CementApp(meta.MetaMixin):
                                             self._meta.config_handler)
         self.config.merge(self._meta.defaults)
         
-        if not self._meta.config_files:
+        if self._meta.config_files is None:
             label = self._meta.label
             user_home = os.path.abspath(os.path.expanduser(os.environ['HOME']))
             self._meta.config_files = [
@@ -526,6 +596,12 @@ class CementApp(meta.MetaMixin):
                 ]
         for _file in self._meta.config_files:
             self.config.parse_file(_file)
+        
+        base_dict = self.config.get_section_dict('base')
+        for key in base_dict:
+            if key in self._meta.core_meta_override or \
+               key in self._meta.meta_override:
+                setattr(self._meta, key, base_dict[key])
                                   
     def _setup_log_handler(self):
         Log.debug("setting up %s.log handler" % self._meta.label)

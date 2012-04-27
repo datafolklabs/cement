@@ -29,9 +29,9 @@ class CementPluginHandler(plugin.CementPluginHandler):
      
     def _setup(self, app_obj):
         self.app = app_obj
-        self.config_dir = self.app._meta.plugin_config_dir
+        self.config_dir = util.abspath(self.app._meta.plugin_config_dir)
         self.bootstrap = self.app._meta.plugin_bootstrap
-        self.load_dir = self.app._meta.plugin_dir
+        self.load_dir = util.abspath(self.app._meta.plugin_dir)
 
         # grab a generic config handler object
         config_handler = handler.get('config', self.app.config._meta.label)
@@ -93,6 +93,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
                 
         """
         full_path = os.path.join(plugin_dir, "%s.py" % plugin_name)
+        print full_path
         if not os.path.exists(full_path):
             Log.debug("plugin file '%s' does not exist." % full_path)
             return False
@@ -105,9 +106,9 @@ class CementPluginHandler(plugin.CementPluginHandler):
         imp.load_module(plugin_name, f, path, desc)
         return True
             
-    def _load_plugin_from_module(self, plugin_name, base_package):
+    def _load_plugin_from_bootstrap(self, plugin_name, base_package):
         """
-        Load a plugin from a python module.  Returns True if no ImportError
+        Load a plugin from a python package.  Returns True if no ImportError
         is encountered.
         
         Required Arguments:
@@ -158,7 +159,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         if self._load_plugin_from_dir(plugin_name, self.load_dir):
             self._loaded_plugins.append(plugin_name)
             return True
-        elif self._load_plugin_from_module(plugin_name, self.bootstrap):
+        elif self._load_plugin_from_bootstrap(plugin_name, self.bootstrap):
             self._loaded_plugins.append(plugin_name)
             return True
         else:

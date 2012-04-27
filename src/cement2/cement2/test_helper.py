@@ -3,6 +3,9 @@ import sys
 from cement2.core import backend, foundation, handler, hook
 
 class TestApp(foundation.CementApp):
+    class Meta:
+        config_files = []
+        
     def __init__(self, *args, **kw):
         super(TestApp, self).__init__(*args, **kw)
         from cement2.ext import ext_argparse

@@ -68,10 +68,12 @@ class PluginTestCase(unittest.TestCase):
         f.close()
     
         app = _t.prep('myapp',
+            config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
             plugin_bootstrap=None,
             )
+        print app._meta.plugin_config_dir
         app.setup()
 
         try:
@@ -92,6 +94,7 @@ class PluginTestCase(unittest.TestCase):
         defaults['myplugin2'] = dict()
         defaults['myplugin2']['enable_plugin'] = False
         app = _t.prep('myapp', defaults=defaults,
+            config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
             plugin_bootstrap=None,
@@ -131,6 +134,7 @@ class PluginTestCase(unittest.TestCase):
         f.close()
     
         app = _t.prep('myapp',
+            config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
             plugin_bootstrap=None,
@@ -156,6 +160,7 @@ class PluginTestCase(unittest.TestCase):
         f.close()
         
         app = _t.prep('myapp',
+            config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
             plugin_bootstrap=None,
@@ -174,6 +179,7 @@ class PluginTestCase(unittest.TestCase):
         f.close()
 
         app = _t.prep('myapp',
+            config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir='./some/bogus/path',
             plugin_bootstrap=None,
@@ -196,6 +202,7 @@ class PluginTestCase(unittest.TestCase):
         f.close()
     
         app = _t.prep('myapp',
+            config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
             plugin_bootstrap='cement2.ext',

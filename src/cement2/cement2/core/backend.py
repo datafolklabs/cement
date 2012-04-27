@@ -25,7 +25,7 @@ def defaults():
     """        
     dcf = {}
     dcf['base'] = {}
-    dcf['base']['debug'] = False  
+    dcf['base']['debug'] = False
     return dcf
 
 def minimal_logger(name, debug=False):
