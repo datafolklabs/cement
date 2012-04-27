@@ -19,8 +19,8 @@ documentation for writing your own plugin handler.
 Plugin Configuration Settings
 -----------------------------
 
-There are a few settings related to how plugins are loaded under the 'base'
-section of your application's configuration.  These are:
+There are a few settings related to how plugins are loaded under the 
+applications Meta options.  These are:
 
 plugin_config_dir
 ^^^^^^^^^^^^^^^^^
