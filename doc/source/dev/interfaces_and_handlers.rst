@@ -134,7 +134,7 @@ is a handler that implements the MyInterface above:
             interface = MyInterface
             label = 'my_handler'
             description = 'This handler implements MyInterface'
-            defaults = {
+            config_defaults = {
                 foo='bar'
                 }
     
@@ -287,42 +287,43 @@ it to CementApp():
 Hander Default Configuration Settings
 -------------------------------------
 
-All handlers can define default config file settings via the 'defaults' 
+All handlers can define default config file settings via the 'config_defaults' 
 meta option.  These will be merged into the app.config under the 
-'<handler_label>' section.  These settings are overridden in the following
-order.  
+'<handler_interface>.<handler_label>' section.  These settings are overridden 
+in the following order.  
 
- * The defaults dictionary passed to CementApp()
- * Via any application config files with a [<handler_type>] block
+ * The config_defaults dictionary passed to CementApp()
+ * Via any application config files with a 
+   [<handler_interface>.<handler_type>] block
  
 The following shows how to override defaults by passing them with the defaults
-dictionary to AppCement():
+dictionary to CementApp():
             
-The f is to pass the overrides via the defaults dictionary passed to the
-CementApp().
+The first way is to pass the overrides via the config_defaults dictionary 
+passed to the CementApp().
 
 .. code-block:: python
 
     from cement2.core import foundation, backend
 
     defaults = backend.defaults()
-    defaults['log'] = dict(
-        file='/path/to/my.log',
-        to_console=False,
-        )
+    defaults['myinterface.myhandler'] = dict(foo='bar')
+    app = foundation.CementApp('myapp', config_defaults=defaults)
 
-    app = foundation.CementApp('myapp', defaults=defaults)
-
-Cement will use all defaults set via LoggingLogHandler.Meta.defaults (for this
-example), and then override just what is passed via defaults['log'].  You 
-should use this approach only to modify the global defaults for your 
-application.  The second way is to then set configuration file defaults 
-under the [<handler_type>] section.  For example:
+Cement will use all defaults set via MyHandler.Meta.config_defaults (for this
+example), and then override just what is passed via 
+config_defaults['myinterface.myhandler'].  You should use this approach only 
+to modify the global defaults for your application.  The second way is to then 
+set configuration file defaults under the [myinterface.myhandler] section.  
+For example:
 
 *my.config*
 
 .. code-block:: text
 
-    [log]
-    file = /path/to/my.log
-    to_console = False
+    [myinterface.myhandler]
+    foo = bar
+
+In the real world this my look like '[controller.tasks]', or 
+'[database.mysql]' depending on what the interface label, and handler label's
+are.

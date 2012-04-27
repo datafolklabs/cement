@@ -20,12 +20,11 @@ def defaults():
         defaults['base']['debug'] = False
         defaults['base']['some_param'] = 'some_value'
         
-        app = foundation.CementApp('myapp', defaults=defaults)
+        app = foundation.CementApp('myapp', config_defaults=defaults)
         
     """        
     dcf = {}
     dcf['base'] = {}
-    dcf['base']['debug'] = False
     return dcf
 
 def minimal_logger(name, debug=False):

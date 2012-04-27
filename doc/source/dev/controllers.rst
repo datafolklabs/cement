@@ -39,7 +39,7 @@ handle command dispatch and rapid development.
             description = "My Application does amazing things!"
             epilog = "This is the text at the bottom of --help."
             
-            defaults = dict(
+            config_defaults = dict(
                 foo='bar',
                 some_other_option='my default value',
                 )
@@ -150,7 +150,7 @@ and the other is not.  Pay attention to how this looks at the command line:
             label = 'base'
             description = "My Application does amazing things!"
 
-            defaults = dict(
+            config_defaults = dict(
                 foo='bar',
                 some_other_option='my default value',
                 )
@@ -177,7 +177,7 @@ and the other is not.  Pay attention to how this looks at the command line:
             label = 'controller2'
             stacked_on = 'base'
             description = 'This is the description for controller2.'
-            defaults = dict()
+            config_defaults = dict()
 
             arguments = [
                 (['--foo2'], dict(action='store', help='the notorious foo option')),
@@ -192,7 +192,7 @@ and the other is not.  Pay attention to how this looks at the command line:
             interface = controller.IController
             label = 'controller3'
             description = 'This is the description for controller3.'
-            defaults = dict()
+            config_defaults = dict()
 
             arguments = [
                 (['--foo3'], dict(action='store', help='the notorious foo option')),

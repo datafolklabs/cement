@@ -88,7 +88,6 @@ class DaemonExtTestCase(unittest.TestCase):
         (_, tmpfile) = tempfile.mkstemp()
         os.remove(tmpfile)
     
-        defaults = backend.defaults()    
         app = _t.prep('myapp')
         import_daemon()
     
@@ -104,7 +103,6 @@ class DaemonExtTestCase(unittest.TestCase):
             ext_daemon.cement_on_close_hook(app)
 
     def test_daemon_not_passed(self):
-        defaults = backend.defaults()
         app = _t.prep('myapp')
         import_daemon()
     

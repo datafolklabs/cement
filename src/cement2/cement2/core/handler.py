@@ -4,9 +4,60 @@ Cement core handler module.
 """
 
 import re
-from cement2.core import exc, backend
+from cement2.core import exc, backend, meta
 
 Log = backend.minimal_logger(__name__)
+
+class CementBaseHandler(meta.MetaMixin):
+    """
+    All handlers should subclass from here.
+    
+    Optional / Meta Options:
+    
+        label
+            The identifier of this handler
+            
+        interface
+            The interface that this handler implements.
+        
+        config_section
+            A config [section] to merge config_defaults with.
+            
+            Default: <interface_label>.<handler_label>
+            
+        config_defaults
+            A config dictionary that is merged into the applications config
+            in the [<config_section>] block.  These are defaults and do not
+            override any existing defaults under that section.
+            
+        """
+    class Meta:
+        label = None
+        interface = None
+        config_section = None
+        config_defaults = None
+        
+    def __init__(self, **kw):
+        super(CementBaseHandler, self).__init__(**kw)
+        self.app = None
+        
+    def _setup(self, app_obj):
+        self.app = app_obj
+        if self._meta.config_section is None:
+            self._meta.config_section = "%s.%s" % \
+                (self._meta.interface.IMeta.label, self._meta.label)
+                
+        ### FIX ME: Deprecation.
+        if hasattr(self._meta, 'defaults'):
+            print('DEPRECATION WARNING: Handler Meta.defaults is ' + \
+                  'deprecated.  Use Meta.config_defaults instead.')
+            if self._meta.config_defaults is None:
+                self._meta.config_defaults = self._meta.defaults
+        if self._meta.config_defaults is not None:
+            Log.debug("merging config defaults from '%s'" % self)
+            dict_obj = dict()
+            dict_obj[self._meta.config_section] = self._meta.config_defaults
+            self.app.config.merge(dict_obj, override=False)
 
 def get(handler_type, handler_label, *args):
     """

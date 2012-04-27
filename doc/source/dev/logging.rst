@@ -19,60 +19,6 @@ The following log handlers are included and maintained with Cement2:
 Please reference the :ref:`ILog <cement2.core.config>` interface 
 documentation for writing your own log handler.
 
-Overriding Default Config Settings
-----------------------------------
-
-All handlers have an optional 'defaults' dictionary that is merged into the
-application configuration.  For example, the 'logging' handler's defaults are
-loaded into 'config -> log' where 'log' is the type of handler that 'logging'
-provides.  You can override these settings by doing the following:
-
-.. code-block:: python
-
-    from cement2.core import foundation, backend
-
-    defaults = backend.defaults('myapp')
-    defaults['log'] = dict(
-        file='/path/to/my.log',
-        to_console=False,
-        )
-
-    app = foundation.CementApp('myapp', defaults=defaults)
-    app.setup()
-
-
-Additionally, a '[log]' block in any configuration file will also override
-the log handler defaults.  For example:
-
-*my.config*
-
-.. code-block:: text
-
-    [log]
-    file = /path/to/my.log
-    to_console = False
-    
-
-By adding a quick change to our defaults, we can easily parse a config file
-which overrides our defaults.
-
-.. code-block:: python
-    
-    from cement2.core import foundation, backend
-
-    defaults = backend.defaults()
-    defaults['base']['config_files'] = ['./my.config']
-    defaults['log'] = dict(
-        file='/path/to/my.log',
-        to_console=False,
-        )
-
-    app = foundation.CementApp('myapp', defaults=defaults)
-    app.setup()
-    
-
-For a full list of available defaults see the :doc:`Logging Extension </api/extensions/logging>` documentation.
-
 Logging Messages
 ----------------
 
@@ -117,8 +63,8 @@ and fatal... but you will not receive INFO, or DEBUG level messages.
 Changing Log Level
 ------------------
 
-The log level defaults to INFO, based on the 'defaults' of the log handler.
-You can override this in the same way we did above:
+The log level defaults to INFO, based on the 'config_defaults' of the log 
+handler.  You can override this via config_defaults:
 
 .. code-block:: python
 
@@ -128,10 +74,12 @@ You can override this in the same way we did above:
     defaults['log'] = dict(
         level='WARN',
         )
-
-    app = foundation.CementApp('myapp', defaults=defaults)
+    app = foundation.CementApp('myapp', config_defaults=defaults)
     app.setup()
     
+This will also be overridden by the 'level' setting under a '[log]' section
+in any of the applications configuration files that are parsed.
+
 You should also note that Cement includes a '--debug' command line option by
 default.  This triggers the log level to 'DEBUG' and is helpful for quickly
 debugging issues:

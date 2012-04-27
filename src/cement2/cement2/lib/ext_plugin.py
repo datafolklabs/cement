@@ -28,7 +28,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         self._disabled_plugins = []
      
     def _setup(self, app_obj):
-        self.app = app_obj
+        super(CementPluginHandler, self)._setup(app_obj)
         self.config_dir = util.abspath(self.app._meta.plugin_config_dir)
         self.bootstrap = self.app._meta.plugin_bootstrap
         self.load_dir = util.abspath(self.app._meta.plugin_dir)
@@ -93,7 +93,6 @@ class CementPluginHandler(plugin.CementPluginHandler):
                 
         """
         full_path = os.path.join(plugin_dir, "%s.py" % plugin_name)
-        print full_path
         if not os.path.exists(full_path):
             Log.debug("plugin file '%s' does not exist." % full_path)
             return False

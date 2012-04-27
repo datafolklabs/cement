@@ -15,25 +15,6 @@ class NullOutputHandler(output.CementOutputHandler):
         interface = output.IOutput
         label = 'null'
         
-    def _setup(self, config_obj):
-        """
-        Sets up the class for use by the framework.  Little is done here in
-        this implementation.
-        
-        Required Arguments:
-        
-            config_obj
-                The application configuration object.  This is a config object 
-                that implements the :ref:`IConfig <cement2.core.config>` 
-                interface and not a config dictionary, though some config 
-                handler implementations may also function like a dict 
-                (i.e. configobj).
-                
-        Returns: n/a
-        
-        """
-        self.config = config_obj
-        
     def render(self, data_dict, template=None):
         """
         This implementation does not actually render anything to output, but

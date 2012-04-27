@@ -7,6 +7,11 @@ from cement2.core import foundation, exc, backend, config, extension, plugin
 from cement2.core import log, output, handler, hook, arg, controller
 from cement2 import test_helper as _t
        
+class DeprecatedApp(foundation.CementApp):
+    class Meta:
+        label = 'deprecated'
+        defaults = None
+        
 class TestOutputHandler(output.CementOutputHandler):
     file_suffix = None
     
@@ -32,6 +37,13 @@ def my_hook_three(app):
 class FoundationTestCase(unittest.TestCase):
     def setUp(self):
         self.app = _t.prep('my_app')
+        
+    def test_old_app(self):
+        defaults = backend.defaults()
+        defaults['base']['foo'] = 'bar'
+        self.app = DeprecatedApp(defaults=defaults)
+        self.app.setup()
+        eq_(self.app.config.get('base', 'foo'), 'bar')
         
     def test_old_lay_cement(self):
         self.app = foundation.lay_cement('myapp')

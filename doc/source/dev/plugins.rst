@@ -74,7 +74,7 @@ options and commands via an application controller:
             description = 'This is my plugin controller.'
             stacked_on = 'base'
         
-            defaults = dict(foo='bar')
+            config_defaults = dict(foo='bar')
     
             arguments = [
                 (['--foo'], dict(action='store', help='the infamous foo option')),
@@ -124,7 +124,7 @@ application shows how to configure an application to load plugins:
             label = 'base'
             description = "HelloWorld does amazing things!"
 
-            defaults = dict(
+            config_defaults = dict(
                 foo='bar',
                 some_other_option='my default value',
                 )
@@ -195,7 +195,7 @@ for example:
             description = 'This is my plugin controller.'
             stacked_on = 'base'
     
-            defaults = dict(some_option='some_value')
+            config_defaults = dict(some_option='some_value')
 
             arguments = [
                 (['--some-option'], dict(action='store')),

@@ -28,7 +28,7 @@ class LogTestCase(unittest.TestCase):
             file='/dev/null',
             to_console=True
             )
-        app = _t.prep(defaults=defaults)
+        app = _t.prep(config_defaults=defaults)
         app.setup()
         app.log.info('Info Message')
         app.log.warn('Warn Message')
@@ -47,10 +47,9 @@ class LogTestCase(unittest.TestCase):
         app.log.set_level('BOGUS')
 
     def test_console_log(self):
-        app = _t.prep('test')
+        app = _t.prep('test', debug=True)
         app.setup()
     
-        app.config.set('base', 'debug', True)
         app.config.set('log', 'file', '/dev/null')
         app.config.set('log', 'to_console', True)
     

@@ -29,7 +29,7 @@ class LoggingExtTestCase(unittest.TestCase):
             rotate=True,
             to_console=True
             )
-        app = _t.prep(defaults=defaults)
+        app = _t.prep(config_defaults=defaults)
         app.setup()    
     
     def test_bad_level(self):
@@ -37,7 +37,7 @@ class LoggingExtTestCase(unittest.TestCase):
         defaults['log'] = dict(
             level='BOGUS'
             )
-        app = _t.prep(defaults=defaults)
+        app = _t.prep(config_defaults=defaults)
         app.setup()            
         eq_(app.log.level(), 'INFO')
 
@@ -53,7 +53,7 @@ class LoggingExtTestCase(unittest.TestCase):
             file=mkstemp()[1],
             rotate=True,
             )
-        app = _t.prep(defaults=defaults)
+        app = _t.prep(config_defaults=defaults)
         app.setup()    
         
         # FIX ME: Actually check rotation here
@@ -67,5 +67,5 @@ class LoggingExtTestCase(unittest.TestCase):
         defaults['log'] = dict(
             file=os.path.join(tmp_path, 'myapp.log'),
             )
-        app = _t.prep(defaults=defaults)
+        app = _t.prep(config_defaults=defaults)
         app.setup()

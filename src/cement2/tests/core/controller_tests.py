@@ -17,7 +17,7 @@ class BogusController2(controller.CementBaseController):
         interface = controller.IController
         label = 'bogus2'
         description = 'Bogus Base Controller2'
-        defaults = {}
+        config_defaults = {}
         arguments = ['bad']
         hide = False
         stacked_on = 'base'
@@ -27,7 +27,7 @@ class BogusController3(controller.CementBaseController):
         interface = controller.IController
         label = 'bogus3'
         description = 'Bogus Base Controller3'
-        defaults = {}
+        config_defaults = {}
         arguments = [(['--ok'], 'bad')]
         hide = False
         stacked_on = 'base'
@@ -37,7 +37,7 @@ class BogusController4(controller.CementBaseController):
         interface = controller.IController
         label = 'bogus4'
         description = 'Bogus Base Controller4'
-        defaults = {}
+        config_defaults = {}
         arguments = [('bad', dict())]
         hide = False
         stacked_on = 'base'
@@ -47,7 +47,8 @@ class TestBaseController(controller.CementBaseController):
         interface = controller.IController
         label = 'base'
         description = 'Test Base Controller'
-        defaults = dict(test_base_default=1)
+        config_section = 'base'
+        config_defaults = dict(test_base_default=1)
         arguments = []
         hide = False
     
@@ -64,7 +65,7 @@ class TestBaseController2(controller.CementBaseController):
         interface = controller.IController
         label = 'base'
         description = 'Test Base Controller2'
-        defaults = {}
+        config_defaults = {}
         arguments = []
         hide = False
     
@@ -81,7 +82,8 @@ class TestStackedController(controller.CementBaseController):
         interface = controller.IController
         label = 'test_stacked'
         description = 'Test Stacked Controller'
-        defaults = dict(test_stacked_default=2)
+        config_section = 'base'
+        config_defaults = dict(test_stacked_default=2)
 
         arguments = [
             (['--foo-stacked'], dict(action='store'))
@@ -90,7 +92,7 @@ class TestStackedController(controller.CementBaseController):
         stacked_on = 'base'
         hide = False
     
-    @controller.expose(aliases=['my-stckd-cmd'])
+    @controller.expose(aliases=['my-stckd-cmd'], help='my stacked command')
     def my_stacked_command(self):
         pass
 
@@ -99,7 +101,8 @@ class DoubleStackedController(controller.CementBaseController):
         interface = controller.IController
         label = 'double_stacked'
         description = 'Double Stacked Controller'
-        defaults = dict()
+        config_defaults = None
+        defaults = dict(foo='bar') # covers deprecated code
         arguments = []
         stacked_on = 'test_stacked'
     
@@ -112,7 +115,7 @@ class TestSecondaryController(controller.CementBaseController):
         interface = controller.IController
         label = 'test_secondary'
         description = 'Test Secondary Controller'
-        defaults = dict(test_secondary_default=3)
+        config_defaults = dict(test_secondary_default=3)
 
         arguments = [
             (['-f2', '--foo2'], dict(action='store'))
@@ -129,7 +132,7 @@ class TestDuplicateController(controller.CementBaseController):
         description = 'Test Duplicate Controller'
         stacked_on = 'base'
         
-        defaults = dict(
+        config_defaults = dict(
             foo='bar',
             )
 
@@ -148,7 +151,7 @@ class TestDuplicate2Controller(controller.CementBaseController):
         description = 'Test Duplicate2 Controller'
         stacked_on = 'base'
         
-        defaults = dict(
+        config_defaults = dict(
             foo='bar',
             )
 
@@ -167,7 +170,7 @@ class TestDuplicate3Controller(controller.CementBaseController):
         description = 'Test Duplicate3 Controller'
         stacked_on = 'base'
         
-        defaults = dict(
+        config_defaults = dict(
             foo='bar',
             )
 
@@ -184,7 +187,7 @@ class SameNameController(controller.CementBaseController):
         interface = controller.IController
         label = 'same_name'
         description = 'Same Name Controller'
-        defaults = dict()
+        config_defaults = dict()
         arguments = []
         stacked_on = 'base'
         
@@ -197,7 +200,7 @@ class SameNameAliasController(controller.CementBaseController):
         interface = controller.IController
         label = 'same_name_alias'
         description = 'Same Name Alias Controller'
-        defaults = dict()
+        config_defaults = dict()
         arguments = []
         stacked_on = 'base'
     
@@ -336,12 +339,10 @@ class ControllerTestCase(unittest.TestCase):
             base_controller=TestBaseController,
             )
         handler.register(TestStackedController)
-        handler.register(TestSecondaryController)
         self.app.setup()
         self.app.run()
         eq_(self.app.config.get('base', 'test_base_default'), 1)
         eq_(self.app.config.get('base', 'test_stacked_default'), 2)
-        eq_(self.app.config.get('test_secondary', 'test_secondary_default'), 3)
     
     @raises(exc.CementRuntimeError)
     def test_same_name_controller(self):

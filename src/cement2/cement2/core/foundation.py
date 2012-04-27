@@ -42,16 +42,27 @@ class CementApp(meta.MetaMixin):
             
             Default: None
     
+        debug
+            Toggles debug output.  By default, this setting is also overridden
+            by the '[base] -> debug' config setting parsed in any
+            of the application configuration files.
+            
+            Default: False
+            
         argv
             A list of arguments to use for parsing command line arguments
             and options.
             
             Default: sys.argv
             
-        defaults
+        config_defaults
             Default configuration dictionary.
             
-            Default: cement2.core.backend.defaults()
+            Default: None
+            
+            Note: Though CementApp.Meta.config_defaults is None by default, 
+            if no other defaults are passed in then Cement will use
+            cement2.core.backend.defaults().
             
         config_files
             List of config files to parse.  
@@ -73,7 +84,7 @@ class CementApp(meta.MetaMixin):
             
             Default: None
             
-            Note: Thought the meta default is None, Cement will set this to
+            Note: Though the meta default is None, Cement will set this to
             '/etc/<app_label>/plugins.d/' if not set during app.setup().
         
         plugin_dir
@@ -84,7 +95,7 @@ class CementApp(meta.MetaMixin):
             
             Default: None
             
-            Note: Thought the meta default is None, Cement will set this to
+            Note: Though the meta default is None, Cement will set this to
             '/usr/lib/<app_label>/plugins/' if not set during app.setup()
         
         plugin_bootstrap
@@ -226,14 +237,14 @@ class CementApp(meta.MetaMixin):
                 arguments = [
                     ( ['-f', '--foo'], dict(help='Notorious foo option') ),
                     ]
-                defaults = dict(
+                config_defaults = dict(
                     debug=False,
                     some_config_param='some_value',
                     )
             
             @controller.expose(help='This is the default command', hide=True)
             def default(self):
-                print 'Hello World'
+                print('Hello World')
                     
         class MyApp(foundation.CementApp):
             class Meta:
@@ -254,13 +265,14 @@ class CementApp(meta.MetaMixin):
     """
     class Meta:
         label = None
+        debug = False
         config_files = None
         plugins = []
         plugin_config_dir = None
         plugin_bootstrap = None
         plugin_dir = None
         argv = sys.argv[1:]
-        defaults = backend.defaults()
+        config_defaults = None
         catch_signals = [signal.SIGTERM, signal.SIGINT]
         signal_handler = cement_signal_handler
         config_handler = ext_configparser.ConfigParserConfigHandler
@@ -440,7 +452,7 @@ class CementApp(meta.MetaMixin):
         # hacks to suppress console output
         suppress_output = False
         if '--debug' in self._meta.argv:
-            self._meta.defaults['base']['debug'] = True
+            self._meta.debug = True
         else:
             for flag in ['--quiet', '--json', '--yaml']:
                 if flag in self._meta.argv:
@@ -480,41 +492,6 @@ class CementApp(meta.MetaMixin):
         # extension handler is the only thing that can't be loaded... as, 
         # well, an extension.  ;)
         handler.register(extension.CementExtensionHandler)
-    
-    def _set_handler_defaults(self, handler_obj):
-        """
-        Set config defaults per handler defaults if the config key is not 
-        already set.  The configurations are set under a [section] whose
-        name is that of the handlers interface type/label.  The exception
-        is for handlers of type 'controllers', by which case the label of the
-        controller is used.
-        
-        Required Arguments:
-        
-            handler_obj
-                An instantiated handler object.
-                
-        """
-        if not hasattr(handler_obj._meta, 'defaults'):
-            Log.debug("no config defaults from '%s'" % handler_obj)
-            return 
-        
-        Log.debug("setting config defaults from '%s'" % handler_obj)
-        
-        dict_obj = dict()
-        handler_type = handler_obj._meta.interface.IMeta.label
-        
-        if handler_type == 'controller':
-            # If its stacked, then add the defaults to the parent config
-            if getattr(handler_obj._meta, 'stacked_on', None):
-                key = handler_obj._meta.stacked_on
-            else:
-                key = handler_obj._meta.label
-        else:
-            key = handler_type
-            
-        dict_obj[key] = handler_obj._meta.defaults
-        self.config.merge(dict_obj, override=False)
             
     def _parse_args(self):
         self.args.parse(self.argv)
@@ -566,7 +543,6 @@ class CementApp(meta.MetaMixin):
         msg = "Unable to resolve handler '%s' of type '%s'" % \
               (handler_def, handler_type)
         if han is not None:
-            self._set_handler_defaults(han)
             han._setup(self)
             return han
         elif han is None and raise_error:
@@ -585,7 +561,13 @@ class CementApp(meta.MetaMixin):
         Log.debug("setting up %s.config handler" % self._meta.label)
         self.config = self._resolve_handler('config', 
                                             self._meta.config_handler)
-        self.config.merge(self._meta.defaults)
+        if hasattr(self._meta, 'defaults'):
+            print('DEPRECATION WARNING: CementApp.Meta.defaults is ' + \
+                  'deprecated.  Use CementApp.Meta.config_defaults instead.')
+            self.config.merge(self._meta.defaults)
+        if self._meta.config_defaults is None:
+            self._meta.config_defaults = backend.defaults()
+        self.config.merge(self._meta.config_defaults)
         
         if self._meta.config_files is None:
             label = self._meta.label
@@ -639,10 +621,6 @@ class CementApp(meta.MetaMixin):
                  
     def _setup_controllers(self):
         Log.debug("setting up application controllers") 
-
-        # set handler defaults for all controllers
-        for contr in handler.list('controller'):
-            self._set_handler_defaults(contr())
 
         if self._meta.base_controller:
             self.controller = self._resolve_handler('controller', 

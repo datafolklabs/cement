@@ -3,7 +3,7 @@
 import re
 import textwrap
 import argparse
-from cement2.core import backend, exc, interface, handler, meta
+from cement2.core import backend, exc, interface, handler
 
 Log = backend.minimal_logger(__name__)
 
@@ -20,7 +20,8 @@ def controller_validator(klass, obj):
         'label',
         'interface',
         'description',
-        'defaults',
+        'config_section',
+        'config_defaults',
         'arguments',
         ]
     interface.validate(IController, obj, members, meta=meta)
@@ -144,7 +145,7 @@ class expose(object):
         self.func.aliases = self.aliases
         return self.func
 
-class CementBaseController(meta.MetaMixin):
+class CementBaseController(handler.CementBaseHandler):
     """
     This is an implementation of the IControllerHandler interface, but as a
     base class that application controllers need to subclass from.  
@@ -154,23 +155,7 @@ class CementBaseController(meta.MetaMixin):
     argparse.  If using an alternative argument handler you will need to 
     write your own controller.
     
-    Usage:
-    
-    .. code-block:: python
-    
-        from cement2.core import controller
-           
-        class MyAppBaseController(controller.CementBaseController):
-            class Meta:
-                interface = controller.IController
-                label = 'base'
-                description = 'MyApp is awesome'
-                defaults = dict()
-                arguments = []
-                epilog = "This is the text at the bottom of --help."
-            ...
-        
-    Supported Meta Data:
+    Optional / Meta Options:
     
         interface
             The interface that this controller implements (IController).
@@ -182,9 +167,14 @@ class CementBaseController(meta.MetaMixin):
         description
             The description showed at the top of '--help'.
             
-        defaults
-            Configuration defaults (type: dict) that are merged into 
-            config->'controller' where controller is the label defined above.
+        config_section
+            A config [section] to merge config_defaults into.
+            
+            Default: controller.<label>
+            
+        config_defaults
+            Configuration defaults (type: dict) that are merged into the 
+            applications config object.
             
         arguments
             Arguments to pass to the argument_handler.  The format is a list
@@ -201,13 +191,30 @@ class CementBaseController(meta.MetaMixin):
             
         epilog
             The text that is displayed at the bottom when '--help' is passed.
-            
+    
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement2.core import controller
+           
+        class MyAppBaseController(controller.CementBaseController):
+            class Meta:
+                interface = controller.IController
+                label = 'base'
+                description = 'MyApp is awesome'
+                config_defaults = dict()
+                arguments = []
+                epilog = "This is the text at the bottom of --help."
+            ...
+                
     """
     class Meta:
         interface = IController
         label = 'base' # provided in subclass
         description = 'Application Base Controller'
-        defaults = {} # default config options
+        config_section = None # defaults to controller.<label>
+        config_defaults = {} # default config options
         arguments = [] # list of tuple (*args, *kwargs)
         stacked_on = None # controller name to merge commands/options into
         hide = False # whether to hide controller completely
@@ -229,9 +236,9 @@ class CementBaseController(meta.MetaMixin):
         self.exposed = {}
         self.arguments = []
         
-    def _setup(self, base_app):
+    def _setup(self, app_obj):
         # shortcuts
-        self.app = base_app                        
+        super(CementBaseController, self)._setup(app_obj)
         self.config = self.app.config
         self.log = self.app.log
         self.pargs = self.app.pargs

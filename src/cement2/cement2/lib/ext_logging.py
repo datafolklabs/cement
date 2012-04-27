@@ -12,14 +12,8 @@ class LoggingLogHandler(log.CementLogHandler):
     
     Optional Arguments / Meta:
         
-        config
-            The application configuration object.
-            
         namespace
             The logging namespace.  Default: application name.
-            
-        backend
-            The logging backend.  Default: logging.getLogger().
         
         file
             The log file path. Default: None.
@@ -100,7 +94,8 @@ class LoggingLogHandler(log.CementLogHandler):
 
         # These are the default config values, overridden by any '[log]' 
         # section in parsed config files.
-        defaults = dict(
+        config_section = 'log'
+        config_defaults = dict(
             file=None,
             level='INFO',
             to_console=True,
@@ -117,7 +112,7 @@ class LoggingLogHandler(log.CementLogHandler):
         self.app = None
         
     def _setup(self, app_obj):
-        self.app = app_obj
+        super(LoggingLogHandler, self)._setup(app_obj)
         self._meta._merge(self.app.config.get_section_dict('log'))
         
         if self._meta.namespace is None:
@@ -126,7 +121,7 @@ class LoggingLogHandler(log.CementLogHandler):
         self.backend = logging.getLogger(self._meta.namespace)
         
         # the king trumps all
-        if util.is_true(self.app.config.get('base', 'debug')):
+        if util.is_true(self.app._meta.debug):
             self._meta.level = 'DEBUG'
             
         self.set_level(self._meta.level)

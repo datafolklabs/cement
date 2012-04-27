@@ -1,6 +1,6 @@
 """Cement core config module."""
 
-from cement2.core import exc, backend, interface, meta
+from cement2.core import exc, backend, interface, handler
 
 def config_validator(klass, obj):
     """Validates an handler implementation against the IConfig interface."""
@@ -180,7 +180,7 @@ class IConfig(interface.Interface):
         
         """
         
-class CementConfigHandler(meta.MetaMixin):
+class CementConfigHandler(handler.CementBaseHandler):
     class Meta:
         interface = IConfig
         

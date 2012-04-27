@@ -39,7 +39,6 @@ The following is an example application within a python package.
         class Meta:
             label = 'base'
             description = "My Application Does Amazing Things"
-            defaults = dict()
             arguments = []
 
         @controller.expose(help="base controller default command", hide=True)

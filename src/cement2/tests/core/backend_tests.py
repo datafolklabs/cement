@@ -7,7 +7,6 @@ from cement2 import test_helper as _t
 
 config = {}
 config['base'] = {}
-config['base']['debug'] = False
 
 def compare_with_defaults(section, key):
     """

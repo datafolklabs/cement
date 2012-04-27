@@ -21,13 +21,15 @@ is available online at:
 
 Feature Enhancements:
 
+    * :issue:`95` - Add a 'config_section' Meta default for all handlers.
+      Required to parse config options for a handler.
     * :issue:`105` - Add 'meta_override' and 'core_meta_override' list to 
       CementApp().Meta.  Also resolves :issue:`104`.
-    
+
 Incompatible Changes:
 
     * :issue:`103` - plugin_bootstrap_module renamed as plugin_bootstrap.
-
+    * :issue:`106` - Deprecate Meta.defaults in favor of Meta.config_defaults
 
 
 1.9.6 - Wed Apr 18, 2012

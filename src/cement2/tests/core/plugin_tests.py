@@ -73,7 +73,6 @@ class PluginTestCase(unittest.TestCase):
             plugin_dir=tmpdir,
             plugin_bootstrap=None,
             )
-        print app._meta.plugin_config_dir
         app.setup()
 
         try:
@@ -93,7 +92,7 @@ class PluginTestCase(unittest.TestCase):
         defaults['myplugin']['enable_plugin'] = True
         defaults['myplugin2'] = dict()
         defaults['myplugin2']['enable_plugin'] = False
-        app = _t.prep('myapp', defaults=defaults,
+        app = _t.prep('myapp', config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,

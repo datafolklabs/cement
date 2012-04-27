@@ -48,7 +48,7 @@ The configurations can be passed as defaults:
     defaults['daemon']['pid_file'] = '/var/run/myapp/myapp.pid'
     defaults['daemon']['umask'] = 0
     
-    app = foundation.CementApp('myapp', defaults=defaults)
+    app = foundation.CementApp('myapp', config_defaults=defaults)
     
 
 Additionally, an application configuration file might have a section like the
@@ -119,7 +119,7 @@ For example:
             label = 'base'
             description = "My Application does amazing things!"
 
-            defaults = dict(
+            config_defaults = dict(
                 foo='bar',
                 some_other_option='my default value',
                 )

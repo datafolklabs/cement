@@ -1,6 +1,6 @@
 """Cement core plugins module."""
 
-from cement2.core import backend, exc, interface, meta
+from cement2.core import backend, exc, interface, handler
 
 Log = backend.minimal_logger(__name__)
 
@@ -85,7 +85,7 @@ class IPlugin(interface.Interface):
         
         """
         
-class CementPluginHandler(meta.MetaMixin):
+class CementPluginHandler(handler.CementBaseHandler):
     class Meta:
         interface = IPlugin
         

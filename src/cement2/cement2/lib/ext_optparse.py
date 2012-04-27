@@ -25,25 +25,6 @@ class OptParseArgumentHandler(arg.CementArgumentHandler, OptionParser):
         arg.CementArgumentHandler.__init__(self, *args, **kw)
         self.config = None
         
-    def _setup(self, config_obj):
-        """
-        Sets up the class for use by the framework.  Little is done here in
-        this implementation.
-        
-        Required Arguments:
-        
-            config_obj
-                The application configuration object.  This is a config object 
-                that implements the :ref:`IConfig <cement2.core.config>` 
-                interface and not a config dictionary, though some config 
-                handler implementations may also function like a dict 
-                (i.e. configobj).
-                
-        Returns: n/a
-        
-        """
-        self.config = config_obj
-        
     def parse(self, arg_list):
         """
         Parse a list of arguments, and store them as self.parsed_args which

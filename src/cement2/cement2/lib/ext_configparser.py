@@ -33,9 +33,6 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         super(ConfigParserConfigHandler, self).__init__(*args, **kw)
         self.app = None
         
-    def _setup(self, app_obj):
-        self.app = app_obj
-        
     def merge(self, dict_obj, override=True):
         """
         Merge a dictionary into our config.  If override is True then 

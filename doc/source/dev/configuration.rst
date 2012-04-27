@@ -31,8 +31,8 @@ default settings, handler defaults, config file settings, etc.  The following
 is the order in which configurations are discovered:
 
     * Loaded from backend.defaults()
-    * Extended by any handler defaults (not overridden)
-    * Overridden by a defaults dict passed to foundation.CementApp()
+    * Extended by any handler Meta.config_defaults (not overridden)
+    * Overridden by a config_defaults dict passed to foundation.CementApp()
     * Overridden by the configuration files
     * Overridden by command line options that match the same key name
 
@@ -59,7 +59,7 @@ Is equivalent to:
 
     from cement2.core import foundation, backend
     defaults = backend.defaults()
-    app = foundation.CementApp('myapp', defaults=defaults)
+    app = foundation.CementApp('myapp', config_defaults=defaults)
     
 
 That said, you can override default settings or add your own defaults like
@@ -73,7 +73,7 @@ so:
     defaults['base']['debug'] = True
     defaults['base']['foo'] = 'bar'
     
-    app = foundation.CementApp('myapp', defaults=defaults)
+    app = foundation.CementApp('myapp', config_defaults=defaults)
 
 It is important to note that the default settings, which is a dict, is parsed
 by the config handler and loaded into it's own configuration mechanism.  
@@ -183,7 +183,7 @@ matches the name.  Note that this happens in *all* sections:
     defaults['base']['foo'] = 'bar'
     
     try:
-        app = foundation.CementApp('myapp', defaults=defaults)
+        app = foundation.CementApp('myapp', config_defaults=defaults)
     
         # First setup the application
         app.setup()

@@ -4,7 +4,7 @@ import os
 import unittest
 from tempfile import mkstemp
 from nose.tools import ok_, eq_, raises
-from cement2.core import exc, config, handler
+from cement2.core import exc, config, handler, backend
 from cement2 import test_helper as _t
 
 CONFIG = """
@@ -26,8 +26,16 @@ class ConfigTestCase(unittest.TestCase):
     
     def test_has_key(self):
         self.app.setup()
-        ok_(self.app.config.has_key('base', 'debug'))
-        eq_(self.app.config.get('base', 'debug'), False)
+        ok_(self.app.config.has_section('base'))
+        self.app.setup()
+        
+    def test_config_override(self):
+        defaults = backend.defaults()
+        defaults['base']['debug'] = False
+        self.app = _t.prep(config_defaults=defaults, argv=['--debug'])
+        self.app.setup()
+        self.app.run()
+        eq_(self.app.config.get('base', 'debug'), True)
 
     def test_parse_file_bad_path(self):
         self.app._meta.config_files = ['./some_bogus_path']

@@ -141,7 +141,7 @@ a custom application hook:
             label = 'base'
             description = "My Application does amazing things!"
 
-            defaults = {}
+            config_defaults = {}
             arguments = []
         
         @controller.expose(hide=True, aliases=['run'])
