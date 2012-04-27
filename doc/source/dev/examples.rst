@@ -18,7 +18,6 @@ Multiple Stacked and Non-Stacked Controllers
             label = 'base'
             interface = controller.IController
             description = "My Application Does Amazing Things"
-            config_defaults = dict()
             arguments = [
                 (['--base-opt'], dict(help="option under base controller")),
                 ]
@@ -39,7 +38,6 @@ Multiple Stacked and Non-Stacked Controllers
             interface = controller.IController
             stacked_on = 'base'
             description = "My Application's Second Controller (stacked)"
-            config_defaults = dict()
             arguments = [
                 (['--2nd-opt'], dict(help="another option under base controller")),
                 ]
@@ -56,7 +54,6 @@ Multiple Stacked and Non-Stacked Controllers
             interface = controller.IController
             stacked_on = None
             description = "My Application's Third Controller (not-stacked)"
-            config_defaults = dict()
             arguments = [
                 (['--3rd-opt'], dict(help="an option only under 3rd controller")),
                 ]
@@ -78,7 +75,6 @@ Multiple Stacked and Non-Stacked Controllers
             interface = controller.IController
             stacked_on = 'third_controller'
             description = "My Application's Fourth Controller (stacked)"
-            config_defaults = dict()
             arguments = [
                 (['--4th-opt'], dict(help="an option only under 3rd controller")),
                 ]
