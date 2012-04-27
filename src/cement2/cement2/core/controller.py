@@ -9,7 +9,7 @@ Log = backend.minimal_logger(__name__)
 
 def controller_validator(klass, obj):
     """
-    Validates an handler implementation against the IController interface.
+    Validates a handler implementation against the IController interface.
     
     """
     members = [
@@ -23,6 +23,9 @@ def controller_validator(klass, obj):
         'config_section',
         'config_defaults',
         'arguments',
+        'epilog',
+        'stacked_on',
+        'hide',
         ]
     interface.validate(IController, obj, members, meta=meta)
     
@@ -52,11 +55,20 @@ class IController(interface.Interface):
     
         from cement2.core import controller
         
-        class MyBaseController(object):
+        class MyBaseController(controller.CementBaseController):
             class Meta:
                 interface = controller.IController
                 label = 'my_base_controller'
-            ...
+                description = 'My applications base controller'
+                epilog = 'Example: myapp.py --foo=bar'
+                hide = False
+                 config_section = 'base'
+                config_defaults = dict(
+                    foo='bar',
+                    )
+                arguments = [
+                    ( ['-f', '--foo'], dict(help='Foo option', dest='foo') ),
+                    ]
             
     """
     class IMeta:
@@ -78,9 +90,9 @@ class IController(interface.Interface):
         Required Arguments:
         
             base_app
-                The application object, after it has been setup() and run().
+                The application object.
                 
-        Returns: n/a
+        Return: None
         
         """
     
@@ -89,49 +101,51 @@ class IController(interface.Interface):
         Reads the application object's data to dispatch a command from this
         controller.  For example, reading self.app.pargs to determine what
         command was passed, and then executing that command function.
-                
+        
+        Note that Cement does *not* parse arguments when calling _dispatch()
+        on a controller, as it expects the controller to handle parsing 
+        arguments (I.e. self.app.args.parse()).
+         
+        Return None       
         """
 
 class expose(object):
-    def __init__(self, hide=False, help='', aliases=[]):
-        """
-        Used to expose controller functions to be listed as commands, and to 
-        decorate the function with Meta data for the argument parser.
+    """
+    Used to expose controller functions to be listed as commands, and to 
+    decorate the function with Meta data for the argument parser.
+    
+    Optional Arguments:
+    
+        hide
+            Whether the command should be visible.
         
-        Optional Argumnets:
+        help
+            Help text to display for that command.
         
-            hide
-                Whether the command should be visible
-            
-            help
-                Help text.
-            
-            aliases
-                List of aliases to this command.
-             
-        Usage:
-        
-        .. code-block:: python
-        
-            from cement2.core import controller
-           
-            class MyAppBaseController(controller.CementBaseController):
-                class Meta:
-                    interface = controller.IController
-                    label = 'base'
-                    description = 'MyApp is awesome'
-                    defaults = dict()
-                    arguments = []
-                    
-                @controller.expose(hide=True, aliases=['run'])
-                def default(self):
-                    print("In MyAppBaseController.default()")
+        aliases
+            List of aliases to this command.
+         
+    Usage:
+    
+    .. code-block:: python
+    
+        from cement2.core import controller
        
-                @controller.expose()
-                def my_command(self):
-                    print("In MyAppBaseController.my_command()")
-                   
-        """
+        class MyAppBaseController(controller.CementBaseController):
+            class Meta:
+                interface = controller.IController
+                label = 'base'
+                
+            @controller.expose(hide=True, aliases=['run'])
+            def default(self):
+                print("In MyAppBaseController.default()")
+   
+            @controller.expose()
+            def my_command(self):
+                print("In MyAppBaseController.my_command()")
+               
+    """
+    def __init__(self, hide=False, help='', aliases=[]):
         self.hide = hide
         self.help = help
         self.aliases = aliases
@@ -153,7 +167,7 @@ class CementBaseController(handler.CementBaseHandler):
     
     NOTE: This handler *requires* that the applications 'arg_handler' be
     argparse.  If using an alternative argument handler you will need to 
-    write your own controller.
+    write your own controller base class.
     
     Optional / Meta Options:
     
@@ -165,7 +179,7 @@ class CementBaseController(handler.CementBaseHandler):
             name for 'stacked' controllers.
             
         description
-            The description showed at the top of '--help'.
+            The description shown at the top of '--help'.
             
         config_section
             A config [section] to merge config_defaults into.
@@ -212,7 +226,7 @@ class CementBaseController(handler.CementBaseHandler):
     class Meta:
         interface = IController
         label = 'base' # provided in subclass
-        description = 'Application Base Controller'
+        description = None
         config_section = None # defaults to controller.<label>
         config_defaults = {} # default config options
         arguments = [] # list of tuple (*args, *kwargs)
@@ -239,11 +253,17 @@ class CementBaseController(handler.CementBaseHandler):
     def _setup(self, app_obj):
         # shortcuts
         super(CementBaseController, self)._setup(app_obj)
+
+        if self._meta.description is None:
+            self._meta.description = "%s Controller" % \
+                self._meta.label.capitalize()
+        
         self.config = self.app.config
         self.log = self.app.log
         self.pargs = self.app.pargs
         self.render = self.app.render
         self._collect()
+        
              
     def _parse_args(self):
         """

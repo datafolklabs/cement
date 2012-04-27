@@ -8,7 +8,7 @@ from cement2.core import backend, exc, interface, handler
 Log = backend.minimal_logger(__name__)
 
 def argument_validator(klass, obj):
-    """Validates an handler implementation against the IArgument interface."""
+    """Validates a handler implementation against the IArgument interface."""
     members = [
         '_setup',
         'parse',
@@ -29,12 +29,10 @@ class IArgument(interface.Interface):
     
         from cement2.core import interface, arg
 
-        class MyArgumentHandler(object):
+        class MyArgumentHandler(arg.CementArgumentHandler):
             class Meta:
                 interface = arg.IArgument
                 label = 'my_argument_handler'
-
-            ...
                 
     """
     class IMeta:
@@ -45,7 +43,7 @@ class IArgument(interface.Interface):
     Meta = interface.Attribute('Handler Meta-data')
     parsed_args = interface.Attribute('Parsed args object')
     
-    def _setup(config_obj):
+    def _setup(app_obj):
         """
         The _setup function is called during application initialization and
         must 'setup' the handler object making it ready for the framework
@@ -53,14 +51,10 @@ class IArgument(interface.Interface):
         
         Required Arguments:
         
-            config_obj
-                The application configuration object.  This is a config object 
-                that implements the :ref:`IConfig` <cement2.core.config>` 
-                interface and not a config dictionary, though some config 
-                handler implementations may also function like a dict 
-                (i.e. configobj).
+            app_obj
+                The application object.
                 
-        Returns: n/a
+        Return: None
         
         """
     
@@ -71,7 +65,8 @@ class IArgument(interface.Interface):
         Positional Arguments:
         
             args
-                The option args.  Generally ['-h', '--help'].
+                List of option arguments.  Generally something like 
+                ['-h', '--help'].
                 
         Optional Arguments
         
@@ -79,10 +74,10 @@ class IArgument(interface.Interface):
                 The destination name (var).  Default: arg[0]'s string.
             
             help
-                The help test for --help output.
+                The help text for --help output (for that argument).
             
             action
-                Must be one of: ['store', 'store_true', 'store_false', 
+                Must support: ['store', 'store_true', 'store_false', 
                 'store_const']
             
             const
@@ -92,11 +87,11 @@ class IArgument(interface.Interface):
                 The default value.
                 
         
-        Returns: n/a
+        Return: None
         
         """
         
-    def parse(self, args):
+    def parse(self, arg_list):
         """
         Parse the argument list (i.e. sys.argv).  Can return any object as
         long as it's members contain those of the added arguments.  For 
@@ -107,15 +102,21 @@ class IArgument(interface.Interface):
         
         Required Arguments:
         
-            args
+            arg_list
                 A list of command line arguments.
         
-        Returns: Callable
+        Return: Callable
         
         """
 
 class CementArgumentHandler(handler.CementBaseHandler):
+    """
+    Argument Handler base class that all other Argument Handlers should 
+    sub-class from.
+    
+    """
     class Meta:
+        label = None
         interface = IArgument
         
     def __init__(self, *args, **kw):

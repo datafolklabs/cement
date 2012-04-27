@@ -34,6 +34,19 @@ def minimal_logger(name, debug=False):
     the application is functional (and more importantly before the 
     applications log handler is usable).
     
+    Required Arguments:
+    
+        name
+            The logging namespace.  This is generally '__name__' or anything
+            you want.
+    
+    Optional Arguments:
+    
+        debug
+            Toggle debug output.
+            
+            Default: False
+            
     Usage:
     
     .. code-block:: python

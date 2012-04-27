@@ -3,7 +3,7 @@
 from cement2.core import exc, backend, interface, handler
 
 def config_validator(klass, obj):
-    """Validates an handler implementation against the IConfig interface."""
+    """Validates a handler implementation against the IConfig interface."""
     members = [
         '_setup',
         'keys', 
@@ -41,7 +41,7 @@ class IConfig(interface.Interface):
     
         from cement2.core import config
         
-        class MyConfigHandler(object):
+        class MyConfigHandler(config.CementConfigHandler):
             class Meta:
                 interface = config.IConfig
                 label = 'my_config_handler'
@@ -80,7 +80,7 @@ class IConfig(interface.Interface):
             file_path
                 The path to the config file to parse.
                 
-        Returns: boolean
+        Return: boolean
         
         """
 
@@ -93,7 +93,7 @@ class IConfig(interface.Interface):
             section
                 The config [section] to pull keys from.
                 
-        Returns: list
+        Return: list
         
         """
             
@@ -102,23 +102,34 @@ class IConfig(interface.Interface):
         Return a list of configuration sections.  These are designated by a
         [block] label in a config file.
         
-        Returns: list
+        Return: list
                 
         """
         
-    def get_section_dict():
+    def get_section_dict(section):
         """
         Return a dict of configuration parameters for [section].
         
-        Returns: dict
+        Required Arguments:
+        
+            section
+                The config [section] to generate a dict from (using that 
+                sections keys).
+                
+        Return: dict
                 
         """
           
-    def add_section():
+    def add_section(section):
         """
         Add a new section if it doesn't exist.
         
-        Returns: None
+        Required Arguments:
+        
+            section
+                The [section] label to create.
+                
+        Return: None
         
         """ 
         
@@ -135,7 +146,7 @@ class IConfig(interface.Interface):
             key
                 The configuration key to get the value from.
                 
-        Returns: unknown
+        Return: unknown
         
         """
             
@@ -154,6 +165,7 @@ class IConfig(interface.Interface):
             value
                 The value to set.
         
+        Return: None
         """
 
     def merge(dict_obj, override=True):
@@ -170,20 +182,25 @@ class IConfig(interface.Interface):
             override 
                 Whether to override existing values.  Default: True
                 
+        Return: None
         """
     
     def has_section(section):
         """
         Returns whether or not the section exists.
         
-        Returns: bool
+        Return: bool
         
         """
         
 class CementConfigHandler(handler.CementBaseHandler):
+    """
+    Base Config Handler class that all other Config Handlers should 
+    sub-class from.
+    
+    """
     class Meta:
         interface = IConfig
         
     def __init__(self, *args, **kw):
         super(CementConfigHandler, self).__init__(*args, **kw)              
-
