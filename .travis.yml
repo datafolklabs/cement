@@ -3,7 +3,6 @@ before_script: ./utils/travis/bootstrap.sh
 script: ./utils/run_tests.sh
 install: sudo apt-get install memcached libmemcached-dev -y
 python:
-  - "2.5"
   - "2.6"
   - "2.7"
   - "3.1"
