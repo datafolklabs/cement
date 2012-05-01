@@ -6,7 +6,7 @@ import sys
 import signal
 
 from cement2.core import backend, exc, handler, hook, log, config, plugin
-from cement2.core import output, extension, arg, controller, meta
+from cement2.core import output, extension, arg, controller, meta, cache
 from cement2.lib import ext_configparser, ext_argparse, ext_logging
 from cement2.lib import ext_nulloutput, ext_plugin
 
@@ -160,6 +160,13 @@ class CementApp(meta.MetaMixin):
 
             Default: cement2.lib.ext_nulloutput.NullOutputHandler
             
+        cache_handler
+            A handler class that implements the ICache interface.  This can
+            be a string (label of a registered handler), an uninstantiated
+            class, or an instantiated class object.
+            
+            Default: None
+            
         base_controller
             This is the base application controller.  If a controller is set,
             runtime operations are passed to the controller for command 
@@ -281,6 +288,7 @@ class CementApp(meta.MetaMixin):
         plugin_handler = ext_plugin.CementPluginHandler
         argument_handler = ext_argparse.ArgParseArgumentHandler
         output_handler = ext_nulloutput.NullOutputHandler
+        cache_handler = None
         base_controller = None
         extensions = []        
         core_extensions = [  
@@ -312,6 +320,7 @@ class CementApp(meta.MetaMixin):
         self.args = None
         self.output = None
         self.controller = None
+        self.cache = None
         
         # attributes
         self.argv = list(self._meta.argv)
@@ -377,6 +386,7 @@ class CementApp(meta.MetaMixin):
         self._setup_config_handler()
         self._validate_required_config()
         self.validate_config()
+        self._setup_cache_handler()
         self._setup_log_handler()
         self._setup_plugin_handler()
         self._setup_arg_handler()
@@ -511,7 +521,8 @@ class CementApp(meta.MetaMixin):
         handler.define(output.IOutput)
         handler.define(arg.IArgument)
         handler.define(controller.IController)
-    
+        handler.define(cache.ICache)
+        
         # extension handler is the only thing that can't be loaded... as, 
         # well, an extension.  ;)
         handler.register(extension.CementExtensionHandler)
@@ -628,11 +639,25 @@ class CementApp(meta.MetaMixin):
         self.plugin.load_plugins(self.plugin.enabled_plugins)
         
     def _setup_output_handler(self):
+        if self._meta.output_handler is None:
+            Log.debug("no output handler defined, skipping.")
+            return
+            
         Log.debug("setting up %s.output handler" % self._meta.label) 
         self.output = self._resolve_handler('output', 
                                             self._meta.output_handler,
                                             raise_error=False)
          
+    def _setup_cache_handler(self):
+        if self._meta.cache_handler is None:
+            Log.debug("no cache handler defined, skipping.")
+            return
+            
+        Log.debug("setting up %s.cache handler" % self._meta.label) 
+        self.cache = self._resolve_handler('cache', 
+                                            self._meta.cache_handler,
+                                            raise_error=False)
+                                            
     def _setup_arg_handler(self):
         Log.debug("setting up %s.arg handler" % self._meta.label) 
         self.args = self._resolve_handler('argument', 

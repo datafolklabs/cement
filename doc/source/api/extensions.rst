@@ -16,3 +16,4 @@ Cement2 Extensions
    extensions/nulloutput
    extensions/optparse
    extensions/yaml
+   extensions/memcached

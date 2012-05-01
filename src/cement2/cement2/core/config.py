@@ -195,8 +195,7 @@ class IConfig(interface.Interface):
         
 class CementConfigHandler(handler.CementBaseHandler):
     """
-    Base Config Handler class that all other Config Handlers should 
-    sub-class from.
+    Base class that all Config Handlers should sub-class from.
     
     """
     class Meta:

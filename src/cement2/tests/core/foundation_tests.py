@@ -205,3 +205,8 @@ class FoundationTestCase(unittest.TestCase):
     def test_extended_duplicate(self):
         self.app.extend('config', my_extended_func)
     
+    def test_no_handler(self):
+        app = _t.prep('myapp')
+        app._resolve_handler('cache', None, raise_error=False)
+        
+    

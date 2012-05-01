@@ -138,6 +138,10 @@ class ILog(interface.Interface):
         """
 
 class CementLogHandler(handler.CementBaseHandler):
+    """
+    Base class that all Log Handlers should sub-class from.
+    
+    """
     class Meta:
         interface = ILog
         

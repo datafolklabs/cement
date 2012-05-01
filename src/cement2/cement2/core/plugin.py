@@ -86,6 +86,11 @@ class IPlugin(interface.Interface):
         """
         
 class CementPluginHandler(handler.CementBaseHandler):
+    """
+    Base class that all Plugin Handlers should sub-class from.
+    
+    """
+    
     class Meta:
         interface = IPlugin
         

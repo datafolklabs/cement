@@ -104,6 +104,14 @@ Cement2 Core Modules
 
 .. automodule:: cement2.core.plugin
     :members:    
+
+.. _cement2.core.cache:
+
+:mod:`cement2.core.cache`
+--------------------------
+
+.. automodule:: cement2.core.cache
+    :members:    
     
 .. _cement2.core.util:    
 

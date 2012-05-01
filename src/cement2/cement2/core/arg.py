@@ -111,8 +111,7 @@ class IArgument(interface.Interface):
 
 class CementArgumentHandler(handler.CementBaseHandler):
     """
-    Argument Handler base class that all other Argument Handlers should 
-    sub-class from.
+    Base class that all Argument Handlers should sub-class from.
     
     """
     class Meta:

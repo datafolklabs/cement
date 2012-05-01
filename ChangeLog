@@ -23,9 +23,11 @@ Feature Enhancements:
 
     * :issue:`95` - Add a 'config_section' Meta default for all handlers.
       Required to parse config options for a handler.
+    * :issue:`97` - Add a standard cache handler interface.
     * :issue:`105` - Add 'meta_override' and 'core_meta_override' list to 
       CementApp().Meta.  Also resolves :issue:`104`.
-    * :issue:`108` - Add CementApp.extend() functionality
+    * :issue:`108` - Add CementApp.extend() functionality.
+    * :issue:`109` - Add cement2.ext.memcached extension
 
 Incompatible Changes:
 
