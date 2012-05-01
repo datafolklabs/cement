@@ -75,7 +75,7 @@ def cement_post_setup_hook(app):
     defaults['daemon']['dir'] = '/'
     defaults['daemon']['umask'] = 0
     app.config.merge(defaults, override=False)
-    app.daemonize = daemonize
+    app.extend('daemonize', daemonize)
         
 @hook.register()
 def cement_on_close_hook(app):

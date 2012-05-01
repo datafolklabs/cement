@@ -25,6 +25,7 @@ Feature Enhancements:
       Required to parse config options for a handler.
     * :issue:`105` - Add 'meta_override' and 'core_meta_override' list to 
       CementApp().Meta.  Also resolves :issue:`104`.
+    * :issue:`108` - Add CementApp.extend() functionality
 
 Incompatible Changes:
 

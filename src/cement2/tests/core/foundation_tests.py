@@ -6,7 +6,10 @@ from nose import SkipTest
 from cement2.core import foundation, exc, backend, config, extension, plugin
 from cement2.core import log, output, handler, hook, arg, controller
 from cement2 import test_helper as _t
-       
+
+def my_extended_func():
+    return 'KAPLA'
+               
 class DeprecatedApp(foundation.CementApp):
     class Meta:
         label = 'deprecated'
@@ -194,4 +197,11 @@ class FoundationTestCase(unittest.TestCase):
         app = _t.prep('test', catch_signals=None)
         app.setup()
     
+    def test_extend(self):
+        self.app.extend('kapla', my_extended_func)
+        eq_(self.app.kapla(), 'KAPLA')
+        
+    @raises(exc.CementRuntimeError)
+    def test_extended_duplicate(self):
+        self.app.extend('config', my_extended_func)
     

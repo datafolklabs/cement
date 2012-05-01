@@ -318,6 +318,29 @@ class CementApp(meta.MetaMixin):
         
         self._lay_cement()
         
+    def extend(self, member_name, member_object):
+        """
+        Extend the CementApp() object with additional functions/classes such
+        as 'app.my_custom_function()', etc.  It provides an interface for
+        extensions to provide functionality that travel along with the 
+        application object.
+        
+        Required Arguments:
+        
+            member_name
+                The name to attach the object to.
+                
+            member_object
+                The function or class object to attach to CementApp().
+                
+        """
+        if hasattr(self, member_name):
+            raise exc.CementRuntimeError("App member '%s' already exists!" % \
+                                         member_name)
+        Log.debug("extending appication with '.%s' (%s)" % \
+                 (member_name, member_object))
+        setattr(self, member_name, member_object)
+
     def _validate_label(self):
         if not self._meta.label:
             raise exc.CementRuntimeError("Application name missing.")
@@ -613,7 +636,7 @@ class CementApp(meta.MetaMixin):
     def _setup_arg_handler(self):
         Log.debug("setting up %s.arg handler" % self._meta.label) 
         self.args = self._resolve_handler('argument', 
-                                           self._meta.argument_handler)
+                                          self._meta.argument_handler)
         self.args.add_argument('--debug', dest='debug', 
             action='store_true', help='toggle debug output')
         self.args.add_argument('--quiet', dest='suppress_output', 
@@ -624,7 +647,7 @@ class CementApp(meta.MetaMixin):
 
         if self._meta.base_controller:
             self.controller = self._resolve_handler('controller', 
-                                                self._meta.base_controller) 
+                                                    self._meta.base_controller) 
             self._meta.base_controller = self.controller
                 
         # Trump all with whats passed at the command line, and pop off the arg
