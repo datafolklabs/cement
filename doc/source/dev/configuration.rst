@@ -200,3 +200,48 @@ matches the name.  Note that this happens in *all* sections:
     
 At the command line, running the application and passing the '--foo=some_value'
 option will override the 'foo' setting under the 'base' (or any other) section.
+
+Configuration Options Versus Meta Options
+-----------------------------------------
+
+As you will see extensively throughout the Cement code is the use of Meta 
+options.  There can be some confusion between the use of Meta options, and
+application configuration options.  The following explains the two:
+
+*Configuration Options*
+
+Configuration options are application specific.  There are config defaults
+defined by the application developer, but those defaults can either be 
+overridden by command line options of the same name, or config file settings.
+Cement does not rely on the application configuration, though it can honor 
+configuration settings.  For example, CementApp() honors the 'debug' config
+option which is documented, but it doesn't rely on it existing either.
+
+The key things to note about configuration options are:
+
+    * They give the end user flexibility in how the application operates.
+    * Anything that you want users to be able to customize via a config file.
+      For example, the path to a log file or the location of a database 
+      server. These are things that you do not want 'hard-coded' into your 
+      app, but rather might want sane defaults for.
+    
+*Meta Options*
+ 
+Meta options are used on the backend by developers to alter how classes 
+operate.  For example, the CementApp class has a meta option of 'log_handler'.
+The default log handler is LoggingLogHandler, but because this is built on
+an interface definition, Cement can use any other log handler the same way
+without issue as long as that log handler abides by the interface definition.
+Meta options make this change seamless and allows the handler to alter 
+functionality, rather than having to change code in the top level class 
+itself.
+
+The key thing to note about Meta options are:
+
+    * They give the developer flexibility in how the code operates.
+    * End users should not have access to modify Meta options via a config 
+      file or similar 'dynamic' configuration.
+    * Meta options are used to alter how classes work, however are considered
+      'hard-coded' settings.  If the developer chooses to alter a Meta option,
+      it is for the life of that release.  
+    * Meta options should have a sane default, and be clearly documented.
