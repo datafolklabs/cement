@@ -9,7 +9,8 @@ VERSION = '1.9.7'
 LONG = """
 Cement is an advanced CLI Application Framework for Python. This package 
 provides the Memcached framework extension allowing applications to use
-the MemcachedCacheHandler.
+the MemcachedCacheHandler.  This extension is not currently supported on 
+Python 3.
 
 The Cement CLI Application Framework is Open Source and is distributed under 
 The BSD "three-clause" License.  
