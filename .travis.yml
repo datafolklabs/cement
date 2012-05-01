@@ -1,7 +1,6 @@
 language: python
 before_script: ./utils/travis/bootstrap.sh
 script: ./utils/run_tests.sh
-install: memcached
 python:
   - "2.6"
   - "2.7"

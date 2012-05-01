@@ -7,4 +7,3 @@ pip install -r src/cement2.ext.json/requirements.txt --use-mirrors
 pip install -r src/cement2.ext.genshi/requirements.txt --use-mirrors
 pip install -r src/cement2.ext.yaml/requirements.txt --use-mirrors
 pip install -r src/cement2.ext.memcached/requirements.txt --use-mirrors
-memcached &
