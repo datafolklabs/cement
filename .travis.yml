@@ -1,6 +1,7 @@
 language: python
 before_script: ./utils/travis/bootstrap.sh
 script: ./utils/run_tests.sh
+install: libmemcached libmemcached-dev
 python:
   - "2.6"
   - "2.7"
