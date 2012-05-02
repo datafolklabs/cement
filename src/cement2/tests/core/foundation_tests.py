@@ -43,10 +43,11 @@ class FoundationTestCase(unittest.TestCase):
         
     def test_old_app(self):
         defaults = backend.defaults()
-        defaults['base']['foo'] = 'bar'
+        defaults['test'] = dict()
+        defaults['test']['foo'] = 'bar'
         self.app = DeprecatedApp(defaults=defaults)
         self.app.setup()
-        eq_(self.app.config.get('base', 'foo'), 'bar')
+        eq_(self.app.config.get('test', 'foo'), 'bar')
         
     def test_old_lay_cement(self):
         self.app = foundation.lay_cement('myapp')

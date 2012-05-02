@@ -306,7 +306,7 @@ passed to the CementApp().
 
     from cement2.core import foundation, backend
 
-    defaults = backend.defaults()
+    defaults = backend.defaults('myinterface.myhandler')
     defaults['myinterface.myhandler'] = dict(foo='bar')
     app = foundation.CementApp('myapp', config_defaults=defaults)
 

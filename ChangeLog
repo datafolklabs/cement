@@ -33,7 +33,7 @@ Incompatible Changes:
 
     * :issue:`103` - plugin_bootstrap_module renamed as plugin_bootstrap.
     * :issue:`106` - Deprecate Meta.defaults in favor of Meta.config_defaults
-
+    * :issue:`107` - Make the app name the default config section, not [base]
 
 1.9.6 - Wed Apr 18, 2012
 ------------------------------------------------------------------------------

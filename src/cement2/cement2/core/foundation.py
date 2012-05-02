@@ -45,7 +45,9 @@ class CementApp(meta.MetaMixin):
         debug
             Toggles debug output.  By default, this setting is also overridden
             by the '[base] -> debug' config setting parsed in any
-            of the application configuration files.
+            of the application configuration files (where [base] is the 
+            base configuration section of the application which is determined
+            by Meta.config_section but defaults to Meta.label).
             
             Default: False
             
@@ -55,14 +57,19 @@ class CementApp(meta.MetaMixin):
             
             Default: sys.argv
             
-        config_defaults
-            Default configuration dictionary.
+        config_section
+            The base configuration section for the application.
             
             Default: None
             
-            Note: Though CementApp.Meta.config_defaults is None by default, 
-            if no other defaults are passed in then Cement will use
-            cement2.core.backend.defaults().
+            Note: Though Meta.config_section defaults to None, Cement will
+            set this to the value of Meta.label (or in other words, the name
+            of the application).
+            
+        config_defaults
+            Default configuration dictionary.  Must be of type 'dict'.
+            
+            Default: None
             
         config_files
             List of config files to parse.  
@@ -91,7 +98,9 @@ class CementApp(meta.MetaMixin):
             A directory path where plugin code (modules) can be loaded from.
             By default, this setting is also overridden by the 
             '[base] -> plugin_dir' config setting parsed in any of the 
-            application configuration files.
+            application configuration files (where [base] is the 
+            base configuration section of the application which is determined
+            by Meta.config_section but defaults to Meta.label).
             
             Default: None
             
@@ -199,10 +208,12 @@ class CementApp(meta.MetaMixin):
         
         core_meta_override
             List of meta options that can/will be overridden by config options
-            of the '[base]' config section.  These overrides are required by 
-            the framework to function properly and should not be used by end 
-            user (developers) unless you really know what you're doing.  To 
-            add your own extended meta overrides please use 
+            of the '[base]' config section (where [base] is the base 
+            configuration section of the application which is determined by 
+            Meta.config_section but defaults to Meta.label). These overrides 
+            are required by the framework to function properly and should not 
+            be used by end user (developers) unless you really know what 
+            you're doing.  To add your own extended meta overrides please use 
             'meta_override'.
             
             Default: [
@@ -213,7 +224,9 @@ class CementApp(meta.MetaMixin):
             
         meta_override
             List of meta options that can/will be overridden by config options
-            of the '[base]' config section.
+            of the '[base]' config section (where [base] is the 
+            base configuration section of the application which is determined
+            by Meta.config_section but defaults to Meta.label).
             
             Default: []
             
@@ -279,6 +292,7 @@ class CementApp(meta.MetaMixin):
         plugin_bootstrap = None
         plugin_dir = None
         argv = sys.argv[1:]
+        config_section = None
         config_defaults = None
         catch_signals = [signal.SIGTERM, signal.SIGINT]
         signal_handler = cement_signal_handler
@@ -384,7 +398,6 @@ class CementApp(meta.MetaMixin):
         self._setup_signals()
         self._setup_extension_handler()
         self._setup_config_handler()
-        self._validate_required_config()
         self.validate_config()
         self._setup_cache_handler()
         self._setup_log_handler()
@@ -595,13 +608,16 @@ class CementApp(meta.MetaMixin):
         Log.debug("setting up %s.config handler" % self._meta.label)
         self.config = self._resolve_handler('config', 
                                             self._meta.config_handler)
+        if self._meta.config_section is None:
+            self._meta.config_section = self._meta.label
+        self.config.add_section(self._meta.config_section)
+        
         if hasattr(self._meta, 'defaults'):
             print('DEPRECATION WARNING: CementApp.Meta.defaults is ' + \
                   'deprecated.  Use CementApp.Meta.config_defaults instead.')
             self.config.merge(self._meta.defaults)
-        if self._meta.config_defaults is None:
-            self._meta.config_defaults = backend.defaults()
-        self.config.merge(self._meta.config_defaults)
+        if not self._meta.config_defaults is None:
+            self.config.merge(self._meta.config_defaults)
         
         if self._meta.config_files is None:
             label = self._meta.label
@@ -613,7 +629,7 @@ class CementApp(meta.MetaMixin):
         for _file in self._meta.config_files:
             self.config.parse_file(_file)
         
-        base_dict = self.config.get_section_dict('base')
+        base_dict = self.config.get_section_dict(self._meta.config_section)
         for key in base_dict:
             if key in self._meta.core_meta_override or \
                key in self._meta.meta_override:
@@ -690,12 +706,6 @@ class CementApp(meta.MetaMixin):
         if not self.controller:
             Log.debug("no controller could be found.")
     
-    def _validate_required_config(self):
-        """
-        Validate base config settings required by cement.
-        """
-        Log.debug("validating required configuration parameters")
-        
     def validate_config(self):
         """
         Validate application config settings.

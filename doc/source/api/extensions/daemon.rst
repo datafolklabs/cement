@@ -40,8 +40,7 @@ The configurations can be passed as defaults:
     
     from cement2.core import foundation, backend
     
-    defaults = backend.defaults()
-    defaults['daemon'] = dict()
+    defaults = backend.defaults('myapp', 'daemon')
     defaults['daemon']['user'] = 'myuser'
     defaults['daemon']['group'] = 'mygroup'
     defaults['daemon']['dir'] = '/var/lib/myapp/'

@@ -152,9 +152,9 @@ application features.
     from cement2.core import backend, foundation, hook
 
     # set default config options
-    defaults = backend.defaults()
-    defaults['base']['debug'] = False
-    defaults['base']['foo'] = 'bar'
+    defaults = backend.defaults('myapp')
+    defaults['myapp']['debug'] = False
+    defaults['myapp']['foo'] = 'bar'
 
     # create an application
     app = foundation.CementApp('example', config_defaults=defaults)

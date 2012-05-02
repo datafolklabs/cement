@@ -26,16 +26,17 @@ class ConfigTestCase(unittest.TestCase):
     
     def test_has_key(self):
         self.app.setup()
-        ok_(self.app.config.has_section('base'))
+        ok_(self.app.config.has_section(self.app._meta.config_section))
         self.app.setup()
         
     def test_config_override(self):
-        defaults = backend.defaults()
-        defaults['base']['debug'] = False
+        defaults = dict()
+        defaults['test'] = dict()
+        defaults['test']['debug'] = False
         self.app = _t.prep(config_defaults=defaults, argv=['--debug'])
         self.app.setup()
         self.app.run()
-        eq_(self.app.config.get('base', 'debug'), True)
+        eq_(self.app.config.get('test', 'debug'), True)
 
     def test_parse_file_bad_path(self):
         self.app._meta.config_files = ['./some_bogus_path']

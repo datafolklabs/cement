@@ -41,8 +41,8 @@ Application Default Settings
 ----------------------------
 
 Cement may in the future require default config settings in order to operate.  
-These settings are found under the 'base' section of the config, and 
-overridden by a '[base]' block from a configuration file.
+These settings are found under the '<app_label>' application section of the 
+config, and overridden by a '[<app_label>]' block from a configuration file.
 
 You do not need to override these values, however you should always start
 with them.  Additionally, the default dictionary is used if no other defaults 
@@ -58,7 +58,7 @@ Is equivalent to:
 .. code-block:: python
 
     from cement2.core import foundation, backend
-    defaults = backend.defaults()
+    defaults = backend.defaults('myapp')
     app = foundation.CementApp('myapp', config_defaults=defaults)
     
 
@@ -69,9 +69,10 @@ so:
 
     from cement2.core import foundation, backend
     
-    defaults = backend.defaults()
-    defaults['base']['debug'] = True
-    defaults['base']['foo'] = 'bar'
+    defaults = dict()
+    defaults['myapp'] = dict()
+    defaults['myapp']['debug'] = True
+    defaults['myapp']['foo'] = 'bar'
     
     app = foundation.CementApp('myapp', config_defaults=defaults)
 
@@ -179,7 +180,7 @@ matches the name.  Note that this happens in *all* sections:
 
     from cement2.core import foundation
     
-    defaults = backend.defaults()
+    defaults = backend.defaults('base')
     defaults['base']['foo'] = 'bar'
     
     try:

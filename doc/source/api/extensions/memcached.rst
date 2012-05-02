@@ -23,8 +23,7 @@ The configurations can be passed as defaults:
     
     from cement2.core import foundation, backend
     
-    defaults = backend.defaults()
-    defaults['cache.memcached'] = dict()
+    defaults = backend.defaults('myapp', 'cache.memcached')
     defaults['cache.memcached']['expire_time'] = 0
     defaults['cache.memcached']['hosts'] = ['127.0.0.1']
     

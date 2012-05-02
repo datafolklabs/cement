@@ -54,7 +54,7 @@ class LoggingLogHandler(log.CementLogHandler):
     
     The following configuration options are recognized in this class:
     
-        base.debug
+        <app_label>.debug
         
         log.file
         
@@ -71,7 +71,7 @@ class LoggingLogHandler(log.CementLogHandler):
     
     .. code-block::text
     
-        [base]
+        [<app_label>]
         debug = True
         
         [log]

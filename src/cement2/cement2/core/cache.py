@@ -122,10 +122,23 @@ class CementCacheHandler(handler.CementBaseHandler):
     
     """
     class Meta:
+        label = None
         interface = ICache
         
     def __init__(self, *args, **kw):
         super(CementCacheHandler, self).__init__(*args, **kw)
+        
+    def get(self, key):
+        raise NotImplementedError
+        
+    def set(self, key, value):
+        raise NotImplementedError
+        
+    def delete(self, key):
+        raise NotImplementedError
+        
+    def purge(self):
+        raise NotImplementedError
         
 class MemoryCacheHandler(CementCacheHandler):
     class Meta:

@@ -6,26 +6,27 @@ import logging
 
 from cement2.core import exc
 
-def defaults():
+def defaults(*sections):
     """
-    Get a standard, default config dictionary for the [base] section.
+    Returns a standard dictionary object to use for application defaults.
+    If sections are given, it will create a nested dict for each section name.
     
     Usage:
     
-    .. code-block:: python
-    
-        from cement2.core import backend, foundation
+        from cement2.core import foundation, backend
         
-        defaults = backend.defaults()
-        defaults['base']['debug'] = False
-        defaults['base']['some_param'] = 'some_value'
+        defaults = backend.defaults('myapp', 'section2', 'section3')
+        defaults['myapp']['debug'] = False
+        defaults['section2']['foo'] = 'bar
+        defaults['section3']['foo2'] = 'bar2'
         
         app = foundation.CementApp('myapp', config_defaults=defaults)
-        
+    
     """        
-    dcf = {}
-    dcf['base'] = {}
-    return dcf
+    defaults = dict()
+    for section in sections:
+        defaults[section] = dict()
+    return defaults
 
 def minimal_logger(name, debug=False):
     """

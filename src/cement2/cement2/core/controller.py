@@ -62,7 +62,7 @@ class IController(interface.Interface):
                 description = 'My applications base controller'
                 epilog = 'Example: myapp.py --foo=bar'
                 hide = False
-                 config_section = 'base'
+                config_section = 'base'
                 config_defaults = dict(
                     foo='bar',
                     )
@@ -78,7 +78,7 @@ class IController(interface.Interface):
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data')
     
-    def _setup(base_app):
+    def _setup(app_obj):
         """
         The _setup function is after application initialization and after it
         is determined that this controller was requested via command line
@@ -89,7 +89,7 @@ class IController(interface.Interface):
         
         Required Arguments:
         
-            base_app
+            app_obj
                 The application object.
                 
         Return: None
