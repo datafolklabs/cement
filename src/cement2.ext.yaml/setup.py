@@ -6,8 +6,8 @@ VERSION = '1.9.9'
 
 LONG = """
 Cement is an advanced CLI Application Framework for Python. This package 
-provides the Json framework extension allowing applications to use
-the Json output handler.
+provides the YAML framework extension allowing applications to use
+the YAML output handler.
 
 The Cement CLI Application Framework is Open Source and is distributed under 
 The BSD "three-clause" License.  
