@@ -47,7 +47,7 @@ and < 3.2.  Some extensions rely on external dependencies.*
 
 Other sites that might be helpful.
 
- * RTFD: http://cement.rtfd.org/en/portland/
+ * RTFD: http://cement.readthedocs.org/en/portland/
  * CODE: https://github.com/derks/cement/tree/portland
  * PYPI: http://pypi.python.org/pypi/cement2
  *  IRC: #cement
