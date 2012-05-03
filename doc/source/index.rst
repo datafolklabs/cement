@@ -14,7 +14,7 @@ well as support rapid development needs without sacrificing quality.
 .. image:: https://secure.travis-ci.org/derks/cement.png
   :target: http://travis-ci.org/#!/derks/cement
 
-Cement2 Core features include (but are not limited to):
+Cement2 core features include (but are not limited to):
 
     * Core pieces of the framework are customizable via handlers/interfaces
     * Extension handler interface to easily extend framework functionality
@@ -33,8 +33,7 @@ Cement2 Core features include (but are not limited to):
     * Extensive Sphinx documentation
     * Tested on Python 2.6, 2.7, 3.1, and 3.2
     
-
-Available Extensions includes:
+Cement2 extensions include:
 
     * JSON output handler extension (adds --json option)
     * YAML output handler extension (adds --yaml option)
@@ -42,7 +41,6 @@ Available Extensions includes:
     * Daemon extension handles background processes (adds --daemon option)
     * Genshi output handler extension provides Text Templating
     * Memcached cache handler extension provides easy caching
-    
 
 *Note that argparse is required as an external dependency for Python < 2.7 
 and < 3.2.  Some extensions rely on external dependencies.*

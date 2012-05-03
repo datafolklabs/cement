@@ -10,7 +10,7 @@ rewrite of Cement version 0.x/1.x.  Its goal is to introduce a standard, and
 feature-full platform for both simple and complex command line applications as 
 well as support rapid development needs without sacrificing quality.
 
-Cement2 Core features include (but are not limited to):
+Cement2 core features include (but are not limited to):
 
     * Core pieces of the framework are customizable via handlers/interfaces
     * Extension handler interface to easily extend framework functionality
@@ -29,13 +29,12 @@ Cement2 Core features include (but are not limited to):
     * Extensive Sphinx documentation
     * Tested on Python 2.6, 2.7, 3.1, and 3.2
     
-
-Cement2 Core Extensions includes:
+Cement2 extensions include:
 
     * JSON output handler extension (adds --json option)
     * YAML output handler extension (adds --yaml option)
     * ConfigObj config handler extension replaces ConfigParser
-    * Damemon extension handles background processes (adds --daemon option)
+    * Daemon extension handles background processes (adds --daemon option)
     * Genshi output handler extension provides Text Templating
     * Memcached cache handler extension provides easy caching
 
