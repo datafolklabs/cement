@@ -12,6 +12,7 @@ class BackendTestCase(unittest.TestCase):
     def test_defaults(self):
         defaults = backend.defaults('myapp', 'section2', 'section3')
         defaults['myapp']['debug'] = True
+        defaults['section2']['foo'] = 'bar'
         self.app = _t.prep('myapp', config_defaults=defaults)
         self.app.setup()
         eq_(self.app.config.get('myapp', 'debug'), True)

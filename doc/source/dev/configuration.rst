@@ -69,10 +69,9 @@ so:
 
     from cement2.core import foundation, backend
     
-    defaults = dict()
-    defaults['myapp'] = dict()
-    defaults['myapp']['debug'] = True
-    defaults['myapp']['foo'] = 'bar'
+    defaults = backend.defaults('section1','section2')
+    defaults['section1']['foo'] = 'bar'
+    defaults['section2']['foo2'] = 'bar2'
     
     app = foundation.CementApp('myapp', config_defaults=defaults)
 
