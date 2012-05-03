@@ -75,7 +75,7 @@ API Reference
 .. _cement2.ext.ext_memcached:
 
 :mod:`cement2.ext.ext_memcached`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: cement2.ext.ext_memcached
     :members:
@@ -83,7 +83,7 @@ API Reference
 .. _cement2.lib.ext_memcached:
 
 :mod:`cement2.lib.ext_memcached`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: cement2.lib.ext_memcached
     :members:
