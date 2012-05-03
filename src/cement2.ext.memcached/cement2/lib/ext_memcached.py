@@ -27,6 +27,18 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
     
     def _setup(self, *args, **kw):
         super(MemcachedCacheHandler, self)._setup(*args, **kw)
+
+        # Work around because ConfigParser doesn't support Python types
+        hosts = self._config('hosts')
+        fixed_hosts = []
+
+        if type(hosts) == str:
+            parts = hosts.split(',')
+            for part in parts:
+                fixed_hosts.append(part.strip())
+        elif type(hosts) == list:
+            fixed_hosts = hosts
+        self.app.config.set(self._meta.config_section, 'hosts', fixed_hosts)
         self.mc = pylibmc.Client(self._config('hosts'))
         
     def get(self, key, fallback=None, **kw):

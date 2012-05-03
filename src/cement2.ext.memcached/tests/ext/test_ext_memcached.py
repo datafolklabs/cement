@@ -6,7 +6,7 @@ from time import sleep
 from random import random
 from nose.tools import eq_, raises
 from nose import SkipTest
-from cement2.core import handler
+from cement2.core import handler, backend
 from cement2 import test_helper as _t
 
 if sys.version_info[0] < 3:
@@ -24,7 +24,10 @@ def import_memcached():
 class MemcachedExtTestCase(unittest.TestCase):
     def setUp(self):
         self.key = "cement2-tests-random-key-%s" % random()
+        defaults = backend.defaults('tests', 'cache.memcached')
+        defaults['cache.memcached']['hosts'] = '127.0.0.1, localhost'
         self.app = _t.prep('tests', 
+            config_defaults=defaults,
             extensions=['memcached'],
             cache_handler='memcached',
             )
@@ -33,6 +36,32 @@ class MemcachedExtTestCase(unittest.TestCase):
         
     def tearDown(self):
         self.app.cache.delete(self.key)
+        
+    def test_memcache_list_type_config(self):
+        defaults = backend.defaults('tests', 'cache.memcached')
+        defaults['cache.memcached']['hosts'] = ['127.0.0.1', 'localhost']
+        self.app = _t.prep('tests', 
+            config_defaults=defaults,
+            extensions=['memcached'],
+            cache_handler='memcached',
+            )
+        import_memcached()
+        self.app.setup()
+        eq_(self.app.config.get('cache.memcached', 'hosts'), 
+            ['127.0.0.1', 'localhost'])
+        
+    def test_memcache_str_type_config(self):
+        defaults = backend.defaults('tests', 'cache.memcached')
+        defaults['cache.memcached']['hosts'] = '127.0.0.1, localhost'
+        self.app = _t.prep('tests', 
+            config_defaults=defaults,
+            extensions=['memcached'],
+            cache_handler='memcached',
+            )
+        import_memcached()
+        self.app.setup()
+        eq_(self.app.config.get('cache.memcached', 'hosts'), 
+            ['127.0.0.1', 'localhost'])
         
     def test_memcached_set(self):    
         self.app.cache.set(self.key, 1001)
