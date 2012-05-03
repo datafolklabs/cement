@@ -37,7 +37,9 @@ following:
 
     [cache.memcached]
     expire_time = 3600
-    hosts = 127.0.0.1, cache.example.com,
+    
+    # comma seperated list of memcached servers
+    hosts = 127.0.0.1, cache.example.com
         
 Example Usage
 -------------
