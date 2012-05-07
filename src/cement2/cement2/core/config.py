@@ -1,6 +1,6 @@
 """Cement core config module."""
 
-from cement2.core import exc, backend, interface, handler
+from ..core import exc, backend, interface, handler
 
 def config_validator(klass, obj):
     """Validates a handler implementation against the IConfig interface."""

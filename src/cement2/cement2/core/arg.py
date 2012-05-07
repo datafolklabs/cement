@@ -3,7 +3,7 @@ Cement core argument module.
 
 """
 
-from cement2.core import backend, exc, interface, handler
+from ..core import backend, exc, interface, handler
 
 Log = backend.minimal_logger(__name__)
 

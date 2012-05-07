@@ -5,7 +5,7 @@ classes and functions exist in cement2.lib.ext_configobj.
     
 """
 
-from cement2.core import handler
-from cement2.lib.ext_configobj import ConfigObjConfigHandler
+from ..core import handler
+from ..lib.ext_configobj import ConfigObjConfigHandler
 
 handler.register(ConfigObjConfigHandler)

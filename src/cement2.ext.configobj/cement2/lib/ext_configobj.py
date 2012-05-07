@@ -2,7 +2,7 @@
 
 import os
 import sys
-from cement2.core import config, backend, exc
+from ..core import config, backend, exc
 
 if sys.version_info[0] >= 3:
     raise exc.CementRuntimeError('ConfigObj does not support Python 3.') # pragma: no cover

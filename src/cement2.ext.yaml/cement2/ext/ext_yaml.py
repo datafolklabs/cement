@@ -5,8 +5,8 @@ classes and functions exist in cement2.lib.ext_yaml.
     
 """
 
-from cement2.core import handler, hook
-from cement2.lib.ext_yaml import YamlOutputHandler
+from ..core import handler, hook
+from ..lib.ext_yaml import YamlOutputHandler
 
 handler.register(YamlOutputHandler)
 

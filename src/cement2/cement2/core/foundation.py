@@ -5,10 +5,10 @@ import os
 import sys
 import signal
 
-from cement2.core import backend, exc, handler, hook, log, config, plugin
-from cement2.core import output, extension, arg, controller, meta, cache
-from cement2.lib import ext_configparser, ext_argparse, ext_logging
-from cement2.lib import ext_nulloutput, ext_plugin
+from ..core import backend, exc, handler, hook, log, config, plugin
+from ..core import output, extension, arg, controller, meta, cache
+from ..lib import ext_configparser, ext_argparse, ext_logging
+from ..lib import ext_nulloutput, ext_plugin
 
 Log = backend.minimal_logger(__name__)    
     

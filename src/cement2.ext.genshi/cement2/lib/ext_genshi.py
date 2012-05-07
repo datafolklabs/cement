@@ -3,7 +3,7 @@
 import sys
 import pkgutil
 from genshi.template import NewTextTemplate
-from cement2.core import output, backend, exc
+from ..core import output, backend, exc
 
 Log = backend.minimal_logger(__name__)
     

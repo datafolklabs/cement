@@ -2,7 +2,7 @@
 
 import sys
 import yaml
-from cement2.core import output, backend
+from ..core import output, backend
 
 Log = backend.minimal_logger(__name__)
 

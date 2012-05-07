@@ -4,7 +4,7 @@ import os
 import sys
 import logging
 
-from cement2.core import exc
+from ..core import exc
 
 def defaults(*sections):
     """

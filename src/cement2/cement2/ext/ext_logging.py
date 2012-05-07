@@ -5,7 +5,7 @@ classes and functions exist in cement2.lib.ext_logging.
     
 """
 
-from cement2.core import handler
-from cement2.lib.ext_logging import LoggingLogHandler
+from ..core import handler
+from ..lib.ext_logging import LoggingLogHandler
 
 handler.register(LoggingLogHandler)

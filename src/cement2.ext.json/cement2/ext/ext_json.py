@@ -5,8 +5,8 @@ classes and functions exist in cement2.lib.ext_json.
     
 """
 
-from cement2.core import handler, hook
-from cement2.lib.ext_json import JsonOutputHandler
+from ..core import handler, hook
+from ..lib.ext_json import JsonOutputHandler
 
 handler.register(JsonOutputHandler)
             

@@ -4,7 +4,7 @@ import os
 import sys
 import glob
 import imp
-from cement2.core import backend, handler, plugin, util, exc
+from ..core import backend, handler, plugin, util, exc
 
 Log = backend.minimal_logger(__name__)
 

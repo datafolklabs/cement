@@ -2,7 +2,7 @@
 
 import sys
 import pylibmc
-from cement2.core import cache, backend
+from ..core import cache, backend
 
 Log = backend.minimal_logger(__name__)
 

@@ -1,7 +1,7 @@
 """JSON Framework Extension Library."""
 
 import sys
-from cement2.core import output, backend, hook
+from ..core import output, backend, hook
 
 if sys.version_info[0] >= 3:
     raise SkipTest('jsonpickle does not support Python 3') # pragma: no cover

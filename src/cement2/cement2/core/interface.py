@@ -3,7 +3,7 @@ Cement core interface module.
 
 """
 
-from cement2.core import exc
+from ..core import exc
 
 class Interface(object):
     def __init__(self):

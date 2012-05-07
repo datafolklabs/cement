@@ -4,7 +4,7 @@ Cement core handler module.
 """
 
 import re
-from cement2.core import exc, backend, meta
+from ..core import exc, backend, meta
 
 Log = backend.minimal_logger(__name__)
 

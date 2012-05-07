@@ -5,7 +5,7 @@ classes and functions exist in cement2.lib.ext_memcached.
     
 """
 
-from cement2.core import handler
-from cement2.lib.ext_memcached import MemcachedCacheHandler
+from ..core import handler
+from ..lib.ext_memcached import MemcachedCacheHandler
 
 handler.register(MemcachedCacheHandler)

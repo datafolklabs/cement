@@ -1,6 +1,6 @@
 """Null Output Framework Extension Library."""
 
-from cement2.core import backend, output
+from ..core import backend, output
 
 Log = backend.minimal_logger(__name__)
 

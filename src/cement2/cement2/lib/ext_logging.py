@@ -2,7 +2,7 @@
 
 import os
 import logging
-from cement2.core import exc, util, log
+from ..core import exc, util, log
         
 class LoggingLogHandler(log.CementLogHandler):  
     """

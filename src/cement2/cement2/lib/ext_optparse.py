@@ -1,7 +1,7 @@
 """OptParse Framework Extension Library."""
 
 from optparse import OptionParser
-from cement2.core import backend, arg
+from ..core import backend, arg
 
 Log = backend.minimal_logger(__name__)
 

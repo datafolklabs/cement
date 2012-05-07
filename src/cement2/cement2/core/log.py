@@ -3,7 +3,7 @@ Cement core log module.
 
 """
 
-from cement2.core import exc, backend, interface, handler
+from ..core import exc, backend, interface, handler
             
 def log_validator(klass, obj):
     """Validates an handler implementation against the ILog interface."""

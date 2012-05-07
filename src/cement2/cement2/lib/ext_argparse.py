@@ -4,7 +4,7 @@ ArgParse Framework Extension Library.
 """
             
 from argparse import ArgumentParser
-from cement2.core import backend, arg
+from ..core import backend, arg
 
 Log = backend.minimal_logger(__name__)
     

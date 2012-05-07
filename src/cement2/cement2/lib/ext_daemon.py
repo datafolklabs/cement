@@ -8,7 +8,7 @@ import io
 import sys
 import pwd
 import grp
-from cement2.core import backend, exc
+from ..core import backend, exc
 
 Log = backend.minimal_logger(__name__)
 
