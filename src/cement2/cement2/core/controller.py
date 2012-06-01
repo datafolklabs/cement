@@ -551,7 +551,8 @@ class CementBaseController(handler.CementBaseHandler):
             else:
                 cmd_txt = cmd_txt + "\n"
     
-        txt = '''%s
+        if len(cmd_txt) > 0:
+            txt = '''%s
 
 commands:
 
@@ -559,5 +560,7 @@ commands:
 
         
         ''' % (self._meta.description, cmd_txt)
+        else:
+            txt = self._meta.description
         
         return textwrap.dedent(txt)        
