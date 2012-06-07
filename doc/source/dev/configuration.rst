@@ -159,7 +159,7 @@ CementApp.Meta.config_files list.  For example:
 
     from cement2.core import foundation, backend
     
-    app = foundation.lay_cement('myapp', 
+    app = foundation.CementApp('myapp', 
         config_files=['/path/to/config1', '/path/to/config2'],
         )
 
