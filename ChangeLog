@@ -21,7 +21,8 @@ is available online at:
 
 Misc:
 
-    * :issue:`111` - Use relative imports
+    * :issue:`111` - Use relative imports (makes cement2 more portable as it
+    can be included and distributed with 3rd party sources).
     
 
 1.9.8 - Thu May 3, 2012
