@@ -241,6 +241,14 @@ class ControllerTestCase(unittest.TestCase):
         self.app.setup()
         self.app.run()
 
+    def test_base_controller_by_name(self):
+        self.app = _t.prep(
+            argv=['my-command'], 
+            base_controller=None
+            )
+        handler.register(TestBaseController)
+        self.app.setup()
+        
     def test_stacked_controller(self):
         app = _t.prep(
             argv=['my-stacked-command',], 

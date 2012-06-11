@@ -106,6 +106,10 @@ def list(handler_type):
             The type of handler (i.e. 'output')
     
     """
+    if handler_type not in backend.handlers:
+        raise exc.CementRuntimeError("handler type '%s' does not exist!" % \
+                                     handler_type)
+                                     
     res = []
     for label in backend.handlers[handler_type]:
         if label == '__interface__':

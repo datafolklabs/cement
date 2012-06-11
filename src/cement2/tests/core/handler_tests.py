@@ -5,6 +5,7 @@ from nose.tools import ok_, eq_, raises
 from cement2.core import exc, backend, handler, handler, output, meta
 from cement2.core import interface
 from cement2 import test_helper as _t
+from cement2.lib.ext_configparser import ConfigParserConfigHandler
 
 class BogusOutputHandler(meta.MetaMixin):
     class Meta:
@@ -108,6 +109,17 @@ class HandlerTestCase(unittest.TestCase):
 
         # and check for bogus one too
         eq_(handler.defined('bogus'), False)
+    
+    def test_handler_list(self):
+        self.app.setup()
+        handler_list = handler.list('config')
+        res = ConfigParserConfigHandler in handler_list
+        ok_(res)
+    
+    @raises(exc.CementRuntimeError)
+    def test_handler_list_bogus_type(self):
+        self.app.setup()
+        handler_list = handler.list('bogus')
     
     def is_defined(handler_type):
         eq_(handler.defined(handler_type), True)

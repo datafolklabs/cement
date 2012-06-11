@@ -690,6 +690,10 @@ class CementApp(meta.MetaMixin):
             self.controller = self._resolve_handler('controller', 
                                                     self._meta.base_controller) 
             self._meta.base_controller = self.controller
+        elif self._meta.base_controller is None:
+            if handler.registered('controller', 'base'):
+                self.controller = self._resolve_handler('controller', 'base') 
+                self._meta.base_controller = self.controller
                 
         # Trump all with whats passed at the command line, and pop off the arg
         if len(self.argv) > 0:
