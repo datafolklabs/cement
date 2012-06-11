@@ -53,6 +53,7 @@ class CementBaseHandler(meta.MetaMixin):
                   'deprecated.  Use Meta.config_defaults instead.')
             if self._meta.config_defaults is None:
                 self._meta.config_defaults = self._meta.defaults
+                
         if self._meta.config_defaults is not None:
             Log.debug("merging config defaults from '%s'" % self)
             dict_obj = dict()

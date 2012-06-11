@@ -69,7 +69,7 @@ so:
 
     from cement2.core import foundation, backend
     
-    defaults = backend.defaults('section1','section2')
+    defaults = backend.defaults('myapp', 'section1','section2')
     defaults['section1']['foo'] = 'bar'
     defaults['section2']['foo2'] = 'bar2'
     
@@ -82,17 +82,60 @@ like a dict, not all do (i.e. ConfigParser).  Please see the documentation
 for the config handler you use for their full usage when accessing the 
 'app.config' object.   
 
-Builtin Defaults
-----------------
+Built-in Defaults
+-----------------
 
-Currently, the only builtin default is:
+The following are not required to exist in the config defaults, however if 
+they do, Cement will honor them (overriding built-in defaults).
 
     debug
-        Toggles full debug mode (more or less trumps whatever the log
-        handler log level is set to).
+        Toggles debug output.  By default, this setting is also overridden
+        by the '[base] -> debug' config setting parsed in any
+        of the application configuration files (where [base] is the 
+        base configuration section of the application which is determined
+        by Meta.config_section but defaults to Meta.label).
         
-        Value: False
+        Default: False
     
+    plugin_config_dir
+        A directory path where plugin config files can be found.  Files
+        must end in '.conf'.  By default, this setting is also overridden
+        by the '[base] -> plugin_config_dir' config setting parsed in any
+        of the application configuration files.
+        
+        Default: None
+        
+        Note: Though the meta default is None, Cement will set this to
+        '/etc/<app_label>/plugins.d/' if not set during app.setup().
+    
+    plugin_dir
+        A directory path where plugin code (modules) can be loaded from.
+        By default, this setting is also overridden by the 
+        '[base] -> plugin_dir' config setting parsed in any of the 
+        application configuration files (where [base] is the 
+        base configuration section of the application which is determined
+        by Meta.config_section but defaults to Meta.label).
+        
+        Default: None
+        
+        Note: Though the meta default is None, Cement will set this to
+        '/usr/lib/<app_label>/plugins/' if not set during app.setup()
+    
+Application Configuration Defaults vs Handler Configuration Defaults
+--------------------------------------------------------------------
+
+There may be slight confusion between the 'CementApp.Meta.config_defaults'
+and the 'CementBaseHandler.Meta.config_defaults' options.  They both are very 
+similar, however the application level configuration defaults is intended to
+be used to set defaults for multiple sections.  Therefore, the 
+CementApp.Meta.config_defaults option is a dict() with nested dict()'s 
+under it.  Each key of the top level dict() relates to a config [section]
+and the nested dict() are the settings for that [section].
+
+The CementBaseHandler.Meta.config_defaults only partain to a single [section] and
+therefor is only a single level dict(), whose settings are applied to the
+CementBaseHandler.Meta.config_section of the application's configuration.
+
 Accessing Configuration Settings
 --------------------------------
 

@@ -188,7 +188,7 @@ class CementBaseController(handler.CementBaseHandler):
             
         config_defaults
             Configuration defaults (type: dict) that are merged into the 
-            applications config object.
+            applications config object for the config_section mentioned above.
             
         arguments
             Arguments to pass to the argument_handler.  The format is a list
