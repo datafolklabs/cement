@@ -14,8 +14,8 @@ For example:
 
 .. code-block:: python
 
-    from cement2.core import foundation, hook
-    from cement2.core.exc import CementRuntimeError
+    from cement.core import foundation, hook
+    from cement.core.exc import CementRuntimeError
     
     try:
         app = foundation.CementApp('helloworld')
@@ -44,7 +44,7 @@ code can do so within the cement_on_close_hook().  For example:
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register()
     def cement_on_close_hook(app):

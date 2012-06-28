@@ -1,8 +1,8 @@
 Log Handling
 ============
 
-Cement defines a logging interface called :ref:`ILog <cement2.core.log>`, 
-as well as the default :ref:`LoggingLogHandler <cement2.ext.ext_logging>` 
+Cement defines a logging interface called :ref:`ILog <cement.core.log>`, 
+as well as the default :ref:`LoggingLogHandler <cement.ext.ext_logging>` 
 that implements the interface.   This 
 handler is built on top of the `Logging <http://docs.python.org/library/logging.html>`_ 
 module which is included in the Python standard library.  
@@ -11,12 +11,12 @@ Please note that there may be other handler's that implement the ILog
 interface.  The documentation below only references usage based on the 
 interface and not the full capabilities of the implementation.
 
-The following log handlers are included and maintained with Cement2:
+The following log handlers are included and maintained with Cement:
 
-    * :ref:`LoggingLogHandler <cement2.ext.ext_logging>`
+    * :ref:`LoggingLogHandler <cement.ext.ext_logging>`
     
 
-Please reference the :ref:`ILog <cement2.core.config>` interface 
+Please reference the :ref:`ILog <cement.core.config>` interface 
 documentation for writing your own log handler.
 
 Logging Messages
@@ -26,7 +26,7 @@ The following shows logging to each of the defined log levels.
 
 .. code-block:: python
 
-    from cement2.core import foundation
+    from cement.core import foundation
     app = foundation.CementApp('myapp')
     
     # First setup the application
@@ -68,7 +68,7 @@ handler.  You can override this via config_defaults:
 
 .. code-block:: python
 
-    from cement2.core import foundation, backend
+    from cement.core import foundation, backend
 
     defaults = backend.defaults('myapp', 'log')
     defaults['log']['level'] = 'WARN'
@@ -86,44 +86,44 @@ debugging issues:
 .. code-block:: text
 
     $ python test.py --debug
-    2011-08-26 18:00:31,993 (DEBUG) cement2.core.foundation : laying cement for the 'myapp' application
-    2011-08-26 18:00:31,993 (DEBUG) cement2.core.hook : defining hook 'cement_init_hook'
-    2011-08-26 18:00:31,993 (DEBUG) cement2.core.hook : defining hook 'cement_add_args_hook'
-    2011-08-26 18:00:31,993 (DEBUG) cement2.core.hook : defining hook 'cement_validate_config_hook'
-    2011-08-26 18:00:31,993 (DEBUG) cement2.core.handler : defining handler type 'extension' (IExtension)
-    2011-08-26 18:00:31,993 (DEBUG) cement2.core.handler : defining handler type 'log' (ILog)
-    2011-08-26 18:00:31,994 (DEBUG) cement2.core.handler : defining handler type 'config' (IConfig)
-    2011-08-26 18:00:31,994 (DEBUG) cement2.core.handler : defining handler type 'plugin' (IPlugin)
-    2011-08-26 18:00:31,994 (DEBUG) cement2.core.handler : defining handler type 'output' (IOutput)
-    2011-08-26 18:00:31,994 (DEBUG) cement2.core.handler : defining handler type 'argument' (IArgument)
-    2011-08-26 18:00:31,994 (DEBUG) cement2.core.handler : defining handler type 'controller' (IController)
-    2011-08-26 18:00:31,994 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
-    2011-08-26 18:00:31,994 (DEBUG) cement2.core.foundation : now setting up the 'myapp' application
-    2011-08-26 18:00:31,994 (DEBUG) cement2.core.foundation : setting up myapp.extension handler
-    2011-08-26 18:00:31,995 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.core.extension.CementExtensionHandler object at 0x1005827d0>'
-    2011-08-26 18:00:31,995 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_cement_output' framework extension
-    2011-08-26 18:00:31,995 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_cement_output.CementOutputHandler'>' into handlers['output']['cement']
-    2011-08-26 18:00:31,995 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_cement_plugin' framework extension
-    2011-08-26 18:00:31,996 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_cement_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
-    2011-08-26 18:00:31,996 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_configparser' framework extension
-    2011-08-26 18:00:31,999 (DEBUG) cement2.core.handler : registering handler 'cement2.ext.ext_configparser.ConfigParserConfigHandler' into handlers['config']['configparser']
-    2011-08-26 18:00:31,999 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_logging' framework extension
-    2011-08-26 18:00:32,000 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
-    2011-08-26 18:00:32,000 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_argparse' framework extension
-    2011-08-26 18:00:32,000 (DEBUG) cement2.core.handler : registering handler '<class 'cement2.ext.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
-    2011-08-26 18:00:32,000 (DEBUG) cement2.core.foundation : setting up myapp.config handler
-    2011-08-26 18:00:32,001 (DEBUG) cement2.core.foundation : validating required configuration parameters
-    2011-08-26 18:00:32,001 (DEBUG) cement2.core.foundation : setting up myapp.log handler
-    2011-08-26 18:00:32,001 (DEBUG) cement2.core.foundation : setting config defaults from '<cement2.ext.ext_logging.LoggingLogHandler object at 0x10040ffd0>'
+    2011-08-26 18:00:31,993 (DEBUG) cement.core.foundation : laying cement for the 'myapp' application
+    2011-08-26 18:00:31,993 (DEBUG) cement.core.hook : defining hook 'cement_init_hook'
+    2011-08-26 18:00:31,993 (DEBUG) cement.core.hook : defining hook 'cement_add_args_hook'
+    2011-08-26 18:00:31,993 (DEBUG) cement.core.hook : defining hook 'cement_validate_config_hook'
+    2011-08-26 18:00:31,993 (DEBUG) cement.core.handler : defining handler type 'extension' (IExtension)
+    2011-08-26 18:00:31,993 (DEBUG) cement.core.handler : defining handler type 'log' (ILog)
+    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'config' (IConfig)
+    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'plugin' (IPlugin)
+    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'output' (IOutput)
+    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'argument' (IArgument)
+    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'controller' (IController)
+    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : registering handler '<class 'cement.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
+    2011-08-26 18:00:31,994 (DEBUG) cement.core.foundation : now setting up the 'myapp' application
+    2011-08-26 18:00:31,994 (DEBUG) cement.core.foundation : setting up myapp.extension handler
+    2011-08-26 18:00:31,995 (DEBUG) cement.core.foundation : no config defaults from '<cement.core.extension.CementExtensionHandler object at 0x1005827d0>'
+    2011-08-26 18:00:31,995 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_cement_output' framework extension
+    2011-08-26 18:00:31,995 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_cement_output.CementOutputHandler'>' into handlers['output']['cement']
+    2011-08-26 18:00:31,995 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_cement_plugin' framework extension
+    2011-08-26 18:00:31,996 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_cement_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
+    2011-08-26 18:00:31,996 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_configparser' framework extension
+    2011-08-26 18:00:31,999 (DEBUG) cement.core.handler : registering handler 'cement.ext.ext_configparser.ConfigParserConfigHandler' into handlers['config']['configparser']
+    2011-08-26 18:00:31,999 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_logging' framework extension
+    2011-08-26 18:00:32,000 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
+    2011-08-26 18:00:32,000 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_argparse' framework extension
+    2011-08-26 18:00:32,000 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
+    2011-08-26 18:00:32,000 (DEBUG) cement.core.foundation : setting up myapp.config handler
+    2011-08-26 18:00:32,001 (DEBUG) cement.core.foundation : validating required configuration parameters
+    2011-08-26 18:00:32,001 (DEBUG) cement.core.foundation : setting up myapp.log handler
+    2011-08-26 18:00:32,001 (DEBUG) cement.core.foundation : setting config defaults from '<cement.ext.ext_logging.LoggingLogHandler object at 0x10040ffd0>'
     2011-08-26 18:00:32,002 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
-    2011-08-26 18:00:32,002 (DEBUG) cement2.core.foundation : setting up myapp.plugin handler
-    2011-08-26 18:00:32,002 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.ext.ext_cement_plugin.CementPluginHandler object at 0x100590f50>'
-    2011-08-26 18:00:32,002 (DEBUG) cement2.core.foundation : setting up myapp.arg handler
-    2011-08-26 18:00:32,003 (DEBUG) cement2.core.foundation : no config defaults from 'ArgParseArgumentHandler(prog='test.py', usage=None, description=None, version=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)'
-    2011-08-26 18:00:32,004 (DEBUG) cement2.core.foundation : setting up myapp.output handler
-    2011-08-26 18:00:32,004 (DEBUG) cement2.core.foundation : no config defaults from '<cement2.ext.ext_cement_output.CementOutputHandler object at 0x100599350>'
-    2011-08-26 18:00:32,004 (DEBUG) cement2.core.foundation : setting up myapp.controller handler
-    2011-08-26 18:00:32,004 (DEBUG) cement2.core.foundation : no controller could be found.
+    2011-08-26 18:00:32,002 (DEBUG) cement.core.foundation : setting up myapp.plugin handler
+    2011-08-26 18:00:32,002 (DEBUG) cement.core.foundation : no config defaults from '<cement.ext.ext_cement_plugin.CementPluginHandler object at 0x100590f50>'
+    2011-08-26 18:00:32,002 (DEBUG) cement.core.foundation : setting up myapp.arg handler
+    2011-08-26 18:00:32,003 (DEBUG) cement.core.foundation : no config defaults from 'ArgParseArgumentHandler(prog='test.py', usage=None, description=None, version=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)'
+    2011-08-26 18:00:32,004 (DEBUG) cement.core.foundation : setting up myapp.output handler
+    2011-08-26 18:00:32,004 (DEBUG) cement.core.foundation : no config defaults from '<cement.ext.ext_cement_output.CementOutputHandler object at 0x100599350>'
+    2011-08-26 18:00:32,004 (DEBUG) cement.core.foundation : setting up myapp.controller handler
+    2011-08-26 18:00:32,004 (DEBUG) cement.core.foundation : no controller could be found.
     2011-08-26 18:00:32,005 (INFO) myapp : This is my info message
 
 
@@ -135,7 +135,7 @@ note the message format is:
     TIMESTAMP - LEVEL - MODULE - MESSAGE
     
 The Cement framework only logs to DEBUG, where the MODULE is displayed as
-'cement2.core.whatever'.  Note that Cement uses a minimal logger that is 
+'cement.core.whatever'.  Note that Cement uses a minimal logger that is 
 separate from the application log, therefore settings you change in your
 application do not affect it.  
 
@@ -146,7 +146,7 @@ The default log handler configuration enables logging to console.  For example:
 
 .. code-block:: python
 
-    from cement2.core import foundation
+    from cement.core import foundation
     app = foundation.CementApp('myapp')
     app.setup()
     app.run()
@@ -172,7 +172,7 @@ defaults, or via a configuration file.
 
 .. code-block:: python
 
-    from cement2.core import foundation, backend
+    from cement.core import foundation, backend
 
     defaults = backend.defaults('myapp', 'log')
     defaults['log']['file'] = 'my.log'

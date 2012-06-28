@@ -6,7 +6,7 @@
 Cement CLI Application Framework v2 Beta
 ========================================
     
-Cement2 is an advanced CLI Application Framework for Python, and a complete
+Cement is an advanced CLI Application Framework for Python, and a complete
 rewrite of Cement version 0.x/1.x.  Its goal is to introduce a standard, and 
 feature-full platform for both simple and complex command line applications as 
 well as support rapid development needs without sacrificing quality.
@@ -14,7 +14,7 @@ well as support rapid development needs without sacrificing quality.
 .. image:: https://secure.travis-ci.org/derks/cement.png
   :target: http://travis-ci.org/#!/derks/cement
 
-Cement2 core features include (but are not limited to):
+Cement core features include (but are not limited to):
 
     * Core pieces of the framework are customizable via handlers/interfaces
     * Extension handler interface to easily extend framework functionality
@@ -33,7 +33,7 @@ Cement2 core features include (but are not limited to):
     * Extensive Sphinx documentation
     * Tested on Python 2.6, 2.7, 3.1, and 3.2
     
-Cement2 extensions include:
+Cement extensions include:
 
     * JSON output handler extension (adds --json option)
     * YAML output handler extension (adds --yaml option)
@@ -49,7 +49,7 @@ Other sites that might be helpful.
 
  * RTFD: http://cement.readthedocs.org/en/portland/
  * CODE: https://github.com/derks/cement/tree/portland
- * PYPI: http://pypi.python.org/pypi/cement2
+ * PYPI: http://pypi.python.org/pypi/cement
  *  IRC: #cement
  *   CI: http://travis-ci.org/#!/derks/cement
 

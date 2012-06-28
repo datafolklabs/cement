@@ -1,8 +1,8 @@
 Configuration Handling
 ======================
 
-Cement defines a configuration interface called :ref:`IConfig <cement2.core.config>`, 
-as well as the default :ref:`ConfigParserConfigHandler <cement2.ext.ext_configparser>` 
+Cement defines a configuration interface called :ref:`IConfig <cement.core.config>`, 
+as well as the default :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>` 
 that implements the interface.  This handler is built on top of 
 `ConfigParser <http://docs.python.org/library/configparser.html>`_ 
 which is included in the Python standard library.  Therefor, this class will
@@ -13,14 +13,14 @@ Please note that there are other handler's that implement the IConfig
 interface.  The documentation below only references usage based on the 
 interface and not the full capabilities of the implementation.
 
-The following config handlers are included and maintained with Cement2, though
+The following config handlers are included and maintained with Cement, though
 may need to be installed via an external extension:
 
-    * :ref:`ConfigParserConfigHandler <cement2.ext.ext_configparser>` (default)
-    * :ref:`ConfigObjConfigHandler <cement2.ext.ext_configobj>`
+    * :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>` (default)
+    * :ref:`ConfigObjConfigHandler <cement.ext.ext_configobj>`
     
     
-Please reference the :ref:`IConfig <cement2.core.config>` interface 
+Please reference the :ref:`IConfig <cement.core.config>` interface 
 documentation for writing your own config handler.
     
 Configuration Ordering
@@ -50,14 +50,14 @@ are passed when creating an application.  For example, the following:
 
 .. code-block:: python
 
-    from cement2.core import foundation
+    from cement.core import foundation
     app = foundation.CementApp('myapp')
 
 Is equivalent to:
 
 .. code-block:: python
 
-    from cement2.core import foundation, backend
+    from cement.core import foundation, backend
     defaults = backend.defaults('myapp')
     app = foundation.CementApp('myapp', config_defaults=defaults)
     
@@ -67,7 +67,7 @@ so:
 
 .. code-block:: python
 
-    from cement2.core import foundation, backend
+    from cement.core import foundation, backend
     
     defaults = backend.defaults('myapp', 'section1','section2')
     defaults['section1']['foo'] = 'bar'
@@ -144,7 +144,7 @@ After application creation, you can access the config handler via the
 
 .. code-block:: python
 
-    from cement2.core import foundation
+    from cement.core import foundation
     app = foundation.CementApp('myapp')
     
     # First setup the application
@@ -186,7 +186,7 @@ a configuration file.  This can be done by:
 
 .. code-block:: python
 
-    from cement2.core import foundation
+    from cement.core import foundation
     app = foundation.CementApp('myapp')
     
     # First setup the application
@@ -200,7 +200,7 @@ CementApp.Meta.config_files list.  For example:
 
 .. code-block:: python
 
-    from cement2.core import foundation, backend
+    from cement.core import foundation, backend
     
     app = foundation.CementApp('myapp', 
         config_files=['/path/to/config1', '/path/to/config2'],
@@ -220,7 +220,7 @@ matches the name.  Note that this happens in *all* sections:
 
 .. code-block:: python
 
-    from cement2.core import foundation
+    from cement.core import foundation
     
     defaults = backend.defaults('base')
     defaults['base']['foo'] = 'bar'

@@ -38,7 +38,7 @@ handle this in setup.py of Cement applications by doing something like:
 .. code-block:: python
 
     install_requires=[
-        "cement2 >=0.2.4, <0.3"
+        "cement >=0.2.4, <0.3"
         ]
 
 This means, if you write an application on top of cement == 0.2.4 then your 
@@ -65,6 +65,6 @@ two Git repos.
 Python Compatibility
 --------------------
 
-The Cement2 Core library is compatible with Python 2.6+ and Python 3+.  Some
+The Cement Core library is compatible with Python 2.6+ and Python 3+.  Some
 extensions may not be Python 3 compatible and would therefore be packaged 
 separately (though still part of the official source).  

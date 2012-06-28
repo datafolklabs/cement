@@ -1,21 +1,21 @@
 Framework Extensions
 ====================
 
-Cement defines an extension interface called :ref:`IExtension <cement2.core.extension>`, 
-as well as the default :ref:`CementExtensionHandler <cement2.core.extension>` 
+Cement defines an extension interface called :ref:`IExtension <cement.core.extension>`, 
+as well as the default :ref:`CementExtensionHandler <cement.core.extension>` 
 that implements the interface.  Its purpose is to manage loading framework
 extensions and making them usable by the application.  Extensions are similar
-to :ref:`Application Plugins <cement2.core.plugin>`, but at the framework level.
+to :ref:`Application Plugins <cement.core.plugin>`, but at the framework level.
 
 Please note that there may be other handler's that implement the IExtension
 interface.  The documentation below only references usage based on the 
 interface and not the full capabilities of the implementation.
 
-The following extension handlers are included and maintained with Cement2:
+The following extension handlers are included and maintained with Cement:
 
-    * :ref:`CementExtensionHandler <cement2.core.extension>`
+    * :ref:`CementExtensionHandler <cement.core.extension>`
 
-Please reference the :ref:`IExtension <cement2.core.extension>` interface 
+Please reference the :ref:`IExtension <cement.core.extension>` interface 
 documentation for writing your own extension handler.
 
 Extension Configuration Settings
@@ -47,7 +47,7 @@ The following example shows how to alter these settings for your application:
 
 .. code-block:: python
 
-    from cement2.core import foundation
+    from cement.core import foundation
     
     try:
         app = foundation.CementApp('myapp',
@@ -74,13 +74,13 @@ the functionality of the framework.  In general, this includes the
 registration of interfaces, handlers, and/or hooks.
 
 The following is an example extension that provides an 
-:ref:`Output Handler <cement2.core.output>`.  We will assume this extension
+:ref:`Output Handler <cement.core.output>`.  We will assume this extension
 is part of our 'myapp' application, so the extension module would be
 'myapp.ext.ext_myapp_output' (or whatever you want to call it).
 
 .. code-block:: python
 
-    from cement2.core import backend, handler, output
+    from cement.core import backend, handler, output
 
     Log = backend.minimal_logger(__name__)
 
@@ -103,7 +103,7 @@ is part of our 'myapp' application, so the extension module would be
     handler.register(MyAppOutputHandler)
 
 Take note of two things.  One is, the 'Log' we are using is from 
-cement2.core.backend.minimal_logger(__name__).  Framework extensions do not 
+cement.core.backend.minimal_logger(__name__).  Framework extensions do not 
 use the application log handler, ever.  Use the minimal_logger(), and only
 log to 'DEBUG' (recommended).
 
@@ -131,7 +131,7 @@ in 'myapp/ext/ext_something_fansy.py':
 
 .. code-block:: python
 
-    from cement2.core import foundation
+    from cement.core import foundation
     
     try:
         app = foundation.CementApp('myapp',

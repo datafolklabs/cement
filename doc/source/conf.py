@@ -15,10 +15,10 @@ VERSION = '1.9'
 RELEASE = '1.9.9'
 
 import sys, os
-sys.path.insert(0, os.path.abspath('../../src/cement2/'))
+sys.path.insert(0, os.path.abspath('../../src/cement/'))
 
 # If we dont' prep an app, then we'll get runtime errors
-from cement2.test_helper import prep
+from cement.test_helper import prep
 prep()
 
 # If extensions (or modules to document with autodoc) are in another directory,

@@ -10,7 +10,7 @@ Multiple Stacked and Non-Stacked Controllers
 .. code-block:: python
 
 
-    from cement2.core import foundation, controller, handler
+    from cement.core import foundation, controller, handler
 
     # define application controllers
     class MyAppBaseController(controller.CementBaseController):
@@ -176,7 +176,7 @@ sub-class but still maintain the existing shared commands.
 
 .. code-block:: python
 
-    from cement2.core import foundation, controller, handler
+    from cement.core import foundation, controller, handler
         
     class AbstractBaseController(controller.CementBaseController):
         """

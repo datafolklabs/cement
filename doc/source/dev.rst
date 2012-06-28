@@ -2,7 +2,7 @@ Developer Documentation
 =======================
 
 This page contains documentation for developers building their application
-on Cement2.  It outlines the features of the Cement2 Framework and how to use
+on Cement.  It outlines the features of the Cement Framework and how to use
 them in your applications.
 
 .. toctree::

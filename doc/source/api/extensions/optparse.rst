@@ -1,18 +1,18 @@
 OptParse
 ========
 
-.. _cement2.ext.ext_optparse:
+.. _cement.ext.ext_optparse:
 
-:mod:`cement2.ext.ext_optparse`
+:mod:`cement.ext.ext_optparse`
 -------------------------------
 
-.. automodule:: cement2.ext.ext_optparse
+.. automodule:: cement.ext.ext_optparse
     :members:
 
-.. _cement2.lib.ext_optparse:
+.. _cement.lib.ext_optparse:
 
-:mod:`cement2.lib.ext_optparse`
+:mod:`cement.lib.ext_optparse`
 -------------------------------
 
-.. automodule:: cement2.lib.ext_optparse
+.. automodule:: cement.lib.ext_optparse
     :members:

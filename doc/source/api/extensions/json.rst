@@ -10,20 +10,20 @@ support Python 3.
 API Reference
 -------------
 
-.. _cement2.ext.ext_json:
+.. _cement.ext.ext_json:
 
-:mod:`cement2.ext.ext_json`
+:mod:`cement.ext.ext_json`
 ---------------------------
 
-.. automodule:: cement2.ext.ext_json
+.. automodule:: cement.ext.ext_json
     :members:
     
-.. _cement2.lib.ext_json:
+.. _cement.lib.ext_json:
 
-:mod:`cement2.lib.ext_json`
+:mod:`cement.lib.ext_json`
 ---------------------------
 
-.. automodule:: cement2.lib.ext_json
+.. automodule:: cement.lib.ext_json
     :members:
     
 

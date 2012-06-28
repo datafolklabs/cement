@@ -5,15 +5,15 @@ if [ -z $1 ]; then
     exit 1
 fi
 
-SOURCES="cement2 \
-         cement2.ext.configobj \
-         cement2.ext.json \
-         cement2.ext.yaml \
-         cement2.ext.memcached \
-         cement2.ext.genshi"
+SOURCES="cement \
+         cement.ext.configobj \
+         cement.ext.json \
+         cement.ext.yaml \
+         cement.ext.memcached \
+         cement.ext.genshi"
 
 #status=$(git status --porcelain)
-#version=$(cat src/cement2/setup.py | grep VERSION | head -n1 | awk -F \' {' print $2 '})
+#version=$(cat src/cement/setup.py | grep VERSION | head -n1 | awk -F \' {' print $2 '})
 version=$1
 
 res=$(git tag | grep $version)
@@ -23,7 +23,7 @@ if [ $? != 0 ]; then
 fi
 
 short=$(echo $version | awk -F . {' print $1"."$2 '})
-dir=~/cement2-${version}
+dir=~/cement-${version}
 tmpdir=$(mktemp -d -t cement-$version)
 
 #if [ "${status}" != "" ]; then
@@ -37,8 +37,8 @@ mkdir ${dir}/source
 mkdir ${dir}/pypi
 
 # all
-git archive ${version} --prefix=cement2-${version}/ | gzip > ${dir}/source/cement2-${version}.tar.gz
-cp -a ${dir}/source/cement2-${version}.tar.gz $tmpdir/
+git archive ${version} --prefix=cement-${version}/ | gzip > ${dir}/source/cement-${version}.tar.gz
+cp -a ${dir}/source/cement-${version}.tar.gz $tmpdir/
 
 # individual
 for i in $SOURCES; do
@@ -48,8 +48,8 @@ for i in $SOURCES; do
 done
 
 pushd $tmpdir
-    tar -zxvf cement2-${version}.tar.gz
-    pushd cement2-${version}/
+    tar -zxvf cement-${version}.tar.gz
+    pushd cement-${version}/
         sphinx-build doc/source ${dir}/doc
     popd
 popd

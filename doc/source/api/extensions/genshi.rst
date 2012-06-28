@@ -12,8 +12,8 @@ module.  To override this, you can subclass and pass to CementApp().
 
 .. code-block:: python
     
-    from cement2.core import foundation, backend
-    from cement2.lib.ext_genshi import GenshiOutputHandler
+    from cement.core import foundation, backend
+    from cement.lib.ext_genshi import GenshiOutputHandler
     
     class MyOutputHandler(GenshiOutputHandler):
         class Meta:
@@ -32,7 +32,7 @@ The following is an example application within a python package.
 
 .. code-block:: python
 
-    from cement2.core import foundation, controller, handler, backend
+    from cement.core import foundation, controller, handler, backend
 
     # define application controllers
     class MyAppBaseController(controller.CementBaseController):
@@ -179,20 +179,20 @@ Output looks like:
 API Reference
 -------------
 
-.. _cement2.ext.ext_genshi:
+.. _cement.ext.ext_genshi:
 
-:mod:`cement2.ext.ext_genshi`
+:mod:`cement.ext.ext_genshi`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: cement2.ext.ext_genshi
+.. automodule:: cement.ext.ext_genshi
     :members:
     
-.. _cement2.lib.ext_genshi:
+.. _cement.lib.ext_genshi:
 
-:mod:`cement2.lib.ext_genshi`
+:mod:`cement.lib.ext_genshi`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: cement2.lib.ext_genshi
+.. automodule:: cement.lib.ext_genshi
     :members:
     
 

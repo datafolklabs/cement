@@ -16,7 +16,7 @@ or what, if any, arguments will be passed to the hook functions when called.
 
 API Reference:
 
-    * :ref:`Cement Hook Module <cement2.core.hook>`
+    * :ref:`Cement Hook Module <cement.core.hook>`
     
 Defining a Hook
 ---------------
@@ -25,7 +25,7 @@ A hook can be defined as follows:
 
 .. code-block:: python
 
-    from cement2.core import foundation, hook
+    from cement.core import foundation, hook
     
     # First create the application
     app = foundation.CementApp('myapp')
@@ -51,7 +51,7 @@ obviously).
 
 .. code-block:: python
 
-    from cement2.core import foundation, hook
+    from cement.core import foundation, hook
     
     # First create the application
     app = foundation.CementApp('myapp')
@@ -107,7 +107,7 @@ then you are trying to register a hook to soon before the hook is defined.
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     for res in hook.run('my_example_hook'):
         # do something with res?
@@ -132,7 +132,7 @@ a custom application hook:
 
 .. code-block:: python
 
-    from cement2.core import backend, foundation, controller, handler, hook
+    from cement.core import backend, foundation, controller, handler, hook
 
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
@@ -207,7 +207,7 @@ passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register(name='cement_pre_setup_hook')
     def my_setup_hook(app):
@@ -222,7 +222,7 @@ passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register(name='cement_post_setup_hook')
     def my_setup_hook(app):
@@ -239,7 +239,7 @@ passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register(name='cement_pre_run_hook')
     def my_pre_run_hook(app):
@@ -257,7 +257,7 @@ passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register(name='cement_post_run_hook')
     def my_post_run_hook(app):
@@ -273,7 +273,7 @@ data dictionary, or a modified one.
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register(name='cement_pre_render_hook')
     def my_pre_render_hook(app, data):
@@ -291,7 +291,7 @@ output text, or a modified version.
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register(name='cement_post_render_hook')
     def my_post_render_hook(app, output_text):
@@ -307,7 +307,7 @@ expected in return.
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register(name='cement_on_close_hook')
     def my_cleanup_hook(app):
@@ -324,7 +324,7 @@ is expected in return.
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register(name='cement_signal_hook')
     def my_signal_hook(signum, frame):

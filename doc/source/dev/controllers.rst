@@ -1,7 +1,7 @@
 Application Controllers
 =======================
 
-Cement defines a controller interface called :ref:`IController <cement2.core.controller>`, 
+Cement defines a controller interface called :ref:`IController <cement.core.controller>`, 
 but does not enable any default handlers that implement the interface.  
 
 Using application controllers is not necessary, but enables rapid development
@@ -13,11 +13,11 @@ ArgParseArgumentHandler.  That said, the CementBaseController is relatively
 useless when used directly and therefore should be used as a Base class to
 create your own application controllers from.
 
-The following controllers are included and maintained with Cement2:
+The following controllers are included and maintained with Cement:
 
-    * :ref:`CementBaseController <cement2.core.controller>`
+    * :ref:`CementBaseController <cement.core.controller>`
 
-Please reference the :ref:`IController <cement2.core.controller>` interface 
+Please reference the :ref:`IController <cement.core.controller>` interface 
 documentation for writing your own controller.
 
     
@@ -29,7 +29,7 @@ handle command dispatch and rapid development.
 
 .. code-block:: python
 
-    from cement2.core import backend, foundation, controller, handler
+    from cement.core import backend, foundation, controller, handler
 
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
@@ -141,7 +141,7 @@ and the other is not.  Pay attention to how this looks at the command line:
 
 .. code-block:: python
 
-    from cement2.core import backend, foundation, controller, handler
+    from cement.core import backend, foundation, controller, handler
 
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):

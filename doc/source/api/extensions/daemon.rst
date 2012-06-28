@@ -38,7 +38,7 @@ The configurations can be passed as defaults:
 
 .. code-block:: python
     
-    from cement2.core import foundation, backend
+    from cement.core import foundation, backend
     
     defaults = backend.defaults('myapp', 'daemon')
     defaults['daemon']['user'] = 'myuser'
@@ -72,7 +72,7 @@ trigger daemon functionality before app.run() is called.
 .. code-block:: python
     
     from time import sleep
-    from cement2.core import foundation, backend
+    from cement.core import foundation, backend
 
     try:    
         app = foundation.CementApp('myapp', extensions=['daemon'])
@@ -92,7 +92,7 @@ An alternative to the above is to put app.daemonize() within a framework hook:
 
 .. code-block:: python
 
-    from cement2.core import hook
+    from cement.core import hook
     
     @hook.register()
     def cement_pre_run_hook(app):
@@ -106,7 +106,7 @@ For example:
 
 .. code-block:: python
 
-    from cement2.core import backend, foundation, controller, handler
+    from cement.core import backend, foundation, controller, handler
     
     # create an application
     app = foundation.CementApp('myapp', extensions=['daemon'])
@@ -181,34 +181,34 @@ scenes:
 
 .. code-block:: text
 
-    2011-12-21 17:44:14,348 (DEBUG) cement2.core.extension : loading the 'cement2.ext.ext_daemon' framework extension
-    2011-12-21 17:44:14,349 (DEBUG) cement2.core.hook : registering hook func 'cement_post_setup_hook' from cement2.ext.ext_daemon into hooks['cement_post_setup_hook']
-    2011-12-21 17:44:14,349 (DEBUG) cement2.core.hook : registering hook func 'cement_on_close_hook' from cement2.ext.ext_daemon into hooks['cement_on_close_hook']
-    2011-12-21 17:44:14,353 (DEBUG) cement2.core.hook : running hook 'cement_post_setup_hook' (<function cement_post_setup_hook at 0x1005bf938>) from cement2.ext.ext_daemon
-    2011-12-21 17:44:14,354 (DEBUG) cement2.lib.ext_daemon : setting process uid(501) and gid(20)
-    2011-12-21 17:44:14,355 (DEBUG) cement2.lib.ext_daemon : writing pid (42662) out to /Users/wdierkes/tmp/myapp.pid
-    2011-12-21 17:44:14,355 (DEBUG) cement2.lib.ext_daemon : attempting to daemonize the current process
-    2011-12-21 17:44:14,356 (DEBUG) cement2.lib.ext_daemon : successfully detached from first parent
-    2011-12-21 17:44:14,358 (DEBUG) cement2.lib.ext_daemon : successfully detached from second parent
+    2011-12-21 17:44:14,348 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_daemon' framework extension
+    2011-12-21 17:44:14,349 (DEBUG) cement.core.hook : registering hook func 'cement_post_setup_hook' from cement.ext.ext_daemon into hooks['cement_post_setup_hook']
+    2011-12-21 17:44:14,349 (DEBUG) cement.core.hook : registering hook func 'cement_on_close_hook' from cement.ext.ext_daemon into hooks['cement_on_close_hook']
+    2011-12-21 17:44:14,353 (DEBUG) cement.core.hook : running hook 'cement_post_setup_hook' (<function cement_post_setup_hook at 0x1005bf938>) from cement.ext.ext_daemon
+    2011-12-21 17:44:14,354 (DEBUG) cement.lib.ext_daemon : setting process uid(501) and gid(20)
+    2011-12-21 17:44:14,355 (DEBUG) cement.lib.ext_daemon : writing pid (42662) out to /Users/wdierkes/tmp/myapp.pid
+    2011-12-21 17:44:14,355 (DEBUG) cement.lib.ext_daemon : attempting to daemonize the current process
+    2011-12-21 17:44:14,356 (DEBUG) cement.lib.ext_daemon : successfully detached from first parent
+    2011-12-21 17:44:14,358 (DEBUG) cement.lib.ext_daemon : successfully detached from second parent
 
 
 API Reference
 -------------
 
-.. _cement2.ext.ext_daemon:
+.. _cement.ext.ext_daemon:
 
-:mod:`cement2.ext.ext_daemon`
+:mod:`cement.ext.ext_daemon`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: cement2.ext.ext_daemon
+.. automodule:: cement.ext.ext_daemon
     :members:
     
-.. _cement2.lib.ext_daemon:
+.. _cement.lib.ext_daemon:
 
-:mod:`cement2.lib.ext_daemon`
+:mod:`cement.lib.ext_daemon`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: cement2.lib.ext_daemon
+.. automodule:: cement.lib.ext_daemon
     :members:
     
 

@@ -1,8 +1,8 @@
 Argument and Option Handling
 ============================
 
-Cement defines an argument interface called :ref:`IArgument <cement2.core.arg>`, 
-as well as the default :ref:`ArgParseArgumentHandler <cement2.ext.ext_argparse>` 
+Cement defines an argument interface called :ref:`IArgument <cement.core.arg>`, 
+as well as the default :ref:`ArgParseArgumentHandler <cement.ext.ext_argparse>` 
 that implements the interface.  This handler is built on top of the 
 `ArgParse <http://docs.python.org/library/argparse.html>`_ module which is 
 included in the Python standard library.  
@@ -11,11 +11,11 @@ Please note that there may be other handler's that implement the IArgument
 interface.  The documentation below only references usage based on the 
 interface and not the full capabilities of the implementation.
 
-The following argument handlers are included and maintained with Cement2:
+The following argument handlers are included and maintained with Cement:
 
-    * :ref:`ArgParseArgumentHandler <cement2.ext.ext_argparse>`
+    * :ref:`ArgParseArgumentHandler <cement.ext.ext_argparse>`
     
-Please reference the :ref:`IArgument <cement2.core.arg>` interface 
+Please reference the :ref:`IArgument <cement.core.arg>` interface 
 documentation for writing your own argument handler.
 
 Adding Arguments
@@ -30,7 +30,7 @@ regardless of what the handler is):
 
 .. code-block:: python
 
-    from cement2.core import foundation
+    from cement.core import foundation
 
     # Create the application
     app = foundation.CementApp('myapp')

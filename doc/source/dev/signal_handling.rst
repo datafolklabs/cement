@@ -49,7 +49,7 @@ A basic application using default handling might look like:
 .. code-block:: python
 
     import signal
-    from cement2.core import foundation, exc
+    from cement.core import foundation, exc
     
     app = foundation.CementApp('myapp')
     app.setup()
@@ -84,7 +84,7 @@ is encountered.
 .. code-block:: python
 
     import signal
-    from cement2.core import foundation, exc, hook
+    from cement.core import foundation, exc, hook
     
     app = foundation.CementApp('myapp') 
     app.setup()
@@ -128,7 +128,7 @@ foundation.CementApp():
 .. code-block:: python
 
     import signal
-    from cement2.core import foundation, exc
+    from cement.core import foundation, exc
     
     SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
 
@@ -152,7 +152,7 @@ callback.
 .. code-block:: python
 
     import signal
-    from cement2.core import foundation, exc, hook
+    from cement.core import foundation, exc, hook
 
     SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
 
@@ -179,6 +179,6 @@ performed, just set 'catch_signals=None'.
 .. code-block:: python
 
     import signal
-    from cement2.core import foundation, exc
+    from cement.core import foundation, exc
 
     app = foundation.CementApp('myapp', catch_signals=None)

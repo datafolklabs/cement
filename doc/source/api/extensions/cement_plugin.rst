@@ -1,18 +1,18 @@
 Plugin
 ======
 
-.. _cement2.ext.ext_plugin:
+.. _cement.ext.ext_plugin:
 
-:mod:`cement2.ext.ext_plugin`
+:mod:`cement.ext.ext_plugin`
 -----------------------------
 
-.. automodule:: cement2.ext.ext_plugin
+.. automodule:: cement.ext.ext_plugin
     :members:
 
-.. _cement2.lib.ext_plugin:
+.. _cement.lib.ext_plugin:
 
-:mod:`cement2.lib.ext_plugin`
+:mod:`cement.lib.ext_plugin`
 -----------------------------
 
-.. automodule:: cement2.lib.ext_plugin
+.. automodule:: cement.lib.ext_plugin
     :members:

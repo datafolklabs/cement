@@ -21,7 +21,7 @@ is available online at:
 
 Misc:
 
-    * :issue:`111` - Use relative imports (makes cement2 more portable as it
+    * :issue:`111` - Use relative imports (makes cement more portable as it
     can be included and distributed with 3rd party sources).
     
 
@@ -36,7 +36,7 @@ Feature Enhancements:
     * :issue:`105` - Add 'meta_override' and 'core_meta_override' list to 
       CementApp().Meta.  Also resolves :issue:`104`.
     * :issue:`108` - Add CementApp.extend() functionality.
-    * :issue:`109` - Add cement2.ext.memcached extension
+    * :issue:`109` - Add cement.ext.memcached extension
 
 Incompatible Changes:
 
@@ -55,7 +55,7 @@ Bug Fixes:
     
 Feature Enhancements:
 
-    * :issue:`88` - Add cement2.ext.genshi extension, provides Genshi Text
+    * :issue:`88` - Add cement.ext.genshi extension, provides Genshi Text
       Templating Launguage support.
     * :issue:`93` - Add epilog support for CementBaseController.
 
@@ -107,12 +107,12 @@ Incompatible Changes:
       and run hooks.
     * :issue:`82` - Change 'meta' classes to Python-proper 'Meta', and 
       interfaces to use 'IMeta'.  Old functionality will be completely removed
-      before Cement2 stable release.
+      before Cement stable release.
     
     
 
 1.9.2 - Wed Nov 02, 2011
 ------------------------------------------------------------------------------
 
-This is an initial beta release of Cement2, and therefore no bugs or features
+This is an initial beta release of Cement, and therefore no bugs or features
 are listed.  Future releases will detail all changes.

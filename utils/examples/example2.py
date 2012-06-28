@@ -1,5 +1,5 @@
 
-from cement2.core import backend, foundation, controller, handler
+from cement.core import backend, foundation, controller, handler
 
 # create an application
 app = foundation.lay_cement('example')

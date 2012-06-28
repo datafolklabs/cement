@@ -21,7 +21,7 @@ The configurations can be passed as defaults:
 
 .. code-block:: python
     
-    from cement2.core import foundation, backend
+    from cement.core import foundation, backend
     
     defaults = backend.defaults('myapp', 'cache.memcached')
     defaults['cache.memcached']['expire_time'] = 0
@@ -46,7 +46,7 @@ Example Usage
 
 .. code-block:: python
     
-    from cement2.core import foundation
+    from cement.core import foundation
 
     try:    
         app = foundation.CementApp('myapp', extensions=['memcached'])
@@ -72,20 +72,20 @@ Example Usage
 API Reference
 -------------
 
-.. _cement2.ext.ext_memcached:
+.. _cement.ext.ext_memcached:
 
-:mod:`cement2.ext.ext_memcached`
+:mod:`cement.ext.ext_memcached`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: cement2.ext.ext_memcached
+.. automodule:: cement.ext.ext_memcached
     :members:
     
-.. _cement2.lib.ext_memcached:
+.. _cement.lib.ext_memcached:
 
-:mod:`cement2.lib.ext_memcached`
+:mod:`cement.lib.ext_memcached`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: cement2.lib.ext_memcached
+.. automodule:: cement.lib.ext_memcached
     :members:
     
 

@@ -1,2 +1,0 @@
-pylibmc
-cement2

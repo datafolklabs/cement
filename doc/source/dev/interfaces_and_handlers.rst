@@ -15,14 +15,14 @@ class have a function called '_setup()'.  Any implementation of that interface
 must provide a function called '_setup()', and perform the expected actions
 when called.
 
-In Cement2, we call the implementation of interfaces 'handlers' and provide the 
-ability to easily register, and retrieve them via the :ref:`cement2.core.handler`
+In Cement, we call the implementation of interfaces 'handlers' and provide the 
+ability to easily register, and retrieve them via the :ref:`cement.core.handler`
 library.
 
 API References:
 
-    * :ref:`Cement Interface Module <cement2.core.interface>`
-    * :ref:`Cement Handler Module <cement2.core.handler>`
+    * :ref:`Cement Interface Module <cement.core.interface>`
+    * :ref:`Cement Handler Module <cement.core.handler>`
     
     
 Defining an Interface
@@ -36,7 +36,7 @@ The following defines a basic interface:
 
 .. code-block:: python
 
-    from cement2.core import interface, handler
+    from cement.core import interface, handler
 
     class MyInterface(interface.Interface):
         class iMeta:
@@ -92,7 +92,7 @@ like this:
 
 .. code-block:: python
 
-    from cement2.core import interface, handler
+    from cement.core import interface, handler
 
     def my_validator(klass, obj):
         members = [
@@ -112,7 +112,7 @@ When 'handler.register()' is called to register a handler to an interface,
 the validator is called and the handler object is passed to the validator.  In
 the above example, we simply define what members we want to validate for and
 then call interface.validate() which will raise 
-cement2.core.exc.CementInterfaceError if validation fails.  It is not 
+cement.core.exc.CementInterfaceError if validation fails.  It is not 
 necessary to use interface.validate() but it is useful and recommended.  In 
 general, the key thing to note is that a validator either raises 
 CementInterfaceError or does nothing if validation passes.
@@ -126,7 +126,7 @@ is a handler that implements the MyInterface above:
 
 .. code-block:: python
 
-    from cement2.core import handler
+    from cement.core import handler
     from myapp.interfaces import MyInterface
     
     class MyHandler(object):
@@ -154,7 +154,7 @@ is a handler that implements the MyInterface above:
 The above is a simple class that meets all the expectations of the interface.
 When calling handler.register(), MyHandler is passed to the validator (if 
 defined in the interface) and if it passes validation will be registered into
-the cement2.core.backend.handlers dictionary.  
+the cement.core.backend.handlers dictionary.  
 
 Using Handlers
 --------------
@@ -163,7 +163,7 @@ The following are a few examples of working with handlers:
 
 .. code-block:: python
 
-    from cement2.core import handler
+    from cement.core import handler
     
     # Get a log handler called 'logging'
     log_handler = handler.get('log', 'logging')
@@ -184,7 +184,7 @@ like so:
 
 .. code-block:: python
 
-    from cement2.core import handler
+    from cement.core import handler
     
     log_handler = handler.get('log', 'logging')
     log = log_handler()
@@ -203,7 +203,7 @@ them as keyword arguments to CementApp():
 
 .. code-block:: python
     
-    from cement2.core import foundation
+    from cement.core import foundation
     from myapp.log import MyLogHandler
     
     # Create the application
@@ -214,7 +214,7 @@ CementApp meta data:
 
 .. code-block:: python
     
-    from cement2.core import foundation
+    from cement.core import foundation
     from myapp.log import MyLogHandler
     
     class MyApp(foundation.CementApp):
@@ -229,7 +229,7 @@ passing them to CementApp().  The following works just the same:
 
 .. code-block:: python
     
-    from cement2.core import foundation
+    from cement.core import foundation
     from myapp.log import MyLogHandler
     
     my_log = MyLogHandler(some_param='some_value')
@@ -271,8 +271,8 @@ it to CementApp():
 
 .. code-block:: python
 
-    from cement2.core import foundation
-    from cement2.ext import ext_logging
+    from cement.core import foundation
+    from cement.ext import ext_logging
     
     class MyLogHandler(ext_logging.LoggingLogHandler):
         class Meta:
@@ -304,7 +304,7 @@ passed to the CementApp().
 
 .. code-block:: python
 
-    from cement2.core import foundation, backend
+    from cement.core import foundation, backend
 
     defaults = backend.defaults('myinterface.myhandler')
     defaults['myinterface.myhandler'] = dict(foo='bar')

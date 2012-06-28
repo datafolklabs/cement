@@ -1,5 +1,5 @@
 
-Cement2 Extensions
+Cement Extensions
 ==================
 
 .. toctree::

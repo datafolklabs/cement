@@ -1,7 +1,7 @@
 Features
 ========
 
-Cement2 Core features include (but are not limited to):
+Cement Core features include (but are not limited to):
 
     * Core pieces of the framework are customizable via handlers/interfaces
     * Extension handler interface to easily extend framework functionality

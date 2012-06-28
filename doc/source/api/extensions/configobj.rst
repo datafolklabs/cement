@@ -8,19 +8,19 @@ It is supported on Python 2.6+, however currently does not support Python 3.
 API Reference
 -------------
 
-.. _cement2.ext.ext_configobj:
+.. _cement.ext.ext_configobj:
 
-:mod:`cement2.ext.ext_configobj`
+:mod:`cement.ext.ext_configobj`
 --------------------------------
 
-.. automodule:: cement2.ext.ext_configobj
+.. automodule:: cement.ext.ext_configobj
     :members:
     
-.. _cement2.lib.ext_configobj:
+.. _cement.lib.ext_configobj:
 
-:mod:`cement2.lib.ext_configobj`
+:mod:`cement.lib.ext_configobj`
 --------------------------------
 
-.. automodule:: cement2.lib.ext_configobj
+.. automodule:: cement.lib.ext_configobj
     :members:
     
