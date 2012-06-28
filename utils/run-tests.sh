@@ -1,13 +1,7 @@
 #!/bin/bash
 
-SOURCES=" \
-    src/cement2 \
-    src/cement2.ext.configobj \
-    src/cement2.ext.json \
-    src/cement2.ext.yaml \
-    src/cement2.ext.genshi \
-    src/cement2.ext.memcached"
-
+SOURCES='src/cement2 src/cement2.ext.configobj src/cement2.ext.genshi src/cement2.ext.memcached src/cement2.ext.yaml'
+         
 pip install nose coverage
 
 for path in $SOURCES; do

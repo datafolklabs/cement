@@ -2,11 +2,7 @@
 parallel = True
 include = 
     src/cement2/cement2/*.py
-    src/cement2.ext.configobj/cement2/*.py
-    src/cement2.ext.json/cement2/*.py
-    src/cement2.ext.yaml/cement2/*.py
-    src/cement2.ext.genshi/cement2/*.py
-    src/cement2.ext.memcached/cement2/*.py
+    src/cement2.ext.*/cement2/*.py
 
 [report]
 ignore_errors = True

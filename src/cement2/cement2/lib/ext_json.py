@@ -1,12 +1,9 @@
 """JSON Framework Extension Library."""
 
 import sys
+import json
 from ..core import output, backend, hook
 
-if sys.version_info[0] >= 3:
-    raise SkipTest('jsonpickle does not support Python 3') # pragma: no cover
-    
-import jsonpickle
 
 Log = backend.minimal_logger(__name__)
 
@@ -58,4 +55,4 @@ class JsonOutputHandler(output.CementOutputHandler):
         Log.debug("rendering output as Json via %s" % self.__module__)
         sys.stdout = backend.SAVED_STDOUT
         sys.stderr = backend.SAVED_STDERR
-        return jsonpickle.encode(data_dict, unpicklable=unpicklable)
+        return json.dumps(data_dict)
