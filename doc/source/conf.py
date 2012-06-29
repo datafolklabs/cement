@@ -18,7 +18,7 @@ import sys, os
 sys.path.insert(0, os.path.abspath('../cement/'))
 
 # If we dont' prep an app, then we'll get runtime errors
-from cement.test_helper import prep
+from cement.utils.test_helper import prep
 prep()
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -38,7 +38,7 @@ extensions = [
     'sphinx.ext.extlinks',
     ]
 
-extlinks = {'issue' : ('https://github.com/derks/cement/issues/%s', 'Issue #')}
+extlinks = {'issue' : ('https://github.com/cement/cement/issues/%s', 'Issue #')}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
