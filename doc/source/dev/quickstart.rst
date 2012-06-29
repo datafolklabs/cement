@@ -22,7 +22,7 @@ source for development of the next major version of Cement.
 
 .. code-block:: text
 
-    $ git clone git://github.com/derks/cement.git
+    $ git clone git://github.com/cement/cement.git
     
     $ cd cement
     
