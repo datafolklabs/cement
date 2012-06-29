@@ -4,7 +4,7 @@ import unittest
 import logging
 from nose.tools import eq_, raises
 from cement.core import exc, backend, handler, log
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 class BogusHandler1(log.CementLogHandler):
     class Meta:

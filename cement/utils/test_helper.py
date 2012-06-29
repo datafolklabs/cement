@@ -1,6 +1,6 @@
 
 import sys
-from .core import backend, foundation, handler, hook
+from ..core import backend, foundation, handler, hook
 
 class TestApp(foundation.CementApp):
     class Meta:

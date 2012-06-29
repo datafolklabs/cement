@@ -5,7 +5,7 @@ import sys
 import unittest
 from nose.tools import ok_, eq_, raises
 from cement.core import handler, backend, hook
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 _t.prep()
 from cement.ext import ext_json

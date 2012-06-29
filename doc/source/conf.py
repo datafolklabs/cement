@@ -15,7 +15,7 @@ VERSION = '1.9'
 RELEASE = '1.9.9'
 
 import sys, os
-sys.path.insert(0, os.path.abspath('../../src/cement/'))
+sys.path.insert(0, os.path.abspath('../cement/'))
 
 # If we dont' prep an app, then we'll get runtime errors
 from cement.test_helper import prep

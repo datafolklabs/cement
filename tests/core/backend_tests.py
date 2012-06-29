@@ -3,7 +3,7 @@
 import unittest
 from nose.tools import with_setup, ok_, eq_, raises
 from cement.core import backend
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 class BackendTestCase(unittest.TestCase):
     def setUp(self):

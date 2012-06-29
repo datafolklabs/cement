@@ -3,7 +3,7 @@
 import unittest
 from nose.tools import eq_, raises
 from cement.core import exc, interface, output, handler, meta
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 class TestInterface(meta.MetaMixin):
     class IMeta:

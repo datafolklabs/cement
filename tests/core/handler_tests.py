@@ -4,7 +4,7 @@ import unittest
 from nose.tools import ok_, eq_, raises
 from cement.core import exc, backend, handler, handler, output, meta
 from cement.core import interface
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 from cement.lib.ext_configparser import ConfigParserConfigHandler
 
 class BogusOutputHandler(meta.MetaMixin):

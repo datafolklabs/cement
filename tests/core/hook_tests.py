@@ -4,7 +4,7 @@ import signal
 import unittest
 from nose.tools import ok_, eq_, raises
 from cement.core import exc, backend, hook, foundation
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 
 def cement_hook_one(*args, **kw):

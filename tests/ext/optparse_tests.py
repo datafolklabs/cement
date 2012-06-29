@@ -3,7 +3,7 @@
 import unittest
 from nose.tools import eq_, raises
 from cement.core import handler, backend, log
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 class OptParseExtTestCase(unittest.TestCase):
     def setUp(self):

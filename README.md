@@ -6,6 +6,8 @@ introduce a standard, and feature-full platform for both simple and complex
 command line applications as well as support rapid development needs without 
 sacrificing quality.
 
+[![Continuous Integration Status](https://secure.travis-ci.org/cement/cement.png)](http://travis-ci.org/cement/cement)
+
 Cement core features include (but are not limited to):
 
  * Core pieces of the framework are customizable via handlers/interfaces
@@ -30,6 +32,7 @@ and < 3.2.*
 
 More Information
 ----------------
+
  * RTFD: http://cement.rtfd.org/
  * CODE: http://github.com/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
@@ -42,3 +45,4 @@ License
 The Cement CLI Application Framework is Open Source and is distributed under 
 the BSD License (three clause).  Please see the LICENSE file included with 
 this software.  
+

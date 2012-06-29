@@ -3,7 +3,7 @@
 import unittest
 from nose.tools import raises
 from cement.core import exc, backend, extension, handler, output, interface
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 class IBogus(interface.Interface):
     class IMeta:

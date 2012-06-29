@@ -5,7 +5,7 @@ from nose.tools import eq_, raises
 from nose import SkipTest
 
 from cement.core import exc, controller, handler
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 class BogusController(controller.CementBaseController):
     class Meta:

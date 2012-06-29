@@ -4,7 +4,7 @@ import unittest
 from nose.tools import eq_, raises
 from nose import SkipTest
 from cement.core import exc
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 class ExceptionTestCase(unittest.TestCase):
     def setUp(self):

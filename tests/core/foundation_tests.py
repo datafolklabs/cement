@@ -5,7 +5,7 @@ from nose.tools import ok_, eq_, raises
 from nose import SkipTest
 from cement.core import foundation, exc, backend, config, extension, plugin
 from cement.core import log, output, handler, hook, arg, controller
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 def my_extended_func():
     return 'KAPLA'

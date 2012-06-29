@@ -5,7 +5,7 @@ import unittest
 from tempfile import mkstemp
 from nose.tools import ok_, eq_, raises
 from cement.core import exc, config, handler, backend
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 CONFIG = """
 [my_section]

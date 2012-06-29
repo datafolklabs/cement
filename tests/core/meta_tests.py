@@ -3,7 +3,7 @@
 import unittest
 from nose.tools import eq_, raises
 from cement.core import backend, exc, meta
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 class TestMeta(meta.MetaMixin):
     class Meta:

@@ -3,7 +3,7 @@
 import unittest
 from nose.tools import ok_, eq_, raises
 from cement.core import exc, cache, handler
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 
 class MyCacheHandler(cache.CementCacheHandler):

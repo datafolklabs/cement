@@ -6,7 +6,7 @@ import unittest
 from tempfile import mkstemp
 from nose.tools import eq_, raises
 from cement.core import handler, backend, log
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 from cement.lib import ext_logging
 
 class MyLog(ext_logging.LoggingLogHandler):

@@ -6,7 +6,7 @@ import unittest
 from tempfile import mkdtemp
 from nose.tools import with_setup, ok_, eq_, raises
 from cement.core import exc, backend, plugin, handler
-from cement import test_helper as _t
+from cement.utils import test_helper as _t
 
 CONF = """
 [myplugin]
