@@ -8,7 +8,7 @@ implementation.
 
 The following output handlers are included and maintained with Cement:
 
-    * :ref:`MemcachedCacheHandler <cement.ext.ext_memcached>`
+    * None
 
 Please reference the :ref:`ICache <cement.core.cache>` interface 
 documentation for writing your own cache handler.

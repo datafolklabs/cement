@@ -17,7 +17,6 @@ The following config handlers are included and maintained with Cement, though
 may need to be installed via an external extension:
 
     * :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>` (default)
-    * :ref:`ConfigObjConfigHandler <cement.ext.ext_configobj>`
     
     
 Please reference the :ref:`IConfig <cement.core.config>` interface 

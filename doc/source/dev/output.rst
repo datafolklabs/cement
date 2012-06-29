@@ -16,7 +16,6 @@ The following output handlers are included and maintained with Cement:
 
     * :ref:`NullOutputHandler <cement.ext.ext_nulloutput>`
     * :ref:`JsonOutputHandler <cement.ext.ext_json>`
-    * :ref:`YamlOutputHandler <cement.ext.ext_yaml>`
 
 Please reference the :ref:`IOutput <cement.core.output>` interface 
 documentation for writing your own output handler.

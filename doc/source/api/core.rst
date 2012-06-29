@@ -115,10 +115,10 @@ Cement Core Modules
     
 .. _cement.core.util:    
 
-:mod:`cement.core.util`
+:mod:`cement.utils`
 ------------------------
 
-.. automodule:: cement.core.util
+.. automodule:: cement.utils
     :members:    
 
 

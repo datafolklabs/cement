@@ -18,9 +18,9 @@ Cement core features include (but are not limited to):
  * Handler system connects implementation classes with Interfaces
  * Output handler interface renders return dictionaries to console
  * Cache handler interface adds caching support for improved performance
- * Zero external dependencies* (ext's with dependencies ship separately)
  * Controller handler supports sub-commands, and nested controllers
- * Almost 100% test coverage
+ * Zero external dependencies* (ext's with dependencies ship separately)
+ * 99% test coverage
  * Extensive Sphinx documentation
  * Tested on Python 2.6, 2.7, 3.1, and 3.2
 

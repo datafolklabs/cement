@@ -1,5 +1,0 @@
-argparse>=1.2
-configobj
-pylibmc
-jsonpickle
-pyyaml

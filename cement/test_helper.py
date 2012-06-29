@@ -14,7 +14,6 @@ class TestApp(foundation.CementApp):
         from cement.ext import ext_configparser
         from cement.ext import ext_logging
         from cement.ext import ext_optparse
-        from cement.ext import ext_daemon
         from cement.ext import ext_json
         if not 'configparser' in backend.handlers['config']:
             handler.register(ext_configparser.ConfigParserConfigHandler)

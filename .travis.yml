@@ -1,7 +1,5 @@
 language: python
-before_script: ./utils/travis/bootstrap.sh
-script: ./utils/run-tests.sh
-install: sudo apt-get install memcached libmemcached-dev -y
+script: ./scripts/travis.sh
 python:
   - "2.6"
   - "2.7"

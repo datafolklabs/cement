@@ -21,8 +21,16 @@ is available online at:
 
 Misc:
 
-    * :issue:`111` - Use relative imports (makes cement more portable as it
-    can be included and distributed with 3rd party sources).
+    * :issue:`111` - Use relative imports (makes cement more portable as it 
+      can be included and distributed with 3rd party sources).
+    
+
+Incompatible Changes:
+
+    * Namespace reverted from 'cement2' back to 'cement'.
+    * The following extensions have been removed from the cement source tree, 
+      and are now available externally (see: http://github.com/cement): daemon, 
+      memcached, configobj, yaml, genshi.
     
 
 1.9.8 - Thu May 3, 2012
