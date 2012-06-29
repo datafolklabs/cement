@@ -11,7 +11,7 @@ class ShellUtilsTestCase(unittest.TestCase):
     def test_exec_cmd(self):
         out, err, ret = shell.exec_cmd(['echo', 'KAPLA!'])
         eq_(ret, 0)
-        eq_(out, 'KAPLA!\n')
+        eq_(out, b'KAPLA!\n')
         
     def test_exec_cmd2(self):
         ret = shell.exec_cmd2(['echo'])
