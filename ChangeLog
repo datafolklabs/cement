@@ -19,11 +19,15 @@ is available online at:
 1.9.9 - development version (will be released as 1.9.10)
 ------------------------------------------------------------------------------
 
+Feature Enhancements:
+
+    * :issue:`118` - Added utils.fs.backup() to safely backup files/dirs.
+    
 Misc:
 
     * :issue:`111` - Use relative imports (makes cement more portable as it 
       can be included and distributed with 3rd party sources).
-    
+    * :issue:`120` - Use standard json rather than relying on jsonpickle
 
 Incompatible Changes:
 
