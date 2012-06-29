@@ -13,12 +13,17 @@ is easily installed on most platforms either with 'easy_install' or 'pip' or
 via your OS distributions packaging system (yum, apt, brew, etc).
 
 
-Installing From Git
--------------------
+Installation
+------------
 
-Currently, the 'master' branch is the current stable version of cement (0.8.x).
-To install Cement you need to checkout the 'portland' branch which is the
-source for development of the next major version of Cement.  
+*Installing Stable Versions From PyPI:*
+
+.. code-block:: text
+
+    $ pip install cement
+    
+
+*Installing From Git:*
 
 .. code-block:: text
 
@@ -26,15 +31,9 @@ source for development of the next major version of Cement.
     
     $ cd cement
     
-    $ git checkout --track -b portland origin/portland
-    Branch portland set up to track remote branch portland from origin.
-    Switched to a new branch 'portland'
-
     $ virtualenv --no-site-packages ~/env/helloworld/
     
     $ source ~/env/helloworld/bin/activate
-    
-    (helloworld) $ cd src/cement/
     
     (helloworld) $ python setup.py install
     
@@ -43,9 +42,9 @@ To run tests, do the following from the 'root' directory:
 
 .. code-block:: text
     
-    (helloworld) $ pip install nose
+    (helloworld) $ pip install nose coverage
     
-    (helloworld) $ ./utils/run_tests.sh
+    (helloworld) $ python setup.py nosetests
 
 
 A Simple Hello World Application
@@ -57,8 +56,8 @@ The following is a bare minimum 'helloworld' application.
 
     from cement.core import foundation
     
+    app = foundation.CementApp('helloworld')
     try:
-        app = foundation.CementApp('helloworld')
         app.setup()
         app.run()
         print('Hello World')
@@ -264,10 +263,10 @@ handle command dispatch and rapid development.
     # Register any handlers that aren't passed directly to CementApp
     handler.register(MySecondController)
 
-    # setup the application
-    app.setup()
-
     try:
+        # setup the application
+        app.setup()
+        
         # run the application
         app.run()
     finally:

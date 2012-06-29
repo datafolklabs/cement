@@ -11,8 +11,8 @@ introduce a standard, and feature-full platform for both simple and complex
 command line applications as well as support rapid development needs without 
 sacrificing quality.
 
-.. image:: https://secure.travis-ci.org/derks/cement.png
-  :target: http://travis-ci.org/#!/derks/cement
+.. image:: https://secure.travis-ci.org/cement/cement.png
+  :target: http://travis-ci.org/#!/cement/cement
 
 Cement core features include (but are not limited to):
 
@@ -43,7 +43,7 @@ Getting More Information
  * CODE: http://github.com/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
  * SITE: http://builtoncement.org/
-   
+ * T-CI: http://travis-ci.org/cement/cement
 
 Older Versions of Cement
 ------------------------

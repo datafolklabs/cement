@@ -37,6 +37,7 @@ More Information
  * CODE: http://github.com/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
  * SITE: http://builtoncement.org/
+ * T-CI: http://travis-ci.org/cement/cement
     
     
 License
