@@ -14,6 +14,6 @@ class ShellUtilsTestCase(unittest.TestCase):
         eq_(out, 'KAPLA!\n')
         
     def test_exec_cmd2(self):
-        out, err, ret = shell.exec_cmd2(['echo'])
+        ret = shell.exec_cmd2(['echo'])
         eq_(ret, 0)
         
