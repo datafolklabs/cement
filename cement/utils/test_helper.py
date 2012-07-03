@@ -13,7 +13,6 @@ class TestApp(foundation.CementApp):
         from cement.ext import ext_plugin
         from cement.ext import ext_configparser
         from cement.ext import ext_logging
-        from cement.ext import ext_optparse
         from cement.ext import ext_json
         if not 'configparser' in backend.handlers['config']:
             handler.register(ext_configparser.ConfigParserConfigHandler)
@@ -25,8 +24,6 @@ class TestApp(foundation.CementApp):
             handler.register(ext_plugin.CementPluginHandler)
         if not 'logging' in backend.handlers['log']:
             handler.register(ext_logging.LoggingLogHandler)
-        if not 'optparse' in backend.handlers['argument']:
-            handler.register(ext_optparse.OptParseArgumentHandler)
             
     def setup(self):
         super(TestApp, self).setup()

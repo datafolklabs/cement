@@ -31,6 +31,7 @@ Cement Utility Modules
    
    utils/fs
    utils/shell
+   utils/misc
    utils/test_helper
    
 Cement Extension Modules
@@ -45,7 +46,6 @@ Cement Extension Modules
    ext/ext_logging
    ext/ext_nulloutput
    ext/ext_plugin
-   ext/ext_optparse
    
 Cement Library Modules
 ----------------------
@@ -59,4 +59,3 @@ Cement Library Modules
    lib/ext_logging
    lib/ext_nulloutput
    lib/ext_plugin
-   lib/ext_optparse

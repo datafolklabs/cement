@@ -27,7 +27,7 @@ foo = bar
 """
 
 CONF4 = """
-[ext_optparse]
+[ext_json]
 enable_plugin = true
 foo = bar
 """
@@ -196,7 +196,7 @@ class PluginTestCase(unittest.TestCase):
         # We mock this out by loading a cement ext, but it is essentially the
         # same type of code.
         tmpdir = mkdtemp()
-        f = open(os.path.join(tmpdir, 'ext_optparse.conf'), 'w')
+        f = open(os.path.join(tmpdir, 'ext_json.conf'), 'w')
         f.write(CONF4)
         f.close()
     
@@ -208,7 +208,7 @@ class PluginTestCase(unittest.TestCase):
             )
         app.setup()
         
-        res = 'ext_optparse' in app.plugin.enabled_plugins
+        res = 'ext_json' in app.plugin.enabled_plugins
         ok_(res)
         
         shutil.rmtree(tmpdir)
