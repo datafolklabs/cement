@@ -8,10 +8,11 @@ them in your applications.
 .. toctree::
    :maxdepth: 20
    
+   installation
    quickstart
    interfaces_and_handlers
    configuration
-   args
+   arguments
    logging
    output
    controllers
@@ -21,4 +22,3 @@ them in your applications.
    signal_handling
    cleanup
    caching
-   examples

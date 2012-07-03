@@ -14,7 +14,7 @@ sacrificing quality.
 .. image:: https://secure.travis-ci.org/cement/cement.png
   :target: http://travis-ci.org/#!/cement/cement
 
-Cement core features include (but are not limited to):
+Core features include (but are not limited to):
 
  * Core pieces of the framework are customizable via handlers/interfaces
  * Extension handler interface to easily extend framework functionality
@@ -29,7 +29,7 @@ Cement core features include (but are not limited to):
  * Controller handler supports sub-commands, and nested controllers
  * Zero external dependencies* (ext's with dependencies ship separately)
  * 99-100% test coverage
- * Extensive Sphinx documentation
+ * Extensive documentation
  * Tested on Python 2.6, 2.7, 3.1, and 3.2
 
 *Note that argparse is required as an external dependency for Python < 2.7 
@@ -69,3 +69,10 @@ Documentation
    :maxdepth: 2
 
    dev/index
+
+.. toctree::
+   :maxdepth: 2
+
+   examples/index
+
+  

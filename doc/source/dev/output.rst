@@ -23,7 +23,7 @@ documentation for writing your own output handler.
 Rending Output
 --------------
 
-Cement application do not need to use an output handler by any means.  Most
+Cement applications do not need to use an output handler by any means.  Most
 small applications can get away with print() statements.  However, anyone
 who has ever built a bigger application that produces a lot of output will 
 know that this can get ugly very quickly in your code.   
@@ -33,7 +33,7 @@ offload the display of relevant data to an output handler, possibly by
 templates or other means (GUI?).
 
 An output handler has a 'render()' function that takes a data dictionary that
-it uses to produce output.  Some output handler may also accept a 'template' 
+it uses to produce output.  Some output handlers may also accept a 'template' 
 or other parameters that define how output is rendered.  This is easily 
 accessible by the application object.
 
@@ -66,23 +66,17 @@ something happen:
     from cement.core import foundation, handler, output
 
     # Create a custom output handler
-    class MyOutput(object):
+    class MyOutput(output.CementOutputHandler):
         class Meta:
-            interface = output.IOutput
             label = 'myoutput'
-
-        def __init__(self):
-            self.config = None
-
-        def setup(self, config_obj):
-            self.config = config_obj
 
         def render(self, data, template=None):
             for key in data:
                 print "%s => %s" % (key, data[key])
 
     app = foundation.CementApp('myapp', output_handler=MyOutputHandler)
-
+    ...
+    
 Which looks like:
 
 .. code-block:: text

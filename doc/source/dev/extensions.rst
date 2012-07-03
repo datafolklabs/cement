@@ -49,18 +49,19 @@ The following example shows how to alter these settings for your application:
 
     from cement.core import foundation
     
+    app = foundation.CementApp('myapp',
+        extension_handler = MyExtensionHandler
+        core_extensions = [
+            'cement_output',
+            'cement_plugin',
+            'configparser', 
+            'logging', 
+            'argparse',
+            ]
+        extensions = ['myapp.ext.ext_something_fansy']
+        )
+        
     try:
-        app = foundation.CementApp('myapp',
-            extension_handler = MyExtensionHandler
-            core_extensions = [
-                'cement_output',
-                'cement_plugin',
-                'configparser', 
-                'logging', 
-                'argparse',
-                ]
-            extensions = ['myapp.ext.ext_something_fansy']
-            )
         app.setup()
         app.run()
     finally:
@@ -84,17 +85,10 @@ is part of our 'myapp' application, so the extension module would be
 
     Log = backend.minimal_logger(__name__)
 
-    class MyAppOutputHandler(object):
+    class MyAppOutputHandler(output.CementOutputHandler):
         class Meta:
-            interface = output.IOutput
             label = 'myapp_output'
-        
-        def __init__(self):
-            self.app = None
-            
-        def setup(self, app_obj):
-            self.app = app_obj
-        
+                
         def render(self, data_dict, template=None):
             Log.debug("Rendering output via MyAppOutputHandler")
             for key in data_dict.keys():
@@ -132,13 +126,34 @@ in 'myapp/ext/ext_something_fansy.py':
 .. code-block:: python
 
     from cement.core import foundation
-    
-    try:
-        app = foundation.CementApp('myapp',
-            extensions = ['myapp.ext.ext_something_fansy']
-            )
+
+    app = foundation.CementApp('myapp',
+        extensions = ['myapp.ext.ext_something_fansy']
+        )
+            
+    try:        
         app.setup()
         app.run()
     finally:
         app.close()
     
+Note that Cement provides a shortcut for Cement extensions.  For example, the
+following:
+
+.. code-block:: python
+
+    app = foundation.CementApp('myapp', extensions=['json', 'daemon'])
+
+Is equivalent to:
+
+.. code-block:: python
+
+    app = foundation.CementApp('myapp',
+        extensions=[
+            'cement.ext.ext_json', 
+            'cement.ext.ext_daemon',
+            ]
+        )
+
+For non-cement extensions you need to use the full python 'dotted' module 
+path.

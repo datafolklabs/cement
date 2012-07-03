@@ -191,7 +191,9 @@ like so:
 
 Or shorter:
 
-log = handler.get('log', 'logging')()
+.. code-block:: python
+
+    log = handler.get('log', 'logging')()
 
 
 Overriding Default Handlers
@@ -241,6 +243,8 @@ passing them to CementApp().  The following works just the same:
 
     app = MyApp()
 
+To see what default handlers can be overridden, see the 
+:ref:`cement.core.foundation <cement.core.foundation>` documentation.
 
 Multiple Registered Handlers
 ----------------------------
@@ -272,15 +276,15 @@ it to CementApp():
 .. code-block:: python
 
     from cement.core import foundation
-    from cement.ext import ext_logging
+    from cement.lib.ext_logging import LoggingLogHandler
     
-    class MyLogHandler(ext_logging.LoggingLogHandler):
+    class MyLogHandler(LoggingLogHandler):
         class Meta:
             label = 'mylog'
             
         def info(self, msg):
             # do something to customize this function, here...
-            super(MyLogHandler, selt).info(msg)
+            super(MyLogHandler, self).info(msg)
             
     app = foundation.CementApp('myapp', log_handler=MyLogHandler)
     
@@ -324,6 +328,7 @@ For example:
     [myinterface.myhandler]
     foo = bar
 
-In the real world this my look like '[controller.tasks]', or 
+In the real world this may look like '[controller.tasks]', or 
 '[database.mysql]' depending on what the interface label, and handler label's
-are.
+are.  Additionally, individual handlers can override their config section
+by setting Meta.config_section.

@@ -34,7 +34,6 @@ handle command dispatch and rapid development.
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
         class Meta:
-            interface = controller.IController
             label = 'base'
             description = "My Application does amazing things!"
             epilog = "This is the text at the bottom of --help."
@@ -45,7 +44,7 @@ handle command dispatch and rapid development.
                 )
             
             arguments = [
-                (['--foo'], dict(action='store', help='the notorious foo option')),
+                (['-f', '--foo'], dict(action='store', help='the notorious foo option')),
                 (['-C'], dict(action='store_true', help='the big C option'))
                 ]
         
@@ -64,12 +63,10 @@ handle command dispatch and rapid development.
         def command2(self):
             self.log.info("Inside base.command2 function.")
     
-    try:
-        # create an application
-        app = foundation.CementApp('example', 
-            base_controller=MyAppBaseController
-            )
+    # create an application
+    app = foundation.CementApp('example', base_controller=MyAppBaseController)
 
+    try:
         # setup the application
         app.setup()
         
@@ -146,7 +143,6 @@ and the other is not.  Pay attention to how this looks at the command line:
     # define an application base controller
     class MyAppBaseController(controller.CementBaseController):
         class Meta:
-            interface = controller.IController
             label = 'base'
             description = "My Application does amazing things!"
 
@@ -173,7 +169,6 @@ and the other is not.  Pay attention to how this looks at the command line:
 
     class Controller2(controller.CementBaseController):
         class Meta:
-            interface = controller.IController
             label = 'controller2'
             stacked_on = 'base'
             description = 'This is the description for controller2.'
@@ -189,7 +184,6 @@ and the other is not.  Pay attention to how this looks at the command line:
 
     class Controller3(controller.CementBaseController):
         class Meta:
-            interface = controller.IController
             label = 'controller3'
             description = 'This is the description for controller3.'
             config_defaults = dict()
@@ -206,15 +200,14 @@ and the other is not.  Pay attention to how this looks at the command line:
         def command3(self):
             self.log.info('Inside controller3.command3 function.')
 
-    try:
-        # create an application
-        app = foundation.CementApp('example', 
-            base_controller=MyAppBaseController
-            )
+    # create an application
+    app = foundation.CementApp('example', base_controller=MyAppBaseController)
     
-        handler.register(Controller2)
-        handler.register(Controller3)
+    # register non-base controllers
+    handler.register(Controller2)
+    handler.register(Controller3)
 
+    try:
         # setup the application
         app.setup()
         

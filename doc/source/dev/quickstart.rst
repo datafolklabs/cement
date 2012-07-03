@@ -1,56 +1,9 @@
 Quick Start
 ===========
 
-The following outlines installation of Cement, as well as quick starting a
-new 'helloworld' application.
+The following outlines creating a sample 'helloworld' application.
 
-Development Environment
------------------------
-
-It is recommended to work out of a `VirtualENV <http://pypi.python.org/pypi/virtualenv>`_ 
-for development, which is reference throughout this documentation.  VirtualENV
-is easily installed on most platforms either with 'easy_install' or 'pip' or
-via your OS distributions packaging system (yum, apt, brew, etc).
-
-
-Installation
-------------
-
-*Installing Stable Versions From PyPI:*
-
-.. code-block:: text
-
-    $ pip install cement
-    
-
-*Installing From Git:*
-
-.. code-block:: text
-
-    $ git clone git://github.com/cement/cement.git
-    
-    $ cd cement
-    
-    $ virtualenv --no-site-packages ~/env/helloworld/
-    
-    $ source ~/env/helloworld/bin/activate
-    
-    (helloworld) $ python setup.py install
-    
-
-To run tests, do the following from the 'root' directory:
-
-.. code-block:: text
-    
-    (helloworld) $ pip install nose coverage
-    
-    (helloworld) $ python setup.py nosetests
-
-
-A Simple Hello World Application
---------------------------------
-
-The following is a bare minimum 'helloworld' application.
+*helloworld.py*
 
 .. code-block:: python
 
@@ -63,8 +16,8 @@ The following is a bare minimum 'helloworld' application.
         print('Hello World')
     finally:
         app.close()
-    
-And execution:
+
+Executing the application:
 
 .. code-block:: text
 
@@ -72,8 +25,8 @@ And execution:
     Hello World
     
     
-Oh, I can here you saying, "Whoa whoa... hang on a minute.  This is a joke 
-right, all you did was print 'Hello World' to stdout.  What kind of framework 
+Oh, I can just here you saying, "Whoa whoa... hang on a minute.  This is a joke 
+right, all you did was print 'Hello World' to STDOUT.  What kind of framework 
 is this?".  Well obviously this is just an introduction to show that the 
 creation of an application is dead simple.  Lets take a look further:
 
@@ -87,56 +40,60 @@ creation of an application is dead simple.  Lets take a look further:
       --debug     toggle debug output
       --quiet     suppress all output
     
+
 Oh nice, ok... ArgParse is already setup with a few options I see.  What else?
 
 .. code-block:: text
 
     $ python helloworld.py --debug
-    2011-11-15 15:19:35,157 (DEBUG) cement.core.foundation : laying cement for the 'helloworld' application
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.hook : defining hook 'cement_pre_setup_hook'
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.hook : defining hook 'cement_post_setup_hook'
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.hook : defining hook 'cement_pre_run_hook'
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.hook : defining hook 'cement_post_run_hook'
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.hook : defining hook 'cement_on_close_hook'
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.handler : defining handler type 'extension' (IExtension)
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.handler : defining handler type 'log' (ILog)
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.handler : defining handler type 'config' (IConfig)
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.handler : defining handler type 'plugin' (IPlugin)
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.handler : defining handler type 'output' (IOutput)
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.handler : defining handler type 'argument' (IArgument)
-    2011-11-15 15:19:35,158 (DEBUG) cement.core.handler : defining handler type 'controller' (IController)
-    2011-11-15 15:19:35,159 (DEBUG) cement.core.handler : registering handler '<class 'cement.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
-    2011-11-15 15:19:35,159 (DEBUG) cement.core.foundation : now setting up the 'helloworld' application
-    2011-11-15 15:19:35,159 (DEBUG) cement.core.foundation : setting up helloworld.extension handler
-    2011-11-15 15:19:35,159 (DEBUG) cement.core.foundation : no config defaults from '<cement.core.extension.CementExtensionHandler object at 0x1005b2e10>'
-    2011-11-15 15:19:35,159 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_nulloutput' framework extension
-    2011-11-15 15:19:35,159 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_nulloutput.NullOutputHandler'>' into handlers['output']['null']
-    2011-11-15 15:19:35,160 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_plugin' framework extension
-    2011-11-15 15:19:35,161 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
-    2011-11-15 15:19:35,161 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_configparser' framework extension
-    2011-11-15 15:19:35,164 (DEBUG) cement.core.handler : registering handler 'cement.lib.ext_configparser.ConfigParserConfigHandler' into handlers['config']['configparser']
-    2011-11-15 15:19:35,164 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_logging' framework extension
-    2011-11-15 15:19:35,165 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
-    2011-11-15 15:19:35,165 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_argparse' framework extension
-    2011-11-15 15:19:35,165 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
-    2011-11-15 15:19:35,165 (DEBUG) cement.core.foundation : setting up helloworld.config handler
-    2011-11-15 15:19:35,166 (DEBUG) cement.lib.ext_configparser : config file '/etc/helloworld/helloworld.conf' does not exist, skipping...
-    2011-11-15 15:19:35,166 (DEBUG) cement.lib.ext_configparser : config file '/Users/wdierkes/.helloworld.conf' does not exist, skipping...
-    2011-11-15 15:19:35,166 (DEBUG) cement.core.foundation : validating required configuration parameters
-    2011-11-15 15:19:35,166 (DEBUG) cement.core.foundation : setting up helloworld.log handler
-    2011-11-15 15:19:35,166 (DEBUG) cement.core.foundation : setting config defaults from '<cement.lib.ext_logging.LoggingLogHandler object at 0x100419050>'
-    2011-11-15 15:19:35,167 (DEBUG) helloworld : logging initialized for 'helloworld' using LoggingLogHandler
-    2011-11-15 15:19:35,167 (DEBUG) cement.core.foundation : setting up helloworld.plugin handler
-    2011-11-15 15:19:35,167 (DEBUG) cement.core.foundation : no config defaults from '<cement.lib.ext_plugin.CementPluginHandler object at 0x1005c9890>'
-    2011-11-15 15:19:35,167 (DEBUG) cement.lib.ext_plugin : plugin config dir /etc/helloworld/plugins.d does not exist.
-    2011-11-15 15:19:35,167 (DEBUG) cement.core.foundation : setting up helloworld.arg handler
-    2011-11-15 15:19:35,169 (DEBUG) cement.core.foundation : no config defaults from 'ArgParseArgumentHandler(prog='test.py', usage=None, description=None, version=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)'
-    2011-11-15 15:19:35,169 (DEBUG) cement.core.foundation : setting up helloworld.output handler
-    2011-11-15 15:19:35,169 (DEBUG) cement.core.foundation : no config defaults from '<cement.lib.ext_nulloutput.NullOutputHandler object at 0x1005c9c50>'
-    2011-11-15 15:19:35,169 (DEBUG) cement.core.foundation : setting up helloworld.controller handler
-    2011-11-15 15:19:35,169 (DEBUG) cement.core.foundation : no controller could be found.
+    2012-07-03 14:05:28,270 (DEBUG) cement.core.foundation : laying cement for the 'helloworld' application
+    2012-07-03 14:05:28,270 (DEBUG) cement.core.hook : defining hook 'cement_pre_setup_hook'
+    2012-07-03 14:05:28,270 (DEBUG) cement.core.hook : defining hook 'cement_post_setup_hook'
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_pre_run_hook'
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_post_run_hook'
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_on_close_hook'
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_signal_hook'
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_pre_render_hook'
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_post_render_hook'
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.handler : defining handler type 'extension' (IExtension)
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.handler : defining handler type 'log' (ILog)
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.handler : defining handler type 'config' (IConfig)
+    2012-07-03 14:05:28,271 (DEBUG) cement.core.handler : defining handler type 'plugin' (IPlugin)
+    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : defining handler type 'output' (IOutput)
+    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : defining handler type 'argument' (IArgument)
+    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : defining handler type 'controller' (IController)
+    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : defining handler type 'cache' (ICache)
+    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : registering handler '<class 'cement.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
+    2012-07-03 14:05:28,272 (DEBUG) cement.core.foundation : now setting up the 'helloworld' application
+    2012-07-03 14:05:28,272 (DEBUG) cement.core.foundation : adding signal handler for signal 15
+    2012-07-03 14:05:28,272 (DEBUG) cement.core.foundation : adding signal handler for signal 2
+    2012-07-03 14:05:28,273 (DEBUG) cement.core.foundation : setting up helloworld.extension handler
+    2012-07-03 14:05:28,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_nulloutput' framework extension
+    2012-07-03 14:05:28,273 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_nulloutput.NullOutputHandler'>' into handlers['output']['null']
+    2012-07-03 14:05:28,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_plugin' framework extension
+    2012-07-03 14:05:28,274 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
+    2012-07-03 14:05:28,274 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_configparser' framework extension
+    2012-07-03 14:05:28,274 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_configparser.ConfigParserConfigHandler'>' into handlers['config']['configparser']
+    2012-07-03 14:05:28,274 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_logging' framework extension
+    2012-07-03 14:05:28,275 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
+    2012-07-03 14:05:28,275 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_argparse' framework extension
+    2012-07-03 14:05:28,276 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
+    2012-07-03 14:05:28,276 (DEBUG) cement.core.foundation : setting up helloworld.config handler
+    2012-07-03 14:05:28,277 (DEBUG) cement.lib.ext_configparser : config file '/etc/helloworld/helloworld.conf' does not exist, skipping...
+    2012-07-03 14:05:28,277 (DEBUG) cement.lib.ext_configparser : config file '/Users/derks/.helloworld.conf' does not exist, skipping...
+    2012-07-03 14:05:28,277 (DEBUG) cement.core.foundation : no cache handler defined, skipping.
+    2012-07-03 14:05:28,277 (DEBUG) cement.core.foundation : setting up helloworld.log handler
+    2012-07-03 14:05:28,277 (DEBUG) cement.core.handler : merging config defaults from '<cement.lib.ext_logging.LoggingLogHandler object at 0x100588910>'
+    2012-07-03 14:05:28,278 (DEBUG) helloworld : logging initialized for 'helloworld' using LoggingLogHandler
+    2012-07-03 14:05:28,278 (DEBUG) cement.core.foundation : setting up helloworld.plugin handler
+    2012-07-03 14:05:28,278 (DEBUG) cement.lib.ext_plugin : plugin config dir /etc/helloworld/plugins.d does not exist.
+    2012-07-03 14:05:28,278 (DEBUG) cement.core.foundation : setting up helloworld.arg handler
+    2012-07-03 14:05:28,279 (DEBUG) cement.core.foundation : setting up helloworld.output handler
+    2012-07-03 14:05:28,279 (DEBUG) cement.core.foundation : setting up application controllers
+    2012-07-03 14:05:28,279 (DEBUG) cement.core.foundation : no controller could be found.
     Hello World
-    
+    2012-07-03 14:05:28,280 (DEBUG) cement.core.foundation : closing the application    
+
 
 Damn son, WTF?  Don't worry, we'll explain everything in the rest of the doc.
 
@@ -144,7 +101,10 @@ Getting Warmer
 --------------
 
 The following is a more advanced example that showcases some of the default
-application features.
+application features.  Notice the creation of command line arguments, default
+config creation, and logging.
+
+*myapp.py*
 
 .. code-block:: python
     
@@ -156,24 +116,22 @@ application features.
     defaults['myapp']['foo'] = 'bar'
 
     # create an application
-    app = foundation.CementApp('example', config_defaults=defaults)
+    app = foundation.CementApp('myapp', config_defaults=defaults)
 
     # register any framework hook functions after app creation, and before 
     # app.setup()
     @hook.register()
     def cement_post_setup_hook(app):
-        assert app.config.has_key('base', 'foo')
-    
-    # setup the application
-    app.setup()
+        assert app.config.has_key('myapp', 'foo')
 
-    # add arguments
-    app.args.add_argument('-f', '--foo', action='store', Metavar='STR',
-                          help='the notorious foo option')
-
-    # run the application
     try:
-        app.log.debug("About to run my example application!")
+        # setup the application
+        app.setup()
+
+        # add arguments
+        app.args.add_argument('-f', '--foo', action='store', metavar='STR',
+                              help='the notorious foo option')
+        app.log.debug("About to run my myapp application!")
         app.run()
 
         # add application logic
@@ -185,19 +143,21 @@ application features.
     finally:
         # close the application
         app.close()
-    
+        
+And execution:
+
 .. code-block:: text
 
-    $ python scripts/example.py --help
-    usage: example.py [-h] [--debug] [--quiet] [--foo STR]
+    $ python myapp.py --help
+    usage: myapp.py [-h] [--debug] [--quiet] [-f STR]
 
     optional arguments:
-      -h, --help  show this help message and exit
-      --debug     toggle debug output
-      --quiet     suppress all output
-      -f, --foo STR   the notorious foo option
+      -h, --help         show this help message and exit
+      --debug            toggle debug output
+      --quiet            suppress all output
+      -f STR, --foo STR  the notorious foo option
     
-    $ python scripts/example.py --foo=bar
+    $ python myapp.py --foo=bar
     INFO: Received the 'foo' option with value 'bar'.
 
 
@@ -206,6 +166,8 @@ Diving Right In
 
 This final example demonstrates the use of application controllers that 
 handle command dispatch and rapid development.
+
+*myapp.py*
 
 .. code-block:: python
 
@@ -221,23 +183,23 @@ handle command dispatch and rapid development.
                 foo='bar',
                 some_other_option='my default value',
                 )
-            
+        
             arguments = [
                 (['-f', '--foo'], dict(action='store', help='the notorious foo option')),
                 (['-C'], dict(action='store_true', help='the big C option'))
                 ]
-        
+    
         @controller.expose(hide=True, aliases=['run'])
         def default(self):
             self.log.info('Inside base.default function.')
             if self.pargs.foo:
                 self.log.info("Recieved option 'foo' with value '%s'." % \
                               self.pargs.foo)
-                          
+                      
         @controller.expose(help="this command does relatively nothing useful.")
         def command1(self):
             self.log.info("Inside base.command1 function.")
-        
+    
         @controller.expose(aliases=['cmd2'], help="more of nothing.")
         def command2(self):
             self.log.info("Inside base.command2 function.")
@@ -247,39 +209,41 @@ handle command dispatch and rapid development.
         class Meta:
             label = 'secondary'
             stacked_on = 'base'
-            
+        
         @controller.expose(help='this is some command', aliases=['some-cmd'])
         def some_other_command(self):
             pass
-            
+        
     class MyApp(foundation.CementApp):
         class Meta:
             label = 'helloworld'
             base_controller = MyAppBaseController
-    
+
     # create the app      
     app = MyApp()
-      
+  
     # Register any handlers that aren't passed directly to CementApp
     handler.register(MySecondController)
 
     try:
         # setup the application
         app.setup()
-        
+    
         # run the application
         app.run()
     finally:
-        # close the application
-        app.close()
+        # close the app
 
 As you can see, we're able to build out the core functionality of our app
-via a controller class.  Lets see what this looks like:
+via a controller class.  Notice the use of controllers, which allow us to 
+build out 'sub-commands' to our app.
+
+Lets see what this looks like:
 
 .. code-block:: text
 
-    $ python example2.py --help
-    usage: example2.py <CMD> -opt1 --opt2=VAL [arg1] [arg2] ...
+    $ python myapp.py --help
+    usage: myapp.py <CMD> -opt1 --opt2=VAL [arg1] [arg2] ...
 
     My Application does amazing things!
 
@@ -293,21 +257,19 @@ via a controller class.  Lets see what this looks like:
 
       some-other-command (aliases: some-cmd)
         this is some command
-        
+
     optional arguments:
-      -h, --help  show this help message and exit
-      --debug     toggle debug output
-      --quiet     suppress all output
-      -f,     --foo FOO   the notorious foo option
-      -C          the big C option
+      -h, --help         show this help message and exit
+      --debug            toggle debug output
+      --quiet            suppress all output
+      -f FOO, --foo FOO  the notorious foo option
+      -C                 the big C option      
       
-      
-    $ python example2.py 
-    INFO: Inside base.default function.
-    
-    $ python example2.py command1
+    $ python myapp.py command1
     INFO: Inside base.command1 function.
-    
-    $ python example2.py cmd2
+      
+    $ python myapp.py command2
     INFO: Inside base.command2 function.
     
+    $ python myapp.py cmd2
+    INFO: Inside base.command2 function.    

@@ -2,7 +2,7 @@ Configuration Handling
 ======================
 
 Cement defines a configuration interface called :ref:`IConfig <cement.core.config>`, 
-as well as the default :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>` 
+as well as the default :ref:`ConfigParserConfigHandler <cement.lib.ext_configparser>` 
 that implements the interface.  This handler is built on top of 
 `ConfigParser <http://docs.python.org/library/configparser.html>`_ 
 which is included in the Python standard library.  Therefor, this class will
@@ -13,10 +13,9 @@ Please note that there are other handler's that implement the IConfig
 interface.  The documentation below only references usage based on the 
 interface and not the full capabilities of the implementation.
 
-The following config handlers are included and maintained with Cement, though
-may need to be installed via an external extension:
+The following config handlers are included and maintained with Cement:
 
-    * :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>` (default)
+    * :ref:`ConfigParserConfigHandler <cement.lib.ext_configparser>` (default)
     
     
 Please reference the :ref:`IConfig <cement.core.config>` interface 
@@ -39,13 +38,13 @@ is the order in which configurations are discovered:
 Application Default Settings
 ----------------------------
 
-Cement may in the future require default config settings in order to operate.  
-These settings are found under the '<app_label>' application section of the 
-config, and overridden by a '[<app_label>]' block from a configuration file.
+Cement does not require default config settings in order to operate.  That 
+said, these settings are found under the '<app_label>' application section of 
+the config, and overridden by a '[<app_label>]' block from a configuration 
+file.
 
-You do not need to override these values, however you should always start
-with them.  Additionally, the default dictionary is used if no other defaults 
-are passed when creating an application.  For example, the following:
+A default dictionary is used if no other defaults are passed when creating an 
+application.  For example, the following:
 
 .. code-block:: python
 
@@ -224,9 +223,8 @@ matches the name.  Note that this happens in *all* sections:
     defaults = backend.defaults('base')
     defaults['base']['foo'] = 'bar'
     
+    app = foundation.CementApp('myapp', config_defaults=defaults)
     try:
-        app = foundation.CementApp('myapp', config_defaults=defaults)
-    
         # First setup the application
         app.setup()
     
