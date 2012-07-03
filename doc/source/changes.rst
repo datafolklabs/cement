@@ -1,1 +1,130 @@
-../../ChangeLog
+
+ChangeLog
+==============================================================================
+
+All bugs/feature details can be found at: 
+
+   https://github.com/derks/cement/issues/XXXXX
+
+
+Where XXXXX is the 'Issue #' referenced below.  Additionally, this change log
+is available online at:
+
+    http://cement.readthedocs.org/en/portland/changes/
+
+.. raw:: html
+
+    <BR><BR>
+
+1.9.9 - development version (will be released as 1.9.10)
+------------------------------------------------------------------------------
+
+Feature Enhancements:
+
+    * :issue:`118` - Added utils.fs.backup() to safely backup files/dirs.
+    
+Misc:
+
+    * :issue:`111` - Use relative imports (makes cement more portable as it 
+      can be included and distributed with 3rd party sources).
+    * :issue:`120` - Use standard json rather than relying on jsonpickle
+
+Incompatible Changes:
+
+    * Namespace reverted from 'cement' back to 'cement'.
+    * The following extensions have been removed from the cement source tree, 
+      and are now available externally (see: http://github.com/cement): daemon, 
+      memcached, configobj, yaml, genshi.
+    
+
+1.9.8 - Thu May 3, 2012
+------------------------------------------------------------------------------
+
+Feature Enhancements:
+
+    * :issue:`95` - Add a 'config_section' Meta default for all handlers.
+      Required to parse config options for a handler.
+    * :issue:`97` - Add a standard cache handler interface.
+    * :issue:`105` - Add 'meta_override' and 'core_meta_override' list to 
+      CementApp().Meta.  Also resolves :issue:`104`.
+    * :issue:`108` - Add CementApp.extend() functionality.
+    * :issue:`109` - Add cement.ext.memcached extension
+
+Incompatible Changes:
+
+    * :issue:`103` - plugin_bootstrap_module renamed as plugin_bootstrap.
+    * :issue:`106` - Deprecate Meta.defaults in favor of Meta.config_defaults
+    * :issue:`107` - Make the app name the default config section, not [base]
+
+1.9.6 - Wed Apr 18, 2012
+------------------------------------------------------------------------------
+
+Bug Fixes:
+
+    * :issue:`89` - Secondary controllers display under other controllers
+    * :issue:`90` - Logging to file doesn't expand '~'
+    * :issue:`91` - Logging to file doesn't create basedir
+    
+Feature Enhancements:
+
+    * :issue:`88` - Add cement.ext.genshi extension, provides Genshi Text
+      Templating Launguage support.
+    * :issue:`93` - Add epilog support for CementBaseController.
+
+Refactoring:
+
+    * :issue:`87` - Refactor Meta handling
+    
+Incompatible Changes:
+
+    * :issue:`96` - Move 'setup()' functions to '_setup()'
+    * Moved CementBaseController.dispatch() to _dispatch()
+    * Moved CementBaseController.usage_text to _usage_text()
+    * Moved CementBaseController.help_text to _help_text()
+    * backend.defaults() no longer accepts an app name as an argument.
+    * foundation.lay_cement() is deprecated.  Use foundation.CementApp() 
+      directly.
+    * No longer pass anything but 'app' object to handlers _setup() functions.
+    * handler.enabled() is deprecated.  Use handler.registered().
+    
+1.9.4 - Wed Dec 21, 2011
+------------------------------------------------------------------------------
+
+Bug Fixes:
+
+    * :issue:`73` - Hooks broken in Python 3
+    * :issue:`81` - Controller defaults should be processed before base 
+      controller.setup()
+      
+Feature Enhancements:
+
+    * :issue:`65` - Added 'daemon' extension.  Process is daemonized by 
+      passing the '--daemon' option.  Handles switching the run user/group, as
+      well as managing a pid file.
+    * :issue:`72` - Added new framework hooks.
+    * :issue:`76` - Added app.close() functionality including a 
+      cement_on_close_hook() allowing plugins/extensions/etc to be able to
+      cleanup on application exit.
+    * :issue:`77` - Added default signal handler for SIGINT/SIGTERM as well as
+      the cement_signal_hook which is called when any catch_signals are 
+      encountered.
+    * :issue:`78` - Added cement_pre_render_hook, and cement_post_render_hook
+      allowing developers to control the data that is rendered to console.
+    * :issue:`84` - Ability to run all tests from utils/run_tests.sh
+    
+Incompatible Changes:
+
+    * :issue:`72` - The framework hooks 'cement_add_args_hook' and 
+      'cement_validate_config' were removed in favor of the new pre/post setup 
+      and run hooks.
+    * :issue:`82` - Change 'meta' classes to Python-proper 'Meta', and 
+      interfaces to use 'IMeta'.  Old functionality will be completely removed
+      before Cement stable release.
+    
+    
+
+1.9.2 - Wed Nov 02, 2011
+------------------------------------------------------------------------------
+
+This is an initial beta release of Cement, and therefore no bugs or features
+are listed.  Future releases will detail all changes.

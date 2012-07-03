@@ -5,45 +5,18 @@ import sys, os
 VERSION = '1.9.9'
 
 LONG = """
-Cement is an advanced CLI Application Framework for Python. This package 
-provides the core framework required to run an application built on top of 
-Cement.  Note that this is only part of 'cement' as a whole.  The entire
-source is available from:
+Cement is an advanced CLI Application Framework for Python.  Its goal is to 
+introduce a standard, and feature-full platform for both simple and complex 
+command line applications as well as support rapid development needs without 
+sacrificing quality.
 
-    http://builtoncement.org/cement/1.9/download/
-    
+More Information:
 
-The Cement CLI Application Framework is Open Source and is distributed under 
-The BSD "three-clause" License.  
-
-
-MORE INFORMATION:
-
-All documentation is available from the official website:
-
-    http://builtoncement.org
-    
-    
-GETTING STARTED:
-
-Stable versions can be installed via the cheeze shop:
-::
-    $ easy_install cement
-
-
-Development versions can be checked out of Git:
-::
-    $ git clone git://github.com/derks/cement.git
-    
-    $ git checkout --track -b portland origin/portland
-    
-    $ cd cement/src/cement/
-    
-    $ python setup.py install
-
-
-For development, and actually building applications on Cement, please see the
-cement.devtools package.
+ * RTFD: http://cement.rtfd.org/
+ * CODE: http://github.com/cement/
+ * PYPI: http://pypi.python.org/pypi/cement/
+ * SITE: http://builtoncement.org/
+ * T-CI: http://travis-ci.org/cement/cement
 
 """
 
@@ -55,7 +28,7 @@ setup(name='cement',
     classifiers=[], 
     keywords='cli framework',
     author='BJ Dierkes',
-    author_email='wdierkes@5dollarwhitebox.org',
+    author_email='derks@bjdierkes.com',
     url='http://builtoncement.org',
     license='BSD',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),

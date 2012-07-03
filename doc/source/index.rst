@@ -28,7 +28,7 @@ Cement core features include (but are not limited to):
  * Cache handler interface adds caching support for improved performance
  * Controller handler supports sub-commands, and nested controllers
  * Zero external dependencies* (ext's with dependencies ship separately)
- * 99% test coverage
+ * 99-100% test coverage
  * Extensive Sphinx documentation
  * Tested on Python 2.6, 2.7, 3.1, and 3.2
 
@@ -63,13 +63,9 @@ Documentation
    
    changes
    license
-      
+   api/index    
+   
 .. toctree::
    :maxdepth: 2
 
-   api
-
-.. toctree::
-   :maxdepth: 2
-       
-   dev
+   dev/index

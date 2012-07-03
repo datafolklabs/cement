@@ -6,25 +6,25 @@ Cement core interface module.
 from ..core import exc
 
 class Interface(object):
+    """
+    An interface definition class.  All Interfaces should subclass from
+    here.  Note that this is not an implementation and should never be
+    used directly.
+    """
     def __init__(self):
-        """
-        An interface definition class.  All Interfaces should subclass from
-        here.  Note that this is not an implementation and should never be
-        used directly.
-        """
         raise exc.CementInterfaceError("Interfaces can not be used directly.")
             
 class Attribute(object):
+    """
+    An interface attribute definition.
+    
+    Required Arguments:
+    
+        description
+            The description of the attribute.
+            
+    """
     def __init__(self, description):
-        """
-        An interface attribute definition.
-        
-        Required Arguments:
-        
-            description
-                The description of the attribute.
-                
-        """
         self.description = description
     
     def __repr__(self):
