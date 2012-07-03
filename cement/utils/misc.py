@@ -1,6 +1,4 @@
-"""Cement util module."""                        
-
-import os
+"""Misc utilities."""
 
 def is_true(item):
     """
@@ -11,10 +9,3 @@ def is_true(item):
         return True
     else:
         return False
-
-def abspath(path):
-    """
-    Wrapper to return the absolute path of a given path.
-    
-    """
-    return os.path.abspath(os.path.expanduser(path))

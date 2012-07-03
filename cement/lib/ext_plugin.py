@@ -4,7 +4,9 @@ import os
 import sys
 import glob
 import imp
-from ..core import backend, handler, plugin, util, exc
+from ..core import backend, handler, plugin, exc
+from ..utils.misc import is_true
+from ..utils.fs import abspath
 
 Log = backend.minimal_logger(__name__)
 
@@ -29,9 +31,9 @@ class CementPluginHandler(plugin.CementPluginHandler):
      
     def _setup(self, app_obj):
         super(CementPluginHandler, self)._setup(app_obj)
-        self.config_dir = util.abspath(self.app._meta.plugin_config_dir)
+        self.config_dir = abspath(self.app._meta.plugin_config_dir)
         self.bootstrap = self.app._meta.plugin_bootstrap
-        self.load_dir = util.abspath(self.app._meta.plugin_dir)
+        self.load_dir = abspath(self.app._meta.plugin_dir)
 
         # grab a generic config handler object
         config_handler = handler.get('config', self.app.config._meta.label)
@@ -40,7 +42,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         for section in self.app.config.get_sections():
             if not self.app.config.has_key(section, 'enable_plugin'):
                 continue
-            if util.is_true(self.app.config.get(section, 'enable_plugin')):
+            if is_true(self.app.config.get(section, 'enable_plugin')):
                 self._enabled_plugins.append(section)
             else:
                 self._disabled_plugins.append(section)
@@ -67,7 +69,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
             if not pconfig.has_key(plugin, 'enable_plugin'):
                 continue
 
-            if util.is_true(pconfig.get(plugin, 'enable_plugin')):
+            if is_true(pconfig.get(plugin, 'enable_plugin')):
                 self._enabled_plugins.append(plugin)
                 self.app.config.add_section(plugin)
                 

@@ -2,8 +2,9 @@
 
 import os
 import logging
-from ..core import exc, util, log
-        
+from ..core import exc, log
+from ..utils.misc import is_true
+
 class LoggingLogHandler(log.CementLogHandler):  
     """
     This class is an implementation of the :ref:`ILog <cement.core.log>` 
@@ -121,17 +122,17 @@ class LoggingLogHandler(log.CementLogHandler):
         self.backend = logging.getLogger(self._meta.namespace)
         
         # the king trumps all
-        if util.is_true(self.app._meta.debug):
+        if is_true(self.app._meta.debug):
             self._meta.level = 'DEBUG'
             
         self.set_level(self._meta.level)
         
         # clear loggers?
-        if util.is_true(self._meta.clear_loggers):
+        if is_true(self._meta.clear_loggers):
             self.clear_loggers()
             
         # console
-        if util.is_true(self._meta.to_console):
+        if is_true(self._meta.to_console):
             self._setup_console_log()
         
         # file

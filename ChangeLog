@@ -31,6 +31,8 @@ Misc:
 
 Incompatible Changes:
 
+    * core.util.abspath moved to utils.fs.abspath
+    * core.util.is_true moved to utils.misc.is_true
     * Namespace reverted from 'cement' back to 'cement'.
     * The following extensions have been removed from the cement source tree, 
       and are now available externally (see: http://github.com/cement): daemon, 
