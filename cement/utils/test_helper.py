@@ -5,6 +5,7 @@ from ..core import backend, foundation, handler, hook
 class TestApp(foundation.CementApp):
     class Meta:
         config_files = []
+        argv = []
         
     def __init__(self, *args, **kw):
         super(TestApp, self).__init__(*args, **kw)

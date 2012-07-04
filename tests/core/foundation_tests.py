@@ -64,13 +64,9 @@ class FoundationTestCase(unittest.TestCase):
             ok_(e.msg.find('resolve'))
             raise
         
-    @raises(SystemExit)
     def test_default(self):
-        try:
-            self.app.setup()
-            self.app.run()
-        except SystemExit as e:
-            raise
+        self.app.setup()
+        self.app.run()
     
     def test_passed_handlers(self):
         from cement.lib import ext_configparser
