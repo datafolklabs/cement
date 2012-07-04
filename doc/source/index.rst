@@ -28,7 +28,7 @@ Core features include (but are not limited to):
  * Cache handler interface adds caching support for improved performance
  * Controller handler supports sub-commands, and nested controllers
  * Zero external dependencies* (ext's with dependencies ship separately)
- * 99-100% test coverage
+ * 100% test coverage
  * Extensive documentation
  * Tested on Python 2.6, 2.7, 3.1, and 3.2
 
