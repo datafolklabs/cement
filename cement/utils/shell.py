@@ -1,7 +1,7 @@
 """Common Shell Utilities."""
 
 from subprocess import Popen, PIPE
-
+            
 def exec_cmd(cmd_args):
     """
     Execute a shell call using Subprocess.

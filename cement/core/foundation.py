@@ -55,7 +55,7 @@ class CementApp(meta.MetaMixin):
             A list of arguments to use for parsing command line arguments
             and options.
             
-            Default: sys.argv
+            Default: sys.argv[1:]
             
         config_section
             The base configuration section for the application.
@@ -291,7 +291,7 @@ class CementApp(meta.MetaMixin):
         plugin_config_dir = None
         plugin_bootstrap = None
         plugin_dir = None
-        argv = sys.argv[1:]
+        argv = list(sys.argv[1:])
         config_section = None
         config_defaults = None
         catch_signals = [signal.SIGTERM, signal.SIGINT]
@@ -335,9 +335,13 @@ class CementApp(meta.MetaMixin):
         self.output = None
         self.controller = None
         self.cache = None
-        
+
         # setup the cement framework
         self._lay_cement()
+    
+    @property
+    def argv(self):
+        return self._meta.argv
         
     @property
     def argv(self):

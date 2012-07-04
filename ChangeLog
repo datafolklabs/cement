@@ -16,7 +16,13 @@ is available online at:
 
     <BR><BR>
 
-1.9.9 - development version (will be released as 1.9.10)
+1.9.11 - development (will be released as 1.9.12 or 2.0.0)
+------------------------------------------------------------------------------
+
+None
+
+
+1.9.10 - Jul 10, 2012
 ------------------------------------------------------------------------------
 
 Feature Enhancements:
@@ -33,7 +39,7 @@ Incompatible Changes:
 
     * core.util.abspath moved to utils.fs.abspath
     * core.util.is_true moved to utils.misc.is_true
-    * Namespace reverted from 'cement' back to 'cement'.
+    * Namespace reverted from 'cement2' back to 'cement'.
     * The following extensions have been removed from the cement source tree, 
       and are now available externally (see: http://github.com/cement): daemon, 
       memcached, configobj, yaml, genshi.
