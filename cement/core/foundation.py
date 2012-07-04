@@ -336,10 +336,12 @@ class CementApp(meta.MetaMixin):
         self.controller = None
         self.cache = None
         
-        # attributes
-        self.argv = list(self._meta.argv)
-        
+        # setup the cement framework
         self._lay_cement()
+        
+    @property
+    def argv(self):
+        return self._meta.argv
         
     def extend(self, member_name, member_object):
         """
