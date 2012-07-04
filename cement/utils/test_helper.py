@@ -6,25 +6,6 @@ class TestApp(foundation.CementApp):
     class Meta:
         config_files = []
         argv = []
-        
-    def __init__(self, *args, **kw):
-        super(TestApp, self).__init__(*args, **kw)
-        from cement.ext import ext_argparse
-        from cement.ext import ext_nulloutput
-        from cement.ext import ext_plugin
-        from cement.ext import ext_configparser
-        from cement.ext import ext_logging
-        from cement.ext import ext_json
-        if not 'configparser' in backend.handlers['config']:
-            handler.register(ext_configparser.ConfigParserConfigHandler)
-        if not 'argparse' in backend.handlers['argument']:
-            handler.register(ext_argparse.ArgParseArgumentHandler)
-        if not 'null' in backend.handlers['output']:
-            handler.register(ext_nulloutput.NullOutputHandler)
-        if not 'cement' in backend.handlers['plugin']:
-            handler.register(ext_plugin.CementPluginHandler)
-        if not 'logging' in backend.handlers['log']:
-            handler.register(ext_logging.LoggingLogHandler)
             
     def setup(self):
         super(TestApp, self).setup()

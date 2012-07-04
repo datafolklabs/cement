@@ -90,6 +90,7 @@ class HandlerTestCase(unittest.TestCase):
             raise
 
     def test_verify_handler(self):
+        self.app.setup()
         ok_(handler.registered('output', 'null'))
         eq_(handler.registered('output', 'bogus_handler'), False)
         eq_(handler.registered('bogus_type', 'bogus_handler'), False)
@@ -148,8 +149,10 @@ class HandlerTestCase(unittest.TestCase):
         eq_(handler.defined('bogus'), False)
         
     def test_handler_registered(self):
+        self.app.setup()
         eq_(handler.registered('output', 'null'), True)
     
     def test_handler_enabled(self):
+        self.app.setup()
         eq_(handler.enabled('output', 'null'), True)
     

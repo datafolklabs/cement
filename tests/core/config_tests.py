@@ -27,7 +27,6 @@ class ConfigTestCase(unittest.TestCase):
     def test_has_key(self):
         self.app.setup()
         ok_(self.app.config.has_section(self.app._meta.config_section))
-        self.app.setup()
         
     def test_config_override(self):
         defaults = dict()

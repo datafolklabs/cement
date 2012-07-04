@@ -41,6 +41,10 @@ class FoundationTestCase(unittest.TestCase):
     def setUp(self):
         self.app = _t.prep('my_app')
         
+    def test_argv(self):
+        app = _t.prep('my_app', argv=['bogus', 'args'])
+        eq_(app.argv, ['bogus', 'args'])
+        
     def test_old_app(self):
         defaults = backend.defaults()
         defaults['test'] = dict()

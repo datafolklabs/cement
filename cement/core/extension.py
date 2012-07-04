@@ -1,7 +1,11 @@
 """Cement core extensions module."""
 
+import sys
 from ..core import backend, exc, interface, handler
 
+if sys.version_info[0] >= 3:
+    from imp import reload # pragma: no cover
+    
 Log = backend.minimal_logger(__name__)
     
 def extension_validator(klass, obj):
@@ -133,8 +137,13 @@ class CementExtensionHandler(handler.CementBaseHandler):
             
         Log.debug("loading the '%s' framework extension" % ext_module)
         try:
-            __import__(ext_module, globals(), locals(), [])                
-            self.loaded_extensions.append(ext_module)
+            if ext_module in sys.modules:
+                reload(sys.modules[ext_module])
+            else:
+                __import__(ext_module, globals(), locals(), [])                
+            
+            if ext_module not in self.loaded_extensions:    
+                self.loaded_extensions.append(ext_module)
    
         except ImportError as e:
             raise exc.CementRuntimeError(e.args[0])

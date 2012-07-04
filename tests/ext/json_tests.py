@@ -10,11 +10,11 @@ from cement.utils import test_helper as _t
 _t.prep()
 from cement.ext import ext_json
 
-def import_json():
-    from cement.ext import ext_json
-    handler.register(ext_json.JsonOutputHandler)
-    hook.register()(ext_json.cement_post_setup_hook)
-    hook.register()(ext_json.cement_pre_run_hook)
+#def import_json():
+#    from cement.ext import ext_json
+#    handler.register(ext_json.JsonOutputHandler)
+#    hook.register()(ext_json.cement_post_setup_hook)
+#    hook.register()(ext_json.cement_pre_run_hook)
     
 class JsonExtTestCase(unittest.TestCase):
     def setUp(self):
@@ -23,7 +23,6 @@ class JsonExtTestCase(unittest.TestCase):
             output_handler='json',
             argv=['--json']
             )
-        import_json()
     
     def test_json(self):    
         self.app.setup()

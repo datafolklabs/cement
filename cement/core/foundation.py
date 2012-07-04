@@ -343,10 +343,6 @@ class CementApp(meta.MetaMixin):
     def argv(self):
         return self._meta.argv
         
-    @property
-    def argv(self):
-        return self._meta.argv
-        
     def extend(self, member_name, member_object):
         """
         Extend the CementApp() object with additional functions/classes such
