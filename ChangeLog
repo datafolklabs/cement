@@ -16,13 +16,15 @@ is available online at:
 
     <BR><BR>
 
-1.9.11 - development (will be released as 1.9.12 or 2.0.0)
+1.9.12 - Thu Jul 05, 2012
 ------------------------------------------------------------------------------
 
-None
+Bugs:
+
+    * Fixed version mis-hap in setup.py
 
 
-1.9.10 - Jul 10, 2012
+1.9.10 - Wed Jul 04, 2012
 ------------------------------------------------------------------------------
 
 Feature Enhancements:
