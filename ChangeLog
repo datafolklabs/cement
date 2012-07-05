@@ -4,7 +4,7 @@ ChangeLog
 
 All bugs/feature details can be found at: 
 
-   https://github.com/derks/cement/issues/XXXXX
+   https://github.com/cement/cement/issues/XXXXX
 
 
 Where XXXXX is the 'Issue #' referenced below.  Additionally, this change log
@@ -15,6 +15,12 @@ is available online at:
 .. raw:: html
 
     <BR><BR>
+
+1.9.13 - development version (will be released as 1.9.14 or 2.0.0) 
+------------------------------------------------------------------------------
+
+None
+
 
 1.9.12 - Thu Jul 05, 2012
 ------------------------------------------------------------------------------
