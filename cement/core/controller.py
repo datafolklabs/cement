@@ -248,7 +248,7 @@ class CementBaseController(handler.CementBaseHandler):
         self.visible = {}
         self.hidden = {}
         self.exposed = {}
-        self.arguments = []
+        self._arguments = []
         
     def _setup(self, app_obj):
         # shortcuts
@@ -331,7 +331,7 @@ class CementBaseController(handler.CementBaseHandler):
         argument parser.
         
         """
-        for _args,_kwargs in self.arguments:
+        for _args,_kwargs in self._arguments:
             self.app.args.add_argument(*_args, **_kwargs)
         
     def _collect_from_self(self):
@@ -340,7 +340,8 @@ class CementBaseController(handler.CementBaseHandler):
         """
         # collect our Meta arguments
         for _args,_kwargs in self._meta.arguments:
-            self.arguments.append((_args, _kwargs))
+            if (_args, _kwargs) not in self._arguments:
+                self._arguments.append((_args, _kwargs))
            
         # epilog only good for non-stacked controllers
         if hasattr(self._meta, 'epilog'):
@@ -417,8 +418,9 @@ class CementBaseController(handler.CementBaseHandler):
         contr._collect()
         
         # add stacked arguments into ours
-        for _args,_kwargs in contr.arguments:
-            self.arguments.append((_args, _kwargs))
+        for _args,_kwargs in contr._arguments:
+            if (_args, _kwargs) not in self._arguments:
+                self._arguments.append((_args, _kwargs))
             
         # add stacked commands into ours              
 
@@ -476,7 +478,7 @@ class CementBaseController(handler.CementBaseHandler):
         self.visible = {}
         self.hidden = {}
         self.exposed = {}
-        self.arguments = []
+        self._arguments = []
         
         self._collect_from_self()
         self._collect_from_controllers()
