@@ -38,7 +38,7 @@ More Information
  * PYPI: http://pypi.python.org/pypi/cement/
  * SITE: http://builtoncement.org/
  * T-CI: http://travis-ci.org/cement/cement
-    
+ * HELP: mail://cement@librelist.org - #cement
     
 License
 -------
