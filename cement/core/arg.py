@@ -3,9 +3,9 @@ Cement core argument module.
 
 """
 
-from ..core import backend, exc, interface, handler
+from ..core import backend, interface, handler
 
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
 
 def argument_validator(klass, obj):
     """Validates a handler implementation against the IArgument interface."""
@@ -35,6 +35,7 @@ class IArgument(interface.Interface):
                 label = 'my_argument_handler'
                 
     """
+    # pylint: disable=W0232, C0111, R0903
     class IMeta:
         label = 'argument'
         validator = argument_validator
@@ -113,7 +114,16 @@ class CementArgumentHandler(handler.CementBaseHandler):
     """
     Base class that all Argument Handlers should sub-class from.
     
+    Required Meta Options:
+    
+        label
+            The label of the handler.
+        
+        interface
+            The interface that this handler implements
+            
     """
+    # pylint: disable=W0232,R0903
     class Meta:
         label = None
         interface = IArgument

@@ -6,7 +6,7 @@ from ..core import backend, exc, interface, handler
 if sys.version_info[0] >= 3:
     from imp import reload # pragma: no cover
     
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
     
 def extension_validator(klass, obj):
     """
@@ -43,7 +43,7 @@ class IExtension(interface.Interface):
             
     """
     
-    # This is interface Meta-deta, not part of the implemention
+    # pylint: disable=W0232, C0111, R0903
     class IMeta:
         label = 'extension'
         validator = extension_validator
@@ -132,10 +132,10 @@ class CementExtensionHandler(handler.CementBaseHandler):
             ext_module = 'cement.ext.ext_%s' % ext_module
             
         if ext_module in self.loaded_extensions:
-            Log.debug("framework extension '%s' already loaded" % ext_module)
+            LOG.debug("framework extension '%s' already loaded" % ext_module)
             return 
             
-        Log.debug("loading the '%s' framework extension" % ext_module)
+        LOG.debug("loading the '%s' framework extension" % ext_module)
         try:
             if ext_module in sys.modules:
                 reload(sys.modules[ext_module])

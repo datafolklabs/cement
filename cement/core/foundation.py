@@ -10,7 +10,10 @@ from ..core import output, extension, arg, controller, meta, cache
 from ..lib import ext_configparser, ext_argparse, ext_logging
 from ..lib import ext_nulloutput, ext_plugin
 
-Log = backend.minimal_logger(__name__)    
+if sys.version_info[0] >= 3: 
+    from imp import reload  # pragma: nocover
+    
+LOG = backend.minimal_logger(__name__)    
     
 class NullOut():
     def write(self, s):
@@ -22,7 +25,7 @@ def cement_signal_handler(signum, frame):
     allowing the app to handle logic elsewhere.
     
     """      
-    Log.debug('Caught signal %s' % signum)  
+    LOG.debug('Caught signal %s' % signum)  
     
     for res in hook.run('cement_signal_hook', signum, frame):
         pass
@@ -42,6 +45,19 @@ class CementApp(meta.MetaMixin):
             
             Default: None
     
+        bootstrap
+            A bootstrapping module to load after app creation, and before
+            app.setup() is called.  This is useful for larger applications
+            that need to offload their bootstrapping code such as registering
+            hooks/handlers/etc to another file.  
+            
+            This must be a dotted python module path.  
+            I.e. 'myapp.bootstrap.base'.  Cement will essentially just 
+            call 'import myapp.bootstrap.base' which will trigger any
+            necessary code to load.
+            
+            Default: None
+            
         debug
             Toggles debug output.  By default, this setting is also overridden
             by the '[base] -> debug' config setting parsed in any
@@ -304,7 +320,8 @@ class CementApp(meta.MetaMixin):
         output_handler = ext_nulloutput.NullOutputHandler
         cache_handler = None
         base_controller = None
-        extensions = []        
+        extensions = []   
+        bootstrap = None     
         core_extensions = [  
             'cement.ext.ext_nulloutput',
             'cement.ext.ext_plugin',
@@ -326,6 +343,7 @@ class CementApp(meta.MetaMixin):
         if label:
             self._meta.label = label
         self._validate_label()
+        self._loaded_bootstrap = None
         
         self.ext = None
         self.config = None
@@ -362,7 +380,7 @@ class CementApp(meta.MetaMixin):
         if hasattr(self, member_name):
             raise exc.CementRuntimeError("App member '%s' already exists!" % \
                                          member_name)
-        Log.debug("extending appication with '.%s' (%s)" % \
+        LOG.debug("extending appication with '.%s' (%s)" % \
                  (member_name, member_object))
         setattr(self, member_name, member_object)
 
@@ -392,8 +410,20 @@ class CementApp(meta.MetaMixin):
         complete.
         
         """
-        Log.debug("now setting up the '%s' application" % self._meta.label)
+        LOG.debug("now setting up the '%s' application" % self._meta.label)
         
+        if self._meta.bootstrap is not None:
+            LOG.debug("importing bootstrap code from %s" % \
+                      self._meta.bootstrap)
+
+            if self._meta.bootstrap not in sys.modules \
+                or self._loaded_bootstrap is None:
+                mod = __import__(self._meta.bootstrap, 
+                                 globals(), locals(), [], -1)
+                self._loaded_bootstrap = sys.modules[self._meta.bootstrap]
+            else:
+                reload(self._loaded_bootstrap)
+            
         for res in hook.run('cement_pre_setup_hook', self):
             pass
         
@@ -435,7 +465,7 @@ class CementApp(meta.MetaMixin):
         plugins/extensions/etc to 'cleanup' at the end of program execution.
         
         """
-        Log.debug("closing the application")
+        LOG.debug("closing the application")
         for res in hook.run('cement_on_close_hook', self):
             pass
             
@@ -458,19 +488,19 @@ class CementApp(meta.MetaMixin):
         """
         for res in hook.run('cement_pre_render_hook', self, data):
             if not type(res) is dict:
-                Log.debug("pre_render_hook did not return a dict().")
+                LOG.debug("pre_render_hook did not return a dict().")
             else:
                 data = res
             
         if not self.output:
-            Log.debug('render() called, but no output handler defined.')
+            LOG.debug('render() called, but no output handler defined.')
             out_text = ''
         else:
             out_text = self.output.render(data, template)
             
         for res in hook.run('cement_post_render_hook', self, out_text):
             if not type(res) is str:
-                Log.debug('post_render_hook did not return a str()')
+                LOG.debug('post_render_hook did not return a str()')
             else:
                 out_text = str(res)
         
@@ -494,7 +524,7 @@ class CementApp(meta.MetaMixin):
         """
         Initialize the framework.
         """
-        Log.debug("laying cement for the '%s' application" % \
+        LOG.debug("laying cement for the '%s' application" % \
                   self._meta.label)
 
         # hacks to suppress console output
@@ -508,7 +538,7 @@ class CementApp(meta.MetaMixin):
                     break
 
         if suppress_output:
-            Log.debug('suppressing all console output per runtime config')
+            LOG.debug('suppressing all console output per runtime config')
             backend.SAVED_STDOUT = sys.stdout
             backend.SAVED_STDERR = sys.stderr
             sys.stdout = NullOut()
@@ -561,11 +591,11 @@ class CementApp(meta.MetaMixin):
             
     def _setup_signals(self):
         if not self._meta.catch_signals:
-            Log.debug("catch_signals=None... not handling any signals")
+            LOG.debug("catch_signals=None... not handling any signals")
             return
             
         for signum in self._meta.catch_signals:
-            Log.debug("adding signal handler for signal %s" % signum)
+            LOG.debug("adding signal handler for signal %s" % signum)
             signal.signal(signum, self._meta.signal_handler)
     
     def _resolve_handler(self, handler_type, handler_def, raise_error=True):
@@ -597,17 +627,17 @@ class CementApp(meta.MetaMixin):
         elif han is None and raise_error:
             raise exc.CementRuntimeError(msg)
         elif han is None:
-            Log.debug(msg)
+            LOG.debug(msg)
         
     def _setup_extension_handler(self):
-        Log.debug("setting up %s.extension handler" % self._meta.label) 
+        LOG.debug("setting up %s.extension handler" % self._meta.label) 
         self.ext = self._resolve_handler('extension', 
                                          self._meta.extension_handler)
         self.ext.load_extensions(self._meta.core_extensions)
         self.ext.load_extensions(self._meta.extensions)
         
     def _setup_config_handler(self):
-        Log.debug("setting up %s.config handler" % self._meta.label)
+        LOG.debug("setting up %s.config handler" % self._meta.label)
         self.config = self._resolve_handler('config', 
                                             self._meta.config_handler)
         if self._meta.config_section is None:
@@ -638,11 +668,11 @@ class CementApp(meta.MetaMixin):
                 setattr(self._meta, key, base_dict[key])
                                   
     def _setup_log_handler(self):
-        Log.debug("setting up %s.log handler" % self._meta.label)
+        LOG.debug("setting up %s.log handler" % self._meta.label)
         self.log = self._resolve_handler('log', self._meta.log_handler)
            
     def _setup_plugin_handler(self):
-        Log.debug("setting up %s.plugin handler" % self._meta.label) 
+        LOG.debug("setting up %s.plugin handler" % self._meta.label) 
         
         # modify app defaults if not set
         if not self._meta.plugin_config_dir:
@@ -658,26 +688,26 @@ class CementApp(meta.MetaMixin):
         
     def _setup_output_handler(self):
         if self._meta.output_handler is None:
-            Log.debug("no output handler defined, skipping.")
+            LOG.debug("no output handler defined, skipping.")
             return
             
-        Log.debug("setting up %s.output handler" % self._meta.label) 
+        LOG.debug("setting up %s.output handler" % self._meta.label) 
         self.output = self._resolve_handler('output', 
                                             self._meta.output_handler,
                                             raise_error=False)
          
     def _setup_cache_handler(self):
         if self._meta.cache_handler is None:
-            Log.debug("no cache handler defined, skipping.")
+            LOG.debug("no cache handler defined, skipping.")
             return
             
-        Log.debug("setting up %s.cache handler" % self._meta.label) 
+        LOG.debug("setting up %s.cache handler" % self._meta.label) 
         self.cache = self._resolve_handler('cache', 
                                             self._meta.cache_handler,
                                             raise_error=False)
                                             
     def _setup_arg_handler(self):
-        Log.debug("setting up %s.arg handler" % self._meta.label) 
+        LOG.debug("setting up %s.arg handler" % self._meta.label) 
         self.args = self._resolve_handler('argument', 
                                           self._meta.argument_handler)
         self.args.add_argument('--debug', dest='debug', 
@@ -686,7 +716,7 @@ class CementApp(meta.MetaMixin):
             action='store_true', help='suppress all output')
                  
     def _setup_controllers(self):
-        Log.debug("setting up application controllers") 
+        LOG.debug("setting up application controllers") 
 
         if self._meta.base_controller:
             self.controller = self._resolve_handler('controller', 
@@ -722,7 +752,7 @@ class CementApp(meta.MetaMixin):
 
         # if no handler can be found, that's ok
         if not self.controller:
-            Log.debug("no controller could be found.")
+            LOG.debug("no controller could be found.")
     
     def validate_config(self):
         """

@@ -8,7 +8,7 @@ from ..core import backend, handler, plugin, exc
 from ..utils.misc import is_true
 from ..utils.fs import abspath
 
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
 
 ### FIX ME: This is a redundant name... ?
 class CementPluginHandler(plugin.CementPluginHandler):
@@ -50,19 +50,19 @@ class CementPluginHandler(plugin.CementPluginHandler):
         # parse plugin config dir for enabled plugins, or return 
         if self.config_dir:
             if not os.path.exists(self.config_dir):
-                Log.debug('plugin config dir %s does not exist.' % 
+                LOG.debug('plugin config dir %s does not exist.' % 
                           self.config_dir)
                 return
         
         for config in glob.glob("%s/*.conf" % self.config_dir):
             config = os.path.abspath(os.path.expanduser(config))
-            Log.debug("loading plugin config from '%s'." % config)
+            LOG.debug("loading plugin config from '%s'." % config)
             pconfig = config_handler()
             pconfig._setup(self.app)
             pconfig.parse_file(config)
 
             if not pconfig.get_sections():
-                Log.debug("config file '%s' has no sections." % config)
+                LOG.debug("config file '%s' has no sections." % config)
                 continue
                 
             plugin = pconfig.get_sections()[0]
@@ -96,10 +96,10 @@ class CementPluginHandler(plugin.CementPluginHandler):
         """
         full_path = os.path.join(plugin_dir, "%s.py" % plugin_name)
         if not os.path.exists(full_path):
-            Log.debug("plugin file '%s' does not exist." % full_path)
+            LOG.debug("plugin file '%s' does not exist." % full_path)
             return False
             
-        Log.debug("attempting to load '%s' from '%s'" % (plugin_name, 
+        LOG.debug("attempting to load '%s' from '%s'" % (plugin_name, 
                                                          plugin_dir))
         
         # We don't catch this because it would make debugging a nightmare
@@ -126,11 +126,11 @@ class CementPluginHandler(plugin.CementPluginHandler):
         
         """
         if base_package is None:
-            Log.debug("plugin bootstrap module is set to None, unusable.")
+            LOG.debug("plugin bootstrap module is set to None, unusable.")
             return False
             
         full_module = '%s.%s' % (base_package, plugin_name)
-        Log.debug("attempting to load '%s' from '%s'" % (plugin_name, 
+        LOG.debug("attempting to load '%s' from '%s'" % (plugin_name, 
                                                          base_package))
         
         # We don't catch this because it would make debugging a nightmare
@@ -153,7 +153,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
                 The name of the plugin to load.
         
         """
-        Log.debug("loading application plugin '%s'" % plugin_name)
+        LOG.debug("loading application plugin '%s'" % plugin_name)
 
         # first attempt to load from plugin_dir, then from a bootstrap module
         

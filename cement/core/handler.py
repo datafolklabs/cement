@@ -6,7 +6,7 @@ Cement core handler module.
 import re
 from ..core import exc, backend, meta
 
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
 
 class CementBaseHandler(meta.MetaMixin):
     """
@@ -55,7 +55,7 @@ class CementBaseHandler(meta.MetaMixin):
                 self._meta.config_defaults = self._meta.defaults
                 
         if self._meta.config_defaults is not None:
-            Log.debug("merging config defaults from '%s'" % self)
+            LOG.debug("merging config defaults from '%s'" % self)
             dict_obj = dict()
             dict_obj[self._meta.config_section] = self._meta.config_defaults
             self.app.config.merge(dict_obj, override=False)
@@ -144,7 +144,7 @@ def define(interface):
         raise exc.CementInterfaceError("Invalid %s, " % interface + \
                                        "missing 'IMeta.label' class.")  
                                        
-    Log.debug("defining handler type '%s' (%s)" % \
+    LOG.debug("defining handler type '%s' (%s)" % \
         (interface.IMeta.label, interface.__name__))
                                                                               
     if interface.IMeta.label in backend.handlers:
@@ -221,7 +221,7 @@ def register(obj):
     obj._meta.label = re.sub('-', '_', obj._meta.label)
     
     handler_type = obj._meta.interface.IMeta.label
-    Log.debug("registering handler '%s' into handlers['%s']['%s']" % \
+    LOG.debug("registering handler '%s' into handlers['%s']['%s']" % \
              (orig_obj, handler_type, obj._meta.label))
              
     if handler_type not in backend.handlers:
@@ -236,7 +236,7 @@ def register(obj):
     if hasattr(interface.IMeta, 'validator'):
         interface.IMeta().validator(obj)
     else:
-        Log.debug("Interface '%s' does not have a validator() function!" % \
+        LOG.debug("Interface '%s' does not have a validator() function!" % \
                  interface)
         
     backend.handlers[handler_type][obj.Meta.label] = orig_obj
@@ -246,7 +246,7 @@ def enabled(handler_type, handler_label):
     Deprecated as of 1.9.5.  Use handler.registered().
     
     """   
-    Log.warn("DEPRECATION WARNING: handler.enabled() is deprecated.  " + \
+    LOG.warn("DEPRECATION WARNING: handler.enabled() is deprecated.  " + \
              "Use handler.registered() instead.")
     return registered(handler_type, handler_label)
     

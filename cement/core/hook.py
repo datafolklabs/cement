@@ -3,7 +3,7 @@
 import operator
 from ..core import backend, exc
 
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
 
 def define(name):
     """
@@ -24,7 +24,7 @@ def define(name):
         hook.define('myhookname_hook')
     
     """
-    Log.debug("defining hook '%s'", name)
+    LOG.debug("defining hook '%s'", name)
     if name in backend.hooks:
         raise exc.CementRuntimeError("Hook name '%s' already defined!" % name)
     backend.hooks[name] = []
@@ -81,10 +81,10 @@ class register(object):
             self.name = func.__name__
 
         if self.name not in backend.hooks:
-            Log.debug("hook name '%s' is not defined!" % self.name)
+            LOG.debug("hook name '%s' is not defined!" % self.name)
             return func
             
-        Log.debug("registering hook func '%s' from %s into hooks['%s']" % \
+        LOG.debug("registering hook func '%s' from %s into hooks['%s']" % \
             (func.__name__, func.__module__, self.name))
         # Hooks are as follows: (weight, name, func)
         backend.hooks[self.name].append((int(self.weight), func.__name__, func))
@@ -121,7 +121,7 @@ def run(name, *args, **kwargs):
     # Will order based on weight (the first item in the tuple)
     backend.hooks[name].sort(key=operator.itemgetter(0)) 
     for hook in backend.hooks[name]:
-        Log.debug("running hook '%s' (%s) from %s" % (name, hook[2], hook[2].__module__))
+        LOG.debug("running hook '%s' (%s) from %s" % (name, hook[2], hook[2].__module__))
         res = hook[2](*args, **kwargs)
         
         # Results are yielded, so you must fun a for loop on it, you can not

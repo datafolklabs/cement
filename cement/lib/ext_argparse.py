@@ -6,7 +6,7 @@ ArgParse Framework Extension Library.
 from argparse import ArgumentParser
 from ..core import backend, arg
 
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
     
 class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
     """

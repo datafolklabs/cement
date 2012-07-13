@@ -11,7 +11,7 @@ def exec_cmd(cmd_args):
         cmd_args
             List of command line arguments.
             
-    Return: tuple (stdout, stderr, return_codee)
+    Return: tuple (stdout, stderr, return_code)
     
     """
     proc = Popen(cmd_args, stdout=PIPE, stderr=PIPE)

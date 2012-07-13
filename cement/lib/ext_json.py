@@ -5,7 +5,7 @@ import json
 from ..core import output, backend, hook
 
 
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
 
 class JsonOutputHandler(output.CementOutputHandler):
     """
@@ -52,7 +52,7 @@ class JsonOutputHandler(output.CementOutputHandler):
         Returns: string (json)
         
         """
-        Log.debug("rendering output as Json via %s" % self.__module__)
+        LOG.debug("rendering output as Json via %s" % self.__module__)
         sys.stdout = backend.SAVED_STDOUT
         sys.stderr = backend.SAVED_STDERR
         return json.dumps(data_dict)

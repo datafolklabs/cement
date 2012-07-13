@@ -9,7 +9,7 @@ else:
 
 from ..core import backend, config
 
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
 
 class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
     """
@@ -89,7 +89,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
             self.read(file_path)
             return True
         else:
-            Log.debug("config file '%s' does not exist, skipping..." % \
+            LOG.debug("config file '%s' does not exist, skipping..." % \
                       file_path)
             return False
      

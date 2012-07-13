@@ -2,7 +2,7 @@
 
 from ..core import backend, exc, interface, handler
 
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
 
 def output_validator(klass, obj):
     """Validates an handler implementation against the IOutput interface."""
@@ -34,6 +34,7 @@ class IOutput(interface.Interface):
             ...
     
     """
+    # pylint: disable=W0232, C0111, R0903
     class IMeta:
         label = 'output'
         validator = output_validator

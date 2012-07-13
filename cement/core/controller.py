@@ -5,7 +5,7 @@ import textwrap
 import argparse
 from ..core import backend, exc, interface, handler
 
-Log = backend.minimal_logger(__name__)
+LOG = backend.minimal_logger(__name__)
 
 def controller_validator(klass, obj):
     """
@@ -60,6 +60,7 @@ class IController(interface.Interface):
                 interface = controller.IController
                 ...            
     """
+    # pylint: disable=W0232, C0111, R0903
     class IMeta:
         label = 'controller'
         validator = controller_validator
@@ -305,10 +306,10 @@ class CementBaseController(handler.CementBaseHandler):
         self._parse_args()
                        
         if not self.command:
-            Log.debug("no command to dispatch")
+            LOG.debug("no command to dispatch")
         else:    
             func = self.exposed[self.command]     
-            Log.debug("dispatching command: %s.%s" % \
+            LOG.debug("dispatching command: %s.%s" % \
                       (func['controller'], func['label']))
 
             if func['controller'] == self._meta.label:
@@ -391,7 +392,7 @@ class CementBaseController(handler.CementBaseHandler):
                 
         """
         contr = controller()
-        Log.debug('exposing %s controller' % contr._meta.label)
+        LOG.debug('exposing %s controller' % contr._meta.label)
                 
         func_dict = dict(
             controller=contr._meta.label,
@@ -432,7 +433,7 @@ class CementBaseController(handler.CementBaseHandler):
         for label in func_dicts:
             if label in self.exposed:  
                 if label == 'default':
-                    Log.debug(
+                    LOG.debug(
                         "ignoring duplicate command '%s' " % label + \
                         "found in '%s' " % contr._meta.label + \
                         "controller."
@@ -475,7 +476,7 @@ class CementBaseController(handler.CementBaseHandler):
         availble controllers.
         """
         
-        Log.debug("collecting arguments and commands from '%s' controller" % \
+        LOG.debug("collecting arguments and commands from '%s' controller" % \
                   self)
                   
         self.visible = {}

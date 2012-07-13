@@ -42,6 +42,7 @@ class ILog(interface.Interface):
             ...
             
     """
+    # pylint: disable=W0232, C0111, R0903
     class IMeta:
         label = 'log'
         validator = log_validator

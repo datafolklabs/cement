@@ -53,8 +53,8 @@ def minimal_logger(name, debug=False):
     .. code-block:: python
     
         from cement.core import backend
-        Log = backend.minimal_logger('cement')
-        Log.debug('This is a debug message')
+        LOG = backend.minimal_logger('cement')
+        LOG.debug('This is a debug message')
         
     """
                 

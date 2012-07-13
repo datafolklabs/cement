@@ -41,6 +41,17 @@ class FoundationTestCase(unittest.TestCase):
     def setUp(self):
         self.app = _t.prep('my_app')
         
+    def test_bootstrap(self):
+        app = _t.prep('my_app', bootstrap='cement.utils.fs')
+        app.setup()
+        eq_(app._loaded_bootstrap.__name__, 'cement.utils.fs')
+
+    def test_reload_bootstrap(self):
+        app = _t.prep('my_app', bootstrap='cement.utils.test_helper')
+        app._loaded_bootstrap = _t
+        app.setup()
+        eq_(app._loaded_bootstrap.__name__, 'cement.utils.test_helper')
+        
     def test_argv(self):
         app = _t.prep('my_app', argv=['bogus', 'args'])
         eq_(app.argv, ['bogus', 'args'])

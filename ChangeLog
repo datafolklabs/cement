@@ -26,6 +26,7 @@ Bugs:
 Feature Enhancements:
 
     * :issue:`131` - Controller aliases
+    * :issue:`126` - Add a 'bootstrap' importer to CementApp    
     
 
 1.9.12 - Thu Jul 05, 2012

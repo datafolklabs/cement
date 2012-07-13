@@ -48,6 +48,7 @@ class IConfig(interface.Interface):
             ...
             
     """
+    # pylint: disable=W0232, C0111, R0903
     class IMeta:
         label = 'config'
         validator = config_validator

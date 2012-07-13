@@ -26,7 +26,7 @@ def backup(path):
         path
             The path to the file or directory to make a backup of.
     
-    Return: str (new path of backuped up file/directory)
+    Return: str (new path of backed up file/directory)
     
     """
     count = -1
