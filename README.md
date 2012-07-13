@@ -46,4 +46,3 @@ License
 The Cement CLI Application Framework is Open Source and is distributed under 
 the BSD License (three clause).  Please see the LICENSE file included with 
 this software.  
-
