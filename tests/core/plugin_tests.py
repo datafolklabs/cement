@@ -1,6 +1,7 @@
 """Tests for cement.core.plugin."""
 
 import os
+import sys
 import shutil
 import unittest
 from tempfile import mkdtemp
@@ -196,6 +197,7 @@ class PluginTestCase(unittest.TestCase):
         # We mock this out by loading a cement ext, but it is essentially the
         # same type of code.
         tmpdir = mkdtemp()
+        del sys.modules['cement.ext.ext_json']
         f = open(os.path.join(tmpdir, 'ext_json.conf'), 'w')
         f.write(CONF4)
         f.close()

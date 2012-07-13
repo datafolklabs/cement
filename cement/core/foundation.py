@@ -7,8 +7,8 @@ import signal
 
 from ..core import backend, exc, handler, hook, log, config, plugin
 from ..core import output, extension, arg, controller, meta, cache
-from ..lib import ext_configparser, ext_argparse, ext_logging
-from ..lib import ext_nulloutput, ext_plugin
+from ..ext import ext_configparser, ext_argparse, ext_logging
+from ..ext import ext_nulloutput, ext_plugin
 
 if sys.version_info[0] >= 3: 
     from imp import reload  # pragma: nocover
@@ -21,13 +21,13 @@ class NullOut():
         
 def cement_signal_handler(signum, frame):
     """
-    Catch a signal, run the cement_signal_hook, and then raise an exception 
+    Catch a signal, run the 'signal' hook, and then raise an exception 
     allowing the app to handle logic elsewhere.
     
     """      
     LOG.debug('Caught signal %s' % signum)  
     
-    for res in hook.run('cement_signal_hook', signum, frame):
+    for res in hook.run('signal', signum, frame):
         pass
         
     raise exc.CementSignalError(signum, frame)
@@ -92,6 +92,12 @@ class CementApp(meta.MetaMixin):
             
             Default: None
             
+            Note: Though Meta.config_section defaults to None, Cement will
+            set this to a default list based on Meta.label (or in other words, 
+            the name of the application).  This will equate to:
+            
+            ['/etc/<app_label>/<app_label>.conf', '~/.<app_label>.conf']
+            
         plugins
             A list of plugins to load.  This is generally considered bad 
             practice since plugins should be dynamically enabled/disabled
@@ -133,10 +139,7 @@ class CementApp(meta.MetaMixin):
             List of signals to catch, and raise exc.CementSignalError for.
             Can be set to None to disable signal handling.
 
-            Default: [
-                signal.SIGTERM, 
-                signal.SIGINT
-                ].
+            Default: [signal.SIGTERM, signal.SIGINT]
                 
         signal_handler
             A function that is called to handle any caught signals. 
@@ -148,7 +151,7 @@ class CementApp(meta.MetaMixin):
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
 
-            Default: cement.lib.ext_configparser.ConfigParserConfigHandler
+            Default: cement.ext.ext_configparser.ConfigParserConfigHandler
             
         extension_handler
             A handler class that implements the IExtension interface.  This can
@@ -162,28 +165,28 @@ class CementApp(meta.MetaMixin):
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
 
-            Default: cement.lib.ext_logging.LoggingLogHandler
+            Default: cement.ext.ext_logging.LoggingLogHandler
             
         plugin_handler
             A handler class that implements the IPlugin interface.  This can
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
 
-            Default: cement.lib.ext_plugin.CementPluginHandler
+            Default: cement.ext.ext_plugin.CementPluginHandler
         
         argument_handler
             A handler class that implements the IArgument interface.  This can
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
 
-            Default: cement.lib.ext_argparse.ArgParseArgumentHandler
+            Default: cement.ext.ext_argparse.ArgParseArgumentHandler
         
         output_handler
             A handler class that implements the IOutput interface.  This can
             be a string (label of a registered handler), an uninstantiated
             class, or an instantiated class object.
 
-            Default: cement.lib.ext_nulloutput.NullOutputHandler
+            Default: cement.ext.ext_nulloutput.NullOutputHandler
             
         cache_handler
             A handler class that implements the ICache interface.  This can
@@ -209,13 +212,11 @@ class CementApp(meta.MetaMixin):
             extension you likely don't want/need LoggingLogHandler to be 
             registered).
             
-            Default: [  
-                'cement.ext.ext_nulloutput',
-                'cement.ext.ext_plugin',
-                'cement.ext.ext_configparser', 
-                'cement.ext.ext_logging', 
-                'cement.ext.ext_argparse',
-                ]
+            Default: ['cement.ext.ext_nulloutput',
+                      'cement.ext.ext_plugin',
+                      'cement.ext.ext_configparser', 
+                      'cement.ext.ext_logging', 
+                      'cement.ext.ext_argparse']
         
         extensions
             List of additional framework extensions to load.
@@ -232,11 +233,7 @@ class CementApp(meta.MetaMixin):
             you're doing.  To add your own extended meta overrides please use 
             'meta_override'.
             
-            Default: [
-                'debug', 
-                'plugin_config_dir', 
-                'plugin_dir'
-                ]
+            Default: ['debug', 'plugin_config_dir', 'plugin_dir']
             
         meta_override
             List of meta options that can/will be overridden by config options
@@ -254,8 +251,8 @@ class CementApp(meta.MetaMixin):
     .. code-block:: python
     
         from cement.core import foundation
+        app = foundation.CementApp('helloworld')
         try:
-            app = foundation.CementApp('helloworld')
             app.setup()
             app.run()
         finally:
@@ -285,14 +282,12 @@ class CementApp(meta.MetaMixin):
         class MyApp(foundation.CementApp):
             class Meta:
                 label = 'helloworld'
-                extensions = [
-                    'daemon',
-                    'json',
-                    ]
+                extensions = ['daemon','json',]
                 base_controller = MyController
-        
+
+        app = MyApp()
         try:
-            app = MyApp()
+            
             app.setup()
             app.run()
         finally:
@@ -424,7 +419,7 @@ class CementApp(meta.MetaMixin):
             else:
                 reload(self._loaded_bootstrap)
             
-        for res in hook.run('cement_pre_setup_hook', self):
+        for res in hook.run('pre_setup', self):
             pass
         
         self._setup_signals()
@@ -438,7 +433,7 @@ class CementApp(meta.MetaMixin):
         self._setup_output_handler()
         self._setup_controllers()
 
-        for res in hook.run('cement_post_setup_hook', self):
+        for res in hook.run('post_setup', self):
             pass
              
     def run(self):
@@ -447,7 +442,7 @@ class CementApp(meta.MetaMixin):
         called) to run the application.
         
         """
-        for res in hook.run('cement_pre_run_hook', self):
+        for res in hook.run('pre_run', self):
             pass
         
         # If controller exists, then pass controll to it
@@ -456,17 +451,22 @@ class CementApp(meta.MetaMixin):
         else:
             self._parse_args()
 
-        for res in hook.run('cement_post_run_hook', self):
+        for res in hook.run('post_run', self):
             pass
 
     def close(self):
         """
-        Close the application.  This runs the cement_on_close_hook() allowing
-        plugins/extensions/etc to 'cleanup' at the end of program execution.
+        Close the application.  This runs the pre_close and post_close hooks 
+        allowing plugins/extensions/etc to 'cleanup' at the end of program 
+        execution.
         
         """
+        for res in hook.run('pre_close', self):
+            pass
+            
         LOG.debug("closing the application")
-        for res in hook.run('cement_on_close_hook', self):
+
+        for res in hook.run('post_close', self):
             pass
             
     def render(self, data, template=None):
@@ -486,9 +486,9 @@ class CementApp(meta.MetaMixin):
                 handlers do not use templates).
                 
         """
-        for res in hook.run('cement_pre_render_hook', self, data):
+        for res in hook.run('pre_render', self, data):
             if not type(res) is dict:
-                LOG.debug("pre_render_hook did not return a dict().")
+                LOG.debug("pre_render hook did not return a dict().")
             else:
                 data = res
             
@@ -498,9 +498,9 @@ class CementApp(meta.MetaMixin):
         else:
             out_text = self.output.render(data, template)
             
-        for res in hook.run('cement_post_render_hook', self, out_text):
+        for res in hook.run('post_render', self, out_text):
             if not type(res) is str:
-                LOG.debug('post_render_hook did not return a str()')
+                LOG.debug('post_render hook did not return a str()')
             else:
                 out_text = str(res)
         
@@ -549,14 +549,15 @@ class CementApp(meta.MetaMixin):
         backend.handlers = {}
 
         # define framework hooks
-        hook.define('cement_pre_setup_hook')
-        hook.define('cement_post_setup_hook')
-        hook.define('cement_pre_run_hook')
-        hook.define('cement_post_run_hook')
-        hook.define('cement_on_close_hook')
-        hook.define('cement_signal_hook')
-        hook.define('cement_pre_render_hook')
-        hook.define('cement_post_render_hook')
+        hook.define('pre_setup')
+        hook.define('post_setup')
+        hook.define('pre_run')
+        hook.define('post_run')
+        hook.define('pre_close')
+        hook.define('post_close')
+        hook.define('signal')
+        hook.define('pre_render')
+        hook.define('post_render')
     
         # define and register handlers    
         handler.define(extension.IExtension)

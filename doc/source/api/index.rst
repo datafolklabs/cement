@@ -46,16 +46,3 @@ Cement Extension Modules
    ext/ext_logging
    ext/ext_nulloutput
    ext/ext_plugin
-   
-Cement Library Modules
-----------------------
-
-.. toctree::
-   :maxdepth: 1
-   
-   lib/ext_argparse
-   lib/ext_configparser
-   lib/ext_json
-   lib/ext_logging
-   lib/ext_nulloutput
-   lib/ext_plugin

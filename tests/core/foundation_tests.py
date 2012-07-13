@@ -84,14 +84,14 @@ class FoundationTestCase(unittest.TestCase):
         self.app.run()
     
     def test_passed_handlers(self):
-        from cement.lib import ext_configparser
-        from cement.lib import ext_logging
-        from cement.lib import ext_argparse
-        from cement.lib import ext_plugin
-        from cement.lib import ext_nulloutput
+        from cement.ext import ext_configparser
+        from cement.ext import ext_logging
+        from cement.ext import ext_argparse
+        from cement.ext import ext_plugin
+        from cement.ext import ext_nulloutput
     
         # forces CementApp._resolve_handler to register the handler
-        from cement.lib import ext_json
+        from cement.ext import ext_json
         
         app = _t.prep('my-app-test',
             config_handler=ext_configparser.ConfigParserConfigHandler,
@@ -166,24 +166,7 @@ class FoundationTestCase(unittest.TestCase):
     def test_lay_cement(self):
         app = _t.prep('test', argv=['--quiet'])
         app = _t.prep('test', argv=['--json', '--yaml'])
-        
-    def test_framework_hooks(self):
-        hook_tuple = (0, my_hook_one.__name__, my_hook_one)    
-        hook_tuple_two = (99, my_hook_two.__name__, my_hook_two)    
-        hook_tuple_three = (-99, my_hook_three.__name__, my_hook_three)    
-        backend.hooks['cement_pre_setup_hook'].append(hook_tuple)
-        backend.hooks['cement_pre_setup_hook'].append(hook_tuple_two)
-        backend.hooks['cement_pre_setup_hook'].append(hook_tuple_three)
-        backend.hooks['cement_post_setup_hook'].append(hook_tuple)
-        backend.hooks['cement_pre_run_hook'].append(hook_tuple)
-        backend.hooks['cement_post_run_hook'].append(hook_tuple)
-        self.app.setup()
-
-        # check weight ordering
-        eq_(backend.hooks['cement_pre_setup_hook'][0][1], 'my_hook_three')
-        eq_(backend.hooks['cement_pre_setup_hook'][1][1], 'my_hook_one')
-        eq_(backend.hooks['cement_pre_setup_hook'][2][1], 'my_hook_two')
-    
+            
     def test_none_member(self):
         class Test(object):
             var = None

@@ -137,11 +137,12 @@ class CementExtensionHandler(handler.CementBaseHandler):
             
         LOG.debug("loading the '%s' framework extension" % ext_module)
         try:
-            if ext_module in sys.modules:
-                reload(sys.modules[ext_module])
-            else:
-                __import__(ext_module, globals(), locals(), [])                
-            
+            if ext_module not in sys.modules:
+                __import__(ext_module, globals(), locals(), [], -1)
+                
+            if hasattr(sys.modules[ext_module], 'load'):
+                sys.modules[ext_module].load()
+
             if ext_module not in self.loaded_extensions:    
                 self.loaded_extensions.append(ext_module)
    

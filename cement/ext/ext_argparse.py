@@ -1,11 +1,54 @@
-"""
-This module provides any dynamically loadable code for the ArgParse 
-Framework Extension such as hook and handler registration.  Additional 
-classes and functions exist in cement.lib.ext_argparse.
+"""ArgParse Framework Extension"""
+
+from argparse import ArgumentParser
+from ..core import backend, arg, handler
+
+LOG = backend.minimal_logger(__name__)
     
-"""
+class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
+    """
+    This class implements the :ref:`IArgument <cement.core.arg>` 
+    interface, and sub-classes from `argparse.ArgumentParser <http://docs.python.org/dev/library/argparse.html>`_.
+    Please reference the argparse documentation for full usage of the
+    class.
 
-from ..core import handler
-from ..lib.ext_argparse import ArgParseArgumentHandler
+    Arguments and Keyword arguments are passed directly to ArgumentParser
+    on initialization.
+    """
+    
+    parsed_args = None
+    class Meta:
+        interface = arg.IArgument
+        label = 'argparse'
+    
+    def __init__(self, *args, **kw):
+        super(ArgParseArgumentHandler, self).__init__(*args, **kw)
+        self.config = None
+        
+    def parse(self, arg_list):
+        """
+        Parse a list of arguments, and store them as self.parsed_args which
+        is an object.  Meaning an argument name of 'foo' will be stored as
+        self.parsed_args.foo.
+        
+        Required Arguments:
+        
+            arg_list
+                A list of arguments (generally sys.argv) to be parsed.
+        
+        Returns: self.parsed_args (object)
+        
+        """
+        self.parsed_args = self.parse_args(arg_list)
+        return self.parsed_args
+        
+    def add_argument(self, *args, **kw):
+        """
+        Add an argument to the parser.  Arguments and keyword arguments are
+        passed directly to ArgumentParser.add_argument().
+        
+        """
+        return super(ArgumentParser, self).add_argument(*args, **kw)            
 
-handler.register(ArgParseArgumentHandler)
+def load():
+    handler.register(ArgParseArgumentHandler)

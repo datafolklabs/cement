@@ -5,7 +5,6 @@ from nose.tools import ok_, eq_, raises
 from cement.core import exc, cache, handler
 from cement.utils import test_helper as _t
 
-
 class MyCacheHandler(cache.CementCacheHandler):
     class Meta:
         label = 'my_cache_handler'

@@ -5,7 +5,7 @@ from nose.tools import ok_, eq_, raises
 from cement.core import exc, backend, handler, handler, output, meta
 from cement.core import interface
 from cement.utils import test_helper as _t
-from cement.lib.ext_configparser import ConfigParserConfigHandler
+from cement.ext.ext_configparser import ConfigParserConfigHandler
 
 class BogusOutputHandler(meta.MetaMixin):
     class Meta:

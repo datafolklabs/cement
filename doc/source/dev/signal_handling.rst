@@ -70,26 +70,25 @@ A basic application using default handling might look like:
     
 As you can see, this provides a very simple means of handling the most common
 signals allowing us to still call app.close() after handling the signal.  This
-is extremely important as 'app.close()' is where the 'cement_on_close_hook' is    
-called, allowing the framework/application/extensions/plugins to all perform
-any cleanup actions they may need.
+is extremely important as 'app.close()' is where the 'pre_close' and 
+'post_close' hooks are called, allowing the 
+framework/application/extensions/plugins to all perform any cleanup actions 
+they may need.
 
 Using The Signal Hook
 ---------------------
 
 An alternative way of adding multiple callbacks to a signal handler is by
-using the cement_signal_hook.  This hook is called anytime a handled signal
+using the cement signal hook.  This hook is called anytime a handled signal
 is encountered.
 
 .. code-block:: python
 
     import signal
     from cement.core import foundation, exc, hook
-    
-    app = foundation.CementApp('myapp') 
-    app.setup()
 
-    @hook.register(name='cement_signal_hook')
+    app = foundation.CementApp('myapp') 
+   
     def my_signal_handler(signum, frame):
         # do something with signum/frame
 
@@ -99,8 +98,11 @@ is encountered.
         elif signum == signal.SIGINT:
             print("Caught signal SIGINT...")
             # do something to handle signal here
-   
+
+    hook.register('signal', my_signal_handler)
+    
     try:
+        app.setup()
         app.run()
     except exc.CementSignalError as e:
         pass
@@ -109,12 +111,12 @@ is encountered.
 
 
 The key thing to note here is that the main application itself handles the
-exc.CementSignalError exception, where as using the cement_signal_hook is 
+exc.CementSignalError exception, where as using the cement 'signal' hook is 
 useful for plugins and extensions to be able to tie into the signal handling
 outside of the main application.  Both serve the same purpose however the
-application object is not available (passed to) the cement_signal_hook which
+application object is not available (passed to) the cement 'signal' hook which
 limits what can be done within the callback function.  For this reason 
-any extensions or plugins should use the cement_on_close_hook as much as 
+any extensions or plugins should use the 'pre_close' hook as much as 
 possible as it is always run when app.close() is called and receives the 
 app object as one of its parameters.
 
@@ -137,7 +139,7 @@ foundation.CementApp():
     
 What happens is, Cement iterates over the catch_signals list and adds a 
 generic handler function (the same) for each signal.  Because the handler
-calls the cement_signal_hook, and then raises an exception which both pass the 
+calls the cement 'signal' hook, and then raises an exception which both pass the 
 'signum' and 'frame' parameters, you are able to handle the logic elsewhere 
 rather than assigning a unique callback function for every signal.
 
@@ -146,7 +148,7 @@ What If I Don't Like Your Signal Handler Callback?
 
 If you want more control over what happens when a signal is caught, you are
 more than welcome to override the default signal handler callback.  That said,
-please be kind and be sure to atleast run the cement_signal_hook within your
+please be kind and be sure to atleast run the cement 'signal' hook within your
 callback.
 
 .. code-block:: python
@@ -160,8 +162,8 @@ callback.
         # do something with signum/frame
         print 'Caught signal %s' % signum
         
-        # execute the cement_signal_hook
-        for res in hook.run('cement_signal_hook', signum, frame):
+        # execute the cement 'signal' hook
+        for res in hook.run('cement 'signal' hook', signum, frame):
             pass 
 
     app = foundation.CementApp('myapp', 

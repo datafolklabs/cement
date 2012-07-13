@@ -39,16 +39,15 @@ class HookTestCase(unittest.TestCase):
             raise
     
     def test_hooks_registered(self):
-        hook.register(name='nosetests_hook', weight=99)(cement_hook_one)
-        hook.register(name='nosetests_hook', weight=-1)(cement_hook_two)
-        hook.register(name='some_bogus_hook', weight=-99)(cement_hook_three)
-        hook.register()(nosetests_hook)
-        eq_(len(backend.hooks['nosetests_hook']), 3)
+        hook.register('nosetests_hook', cement_hook_one, weight=99)
+        hook.register('nosetests_hook', cement_hook_two, weight=-1)
+        hook.register('some_bogus_hook', cement_hook_three, weight=-99)
+        eq_(len(backend.hooks['nosetests_hook']), 2)
     
     def test_run(self):
-        hook.register(name='nosetests_hook', weight=99)(cement_hook_one)
-        hook.register(name='nosetests_hook', weight=-1)(cement_hook_two)
-        hook.register(name='nosetests_hook', weight=-99)(cement_hook_three)
+        hook.register('nosetests_hook', cement_hook_one, weight=99)
+        hook.register('nosetests_hook', cement_hook_two, weight=-1)
+        hook.register('nosetests_hook', cement_hook_three, weight=-99)
         
         results = []
         for res in hook.run('nosetests_hook'):
@@ -69,16 +68,17 @@ class HookTestCase(unittest.TestCase):
         
     def test_framework_hooks(self):
         app = _t.prep('myapp', argv=['--quiet'])
-        hook.register(name='cement_pre_setup_hook')(cement_hook_one)
-        hook.register(name='cement_post_setup_hook')(cement_hook_one)
-        hook.register(name='cement_pre_run_hook')(cement_hook_one)
-        hook.register(name='cement_post_run_hook')(cement_hook_one)
-        hook.register(name='cement_on_close_hook')(cement_hook_one)
-        hook.register(name='cement_signal_hook')(cement_hook_one)
-        hook.register(name='cement_pre_render_hook')(cement_hook_one)
-        hook.register(name='cement_pre_render_hook')(cement_hook_five)
-        hook.register(name='cement_post_render_hook')(cement_hook_one)
-        hook.register(name='cement_post_render_hook')(cement_hook_five)
+        hook.register('pre_setup', cement_hook_one)
+        hook.register('post_setup', cement_hook_one)
+        hook.register('pre_run', cement_hook_one)
+        hook.register('post_run', cement_hook_one)
+        hook.register('pre_close', cement_hook_one)
+        hook.register('post_close', cement_hook_one)
+        hook.register('signal', cement_hook_one)
+        hook.register('pre_render', cement_hook_one)
+        hook.register('pre_render', cement_hook_five)
+        hook.register('post_render', cement_hook_one)
+        hook.register('post_render', cement_hook_five)
         app.setup()
         app.run()
         app.render(dict(foo='bar'))

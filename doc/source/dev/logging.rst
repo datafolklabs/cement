@@ -86,46 +86,52 @@ debugging issues:
 .. code-block:: text
 
     $ python test.py --debug
-    2011-08-26 18:00:31,993 (DEBUG) cement.core.foundation : laying cement for the 'myapp' application
-    2011-08-26 18:00:31,993 (DEBUG) cement.core.hook : defining hook 'cement_init_hook'
-    2011-08-26 18:00:31,993 (DEBUG) cement.core.hook : defining hook 'cement_add_args_hook'
-    2011-08-26 18:00:31,993 (DEBUG) cement.core.hook : defining hook 'cement_validate_config_hook'
-    2011-08-26 18:00:31,993 (DEBUG) cement.core.handler : defining handler type 'extension' (IExtension)
-    2011-08-26 18:00:31,993 (DEBUG) cement.core.handler : defining handler type 'log' (ILog)
-    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'config' (IConfig)
-    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'plugin' (IPlugin)
-    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'output' (IOutput)
-    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'argument' (IArgument)
-    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : defining handler type 'controller' (IController)
-    2011-08-26 18:00:31,994 (DEBUG) cement.core.handler : registering handler '<class 'cement.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
-    2011-08-26 18:00:31,994 (DEBUG) cement.core.foundation : now setting up the 'myapp' application
-    2011-08-26 18:00:31,994 (DEBUG) cement.core.foundation : setting up myapp.extension handler
-    2011-08-26 18:00:31,995 (DEBUG) cement.core.foundation : no config defaults from '<cement.core.extension.CementExtensionHandler object at 0x1005827d0>'
-    2011-08-26 18:00:31,995 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_cement_output' framework extension
-    2011-08-26 18:00:31,995 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_cement_output.CementOutputHandler'>' into handlers['output']['cement']
-    2011-08-26 18:00:31,995 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_cement_plugin' framework extension
-    2011-08-26 18:00:31,996 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_cement_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
-    2011-08-26 18:00:31,996 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_configparser' framework extension
-    2011-08-26 18:00:31,999 (DEBUG) cement.core.handler : registering handler 'cement.ext.ext_configparser.ConfigParserConfigHandler' into handlers['config']['configparser']
-    2011-08-26 18:00:31,999 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_logging' framework extension
-    2011-08-26 18:00:32,000 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
-    2011-08-26 18:00:32,000 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_argparse' framework extension
-    2011-08-26 18:00:32,000 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
-    2011-08-26 18:00:32,000 (DEBUG) cement.core.foundation : setting up myapp.config handler
-    2011-08-26 18:00:32,001 (DEBUG) cement.core.foundation : validating required configuration parameters
-    2011-08-26 18:00:32,001 (DEBUG) cement.core.foundation : setting up myapp.log handler
-    2011-08-26 18:00:32,001 (DEBUG) cement.core.foundation : setting config defaults from '<cement.ext.ext_logging.LoggingLogHandler object at 0x10040ffd0>'
-    2011-08-26 18:00:32,002 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
-    2011-08-26 18:00:32,002 (DEBUG) cement.core.foundation : setting up myapp.plugin handler
-    2011-08-26 18:00:32,002 (DEBUG) cement.core.foundation : no config defaults from '<cement.ext.ext_cement_plugin.CementPluginHandler object at 0x100590f50>'
-    2011-08-26 18:00:32,002 (DEBUG) cement.core.foundation : setting up myapp.arg handler
-    2011-08-26 18:00:32,003 (DEBUG) cement.core.foundation : no config defaults from 'ArgParseArgumentHandler(prog='test.py', usage=None, description=None, version=None, formatter_class=<class 'argparse.HelpFormatter'>, conflict_handler='error', add_help=True)'
-    2011-08-26 18:00:32,004 (DEBUG) cement.core.foundation : setting up myapp.output handler
-    2011-08-26 18:00:32,004 (DEBUG) cement.core.foundation : no config defaults from '<cement.ext.ext_cement_output.CementOutputHandler object at 0x100599350>'
-    2011-08-26 18:00:32,004 (DEBUG) cement.core.foundation : setting up myapp.controller handler
-    2011-08-26 18:00:32,004 (DEBUG) cement.core.foundation : no controller could be found.
-    2011-08-26 18:00:32,005 (INFO) myapp : This is my info message
-
+    2012-07-13 02:19:42,270 (DEBUG) cement.core.foundation : laying cement for the 'myapp' application
+    2012-07-13 02:19:42,270 (DEBUG) cement.core.hook : defining hook 'pre_setup'
+    2012-07-13 02:19:42,270 (DEBUG) cement.core.hook : defining hook 'post_setup'
+    2012-07-13 02:19:42,270 (DEBUG) cement.core.hook : defining hook 'pre_run'
+    2012-07-13 02:19:42,270 (DEBUG) cement.core.hook : defining hook 'post_run'
+    2012-07-13 02:19:42,271 (DEBUG) cement.core.hook : defining hook 'pre_close'
+    2012-07-13 02:19:42,271 (DEBUG) cement.core.hook : defining hook 'post_close'
+    2012-07-13 02:19:42,271 (DEBUG) cement.core.hook : defining hook 'signal'
+    2012-07-13 02:19:42,271 (DEBUG) cement.core.hook : defining hook 'pre_render'
+    2012-07-13 02:19:42,271 (DEBUG) cement.core.hook : defining hook 'post_render'
+    2012-07-13 02:19:42,271 (DEBUG) cement.core.handler : defining handler type 'extension' (IExtension)
+    2012-07-13 02:19:42,271 (DEBUG) cement.core.handler : defining handler type 'log' (ILog)
+    2012-07-13 02:19:42,271 (DEBUG) cement.core.handler : defining handler type 'config' (IConfig)
+    2012-07-13 02:19:42,271 (DEBUG) cement.core.handler : defining handler type 'plugin' (IPlugin)
+    2012-07-13 02:19:42,272 (DEBUG) cement.core.handler : defining handler type 'output' (IOutput)
+    2012-07-13 02:19:42,272 (DEBUG) cement.core.handler : defining handler type 'argument' (IArgument)
+    2012-07-13 02:19:42,272 (DEBUG) cement.core.handler : defining handler type 'controller' (IController)
+    2012-07-13 02:19:42,272 (DEBUG) cement.core.handler : defining handler type 'cache' (ICache)
+    2012-07-13 02:19:42,272 (DEBUG) cement.core.handler : registering handler '<class 'cement.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
+    2012-07-13 02:19:42,272 (DEBUG) cement.core.foundation : now setting up the 'myapp' application
+    2012-07-13 02:19:42,272 (DEBUG) cement.core.foundation : adding signal handler for signal 15
+    2012-07-13 02:19:42,273 (DEBUG) cement.core.foundation : adding signal handler for signal 2
+    2012-07-13 02:19:42,273 (DEBUG) cement.core.foundation : setting up myapp.extension handler
+    2012-07-13 02:19:42,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_nulloutput' framework extension
+    2012-07-13 02:19:42,273 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_nulloutput.NullOutputHandler'>' into handlers['output']['null']
+    2012-07-13 02:19:42,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_plugin' framework extension
+    2012-07-13 02:19:42,273 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
+    2012-07-13 02:19:42,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_configparser' framework extension
+    2012-07-13 02:19:42,274 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_configparser.ConfigParserConfigHandler'>' into handlers['config']['configparser']
+    2012-07-13 02:19:42,274 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_logging' framework extension
+    2012-07-13 02:19:42,274 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
+    2012-07-13 02:19:42,274 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_argparse' framework extension
+    2012-07-13 02:19:42,276 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
+    2012-07-13 02:19:42,276 (DEBUG) cement.core.foundation : setting up myapp.config handler
+    2012-07-13 02:19:42,276 (DEBUG) cement.ext.ext_configparser : config file '/etc/myapp/myapp.conf' does not exist, skipping...
+    2012-07-13 02:19:42,277 (DEBUG) cement.core.foundation : no cache handler defined, skipping.
+    2012-07-13 02:19:42,277 (DEBUG) cement.core.foundation : setting up myapp.log handler
+    2012-07-13 02:19:42,277 (DEBUG) cement.core.handler : merging config defaults from '<cement.ext.ext_logging.LoggingLogHandler object at 0x100588dd0>'
+    2012-07-13 02:19:42,277 (DEBUG) myapp : logging initialized for 'myapp' using LoggingLogHandler
+    2012-07-13 02:19:42,278 (DEBUG) cement.core.foundation : setting up myapp.plugin handler
+    2012-07-13 02:19:42,278 (DEBUG) cement.ext.ext_plugin : plugin config dir /etc/myapp/plugins.d does not exist.
+    2012-07-13 02:19:42,278 (DEBUG) cement.core.foundation : setting up myapp.arg handler
+    2012-07-13 02:19:42,279 (DEBUG) cement.core.foundation : setting up myapp.output handler
+    2012-07-13 02:19:42,279 (DEBUG) cement.core.foundation : setting up application controllers
+    2012-07-13 02:19:42,279 (DEBUG) cement.core.foundation : no controller could be found.
+    2012-07-13 02:19:42,280 (DEBUG) cement.core.foundation : closing the application
 
 You can see that debug logging is extremely verbose.  In the above you will 
 note the message format is:

@@ -1,11 +1,42 @@
-"""
-This module provides any dynamically loadable code for the NullOutput 
-Framework Extension such as hook and handler registration.  Additional 
-classes and functions exist in cement.lib.ext_nulloutput.
+"""NullOutput Framework Extension"""
+
+from ..core import backend, output, handler
+
+Log = backend.minimal_logger(__name__)
+
+class NullOutputHandler(output.CementOutputHandler):
+    """
+    This class is an internal implementation of the 
+    :ref:`IOutput <cement.core.output>` interface. It does not take any 
+    parameters on initialization.
     
-"""
+    """
+    class Meta:
+        interface = output.IOutput
+        label = 'null'
+        
+    def render(self, data_dict, template=None):
+        """
+        This implementation does not actually render anything to output, but
+        rather logs it to the debug facility.
+        
+        Required Arguments:
+        
+            data_dict
+                The data dictionary to render.
+                
+        Optional Arguments:
+        
+            template
+                The template parameter is not used by this implementation at
+                all.
+                
+        Returns: None
+        
+        """
+        Log.debug("not rendering any output to console")
+        Log.debug("DATA: %s" % data_dict)
+        return None
 
-from ..core import handler
-from ..lib.ext_nulloutput import NullOutputHandler
-
-handler.register(NullOutputHandler)
+def load():
+    handler.register(NullOutputHandler)

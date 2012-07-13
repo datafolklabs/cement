@@ -28,6 +28,14 @@ Feature Enhancements:
     * :issue:`131` - Controller aliases
     * :issue:`126` - Add a 'bootstrap' importer to CementApp    
     
+Incompatible Changes:
+
+    * :issue:`129` - Simplify extensions/plugins/hooks/etc.
+    Hooks renamed from 'cement_xxx_hook' to just 'xxx'.  For example, the
+    'cement_pre_setup_hook' is now simply 'pre_setup'.  Additionally, the
+    'cement_on_close_hook' is now broken out into 'pre_close', and 
+    'post_close'.
+
 
 1.9.12 - Thu Jul 05, 2012
 ------------------------------------------------------------------------------

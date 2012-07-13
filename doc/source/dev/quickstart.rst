@@ -46,53 +46,54 @@ Oh nice, ok... ArgParse is already setup with a few options I see.  What else?
 .. code-block:: text
 
     $ python helloworld.py --debug
-    2012-07-03 14:05:28,270 (DEBUG) cement.core.foundation : laying cement for the 'helloworld' application
-    2012-07-03 14:05:28,270 (DEBUG) cement.core.hook : defining hook 'cement_pre_setup_hook'
-    2012-07-03 14:05:28,270 (DEBUG) cement.core.hook : defining hook 'cement_post_setup_hook'
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_pre_run_hook'
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_post_run_hook'
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_on_close_hook'
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_signal_hook'
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_pre_render_hook'
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.hook : defining hook 'cement_post_render_hook'
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.handler : defining handler type 'extension' (IExtension)
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.handler : defining handler type 'log' (ILog)
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.handler : defining handler type 'config' (IConfig)
-    2012-07-03 14:05:28,271 (DEBUG) cement.core.handler : defining handler type 'plugin' (IPlugin)
-    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : defining handler type 'output' (IOutput)
-    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : defining handler type 'argument' (IArgument)
-    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : defining handler type 'controller' (IController)
-    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : defining handler type 'cache' (ICache)
-    2012-07-03 14:05:28,272 (DEBUG) cement.core.handler : registering handler '<class 'cement.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
-    2012-07-03 14:05:28,272 (DEBUG) cement.core.foundation : now setting up the 'helloworld' application
-    2012-07-03 14:05:28,272 (DEBUG) cement.core.foundation : adding signal handler for signal 15
-    2012-07-03 14:05:28,272 (DEBUG) cement.core.foundation : adding signal handler for signal 2
-    2012-07-03 14:05:28,273 (DEBUG) cement.core.foundation : setting up helloworld.extension handler
-    2012-07-03 14:05:28,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_nulloutput' framework extension
-    2012-07-03 14:05:28,273 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_nulloutput.NullOutputHandler'>' into handlers['output']['null']
-    2012-07-03 14:05:28,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_plugin' framework extension
-    2012-07-03 14:05:28,274 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
-    2012-07-03 14:05:28,274 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_configparser' framework extension
-    2012-07-03 14:05:28,274 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_configparser.ConfigParserConfigHandler'>' into handlers['config']['configparser']
-    2012-07-03 14:05:28,274 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_logging' framework extension
-    2012-07-03 14:05:28,275 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
-    2012-07-03 14:05:28,275 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_argparse' framework extension
-    2012-07-03 14:05:28,276 (DEBUG) cement.core.handler : registering handler '<class 'cement.lib.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
-    2012-07-03 14:05:28,276 (DEBUG) cement.core.foundation : setting up helloworld.config handler
-    2012-07-03 14:05:28,277 (DEBUG) cement.lib.ext_configparser : config file '/etc/helloworld/helloworld.conf' does not exist, skipping...
-    2012-07-03 14:05:28,277 (DEBUG) cement.lib.ext_configparser : config file '/Users/derks/.helloworld.conf' does not exist, skipping...
-    2012-07-03 14:05:28,277 (DEBUG) cement.core.foundation : no cache handler defined, skipping.
-    2012-07-03 14:05:28,277 (DEBUG) cement.core.foundation : setting up helloworld.log handler
-    2012-07-03 14:05:28,277 (DEBUG) cement.core.handler : merging config defaults from '<cement.lib.ext_logging.LoggingLogHandler object at 0x100588910>'
-    2012-07-03 14:05:28,278 (DEBUG) helloworld : logging initialized for 'helloworld' using LoggingLogHandler
-    2012-07-03 14:05:28,278 (DEBUG) cement.core.foundation : setting up helloworld.plugin handler
-    2012-07-03 14:05:28,278 (DEBUG) cement.lib.ext_plugin : plugin config dir /etc/helloworld/plugins.d does not exist.
-    2012-07-03 14:05:28,278 (DEBUG) cement.core.foundation : setting up helloworld.arg handler
-    2012-07-03 14:05:28,279 (DEBUG) cement.core.foundation : setting up helloworld.output handler
-    2012-07-03 14:05:28,279 (DEBUG) cement.core.foundation : setting up application controllers
-    2012-07-03 14:05:28,279 (DEBUG) cement.core.foundation : no controller could be found.
+    2012-07-13 02:21:25,094 (DEBUG) cement.core.foundation : laying cement for the 'helloworld' application
+    2012-07-13 02:21:25,094 (DEBUG) cement.core.hook : defining hook 'pre_setup'
+    2012-07-13 02:21:25,094 (DEBUG) cement.core.hook : defining hook 'post_setup'
+    2012-07-13 02:21:25,094 (DEBUG) cement.core.hook : defining hook 'pre_run'
+    2012-07-13 02:21:25,094 (DEBUG) cement.core.hook : defining hook 'post_run'
+    2012-07-13 02:21:25,094 (DEBUG) cement.core.hook : defining hook 'pre_close'
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.hook : defining hook 'post_close'
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.hook : defining hook 'signal'
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.hook : defining hook 'pre_render'
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.hook : defining hook 'post_render'
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.handler : defining handler type 'extension' (IExtension)
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.handler : defining handler type 'log' (ILog)
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.handler : defining handler type 'config' (IConfig)
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.handler : defining handler type 'plugin' (IPlugin)
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.handler : defining handler type 'output' (IOutput)
+    2012-07-13 02:21:25,095 (DEBUG) cement.core.handler : defining handler type 'argument' (IArgument)
+    2012-07-13 02:21:25,096 (DEBUG) cement.core.handler : defining handler type 'controller' (IController)
+    2012-07-13 02:21:25,096 (DEBUG) cement.core.handler : defining handler type 'cache' (ICache)
+    2012-07-13 02:21:25,096 (DEBUG) cement.core.handler : registering handler '<class 'cement.core.extension.CementExtensionHandler'>' into handlers['extension']['cement']
+    2012-07-13 02:21:25,096 (DEBUG) cement.core.foundation : now setting up the 'helloworld' application
+    2012-07-13 02:21:25,096 (DEBUG) cement.core.foundation : adding signal handler for signal 15
+    2012-07-13 02:21:25,096 (DEBUG) cement.core.foundation : adding signal handler for signal 2
+    2012-07-13 02:21:25,096 (DEBUG) cement.core.foundation : setting up helloworld.extension handler
+    2012-07-13 02:21:25,097 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_nulloutput' framework extension
+    2012-07-13 02:21:25,097 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_nulloutput.NullOutputHandler'>' into handlers['output']['null']
+    2012-07-13 02:21:25,097 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_plugin' framework extension
+    2012-07-13 02:21:25,097 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
+    2012-07-13 02:21:25,097 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_configparser' framework extension
+    2012-07-13 02:21:25,098 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_configparser.ConfigParserConfigHandler'>' into handlers['config']['configparser']
+    2012-07-13 02:21:25,098 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_logging' framework extension
+    2012-07-13 02:21:25,098 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_logging.LoggingLogHandler'>' into handlers['log']['logging']
+    2012-07-13 02:21:25,098 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_argparse' framework extension
+    2012-07-13 02:21:25,099 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_argparse.ArgParseArgumentHandler'>' into handlers['argument']['argparse']
+    2012-07-13 02:21:25,100 (DEBUG) cement.core.foundation : setting up helloworld.config handler
+    2012-07-13 02:21:25,100 (DEBUG) cement.ext.ext_configparser : config file '/etc/helloworld/helloworld.conf' does not exist, skipping...
+    2012-07-13 02:21:25,100 (DEBUG) cement.ext.ext_configparser : config file '/Users/derks/.helloworld.conf' does not exist, skipping...
+    2012-07-13 02:21:25,100 (DEBUG) cement.core.foundation : no cache handler defined, skipping.
+    2012-07-13 02:21:25,100 (DEBUG) cement.core.foundation : setting up helloworld.log handler
+    2012-07-13 02:21:25,101 (DEBUG) cement.core.handler : merging config defaults from '<cement.ext.ext_logging.LoggingLogHandler object at 0x100588dd0>'
+    2012-07-13 02:21:25,101 (DEBUG) helloworld : logging initialized for 'helloworld' using LoggingLogHandler
+    2012-07-13 02:21:25,101 (DEBUG) cement.core.foundation : setting up helloworld.plugin handler
+    2012-07-13 02:21:25,102 (DEBUG) cement.ext.ext_plugin : plugin config dir /etc/helloworld/plugins.d does not exist.
+    2012-07-13 02:21:25,102 (DEBUG) cement.core.foundation : setting up helloworld.arg handler
+    2012-07-13 02:21:25,103 (DEBUG) cement.core.foundation : setting up helloworld.output handler
+    2012-07-13 02:21:25,103 (DEBUG) cement.core.foundation : setting up application controllers
+    2012-07-13 02:21:25,103 (DEBUG) cement.core.foundation : no controller could be found.
     Hello World
-    2012-07-03 14:05:28,280 (DEBUG) cement.core.foundation : closing the application    
+    2012-07-13 02:21:25,103 (DEBUG) cement.core.foundation : closing the application
 
 
 Damn son, WTF?  Don't worry, we'll explain everything in the rest of the doc.
@@ -120,10 +121,11 @@ config creation, and logging.
 
     # register any framework hook functions after app creation, and before 
     # app.setup()
-    @hook.register()
-    def cement_post_setup_hook(app):
+    def my_hook(app):
         assert app.config.has_key('myapp', 'foo')
 
+    hook.register('post_setup', my_hook)
+    
     try:
         # setup the application
         app.setup()

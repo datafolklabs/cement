@@ -2,7 +2,7 @@ Configuration Handling
 ======================
 
 Cement defines a configuration interface called :ref:`IConfig <cement.core.config>`, 
-as well as the default :ref:`ConfigParserConfigHandler <cement.lib.ext_configparser>` 
+as well as the default :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>` 
 that implements the interface.  This handler is built on top of 
 `ConfigParser <http://docs.python.org/library/configparser.html>`_ 
 which is included in the Python standard library.  Therefor, this class will
@@ -15,7 +15,7 @@ interface and not the full capabilities of the implementation.
 
 The following config handlers are included and maintained with Cement:
 
-    * :ref:`ConfigParserConfigHandler <cement.lib.ext_configparser>` (default)
+    * :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>` (default)
     
     
 Please reference the :ref:`IConfig <cement.core.config>` interface 

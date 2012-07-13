@@ -94,7 +94,8 @@ is part of our 'myapp' application, so the extension module would be
             for key in data_dict.keys():
                 print "%s => %s" % (key, data_dict[key])
 
-    handler.register(MyAppOutputHandler)
+    def load():
+        handler.register(MyAppOutputHandler)
 
 Take note of two things.  One is, the 'Log' we are using is from 
 cement.core.backend.minimal_logger(__name__).  Framework extensions do not 
@@ -106,8 +107,11 @@ handlers and/or hooks if necessary.  In this example we only needed to
 register our output handler (which happens when the extension is loaded
 by the application).
 
+Last, notice that all 'bootstrapping' code goes in a load() function.  This is
+where registration of handlers/hooks should happen.
+
 You will notice that extensions are essentially the same as application 
-plugins, however the difference is both when the code is loaded, as well as
+plugins, however the difference is both when/how the code is loaded, as well as
 the purpose of that code.  Framework extensions add functionality to the
 framework for the application to utilize, where application plugins extend
 the functionality of the application.

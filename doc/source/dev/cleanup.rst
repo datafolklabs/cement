@@ -14,7 +14,7 @@ For example:
 
 .. code-block:: python
 
-    from cement.core import foundation, hook
+    from cement.core import foundation
     from cement.core.exc import CementRuntimeError
     
     app = foundation.CementApp('helloworld')
@@ -22,10 +22,6 @@ For example:
     try:    
         app.setup()
         app.run()
-        print('Hello World')
-    except CementRuntimeError as e:
-        # do something with e
-        pass
     finally:
         app.close()
         
@@ -34,20 +30,21 @@ You will note that we put app.run() within a 'try' block, and app.close() in
 a 'finally' block.  The important thing to note is that we put app.close()
 within a 'finally' block so that regardless of whether an exception is 
 encountered or not, we always run app.close().  The primary purpose of 
-app.close() is that that is where cement_on_close_hook() is run, allowing
-extensions/plugins/etc to cleanup after the program runs.
+app.close() is that is where the 'pre_close' and 'post_close' hooks are run,
+allowing extensions/plugins/etc to cleanup after the program runs.
 
 Running Cleanup Code
 --------------------
 
 Any extension, or plugin, or even the application itself that has 'cleanup' 
-code can do so within the cement_on_close_hook().  For example:
+code can do so within the 'pre_close' or 'post_close' hooks.  For example:
 
 .. code-block:: python
 
     from cement.core import hook
-    
-    @hook.register()
-    def cement_on_close_hook(app):
+
+    def my_cleanup(app):
         # do something when app.close() is called
         pass
+    
+    hook.register('pre_close', my_cleanup)

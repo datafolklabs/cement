@@ -80,7 +80,8 @@ options and commands via an application controller:
         def mycommand(self):
             print 'in MyPlugin.mycommand()'
         
-    handler.register(MyPluginController)
+    def load():
+        handler.register(MyPluginController)
 
 
 As you can see, this is very similar to an application that has a base 
@@ -88,6 +89,9 @@ controller, however as you'll note we do not create an application object
 via foundation.CementApp() like we do in our application.  This code/file
 would then be saved to a location defined by your applications configuration
 that determines where plugins are loaded from (See the next section).
+
+Notice that all 'bootstrapping' code goes in a load() function.  This is
+where registration of handlers/hooks should happen.
 
 A plugin also has a configuration file that will be found in the 
 'plugin_config_dir' as defined by your applications configuration.  The 
@@ -166,7 +170,8 @@ functionality of our app.  Take the following for example:
         def my_plugin_command(self):
             print 'in MyPlugin.my_plugin_command()'
     
-    handler.register(MyPluginController)
+    def load():
+        handler.register(MyPluginController)
 
 
 Running our application we can see:

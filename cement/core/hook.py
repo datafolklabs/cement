@@ -46,18 +46,26 @@ def defined(hook_name):
     else:
         return False   
     
-class register(object):
+def register(name, func, weight=0):
     """
-    Decorator function for plugins to register hooks.
+    Register a function to a hook.  The function will be called, in order of
+    weight, when the hook is run.
+
+    Required Arguments:
     
+        name
+            The name of the hook to register too.  I.e. 'pre_setup', 
+            'post_run', etc.
+
+        func
+            The function to register to the hook.  This is an 
+            *un-instantiated*, non-instance method, simple function.
+            
     Optional keyword arguments:
     
         weight
             The weight in which to order the hook function (default: 0)
         
-        name
-            The name of the hook to register too.  If not passed, the __name__
-            of the decorated function will be used.
 
     Usage:
     
@@ -65,30 +73,23 @@ class register(object):
         
         from cement.core import hook
         
-        @hook.register()
         def my_hook(*args, **kwargs):
             # do something here
             res = 'Something to return'
             return res
     
+        hook.register('post_setup', my_hook)
+        
     """
-    def __init__(self, weight=0, name=None):
-        self.weight = weight
-        self.name = name
-
-    def __call__(self, func):
-        if not self.name:
-            self.name = func.__name__
-
-        if self.name not in backend.hooks:
-            LOG.debug("hook name '%s' is not defined!" % self.name)
-            return func
-            
-        LOG.debug("registering hook func '%s' from %s into hooks['%s']" % \
-            (func.__name__, func.__module__, self.name))
-        # Hooks are as follows: (weight, name, func)
-        backend.hooks[self.name].append((int(self.weight), func.__name__, func))
-        return func
+    if name not in backend.hooks:
+        LOG.debug("hook name '%s' is not defined!" % name)
+        return False
+        
+    LOG.debug("registering hook '%s' from %s into hooks['%s']" % \
+        (func.__name__, func.__module__, name))
+    
+    # Hooks are as follows: (weight, name, func)
+    backend.hooks[name].append((int(weight), func.__name__, func))
     
 def run(name, *args, **kwargs):
     """
