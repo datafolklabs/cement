@@ -58,18 +58,7 @@ class IController(interface.Interface):
         class MyBaseController(controller.CementBaseController):
             class Meta:
                 interface = controller.IController
-                label = 'my_base_controller'
-                description = 'My applications base controller'
-                epilog = 'Example: myapp.py --foo=bar'
-                hide = False
-                config_section = 'base'
-                config_defaults = dict(
-                    foo='bar',
-                    )
-                arguments = [
-                    ( ['-f', '--foo'], dict(help='Foo option', dest='foo') ),
-                    ]
-            
+                ...            
     """
     class IMeta:
         label = 'controller'
@@ -129,18 +118,17 @@ class expose(object):
     
     .. code-block:: python
     
-        from cement.core import controller
+        from cement.core.controller import CementBaseController, expose
        
-        class MyAppBaseController(controller.CementBaseController):
+        class MyAppBaseController(CementBaseController):
             class Meta:
-                interface = controller.IController
                 label = 'base'
                 
-            @controller.expose(hide=True, aliases=['run'])
+            @expose(hide=True, aliases=['run'])
             def default(self):
                 print("In MyAppBaseController.default()")
    
-            @controller.expose()
+            @expose()
             def my_command(self):
                 print("In MyAppBaseController.my_command()")
                
@@ -178,6 +166,14 @@ class CementBaseController(handler.CementBaseHandler):
             The label of the controller.  Will be used as the sub-command
             name for 'stacked' controllers.
             
+        aliases
+            A list of aliases for the controller.  Will be treated like
+            command/function aliases for non-stacked controllers.  For example:
+            'myapp <controller_label> --help' is the same as 
+            'myapp <controller_alias> --help'.
+            
+            Default: []
+            
         description
             The description shown at the top of '--help'.
             
@@ -214,18 +210,23 @@ class CementBaseController(handler.CementBaseHandler):
            
         class MyAppBaseController(controller.CementBaseController):
             class Meta:
-                interface = controller.IController
                 label = 'base'
                 description = 'MyApp is awesome'
                 config_defaults = dict()
                 arguments = []
                 epilog = "This is the text at the bottom of --help."
-            ...
+        
+        class MyStackedController(controller.CementBaseController):
+            class Meta:
+                label = 'second_controller'
+                aliases = ['sec', 'secondary']
+                stacked_on = 'base'
                 
     """
     class Meta:
         interface = IController
         label = 'base' # provided in subclass
+        aliases = [] # aliases for the controller
         description = None
         config_section = None # defaults to controller.<label>
         config_defaults = {} # default config options
@@ -251,13 +252,13 @@ class CementBaseController(handler.CementBaseHandler):
         self._arguments = []
         
     def _setup(self, app_obj):
-        # shortcuts
         super(CementBaseController, self)._setup(app_obj)
 
         if self._meta.description is None:
             self._meta.description = "%s Controller" % \
                 self._meta.label.capitalize()
         
+        # shortcuts
         self.config = self.app.config
         self.log = self.app.log
         self.pargs = self.app.pargs
@@ -279,8 +280,9 @@ class CementBaseController(handler.CementBaseHandler):
                 self.command = cmd
                 self.app.argv.pop(0)
             else:
-                for label in self.exposed:
-                    func = self.exposed[label]
+                # FIX ME: This seems inefficient.  Would be better to have an
+                # alias map... with key: controller_label.func_name
+                for label,func in self.exposed.items():
                     if self.app.argv[0] in func['aliases']:
                         self.command = func['label']
                         self.app.argv.pop(0)
@@ -308,7 +310,7 @@ class CementBaseController(handler.CementBaseHandler):
             func = self.exposed[self.command]     
             Log.debug("dispatching command: %s.%s" % \
                       (func['controller'], func['label']))
-            
+
             if func['controller'] == self._meta.label:
                 getattr(self, func['label'])()
             else:
@@ -395,14 +397,15 @@ class CementBaseController(handler.CementBaseHandler):
             controller=contr._meta.label,
             label=contr._meta.label,
             help=contr._meta.description,
-            aliases=[],
+            aliases=contr._meta.aliases, # for display only
             hide=False,
             )
+            
         # expose the controller label as a sub command
         self.exposed[contr._meta.label] = func_dict
         if not getattr(contr._meta, 'hide', None):
             self.visible[contr._meta.label] = func_dict
-                            
+                                        
     def _collect_from_stacked_controller(self, controller):     
         """
         Collect arguments from stacked controllers.

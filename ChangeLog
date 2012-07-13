@@ -16,13 +16,17 @@ is available online at:
 
     <BR><BR>
 
-1.9.13 - development version (will be released as 1.9.14 or 2.0.0) 
+1.9.13 - development version (will be released as 1.9.14) 
 ------------------------------------------------------------------------------
 
 Bugs:
 
     * :issue:`127` - Inherited positional arguments listed multiple times
 
+Feature Enhancements:
+
+    * :issue:`131` - Controller aliases
+    
 
 1.9.12 - Thu Jul 05, 2012
 ------------------------------------------------------------------------------

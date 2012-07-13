@@ -699,12 +699,24 @@ class CementApp(meta.MetaMixin):
                 
         # Trump all with whats passed at the command line, and pop off the arg
         if len(self.argv) > 0:
+            controller = None
+            
             # translate dashes to underscore
-            contr = re.sub('-', '_', self.argv[0])
+            label = re.sub('-', '_', self.argv[0])
                                
-            h = handler.get('controller', contr, None)
+            h = handler.get('controller', label, None)
             if h:
-                self.controller = h()
+                controller = h()
+            else:
+                # controller aliases
+                for han in handler.list('controller'):
+                    contr = han()
+                    if label in contr._meta.aliases:
+                        controller = contr
+                        break
+                    
+            if controller:
+                self.controller = controller
                 self.controller._setup(self)
                 self.argv.pop(0)
 

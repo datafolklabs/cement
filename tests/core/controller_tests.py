@@ -116,7 +116,7 @@ class TestSecondaryController(controller.CementBaseController):
         label = 'test_secondary'
         description = 'Test Secondary Controller'
         config_defaults = dict(test_secondary_default=3)
-
+        aliases = ['sec']
         arguments = [
             (['-f2', '--foo2'], dict(action='store'))
             ]
@@ -269,6 +269,17 @@ class ControllerTestCase(unittest.TestCase):
         app.controller._setup(app)
         app.run()
 
+    def test_controller_alias(self):
+        app = _t.prep(
+            argv=['sec', 'my-secondary-command'], 
+            base_controller=TestBaseController,
+            )
+        handler.register(TestSecondaryController)
+        app.setup()
+        app.controller._setup(app)
+        app.run()
+        eq_(app.controller._meta.label, 'test_secondary')
+        
     @raises(SystemExit)
     def test_bad_command(self):
         app = _t.prep(argv=['bogus-command'])
