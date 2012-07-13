@@ -104,7 +104,9 @@ class CementPluginHandler(plugin.CementPluginHandler):
         
         # We don't catch this because it would make debugging a nightmare
         f, path, desc = imp.find_module(plugin_name, [plugin_dir])
-        imp.load_module(plugin_name, f, path, desc)
+        mod = imp.load_module(plugin_name, f, path, desc)
+        if mod and hasattr(mod, 'load'):
+            mod.load()
         return True
             
     def _load_plugin_from_bootstrap(self, plugin_name, base_package):
