@@ -52,9 +52,12 @@ class CementApp(meta.MetaMixin):
             hooks/handlers/etc to another file.  
             
             This must be a dotted python module path.  
-            I.e. 'myapp.bootstrap.base'.  Cement will essentially just 
-            call 'import myapp.bootstrap.base' which will trigger any
-            necessary code to load.
+            I.e. 'myapp.bootstrap' (myapp/bootstrap.py).  Cement will then
+            import the module, and if the module has a 'load()' function, that
+            will also be called.  Essentially, this is the same as an 
+            extension or plugin, but as a facility for the application itself
+            to bootstrap 'hardcoded' application code.  It is also called
+            before plugins are loaded.
             
             Default: None
             
@@ -131,7 +134,11 @@ class CementApp(meta.MetaMixin):
         
         plugin_bootstrap
             A python package (dotted import path) where plugin code can be
-            loaded from.  This is generally something like 'myapp.bootstrap'.
+            loaded from.  This is generally something like 'myapp.plugins'
+            where a plugin file would live at 'myapp/plugins/myplugin.py'.
+            This provides a facility for applications that use 'namespace' 
+            packages allowing plugins to share the applications python
+            namespace.
             
             Default: None
             
@@ -413,8 +420,10 @@ class CementApp(meta.MetaMixin):
 
             if self._meta.bootstrap not in sys.modules \
                 or self._loaded_bootstrap is None:
-                mod = __import__(self._meta.bootstrap, 
-                                 globals(), locals(), [], -1)
+                __import__(self._meta.bootstrap, globals(), locals(), [], -1)
+                if hasattr(sys.modules[self._meta.bootstrap], 'load'):
+                    sys.modules[self._meta.bootstrap].load()
+
                 self._loaded_bootstrap = sys.modules[self._meta.bootstrap]
             else:
                 reload(self._loaded_bootstrap)
