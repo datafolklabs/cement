@@ -1,11 +1,8 @@
 """Tests for cement.core.hook."""
 
 import signal
-import unittest
-from nose.tools import ok_, eq_, raises
 from cement.core import exc, backend, hook, foundation
-from cement.utils import test_helper as _t
-
+from cement.utils import test
 
 def cement_hook_one(*args, **kw):
     return 'kapla 1'
@@ -22,27 +19,27 @@ def nosetests_hook(*args, **kw):
 def cement_hook_five(app, data):
     return data
     
-class HookTestCase(unittest.TestCase):
+class HookTestCase(test.CementTestCase):
     def setUp(self):
-        self.app = _t.prep()
+        self.app = self.make_app()
         hook.define('nosetests_hook')
         
     def test_define(self):
-        ok_('nosetests_hook' in backend.hooks)
+        self.ok('nosetests_hook' in backend.hooks)
 
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_define_again(self):
         try:
             hook.define('nosetests_hook')
         except exc.CementRuntimeError as e:
-            eq_(e.msg, "Hook name 'nosetests_hook' already defined!")
+            self.eq(e.msg, "Hook name 'nosetests_hook' already defined!")
             raise
     
     def test_hooks_registered(self):
         hook.register('nosetests_hook', cement_hook_one, weight=99)
         hook.register('nosetests_hook', cement_hook_two, weight=-1)
         hook.register('some_bogus_hook', cement_hook_three, weight=-99)
-        eq_(len(backend.hooks['nosetests_hook']), 2)
+        self.eq(len(backend.hooks['nosetests_hook']), 2)
     
     def test_run(self):
         hook.register('nosetests_hook', cement_hook_one, weight=99)
@@ -53,21 +50,21 @@ class HookTestCase(unittest.TestCase):
         for res in hook.run('nosetests_hook'):
             results.append(res)
     
-        eq_(results[0], 'kapla 3')
-        eq_(results[1], 'kapla 2')
-        eq_(results[2], 'kapla 1')
+        self.eq(results[0], 'kapla 3')
+        self.eq(results[1], 'kapla 2')
+        self.eq(results[2], 'kapla 1')
 
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_run_bad_hook(self):
         for res in hook.run('some_bogus_hook'):
             pass
 
     def test_hook_is_defined(self):
-        ok_(hook.defined('nosetests_hook'))
-        eq_(hook.defined('some_bogus_hook'), False)
+        self.ok(hook.defined('nosetests_hook'))
+        self.eq(hook.defined('some_bogus_hook'), False)
         
     def test_framework_hooks(self):
-        app = _t.prep('myapp', argv=['--quiet'])
+        app = self.make_app('myapp', argv=['--quiet'])
         hook.register('pre_setup', cement_hook_one)
         hook.register('post_setup', cement_hook_one)
         hook.register('pre_run', cement_hook_one)

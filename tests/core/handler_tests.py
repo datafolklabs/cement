@@ -1,10 +1,8 @@
 """Tests for cement.core.handler."""
 
-import unittest
-from nose.tools import ok_, eq_, raises
 from cement.core import exc, backend, handler, handler, output, meta
 from cement.core import interface
-from cement.utils import test_helper as _t
+from cement.utils import test
 from cement.ext.ext_configparser import ConfigParserConfigHandler
 
 class BogusOutputHandler(meta.MetaMixin):
@@ -52,27 +50,27 @@ class TestHandler(meta.MetaMixin):
         interface = TestInterface
         label = 'test'
         
-class HandlerTestCase(unittest.TestCase):
+class HandlerTestCase(test.CementTestCase):
     def setUp(self):
-        self.app = _t.prep()
+        self.app = self.make_app()
         
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_get_invalid_handler(self):
         handler.get('output', 'bogus_handler')
 
-    @raises(exc.CementInterfaceError)
+    @test.raises(exc.CementInterfaceError)
     def test_register_invalid_handler(self):
         handler.register(BogusOutputHandler)
 
-    @raises(exc.CementInterfaceError)
+    @test.raises(exc.CementInterfaceError)
     def test_register_invalid_handler_no_meta(self):
         handler.register(BogusHandler3)
 
-    @raises(exc.CementInterfaceError)
+    @test.raises(exc.CementInterfaceError)
     def test_register_invalid_handler_no_Meta_label(self):
         handler.register(BogusHandler4)
     
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_register_duplicate_handler(self):
         from cement.ext import ext_nulloutput
         handler.register(ext_nulloutput.NullOutputHandler)
@@ -81,7 +79,7 @@ class HandlerTestCase(unittest.TestCase):
         except exc.CementRuntimeError:
             raise
     
-    @raises(exc.CementInterfaceError)
+    @test.raises(exc.CementInterfaceError)
     def test_register_unproviding_handler(self):
         try:
             handler.register(BogusOutputHandler2)
@@ -91,15 +89,15 @@ class HandlerTestCase(unittest.TestCase):
 
     def test_verify_handler(self):
         self.app.setup()
-        ok_(handler.registered('output', 'null'))
-        eq_(handler.registered('output', 'bogus_handler'), False)
-        eq_(handler.registered('bogus_type', 'bogus_handler'), False)
+        self.ok(handler.registered('output', 'null'))
+        self.eq(handler.registered('output', 'bogus_handler'), False)
+        self.eq(handler.registered('bogus_type', 'bogus_handler'), False)
 
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_get_bogus_handler(self):
         handler.get('log', 'bogus')
 
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_get_bogus_handler_type(self):
         handler.get('bogus', 'bogus')
 
@@ -109,31 +107,31 @@ class HandlerTestCase(unittest.TestCase):
             yield is_defined, handler_type
 
         # and check for bogus one too
-        eq_(handler.defined('bogus'), False)
+        self.eq(handler.defined('bogus'), False)
     
     def test_handler_list(self):
         self.app.setup()
         handler_list = handler.list('config')
         res = ConfigParserConfigHandler in handler_list
-        ok_(res)
+        self.ok(res)
     
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_handler_list_bogus_type(self):
         self.app.setup()
         handler_list = handler.list('bogus')
     
     def is_defined(handler_type):
-        eq_(handler.defined(handler_type), True)
+        self.eq(handler.defined(handler_type), True)
 
-    @raises(exc.CementInterfaceError)
+    @test.raises(exc.CementInterfaceError)
     def test_bogus_interface_no_IMeta(self):
         handler.define(BogusInterface1)
 
-    @raises(exc.CementInterfaceError)
+    @test.raises(exc.CementInterfaceError)
     def test_bogus_interface_no_IMeta_label(self):
         handler.define(BogusInterface2)
 
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_define_duplicate_interface(self):
         handler.define(output.IOutput)
         handler.define(output.IOutput)
@@ -146,13 +144,13 @@ class HandlerTestCase(unittest.TestCase):
         handler.defined('output')
     
     def test_handler_not_defined(self):
-        eq_(handler.defined('bogus'), False)
+        self.eq(handler.defined('bogus'), False)
         
     def test_handler_registered(self):
         self.app.setup()
-        eq_(handler.registered('output', 'null'), True)
+        self.eq(handler.registered('output', 'null'), True)
     
     def test_handler_enabled(self):
         self.app.setup()
-        eq_(handler.enabled('output', 'null'), True)
+        self.eq(handler.enabled('output', 'null'), True)
     

@@ -1,21 +1,19 @@
 """Tests for cement.core.log."""
 
-import unittest
 import logging
-from nose.tools import eq_, raises
 from cement.core import exc, backend, handler, log
-from cement.utils import test_helper as _t
+from cement.utils import test
 
 class BogusHandler1(log.CementLogHandler):
     class Meta:
         interface = log.ILog
         label = 'bogus'
 
-class LogTestCase(unittest.TestCase):
+class LogTestCase(test.CementTestCase):
     def setUp(self):
-        self.app = _t.prep()
+        self.app = self.make_app()
         
-    @raises(exc.CementInterfaceError)
+    @test.raises(exc.CementInterfaceError)
     def test_unproviding_handler(self):
         try:
             handler.register(BogusHandler1)
@@ -28,7 +26,7 @@ class LogTestCase(unittest.TestCase):
             file='/dev/null',
             to_console=True
             )
-        app = _t.prep(config_defaults=defaults)
+        app = self.make_app(config_defaults=defaults)
         app.setup()
         app.log.info('Info Message')
         app.log.warn('Warn Message')
@@ -37,7 +35,7 @@ class LogTestCase(unittest.TestCase):
         app.log.debug('Debug Message')
     
     def test_bogus_log_level(self):
-        app = _t.prep('test')
+        app = self.make_app('test')
         app.setup()
         app.config.set('log', 'file', '/dev/null')
         app.config.set('log', 'to_console', True)
@@ -47,7 +45,7 @@ class LogTestCase(unittest.TestCase):
         app.log.set_level('BOGUS')
 
     def test_console_log(self):
-        app = _t.prep('test', debug=True)
+        app = self.make_app('test', debug=True)
         app.setup()
     
         app.config.set('log', 'file', '/dev/null')

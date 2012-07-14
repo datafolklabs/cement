@@ -22,3 +22,4 @@ them in your applications.
    signal_handling
    cleanup
    caching
+   testing

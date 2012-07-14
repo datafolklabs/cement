@@ -27,6 +27,7 @@ Feature Enhancements:
 
     * :issue:`131` - Controller aliases
     * :issue:`126` - Add a 'bootstrap' importer to CementApp    
+    * Added cement.utils.test.CementTestCase for improved testing.
     
 Incompatible Changes:
 
@@ -35,6 +36,7 @@ Incompatible Changes:
     'cement_pre_setup_hook' is now simply 'pre_setup'.  Additionally, the
     'cement_on_close_hook' is now broken out into 'pre_close', and 
     'post_close'.
+    * cement.utils.test_helper moved to cement.utils.test.
 
 
 1.9.12 - Thu Jul 05, 2012

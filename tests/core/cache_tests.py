@@ -1,17 +1,16 @@
 """Tests for cement.core.cache."""
 
-import unittest
-from nose.tools import ok_, eq_, raises
 from cement.core import exc, cache, handler
-from cement.utils import test_helper as _t
+from cement.utils import test
 
 class MyCacheHandler(cache.CementCacheHandler):
     class Meta:
         label = 'my_cache_handler'
 
-class CacheTestCase(unittest.TestCase):
+class CacheTestCase(test.CementTestCase):
     def setUp(self):
-        self.app = _t.prep(cache_handler=MyCacheHandler)
+        super(CacheTestCase, self).setUp()
+        self.app = self.make_app(cache_handler=MyCacheHandler)
     
     def test_base_handler(self):
         self.app.setup()
@@ -37,7 +36,7 @@ class CacheTestCase(unittest.TestCase):
         except NotImplementedError as e:
             count = count + 1
         
-        eq_(count, 4)
+        self.eq(count, 4)
             
         
         

@@ -32,7 +32,7 @@ Cement Utility Modules
    utils/fs
    utils/shell
    utils/misc
-   utils/test_helper
+   utils/test
    
 Cement Extension Modules
 ------------------------

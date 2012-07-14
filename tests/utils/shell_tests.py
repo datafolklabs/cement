@@ -1,19 +1,14 @@
 """Tests for cement.utils.shell"""
 
-import unittest
-from nose.tools import with_setup, ok_, eq_, raises
-from cement.utils import shell
+from cement.utils import shell, test
 
-class ShellUtilsTestCase(unittest.TestCase):
-    def setUp(self):
-        pass
-    
+class ShellUtilsTestCase(test.CementTestCase):
     def test_exec_cmd(self):
         out, err, ret = shell.exec_cmd(['echo', 'KAPLA!'])
-        eq_(ret, 0)
-        eq_(out, b'KAPLA!\n')
+        self.eq(ret, 0)
+        self.eq(out, b'KAPLA!\n')
         
     def test_exec_cmd2(self):
         ret = shell.exec_cmd2(['echo'])
-        eq_(ret, 0)
+        self.eq(ret, 0)
         

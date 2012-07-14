@@ -3,11 +3,9 @@
 import os
 import sys
 import shutil
-import unittest
 from tempfile import mkdtemp
-from nose.tools import with_setup, ok_, eq_, raises
 from cement.core import exc, backend, plugin, handler
-from cement.utils import test_helper as _t
+from cement.utils import test
 
 CONF = """
 [myplugin]
@@ -50,13 +48,14 @@ class TestOutputHandler(output.CementOutputHandler):
     def render(self, data_dict, template=None):
         pass
         
-handler.register(TestOutputHandler)
+def load():
+    handler.register(TestOutputHandler)
 
 """
 
-class PluginTestCase(unittest.TestCase):
+class PluginTestCase(test.CementTestCase):
     def setUp(self):
-        self.app = _t.prep()
+        self.app = self.make_app()
 
     def test_load_plugins_from_files(self):
         tmpdir = mkdtemp()
@@ -68,7 +67,7 @@ class PluginTestCase(unittest.TestCase):
         f.write(PLUGIN)
         f.close()
     
-        app = _t.prep('myapp',
+        app = self.make_app('myapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -78,7 +77,7 @@ class PluginTestCase(unittest.TestCase):
 
         try:
             han = handler.get('output', 'test_output_handler')()
-            eq_(han._meta.label, 'test_output_handler')
+            self.eq(han._meta.label, 'test_output_handler')
         finally:
             shutil.rmtree(tmpdir)
         
@@ -93,7 +92,7 @@ class PluginTestCase(unittest.TestCase):
         defaults['myplugin']['enable_plugin'] = True
         defaults['myplugin2'] = dict()
         defaults['myplugin2']['enable_plugin'] = False
-        app = _t.prep('myapp', config_defaults=defaults,
+        app = self.make_app('myapp', config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -103,25 +102,25 @@ class PluginTestCase(unittest.TestCase):
     
         try:
             han = handler.get('output', 'test_output_handler')()
-            eq_(han._meta.label, 'test_output_handler')
+            self.eq(han._meta.label, 'test_output_handler')
         finally:
             shutil.rmtree(tmpdir)
     
         # some more checks
         res = 'myplugin' in app.plugin.enabled_plugins
-        ok_(res)
+        self.ok(res)
     
         res = 'myplugin' in app.plugin.loaded_plugins
-        ok_(res)
+        self.ok(res)
         
         res = 'myplugin2' in app.plugin.disabled_plugins
-        ok_(res)
+        self.ok(res)
     
         res = 'myplugin2' not in app.plugin.enabled_plugins
-        ok_(res)
+        self.ok(res)
     
         res = 'myplugin2' not in app.plugin.loaded_plugins
-        ok_(res)
+        self.ok(res)
     
     def test_disabled_plugins_from_files(self):
         tmpdir = mkdtemp()
@@ -133,7 +132,7 @@ class PluginTestCase(unittest.TestCase):
         f.write(PLUGIN)
         f.close()
     
-        app = _t.prep('myapp',
+        app = self.make_app('myapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -143,10 +142,10 @@ class PluginTestCase(unittest.TestCase):
         shutil.rmtree(tmpdir)
     
         res = 'test_output_handler' not in backend.handlers['output']
-        ok_(res)
+        self.ok(res)
 
         res = 'myplugin2' not in app.plugin.enabled_plugins
-        ok_(res)
+        self.ok(res)
     
     def test_bogus_plugin_from_files(self):
         tmpdir = mkdtemp()
@@ -159,7 +158,7 @@ class PluginTestCase(unittest.TestCase):
         f.write(CONF5)
         f.close()
         
-        app = _t.prep('myapp',
+        app = self.make_app('myapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -169,16 +168,16 @@ class PluginTestCase(unittest.TestCase):
         shutil.rmtree(tmpdir)
     
         res = 'bogus_plugin' not in app.plugin.enabled_plugins
-        ok_(res)
+        self.ok(res)
 
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_bad_plugin_dir(self):
         tmpdir = mkdtemp()
         f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
         f.write(CONF)
         f.close()
 
-        app = _t.prep('myapp',
+        app = self.make_app('myapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir='./some/bogus/path',
@@ -202,7 +201,7 @@ class PluginTestCase(unittest.TestCase):
         f.write(CONF4)
         f.close()
     
-        app = _t.prep('myapp',
+        app = self.make_app('myapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -211,6 +210,6 @@ class PluginTestCase(unittest.TestCase):
         app.setup()
         
         res = 'ext_json' in app.plugin.enabled_plugins
-        ok_(res)
+        self.ok(res)
         
         shutil.rmtree(tmpdir)

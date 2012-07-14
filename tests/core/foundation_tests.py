@@ -1,11 +1,8 @@
 """Tests for cement.core.setup."""
 
-import unittest
-from nose.tools import ok_, eq_, raises
-from nose import SkipTest
 from cement.core import foundation, exc, backend, config, extension, plugin
 from cement.core import log, output, handler, hook, arg, controller
-from cement.utils import test_helper as _t
+from cement.utils import test
 
 def my_extended_func():
     return 'KAPLA'
@@ -37,24 +34,24 @@ def my_hook_two(app):
 def my_hook_three(app):
     return 3
                 
-class FoundationTestCase(unittest.TestCase):
+class FoundationTestCase(test.CementTestCase):
     def setUp(self):
-        self.app = _t.prep('my_app')
+        self.app = self.make_app('my_app')
         
     def test_bootstrap(self):
-        app = _t.prep('my_app', bootstrap='cement.utils.fs')
+        app = self.make_app('my_app', bootstrap='tests.bootstrap')
         app.setup()
-        eq_(app._loaded_bootstrap.__name__, 'cement.utils.fs')
+        self.eq(app._loaded_bootstrap.__name__, 'tests.bootstrap')
 
     def test_reload_bootstrap(self):
-        app = _t.prep('my_app', bootstrap='cement.utils.test_helper')
-        app._loaded_bootstrap = _t
+        app = self.make_app('my_app', bootstrap='cement.utils.test')
+        app._loaded_bootstrap = test
         app.setup()
-        eq_(app._loaded_bootstrap.__name__, 'cement.utils.test_helper')
+        self.eq(app._loaded_bootstrap.__name__, 'cement.utils.test')
         
     def test_argv(self):
-        app = _t.prep('my_app', argv=['bogus', 'args'])
-        eq_(app.argv, ['bogus', 'args'])
+        app = self.make_app('my_app', argv=['bogus', 'args'])
+        self.eq(app.argv, ['bogus', 'args'])
         
     def test_old_app(self):
         defaults = backend.defaults()
@@ -62,13 +59,13 @@ class FoundationTestCase(unittest.TestCase):
         defaults['test']['foo'] = 'bar'
         self.app = DeprecatedApp(defaults=defaults)
         self.app.setup()
-        eq_(self.app.config.get('test', 'foo'), 'bar')
+        self.eq(self.app.config.get('test', 'foo'), 'bar')
         
     def test_old_lay_cement(self):
         self.app = foundation.lay_cement('myapp')
         self.app.setup()
         
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_resolve_handler_bad_handler(self):
         class Bogus(object):
             pass
@@ -76,7 +73,7 @@ class FoundationTestCase(unittest.TestCase):
         try:
             self.app._resolve_handler('output', Bogus)
         except exc.CementRuntimeError as e:
-            ok_(e.msg.find('resolve'))
+            self.ok(e.msg.find('resolve'))
             raise
         
     def test_default(self):
@@ -93,7 +90,7 @@ class FoundationTestCase(unittest.TestCase):
         # forces CementApp._resolve_handler to register the handler
         from cement.ext import ext_json
         
-        app = _t.prep('my-app-test',
+        app = self.make_app('my-app-test',
             config_handler=ext_configparser.ConfigParserConfigHandler,
             log_handler=ext_logging.LoggingLogHandler(),
             arg_handler=ext_argparse.ArgParseArgumentHandler(),
@@ -115,12 +112,12 @@ class FoundationTestCase(unittest.TestCase):
 
         # Render with no output_handler... this is hackish, but there are 
         # circumstances where app.output would be None.
-        app = _t.prep('test', output_handler=None)
+        app = self.make_app('test', output_handler=None)
         app.setup()
         app.output = None
         app.render(dict(foo='bar'))
 
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_bad_label(self):
         try:
             app = foundation.CementApp(None)
@@ -128,12 +125,12 @@ class FoundationTestCase(unittest.TestCase):
             # FIX ME: verify error msg
             raise
     
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_bad_label_chars(self):
         try:
             app = foundation.CementApp('some!bogus()label')
         except exc.CementRuntimeError as e:
-            ok_(e.msg.find('alpha-numeric'))
+            self.ok(e.msg.find('alpha-numeric'))
             raise
             
     def test_add_arg_shortcut(self):
@@ -141,7 +138,7 @@ class FoundationTestCase(unittest.TestCase):
         self.app.add_arg('--foo', action='store')
     
     def test_reset_output_handler(self):
-        app = _t.prep('test', argv=[], output_handler=TestOutputHandler)
+        app = self.make_app('test', argv=[], output_handler=TestOutputHandler)
         app.setup()
         app.run()
     
@@ -150,9 +147,9 @@ class FoundationTestCase(unittest.TestCase):
         app._meta.output_handler = None
         app._setup_output_handler()
 
-    @raises(NotImplementedError)
+    @test.raises(NotImplementedError)
     def test_controller_handler(self):
-        app = _t.prep('test',
+        app = self.make_app('test',
             base_controller=controller.CementBaseController,
             argv=['default'],
             )
@@ -164,8 +161,8 @@ class FoundationTestCase(unittest.TestCase):
             raise
 
     def test_lay_cement(self):
-        app = _t.prep('test', argv=['--quiet'])
-        app = _t.prep('test', argv=['--json', '--yaml'])
+        app = self.make_app('test', argv=['--quiet'])
+        app = self.make_app('test', argv=['--json', '--yaml'])
             
     def test_none_member(self):
         class Test(object):
@@ -178,30 +175,30 @@ class FoundationTestCase(unittest.TestCase):
         except SystemExit:
             pass
     
-    @raises(exc.CementSignalError)
+    @test.raises(exc.CementSignalError)
     def test_cement_signal_handler(self):
         import signal
         try:
             foundation.cement_signal_handler(signal.SIGTERM, 5)
         except exc.CementSignalError as e:
-            eq_(e.signum, signal.SIGTERM)
-            eq_(e.frame, 5)
+            self.eq(e.signum, signal.SIGTERM)
+            self.eq(e.frame, 5)
             raise
 
     def test_cement_without_signals(self):
-        app = _t.prep('test', catch_signals=None)
+        app = self.make_app('test', catch_signals=None)
         app.setup()
     
     def test_extend(self):
         self.app.extend('kapla', my_extended_func)
-        eq_(self.app.kapla(), 'KAPLA')
+        self.eq(self.app.kapla(), 'KAPLA')
         
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_extended_duplicate(self):
         self.app.extend('config', my_extended_func)
     
     def test_no_handler(self):
-        app = _t.prep('myapp')
+        app = self.make_app('myapp')
         app._resolve_handler('cache', None, raise_error=False)
         
     

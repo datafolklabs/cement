@@ -1,9 +1,7 @@
 """Tests for cement.core.extension."""
 
-import unittest
-from nose.tools import raises
 from cement.core import exc, backend, extension, handler, output, interface
-from cement.utils import test_helper as _t
+from cement.utils import test
 
 class IBogus(interface.Interface):
     class IMeta:
@@ -14,11 +12,8 @@ class BogusExtensionHandler(extension.CementExtensionHandler):
         interface = IBogus
         label = 'bogus'
 
-class ExtensionTestCase(unittest.TestCase):
-    def setUp(self):
-        self.app = _t.prep()
-        
-    @raises(exc.CementRuntimeError)
+class ExtensionTestCase(test.CementTestCase):
+    @test.raises(exc.CementRuntimeError)
     def test_invalid_extension_handler(self):
         # the handler type bogus doesn't exist
         handler.register(BogusExtensionHandler)
@@ -34,7 +29,7 @@ class ExtensionTestCase(unittest.TestCase):
         ext.load_extensions(['cement.ext.ext_configparser'])
         ext.load_extensions(['cement.ext.ext_configparser'])
     
-    @raises(exc.CementRuntimeError)
+    @test.raises(exc.CementRuntimeError)
     def test_load_bogus_extension(self):
         ext = extension.CementExtensionHandler()
         ext._setup(self.app)
