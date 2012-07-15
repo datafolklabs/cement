@@ -235,6 +235,7 @@ handle command dispatch and rapid development.
         app.run()
     finally:
         # close the app
+        app.close()
 
 As you can see, we're able to build out the core functionality of our app
 via a controller class.  Notice the use of controllers, which allow us to 
