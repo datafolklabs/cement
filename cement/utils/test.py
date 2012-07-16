@@ -21,21 +21,14 @@ class TestApp(foundation.CementApp):
 
 class CementTestCase(unittest.TestCase):
     """
-    A sub-class of unittest.TestCase.  Provides useful shortcuts including 
-    the following:
-    
-        self.ok
-            A shortcut to assert()
+    A sub-class of unittest.TestCase.  
         
-        self.eq
-            A shortcut to assertEquals()
-        
-        """
+    """
+    ok = ok
+    eq = eq
         
     def __init__(self, *args, **kw):
         super(CementTestCase, self).__init__(*args, **kw)
-        self.ok = ok
-        self.eq = eq
     
     def setUp(self):
         """
