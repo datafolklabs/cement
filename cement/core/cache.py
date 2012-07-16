@@ -141,9 +141,9 @@ class CementCacheHandler(handler.CementBaseHandler):
     def purge(self):
         raise NotImplementedError
         
-class MemoryCacheHandler(CementCacheHandler):
-    class Meta:
-        label = 'memory'
+# class MemoryCacheHandler(CementCacheHandler):
+#    class Meta:
+#        label = 'memory'
     
     
     
