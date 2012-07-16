@@ -24,12 +24,10 @@ class CementTestCase(unittest.TestCase):
     A sub-class of unittest.TestCase.  
         
     """
-    ok = ok
-    eq = eq
         
     def __init__(self, *args, **kw):
         super(CementTestCase, self).__init__(*args, **kw)
-    
+        
     def setUp(self):
         """
         Sets up self.app with a generic TestApp().  Also resets the backend
@@ -38,7 +36,7 @@ class CementTestCase(unittest.TestCase):
         
         """
         self.app = self.make_app()
-        
+    
     def make_app(self, *args, **kw):
         """
         Create a generic app using TestApp.  Arguments and Keyword Arguments
@@ -58,3 +56,10 @@ class CementTestCase(unittest.TestCase):
         for _hook in backend.hooks.copy():
             del backend.hooks[_hook]    
             
+    def ok(self, expr, msg=None):
+        """Shorthand for assert."""
+        return ok(expr, msg)
+    
+    def eq(self, a, b, msg=None):
+        """Shorthand for 'assert a == b, "%r != %r" % (a, b)'. """
+        return eq(a, b, msg)
