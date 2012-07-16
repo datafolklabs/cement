@@ -75,6 +75,13 @@ class CementApp(meta.MetaMixin):
             and options.
             
             Default: sys.argv[1:]
+          
+        arguments_override_config
+            A boolean to toggle whether command line arguments should 
+            override configuration values if the argument name matches the
+            config key.  I.e. --foo=bar would override config['myapp']['foo'].
+            
+            Default: False
             
         config_section
             The base configuration section for the application.
@@ -310,6 +317,7 @@ class CementApp(meta.MetaMixin):
         plugin_bootstrap = None
         plugin_dir = None
         argv = list(sys.argv[1:])
+        arguments_override_config = False
         config_section = None
         config_defaults = None
         catch_signals = [signal.SIGTERM, signal.SIGINT]
@@ -585,19 +593,20 @@ class CementApp(meta.MetaMixin):
     def _parse_args(self):
         self.args.parse(self.argv)
         
-        for member in dir(self.args.parsed_args):
-            if member and member.startswith('_'):
-                continue
+        if self._meta.arguments_override_config is True:
+            for member in dir(self.args.parsed_args):
+                if member and member.startswith('_'):
+                    continue
             
-            # don't override config values for options that weren't passed
-            # or in otherwords are None
-            elif getattr(self.args.parsed_args, member) is None:
-                continue
+                # don't override config values for options that weren't passed
+                # or in otherwords are None
+                elif getattr(self.args.parsed_args, member) is None:
+                    continue
                 
-            for section in self.config.get_sections():
-                if member in self.config.keys(section):
-                    self.config.set(section, member, 
-                                    getattr(self.args.parsed_args, member))
+                for section in self.config.get_sections():
+                    if member in self.config.keys(section):
+                        self.config.set(section, member, 
+                                        getattr(self.args.parsed_args, member))
             
     def _setup_signals(self):
         if not self._meta.catch_signals:

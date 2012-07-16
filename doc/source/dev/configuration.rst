@@ -32,7 +32,8 @@ is the order in which configurations are discovered:
     * Extended by any handler Meta.config_defaults (not overridden)
     * Overridden by a config_defaults dict passed to foundation.CementApp()
     * Overridden by the configuration files
-    * Overridden by command line options that match the same key name
+    * Overridden by command line options that match the same key name (only
+      if CementApp.Meta.arguments_override_config=True)
 
 
 Application Default Settings
@@ -213,8 +214,9 @@ If no config_files meta data is provided, Cement will set the defaults to:
 Overriding Configurations with Command Line Options
 ---------------------------------------------------
 
-Config settings are automatically overridden if a passed command line option
-matches the name.  Note that this happens in *all* sections:
+Config settings can be automatically overridden by a passed command line 
+option if the argument name matches a configuration key.  Note that this will
+happen in *all* config sections:
 
 .. code-block:: python
 
@@ -223,7 +225,10 @@ matches the name.  Note that this happens in *all* sections:
     defaults = backend.defaults('base')
     defaults['base']['foo'] = 'bar'
     
-    app = foundation.CementApp('myapp', config_defaults=defaults)
+    app = foundation.CementApp('myapp', 
+        config_defaults=defaults,
+        arguments_override_config=True,
+        )
     try:
         # First setup the application
         app.setup()

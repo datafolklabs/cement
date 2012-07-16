@@ -27,11 +27,42 @@ class ConfigTestCase(test.CementTestCase):
         defaults = dict()
         defaults['test'] = dict()
         defaults['test']['debug'] = False
-        self.app = self.make_app(config_defaults=defaults, argv=['--debug'])
+        defaults['test']['foo'] = 'bar'
+        
+        # first test that it doesn't override the config with the default
+        # setting of arguments_override_config=False
+        self.app = self.make_app(
+            config_defaults=defaults, 
+            argv=['--foo=not_bar'],
+            arguments_override_config=False
+            )
         self.app.setup()
+        self.app.args.add_argument('--foo', action='store')
         self.app.run()
-        self.eq(self.app.config.get('test', 'debug'), True)
-
+        self.eq(self.app.config.get('test', 'foo'), 'bar')
+        
+        # then make sure that it does
+        self.app = self.make_app(
+            config_defaults=defaults, 
+            argv=['--foo=not_bar'],
+            arguments_override_config=True
+            )
+        self.app.setup()
+        self.app.args.add_argument('--foo', action='store')
+        self.app.run()
+        self.eq(self.app.config.get('test', 'foo'), 'not_bar')
+                
+        # one last test just for code coverage
+        self.app = self.make_app(
+            config_defaults=defaults, 
+            argv=['--debug'],
+            arguments_override_config=True
+            )
+        self.app.setup()
+        self.app.args.add_argument('--foo', action='store')
+        self.app.run()
+        self.eq(self.app.config.get('test', 'foo'), 'bar')
+        
     def test_parse_file_bad_path(self):
         self.app._meta.config_files = ['./some_bogus_path']
         self.app.setup()

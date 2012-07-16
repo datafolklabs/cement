@@ -44,7 +44,10 @@ Incompatible Changes:
           live in the same file (i.e. hooks won't be registered just because
           you imported an extension to sub-class a handler, etc).
     * cement.utils.test_helper moved to cement.utils.test.
-
+    * By default, command line arguments no longer override config settings.
+      This is now configurable by the CementApp.Meta.arguments_override_config
+      boolean.
+      
 
 1.9.12 - Thu Jul 05, 2012
 ------------------------------------------------------------------------------
