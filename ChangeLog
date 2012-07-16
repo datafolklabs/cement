@@ -46,7 +46,7 @@ Incompatible Changes:
     * cement.utils.test_helper moved to cement.utils.test.
     * By default, command line arguments no longer override config settings.
       This is now configurable by the CementApp.Meta.arguments_override_config
-      boolean.
+      boolean.  Related: :issue:`136`.
       
 
 1.9.12 - Thu Jul 05, 2012
