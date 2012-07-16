@@ -32,10 +32,13 @@ Feature Enhancements:
 Incompatible Changes:
 
     * :issue:`129` - Simplify extensions/plugins/hooks/etc.
-    Hooks renamed from 'cement_xxx_hook' to just 'xxx'.  For example, the
-    'cement_pre_setup_hook' is now simply 'pre_setup'.  Additionally, the
-    'cement_on_close_hook' is now broken out into 'pre_close', and 
-    'post_close'.
+        * Hooks renamed from 'cement_xxx_hook' to just 'xxx'.  For example, the
+          'cement_pre_setup_hook' is now simply 'pre_setup'.  Additionally, the
+          'cement_on_close_hook' is now broken out into 'pre_close', and 
+          'post_close'.
+        * The cement.core.hooks.register decorator was replaced with a  simple 
+          function of the same name.  New usage is:
+          register('hook_name', hook_func).
     * cement.utils.test_helper moved to cement.utils.test.
 
 
