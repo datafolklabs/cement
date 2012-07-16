@@ -50,7 +50,8 @@ Older Versions of Cement
 ------------------------
 
 The previous stable branch of Cement is 0.8.  It is no longer under active
-development, and only critical bugs will be addressed.
+development, is not recommended for new projects being built on Cement.
+That said, it is still available:
 
  * RTFD: http://cement.readthedocs.org/en/0.8.18/index.html
  * CODE: https://github.com/cement/cement/tree/stable/0.8.x
