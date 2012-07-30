@@ -19,7 +19,19 @@ is available online at:
 1.9.15 - development (will be released on 1.9.16 or 2.0.0)
 ------------------------------------------------------------------------------
 
-None
+Bugs:
+
+    * :issue:`143` - Incorrect doc regarding logging.  The LoggingLogHandler
+      nose supports an optional 'namespace' argument allowing the developer
+      to override the log prefix.
+
+Features:
+    
+    None
+
+Incompatible Changes:
+
+    None
 
 
 1.9.14 - Sun Jul 16, 2012

@@ -200,8 +200,48 @@ Running this we will see:
     2011-08-26 17:50:16,306 (INFO) myapp : This is my info message
     
 
-Notice that the logging is a bit more verbose when logged to a file.  One 
-thing in particular to pay attention to is that the third column ('myapp') 
-will always be the module where the log was called.  This is very helpful 
-for debugging to know where execution is in your application at the point of
-that log.  
+Notice that the logging is a bit more verbose when logged to a file. 
+
+
+Tips on Debugging
+-----------------
+
+Note: The following is specific to the default 
+:ref:`LoggingLogHandler <cement.ext.ext_logging>` only, and is not
+an implementation of the ILog interface.
+
+Logging to 'app.log.debug()' is pretty straight forward, however adding an
+additional parameter for the 'namespace' can greatly increase insight into 
+where that log is happening.  The 'namespace' defaults to the application name
+which you will see in every log like this:
+
+.. code-block:: text
+
+    2012-07-30 18:05:11,357 (DEBUG) myapp : This is my message
+
+For debugging, it might be more useful to change this to __name__:
+
+.. code-block:: python
+
+    app.log.debug('This is my info message', __name__)
+    
+Which looks like:
+
+.. code-block:: text
+
+    2012-07-30 18:05:11,357 (DEBUG) myapp.somepackage.test : This is my message
+    
+Or even more verbose, the __file__ and a line number of the log:
+
+.. code-block:: python
+
+    app.log.debug('This is my info message', '%s,L2734' % __file__)
+    
+Which looks like:
+
+.. code-block:: text
+
+    2012-07-30 18:05:11,357 (DEBUG) myapp/somepackage/test.py,L2345 : This is my message
+
+You can override this with anything... it doesn't have to be just for 
+debugging.

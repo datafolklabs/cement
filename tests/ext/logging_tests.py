@@ -27,6 +27,27 @@ class LoggingExtTestCase(test.CementTestCase):
         app = self.make_app(config_defaults=defaults)
         app.setup()    
     
+    def test_alternate_namespaces(self):
+        app = self.make_app()
+        app.setup()            
+        app.log.info('TEST', extra=dict(namespace=__name__))
+        app.log.warn('TEST', extra=dict(namespace=__name__))
+        app.log.error('TEST', extra=dict(namespace=__name__))
+        app.log.fatal('TEST', extra=dict(namespace=__name__))
+        app.log.debug('TEST', extra=dict(namespace=__name__))
+        
+        app.log.info('TEST', __name__, extra=dict(foo='bar'))
+        app.log.warn('TEST', __name__, extra=dict(foo='bar'))
+        app.log.error('TEST', __name__, extra=dict(foo='bar'))
+        app.log.fatal('TEST', __name__, extra=dict(foo='bar'))
+        app.log.debug('TEST', __name__, extra=dict(foo='bar'))
+        
+        app.log.info('TEST', __name__)
+        app.log.warn('TEST', __name__)
+        app.log.error('TEST', __name__)
+        app.log.fatal('TEST', __name__)
+        app.log.debug('TEST', __name__)
+        
     def test_bad_level(self):
         defaults = backend.defaults()
         defaults['log'] = dict(

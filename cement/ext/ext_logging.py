@@ -88,9 +88,9 @@ class LoggingLogHandler(log.CementLogHandler):
         interface = log.ILog
         label = 'logging'
         namespace = None
-        file_format = "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+        file_format = "%(asctime)s (%(levelname)s) %(namespace)s : %(message)s"
         console_format = "%(levelname)s: %(message)s"
-        debug_format = "%(asctime)s (%(levelname)s) %(name)s : %(message)s"
+        debug_format = "%(asctime)s (%(levelname)s) %(namespace)s : %(message)s"
         clear_loggers = True
 
         # These are the default config values, overridden by any '[log]' 
@@ -220,7 +220,20 @@ class LoggingLogHandler(log.CementLogHandler):
         """
         return logging.getLevelName(self.backend.level)
     
-    def info(self, msg):
+    def _get_logging_kwargs(self, namespace, **kw):
+        if namespace is None:
+            namespace = self._meta.namespace
+            
+        if 'extra' in kw.keys() and 'namespace' in kw['extra'].keys():
+            pass
+        elif 'extra' in kw.keys() and 'namespace' not in kw['extra'].keys():
+            kw['extra']['namespace'] = namespace
+        else:
+            kw['extra'] = dict(namespace=namespace)
+        
+        return kw
+        
+    def info(self, msg, namespace=None, **kw):
         """
         Log to the INFO facility.
         
@@ -229,10 +242,20 @@ class LoggingLogHandler(log.CementLogHandler):
             msg
                 The message the log.
         
-        """
-        self.backend.info(msg)
+            namespace
+                A log prefix, generally the module (__name__) that the log is 
+                coming from.  Will default to self._meta.namespace if None is 
+                passed.
+                
+        Optional Keyword Arguments:
         
-    def warn(self, msg):
+            Keyword arguments are passed on to the backend logging system.
+            
+        """
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.info(msg, kwargs)
+        
+    def warn(self, msg, namespace=None, **kw):
         """
         Log to the WARN facility.
         
@@ -241,10 +264,20 @@ class LoggingLogHandler(log.CementLogHandler):
             msg
                 The message the log.
         
+           namespace
+                A log prefix, generally the module (__name__) that the log is 
+                coming from.  Will default to self._meta.namespace if None is 
+                passed.
+                
+        Optional Keyword Arguments:
+        
+            Keyword arguments are passed on to the backend logging system.
+            
         """
-        self.backend.warn(msg)
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.warn(msg, kwargs)
     
-    def error(self, msg):
+    def error(self, msg, namespace=None, **kw):
         """
         Log to the ERROR facility.
         
@@ -253,10 +286,20 @@ class LoggingLogHandler(log.CementLogHandler):
             msg
                 The message the log.
         
+            namespace
+                A log prefix, generally the module (__name__) that the log is 
+                coming from.  Will default to self._meta.namespace if None is 
+                passed.
+                
+        Optional Keyword Arguments:
+        
+            Keyword arguments are passed on to the backend logging system.
+            
         """
-        self.backend.error(msg)
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.error(msg, kwargs)
     
-    def fatal(self, msg):
+    def fatal(self, msg, namespace=None, **kw):
         """
         Log to the FATAL (aka CRITICAL) facility.
         
@@ -265,10 +308,20 @@ class LoggingLogHandler(log.CementLogHandler):
             msg
                 The message the log.
         
+            namespace
+                A log prefix, generally the module (__name__) that the log is 
+                coming from.  Will default to self._meta.namespace if None is 
+                passed.
+                
+        Optional Keyword Arguments:
+        
+            Keyword arguments are passed on to the backend logging system.
+            
         """
-        self.backend.fatal(msg)
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.fatal(msg, kwargs)
     
-    def debug(self, msg):
+    def debug(self, msg, namespace=None, **kw):
         """
         Log to the DEBUG facility.
         
@@ -277,8 +330,19 @@ class LoggingLogHandler(log.CementLogHandler):
             msg
                 The message the log.
         
+            namespace
+                A log prefix, generally the module (__name__) that the log is 
+                coming from.  Will default to self._meta.namespace if None is 
+                passed.  For debugging, it can be useful to set this to 
+                __file__, though __name__ is much less verbose.
+                
+        Optional Keyword Arguments:
+        
+            Keyword arguments are passed on to the backend logging system.
+            
         """
-        self.backend.debug(msg)
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.debug(msg, **kwargs)
 
 
 def load():
