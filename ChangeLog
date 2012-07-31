@@ -27,6 +27,7 @@ Bugs:
 
 Features:
     
+    * :issue:`140` - Included ~/.myapp/config in default config search
     * :issue:`144` - Added a note on Contributing, as well as a CONTRIBUTORS
       file.
 

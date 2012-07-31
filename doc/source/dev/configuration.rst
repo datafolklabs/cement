@@ -209,6 +209,7 @@ If no config_files meta data is provided, Cement will set the defaults to:
 
     * /etc/<app_label>/<app_label>.conf
     * ~/.<app_label>.conf
+    * ~/.<app_label>/config
     
     
 Overriding Configurations with Command Line Options

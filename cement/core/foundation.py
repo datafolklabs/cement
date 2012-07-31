@@ -106,7 +106,7 @@ class CementApp(meta.MetaMixin):
             set this to a default list based on Meta.label (or in other words, 
             the name of the application).  This will equate to:
             
-            ['/etc/<app_label>/<app_label>.conf', '~/.<app_label>.conf']
+            ['/etc/<app_label>/<app_label>.conf', '~/.<app_label>.conf', '~/.<app_label>/config']
             
         plugins
             A list of plugins to load.  This is generally considered bad 
@@ -676,6 +676,7 @@ class CementApp(meta.MetaMixin):
             self._meta.config_files = [
                 os.path.join('/', 'etc', label, '%s.conf' % label),
                 os.path.join(user_home, '.%s.conf' % label),
+                os.path.join(user_home, '.%s' % label, 'config'),
                 ]
         for _file in self._meta.config_files:
             self.config.parse_file(_file)
