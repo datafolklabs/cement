@@ -13,6 +13,8 @@ def defaults(*sections):
     
     Usage:
     
+    .. code-block:: python
+
         from cement.core import foundation, backend
         
         defaults = backend.defaults('myapp', 'section2', 'section3')
