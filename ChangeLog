@@ -27,6 +27,8 @@ Bugs:
 
 Features:
     
+    * :issue:`138` - Added 'shell' argument to utils.shell.exec_cmd() and
+      utils.shell.exec_cmd2().
     * :issue:`140` - Included ~/.myapp/config in default config search
     * :issue:`144` - Added a note on Contributing, as well as a CONTRIBUTORS
       file.
