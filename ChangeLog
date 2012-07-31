@@ -22,7 +22,7 @@ is available online at:
 Bugs:
 
     * :issue:`143` - Incorrect doc regarding logging.  The LoggingLogHandler
-      nose supports an optional 'namespace' argument allowing the developer
+      now supports an optional 'namespace' argument allowing the developer
       to override the log prefix.
 
 Features:
