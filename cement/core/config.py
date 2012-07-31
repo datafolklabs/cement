@@ -50,9 +50,13 @@ class IConfig(interface.Interface):
     """
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+        """Interface meta-data."""
         label = 'config'
+        """The string identifier of the interface."""
+        
         validator = config_validator
-    
+        """The validator function."""
+        
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data')
             
@@ -62,12 +66,8 @@ class IConfig(interface.Interface):
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
-        Required Arguments:
-        
-            app_obj
-                The application object. 
-                                
-        Returns: n/a
+        :param app_obj: The application object. 
+        :returns: None                        
         
         """
 
@@ -76,12 +76,9 @@ class IConfig(interface.Interface):
         Parse config file settings from file_path.  Returns True if the file
         existed, and was parsed successfully.  Returns False otherwise.
         
-        Required Arguments:
-        
-            file_path
-                The path to the config file to parse.
-                
-        Return: boolean
+        :param file_path: The path to the config file to parse.
+        :returns: True if the file was parsed, False otherwise.        
+        :rtype: boolean
         
         """
 
@@ -89,12 +86,9 @@ class IConfig(interface.Interface):
         """
         Return a list of configuration keys from `section`.
         
-        Required Arguments:
-        
-            section
-                The config [section] to pull keys from.
-                
-        Return: list
+        :param section: The config [section] to pull keys from.
+        :returns: A list of keys in `section`.
+        :rtype: list
         
         """
             
@@ -103,7 +97,8 @@ class IConfig(interface.Interface):
         Return a list of configuration sections.  These are designated by a
         [block] label in a config file.
         
-        Return: list
+        :returns: A list of config sections.
+        :rtype: list
                 
         """
         
@@ -111,13 +106,10 @@ class IConfig(interface.Interface):
         """
         Return a dict of configuration parameters for [section].
         
-        Required Arguments:
-        
-            section
-                The config [section] to generate a dict from (using that 
-                sections keys).
-                
-        Return: dict
+        :param section: The config [section] to generate a dict from (using 
+            that section keys).
+        :returns: A dictionary of the config section.
+        :rtype: dict
                 
         """
           
@@ -125,12 +117,8 @@ class IConfig(interface.Interface):
         """
         Add a new section if it doesn't exist.
         
-        Required Arguments:
-        
-            section
-                The [section] label to create.
-                
-        Return: None
+        :param section: The [section] label to create.
+        :returns: None
         
         """ 
         
@@ -139,15 +127,11 @@ class IConfig(interface.Interface):
         Return a configuration value based on [section][key].  The return
         value type is unknown.
         
-        Required Arguments:
-        
-            section
-                The [section] of the configuration to pull key value from.
-            
-            key
-                The configuration key to get the value from.
-                
-        Return: unknown
+        :param section: The [section] of the configuration to pull key value 
+            from.
+        :param key: The configuration key to get the value from.
+        :returns: The value of the `key` in `section`.        
+        :rtype: Unknown
         
         """
             
@@ -155,42 +139,29 @@ class IConfig(interface.Interface):
         """
         Set a configuration value based at [section][key].
         
-        Required Arguments:
-        
-            section
-                The [section] of the configuration to pull key value from.
-        
-            key
-                The configuration key to set the value at.
-            
-            value
-                The value to set.
-        
-        Return: None
+        :param section: The [section] of the configuration to pull key value 
+            from.
+        :param key: The configuration key to set the value at.
+        :param value: The value to set.
+        :returns: None
+
         """
 
     def merge(dict_obj, override=True):
         """
         Merges a dict object into the configuration.
         
-        Required Arguments:
-        
-            dict_obj
-                The dict to merge into the config
-                
-        Optional Arguments:
-        
-            override 
-                Whether to override existing values.  Default: True
-                
-        Return: None
+        :param dict_obj: The dictionary to merge into the config
+        :param override: Boolean.  Whether to override existing values.  
+            Default: True
+        :returns: None
         """
     
     def has_section(section):
         """
         Returns whether or not the section exists.
         
-        Return: bool
+        :returns: boolean
         
         """
         
@@ -200,7 +171,21 @@ class CementConfigHandler(handler.CementBaseHandler):
     
     """
     class Meta:
+        """Handler meta-data."""
+        
+        label = None
+        """The string identifier of the implementation."""
+        
         interface = IConfig
+        """The interface that this handler implements."""
         
     def __init__(self, *args, **kw):
         super(CementConfigHandler, self).__init__(*args, **kw)              
+
+    def _setup(self, app_obj):
+        """
+        See: `IConfig._setup() <#cement.core.config.IConfig._setup>`_.
+        
+        """
+        self.app = app_obj
+        

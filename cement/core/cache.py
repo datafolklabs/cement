@@ -5,7 +5,7 @@ from ..core import backend, exc, interface, handler
 LOG = backend.minimal_logger(__name__)
 
 def cache_validator(klass, obj):
-    """Validates an handler implementation against the ICache interface."""
+    """Validates a handler implementation against the ICache interface."""
     
     members = [
         '_setup',
@@ -39,11 +39,16 @@ class ICache(interface.Interface):
     """
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+        """Interface meta-data."""
+        
         label = 'cache'
+        """The label (or type identifier) of the interface."""
+        
         validator = cache_validator
-    
+        """Interface validator function."""
+        
     # Must be provided by the implementation
-    Meta = interface.Attribute('Handler Meta-data')
+    Meta = interface.Attribute('Handler meta-data')
     
     def _setup(app_obj):
         """
@@ -51,12 +56,8 @@ class ICache(interface.Interface):
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
-        Required Arguments:
-        
-            app_obj
-                The application object. 
-                                
-        Returns: n/a
+        :param app_obj: The application object. 
+        :returns: None        
         
         """
     
@@ -64,42 +65,25 @@ class ICache(interface.Interface):
         """
         Get the value for a key in the cache.  If the key does not exist
         or the key/value in cache is expired, this functions must return 
-        None.
+        'fallback' (which in turn must default to None).
         
-        Required Arguments:
-        
-            key
-                The key of the value stored in cache
-                
-        Optional Arguments:
-        
-            fallback
-                The value that is returned if the cache is expired or the
-                key does not exist.
-                
-        Return: unknown (whatever the value is in cache, or the 'fallback')
+        :param key: The key of the value stored in cache
+        :param fallback: Optional value that is returned if the cache is 
+         expired or the key does not exist.  Default: None
+        :returns: Unknown (whatever the value is in cache, or the `fallback`)
         
         """    
 
     def set(key, value, time=None):
         """
-        Set the key/valuue in cache for 'time'.  
+        Set the key/value in the cache for a set amount of `time`.  
         
-        Required Arguments:
-        
-            key
-                The key of the value to store in cache.
-            
-            value
-                The value of that key to store in cache.
-        
-        Optional Arguments:
-        
-            time
-                A one-off expire time.  If no time is given, then a 
-                default value is used (determined by the implementation).
-        
-        Return: None
+        :param key: The key of the value to store in cache.
+        :param value: The value of that key to store in cache.
+        :param time: A one-off expire time.  If no time is given, then a 
+         default value is used (determined by the implementation).
+        :type time: integer (seconds) or None
+        :returns: None
         
         """
     
@@ -107,7 +91,9 @@ class ICache(interface.Interface):
         """
         Deletes a key/value from the cache.
         
-        Return: True
+        :param key: The key in the cache to delete.
+        :returns: True if the key is successfully deleted, False otherwise.
+        :rtype: boolean
         
         """
         
@@ -120,30 +106,19 @@ class ICache(interface.Interface):
 class CementCacheHandler(handler.CementBaseHandler):
     """
     Base class that all Cache Handlers should sub-class from.
-    
+
     """
     class Meta:
+        """Handler meta-data."""
         label = None
+        """String identifier of this handler implementation."""
+        
         interface = ICache
+        """The interface that this handler class implements."""
         
     def __init__(self, *args, **kw):
         super(CementCacheHandler, self).__init__(*args, **kw)
-        
-    def get(self, key):
-        raise NotImplementedError
-        
-    def set(self, key, value):
-        raise NotImplementedError
-        
-    def delete(self, key):
-        raise NotImplementedError
-        
-    def purge(self):
-        raise NotImplementedError
-        
-# class MemoryCacheHandler(CementCacheHandler):
-#    class Meta:
-#        label = 'memory'
-    
-    
-    
+
+    def _setup(self, app_obj):
+        """See `ICache._setup() <#cement.core.cache.ICache._setup>`_."""
+        self.app = app_obj

@@ -198,11 +198,6 @@ def register(obj):
         handler.register(MyDatabaseHandler)
     
     """
-    # This is redundant with the validator, but if we don't check for them
-    # then we'll get an uncontrolled exception.
-    #if not hasattr(obj, 'Meta'):
-    #    raise exc.CementInterfaceError("Invalid handler %s, " % obj + \
-    #                                   "missing 'Meta' class.")  
     
     orig_obj = obj
 

@@ -5,3 +5,4 @@
 
 .. automodule:: cement.core.cache
     :members: 
+    :undoc-members:

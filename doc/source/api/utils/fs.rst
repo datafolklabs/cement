@@ -5,7 +5,4 @@
 
 .. automodule:: cement.utils.fs
     :members:    
-
-
-
-
+    :undoc-members:

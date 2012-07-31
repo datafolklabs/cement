@@ -5,3 +5,4 @@
 
 .. automodule:: cement.core.plugin
     :members:   
+    :undoc-members:

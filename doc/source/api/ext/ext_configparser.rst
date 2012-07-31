@@ -5,4 +5,3 @@
 
 .. automodule:: cement.ext.ext_configparser
     :members:
-

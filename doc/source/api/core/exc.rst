@@ -4,4 +4,5 @@
 -----------------------
 
 .. automodule:: cement.core.exc
-    :members:  
+    :members:   
+    :undoc-members:

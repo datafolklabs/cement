@@ -5,3 +5,4 @@
 
 .. automodule:: cement.ext.ext_logging
     :members:
+    :undoc-members:

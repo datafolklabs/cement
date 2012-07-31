@@ -7,6 +7,18 @@ class MyCacheHandler(cache.CementCacheHandler):
     class Meta:
         label = 'my_cache_handler'
 
+    def get(self, key, fallback=None):
+        pass
+        
+    def set(self, key, value):
+        pass
+    
+    def delete(self, key):
+        pass
+    
+    def purge(self):
+        pass
+        
 class CacheTestCase(test.CementTestCase):
     def setUp(self):
         super(CacheTestCase, self).setUp()
@@ -14,29 +26,10 @@ class CacheTestCase(test.CementTestCase):
     
     def test_base_handler(self):
         self.app.setup()
-        count = 0
-        
-        try:
-            self.app.cache.set('foo', 'bar')
-        except NotImplementedError as e:
-            count = count + 1
-            
-        try:
-            self.app.cache.get('foo')
-        except NotImplementedError as e:
-            count = count + 1
-        
-        try:    
-            self.app.cache.delete('foo')
-        except NotImplementedError as e:
-            count = count + 1
-        
-        try:    
-            self.app.cache.purge()
-        except NotImplementedError as e:
-            count = count + 1
-        
-        self.eq(count, 4)
+        self.app.cache.set('foo', 'bar')
+        self.app.cache.get('foo')
+        self.app.cache.delete('foo')
+        self.app.cache.purge()
             
         
         

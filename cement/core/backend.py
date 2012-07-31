@@ -11,10 +11,12 @@ def defaults(*sections):
     Returns a standard dictionary object to use for application defaults.
     If sections are given, it will create a nested dict for each section name.
     
-    Usage:
+    :arg sections: Section keys to create nested dictionaries for.
+    :returns: Dictionary of nested dictionaries (sections)
+    :rtype: dict
     
     .. code-block:: python
-
+    
         from cement.core import foundation, backend
         
         defaults = backend.defaults('myapp', 'section2', 'section3')
@@ -37,23 +39,14 @@ def minimal_logger(name, debug=False):
     the application is functional (and more importantly before the 
     applications log handler is usable).
     
-    Required Arguments:
-    
-        name
-            The logging namespace.  This is generally '__name__' or anything
-            you want.
-    
-    Optional Arguments:
-    
-        debug
-            Toggle debug output.
-            
-            Default: False
-            
-    Usage:
-    
+    :param name: The logging namespace.  This is generally '__name__' or 
+        anything you want.
+    :param debug: Toggle debug output. Default: False
+    :type debug: boolean        
+    :returns: Logger object
+
     .. code-block:: python
-    
+        
         from cement.core import backend
         LOG = backend.minimal_logger('cement')
         LOG.debug('This is a debug message')

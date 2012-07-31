@@ -151,6 +151,8 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
             dict_obj[key] = self.get(section, key)
         return dict_obj
 
+    def add_section(self, section):
+        super(ConfigParserConfigHandler, self).add_section(section)
         
 def load():
     handler.register(ConfigParserConfigHandler)
