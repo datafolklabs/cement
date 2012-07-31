@@ -27,7 +27,8 @@ Bugs:
 
 Features:
     
-    None
+    * :issue:`144` - Added a note on Contributing, as well as a CONTRIBUTORS
+      file.
 
 Incompatible Changes:
 
