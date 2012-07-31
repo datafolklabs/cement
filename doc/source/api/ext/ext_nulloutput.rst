@@ -6,3 +6,5 @@
 .. automodule:: cement.ext.ext_nulloutput
     :members:
     :undoc-members:
+    :private-members:
+    :show-inheritance:

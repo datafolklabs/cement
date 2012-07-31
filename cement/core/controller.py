@@ -62,11 +62,16 @@ class IController(interface.Interface):
     """
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+        """Interface meta-data."""
+        
         label = 'controller'
+        """The string identifier of the interface."""
+        
         validator = controller_validator
+        """The interface validator function."""
     
     # Must be provided by the implementation
-    Meta = interface.Attribute('Handler Meta-data')
+    Meta = interface.Attribute('Handler meta-data')
     
     def _setup(app_obj):
         """
@@ -77,12 +82,8 @@ class IController(interface.Interface):
         Must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
-        Required Arguments:
-        
-            app_obj
-                The application object.
-                
-        Return: None
+        :param app_obj: The application object.
+        :returns: None
         
         """
     
@@ -96,7 +97,8 @@ class IController(interface.Interface):
         on a controller, as it expects the controller to handle parsing 
         arguments (I.e. self.app.args.parse()).
          
-        Return None       
+        :returns: None       
+        
         """
 
 class expose(object):
@@ -104,16 +106,12 @@ class expose(object):
     Used to expose controller functions to be listed as commands, and to 
     decorate the function with Meta data for the argument parser.
     
-    Optional Arguments:
-    
-        hide
-            Whether the command should be visible.
-        
-        help
-            Help text to display for that command.
-        
-        aliases
-            List of aliases to this command.
+    :param hide: Whether the command should be visible.
+    :type hide: boolean
+    :param help: Help text to display for that command.
+    :type help: str
+    :param aliases: Aliases to this command.
+    :type aliases: list
          
     Usage:
     
@@ -150,58 +148,14 @@ class expose(object):
 
 class CementBaseController(handler.CementBaseHandler):
     """
-    This is an implementation of the IControllerHandler interface, but as a
-    base class that application controllers need to subclass from.  
+    This is an implementation of the 
+    `IControllerHandler <#cement.core.controller.IController>`_ interface, but 
+    as a base class that application controllers `should` subclass from.  
     Registering it directly as a handler is useless.
     
-    NOTE: This handler *requires* that the applications 'arg_handler' be
+    NOTE: This handler **requires** that the applications 'arg_handler' be
     argparse.  If using an alternative argument handler you will need to 
     write your own controller base class.
-    
-    Optional / Meta Options:
-    
-        interface
-            The interface that this controller implements (IController).
-            
-        label
-            The label of the controller.  Will be used as the sub-command
-            name for 'stacked' controllers.
-            
-        aliases
-            A list of aliases for the controller.  Will be treated like
-            command/function aliases for non-stacked controllers.  For example:
-            'myapp <controller_label> --help' is the same as 
-            'myapp <controller_alias> --help'.
-            
-            Default: []
-            
-        description
-            The description shown at the top of '--help'.
-            
-        config_section
-            A config [section] to merge config_defaults into.
-            
-            Default: controller.<label>
-            
-        config_defaults
-            Configuration defaults (type: dict) that are merged into the 
-            applications config object for the config_section mentioned above.
-            
-        arguments
-            Arguments to pass to the argument_handler.  The format is a list
-            of tuples whos items are a ( list, dict ).  Meaning:
-            
-                [ ( ['-f', '--foo'], dict(dest='foo', help='foo option') ), ]
-
-        stacked_on
-            A label of another controller to 'stack' commands/arguments on 
-            top of.
-            
-        hide
-            Whether or not to hide the controller entirely.
-            
-        epilog
-            The text that is displayed at the bottom when '--help' is passed.
     
     Usage:
     
@@ -216,25 +170,78 @@ class CementBaseController(handler.CementBaseHandler):
                 config_defaults = dict()
                 arguments = []
                 epilog = "This is the text at the bottom of --help."
-        
+                # ...
+                
         class MyStackedController(controller.CementBaseController):
             class Meta:
                 label = 'second_controller'
                 aliases = ['sec', 'secondary']
                 stacked_on = 'base'
+                # ...
                 
     """
     class Meta:
+        """
+        Controller meta-data (can be passed as keyword arguments to the parent 
+        class).
+        
+        """
+        
         interface = IController
-        label = 'base' # provided in subclass
-        aliases = [] # aliases for the controller
+        """The interface this class implements."""
+        
+        label = 'base'
+        """The string identifier for the controller."""
+        
+        aliases = []
+        """
+        A list of aliases for the controller.  Will be treated like
+        command/function aliases for non-stacked controllers.  For example:
+        'myapp <controller_label> --help' is the same as 
+        'myapp <controller_alias> --help'.
+        """
+            
         description = None
-        config_section = None # defaults to controller.<label>
-        config_defaults = {} # default config options
-        arguments = [] # list of tuple (*args, *kwargs)
-        stacked_on = None # controller name to merge commands/options into
-        hide = False # whether to hide controller completely
+        """The description shown at the top of '--help'.  Default: None"""
+        
+        config_section = None
+        """
+        A config [section] to merge config_defaults into.  Cement will default 
+        to controller.<label> if None is set.
+        """
+        
+        config_defaults = {} 
+        """
+        Configuration defaults (type: dict) that are merged into the 
+        applications config object for the config_section mentioned above.
+        """
+        
+        arguments = []
+        """
+        Arguments to pass to the argument_handler.  The format is a list
+        of tuples whos items are a ( list, dict ).  Meaning:
+            
+        ``[ ( ['-f', '--foo'], dict(dest='foo', help='foo option') ), ]``
+        
+        This is equivelant to manually adding each argument to the argument
+        parser:
+        
+        ``parser.add_argument(['-f', '--foo'], help='foo option', dest='foo')``
+        
+        """
+
+        stacked_on = None
+        """
+        A label of another controller to 'stack' commands/arguments on top of.
+        """
+        
+        hide = False
+        """Whether or not to hide the controller entirely."""
+        
         epilog = None
+        """
+        The text that is displayed at the bottom when '--help' is passed.
+        """
         
     ### FIX ME: What is this used for???
     ignored = ['visible', 'hidden', 'exposed']
@@ -253,6 +260,9 @@ class CementBaseController(handler.CementBaseHandler):
         self._arguments = []
         
     def _setup(self, app_obj):
+        """
+        See `IController._setup() <#cement.core.cache.IController._setup>`_.
+        """
         super(CementBaseController, self)._setup(app_obj)
 
         if self._meta.description is None:
@@ -269,7 +279,7 @@ class CementBaseController(handler.CementBaseHandler):
              
     def _parse_args(self):
         """
-        Parse command line arguments and determine a command to dispatch.
+        Parses command line arguments and determine a command to dispatch.
         
         """
         # chop off a command argument if it matches an exposed command
@@ -325,6 +335,8 @@ class CementBaseController(handler.CementBaseHandler):
         This is the default action if no arguments (sub-commands) are passed
         at command line.
         
+        :raises: NotImplementedError
+        
         """
         raise NotImplementedError
     
@@ -340,6 +352,9 @@ class CementBaseController(handler.CementBaseHandler):
     def _collect_from_self(self):
         """
         Collect arguments from this controller.
+        
+        :raises: cement.core.exc.CementRuntimeError
+            
         """
         # collect our Meta arguments
         for _args,_kwargs in self._meta.arguments:
@@ -385,10 +400,8 @@ class CementBaseController(handler.CementBaseHandler):
         """
         Collect arguments from non-stacked controllers.
         
-        Required Arguments:
-        
-            controller
-                The controller to collect arguments from.
+        :param controller: The controller to collect arguments from.
+        :type controller: Uninstantiated controller class
                 
         """
         contr = controller()
@@ -411,10 +424,9 @@ class CementBaseController(handler.CementBaseHandler):
         """
         Collect arguments from stacked controllers.
         
-        Required Arguments:
-        
-            controller
-                The controller to collect arguments from.
+        :param controller: The controller to collect arguments from.
+        :type controller: Uninstantiated controller class
+        :raises: cement.core.exc.CementRuntimeError
                 
         """           
         contr = controller()
@@ -452,10 +464,8 @@ class CementBaseController(handler.CementBaseHandler):
             self.exposed[label] = func_dicts[label]
 
     def _collect_from_controllers(self):
-        """
-        Collect arguments from all controllers.
+        """Collect arguments from all controllers."""
         
-        """
         for controller in handler.list('controller'):
             contr = controller()
             if contr._meta.label == self._meta.label:
@@ -474,6 +484,9 @@ class CementBaseController(handler.CementBaseHandler):
         """
         Collects all commands and arguments from this controller, and other
         availble controllers.
+        
+        :raises: cement.core.exc.CementRuntimeError
+            
         """
         
         LOG.debug("collecting arguments and commands from '%s' controller" % \
@@ -512,10 +525,8 @@ class CementBaseController(handler.CementBaseHandler):
                         
     @property
     def _usage_text(self):
-        """
-        Returns the usage text displayed when '--help' is passed.
+        """Returns the usage text displayed when '--help' is passed."""
         
-        """
         if self == self.app._meta.base_controller:
             txt = "%s <CMD> -opt1 --opt2=VAL [arg1] [arg2] ..." % \
                 self.app.args.prog
@@ -526,10 +537,8 @@ class CementBaseController(handler.CementBaseHandler):
         
     @property
     def _help_text(self):
-        """
-        Returns the help text displayed when '--help' is passed.
+        """Returns the help text displayed when '--help' is passed."""
         
-        """
         cmd_txt = ''
         
         # hack it up to keep commands in alphabetical order

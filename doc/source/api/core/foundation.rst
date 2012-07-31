@@ -6,3 +6,4 @@
 .. automodule:: cement.core.foundation
     :members:   
     :undoc-members:
+    :show-inheritance:

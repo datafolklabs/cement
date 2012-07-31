@@ -109,7 +109,11 @@ class CementCacheHandler(handler.CementBaseHandler):
 
     """
     class Meta:
-        """Handler meta-data."""
+        """
+        Handler meta-data (can be passed as keyword arguments to the parent 
+        class).
+        """
+        
         label = None
         """String identifier of this handler implementation."""
         

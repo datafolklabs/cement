@@ -45,8 +45,13 @@ class IExtension(interface.Interface):
     
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+        """Interface meta-data."""
+        
         label = 'extension'
+        """The string identifier of the interface."""
+        
         validator = extension_validator
+        """The interface validator function."""
     
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data class')
@@ -58,12 +63,8 @@ class IExtension(interface.Interface):
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
-        Required Arguments:
-        
-            app_obj
-                The application object. 
-                                
-        Returns: n/a
+        :param app_obj: The application object. 
+        :returns: None
         
         """
     
@@ -72,10 +73,8 @@ class IExtension(interface.Interface):
         Load an extension whose module is 'ext_module'.  For example, 
         'cement.ext.ext_configobj'.
         
-        Required Arguments:
-        
-            ext_module
-                The name of the extension to load.
+        :param ext_module: The name of the extension to load.
+        :type ext_module: str
                 
         """
         
@@ -83,36 +82,42 @@ class IExtension(interface.Interface):
         """
         Load all extensions from ext_list.
         
-        Required Arguments:
-        
-            ext_list
-                A list of extension modules to load.  For example, 
-                ['cement.ext.ext_configobj', 'cement.ext.ext_logging'].
+        :param ext_list: A list of extension modules to load.  For example: 
+            ``['cement.ext.ext_configobj', 'cement.ext.ext_logging']``
+            
+        :type ext_list: list
         
         """
 
 class CementExtensionHandler(handler.CementBaseHandler):
     loaded_extensions = []
+    """A list of loaded extensions."""
     
     class Meta:
+        """
+        Handler meta-data (can be passed as keyword arguments to the parent 
+        class).
+        """
+        
         interface = IExtension
+        """The interface that this class implements."""
+        
         label = 'cement'
+        """The string identifier of the handler."""
         
     def __init__(self, **kw):
         """
-        This is an implementation of the IExtentionHandler interface.  It handles
-        loading framework extensions.
+        This is an implementation of the IExtentionHandler interface.  It 
+        handles loading framework extensions.
     
         """
         super(CementExtensionHandler, self).__init__(**kw)
         self.app = None
         self._loaded_extensions = []
-        
-    def _setup(self, app_obj):
-        self.app = app_obj
     
     @property
     def loaded_extensions(self):
+        """Returns list of loaded extensions."""
         return self._loaded_extensions
         
     def load_extension(self, ext_module):
@@ -120,11 +125,10 @@ class CementExtensionHandler(handler.CementBaseHandler):
         Given an extension module name, load or in other-words 'import' the 
         extension.
         
-        Required Arguments:
-        
-            ext_module
-                The extension module name.  For example 
-                'cement.ext.ext_logging'.
+        :param ext_module: The extension module name.  For example: 
+            'cement.ext.ext_logging'.
+        :type ext_module: str
+        :raises: cement.core.exc.CementRuntimeError
                 
         """
         # If its not a full module path then preppend our default path
@@ -154,10 +158,8 @@ class CementExtensionHandler(handler.CementBaseHandler):
         Given a list of extension modules, iterate over the list and pass
         individually to self.load_extension().
         
-        Required Arguments:
-        
-            ext_list
-                A list of extension modules.
+        :param ext_list: A list of extension modules.
+        :type ext_list: list
                 
         """
         for ext in ext_list:

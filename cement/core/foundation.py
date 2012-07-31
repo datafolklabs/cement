@@ -1,4 +1,4 @@
-"""Cement core application module."""
+"""Cement core foundation module."""
 
 import re
 import os
@@ -24,6 +24,10 @@ def cement_signal_handler(signum, frame):
     Catch a signal, run the 'signal' hook, and then raise an exception 
     allowing the app to handle logic elsewhere.
     
+    :param signum: The signal number
+    :param frame: The signal frame.
+    :raises: cement.core.exc.CementSignalError
+    
     """      
     LOG.debug('Caught signal %s' % signum)  
     
@@ -35,228 +39,6 @@ def cement_signal_handler(signum, frame):
 class CementApp(meta.MetaMixin):
     """
     The primary class to build applications from.
-    
-    Optional / Meta Arguments:
-    
-        label
-            The name of the application.  This should be the common name as
-            you would see and use at the command line.  For example 
-            'helloworld', or 'my-awesome-app'.
-            
-            Default: None
-    
-        bootstrap
-            A bootstrapping module to load after app creation, and before
-            app.setup() is called.  This is useful for larger applications
-            that need to offload their bootstrapping code such as registering
-            hooks/handlers/etc to another file.  
-            
-            This must be a dotted python module path.  
-            I.e. 'myapp.bootstrap' (myapp/bootstrap.py).  Cement will then
-            import the module, and if the module has a 'load()' function, that
-            will also be called.  Essentially, this is the same as an 
-            extension or plugin, but as a facility for the application itself
-            to bootstrap 'hardcoded' application code.  It is also called
-            before plugins are loaded.
-            
-            Default: None
-            
-        debug
-            Toggles debug output.  By default, this setting is also overridden
-            by the '[base] -> debug' config setting parsed in any
-            of the application configuration files (where [base] is the 
-            base configuration section of the application which is determined
-            by Meta.config_section but defaults to Meta.label).
-            
-            Default: False
-            
-        argv
-            A list of arguments to use for parsing command line arguments
-            and options.
-            
-            Default: sys.argv[1:]
-          
-        arguments_override_config
-            A boolean to toggle whether command line arguments should 
-            override configuration values if the argument name matches the
-            config key.  I.e. --foo=bar would override config['myapp']['foo'].
-            
-            Default: False
-            
-        config_section
-            The base configuration section for the application.
-            
-            Default: None
-            
-            Note: Though Meta.config_section defaults to None, Cement will
-            set this to the value of Meta.label (or in other words, the name
-            of the application).
-            
-        config_defaults
-            Default configuration dictionary.  Must be of type 'dict'.
-            
-            Default: None
-            
-        config_files
-            List of config files to parse.  
-            
-            Default: None
-            
-            Note: Though Meta.config_section defaults to None, Cement will
-            set this to a default list based on Meta.label (or in other words, 
-            the name of the application).  This will equate to:
-            
-            ['/etc/<app_label>/<app_label>.conf', '~/.<app_label>.conf', '~/.<app_label>/config']
-            
-        plugins
-            A list of plugins to load.  This is generally considered bad 
-            practice since plugins should be dynamically enabled/disabled
-            via a plugin config file.  
-            
-            Default: []
-        
-        plugin_config_dir
-            A directory path where plugin config files can be found.  Files
-            must end in '.conf'.  By default, this setting is also overridden
-            by the '[base] -> plugin_config_dir' config setting parsed in any
-            of the application configuration files.
-            
-            Default: None
-            
-            Note: Though the meta default is None, Cement will set this to
-            '/etc/<app_label>/plugins.d/' if not set during app.setup().
-        
-        plugin_dir
-            A directory path where plugin code (modules) can be loaded from.
-            By default, this setting is also overridden by the 
-            '[base] -> plugin_dir' config setting parsed in any of the 
-            application configuration files (where [base] is the 
-            base configuration section of the application which is determined
-            by Meta.config_section but defaults to Meta.label).
-            
-            Default: None
-            
-            Note: Though the meta default is None, Cement will set this to
-            '/usr/lib/<app_label>/plugins/' if not set during app.setup()
-        
-        plugin_bootstrap
-            A python package (dotted import path) where plugin code can be
-            loaded from.  This is generally something like 'myapp.plugins'
-            where a plugin file would live at 'myapp/plugins/myplugin.py'.
-            This provides a facility for applications that use 'namespace' 
-            packages allowing plugins to share the applications python
-            namespace.
-            
-            Default: None
-            
-        catch_signals
-            List of signals to catch, and raise exc.CementSignalError for.
-            Can be set to None to disable signal handling.
-
-            Default: [signal.SIGTERM, signal.SIGINT]
-                
-        signal_handler
-            A function that is called to handle any caught signals. 
-            
-            Default: cement.core.foundation.cement_signal_handler
-            
-        config_handler
-            A handler class that implements the IConfig interface.  This can
-            be a string (label of a registered handler), an uninstantiated
-            class, or an instantiated class object.
-
-            Default: cement.ext.ext_configparser.ConfigParserConfigHandler
-            
-        extension_handler
-            A handler class that implements the IExtension interface.  This can
-            be a string (label of a registered handler), an uninstantiated
-            class, or an instantiated class object.
-            
-            Default: cement.core.extension.CementExtensionHandler
-        
-        log_handler
-            A handler class that implements the ILog interface.  This can
-            be a string (label of a registered handler), an uninstantiated
-            class, or an instantiated class object.
-
-            Default: cement.ext.ext_logging.LoggingLogHandler
-            
-        plugin_handler
-            A handler class that implements the IPlugin interface.  This can
-            be a string (label of a registered handler), an uninstantiated
-            class, or an instantiated class object.
-
-            Default: cement.ext.ext_plugin.CementPluginHandler
-        
-        argument_handler
-            A handler class that implements the IArgument interface.  This can
-            be a string (label of a registered handler), an uninstantiated
-            class, or an instantiated class object.
-
-            Default: cement.ext.ext_argparse.ArgParseArgumentHandler
-        
-        output_handler
-            A handler class that implements the IOutput interface.  This can
-            be a string (label of a registered handler), an uninstantiated
-            class, or an instantiated class object.
-
-            Default: cement.ext.ext_nulloutput.NullOutputHandler
-            
-        cache_handler
-            A handler class that implements the ICache interface.  This can
-            be a string (label of a registered handler), an uninstantiated
-            class, or an instantiated class object.
-            
-            Default: None
-            
-        base_controller
-            This is the base application controller.  If a controller is set,
-            runtime operations are passed to the controller for command 
-            dispatch and argument parsing when CementApp.run() is called.
-
-            Default: None
-        
-        core_extensions
-            List of Cement core extensions.  These are generally required by
-            Cement and should only be modified if you know what you're 
-            doing.  Use 'extensions' to add to this list, rather than 
-            overriding core extensions.  That said if you want to prune down
-            your application, you can remove core extensions if they are
-            not necessary (for example if using your own log handler 
-            extension you likely don't want/need LoggingLogHandler to be 
-            registered).
-            
-            Default: ['cement.ext.ext_nulloutput',
-                      'cement.ext.ext_plugin',
-                      'cement.ext.ext_configparser', 
-                      'cement.ext.ext_logging', 
-                      'cement.ext.ext_argparse']
-        
-        extensions
-            List of additional framework extensions to load.
-            
-            Default: []
-        
-        core_meta_override
-            List of meta options that can/will be overridden by config options
-            of the '[base]' config section (where [base] is the base 
-            configuration section of the application which is determined by 
-            Meta.config_section but defaults to Meta.label). These overrides 
-            are required by the framework to function properly and should not 
-            be used by end user (developers) unless you really know what 
-            you're doing.  To add your own extended meta overrides please use 
-            'meta_override'.
-            
-            Default: ['debug', 'plugin_config_dir', 'plugin_dir']
-            
-        meta_override
-            List of meta options that can/will be overridden by config options
-            of the '[base]' config section (where [base] is the 
-            base configuration section of the application which is determined
-            by Meta.config_section but defaults to Meta.label).
-            
-            Default: []
-            
     
     Usage:
     
@@ -301,7 +83,6 @@ class CementApp(meta.MetaMixin):
 
         app = MyApp()
         try:
-            
             app.setup()
             app.run()
         finally:
@@ -309,29 +90,193 @@ class CementApp(meta.MetaMixin):
                 
     """
     class Meta:
+        """
+        Application meta-data (can also be passed as keyword arguments to the 
+        parent class).
+        """
+        
         label = None
+        """
+        The name of the application.  This should be the common name as you 
+        would see and use at the command line.  For example 'helloworld', or 
+        'my-awesome-app'.
+        """
+        
         debug = False
+        """
+        Toggles debug output.  By default, this setting is also overridden
+        by the '[base] -> debug' config setting parsed in any
+        of the application configuration files (where [base] is the 
+        base configuration section of the application which is determined
+        by Meta.config_section but defaults to Meta.label).
+        """
+        
         config_files = None
+        """
+        List of config files to parse.  
+        
+        Note: Though Meta.config_section defaults to None, Cement will
+        set this to a default list based on Meta.label (or in other words, 
+        the name of the application).  This will equate to:
+        
+        .. code-block:: python
+            
+            ['/etc/<app_label>/<app_label>.conf', 
+             '~/.<app_label>.conf', 
+             '~/.<app_label>/config']
+             
+        """
+
         plugins = []
+        """
+        A list of plugins to load.  This is generally considered bad 
+        practice since plugins should be dynamically enabled/disabled
+        via a plugin config file.  
+        """
+        
         plugin_config_dir = None
+        """
+        A directory path where plugin config files can be found.  Files
+        must end in '.conf'.  By default, this setting is also overridden
+        by the '[base] -> plugin_config_dir' config setting parsed in any
+        of the application configuration files.
+        
+        Note: Though the meta default is None, Cement will set this to
+        ``/etc/<app_label>/plugins.d/`` if not set during app.setup().
+        """
+        
         plugin_bootstrap = None
+        """
+        A python package (dotted import path) where plugin code can be
+        loaded from.  This is generally something like 'myapp.plugins'
+        where a plugin file would live at ``myapp/plugins/myplugin.py``.
+        This provides a facility for applications that use 'namespace' 
+        packages allowing plugins to share the applications python
+        namespace.
+        """
+        
         plugin_dir = None
+        """
+        A directory path where plugin code (modules) can be loaded from.
+        By default, this setting is also overridden by the 
+        '[base] -> plugin_dir' config setting parsed in any of the 
+        application configuration files (where [base] is the 
+        base configuration section of the application which is determined
+        by Meta.config_section but defaults to Meta.label).
+
+        Note: Though the meta default is None, Cement will set this to
+        ``/usr/lib/<app_label>/plugins/`` if not set during app.setup()
+        """
+        
         argv = list(sys.argv[1:])
+        """
+        A list of arguments to use for parsing command line arguments
+        and options.
+        """
+        
         arguments_override_config = False
+        """
+        A boolean to toggle whether command line arguments should 
+        override configuration values if the argument name matches the
+        config key.  I.e. --foo=bar would override config['myapp']['foo'].
+        """
+        
         config_section = None
+        """
+        The base configuration section for the application.
+        
+        Note: Though Meta.config_section defaults to None, Cement will
+        set this to the value of Meta.label (or in other words, the name
+        of the application).
+        """
+        
         config_defaults = None
+        """Default configuration dictionary.  Must be of type 'dict'."""
+        
         catch_signals = [signal.SIGTERM, signal.SIGINT]
+        """
+        List of signals to catch, and raise exc.CementSignalError for.
+        Can be set to None to disable signal handling.
+        """
+        
         signal_handler = cement_signal_handler
+        """A function that is called to handle any caught signals."""
+        
         config_handler = ext_configparser.ConfigParserConfigHandler
+        """
+        A handler class that implements the IConfig interface.  This can
+        be a string (label of a registered handler), an uninstantiated
+        class, or an instantiated class object.
+        """
+        
         extension_handler = extension.CementExtensionHandler
+        """
+        A handler class that implements the IExtension interface.  This can
+        be a string (label of a registered handler), an uninstantiated
+        class, or an instantiated class object.
+        """
+        
         log_handler = ext_logging.LoggingLogHandler
+        """
+        A handler class that implements the ILog interface.  This can
+        be a string (label of a registered handler), an uninstantiated
+        class, or an instantiated class object.
+        """
+        
         plugin_handler = ext_plugin.CementPluginHandler
+        """
+        A handler class that implements the IPlugin interface.  This can
+        be a string (label of a registered handler), an uninstantiated
+        class, or an instantiated class object.
+        """
+        
         argument_handler = ext_argparse.ArgParseArgumentHandler
+        """
+        A handler class that implements the IArgument interface.  This can
+        be a string (label of a registered handler), an uninstantiated
+        class, or an instantiated class object.
+        """
+        
         output_handler = ext_nulloutput.NullOutputHandler
+        """
+        A handler class that implements the IOutput interface.  This can
+        be a string (label of a registered handler), an uninstantiated
+        class, or an instantiated class object.
+        """
+        
         cache_handler = None
+        """
+        A handler class that implements the ICache interface.  This can
+        be a string (label of a registered handler), an uninstantiated
+        class, or an instantiated class object.
+        """
+        
         base_controller = None
+        """
+        This is the base application controller.  If a controller is set,
+        runtime operations are passed to the controller for command 
+        dispatch and argument parsing when CementApp.run() is called.
+        """
+        
         extensions = []   
+        """List of additional framework extensions to load."""
+        
         bootstrap = None     
+        """
+        A bootstrapping module to load after app creation, and before
+        app.setup() is called.  This is useful for larger applications
+        that need to offload their bootstrapping code such as registering
+        hooks/handlers/etc to another file.  
+        
+        This must be a dotted python module path.  
+        I.e. 'myapp.bootstrap' (myapp/bootstrap.py).  Cement will then
+        import the module, and if the module has a 'load()' function, that
+        will also be called.  Essentially, this is the same as an 
+        extension or plugin, but as a facility for the application itself
+        to bootstrap 'hardcoded' application code.  It is also called
+        before plugins are loaded.
+        """
+        
         core_extensions = [  
             'cement.ext.ext_nulloutput',
             'cement.ext.ext_plugin',
@@ -339,13 +284,41 @@ class CementApp(meta.MetaMixin):
             'cement.ext.ext_logging', 
             'cement.ext.ext_argparse',
             ]
+        """
+        List of Cement core extensions.  These are generally required by
+        Cement and should only be modified if you know what you're 
+        doing.  Use 'extensions' to add to this list, rather than 
+        overriding core extensions.  That said if you want to prune down
+        your application, you can remove core extensions if they are
+        not necessary (for example if using your own log handler 
+        extension you likely don't want/need LoggingLogHandler to be 
+        registered).
+        """
+        
         core_meta_override = [
             'debug', 
             'plugin_config_dir', 
             'plugin_dir'
             ]
+        """
+        List of meta options that can/will be overridden by config options
+        of the '[base]' config section (where [base] is the base 
+        configuration section of the application which is determined by 
+        Meta.config_section but defaults to Meta.label). These overrides 
+        are required by the framework to function properly and should not 
+        be used by end user (developers) unless you really know what 
+        you're doing.  To add your own extended meta overrides please use 
+        'meta_override'.
+        """
+        
         meta_override = []
-            
+        """
+        List of meta options that can/will be overridden by config options
+        of the '[base]' config section (where [base] is the 
+        base configuration section of the application which is determined
+        by Meta.config_section but defaults to Meta.label).
+        """    
+        
     def __init__(self, label=None, **kw):                
         super(CementApp, self).__init__(**kw)
         
@@ -369,6 +342,7 @@ class CementApp(meta.MetaMixin):
     
     @property
     def argv(self):
+        """The arguments list that will be used when self.run() is called."""
         return self._meta.argv
         
     def extend(self, member_name, member_object):
@@ -378,13 +352,11 @@ class CementApp(meta.MetaMixin):
         extensions to provide functionality that travel along with the 
         application object.
         
-        Required Arguments:
-        
-            member_name
-                The name to attach the object to.
-                
-            member_object
-                The function or class object to attach to CementApp().
+        :param member_name: The name to attach the object to.
+        :type member_name: str
+        :param member_object: The function or class object to attach to 
+            CementApp().
+        :raises: cement.core.exc.CementRuntimeError
                 
         """
         if hasattr(self, member_name):
@@ -416,7 +388,7 @@ class CementApp(meta.MetaMixin):
         executed (possibly letting the developer perform other actions
         before full execution.).
         
-        All handlers should be instantiated and callable after _setup() is
+        All handlers should be instantiated and callable after setup is
         complete.
         
         """
@@ -491,16 +463,9 @@ class CementApp(meta.MetaMixin):
         This is a simple wrapper around self.output.render() which simply
         returns an empty string if no self.output handler is defined.
         
-        Required Arguments:
-        
-            data
-                The data dictionary to render.
-                
-        Optional Arguments:
-        
-            template
-                The template to render to.  Default: None (some output 
-                handlers do not use templates).
+        :param data: The data dictionary to render.
+        :param template: The template to render to.  Default: None (some 
+            output handlers do not use templates).
                 
         """
         for res in hook.run('pre_render', self, data):
@@ -525,22 +490,15 @@ class CementApp(meta.MetaMixin):
         
     @property
     def pargs(self):
-        """
-        A shortcut for self.args.parsed_args.
-        """
+        """A shortcut for self.args.parsed_args."""
         return self.args.parsed_args
      
     def add_arg(self, *args, **kw):
-        """
-        A shortcut for self.args.add_argument.
-        
-        """   
+        """A shortcut for self.args.add_argument."""   
         self.args.add_argument(*args, **kw)
         
     def _lay_cement(self):
-        """
-        Initialize the framework.
-        """
+        """Initialize the framework."""
         LOG.debug("laying cement for the '%s' application" % \
                   self._meta.label)
 
@@ -623,7 +581,13 @@ class CementApp(meta.MetaMixin):
         the handler to load from backend.handlers, or it can be an 
         instantiated or non-instantiated handler class.
         
-        Returns: The instantiated handler object.
+        :param handler_type: The type of handler (aka the interface label)
+        :param hander_def: The handler as defined in CementApp.Meta.
+        :type handler_def: str, uninstantiated object, or instantiated object
+        :param raise_error: Whether or not to raise an exception if unable
+            to resolve the handler.
+        :type raise_error: boolean
+        :returns: The instantiated handler object.
         
         """
         han = None
@@ -777,6 +741,25 @@ class CementApp(meta.MetaMixin):
     def validate_config(self):
         """
         Validate application config settings.
+        
+        Usage:
+        
+        .. code-block:: python
+        
+            import os
+            from cement.core import foundation
+            
+            class MyApp(foundation.CementApp):
+                class Meta:
+                    label = 'myapp'
+                    
+                def validate_config(self):
+                    # test that the log file directory exist, if not create it
+                    logdir = os.path.dirname(self.config.get('log', 'file'))
+
+                    if not os.path.exists(logdir):
+                        os.makedirs(logdir)
+                
         """
         pass
         

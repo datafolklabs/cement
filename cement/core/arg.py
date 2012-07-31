@@ -97,7 +97,10 @@ class CementArgumentHandler(handler.CementBaseHandler):
     """
     # pylint: disable=W0232,R0903
     class Meta:
-        """Handler meta-data options."""
+        """
+        Handler meta-data (can be passed as keyword arguments to the parent 
+        class).
+        """
         
         label = None
         """The string identifier of the handler implementation."""

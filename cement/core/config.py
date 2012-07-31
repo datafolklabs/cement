@@ -161,6 +161,7 @@ class IConfig(interface.Interface):
         """
         Returns whether or not the section exists.
         
+        :param section: The section to test for.
         :returns: boolean
         
         """
@@ -171,7 +172,10 @@ class CementConfigHandler(handler.CementBaseHandler):
     
     """
     class Meta:
-        """Handler meta-data."""
+        """
+        Handler meta-data (can be passed as keyword arguments to the parent 
+        class).
+        """
         
         label = None
         """The string identifier of the implementation."""

@@ -144,6 +144,11 @@ class CementLogHandler(handler.CementBaseHandler):
     
     """
     class Meta:
+        """
+        Handler meta-data (can be passed as keyword arguments to the parent 
+        class).
+        """
+        
         interface = ILog
         
     def __init__(self, *args, **kw):

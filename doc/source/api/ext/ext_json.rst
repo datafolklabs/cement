@@ -6,3 +6,5 @@
 .. automodule:: cement.ext.ext_json
     :members:
     :undoc-members:
+    :private-members:
+    :show-inheritance:

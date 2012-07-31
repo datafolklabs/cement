@@ -6,3 +6,5 @@
 .. automodule:: cement.utils.misc
     :members:    
     :undoc-members:
+    :private-members:
+    :show-inheritance:
