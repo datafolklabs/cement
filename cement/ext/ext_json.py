@@ -29,7 +29,7 @@ class JsonOutputHandler(output.CementOutputHandler):
     def _setup(self, app_obj):
         self.app = app_obj
         
-    def render(self, data_dict, template=None, unpicklable=False):
+    def render(self, data_dict, template=None):
         """
         Take a data dictionary and render it as Json output.  Note that the
         template option is received here per the interface, however this 
@@ -44,9 +44,6 @@ class JsonOutputHandler(output.CementOutputHandler):
         
             template
                 This option is completely ignored.
-                
-            unpicklable
-                Whether or not the object is unpicklable (default: False)
                 
         Returns: string (json)
         
