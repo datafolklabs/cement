@@ -3,16 +3,16 @@
 from cement.core import exc, interface, output, handler, meta
 from cement.utils import test
 
-class TestInterface(meta.MetaMixin):
+class TestInterface(interface.Interface):
     class IMeta:
         label = 'test'
 
-class TestHandler(meta.MetaMixin):
+class TestHandler(handler.CementBaseHandler):
     class Meta:
         interface = TestInterface
         label = 'test'
         
-class TestHandler2(meta.MetaMixin):
+class TestHandler2(handler.CementBaseHandler):
     class Meta:
         interface = output.IOutput
         label = 'test2'

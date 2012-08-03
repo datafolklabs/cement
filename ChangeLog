@@ -53,10 +53,14 @@ Incompatible Changes:
         * Removed cement.foundation.lay_cement().  Now use CementApp directly.
         * Removed cement.handler.enabled().  Now use `handler.registered()` 
           instead.
+    * :issue:`154` - Validate for handler config_defaults and config_section
+        by default.  Only incompatible if not previously sub-classing from
+        handler.CementBaseHandler.
+        
     * :issue:`157` - CementRuntimeError renamed as FrameworkError
     * :issue:`158` - CementSignalError renamed as CaughtSignal
     * :issue:`159` - CementInterfaceError renamed as InterfaceError
-
+    
 Misc:
 
     * :issue:`155` - Removed unused CementArgumentError, and 

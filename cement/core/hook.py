@@ -104,7 +104,8 @@ def run(name, *args, **kwargs):
     # Will order based on weight (the first item in the tuple)
     backend.hooks[name].sort(key=operator.itemgetter(0)) 
     for hook in backend.hooks[name]:
-        LOG.debug("running hook '%s' (%s) from %s" % (name, hook[2], hook[2].__module__))
+        LOG.debug("running hook '%s' (%s) from %s" % \
+                 (name, hook[2], hook[2].__module__))
         res = hook[2](*args, **kwargs)
         
         # Results are yielded, so you must fun a for loop on it, you can not

@@ -5,6 +5,8 @@ Cement core interface module.
 
 from ..core import exc
 
+DEFAULT_META = ['interface', 'label', 'config_defaults', 'config_section']
+
 class Interface(object):
     """
     An interface definition class.  All Interfaces should subclass from
@@ -27,7 +29,7 @@ class Attribute(object):
     def __repr__(self):
         return "<interface.Attribute - '%s'>" % self.description
         
-def validate(interface, obj, members=[], meta=['interface', 'label']):
+def validate(interface, obj, members=[], meta=DEFAULT_META):
     """
     A wrapper to validate interfaces.
     
