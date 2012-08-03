@@ -136,7 +136,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         
         # We don't catch this because it would make debugging a nightmare
         if full_module not in sys.modules:
-            __import__(full_module, globals(), locals(), [], -1)
+            __import__(full_module, globals(), locals(), [], 0)
                 
         if hasattr(sys.modules[full_module], 'load'):
             sys.modules[full_module].load()
