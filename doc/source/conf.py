@@ -18,8 +18,8 @@ import sys, os
 sys.path.insert(0, os.path.abspath('../cement/'))
 
 # If we dont' prep an app, then we'll get runtime errors
-from cement.utils.test_helper import prep
-prep()
+from cement.utils import test
+app = test.TestApp()
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
