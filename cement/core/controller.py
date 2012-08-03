@@ -35,11 +35,11 @@ def controller_validator(klass, obj):
     try:
         for _args,_kwargs in obj._meta.arguments:
             if not type(_args) is list:
-                raise exc.CementInterfaceError(errmsg)
+                raise exc.InterfaceError(errmsg)
             if not type(_kwargs) is dict:
-                raise exc.CementInterfaceError(errmsg)
+                raise exc.InterfaceError(errmsg)
     except ValueError:
-        raise exc.CementInterfaceError(errmsg)
+        raise exc.InterfaceError(errmsg)
             
 class IController(interface.Interface):
     """
@@ -358,7 +358,7 @@ class CementBaseController(handler.CementBaseHandler):
         """
         Collect arguments from this controller.
         
-        :raises: cement.core.exc.CementRuntimeError
+        :raises: cement.core.exc.FrameworkError
             
         """
         # collect our Meta arguments
@@ -388,7 +388,7 @@ class CementBaseController(handler.CementBaseHandler):
                     )
 
                 if func_dict['label'] == self._meta.label:
-                    raise exc.CementRuntimeError(
+                    raise exc.FrameworkError(
                         "Controller command '%s' " % func_dict['label'] + \
                         "matches controller label.  Use 'default' instead."
                         )
@@ -431,7 +431,7 @@ class CementBaseController(handler.CementBaseHandler):
         
         :param controller: The controller to collect arguments from.
         :type controller: Uninstantiated controller class
-        :raises: cement.core.exc.CementRuntimeError
+        :raises: cement.core.exc.FrameworkError
                 
         """           
         contr = controller()
@@ -457,7 +457,7 @@ class CementBaseController(handler.CementBaseHandler):
                         )
                     continue
                 else:
-                    raise exc.CementRuntimeError(
+                    raise exc.FrameworkError(
                         "Duplicate command '%s' " % label + \
                         "found in '%s' " % contr._meta.label + \
                         "controller."
@@ -490,7 +490,7 @@ class CementBaseController(handler.CementBaseHandler):
         Collects all commands and arguments from this controller, and other
         availble controllers.
         
-        :raises: cement.core.exc.CementRuntimeError
+        :raises: cement.core.exc.FrameworkError
             
         """
         
@@ -512,14 +512,14 @@ class CementBaseController(handler.CementBaseHandler):
             func = self.exposed[label]
             for alias in func['aliases']:
                 if alias in known_aliases:
-                    raise exc.CementRuntimeError(
+                    raise exc.FrameworkError(
                         "Alias '%s' " % alias + \
                         "from the '%s' controller " % func['controller'] + \
                         "collides with an alias of the same name " + \
                         "in the '%s' controller." % known_aliases[alias]['controller']
                         )
                 elif alias in self.exposed.keys():
-                    raise exc.CementRuntimeError(
+                    raise exc.FrameworkError(
                         "Alias '%s' " % alias + \
                         "from the '%s' controller " % func['controller'] + \
                         "collides with a command of the same name in the " + \

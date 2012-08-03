@@ -24,11 +24,11 @@ class InterfaceTestCase(test.CementTestCase):
     def setUp(self):
         self.app = self.make_app()
         
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_interface_class(self):
         try:
             i = interface.Interface()
-        except exc.CementInterfaceError as e:
+        except exc.InterfaceError as e:
             self.eq(e.msg, "Interfaces can not be used directly.")
             raise
 
@@ -39,29 +39,29 @@ class InterfaceTestCase(test.CementTestCase):
     def test_validator(self):
         interface.validate(TestInterface, TestHandler(), [])
     
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_validate_bad_interface(self):
         han = TestHandler2()
         try:
             interface.validate(TestInterface, han, [])
-        except exc.CementInterfaceError as e:
+        except exc.InterfaceError as e:
             self.eq(e.msg, "%s does not implement %s." % (han, TestInterface))
             raise
         
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_validate_bad_interface_no_meta(self):
         han = TestHandler3()
         try:
             interface.validate(TestInterface, han, [])
-        except exc.CementInterfaceError as e:
+        except exc.InterfaceError as e:
             self.eq(e.msg, "Invalid or missing: ['_meta'] in %s" % han)
             raise 
 
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_validate_bad_interface_missing_meta(self):
         han = TestHandler()
         try:
             interface.validate(TestInterface, han, [], ['missing_meta'])
-        except exc.CementInterfaceError as e:
+        except exc.InterfaceError as e:
             self.eq(e.msg, "Invalid or missing: ['_meta.missing_meta'] in %s" % han)
             raise

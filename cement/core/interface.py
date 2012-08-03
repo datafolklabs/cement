@@ -12,7 +12,7 @@ class Interface(object):
     used directly.
     """
     def __init__(self):
-        raise exc.CementInterfaceError("Interfaces can not be used directly.")
+        raise exc.InterfaceError("Interfaces can not be used directly.")
             
 class Attribute(object):
     """
@@ -35,13 +35,13 @@ def validate(interface, obj, members=[], meta=['interface', 'label']):
     :param obj: The object to validate.
     :param members: The object members that must exist.
     :param meta: The meta object members that must exist.
-    :raises: cement.core.exc.CementInterfaceError
+    :raises: cement.core.exc.InterfaceError
             
     """
     invalid = []
 
     if hasattr(obj, '_meta') and interface != obj._meta.interface:
-        raise exc.CementInterfaceError("%s does not implement %s." % \
+        raise exc.InterfaceError("%s does not implement %s." % \
                                       (obj, interface))
         
     for member in members:
@@ -56,5 +56,5 @@ def validate(interface, obj, members=[], meta=['interface', 'label']):
                 invalid.append("_meta.%s" % member)
             
     if invalid:
-        raise exc.CementInterfaceError("Invalid or missing: %s in %s" % \
+        raise exc.InterfaceError("Invalid or missing: %s in %s" % \
                                       (invalid, obj))

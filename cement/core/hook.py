@@ -10,7 +10,7 @@ def define(name):
     Define a hook namespace that plugins can register hooks in.
     
     :param name: The name of the hook, stored as hooks['name']
-    :raises: cement.core.exc.CementRuntimeError
+    :raises: cement.core.exc.FrameworkError
     
     Usage:
     
@@ -23,7 +23,7 @@ def define(name):
     """
     LOG.debug("defining hook '%s'", name)
     if name in backend.hooks:
-        raise exc.CementRuntimeError("Hook name '%s' already defined!" % name)
+        raise exc.FrameworkError("Hook name '%s' already defined!" % name)
     backend.hooks[name] = []
  
 def defined(hook_name):
@@ -86,7 +86,7 @@ def run(name, *args, **kwargs):
     :param args: Additional arguments to be passed to the hook functions.
     :param kwargs: Additional keyword arguments to be passed to the hook 
         functions.
-    :raises: CementRuntimeError
+    :raises: FrameworkError
     
     Usage:
     
@@ -99,7 +99,7 @@ def run(name, *args, **kwargs):
             ...
     """
     if name not in backend.hooks:
-        raise exc.CementRuntimeError("Hook name '%s' is not defined!" % name)
+        raise exc.FrameworkError("Hook name '%s' is not defined!" % name)
 
     # Will order based on weight (the first item in the tuple)
     backend.hooks[name].sort(key=operator.itemgetter(0)) 

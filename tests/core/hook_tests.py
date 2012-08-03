@@ -27,11 +27,11 @@ class HookTestCase(test.CementTestCase):
     def test_define(self):
         self.ok('nosetests_hook' in backend.hooks)
 
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_define_again(self):
         try:
             hook.define('nosetests_hook')
-        except exc.CementRuntimeError as e:
+        except exc.FrameworkError as e:
             self.eq(e.msg, "Hook name 'nosetests_hook' already defined!")
             raise
     
@@ -54,7 +54,7 @@ class HookTestCase(test.CementTestCase):
         self.eq(results[1], 'kapla 2')
         self.eq(results[2], 'kapla 1')
 
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_run_bad_hook(self):
         for res in hook.run('some_bogus_hook'):
             pass
@@ -84,5 +84,5 @@ class HookTestCase(test.CementTestCase):
         # this is where cement_signal_hook is run
         try:
             foundation.cement_signal_handler(signal.SIGTERM, 5)
-        except exc.CementSignalError as e:
+        except exc.CaughtSignal as e:
             pass

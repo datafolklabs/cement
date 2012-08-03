@@ -15,7 +15,6 @@ For example:
 .. code-block:: python
 
     from cement.core import foundation
-    from cement.core.exc import CementRuntimeError
     
     app = foundation.CementApp('helloworld')
     

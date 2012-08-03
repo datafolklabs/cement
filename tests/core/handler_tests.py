@@ -54,36 +54,36 @@ class HandlerTestCase(test.CementTestCase):
     def setUp(self):
         self.app = self.make_app()
         
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_get_invalid_handler(self):
         handler.get('output', 'bogus_handler')
 
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_register_invalid_handler(self):
         handler.register(BogusOutputHandler)
 
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_register_invalid_handler_no_meta(self):
         handler.register(BogusHandler3)
 
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_register_invalid_handler_no_Meta_label(self):
         handler.register(BogusHandler4)
     
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_register_duplicate_handler(self):
         from cement.ext import ext_nulloutput
         handler.register(ext_nulloutput.NullOutputHandler)
         try:
             handler.register(DuplicateHandler)
-        except exc.CementRuntimeError:
+        except exc.FrameworkError:
             raise
     
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_register_unproviding_handler(self):
         try:
             handler.register(BogusOutputHandler2)
-        except exc.CementInterfaceError:
+        except exc.InterfaceError:
             del backend.handlers['output']
             raise
 
@@ -93,11 +93,11 @@ class HandlerTestCase(test.CementTestCase):
         self.eq(handler.registered('output', 'bogus_handler'), False)
         self.eq(handler.registered('bogus_type', 'bogus_handler'), False)
 
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_get_bogus_handler(self):
         handler.get('log', 'bogus')
 
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_get_bogus_handler_type(self):
         handler.get('bogus', 'bogus')
 
@@ -115,7 +115,7 @@ class HandlerTestCase(test.CementTestCase):
         res = ConfigParserConfigHandler in handler_list
         self.ok(res)
     
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_handler_list_bogus_type(self):
         self.app.setup()
         handler_list = handler.list('bogus')
@@ -123,15 +123,15 @@ class HandlerTestCase(test.CementTestCase):
     def is_defined(handler_type):
         self.eq(handler.defined(handler_type), True)
 
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_bogus_interface_no_IMeta(self):
         handler.define(BogusInterface1)
 
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_bogus_interface_no_IMeta_label(self):
         handler.define(BogusInterface2)
 
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_define_duplicate_interface(self):
         handler.define(output.IOutput)
         handler.define(output.IOutput)

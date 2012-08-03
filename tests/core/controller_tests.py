@@ -211,23 +211,23 @@ class ControllerTestCase(test.CementTestCase):
             base_controller=TestBaseController
             )
         
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_invalid_controller(self):
         handler.register(BogusController)
 
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_invalid_arguments_tuple(self):
         handler.register(BogusController2)
         self.app.setup()
         self.app.run()
 
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_invalid_arguments_dict(self):
         handler.register(BogusController3)
         self.app.setup()
         self.app.run()    
 
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_invalid_arguments_list(self):
         handler.register(BogusController4)
         self.app.setup()
@@ -300,25 +300,25 @@ class ControllerTestCase(test.CementTestCase):
         app.setup()
         app.run()
      
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_duplicate_command(self):
         handler.register(TestDuplicateController)
         self.app.setup()
     
         try:
             self.app.run()
-        except exc.CementRuntimeError as e:
+        except exc.FrameworkError as e:
             self.ok(e.msg.find('duplicate'))
             raise
 
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_duplicate_hidden_command(self):
         handler.register(TestDuplicate2Controller)
         self.app.setup()
     
         try:
             self.app.run()
-        except exc.CementRuntimeError:
+        except exc.FrameworkError:
             # FIX ME: Check the error message is right error
             raise
 
@@ -359,25 +359,25 @@ class ControllerTestCase(test.CementTestCase):
         self.eq(self.app.config.get('base', 'test_base_default'), 1)
         self.eq(self.app.config.get('base', 'test_stacked_default'), 2)
     
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_same_name_controller(self):
         handler.register(SameNameController)
         self.app.setup()
     
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_same_name_alias_controller(self):
         handler.register(TestSecondaryController)
         handler.register(SameNameAliasController)
         self.app.setup()
         self.app.run()
     
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_duplicate_alias(self):
         handler.register(TestSecondaryController)
         handler.register(TestDuplicate3Controller)
         self.app.setup()
         try:
             self.app.run()
-        except exc.CementRuntimeError as e:
+        except exc.FrameworkError as e:
             self.ok(e.msg.find('collides'))
             raise

@@ -29,7 +29,7 @@ def cement_signal_handler(signum, frame):
     
     :param signum: The signal number
     :param frame: The signal frame.
-    :raises: cement.core.exc.CementSignalError
+    :raises: cement.core.exc.CaughtSignal
     
     """      
     LOG.debug('Caught signal %s' % signum)  
@@ -37,7 +37,7 @@ def cement_signal_handler(signum, frame):
     for res in hook.run('signal', signum, frame):
         pass
         
-    raise exc.CementSignalError(signum, frame)
+    raise exc.CaughtSignal(signum, frame)
                  
 class CementApp(meta.MetaMixin):
     """
@@ -201,7 +201,7 @@ class CementApp(meta.MetaMixin):
         
         catch_signals = [signal.SIGTERM, signal.SIGINT]
         """
-        List of signals to catch, and raise exc.CementSignalError for.
+        List of signals to catch, and raise exc.CaughtSignal for.
         Can be set to None to disable signal handling.
         """
         
@@ -367,11 +367,11 @@ class CementApp(meta.MetaMixin):
         :type member_name: str
         :param member_object: The function or class object to attach to 
             CementApp().
-        :raises: cement.core.exc.CementRuntimeError
+        :raises: cement.core.exc.FrameworkError
                 
         """
         if hasattr(self, member_name):
-            raise exc.CementRuntimeError("App member '%s' already exists!" % \
+            raise exc.FrameworkError("App member '%s' already exists!" % \
                                          member_name)
         LOG.debug("extending appication with '.%s' (%s)" % \
                  (member_name, member_object))
@@ -379,7 +379,7 @@ class CementApp(meta.MetaMixin):
 
     def _validate_label(self):
         if not self._meta.label:
-            raise exc.CementRuntimeError("Application name missing.")
+            raise exc.FrameworkError("Application name missing.")
         
         # validate the name is ok
         ok = ['_', '-']
@@ -388,7 +388,7 @@ class CementApp(meta.MetaMixin):
                 continue
             
             if not char.isalnum():
-                raise exc.CementRuntimeError(
+                raise exc.FrameworkError(
                     "App label can only contain alpha-numeric, dashes, or underscores."
                     )
                     
@@ -621,7 +621,7 @@ class CementApp(meta.MetaMixin):
             han._setup(self)
             return han
         elif han is None and raise_error:
-            raise exc.CementRuntimeError(msg)
+            raise exc.FrameworkError(msg)
         elif han is None:
             LOG.debug(msg)
         

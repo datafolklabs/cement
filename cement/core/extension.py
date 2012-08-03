@@ -123,7 +123,7 @@ class CementExtensionHandler(handler.CementBaseHandler):
         :param ext_module: The extension module name.  For example: 
             'cement.ext.ext_logging'.
         :type ext_module: str
-        :raises: cement.core.exc.CementRuntimeError
+        :raises: cement.core.exc.FrameworkError
                 
         """
         # If its not a full module path then preppend our default path
@@ -146,7 +146,7 @@ class CementExtensionHandler(handler.CementBaseHandler):
                 self._loaded_extensions.append(ext_module)
    
         except ImportError as e:
-            raise exc.CementRuntimeError(e.args[0])
+            raise exc.FrameworkError(e.args[0])
     
     def load_extensions(self, ext_list):
         """

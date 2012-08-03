@@ -38,7 +38,7 @@ Signals Caught by Default
 -------------------------
 
 By default Cement catches the signals SIGTERM and SIGINT.  When these signals
-are caught, Cement raises the exception 'CementSignalError(signum, frame)' 
+are caught, Cement raises the exception 'CaughtSignal(signum, frame)' 
 where 'signum' and 'frame' are the parameters passed to the signal handler.
 By raising an exception, we are able to pass runtime back to our applications
 main process (within a try/except block) and maintain the ability to access
@@ -56,7 +56,7 @@ A basic application using default handling might look like:
     
     try:
         app.run()
-    except exc.CementSignalError as e:
+    except exc.CaughtSignal as e:
         # do something with e.signum or e.frame (passed from signal library)
         
         if e.signum == signal.SIGTERM:
@@ -104,14 +104,14 @@ is encountered.
     try:
         app.setup()
         app.run()
-    except exc.CementSignalError as e:
+    except exc.CaughtSignal as e:
         pass
     finally:
         app.close()
 
 
 The key thing to note here is that the main application itself handles the
-exc.CementSignalError exception, where as using the cement 'signal' hook is 
+exc.CaughtSignal exception, where as using the cement 'signal' hook is 
 useful for plugins and extensions to be able to tie into the signal handling
 outside of the main application.  Both serve the same purpose however the
 application object is not available (passed to) the cement 'signal' hook which

@@ -170,7 +170,7 @@ class PluginTestCase(test.CementTestCase):
         res = 'bogus_plugin' not in app.plugin.enabled_plugins
         self.ok(res)
 
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_bad_plugin_dir(self):
         tmpdir = mkdtemp()
         f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
@@ -187,7 +187,7 @@ class PluginTestCase(test.CementTestCase):
             app.setup()
         except ImportError as e:
             raise
-        except exc.CementRuntimeError as e:
+        except exc.FrameworkError as e:
             raise 
         finally:
             shutil.rmtree(tmpdir)

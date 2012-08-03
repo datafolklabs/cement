@@ -112,10 +112,10 @@ When 'handler.register()' is called to register a handler to an interface,
 the validator is called and the handler object is passed to the validator.  In
 the above example, we simply define what members we want to validate for and
 then call interface.validate() which will raise 
-cement.core.exc.CementInterfaceError if validation fails.  It is not 
+cement.core.exc.InterfaceError if validation fails.  It is not 
 necessary to use interface.validate() but it is useful and recommended.  In 
 general, the key thing to note is that a validator either raises 
-CementInterfaceError or does nothing if validation passes.
+InterfaceError or does nothing if validation passes.
 
 Registering Handlers to an Interface
 ------------------------------------

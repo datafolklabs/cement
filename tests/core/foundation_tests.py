@@ -60,14 +60,14 @@ class FoundationTestCase(test.CementTestCase):
         app = self.make_app('my_app', argv=['bogus', 'args'])
         self.eq(app.argv, ['bogus', 'args'])
         
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_resolve_handler_bad_handler(self):
         class Bogus(object):
             pass
             
         try:
             self.app._resolve_handler('output', Bogus)
-        except exc.CementRuntimeError as e:
+        except exc.FrameworkError as e:
             self.ok(e.msg.find('resolve'))
             raise
         
@@ -112,19 +112,19 @@ class FoundationTestCase(test.CementTestCase):
         app.output = None
         app.render(dict(foo='bar'))
 
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_bad_label(self):
         try:
             app = foundation.CementApp(None)
-        except exc.CementRuntimeError as e:
+        except exc.FrameworkError as e:
             # FIX ME: verify error msg
             raise
     
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_bad_label_chars(self):
         try:
             app = foundation.CementApp('some!bogus()label')
-        except exc.CementRuntimeError as e:
+        except exc.FrameworkError as e:
             self.ok(e.msg.find('alpha-numeric'))
             raise
             
@@ -170,12 +170,12 @@ class FoundationTestCase(test.CementTestCase):
         except SystemExit:
             pass
     
-    @test.raises(exc.CementSignalError)
+    @test.raises(exc.CaughtSignal)
     def test_cement_signal_handler(self):
         import signal
         try:
             foundation.cement_signal_handler(signal.SIGTERM, 5)
-        except exc.CementSignalError as e:
+        except exc.CaughtSignal as e:
             self.eq(e.signum, signal.SIGTERM)
             self.eq(e.frame, 5)
             raise
@@ -188,7 +188,7 @@ class FoundationTestCase(test.CementTestCase):
         self.app.extend('kapla', my_extended_func)
         self.eq(self.app.kapla(), 'KAPLA')
         
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_extended_duplicate(self):
         self.app.extend('config', my_extended_func)
     

@@ -13,7 +13,7 @@ class BogusExtensionHandler(extension.CementExtensionHandler):
         label = 'bogus'
 
 class ExtensionTestCase(test.CementTestCase):
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_invalid_extension_handler(self):
         # the handler type bogus doesn't exist
         handler.register(BogusExtensionHandler)
@@ -29,7 +29,7 @@ class ExtensionTestCase(test.CementTestCase):
         ext.load_extensions(['cement.ext.ext_configparser'])
         ext.load_extensions(['cement.ext.ext_configparser'])
     
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_load_bogus_extension(self):
         ext = extension.CementExtensionHandler()
         ext._setup(self.app)

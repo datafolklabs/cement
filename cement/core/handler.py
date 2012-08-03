@@ -78,7 +78,7 @@ def get(handler_type, handler_label, *args):
     :param fallback:  A fallback value to return if handler_label doesn't 
         exist.
     :returns: An uninstantiated handler object
-    :raises: cement.core.exc.CementRuntimeError
+    :raises: cement.core.exc.FrameworkError
             
     Usage:
     
@@ -88,7 +88,7 @@ def get(handler_type, handler_label, *args):
 
     """
     if handler_type not in backend.handlers:
-        raise exc.CementRuntimeError("handler type '%s' does not exist!" % \
+        raise exc.FrameworkError("handler type '%s' does not exist!" % \
                                      handler_type)
 
     if handler_label in backend.handlers[handler_type]:
@@ -96,7 +96,7 @@ def get(handler_type, handler_label, *args):
     elif len(args) > 0:
         return args[0]
     else:
-        raise exc.CementRuntimeError("handlers['%s']['%s'] does not exist!" % \
+        raise exc.FrameworkError("handlers['%s']['%s'] does not exist!" % \
                                     (handler_type, handler_label))
     
 def list(handler_type):
@@ -106,11 +106,11 @@ def list(handler_type):
     :param handler_type: The type of handler (i.e. 'output')
     :returns: List of handlers that match `type`.
     :rtype: list
-    :raises: cement.core.exc.CementRuntimeError
+    :raises: cement.core.exc.FrameworkError
     
     """
     if handler_type not in backend.handlers:
-        raise exc.CementRuntimeError("handler type '%s' does not exist!" % \
+        raise exc.FrameworkError("handler type '%s' does not exist!" % \
                                      handler_type)
                                      
     res = []
@@ -127,8 +127,8 @@ def define(interface):
     
     :param interface: The interface class that defines the interface to be 
         implemented by handlers.
-    :raises: cement.core.exc.CementInterfaceError
-    :raises: cement.core.exc.CementRuntimeError
+    :raises: cement.core.exc.InterfaceError
+    :raises: cement.core.exc.FrameworkError
     
     Usage:
     
@@ -140,17 +140,17 @@ def define(interface):
     
     """
     if not hasattr(interface, 'IMeta'):
-        raise exc.CementInterfaceError("Invalid %s, " % interface + \
+        raise exc.InterfaceError("Invalid %s, " % interface + \
                                        "missing 'IMeta' class.")  
     if not hasattr(interface.IMeta, 'label'):
-        raise exc.CementInterfaceError("Invalid %s, " % interface + \
+        raise exc.InterfaceError("Invalid %s, " % interface + \
                                        "missing 'IMeta.label' class.")  
                                        
     LOG.debug("defining handler type '%s' (%s)" % \
         (interface.IMeta.label, interface.__name__))
                                                                               
     if interface.IMeta.label in backend.handlers:
-        raise exc.CementRuntimeError("Handler type '%s' already defined!" % \
+        raise exc.FrameworkError("Handler type '%s' already defined!" % \
                                      interface.IMeta.label)
     backend.handlers[interface.IMeta.label] = {'__interface__' : interface}
     
@@ -172,12 +172,12 @@ def register(handler_obj):
     """
     Register a handler object to a handler.  If the same object is already
     registered then no exception is raised, however if a different object
-    attempts to be registered to the same name a CementRuntimeError is 
+    attempts to be registered to the same name a FrameworkError is 
     raised.
     
     :param handler_obj: The uninstantiated handler object to register.
-    :raises: cement.core.exc.CementInterfaceError
-    :raises: cement.core.exc.CementRuntimeError
+    :raises: cement.core.exc.InterfaceError
+    :raises: cement.core.exc.FrameworkError
     
     Usage:
     
@@ -203,10 +203,10 @@ def register(handler_obj):
     obj = orig_obj()
         
     if not hasattr(obj._meta, 'label') or not obj._meta.label:
-        raise exc.CementInterfaceError("Invalid handler %s, " % orig_obj + \
+        raise exc.InterfaceError("Invalid handler %s, " % orig_obj + \
                                        "missing '_meta.label'.")
     if not hasattr(obj._meta, 'interface') or not obj._meta.interface:
-        raise exc.CementInterfaceError("Invalid handler %s, " % orig_obj + \
+        raise exc.InterfaceError("Invalid handler %s, " % orig_obj + \
                                        "missing '_meta.interface'.")
 
     # translate dashes to underscores
@@ -218,11 +218,11 @@ def register(handler_obj):
              (orig_obj, handler_type, obj._meta.label))
              
     if handler_type not in backend.handlers:
-        raise exc.CementRuntimeError("Handler type '%s' doesn't exist." % \
+        raise exc.FrameworkError("Handler type '%s' doesn't exist." % \
                                      handler_type)                     
     if obj._meta.label in backend.handlers[handler_type] and \
         backend.handlers[handler_type][obj._meta.label] != obj:
-        raise exc.CementRuntimeError("handlers['%s']['%s'] already exists" % \
+        raise exc.FrameworkError("handlers['%s']['%s'] already exists" % \
                                     (handler_type, obj._meta.label))
 
     interface = backend.handlers[handler_type]['__interface__']

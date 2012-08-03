@@ -4,30 +4,30 @@ from cement.core import exc
 from cement.utils import test
 
 class ExceptionTestCase(test.CementTestCase):
-    @test.raises(exc.CementRuntimeError)
+    @test.raises(exc.FrameworkError)
     def test_cement_runtime_error(self):
         try:
-            raise exc.CementRuntimeError("CementRuntimeError Test")
-        except exc.CementRuntimeError as e:
-            self.eq(e.msg, "CementRuntimeError Test")
-            self.eq(e.__str__(), "CementRuntimeError Test")
+            raise exc.FrameworkError("FrameworkError Test")
+        except exc.FrameworkError as e:
+            self.eq(e.msg, "FrameworkError Test")
+            self.eq(e.__str__(), "FrameworkError Test")
             raise
         
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_cement_interface_error(self):
         try:
-            raise exc.CementInterfaceError("CementInterfaceError Test")
-        except exc.CementInterfaceError as e:
-            self.eq(e.msg, "CementInterfaceError Test")
-            self.eq(e.__str__(), "CementInterfaceError Test")
+            raise exc.InterfaceError("InterfaceError Test")
+        except exc.InterfaceError as e:
+            self.eq(e.msg, "InterfaceError Test")
+            self.eq(e.__str__(), "InterfaceError Test")
             raise
 
-    @test.raises(exc.CementSignalError)
+    @test.raises(exc.CaughtSignal)
     def test_cement_signal_error(self):
         try:
             import signal
-            raise exc.CementSignalError(signal.SIGTERM, 5)
-        except exc.CementSignalError as e:
+            raise exc.CaughtSignal(signal.SIGTERM, 5)
+        except exc.CaughtSignal as e:
             self.eq(e.signum, signal.SIGTERM)
             self.eq(e.frame, 5)
             raise

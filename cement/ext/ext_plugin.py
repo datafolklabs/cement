@@ -155,7 +155,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         
         :param plugin_name: The name of the plugin to load.
         :type plugin_name: str
-        :raises: cement.core.exc.CementRuntimeError
+        :raises: cement.core.exc.FrameworkError
         
         """
         LOG.debug("loading application plugin '%s'" % plugin_name)
@@ -167,7 +167,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         elif self._load_plugin_from_bootstrap(plugin_name, self.bootstrap):
             self._loaded_plugins.append(plugin_name)
         else:
-            raise exc.CementRuntimeError("Unable to load plugin '%s'." % 
+            raise exc.FrameworkError("Unable to load plugin '%s'." % 
                                          plugin_name)
     
     def load_plugins(self, plugin_list):

@@ -13,11 +13,11 @@ class LogTestCase(test.CementTestCase):
     def setUp(self):
         self.app = self.make_app()
         
-    @test.raises(exc.CementInterfaceError)
+    @test.raises(exc.InterfaceError)
     def test_unproviding_handler(self):
         try:
             handler.register(BogusHandler1)
-        except exc.CementInterfaceError:
+        except exc.InterfaceError:
             raise
 
     def test_logging(self):
