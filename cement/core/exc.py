@@ -14,20 +14,11 @@ class CementError(Exception):
     def __str__(self):
         return self.msg
 
-            
-class CementConfigError(CementError):
-    """Cement configuration related errors."""
-    pass
-
 class CementRuntimeError(CementError):
     """
     General runtime errors.  Similar to '500 Internal Server Error' in the
     web world.
     """
-    pass
-        
-class CementArgumentError(CementError):
-    """Command line argument related errors."""
     pass
 
 class CementInterfaceError(CementError):

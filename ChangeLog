@@ -54,6 +54,11 @@ Incompatible Changes:
         * Removed cement.handler.enabled().  Now use `handler.registered()` 
           instead.
 
+Misc:
+
+    * :issue:`155` - Removed unused CementArgumentError, and 
+        CementConfigError.  These types of exceptions should be defined at
+        the application level.
 
 1.9.14 - Sun Jul 16, 2012
 ------------------------------------------------------------------------------

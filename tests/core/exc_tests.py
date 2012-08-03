@@ -4,15 +4,6 @@ from cement.core import exc
 from cement.utils import test
 
 class ExceptionTestCase(test.CementTestCase):
-    @test.raises(exc.CementConfigError)    
-    def test_cement_config_error(self):
-        try:
-            raise exc.CementConfigError("CementConfigError Test")
-        except exc.CementConfigError as e:
-            self.eq(e.msg, "CementConfigError Test")
-            self.eq(e.__str__(), "CementConfigError Test")
-            raise
-        
     @test.raises(exc.CementRuntimeError)
     def test_cement_runtime_error(self):
         try:
@@ -22,15 +13,6 @@ class ExceptionTestCase(test.CementTestCase):
             self.eq(e.__str__(), "CementRuntimeError Test")
             raise
         
-    @test.raises(exc.CementArgumentError)
-    def test_cement_argument_error(self):
-        try:
-            raise exc.CementArgumentError("CementArgumentError Test")
-        except exc.CementArgumentError as e:
-            self.eq(e.msg, "CementArgumentError Test")
-            self.eq(e.__str__(), "CementArgumentError Test")
-            raise
-
     @test.raises(exc.CementInterfaceError)
     def test_cement_interface_error(self):
         try:
