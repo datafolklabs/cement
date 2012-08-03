@@ -58,7 +58,7 @@ All contributors should attempt to abide by the following:
         * ``git pull --rebase`` to get latest changes from upstream
         * Checkout a new branch.  For example:
             * ``git checkout -b feature/<feature_name>`` 
-            * ``git checkout -b bug/<bug_number``
+            * ``git checkout -b bug/<bug_number>``
     * Code must include the following:
         * All tests pass successfully
         * Coverage reports 100% code coverage when running tests
