@@ -1,5 +1,6 @@
 """Tests for cement.core.setup."""
 
+import os
 from cement.core import foundation, exc, backend, config, extension, plugin
 from cement.core import log, output, handler, hook, arg, controller
 from cement.utils import test
@@ -193,5 +194,13 @@ class FoundationTestCase(test.CementTestCase):
         app = self.make_app('myapp', config_files=None)
         app.setup()
     
-        res = '/etc/myapp/myapp.conf' in app._meta.config_files
-        self.ok(res)
+        label = 'myapp'
+        user_home = os.path.abspath(os.path.expanduser(os.environ['HOME'])) 
+        files = [ 
+                os.path.join('/', 'etc', label, '%s.conf' % label), 
+                os.path.join(user_home, '.%s.conf' % label), 
+                os.path.join(user_home, '.%s' % label, 'config'), 
+                ] 
+        for f in files:
+            res = f in app._meta.config_files
+            self.ok(res)
