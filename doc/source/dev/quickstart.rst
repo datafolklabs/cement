@@ -237,9 +237,8 @@ handle command dispatch and rapid development.
         # close the app
         app.close()
 
-As you can see, we're able to build out the core functionality of our app
-via a controller class.  Notice the use of controllers, which allow us to 
-build out 'sub-commands' to our app.
+As you can see, we're able to build out the core functionality of our app such
+as arguments and sub-commands via controller classes.
 
 Lets see what this looks like:
 
