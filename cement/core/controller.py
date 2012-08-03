@@ -224,7 +224,7 @@ class CementBaseController(handler.CementBaseHandler):
         ``[ ( ['-f', '--foo'], dict(dest='foo', help='foo option') ), ]``
         
         This is equivelant to manually adding each argument to the argument
-        parser:
+        parser as in the following example:
         
         ``parser.add_argument(['-f', '--foo'], help='foo option', dest='foo')``
         
@@ -241,6 +241,11 @@ class CementBaseController(handler.CementBaseHandler):
         epilog = None
         """
         The text that is displayed at the bottom when '--help' is passed.
+        """
+        
+        argument_formatter = argparse.RawDescriptionHelpFormatter
+        """
+        The argument formatter class to use to display --help output.
         """
         
     ### FIX ME: What is this used for???
@@ -301,7 +306,7 @@ class CementBaseController(handler.CementBaseHandler):
                         
         self.app.args.description = self._help_text
         self.app.args.usage = self._usage_text
-        self.app.args.formatter_class=argparse.RawDescriptionHelpFormatter
+        self.app.args.formatter_class=self._meta.argument_formatter
 
         self.app._parse_args()
         self.pargs = self.app.pargs
