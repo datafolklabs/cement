@@ -189,4 +189,9 @@ class FoundationTestCase(test.CementTestCase):
         app = self.make_app('myapp')
         app._resolve_handler('cache', None, raise_error=False)
         
+    def test_config_files_is_none(self):
+        app = self.make_app('myapp', config_files=None)
+        app.setup()
     
+        res = '/etc/myapp/myapp.conf' in app._meta.config_files
+        self.ok(res)
