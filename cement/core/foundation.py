@@ -627,10 +627,6 @@ class CementApp(meta.MetaMixin):
             self._meta.config_section = self._meta.label
         self.config.add_section(self._meta.config_section)
         
-        if hasattr(self._meta, 'defaults'):
-            print('DEPRECATION WARNING: CementApp.Meta.defaults is ' + \
-                  'deprecated.  Use CementApp.Meta.config_defaults instead.')
-            self.config.merge(self._meta.defaults)
         if not self._meta.config_defaults is None:
             self.config.merge(self._meta.config_defaults)
         
@@ -762,14 +758,3 @@ class CementApp(meta.MetaMixin):
                 
         """
         pass
-        
-        
-def lay_cement(name, klass=CementApp, *args, **kw):
-    """
-    This function is deprecated.  Please use CementApp() directly.
-    
-    """
-    print('DEPRECATION WARNING: lay_cement() is deprecated.  ' + \
-          'Use foundation.CementApp() directly.')
-    app = klass(name, *args, **kw)
-    return app

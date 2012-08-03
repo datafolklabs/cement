@@ -59,13 +59,6 @@ class CementBaseHandler(meta.MetaMixin):
             self._meta.config_section = "%s.%s" % \
                 (self._meta.interface.IMeta.label, self._meta.label)
                 
-        ### FIX ME: Deprecation.
-        if hasattr(self._meta, 'defaults'):
-            print('DEPRECATION WARNING: Handler Meta.defaults is ' + \
-                  'deprecated.  Use Meta.config_defaults instead.')
-            if self._meta.config_defaults is None:
-                self._meta.config_defaults = self._meta.defaults
-                
         if self._meta.config_defaults is not None:
             LOG.debug("merging config defaults from '%s'" % self)
             dict_obj = dict()
@@ -241,15 +234,6 @@ def register(handler_obj):
         
     backend.handlers[handler_type][obj.Meta.label] = orig_obj
 
-def enabled(handler_type, handler_label):
-    """
-    Deprecated as of 1.9.5.  Use handler.registered().
-    
-    """   
-    LOG.warn("DEPRECATION WARNING: handler.enabled() is deprecated.  " + \
-             "Use handler.registered() instead.")
-    return registered(handler_type, handler_label)
-    
 def registered(handler_type, handler_label):
     """
     Check if a handler is registered.

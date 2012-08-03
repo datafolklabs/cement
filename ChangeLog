@@ -35,7 +35,12 @@ Features:
 
 Incompatible Changes:
 
-    None
+    * :issue:`151` - Removed all previously deprecated code including:
+        * Removed CementApp.Meta.defaults, and CementBaseHandler.Meta.defaults.  
+          Now use `config_defaults` instead.
+        * Removed cement.foundation.lay_cement().  Now use CementApp directly.
+        * Removed cement.handler.enabled().  Now use `handler.registered()` 
+          instead.
 
 
 1.9.14 - Sun Jul 16, 2012
