@@ -185,11 +185,4 @@ class CementConfigHandler(handler.CementBaseHandler):
         
     def __init__(self, *args, **kw):
         super(CementConfigHandler, self).__init__(*args, **kw)              
-
-    def _setup(self, app_obj):
-        """
-        See: `IConfig._setup() <#cement.core.config.IConfig._setup>`_.
-        
-        """
-        self.app = app_obj
         

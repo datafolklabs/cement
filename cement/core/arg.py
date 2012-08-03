@@ -60,7 +60,13 @@ class IArgument(interface.Interface):
     
     def add_argument(*args, **kw):
         """
-        Add arguments for parsing.  This should be -o/--option or positional.  
+        Add arguments for parsing.  This should be -o/--option or positional. 
+        Note that the interface defines the following parameters so that at
+        the very least, external extensions can guarantee that they can 
+        properly add command line arguments when necessary.  The
+        implementation itself should, and will provide and support many more
+        options than those listed here.  That said, the implementation must
+        support the following:
         
         :arg args: List of option arguments.  Generally something like 
             ['-h', '--help'].

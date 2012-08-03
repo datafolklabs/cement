@@ -122,7 +122,3 @@ class CementCacheHandler(handler.CementBaseHandler):
         
     def __init__(self, *args, **kw):
         super(CementCacheHandler, self).__init__(*args, **kw)
-
-    def _setup(self, app_obj):
-        """See `ICache._setup() <#cement.core.cache.ICache._setup>`_."""
-        self.app = app_obj
