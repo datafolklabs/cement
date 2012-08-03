@@ -40,6 +40,11 @@ Features:
 
 Incompatible Changes:
 
+    * :issue:`145` - The IArgument interface no longer specifies that the 
+        `parsed_args` be maintained by the handler implementation.  This means
+        that `app.args.parsed_args` is no longer available, however 
+        `app.pargs` functions just the same as it points to 
+        `app._parsed_args`.
     * :issue:`151` - Removed all previously deprecated code including:
         * Removed CementApp.Meta.defaults, and CementBaseHandler.Meta.defaults.  
           Now use `config_defaults` instead.

@@ -12,7 +12,6 @@ def argument_validator(klass, obj):
     members = [
         '_setup',
         'parse',
-        'parsed_args',
         'add_argument',
         ]
     interface.validate(IArgument, obj, members)
@@ -47,7 +46,6 @@ class IArgument(interface.Interface):
         
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data')
-    parsed_args = interface.Attribute('Parsed args object')
     
     def _setup(app_obj):
         """
@@ -83,8 +81,6 @@ class IArgument(interface.Interface):
         example, if adding a '-v/--version' option that stores to the dest of
         'version', then the member must be callable as 'Object().version'.
         
-        Must also set self.parsed_args to what is being returned.
-        
         :param arg_list: A list of command line arguments.
         :returns: Callable object
         
@@ -110,9 +106,3 @@ class CementArgumentHandler(handler.CementBaseHandler):
         
     def __init__(self, *args, **kw):
         super(CementArgumentHandler, self).__init__(*args, **kw)
-        
-    def _setup(self, app_obj):
-        """
-        See `IArgument._setup() <#cement.core.arg.IArgument._setup>`_.
-        """
-        self.app_obj = app_obj

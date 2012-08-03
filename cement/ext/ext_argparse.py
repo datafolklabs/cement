@@ -16,7 +16,6 @@ class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
     on initialization.
     """
     
-    parsed_args = None
     class Meta:
         """Handler meta-data."""
         
@@ -32,16 +31,14 @@ class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
         
     def parse(self, arg_list):
         """
-        Parse a list of arguments, and store them as self.parsed_args which
-        is an object.  Meaning an argument name of 'foo' will be stored as
-        self.parsed_args.foo.
+        Parse a list of arguments, and return them as an object.  Meaning an 
+        argument name of 'foo' will be stored as parsed_args.foo.
         
         :param arg_list: A list of arguments (generally sys.argv) to be parsed.
         :returns: object whose members are the arguments parsed.
         
         """
-        self.parsed_args = self.parse_args(arg_list)
-        return self.parsed_args
+        return self.parse_args(arg_list)
         
     def add_argument(self, *args, **kw):
         """

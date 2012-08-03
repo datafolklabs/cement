@@ -94,8 +94,8 @@ of the ArgParseArgumentHandler the return object is exactly what you would
 expect by calling parser.parse_args().. but maybe different with other handler
 implementations.
 
-The parsed arguments are actually stored as 'app.args.parsed_args', but with a 
-shortcut setup as 'app.pargs' for ease of use.
+The parsed arguments are actually stored as 'app._parsed_args', but are 
+exposed as 'app.pargs'.
 
 Accessing app.pargs can be seen in the examples above.
 

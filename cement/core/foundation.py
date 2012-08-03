@@ -333,6 +333,7 @@ class CementApp(meta.MetaMixin):
             self._meta.label = label
         self._validate_label()
         self._loaded_bootstrap = None
+        self._parsed_args = None
         
         self.ext = None
         self.config = None
@@ -500,8 +501,10 @@ class CementApp(meta.MetaMixin):
         
     @property
     def pargs(self):
-        """A shortcut for self.args.parsed_args."""
-        return self.args.parsed_args
+        """
+        Returns the `parsed_args` object as returned by self.args.parse().
+        """
+        return self._parsed_args
      
     def add_arg(self, *args, **kw):
         """A shortcut for self.args.add_argument."""   
@@ -559,22 +562,22 @@ class CementApp(meta.MetaMixin):
         handler.register(extension.CementExtensionHandler)
             
     def _parse_args(self):
-        self.args.parse(self.argv)
+        self._parsed_args = self.args.parse(self.argv)
         
         if self._meta.arguments_override_config is True:
-            for member in dir(self.args.parsed_args):
+            for member in dir(self._parsed_args):
                 if member and member.startswith('_'):
                     continue
             
                 # don't override config values for options that weren't passed
                 # or in otherwords are None
-                elif getattr(self.args.parsed_args, member) is None:
+                elif getattr(self._parsed_args, member) is None:
                     continue
                 
                 for section in self.config.get_sections():
                     if member in self.config.keys(section):
                         self.config.set(section, member, 
-                                        getattr(self.args.parsed_args, member))
+                                        getattr(self._parsed_args, member))
             
     def _setup_signals(self):
         if not self._meta.catch_signals:
