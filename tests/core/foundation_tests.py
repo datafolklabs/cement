@@ -53,18 +53,6 @@ class FoundationTestCase(test.CementTestCase):
         app = self.make_app('my_app', argv=['bogus', 'args'])
         self.eq(app.argv, ['bogus', 'args'])
         
-    def test_old_app(self):
-        defaults = backend.defaults()
-        defaults['test'] = dict()
-        defaults['test']['foo'] = 'bar'
-        self.app = DeprecatedApp(defaults=defaults)
-        self.app.setup()
-        self.eq(self.app.config.get('test', 'foo'), 'bar')
-        
-    def test_old_lay_cement(self):
-        self.app = foundation.lay_cement('myapp')
-        self.app.setup()
-        
     @test.raises(exc.CementRuntimeError)
     def test_resolve_handler_bad_handler(self):
         class Bogus(object):
