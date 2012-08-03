@@ -45,6 +45,8 @@ Incompatible Changes:
         that `app.args.parsed_args` is no longer available, however 
         `app.pargs` functions just the same as it points to 
         `app._parsed_args`.
+    * :issue:`148` - The CementExtensionHandler.loaded_extensions property is
+        now a callable at CementExtensionHandler.get_loaded_extensions().
     * :issue:`151` - Removed all previously deprecated code including:
         * Removed CementApp.Meta.defaults, and CementBaseHandler.Meta.defaults.  
           Now use `config_defaults` instead.
