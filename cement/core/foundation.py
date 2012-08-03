@@ -171,10 +171,13 @@ class CementApp(meta.MetaMixin):
         ``/usr/lib/<app_label>/plugins/`` if not set during app.setup()
         """
         
-        argv = list(sys.argv[1:])
+        argv = None
         """
         A list of arguments to use for parsing command line arguments
         and options.
+        
+        Note: Though Meta.argv defaults to None, Cement will set this to
+        ``list(sys.argv[1:])`` if no argv is set in Meta during setup().
         """
         
         arguments_override_config = False
@@ -339,7 +342,11 @@ class CementApp(meta.MetaMixin):
         self.output = None
         self.controller = None
         self.cache = None
-
+        
+        # setup argv... this has to happen before lay_cement()
+        if self._meta.argv is None:
+            self._meta.argv = list(sys.argv[1:])
+            
         # setup the cement framework
         self._lay_cement()
     
@@ -396,7 +403,7 @@ class CementApp(meta.MetaMixin):
         
         """
         LOG.debug("now setting up the '%s' application" % self._meta.label)
-        
+
         if self._meta.bootstrap is not None:
             LOG.debug("importing bootstrap code from %s" % \
                       self._meta.bootstrap)

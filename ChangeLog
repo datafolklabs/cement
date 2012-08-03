@@ -24,7 +24,10 @@ Bugs:
     * :issue:`143` - Incorrect doc regarding logging.  The LoggingLogHandler
       now supports an optional 'namespace' argument allowing the developer
       to override the log prefix.
-
+    * :issue:`150` - foundation.CementApp.Meta.argv now defaults to None,
+      but is overridden in __init__() with sys.argv if no other argv is 
+      passed as meta.
+    
 Features:
     
     * :issue:`138` - Added 'shell' argument to utils.shell.exec_cmd() and

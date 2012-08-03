@@ -1,6 +1,7 @@
 """Tests for cement.core.setup."""
 
 import os
+import sys
 from cement.core import foundation, exc, backend, config, extension, plugin
 from cement.core import log, output, handler, hook, arg, controller
 from cement.utils import test
@@ -38,6 +39,11 @@ def my_hook_three(app):
 class FoundationTestCase(test.CementTestCase):
     def setUp(self):
         self.app = self.make_app('my_app')
+        
+    def test_argv_is_none(self):
+        app = self.make_app('myapp', argv=None)
+        app.setup()
+        self.eq(app.argv, list(sys.argv[1:]))
         
     def test_bootstrap(self):
         app = self.make_app('my_app', bootstrap='tests.bootstrap')
