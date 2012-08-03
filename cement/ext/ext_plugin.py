@@ -181,18 +181,15 @@ class CementPluginHandler(plugin.CementPluginHandler):
         for plugin_name in plugin_list:
             self.load_plugin(plugin_name)
 
-    @property
-    def loaded_plugins(self):
+    def get_loaded_plugins(self):
         """List of plugins that have been loaded."""
         return self._loaded_plugins
     
-    @property
-    def enabled_plugins(self):
+    def get_enabled_plugins(self):
         """List of plugins that are enabled (not necessary loaded yet)."""
         return self._enabled_plugins
 
-    @property
-    def disabled_plugins(self):
+    def get_disabled_plugins(self):
         """List of disabled plugins"""
         return self._disabled_plugins
 

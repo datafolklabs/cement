@@ -11,9 +11,9 @@ def plugin_validator(klass, obj):
         '_setup',
         'load_plugin',
         'load_plugins',
-        'loaded_plugins',
-        'enabled_plugins',
-        'disabled_plugins',
+        'get_loaded_plugins',
+        'get_enabled_plugins',
+        'get_disabled_plugins',
         ]
     interface.validate(IPlugin, obj, members)
     
@@ -45,9 +45,6 @@ class IPlugin(interface.Interface):
     
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler meta-data')
-    loaded_plugins = interface.Attribute('List of loaded plugins')
-    enabled_plugins = interface.Attribute('List of enabled plugins')
-    disabled_plugins = interface.Attribute('List of disabled plugins')
     
     def _setup(app_obj):
         """
@@ -59,7 +56,7 @@ class IPlugin(interface.Interface):
 
         """
     
-    def load_plugin(self, plugin_name):
+    def load_plugin(plugin_name):
         """
         Load a plugin whose name is 'plugin_name'.
         
@@ -67,13 +64,22 @@ class IPlugin(interface.Interface):
                 
         """
         
-    def load_plugins(self, plugin_list):
+    def load_plugins(plugin_list):
         """
         Load all plugins from plugin_list.
         
         :param plugin_list: A list of plugin names to load.
         
         """
+    
+    def get_loaded_plugins():
+        """Returns a list of plugins that have been loaded."""
+        
+    def get_enabled_plugins():
+        """Returns a list of plugins that are enabled in the config."""
+        
+    def get_disabled_plugins():
+        """Returns a list of plugins that are disabled in the config."""
         
 class CementPluginHandler(handler.CementBaseHandler):
     """

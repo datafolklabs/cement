@@ -44,6 +44,10 @@ class LogTestCase(test.CementTestCase):
         app.log._setup(app)
         app.log.set_level('BOGUS')
 
+    def test_get_level(self):
+        self.app.setup()
+        self.eq('INFO', self.app.log.get_level())
+        
     def test_console_log(self):
         app = self.make_app('test', debug=True)
         app.setup()

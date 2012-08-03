@@ -57,7 +57,7 @@ class LoggingExtTestCase(test.CementTestCase):
             )
         app = self.make_app(config_defaults=defaults)
         app.setup()            
-        self.eq(app.log.level(), 'INFO')
+        self.eq(app.log.get_level(), 'INFO')
 
     def test_clear_loggers(self):
         self.app.setup()

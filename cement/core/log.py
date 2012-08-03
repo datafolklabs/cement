@@ -12,7 +12,7 @@ def log_validator(klass, obj):
         '_setup',
         'clear_loggers',
         'set_level',
-        'level',
+        'get_level',
         'info', 
         'warn',
         'error', 
@@ -70,12 +70,12 @@ class ILog(interface.Interface):
         
     def set_level():
         """
-        Set the log level.  Must except one of: ``['INFO', 'WARN', 'ERROR', 
-        'DEBUG', or 'FATAL']``.
+        Set the log level.  Must except atleast one of: 
+            ``['INFO', 'WARN', 'ERROR', 'DEBUG', or 'FATAL']``.
         
         """
         
-    def level():
+    def get_level():
         """Return a string representation of the log level."""
     
     def info(msg):

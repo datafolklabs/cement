@@ -146,7 +146,11 @@ class LoggingLogHandler(log.CementLogHandler):
         
         for handler in logging.getLogger(self._meta.namespace).handlers:
             handler.setLevel(level)
-            
+         
+    def get_level(self):
+        """Returns the current log level."""
+        return logging.getLevelName(self.backend.level)
+           
     def clear_loggers(self):
         """Clear any previously configured logging namespaces."""
         
@@ -162,12 +166,12 @@ class LoggingLogHandler(log.CementLogHandler):
         """Add a console log handler."""
         
         console_handler = logging.StreamHandler()
-        if self.level() == logging.getLevelName(logging.DEBUG):
+        if self.get_level() == logging.getLevelName(logging.DEBUG):
             format = logging.Formatter(self._meta.debug_format)
         else:
             format = logging.Formatter(self._meta.console_format)
         console_handler.setFormatter(format)    
-        console_handler.setLevel(getattr(logging, self.level()))   
+        console_handler.setLevel(getattr(logging, self.get_level()))   
         self.backend.addHandler(console_handler)
     
     def _setup_file_log(self):
@@ -189,18 +193,13 @@ class LoggingLogHandler(log.CementLogHandler):
             from logging import FileHandler
             file_handler = FileHandler(file)
         
-        if self.level() == logging.getLevelName(logging.DEBUG):
+        if self.get_level() == logging.getLevelName(logging.DEBUG):
             format = logging.Formatter(self._meta.debug_format)
         else:
             format = logging.Formatter(self._meta.file_format)
         file_handler.setFormatter(format)   
-        file_handler.setLevel(getattr(logging, self.level())) 
+        file_handler.setLevel(getattr(logging, self.get_level())) 
         self.backend.addHandler(file_handler)
-        
-    def level(self):
-        """Returns the current log level."""
-        
-        return logging.getLevelName(self.backend.level)
     
     def _get_logging_kwargs(self, namespace, **kw):
         if namespace is None:

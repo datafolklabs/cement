@@ -107,19 +107,19 @@ class PluginTestCase(test.CementTestCase):
             shutil.rmtree(tmpdir)
     
         # some more checks
-        res = 'myplugin' in app.plugin.enabled_plugins
+        res = 'myplugin' in app.plugin.get_enabled_plugins()
         self.ok(res)
     
-        res = 'myplugin' in app.plugin.loaded_plugins
+        res = 'myplugin' in app.plugin.get_loaded_plugins()
         self.ok(res)
         
-        res = 'myplugin2' in app.plugin.disabled_plugins
+        res = 'myplugin2' in app.plugin.get_disabled_plugins()
         self.ok(res)
     
-        res = 'myplugin2' not in app.plugin.enabled_plugins
+        res = 'myplugin2' not in app.plugin.get_enabled_plugins()
         self.ok(res)
     
-        res = 'myplugin2' not in app.plugin.loaded_plugins
+        res = 'myplugin2' not in app.plugin.get_loaded_plugins()
         self.ok(res)
     
     def test_disabled_plugins_from_files(self):
@@ -144,7 +144,7 @@ class PluginTestCase(test.CementTestCase):
         res = 'test_output_handler' not in backend.handlers['output']
         self.ok(res)
 
-        res = 'myplugin2' not in app.plugin.enabled_plugins
+        res = 'myplugin2' not in app.plugin.get_enabled_plugins()
         self.ok(res)
     
     def test_bogus_plugin_from_files(self):
@@ -167,7 +167,7 @@ class PluginTestCase(test.CementTestCase):
         app.setup()
         shutil.rmtree(tmpdir)
     
-        res = 'bogus_plugin' not in app.plugin.enabled_plugins
+        res = 'bogus_plugin' not in app.plugin.get_enabled_plugins()
         self.ok(res)
 
     @test.raises(exc.FrameworkError)
@@ -209,7 +209,7 @@ class PluginTestCase(test.CementTestCase):
             )
         app.setup()
         
-        res = 'ext_json' in app.plugin.enabled_plugins
+        res = 'ext_json' in app.plugin.get_enabled_plugins()
         self.ok(res)
         
         shutil.rmtree(tmpdir)

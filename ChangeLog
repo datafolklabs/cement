@@ -40,6 +40,14 @@ Features:
 
 Incompatible Changes:
 
+    * :issue:`100` - Interfaces audit.
+        * ILog.level() redefined as ILog.get_level()
+        * IPlugin.loaded_plugins attribute redefined as 
+          IPlugin.get_loaded_plugins()
+        * IPlugin.enable_plugins attribute redefined as 
+          IPlugin.get_enabled_plugins()
+        * IPlugin.disabled_plugins attribute redefined as 
+          IPlugin.get_disabled_plugins()
     * :issue:`145` - The IArgument interface no longer specifies that the 
         `parsed_args` be maintained by the handler implementation.  This means
         that `app.args.parsed_args` is no longer available, however 
@@ -55,12 +63,11 @@ Incompatible Changes:
           instead.
     * :issue:`154` - Validate for handler config_defaults and config_section
         by default.  Only incompatible if not previously sub-classing from
-        handler.CementBaseHandler.
-        
+        handler.CementBaseHandler.        
     * :issue:`157` - CementRuntimeError renamed as FrameworkError
     * :issue:`158` - CementSignalError renamed as CaughtSignal
     * :issue:`159` - CementInterfaceError renamed as InterfaceError
-    
+
 Misc:
 
     * :issue:`155` - Removed unused CementArgumentError, and 

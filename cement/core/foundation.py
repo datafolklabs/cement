@@ -677,7 +677,7 @@ class CementApp(meta.MetaMixin):
         self.plugin = self._resolve_handler('plugin', 
                                             self._meta.plugin_handler)
         self.plugin.load_plugins(self._meta.plugins)
-        self.plugin.load_plugins(self.plugin.enabled_plugins)
+        self.plugin.load_plugins(self.plugin.get_enabled_plugins())
         
     def _setup_output_handler(self):
         if self._meta.output_handler is None:
