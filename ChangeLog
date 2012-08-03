@@ -16,8 +16,12 @@ is available online at:
 
     <BR><BR>
 
-1.9.15 - development (will be released as 2.0.0 stable)
+2.0.0 - Fri Aug 03, 2012
 ------------------------------------------------------------------------------
+
+This is the initial stable release of the 2.0.x branch.  Future releases of 
+this branch will include bug/security fixes and minor feature updates.  
+Forward moving feature development will continue out of the 2.1.x branch.
 
 Bugs:
 
@@ -49,10 +53,10 @@ Incompatible Changes:
         * IPlugin.disabled_plugins attribute redefined as 
           IPlugin.get_disabled_plugins()
     * :issue:`145` - The IArgument interface no longer specifies that the 
-        `parsed_args` be maintained by the handler implementation.  This means
-        that `app.args.parsed_args` is no longer available, however 
-        `app.pargs` functions just the same as it points to 
-        `app._parsed_args`.
+      `parsed_args` be maintained by the handler implementation.  This means
+      that `app.args.parsed_args` is no longer available, however 
+      `app.pargs` functions just the same as it points to 
+      `app._parsed_args`.
     * :issue:`148` - The CementExtensionHandler.loaded_extensions property is
         now a callable at CementExtensionHandler.get_loaded_extensions().
     * :issue:`151` - Removed all previously deprecated code including:
@@ -62,8 +66,8 @@ Incompatible Changes:
         * Removed cement.handler.enabled().  Now use `handler.registered()` 
           instead.
     * :issue:`154` - Validate for handler config_defaults and config_section
-        by default.  Only incompatible if not previously sub-classing from
-        handler.CementBaseHandler.        
+      by default.  Only incompatible if not previously sub-classing from
+      handler.CementBaseHandler.        
     * :issue:`157` - CementRuntimeError renamed as FrameworkError
     * :issue:`158` - CementSignalError renamed as CaughtSignal
     * :issue:`159` - CementInterfaceError renamed as InterfaceError
@@ -71,8 +75,8 @@ Incompatible Changes:
 Misc:
 
     * :issue:`155` - Removed unused CementArgumentError, and 
-        CementConfigError.  These types of exceptions should be defined at
-        the application level.
+      CementConfigError.  These types of exceptions should be defined at
+      the application level.
 
 1.9.14 - Sun Jul 16, 2012
 ------------------------------------------------------------------------------
