@@ -34,3 +34,15 @@ class ExtensionTestCase(test.CementTestCase):
         ext = extension.CementExtensionHandler()
         ext._setup(self.app)
         ext.load_extensions(['bogus'])
+
+    def test_get_loaded_extensions(self):
+        ext = extension.CementExtensionHandler()
+        ext._setup(self.app)
+        
+        res = 'cement.ext.ext_json' not in ext.get_loaded_extensions()
+        self.ok(res)
+        
+        ext.load_extensions(['json'])
+        
+        res = 'cement.ext.ext_json' in ext.get_loaded_extensions()
+        self.ok(res)

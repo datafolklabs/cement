@@ -17,7 +17,7 @@ def extension_validator(klass, obj):
         '_setup',
         'load_extension',
         'load_extensions',
-        'loaded_extensions',
+        'get_loaded_extensions',
         ]
     interface.validate(IExtension, obj, members)
     
@@ -55,7 +55,6 @@ class IExtension(interface.Interface):
     
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data class')
-    loaded_extensions = interface.Attribute('List of loaded extensions')
     
     def _setup(app_obj):
         """
@@ -90,9 +89,6 @@ class IExtension(interface.Interface):
         """
 
 class CementExtensionHandler(handler.CementBaseHandler):
-    loaded_extensions = []
-    """A list of loaded extensions."""
-    
     class Meta:
         """
         Handler meta-data (can be passed as keyword arguments to the parent 
@@ -115,8 +111,7 @@ class CementExtensionHandler(handler.CementBaseHandler):
         self.app = None
         self._loaded_extensions = []
     
-    @property
-    def loaded_extensions(self):
+    def get_loaded_extensions(self):
         """Returns list of loaded extensions."""
         return self._loaded_extensions
         
@@ -135,7 +130,7 @@ class CementExtensionHandler(handler.CementBaseHandler):
         if ext_module.find('.') == -1:
             ext_module = 'cement.ext.ext_%s' % ext_module
             
-        if ext_module in self.loaded_extensions:
+        if ext_module in self._loaded_extensions:
             LOG.debug("framework extension '%s' already loaded" % ext_module)
             return 
             
@@ -147,8 +142,8 @@ class CementExtensionHandler(handler.CementBaseHandler):
             if hasattr(sys.modules[ext_module], 'load'):
                 sys.modules[ext_module].load()
 
-            if ext_module not in self.loaded_extensions:    
-                self.loaded_extensions.append(ext_module)
+            if ext_module not in self._loaded_extensions:    
+                self._loaded_extensions.append(ext_module)
    
         except ImportError as e:
             raise exc.CementRuntimeError(e.args[0])
