@@ -32,6 +32,7 @@ Features:
     * :issue:`140` - Included ~/.myapp/config in default config search
     * :issue:`144` - Added a note on Contributing, as well as a CONTRIBUTORS
       file.
+    * :issue:`153` - Added spawn_process() and spawn_thread() to utils.shell.
 
 Incompatible Changes:
 

@@ -1,7 +1,11 @@
 """Tests for cement.utils.shell"""
 
+import time
 from cement.utils import shell, test
 
+def add(a, b):
+    return a + b
+    
 class ShellUtilsTestCase(test.CementTestCase):
     def test_exec_cmd(self):
         out, err, ret = shell.exec_cmd(['echo', 'KAPLA!'])
@@ -28,3 +32,28 @@ class ShellUtilsTestCase(test.CementTestCase):
     def test_exec_cmd2_bad_command(self):
         ret = shell.exec_cmd2(['false'])
         self.eq(ret, 1)
+    
+    def test_spawn_process(self):
+        p = shell.spawn_process(add, args=(23, 2))
+        p.join()
+        self.eq(p.exitcode, 0)
+        
+        p = shell.spawn_process(add, join=True, args=(23, 2))
+        self.eq(p.exitcode, 0)
+        
+    def test_spawn_thread(self):
+        t = shell.spawn_thread(time.sleep, args=(3))
+        
+        # before joining it is alive
+        res = t.is_alive()
+        self.eq(res, True)
+        
+        t.join()
+        
+        # after joining it is not alive
+        res = t.is_alive()
+        self.eq(res, False)
+        
+        t = shell.spawn_thread(time.sleep, join=True, args=(3))
+        res = t.is_alive()
+        self.eq(res, False)

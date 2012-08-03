@@ -15,8 +15,11 @@ if sys.version_info[0] >= 3:
     
 LOG = backend.minimal_logger(__name__)    
     
-class NullOut():
+class NullOut(object):
     def write(self, s):
+        pass
+    
+    def flush(self):
         pass
         
 def cement_signal_handler(signum, frame):
