@@ -18,8 +18,13 @@ class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
     
     parsed_args = None
     class Meta:
+        """Handler meta-data."""
+        
         interface = arg.IArgument
+        """The interface that this class implements."""
+        
         label = 'argparse'
+        """The string identifier of the handler."""
     
     def __init__(self, *args, **kw):
         super(ArgParseArgumentHandler, self).__init__(*args, **kw)
@@ -31,12 +36,8 @@ class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
         is an object.  Meaning an argument name of 'foo' will be stored as
         self.parsed_args.foo.
         
-        Required Arguments:
-        
-            arg_list
-                A list of arguments (generally sys.argv) to be parsed.
-        
-        Returns: self.parsed_args (object)
+        :param arg_list: A list of arguments (generally sys.argv) to be parsed.
+        :returns: object whose members are the arguments parsed.
         
         """
         self.parsed_args = self.parse_args(arg_list)
@@ -51,4 +52,5 @@ class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
         return super(ArgumentParser, self).add_argument(*args, **kw)            
 
 def load():
+    """Called by the framework when the extension is 'loaded'."""
     handler.register(ArgParseArgumentHandler)

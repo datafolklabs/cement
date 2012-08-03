@@ -20,8 +20,13 @@ class CementPluginHandler(plugin.CementPluginHandler):
     """
     
     class Meta:
+        """Handler meta-data."""
+        
         interface = plugin.IPlugin
+        """The interface that this class implements."""
+        
         label = 'cement'
+        """The string identifier for this class."""
             
     def __init__(self):
         super(CementPluginHandler, self).__init__()
@@ -84,14 +89,10 @@ class CementPluginHandler(plugin.CementPluginHandler):
         Load a plugin from file within a plugin directory rather than a 
         python package within sys.path.
         
-        Required Arguments:
-        
-            plugin_name
-                The name of the plugin, also the name of the file with '.py'
-                appended to the name.
-            
-            plugin_dir
-                The filesystem directory path where to find the file.
+        :param plugin_name: The name of the plugin, also the name of the file 
+            with '.py' appended to the name.
+        :param plugin_dir: The filesystem directory path where to find the 
+            file.
                 
         """
         full_path = os.path.join(plugin_dir, "%s.py" % plugin_name)
@@ -114,17 +115,15 @@ class CementPluginHandler(plugin.CementPluginHandler):
         Load a plugin from a python package.  Returns True if no ImportError
         is encountered.
         
-        Required Arguments:
-        
-            plugin_name
-                The name of the plugin, also the name of the module to load
-                from base_package.  I.e. 'myapp.bootstrap.myplugin'.
-            
-            base_package
-                The base python package to load the plugin module from.  I.e.
-                'myapp.bootstrap' or similar.
-        
-        Returns: Bool
+        :param plugin_name: The name of the plugin, also the name of the 
+            module to load from base_package.  
+            I.e. ``myapp.bootstrap.myplugin``
+        :type plugin_name: str
+        :param base_package: The base python package to load the plugin module from.  I.e.
+            'myapp.bootstrap' or similar.
+        :type base_package: str
+        :returns: True is the plugin was loaded, False otherwise
+        :raises: ImportError
         
         """
         if base_package is None:
@@ -154,10 +153,9 @@ class CementPluginHandler(plugin.CementPluginHandler):
         Upon successful loading of a plugin, the plugin name is appended to
         the self._loaded_plugins list.
         
-        Required Arguments:
-        
-            plugin_name
-                The name of the plugin to load.
+        :param plugin_name: The name of the plugin to load.
+        :type plugin_name: str
+        :raises: cement.core.exc.CementRuntimeError
         
         """
         LOG.debug("loading application plugin '%s'" % plugin_name)
@@ -166,10 +164,8 @@ class CementPluginHandler(plugin.CementPluginHandler):
         
         if self._load_plugin_from_dir(plugin_name, self.load_dir):
             self._loaded_plugins.append(plugin_name)
-            return True
         elif self._load_plugin_from_bootstrap(plugin_name, self.bootstrap):
             self._loaded_plugins.append(plugin_name)
-            return True
         else:
             raise exc.CementRuntimeError("Unable to load plugin '%s'." % 
                                          plugin_name)
@@ -179,10 +175,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         Load a list of plugins.  Each plugin name is passed to 
         self.load_plugin().
         
-        Required Arguments:
-            
-            plugin_list
-                A list of plugin names to load.
+        :param plugin_list: A list of plugin names to load.
         
         """
         for plugin_name in plugin_list:
@@ -190,15 +183,19 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
     @property
     def loaded_plugins(self):
+        """List of plugins that have been loaded."""
         return self._loaded_plugins
     
     @property
     def enabled_plugins(self):
+        """List of plugins that are enabled (not necessary loaded yet)."""
         return self._enabled_plugins
 
     @property
     def disabled_plugins(self):
+        """List of disabled plugins"""
         return self._disabled_plugins
 
 def load():
+    """Called by the framework when the extension is 'loaded'."""
     handler.register(CementPluginHandler)

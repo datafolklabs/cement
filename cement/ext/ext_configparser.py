@@ -23,9 +23,14 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
     RawConfigParser on initialization.
     """
     class Meta:
+        """Handler meta-data."""
+        
         interface = config.IConfig
+        """The interface that this handler implements."""
+        
         label = 'configparser'
-    
+        """The string identifier of this handler."""
+        
     def __init__(self, *args, **kw):
         # ConfigParser is not a new style object, so you can't call super()
         # super(ConfigParserConfigHandler, self).__init__(*args, **kw)
@@ -38,20 +43,11 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         Merge a dictionary into our config.  If override is True then 
         existing config values are overridden by those passed in.
         
-        Required Arguments:
-        
-            dict_obj
-                A dictionary of configuration keys/values to merge into our
-                existing config (self).
+        :param dict_obj: A dictionary of configuration keys/values to merge 
+            into our existing config (self).
             
-        Optional Arguments:
-        
-            override
-                Whether or not to override existing values in the config.
-                Defaults: True.
-                
-        
-        Returns: None
+        :param override:  Whether or not to override existing values in the 
+            config.
         
         """
         for section in list(dict_obj.keys()):
@@ -75,13 +71,8 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         Parse config file settings from file_path, overwriting existing 
         config settings.  If the file does not exist, returns False.
         
-        Required Arguments:
-            
-            file_path
-                The file system path to the configuration file.
-                
-        
-        Returns: Bool
+        :param file_path: The file system path to the configuration file.
+        :returns: boolean
         
         """
         file_path = os.path.abspath(os.path.expanduser(file_path))
@@ -97,12 +88,9 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         """
         Return a list of keys within 'section'.
         
-        Required Arguments:
-        
-            section
-                The config section (I.e. [block_section]).
-        
-        Returns: list
+        :param section: The config section (I.e. [block_section]).
+        :returns: List of keys in the `section`.
+        :rtype: list
         
         """
         return self.options(section)
@@ -111,15 +99,10 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         """
         Return whether or not a 'section' has the given 'key'.
         
-        Required Arguments:
-        
-            section
-                The section of the configuration. I.e. [block_section].
-            
-            key
-                The key within 'section'.
-        
-        Returns: bool
+        :param section: The section of the configuration. I.e. [block_section].
+        :param key: The key within 'section'.
+        :returns: True if the config `section` has `key`.
+        :rtype: boolean
         
         """
         if key in self.options(section):
@@ -131,7 +114,8 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         """
         Return a list of configuration sections or [blocks].
         
-        Returns: list
+        :returns: List of sections.
+        :rtype: list
         
         """
         return self.sections()
@@ -140,10 +124,9 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         """
         Return a dict representation of a section.
         
-        Required Arguments:
-        
-            section:
-                The section of the configuration.  I.e. [block_section]
+        :param section: The section of the configuration.  I.e. [block_section]
+        :returns: Dictionary reprisentation of the config section.
+        :rtype: dict
                 
         """
         dict_obj = dict()
@@ -152,7 +135,14 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         return dict_obj
 
     def add_section(self, section):
+        """
+        Adds a block section to the config.
+        
+        :param section: The section to add.
+        
+        """
         super(ConfigParserConfigHandler, self).add_section(section)
         
 def load():
+    """Called by the framework when the extension is 'loaded'."""
     handler.register(ConfigParserConfigHandler)

@@ -9,8 +9,9 @@ LOG = backend.minimal_logger(__name__)
 class JsonOutputHandler(output.CementOutputHandler):
     """
     This class implements the :ref:`IOutput <cement.core.output>` 
-    interface.  It provides JSON output from a data dictionary and uses 
-    `jsonpickle <http://jsonpickle.github.com/>`_ to dump it to STDOUT.  
+    interface.  It provides JSON output from a data dictionary using the
+    `json <http://docs.python.org/library/json.html>`_ module of the standard
+    library.
     
     Note: The cement framework detects the '--json' option and suppresses
     output (same as if passing --quiet).  Therefore, if debugging or 
@@ -19,15 +20,16 @@ class JsonOutputHandler(output.CementOutputHandler):
     
     """
     class Meta:
+        """Handler meta-data"""
+        
         interface = output.IOutput
+        """The interface this class implements."""
+        
         label = 'json'
+        """The string identifier of this handler."""
         
     def __init__(self, *args, **kw):
         super(JsonOutputHandler, self).__init__(*args, **kw)
-        self.app = None
-        
-    def _setup(self, app_obj):
-        self.app = app_obj
         
     def render(self, data_dict, template=None):
         """
@@ -35,17 +37,10 @@ class JsonOutputHandler(output.CementOutputHandler):
         template option is received here per the interface, however this 
         handler just ignores it.
         
-        Required Arguments:
-        
-            data_dict
-                The data dictionary to render.
-                
-        Optional Arguments:
-        
-            template
-                This option is completely ignored.
-                
-        Returns: string (json)
+        :param data_dict: The data dictionary to render.
+        :param template: This option is completely ignored.
+        :returns: A JSON encoded string.
+        :rtype: str
         
         """
         LOG.debug("rendering output as Json via %s" % self.__module__)
@@ -57,16 +52,26 @@ def add_json_option(app):
     """
     Adds the '--json' argument to the argument object.
     
+    :param app: The application object.
+    
     """
     app.args.add_argument('--json', dest='output_handler', 
         action='store_const', help='toggle json output handler', const='json')
 
 def set_output_handler(app):
+    """
+    Overrides the configured output handler if ``--json`` is passed at the
+    command line.
+    
+    :param app: The application object.
+    
+    """
     if '--json' in app._meta.argv:
         app._meta.output_handler = 'json'
         app._setup_output_handler()
 
 def load():
+    """Called by the framework when the extension is 'loaded'."""
     hook.register('post_setup', add_json_option)
     hook.register('pre_run', set_output_handler)
     handler.register(JsonOutputHandler)

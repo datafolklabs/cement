@@ -36,11 +36,16 @@ class IOutput(interface.Interface):
     """
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+        """Interface meta-data."""
+        
         label = 'output'
+        """The string identifier of the interface."""
+        
         validator = output_validator
+        """The interface validator function."""
     
     # Must be provided by the implementation
-    Meta = interface.Attribute('Handler Meta-data')
+    Meta = interface.Attribute('Handler meta-data')
     
     def _setup(app_obj):
         """
@@ -48,31 +53,19 @@ class IOutput(interface.Interface):
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
-        Required Arguments:
-        
-            app_obj
-                The application object. 
+        :param app_obj: The application object. 
                                 
-        Returns: n/a
         """
     
     def render(data_dict, template=None):
         """
         Render the data_dict into output in some fashion.
         
-        Required Arguments:
-        
-            data_dict
-                The dictionary whose data we need to render into output.
-                
-        Optional Paramaters:
-        
-            template
-                A template to use for rendering (in module form).  I.e.
-                myapp.templates.some_command
-                
-                
-        Returns: string or unicode string or None
+        :param data_dict: The dictionary whose data we need to render into 
+            output.
+        :param template: A template to use for rendering (in module form).  
+            I.e ``myapp.templates.some_command``.
+        :returns: string or unicode string or None
         
         """    
 
@@ -87,7 +80,11 @@ class CementOutputHandler(handler.CementBaseHandler):
         class).
         """
         
+        label = None
+        """The string identifier of this handler."""
+        
         interface = IOutput
+        """The interface that this class implements."""
         
     def __init__(self, *args, **kw):
         super(CementOutputHandler, self).__init__(*args, **kw)

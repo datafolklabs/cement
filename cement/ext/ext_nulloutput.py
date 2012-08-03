@@ -12,26 +12,23 @@ class NullOutputHandler(output.CementOutputHandler):
     
     """
     class Meta:
+        """Handler meta-data"""
+        
         interface = output.IOutput
+        """The interface this class implements."""
+        
         label = 'null'
+        """The string identifier of this handler."""
         
     def render(self, data_dict, template=None):
         """
         This implementation does not actually render anything to output, but
         rather logs it to the debug facility.
         
-        Required Arguments:
-        
-            data_dict
-                The data dictionary to render.
-                
-        Optional Arguments:
-        
-            template
-                The template parameter is not used by this implementation at
-                all.
-                
-        Returns: None
+        :param data_dict: The data dictionary to render.
+        :param template: The template parameter is not used by this 
+            implementation at all.
+        :returns: None
         
         """
         Log.debug("not rendering any output to console")
@@ -39,4 +36,5 @@ class NullOutputHandler(output.CementOutputHandler):
         return None
 
 def load():
+    """Called by the framework when the extension is 'loaded'."""
     handler.register(NullOutputHandler)

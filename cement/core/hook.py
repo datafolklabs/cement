@@ -9,11 +9,8 @@ def define(name):
     """
     Define a hook namespace that plugins can register hooks in.
     
-    Required arguments:
-    
-        name
-            The name of the hook, stored as hooks['name']
-    
+    :param name: The name of the hook, stored as hooks['name']
+    :raises: cement.core.exc.CementRuntimeError
     
     Usage:
     
@@ -33,12 +30,10 @@ def defined(hook_name):
     """
     Test whether a hook name is defined.
     
-    Required Arguments:
-    
-        hook_type
-            The name of the hook (I.e. 'my_hook_does_awesome_things').
-    
-    Returns: bool
+    :param hook_name: The name of the hook. 
+        I.e. ``my_hook_does_awesome_things``.
+    :returns: True if the hook is defined, False otherwise.
+    :rtype: boolean
     
     """
     if hook_name in backend.hooks:
@@ -51,21 +46,12 @@ def register(name, func, weight=0):
     Register a function to a hook.  The function will be called, in order of
     weight, when the hook is run.
 
-    Required Arguments:
-    
-        name
-            The name of the hook to register too.  I.e. 'pre_setup', 
-            'post_run', etc.
-
-        func
-            The function to register to the hook.  This is an 
-            *un-instantiated*, non-instance method, simple function.
-            
-    Optional keyword arguments:
-    
-        weight
-            The weight in which to order the hook function (default: 0)
-        
+    :param name: The name of the hook to register too.  I.e. ``pre_setup``, 
+        ``post_run``, etc.
+    :param func:    The function to register to the hook.  This is an 
+        *un-instantiated*, non-instance method, simple function.
+    :param weight:  The weight in which to order the hook function.  
+    :type weight: integer
 
     Usage:
     
@@ -82,7 +68,7 @@ def register(name, func, weight=0):
         
     """
     if name not in backend.hooks:
-        LOG.debug("hook name '%s' is not defined!" % name)
+        LOG.debug("hook name '%s' is not defined! ignoring..." % name)
         return False
         
     LOG.debug("registering hook '%s' from %s into hooks['%s']" % \
@@ -96,15 +82,11 @@ def run(name, *args, **kwargs):
     Run all defined hooks in the namespace.  Yields the result of each hook
     function run.
     
-    Optional arguments:
-    
-        name
-            The name of the hook function
-        args
-            Any additional args are passed to the hook function
-        kwargs
-            Any kwargs are passed to the hook function
-    
+    :param name: The name of the hook function.
+    :param args: Additional arguments to be passed to the hook functions.
+    :param kwargs: Additional keyword arguments to be passed to the hook 
+        functions.
+    :raises: CementRuntimeError
     
     Usage:
     

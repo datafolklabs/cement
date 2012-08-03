@@ -18,10 +18,7 @@ class Attribute(object):
     """
     An interface attribute definition.
     
-    Required Arguments:
-    
-        description
-            The description of the attribute.
+    :param description: The description of the attribute.
             
     """
     def __init__(self, description):
@@ -34,21 +31,11 @@ def validate(interface, obj, members=[], meta=['interface', 'label']):
     """
     A wrapper to validate interfaces.
     
-    Required Arguments:
-    
-        interface
-            The interface class to validate against
-            
-        obj
-            The object to validate.
-
-    Optional Arguments:
-                
-        members
-            The object members that must exist.
-            
-        meta
-            The meta object members that must exist.
+    :param interface: The interface class to validate against
+    :param obj: The object to validate.
+    :param members: The object members that must exist.
+    :param meta: The meta object members that must exist.
+    :raises: cement.core.exc.CementInterfaceError
             
     """
     invalid = []

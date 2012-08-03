@@ -9,39 +9,51 @@ from ..core import exc, backend, meta
 LOG = backend.minimal_logger(__name__)
 
 class CementBaseHandler(meta.MetaMixin):
-    """
-    All handlers should subclass from here.
+    """Base handler class that all Cement Handlers should subclass from."""
     
-    Optional / Meta Options:
-    
-        label
-            The identifier of this handler
-            
-        interface
-            The interface that this handler implements.
-        
-        config_section
-            A config [section] to merge config_defaults with.
-            
-            Default: <interface_label>.<handler_label>
-            
-        config_defaults
-            A config dictionary that is merged into the applications config
-            in the [<config_section>] block.  These are defaults and do not
-            override any existing defaults under that section.
-            
-        """
     class Meta:
+        """
+        Handler meta-data (can also be passed as keyword arguments to the
+        parent class).
+        
+        """
+        
         label = None
+        """The string identifier of this handler."""
+        
         interface = None
+        """The interface that this class implements."""
+        
         config_section = None
+        """
+        A config [section] to merge config_defaults with.  
+        
+        Note: Though Meta.config_section defaults to None, Cement will
+        set this to the value of ``<interface_label>.<handler_label>`` if
+        no section is set by the user/develop.
+        """
+        
         config_defaults = None
+        """
+        A config dictionary that is merged into the applications config
+        in the [<config_section>] block.  These are defaults and do not
+        override any existing defaults under that section.
+        """
         
     def __init__(self, **kw):
         super(CementBaseHandler, self).__init__(**kw)
         self.app = None
         
     def _setup(self, app_obj):
+        """
+        The _setup function is called during application initialization and
+        must 'setup' the handler object making it ready for the framework
+        or the application to make further calls to it.
+        
+        :param app_obj: The application object. 
+        :returns: None                        
+        
+        """
         self.app = app_obj
         if self._meta.config_section is None:
             self._meta.config_section = "%s.%s" % \
@@ -66,16 +78,14 @@ def get(handler_type, handler_label, *args):
     
     Required Arguments:
     
-        handler_type
-            The type of handler (i.e. 'output')
-        
-        handler_label
-            The label of the handler (i.e. 'json')
-            
-    Optional Arguments:
-    
-        fallback
-            A fallback value to return if handler_label doesn't exist.
+    :param handler_type: The type of handler (i.e. 'output')
+    :type handler_type: str
+    :param handler_label: The label of the handler (i.e. 'json')
+    :type handler_label: str
+    :param fallback:  A fallback value to return if handler_label doesn't 
+        exist.
+    :returns: An uninstantiated handler object
+    :raises: cement.core.exc.CementRuntimeError
             
     Usage:
     
@@ -100,10 +110,10 @@ def list(handler_type):
     """
     Return a list of handlers for a given type.
     
-    Required Arguments:
-    
-        handler_type
-            The type of handler (i.e. 'output')
+    :param handler_type: The type of handler (i.e. 'output')
+    :returns: List of handlers that match `type`.
+    :rtype: list
+    :raises: cement.core.exc.CementRuntimeError
     
     """
     if handler_type not in backend.handlers:
@@ -122,11 +132,10 @@ def define(interface):
     Define a handler based on the provided interface.  Defines a handler type
     based on <interface>.IMeta.label.
     
-    Required arguments:
-
-        interface
-            The handler interface class that defines the interface to be 
-            implemented.
+    :param interface: The interface class that defines the interface to be 
+        implemented by handlers.
+    :raises: cement.core.exc.CementInterfaceError
+    :raises: cement.core.exc.CementRuntimeError
     
     Usage:
     
@@ -156,12 +165,9 @@ def defined(handler_type):
     """
     Test whether a handler type is defined.
     
-    Required Arguments:
-    
-        handler_type
-            The name or 'type' of the handler (I.e. 'logging').
-    
-    Returns: bool
+    :param handler_type: The name or 'type' of the handler (I.e. 'logging').
+    :returns: True if the handler type is defined, False otherwise.
+    :rtype: boolean
     
     """
     if handler_type in backend.handlers:
@@ -169,17 +175,16 @@ def defined(handler_type):
     else:
         return False
         
-def register(obj):
+def register(handler_obj):
     """
     Register a handler object to a handler.  If the same object is already
     registered then no exception is raised, however if a different object
     attempts to be registered to the same name a CementRuntimeError is 
     raised.
     
-    Required Options:
-    
-        obj
-            The handler object to register
+    :param handler_obj: The uninstantiated handler object to register.
+    :raises: cement.core.exc.CementInterfaceError
+    :raises: cement.core.exc.CementRuntimeError
     
     Usage:
     
@@ -199,7 +204,7 @@ def register(obj):
     
     """
     
-    orig_obj = obj
+    orig_obj = handler_obj
 
     # for checks
     obj = orig_obj()
@@ -249,15 +254,10 @@ def registered(handler_type, handler_label):
     """
     Check if a handler is registered.
     
-    Required Arguments:
-    
-        handler_type
-            The type of handler
-            
-        handler_label
-            The label of the handler
-          
-    Returns: Boolean
+    :param handler_type: The type of handler (interface label)
+    :param handler_label: The label of the handler
+    :returns: True if the handler is registered, False otherwise
+    :rtype: boolean
     
     """
     if handler_type in backend.handlers and \

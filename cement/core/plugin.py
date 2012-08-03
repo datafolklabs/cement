@@ -44,7 +44,7 @@ class IPlugin(interface.Interface):
         validator = plugin_validator
     
     # Must be provided by the implementation
-    Meta = interface.Attribute('Handler Meta-data')
+    Meta = interface.Attribute('Handler meta-data')
     loaded_plugins = interface.Attribute('List of loaded plugins')
     enabled_plugins = interface.Attribute('List of enabled plugins')
     disabled_plugins = interface.Attribute('List of disabled plugins')
@@ -55,23 +55,15 @@ class IPlugin(interface.Interface):
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
-        Required Arguments:
-        
-            app_obj
-                The application object. 
-                                
-        Returns: n/a
-        
+        :param app_obj: The application object. 
+
         """
     
     def load_plugin(self, plugin_name):
         """
         Load a plugin whose name is 'plugin_name'.
         
-        Required Arguments:
-        
-            plugin_name
-                The name of the plugin to load.
+        :param plugin_name: The name of the plugin to load.
                 
         """
         
@@ -79,10 +71,7 @@ class IPlugin(interface.Interface):
         """
         Load all plugins from plugin_list.
         
-        Required Arguments:
-        
-            plugin_list
-                A list of plugin names to load.
+        :param plugin_list: A list of plugin names to load.
         
         """
         
@@ -98,7 +87,11 @@ class CementPluginHandler(handler.CementBaseHandler):
         class).
         """
         
+        label = None
+        """The string identifier of this handler."""
+        
         interface = IPlugin
+        """The interface that this class implements."""
         
     def __init__(self, *args, **kw):
         super(CementPluginHandler, self).__init__(*args, **kw)

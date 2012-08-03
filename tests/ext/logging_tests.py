@@ -28,7 +28,9 @@ class LoggingExtTestCase(test.CementTestCase):
         app.setup()    
     
     def test_alternate_namespaces(self):
-        app = self.make_app()
+        defaults = backend.defaults('myapp', 'log')
+        defaults['log']['to_console'] = False
+        app = self.make_app(config_defaults=defaults)
         app.setup()            
         app.log.info('TEST', extra=dict(namespace=__name__))
         app.log.warn('TEST', extra=dict(namespace=__name__))

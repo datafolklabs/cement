@@ -6,16 +6,12 @@ def exec_cmd(cmd_args, shell=False):
     """
     Execute a shell call using Subprocess.
     
-    Required Arguments:
-    
-        cmd_args
-            List of command line arguments.
-            
-        shell
-            Boolean option.  See `Subprocess <http://docs.python.org/library/subprocess.html>`_
-            Default: False
-            
-    Return: tuple (stdout, stderr, return_code)
+    :param cmd_args: List of command line arguments.
+    :type cmd_args: list
+    :param shell: See `Subprocess <http://docs.python.org/library/subprocess.html>`_
+    :type shell: boolean
+    :returns: The (stdout, stderror, return_code) of the command
+    :rtype: tuple
     
     """
     proc = Popen(cmd_args, stdout=PIPE, stderr=PIPE, shell=shell)
@@ -28,16 +24,12 @@ def exec_cmd2(cmd_args, shell=False):
     Similar to exec_cmd, however does not capture stdout, stderr (therefore
     allowing it to print to console).
     
-    Required Arguments:
-    
-        cmd_args
-            List of command line arguments.
-            
-        shell
-            Boolean option.  See `Subprocess <http://docs.python.org/library/subprocess.html>`_
-            Default: False
-            
-    Return: int (return_code)
+    :param cmd_args: List of command line arguments.
+    :type cmd_args: list
+    :param shell: See `Subprocess <http://docs.python.org/library/subprocess.html>`_
+    :type shell: boolean
+    :returns: The integer return code of the command.
+    :rtype: int
     
     """
     proc = Popen(cmd_args, shell=shell)

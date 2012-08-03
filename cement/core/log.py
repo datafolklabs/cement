@@ -44,8 +44,13 @@ class ILog(interface.Interface):
     """
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+        """Interface meta-data."""
+        
         label = 'log'
+        """The string identifier of the interface."""
+        
         validator = log_validator
+        """The interface validator function."""
     
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler Meta-data')
@@ -56,41 +61,28 @@ class ILog(interface.Interface):
         must 'setup' the handler object making it ready for the framework
         or the application to make further calls to it.
         
-        Required Arguments:
-        
-            app_obj
-                The application object. 
-                                
-        Returns: n/a
+        :param app_obj: The application object. 
         
         """
         
     def clear_loggers():
+        """Clear all existing loggers."""
+        
+    def set_level():
         """
-        Clear all existing loggers.
+        Set the log level.  Must except one of: ``['INFO', 'WARN', 'ERROR', 
+        'DEBUG', or 'FATAL']``.
         
         """
         
-    def set_level(self):
-        """
-        Set the log level.  Must except one of: 'INFO', 'WARN', 'ERROR', 
-        'DEBUG', or 'FATAL'.
-        
-        """
-        
-    def level(self):
-        """
-        Return a string representation of the log level.
-        """
+    def level():
+        """Return a string representation of the log level."""
     
-    def info(self, msg):
+    def info(msg):
         """
         Log to the 'INFO' facility.
         
-        Required Arguments:
-        
-            msg
-                The message to log.
+        :param msg: The message to log.
         
         """
         
@@ -98,10 +90,7 @@ class ILog(interface.Interface):
         """
         Log to the 'WARN' facility.
         
-        Required Arguments:
-        
-            msg
-                The message to log.
+        :param msg: The message to log.
         
         """
     
@@ -109,10 +98,7 @@ class ILog(interface.Interface):
         """
         Log to the 'ERROR' facility.
         
-        Required Arguments:
-        
-            msg
-                The message to log.
+        :param msg: The message to log.
         
         """
     
@@ -120,10 +106,7 @@ class ILog(interface.Interface):
         """
         Log to the 'FATAL' facility.
         
-        Required Arguments:
-        
-            msg
-                The message to log.
+        :param msg: The message to log.
         
         """
     
@@ -131,10 +114,7 @@ class ILog(interface.Interface):
         """
         Log to the 'DEBUG' facility.
         
-        Required Arguments:
-        
-            msg
-                The message to log.
+        :param msg: The message to log.
         
         """
 
@@ -149,7 +129,11 @@ class CementLogHandler(handler.CementBaseHandler):
         class).
         """
         
+        label = None
+        """The string identifier of this handler."""
+        
         interface = ILog
+        """The interface that this class implements."""
         
     def __init__(self, *args, **kw):
         super(CementLogHandler, self).__init__(*args, **kw)
