@@ -11,8 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-VERSION = '2.0'
-RELEASE = '2.0.0'
+VERSION = '2.1'
+RELEASE = '2.1.1'
 
 import sys, os
 sys.path.insert(0, os.path.abspath('../cement/'))

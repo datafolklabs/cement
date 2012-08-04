@@ -16,6 +16,14 @@ is available online at:
 
     <BR><BR>
 
+2.1.1 - development (will be released as 2.1.2 dev)
+------------------------------------------------------------------------------
+
+This is a branch of the 2.0.x stable code base.  Maintenance releases will
+still be made for the 2.0.x code base, however forward feature development
+will happen here under as 2.1.x.
+
+
 2.0.0 - Fri Aug 03, 2012
 ------------------------------------------------------------------------------
 
