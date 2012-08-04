@@ -1,0 +1,4 @@
+# The following are only required in development, not production
+nose
+coverage
+sphinx
