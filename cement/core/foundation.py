@@ -411,7 +411,7 @@ class CementApp(meta.MetaMixin):
 
             if self._meta.bootstrap not in sys.modules \
                 or self._loaded_bootstrap is None:
-                __import__(self._meta.bootstrap, globals(), locals(), [], -1)
+                __import__(self._meta.bootstrap, globals(), locals(), [], 0)
                 if hasattr(sys.modules[self._meta.bootstrap], 'load'):
                     sys.modules[self._meta.bootstrap].load()
 
