@@ -12,7 +12,7 @@ sacrificing quality.
 
 More Information:
 
- * RTFD: http://cement.rtfd.org/
+ * DOCS: http://builtoncement.org/2.0/
  * CODE: http://github.com/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
  * SITE: http://builtoncement.org/
