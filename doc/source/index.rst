@@ -6,29 +6,18 @@
 Cement CLI Application Framework Documentation
 ==============================================
 
+.. warning:: Cement 1.0.x is deprecated and no longer developed.
+    Please use `Cement 2.0.x <http://builtoncement.com/2.0/>`_.
+    These documents will continue to live here for historical reasons.
+
 Cement is an advanced CLI Application Framework for Python. This documentation
 is a guide for developers wishing to build their applications on top of the 
 Cement Framework.  
  
- * Doc: http://builtoncement.org/cement/0.8/doc/
- * Download: http://builtoncement.org/cement/0.8/source/
- * Code: http://github.com/derks/cement
- 
+ * DOCS: http://builtoncement.com/1.0/
+ * CODE: https://github.com/cement/cement/tree/stable/1.0.x/
+ * PYPI: http://pypi.python.org/pypi/cement/1.0.0/
 
-The Python packages are available separately via PyPi:
-
- * http://pypi.python.org/pypi/cement
- * http://pypi.python.org/pypi/cement.devtools
- 
-
-The Rosendale Project
----------------------
-
-The Rosendale Project is geared towards providing shared plugins for all 
-applications built on Cement.
-
- * http://builtoncement.org/rosendale/1.0/doc/
- 
  
 Contents
 --------

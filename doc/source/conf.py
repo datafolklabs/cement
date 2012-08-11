@@ -13,8 +13,8 @@
 
 import sys, os
 
-VERSION = '0.8'
-RELEASE = '0.8.19'
+VERSION = '1.0'
+RELEASE = '1.0.0'
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
