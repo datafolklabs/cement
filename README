@@ -30,19 +30,6 @@ cli application from the very start with more or less a single command via
 the paster utility.  Cement brings an end to the 'hack it out, and [maybe] 
 clean it up later' routine that we all find ourselves in under deadlines.
 
-Any application can utilize existing plugins from The Rosendale Project, or 
-from other 3rd party resources to extend functionality.  The plugin system is 
-designed to allow portability of re-usable code.
-
-NEWER VERSIONS OF CEMENT:
-
-Cement2 is currently under heavy, active development and is a full rewrite
-of Cement 0.x/1.x.  For more information please checkout the portland branch
-and read the new documentation:
-
-    http://cement.readthedocs.org/en/portland/
-
-
 MORE INFORMATION:
 
 All documentation is available from the official website:
