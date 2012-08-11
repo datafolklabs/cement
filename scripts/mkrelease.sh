@@ -1,7 +1,7 @@
 #!/bin/bash
 
 status=$(git status --porcelain)
-version=$(python -c "from pkg_resources import get_distribution ; print get_distribution('cement').version")
+version='1.0.0'
 short=$(echo $version | awk -F . {' print $1"."$2 '})
 dir=~/cement-${version}
 
