@@ -39,23 +39,12 @@ and < 3.2.*
 Getting More Information
 ------------------------
 
- * DOCS: http://builtoncement.org/2.0/
+ * DOCS: http://builtoncement.com/2.0/
  * CODE: http://github.com/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
- * SITE: http://builtoncement.org/
+ * SITE: http://builtoncement.com/
  * T-CI: http://travis-ci.org/cement/cement
  * HELP: cement@librelist.org - #cement
-
-Older Versions of Cement
-------------------------
-
-The previous stable branch of Cement is 0.8.  It is no longer under active
-development, is not recommended for new projects being built on Cement.
-That said, it is still available:
-
- * RTFD: http://cement.readthedocs.org/en/0.8.18/index.html
- * CODE: https://github.com/cement/cement/tree/stable/0.8.x
- 
 
 Documentation
 -------------

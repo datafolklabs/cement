@@ -33,10 +33,10 @@ and < 3.2.*
 More Information
 ----------------
 
- * DOCS: http://builtoncement.org/2.0/
+ * DOCS: http://builtoncement.com/2.0/
  * CODE: http://github.com/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
- * SITE: http://builtoncement.org/
+ * SITE: http://builtoncement.com/
  * T-CI: http://travis-ci.org/cement/cement
  * HELP: cement@librelist.org - #cement
     
