@@ -10,13 +10,9 @@ introduce a standard, and feature-full platform for both simple and complex
 command line applications as well as support rapid development needs without 
 sacrificing quality.
 
-More Information:
-
- * RTFD: http://cement.rtfd.org/
- * CODE: http://github.com/cement/
- * PYPI: http://pypi.python.org/pypi/cement/
- * SITE: http://builtoncement.org/
- * T-CI: http://travis-ci.org/cement/cement
+More Information please visit the official site at:
+    
+    * http://builtoncement.com/
 
 """
 

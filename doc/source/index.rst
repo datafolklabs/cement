@@ -6,6 +6,10 @@
 Cement CLI Application Framework for Python
 ===========================================
 
+.. warning:: This documentation is for the development version of Cement 
+    2.1.x.  For production please use, and reference the current stable version of 
+    `Cement 2.0.x <http://builtoncement.com/2.0/>`_.
+
 Cement is an advanced CLI Application Framework for Python.  Its goal is to 
 introduce a standard, and feature-full platform for both simple and complex 
 command line applications as well as support rapid development needs without 
@@ -39,23 +43,12 @@ and < 3.2.*
 Getting More Information
 ------------------------
 
- * RTFD: http://cement.rtfd.org/
+ * DOCS: http://builtoncement.com/2.1/
  * CODE: http://github.com/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
- * SITE: http://builtoncement.org/
+ * SITE: http://builtoncement.com/
  * T-CI: http://travis-ci.org/cement/cement
  * HELP: cement@librelist.org - #cement
-
-Older Versions of Cement
-------------------------
-
-The previous stable branch of Cement is 0.8.  It is no longer under active
-development, is not recommended for new projects being built on Cement.
-That said, it is still available:
-
- * RTFD: http://cement.readthedocs.org/en/0.8.18/index.html
- * CODE: https://github.com/cement/cement/tree/stable/0.8.x
- 
 
 Documentation
 -------------
