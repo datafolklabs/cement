@@ -57,7 +57,7 @@ setup(name='cement.test',
     install_requires=[
         "ConfigObj",
         "Genshi",
-        "cement >=0.8.9, <0.9",
+        "cement ==1.0.0",
         "jsonpickle",
         ],
     setup_requires=[
