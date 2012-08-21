@@ -19,9 +19,19 @@ is available online at:
 2.0.1 - development version (will be released as 2.0.2)
 ------------------------------------------------------------------------------
 
-    None
+Bugs:
 
+    * :issue:`162` - Unable to set log 'level' by config
 
+Features:
+
+    * None
+
+Incompatible Changes:
+    
+    * None
+    
+    
 2.0.0 - Fri Aug 03, 2012
 ------------------------------------------------------------------------------
 
