@@ -16,20 +16,11 @@ class MyLog(ext_logging.LoggingLogHandler):
         super(MyLog, self).__init__(*args, **kw)
     
 class LoggingExtTestCase(test.CementTestCase):
-    def test_rotate(self):
-        defaults = backend.defaults()
-        defaults['base']['debug'] = True
-        defaults['log'] = dict(
-            file='/dev/null',
-            rotate=True,
-            to_console=True
-            )
-        app = self.make_app(config_defaults=defaults)
-        app.setup()    
-    
     def test_alternate_namespaces(self):
         defaults = backend.defaults('myapp', 'log')
         defaults['log']['to_console'] = False
+        defaults['log']['file'] = '/dev/null'
+        defaults['log']['level'] = 'debug'
         app = self.make_app(config_defaults=defaults)
         app.setup()            
         app.log.info('TEST', extra=dict(namespace=__name__))
@@ -66,15 +57,26 @@ class LoggingExtTestCase(test.CementTestCase):
         Log.clear_loggers()
 
     def test_rotate(self):
+        log_file = mkstemp()[1]
         defaults = backend.defaults()
         defaults['log'] = dict(
-            file=mkstemp()[1],
+            file=log_file,
+            level='DEBUG',
             rotate=True,
+            max_bytes=10,
+            max_files=2,
             )
         app = self.make_app(config_defaults=defaults)
         app.setup()    
+        app.log.info('test log message')
         
-        # FIX ME: Actually check rotation here
+        # check that a second file was created, because this log is over 12
+        # bytes.
+        self.ok(os.path.exists("%s.1" % log_file))
+        self.ok(os.path.exists("%s.2" % log_file))
+        
+        # this file should exist because of max files
+        self.eq(os.path.exists("%s.3" % log_file), False)
         
     def test_missing_log_dir(self):
         _, tmp_path = mkstemp()

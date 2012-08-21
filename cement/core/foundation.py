@@ -9,6 +9,7 @@ from ..core import backend, exc, handler, hook, log, config, plugin
 from ..core import output, extension, arg, controller, meta, cache
 from ..ext import ext_configparser, ext_argparse, ext_logging
 from ..ext import ext_nulloutput, ext_plugin
+from ..utils.misc import is_true
 
 if sys.version_info[0] >= 3: 
     from imp import reload  # pragma: nocover
@@ -107,12 +108,8 @@ class CementApp(meta.MetaMixin):
         
         debug = False
         """
-        Toggles debug output.  By default, this setting is also overridden
-        by the '[base] -> debug' config setting parsed in any
-        of the application configuration files (where [base] is the 
-        base configuration section of the application which is determined
-        by Meta.config_section but defaults to Meta.label).
-        """
+        Used internally, and should not be used by developers.  This is set
+        to `True` if `--debug` is passed at command line."""
         
         config_files = None
         """
@@ -302,7 +299,7 @@ class CementApp(meta.MetaMixin):
         """
         
         core_meta_override = [
-            'debug', 
+            'debug',
             'plugin_config_dir', 
             'plugin_dir'
             ]
@@ -347,6 +344,10 @@ class CementApp(meta.MetaMixin):
         # setup argv... this has to happen before lay_cement()
         if self._meta.argv is None:
             self._meta.argv = list(sys.argv[1:])
+                        
+        # hack for command line --debug
+        if '--debug' in self.argv:
+            self._meta.debug = True
             
         # setup the cement framework
         self._lay_cement()
@@ -514,12 +515,14 @@ class CementApp(meta.MetaMixin):
         """Initialize the framework."""
         LOG.debug("laying cement for the '%s' application" % \
                   self._meta.label)
-
-        # hacks to suppress console output
+    
+        ### overrides via command line
         suppress_output = False
+        
         if '--debug' in self._meta.argv:
             self._meta.debug = True
         else:
+            # the following are hacks to suppress console output    
             for flag in ['--quiet', '--json', '--yaml']:
                 if flag in self._meta.argv:
                     suppress_output = True
@@ -654,16 +657,17 @@ class CementApp(meta.MetaMixin):
         for _file in self._meta.config_files:
             self.config.parse_file(_file)
         
+        # override select Meta via config
         base_dict = self.config.get_section_dict(self._meta.config_section)
         for key in base_dict:
             if key in self._meta.core_meta_override or \
                key in self._meta.meta_override:
                 setattr(self._meta, key, base_dict[key])
-                                  
+                    
     def _setup_log_handler(self):
         LOG.debug("setting up %s.log handler" % self._meta.label)
         self.log = self._resolve_handler('log', self._meta.log_handler)
-           
+        
     def _setup_plugin_handler(self):
         LOG.debug("setting up %s.plugin handler" % self._meta.label) 
         

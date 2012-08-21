@@ -4,6 +4,7 @@ import os
 import logging
 from ..core import exc, log, handler
 from ..utils.misc import is_true
+from ..utils import fs
 
 class LoggingLogHandler(log.CementLogHandler):  
     """
@@ -15,7 +16,7 @@ class LoggingLogHandler(log.CementLogHandler):
     
     The following configuration options are recognized in this class:
     
-        <app_label>.debug
+        log.level
         
         log.file
         
@@ -31,10 +32,7 @@ class LoggingLogHandler(log.CementLogHandler):
     A sample config section (in any config file) might look like:
     
     .. code-block:: text
-    
-        [myapp]
-        debug = True
-        
+
         [log]
         file = /path/to/config/file
         level = info
@@ -102,34 +100,33 @@ class LoggingLogHandler(log.CementLogHandler):
         
     def _setup(self, app_obj):
         super(LoggingLogHandler, self)._setup(app_obj)
-        self._meta._merge(self.app.config.get_section_dict('log'))
-        
         if self._meta.namespace is None:
             self._meta.namespace = self.app._meta.label
-
+            
         self.backend = logging.getLogger(self._meta.namespace)
         
-        # the king trumps all
-        if is_true(self.app._meta.debug):
-            self._meta.level = 'DEBUG'
+        # hack for application debugging
+        if self.app._meta.debug is True:
+            self.app.config.set('log', 'level', 'DEBUG')
             
-        self.set_level(self._meta.level)
+        self.set_level(self.app.config.get('log', 'level'))
         
         # clear loggers?
         if is_true(self._meta.clear_loggers):
             self.clear_loggers()
             
         # console
-        if is_true(self._meta.to_console):
+        if is_true(self.app.config.get('log', 'to_console')):
             self._setup_console_log()
         
         # file
-        if self._meta.file:
+        if self.app.config.get('log', 'file'):
             self._setup_file_log()
-            
+        
+        
         self.debug("logging initialized for '%s' using LoggingLogHandler" % \
                    self._meta.namespace)
-                 
+
     def set_level(self, level):
         """
         Set the log level.  Must be one of the log levels configured in 
@@ -138,6 +135,7 @@ class LoggingLogHandler(log.CementLogHandler):
         :param level: The log level to set.
         
         """
+        level = level.upper()
         if level not in self.levels:
             level = 'INFO'
         level = getattr(logging, level.upper())
@@ -146,7 +144,7 @@ class LoggingLogHandler(log.CementLogHandler):
         
         for handler in logging.getLogger(self._meta.namespace).handlers:
             handler.setLevel(level)
-         
+
     def get_level(self):
         """Returns the current log level."""
         return logging.getLevelName(self.backend.level)
@@ -170,28 +168,29 @@ class LoggingLogHandler(log.CementLogHandler):
             format = logging.Formatter(self._meta.debug_format)
         else:
             format = logging.Formatter(self._meta.console_format)
+            
         console_handler.setFormatter(format)    
         console_handler.setLevel(getattr(logging, self.get_level()))   
+        self._console_handler = console_handler
         self.backend.addHandler(console_handler)
     
     def _setup_file_log(self):
         """Add a file log handler."""
-        
-        file = os.path.abspath(os.path.expanduser(self._meta.file))
-        log_dir = os.path.dirname(file)
+        file_path = fs.abspath(self.app.config.get('log', 'file'))
+        log_dir = os.path.dirname(file_path)
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
             
-        if self._meta.rotate:
+        if self.app.config.get('log', 'rotate'):
             from logging.handlers import RotatingFileHandler
             file_handler = RotatingFileHandler(
-                file, 
-                maxBytes=int(self._meta.max_bytes), 
-                backupCount=int(self._meta.max_files),
+                file_path, 
+                maxBytes=int(self.app.config.get('log', 'max_bytes')), 
+                backupCount=int(self.app.config.get('log', 'max_files')),
                 )
         else:
             from logging import FileHandler
-            file_handler = FileHandler(file)
+            file_handler = FileHandler(file_path)
         
         if self.get_level() == logging.getLevelName(logging.DEBUG):
             format = logging.Formatter(self._meta.debug_format)
@@ -199,6 +198,8 @@ class LoggingLogHandler(log.CementLogHandler):
             format = logging.Formatter(self._meta.file_format)
         file_handler.setFormatter(format)   
         file_handler.setLevel(getattr(logging, self.get_level())) 
+        
+        self._file_handler = file_handler
         self.backend.addHandler(file_handler)
     
     def _get_logging_kwargs(self, namespace, **kw):
@@ -227,7 +228,7 @@ class LoggingLogHandler(log.CementLogHandler):
             
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.info(msg, kwargs)
+        self.backend.info(msg, **kwargs)
         
     def warn(self, msg, namespace=None, **kw):
         """
@@ -242,7 +243,7 @@ class LoggingLogHandler(log.CementLogHandler):
             
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.warn(msg, kwargs)
+        self.backend.warn(msg, **kwargs)
     
     def error(self, msg, namespace=None, **kw):
         """
@@ -257,7 +258,7 @@ class LoggingLogHandler(log.CementLogHandler):
             
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.error(msg, kwargs)
+        self.backend.error(msg, **kwargs)
     
     def fatal(self, msg, namespace=None, **kw):
         """
@@ -272,7 +273,7 @@ class LoggingLogHandler(log.CementLogHandler):
             
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.fatal(msg, kwargs)
+        self.backend.fatal(msg, **kwargs)
     
     def debug(self, msg, namespace=None, **kw):
         """
