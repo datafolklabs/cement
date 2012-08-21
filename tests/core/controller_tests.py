@@ -64,7 +64,9 @@ class TestBaseController2(controller.CementBaseController):
         config_defaults = {}
         arguments = []
         hide = False
-    
+        epilog = 'Test Epilog'
+        usage = 'Test Usage'
+        
     @controller.expose()
     def my_command(self):
         pass
@@ -381,3 +383,10 @@ class ControllerTestCase(test.CementTestCase):
         except exc.FrameworkError as e:
             self.ok(e.msg.find('collides'))
             raise
+
+    def test_usage_text(self):
+        self.app.setup()
+        contr = TestBaseController2()
+        contr._setup(self.app)
+        self.eq(contr._usage_text, 'Test Usage')
+    

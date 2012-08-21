@@ -23,6 +23,7 @@ def controller_validator(klass, obj):
         'config_section',
         'config_defaults',
         'arguments',
+        'usage',
         'epilog',
         'stacked_on',
         'hide',
@@ -241,6 +242,14 @@ class CementBaseController(handler.CementBaseHandler):
         epilog = None
         """
         The text that is displayed at the bottom when '--help' is passed.
+        """
+        
+        usage = None
+        """
+        The text that is displayed at the top when '--help' is passed.  
+        Although the default is `None`, Cement will set this to a generic
+        usage based on the `prog`, `controller` name, etc if nothing else is
+        passed.
         """
         
         argument_formatter = argparse.RawDescriptionHelpFormatter
@@ -532,6 +541,9 @@ class CementBaseController(handler.CementBaseHandler):
     def _usage_text(self):
         """Returns the usage text displayed when '--help' is passed."""
         
+        if self._meta.usage is not None:
+            return self._meta.usage
+            
         if self == self.app._meta.base_controller:
             txt = "%s <CMD> -opt1 --opt2=VAL [arg1] [arg2] ..." % \
                 self.app.args.prog
