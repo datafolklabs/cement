@@ -29,7 +29,7 @@ Bugs:
 
 Features:
 
-    * None
+    * :issue:`161` - Ability to override `usage`
 
 Incompatible Changes:
     
