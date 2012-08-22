@@ -30,7 +30,8 @@ Bugs:
 Features:
 
     * :issue:`161` - Ability to override `usage`
-
+    * :issue:`165` - Allow utils.fs.backup() to support a suffix kwarg
+    
 Incompatible Changes:
     
     * None
