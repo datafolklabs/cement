@@ -14,12 +14,13 @@ def abspath(path):
     """
     return os.path.abspath(os.path.expanduser(path))
 
-def backup(path):
+def backup(path, suffix='.bak'):
     """
     Rename a file or directory safely without overwriting an existing
     backup of the same name.
     
     :param path: The path to the file or directory to make a backup of.
+    :param suffix: The suffix to rename files with.
     :returns: The new path of backed up file/directory
     :rtype: str
     
@@ -29,9 +30,9 @@ def backup(path):
     while True:
         if os.path.exists(path):
             if count == -1:
-                new_path = "%s.bak" % (path)
+                new_path = "%s%s" % (path, suffix)
             else:
-                new_path = "%s.bak.%s" % (path, count)
+                new_path = "%s%s.%s" % (path, suffix, count)
             if os.path.exists(new_path):
                 count += 1
                 continue
