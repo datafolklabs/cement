@@ -106,7 +106,7 @@ class LoggingLogHandler(log.CementLogHandler):
         self.backend = logging.getLogger(self._meta.namespace)
         
         # hack for application debugging
-        if self.app._meta.debug is True:
+        if is_true(self.app._meta.debug):
             self.app.config.set('log', 'level', 'DEBUG')
             
         self.set_level(self.app.config.get('log', 'level'))
