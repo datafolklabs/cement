@@ -289,7 +289,6 @@ class CementBaseController(handler.CementBaseHandler):
         self.pargs = self.app.pargs
         self.render = self.app.render
         self._collect()
-        
              
     def _parse_args(self):
         """

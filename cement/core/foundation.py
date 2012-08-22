@@ -259,6 +259,10 @@ class CementApp(meta.MetaMixin):
         This is the base application controller.  If a controller is set,
         runtime operations are passed to the controller for command 
         dispatch and argument parsing when CementApp.run() is called.
+        
+        Note that cement will automatically set the `base_controller` to a
+        registered controller whose label is 'base' (only if `base_controller`
+        is not currently set).
         """
         
         extensions = []   
@@ -715,7 +719,7 @@ class CementApp(meta.MetaMixin):
     def _setup_controllers(self):
         LOG.debug("setting up application controllers") 
 
-        if self._meta.base_controller:
+        if self._meta.base_controller is not None:
             self.controller = self._resolve_handler('controller', 
                                                     self._meta.base_controller) 
             self._meta.base_controller = self.controller
