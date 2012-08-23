@@ -728,6 +728,13 @@ class CementApp(meta.MetaMixin):
                 self.controller = self._resolve_handler('controller', 'base') 
                 self._meta.base_controller = self.controller
                 
+        # This is necessary for some backend usage
+        if self._meta.base_controller is not None:
+            if self._meta.base_controller._meta.label != 'base':
+               raise exc.FrameworkError("Base controllers must have " +  
+                                        "a label of 'base'.")
+                
+                
         # Trump all with whats passed at the command line, and pop off the arg
         if len(self.argv) > 0:
             controller = None

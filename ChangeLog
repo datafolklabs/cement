@@ -26,7 +26,8 @@ development will happen here under as 2.1.x under the git master branch.
 Bugs:
 
     * :issue:`162` - Unable to set log 'level' by config
-
+    * :issue:`167` - Non-stacked controllers not listed in --help
+    
 Features:
 
     * :issue:`161` - Ability to override `usage`

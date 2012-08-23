@@ -488,8 +488,8 @@ class CementBaseController(handler.CementBaseHandler):
             if not hasattr(contr._meta, 'stacked_on') \
                or contr._meta.stacked_on is None:
                 # only show non-stacked controllers under base
-                if self.__class__ == self.app._meta.base_controller:
-                    self._collect_from_non_stacked_controller(controller)                        
+                if self._meta.label == 'base':
+                    self._collect_from_non_stacked_controller(controller)         
             elif contr._meta.stacked_on == self._meta.label:
                 self._collect_from_stacked_controller(controller)
 

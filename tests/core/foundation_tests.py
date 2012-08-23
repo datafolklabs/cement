@@ -27,6 +27,10 @@ class TestOutputHandler(output.CementOutputHandler):
     def render(self, data_dict, template=None):
         return None
 
+class BogusBaseController(controller.CementBaseController):
+    class Meta:
+        label = 'bad_base_controller_label'
+        
 def my_hook_one(app):
     return 1
     
@@ -210,3 +214,9 @@ class FoundationTestCase(test.CementTestCase):
         for f in files:
             res = f in app._meta.config_files
             self.ok(res)
+
+    @test.raises(exc.FrameworkError)
+    def test_base_controller_label(self):
+        app = self.make_app('myapp', base_controller=BogusBaseController)
+        app.setup()
+        
