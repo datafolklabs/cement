@@ -16,12 +16,8 @@ is available online at:
 
     <BR><BR>
 
-2.1.1 - development (will be released as 2.1.2 dev)
+2.0.1 - development version (will be released as 2.0.2)
 ------------------------------------------------------------------------------
-
-This is a branch of the 2.0.x stable code base.  Maintenance releases for
-2.0.x will happen under the stable/2.0.x git branch, while forward feature 
-development will happen here under as 2.1.x under the git master branch.
 
 Bugs:
 
@@ -35,7 +31,12 @@ Features:
     
 Incompatible Changes:
     
-    * None
+    * :issue:`167` - Listed above, in order to fix this issue as well as 
+      restrict future issues we implemented a hard requirement that all 
+      base controllers have the label 'base'.  This should not be a major
+      change for anyone using Cement 2.0.x as it is a simple 1 line change
+      in any one application.  As all documentation encourages the use of the
+      label 'base' it should not be a wide spread incompatibility.
     
     
 2.0.0 - Fri Aug 03, 2012
