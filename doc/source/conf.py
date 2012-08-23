@@ -12,7 +12,7 @@
 # serve to show the default.
 
 VERSION = '2.0'
-RELEASE = '2.0.1'
+RELEASE = '2.0.2'
 
 import sys, os
 sys.path.insert(0, os.path.abspath('../cement/'))
