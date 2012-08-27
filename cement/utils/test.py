@@ -25,6 +25,7 @@ class CementTestCase(unittest.TestCase):
         
     """
     app_class = TestApp
+    """The test class that is used by self.make_app to create an app."""
         
     def __init__(self, *args, **kw):
         super(CementTestCase, self).__init__(*args, **kw)

@@ -30,6 +30,8 @@ The following outlines a basic test case using the cement.utils.test module.
     from myapp.cli.main import MyApp
     
     class MyTestCase(test.CementTestCase):
+        app_class = MyApp
+        
         def setUp(self):
             super(MyTestCase, self).setUp()
             
@@ -111,10 +113,7 @@ a special 'testing' version.  For example:
             config_files = []
             
     class MyTestCase(test.CementTestCase):
-        def setUp(self):
-            super(MyTestCase, self).setUp()
-            self.reset_backend()
-            self.app = MyTestApp()
+        app_class = MyTestApp
         
         def test_myapp_default(self):
             self.app.setup()
