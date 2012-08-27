@@ -67,7 +67,7 @@ class PluginTestCase(test.CementTestCase):
         f.write(PLUGIN)
         f.close()
     
-        app = self.make_app('myapp',
+        app = self.make_app('cement-testapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -92,7 +92,7 @@ class PluginTestCase(test.CementTestCase):
         defaults['myplugin']['enable_plugin'] = True
         defaults['myplugin2'] = dict()
         defaults['myplugin2']['enable_plugin'] = False
-        app = self.make_app('myapp', config_defaults=defaults,
+        app = self.make_app('cement-testapp', config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -132,7 +132,7 @@ class PluginTestCase(test.CementTestCase):
         f.write(PLUGIN)
         f.close()
     
-        app = self.make_app('myapp',
+        app = self.make_app('cement-testapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -158,7 +158,7 @@ class PluginTestCase(test.CementTestCase):
         f.write(CONF5)
         f.close()
         
-        app = self.make_app('myapp',
+        app = self.make_app('cement-testapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -177,7 +177,7 @@ class PluginTestCase(test.CementTestCase):
         f.write(CONF)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app('cement-testapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir='./some/bogus/path',
@@ -201,7 +201,7 @@ class PluginTestCase(test.CementTestCase):
         f.write(CONF4)
         f.close()
     
-        app = self.make_app('myapp',
+        app = self.make_app('cement-testapp',
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,

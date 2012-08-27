@@ -17,7 +17,7 @@ class MyLog(ext_logging.LoggingLogHandler):
     
 class LoggingExtTestCase(test.CementTestCase):
     def test_alternate_namespaces(self):
-        defaults = backend.defaults('myapp', 'log')
+        defaults = backend.defaults('cement-testapp', 'log')
         defaults['log']['to_console'] = False
         defaults['log']['file'] = '/dev/null'
         defaults['log']['level'] = 'debug'
@@ -85,7 +85,7 @@ class LoggingExtTestCase(test.CementTestCase):
         
         defaults = backend.defaults()
         defaults['log'] = dict(
-            file=os.path.join(tmp_path, 'myapp.log'),
+            file=os.path.join(tmp_path, 'cement-testapp.log'),
             )
         app = self.make_app(config_defaults=defaults)
         app.setup()

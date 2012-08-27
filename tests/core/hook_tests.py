@@ -64,7 +64,7 @@ class HookTestCase(test.CementTestCase):
         self.eq(hook.defined('some_bogus_hook'), False)
         
     def test_framework_hooks(self):
-        app = self.make_app('myapp', argv=['--quiet'])
+        app = self.make_app('cement-testapp', argv=['--quiet'])
         hook.register('pre_setup', cement_hook_one)
         hook.register('post_setup', cement_hook_one)
         hook.register('pre_run', cement_hook_one)
