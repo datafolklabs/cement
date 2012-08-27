@@ -121,8 +121,8 @@ a special 'testing' version.  For example:
             self.app.close()
             
         def test_myapp_foo(self):
-            self.app = MyTestApp(argv=['--foo', 'bar])
-            self.app.setup()
-            self.app.run()
-            self.app.close()
+            app = self.make_app(argv=['--foo', 'bar])
+            app.setup()
+            app.run()
+            app.close()
             
