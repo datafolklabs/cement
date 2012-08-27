@@ -24,6 +24,7 @@ class CementTestCase(unittest.TestCase):
     A sub-class of unittest.TestCase.  
         
     """
+    app_class = TestApp
         
     def __init__(self, *args, **kw):
         super(CementTestCase, self).__init__(*args, **kw)
@@ -44,8 +45,8 @@ class CementTestCase(unittest.TestCase):
         
         """
         self.reset_backend()
-        return TestApp(*args, **kw)
-        
+        return self.app_class(*args, **kw)
+
     def reset_backend(self):
         """
         Remove all registered hooks and handlers from the backend.
