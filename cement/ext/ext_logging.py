@@ -116,13 +116,10 @@ class LoggingLogHandler(log.CementLogHandler):
             self.clear_loggers()
             
         # console
-        if is_true(self.app.config.get('log', 'to_console')):
-            self._setup_console_log()
+        self._setup_console_log()
         
         # file
-        if self.app.config.get('log', 'file'):
-            self._setup_file_log()
-        
+        self._setup_file_log()
         
         self.debug("logging initialized for '%s' using LoggingLogHandler" % \
                    self._meta.namespace)
@@ -163,43 +160,48 @@ class LoggingLogHandler(log.CementLogHandler):
     def _setup_console_log(self):
         """Add a console log handler."""
         
-        console_handler = logging.StreamHandler()
-        if self.get_level() == logging.getLevelName(logging.DEBUG):
-            format = logging.Formatter(self._meta.debug_format)
+        if is_true(self.app.config.get('log', 'to_console')):
+            console_handler = logging.StreamHandler()
+            if self.get_level() == logging.getLevelName(logging.DEBUG):
+                format = logging.Formatter(self._meta.debug_format)
+            else:
+                format = logging.Formatter(self._meta.console_format)
+            console_handler.setFormatter(format)    
+            console_handler.setLevel(getattr(logging, self.get_level()))   
         else:
-            format = logging.Formatter(self._meta.console_format)
-            
-        console_handler.setFormatter(format)    
-        console_handler.setLevel(getattr(logging, self.get_level()))   
-        self._console_handler = console_handler
+            console_handler = logging.NullHandler()
+
         self.backend.addHandler(console_handler)
     
     def _setup_file_log(self):
         """Add a file log handler."""
-        file_path = fs.abspath(self.app.config.get('log', 'file'))
-        log_dir = os.path.dirname(file_path)
-        if not os.path.exists(log_dir):
-            os.makedirs(log_dir)
+        
+        if self.app.config.get('log', 'file'):
+            file_path = fs.abspath(self.app.config.get('log', 'file'))
+            log_dir = os.path.dirname(file_path)
+            if not os.path.exists(log_dir):
+                os.makedirs(log_dir)
             
-        if self.app.config.get('log', 'rotate'):
-            from logging.handlers import RotatingFileHandler
-            file_handler = RotatingFileHandler(
-                file_path, 
-                maxBytes=int(self.app.config.get('log', 'max_bytes')), 
-                backupCount=int(self.app.config.get('log', 'max_files')),
-                )
-        else:
-            from logging import FileHandler
-            file_handler = FileHandler(file_path)
+            if self.app.config.get('log', 'rotate'):
+                from logging.handlers import RotatingFileHandler
+                file_handler = RotatingFileHandler(
+                    file_path, 
+                    maxBytes=int(self.app.config.get('log', 'max_bytes')), 
+                    backupCount=int(self.app.config.get('log', 'max_files')),
+                    )
+            else:
+                from logging import FileHandler
+                file_handler = FileHandler(file_path)
         
-        if self.get_level() == logging.getLevelName(logging.DEBUG):
-            format = logging.Formatter(self._meta.debug_format)
+            if self.get_level() == logging.getLevelName(logging.DEBUG):
+                format = logging.Formatter(self._meta.debug_format)
+            else:
+                format = logging.Formatter(self._meta.file_format)
+            file_handler.setFormatter(format)   
+            file_handler.setLevel(getattr(logging, self.get_level())) 
         else:
-            format = logging.Formatter(self._meta.file_format)
-        file_handler.setFormatter(format)   
-        file_handler.setLevel(getattr(logging, self.get_level())) 
-        
-        self._file_handler = file_handler
+            file_handler = logging.NullHandler()
+
         self.backend.addHandler(file_handler)
     
     def _get_logging_kwargs(self, namespace, **kw):

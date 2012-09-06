@@ -19,7 +19,7 @@ is available online at:
 2.1.1 - development (will be released as 2.1.2 dev)
 ------------------------------------------------------------------------------
 
-This is a branch of the 2.0.x stable code base.  Maintenance releases for
+sThis is a branch of the 2.0.x stable code base.  Maintenance releases for
 2.0.x will happen under the stable/2.0.x git branch, while forward feature 
 development will happen here under as 2.1.x under the git master branch.
 
@@ -28,6 +28,7 @@ Bugs:
     * :issue:`162` - Unable to set log 'level' by config
     * :issue:`167` - Non-stacked controllers not listed in --help
     * :issue:`169` - Fixed tests.utils.shell_tests timeout issue
+    * :issue:`171` - No handlers could be found for logger
     
 Features:
 
