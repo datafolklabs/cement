@@ -27,6 +27,7 @@ Bugs:
 
     * :issue:`162` - Unable to set log 'level' by config
     * :issue:`167` - Non-stacked controllers not listed in --help
+    * :issue:`169` - Fixed tests.utils.shell_tests timeout issue
     
 Features:
 
