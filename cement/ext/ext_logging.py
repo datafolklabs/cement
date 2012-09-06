@@ -6,6 +6,14 @@ from ..core import exc, log, handler
 from ..utils.misc import is_true
 from ..utils import fs
 
+try:                                        # pragma: no cover
+    NullHandler = logging.NullHandler       # pragma: no cover
+except AttributeError as e:                 # pragma: no cover
+    # Not supported on Python < 3.1/2.7     # pragma: no cover
+    class NullHandler(object):              # pragma: no cover
+        def emit(self, *args, **kw):        # pragma: no cover
+            pass                            # pragma: no cover
+            
 class LoggingLogHandler(log.CementLogHandler):  
     """
     This class is an implementation of the :ref:`ILog <cement.core.log>` 
@@ -169,7 +177,7 @@ class LoggingLogHandler(log.CementLogHandler):
             console_handler.setFormatter(format)    
             console_handler.setLevel(getattr(logging, self.get_level()))   
         else:
-            console_handler = logging.NullHandler()
+            console_handler = NullHandler()
 
         self.backend.addHandler(console_handler)
     
@@ -200,7 +208,7 @@ class LoggingLogHandler(log.CementLogHandler):
             file_handler.setFormatter(format)   
             file_handler.setLevel(getattr(logging, self.get_level())) 
         else:
-            file_handler = logging.NullHandler()
+            file_handler = NullHandler()
 
         self.backend.addHandler(file_handler)
     

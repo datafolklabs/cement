@@ -34,7 +34,6 @@ class IArgument(interface.Interface):
                 label = 'my_argument_handler'
                 
     """
-    # pylint: disable=W0232, C0111, R0903
     class IMeta:
         """Interface meta-data options."""
 
@@ -97,7 +96,6 @@ class CementArgumentHandler(handler.CementBaseHandler):
     Base class that all Argument Handlers should sub-class from.
             
     """
-    # pylint: disable=W0232,R0903
     class Meta:
         """
         Handler meta-data (can be passed as keyword arguments to the parent 
