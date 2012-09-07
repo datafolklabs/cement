@@ -9,7 +9,7 @@ introduce a standard, and feature-full platform for both simple and complex
 command line applications as well as support rapid development needs without 
 sacrificing quality.
 
-[![Continuous Integration Status](https://secure.travis-ci.org/cement/cement.png)](http://travis-ci.org/cement/cement)
+[![Continuous Integration Status](http://travis-ci.org/cement/cement.png)](http://travis-ci.org/cement/cement)
 
 Cement core features include (but are not limited to):
 
@@ -25,7 +25,8 @@ Cement core features include (but are not limited to):
  * Cache handler interface adds caching support for improved performance
  * Controller handler supports sub-commands, and nested controllers
  * Zero external dependencies* (ext's with dependencies ship separately)
- * 100% test coverage
+ * 100% test coverage using Nose
+ * 100% PEP8 compliant using `pep8` and `autopep8` tools
  * Extensive Sphinx documentation
  * Tested on Python 2.6, 2.7, 3.1, and 3.2
 

@@ -32,13 +32,13 @@ Core features include (but are not limited to):
  * Cache handler interface adds caching support for improved performance
  * Controller handler supports sub-commands, and nested controllers
  * Zero external dependencies* (ext's with dependencies ship separately)
- * 100% test coverage
- * Extensive documentation
+ * 100% test coverage using Nose
+ * 100% PEP8 compliant using `pep8` and `autopep8` tools
+ * Extensive Sphinx documentation
  * Tested on Python 2.6, 2.7, 3.1, and 3.2
 
 *Note that argparse is required as an external dependency for Python < 2.7 
 and < 3.2.*
-
 
 Getting More Information
 ------------------------
@@ -49,7 +49,6 @@ Getting More Information
  * SITE: http://builtoncement.com/
  * T-CI: http://travis-ci.org/cement/cement
  * HELP: cement@librelist.org - #cement
-
 
 Documentation
 -------------

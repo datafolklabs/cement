@@ -36,6 +36,10 @@ Features:
     * :issue:`165` - Allow utils.fs.backup() to support a suffix kwarg
     * :issue:`166` - Ability to set the 'app' for CementTestCase.make_app()
 
+Misc:
+    
+    * :issue:`172` - 100% PEP8 Compliant
+    
 Incompatible Changes:
     
     * :issue:`167` - Listed above, in order to fix this issue as well as 

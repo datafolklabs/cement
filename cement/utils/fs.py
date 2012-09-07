@@ -3,27 +3,29 @@
 import os
 import shutil
 
+
 def abspath(path):
     """
     Return an absolute path, while also expanding the '~' user directory
     shortcut.
-    
+
     :param path: The original path to expand.
     :rtype: str
-            
+
     """
     return os.path.abspath(os.path.expanduser(path))
+
 
 def backup(path, suffix='.bak'):
     """
     Rename a file or directory safely without overwriting an existing
     backup of the same name.
-    
+
     :param path: The path to the file or directory to make a backup of.
     :param suffix: The suffix to rename files with.
     :returns: The new path of backed up file/directory
     :rtype: str
-    
+
     """
     count = -1
     new_path = None
