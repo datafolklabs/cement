@@ -7,6 +7,7 @@ from ..core import backend, interface, handler
 
 LOG = backend.minimal_logger(__name__)
 
+
 # pylint: disable=w0613
 def argument_validator(klass, obj):
     """Validates a handler implementation against the IArgument interface."""
@@ -17,6 +18,7 @@ def argument_validator(klass, obj):
     ]
 
     interface.validate(IArgument, obj, members)
+
 
 # pylint: disable=W0105,W0232,W0232,R0903,E0213,R0923
 class IArgument(interface.Interface):
@@ -59,7 +61,7 @@ class IArgument(interface.Interface):
         :returns: None
 
         """
-    
+
     # pylint: disable=E0211
     def add_argument(*args, **kw):
         """
@@ -94,6 +96,7 @@ class IArgument(interface.Interface):
         :returns: Callable object
 
         """
+
 
 # pylint: disable=W0105
 class CementArgumentHandler(handler.CementBaseHandler):

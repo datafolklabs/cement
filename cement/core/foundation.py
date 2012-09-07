@@ -309,7 +309,8 @@ class CementApp(meta.MetaMixin):
         core_meta_override = [
             'debug',
             'plugin_config_dir',
-            'plugin_dir'
+            'plugin_dir',
+            'ignore_deprecation_warnings',
         ]
         """
         List of meta options that can/will be overridden by config options
@@ -329,6 +330,9 @@ class CementApp(meta.MetaMixin):
         base configuration section of the application which is determined
         by Meta.config_section but defaults to Meta.label).
         """
+
+        ignore_deprecation_warnings = False
+        """Disabled deprecation warnings from being logged by Cement."""
 
     def __init__(self, label=None, **kw):
         super(CementApp, self).__init__(**kw)

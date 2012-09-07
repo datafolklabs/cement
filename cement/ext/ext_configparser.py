@@ -111,7 +111,20 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         in future versions.  Use `if 'key' in config.keys('section')`
         instead.*
         """
-        if key in self.options(section):
+        if self.app._meta.ignore_deprecation_warnings:
+            LOG.debug("ConfigParserConfigHandler.has_key() is " +
+                      "deprecated as of Cement 2.1.1.  Please use " +
+                      "`if key in app.config.keys(section)` " +
+                      "instead.")
+        else:
+            LOG.warn("ConfigParserConfigHandler.has_key() is " +
+                     "deprecated as of Cement 2.1.1.  Please use " +
+                     "`if key in app.config.keys(section)` " +
+                     "instead.  You can disable this warning by setting " +
+                     "`ignore_deprecation_warnings = true` under the " +
+                     "applications primary config section.")
+
+        if key in self.keys(section):
             return True
         else:
             return False

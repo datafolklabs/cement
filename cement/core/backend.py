@@ -3,6 +3,7 @@
 import sys
 import logging
 
+
 def defaults(*sections):
     """
     Returns a standard dictionary object to use for application defaults.

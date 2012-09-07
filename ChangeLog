@@ -40,6 +40,12 @@ Misc:
     
     * :issue:`172` - 100% PEP8 Compliant
     
+Deprecation Notices:
+
+    * :issue:`173` - ConfigParserConfigHandler.has_key() is now deprecated,
+      and will be removed in future versions.  Please use `if key in
+      app.config.keys(section)` instead.
+      
 Incompatible Changes:
     
     * :issue:`167` - Listed above, in order to fix this issue as well as 
