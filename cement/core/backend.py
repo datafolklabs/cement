@@ -1,11 +1,7 @@
 """Cement core backend module."""
 
-import os
 import sys
 import logging
-
-from ..core import exc
-
 
 def defaults(*sections):
     """

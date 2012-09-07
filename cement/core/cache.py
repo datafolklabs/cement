@@ -1,6 +1,6 @@
 """Cement core cache module."""
 
-from ..core import backend, exc, interface, handler
+from ..core import backend, interface, handler
 
 LOG = backend.minimal_logger(__name__)
 
@@ -99,6 +99,7 @@ class ICache(interface.Interface):
 
         """
 
+    # pylint: disable=E0211
     def purge():
         """
         Clears all data from the cache.

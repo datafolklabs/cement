@@ -136,6 +136,7 @@ class expose(object):
                 print("In MyAppBaseController.my_command()")
 
     """
+    # pylint: disable=W0622
     def __init__(self, hide=False, help='', aliases=[]):
         self.hide = hide
         self.help = help
@@ -150,7 +151,7 @@ class expose(object):
         self.func.aliases = self.aliases
         return self.func
 
-
+# pylint: disable=R0921
 class CementBaseController(handler.CementBaseHandler):
     """
     This is an implementation of the
@@ -283,7 +284,7 @@ class CementBaseController(handler.CementBaseHandler):
         """
         super(CementBaseController, self)._setup(app_obj)
 
-        if self._meta.description is None:
+        if getattr(self._meta, 'description', None) is None:
             self._meta.description = "%s Controller" % \
                 self._meta.label.capitalize()
 
