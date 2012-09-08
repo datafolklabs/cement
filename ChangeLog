@@ -35,7 +35,8 @@ Features:
     * :issue:`161` - Ability to override `usage`
     * :issue:`165` - Allow utils.fs.backup() to support a suffix kwarg
     * :issue:`166` - Ability to set the 'app' for CementTestCase.make_app()
-
+    * :issue:`170` - Added support for `nested` and `embedded` controllers.
+    
 Misc:
     
     * :issue:`172` - 100% PEP8 Compliant
@@ -48,13 +49,17 @@ Deprecation Notices:
       
 Incompatible Changes:
     
+    * :issue:`141` - Removed shortcuts from CementBaseController (such as
+      log, pargs, etc).  Use `self.app.<shortcut>` instead.
     * :issue:`167` - Listed above, in order to fix this issue as well as 
       restrict future issues we implemented a hard requirement that all 
       base controllers have the label 'base'.  This should not be a major
       change for anyone using Cement 2.0.x as it is a simple 1 line change
       in any one application.  As all documentation encourages the use of the
       label 'base' it should not be a wide spread incompatibility.
-    
+    * :issue:`179` - CementBaseController `hidden`, `visible`, and `exposed`
+      have been removed infavor of private methods.
+    * CementBaseController no longer implements a `default` command.
     
 2.0.0 - Fri Aug 03, 2012
 ------------------------------------------------------------------------------

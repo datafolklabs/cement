@@ -19,6 +19,7 @@ def controller_validator(klass, obj):
     ]
     meta = [
         'label',
+        'aliases',
         'interface',
         'description',
         'config_section',
@@ -27,6 +28,7 @@ def controller_validator(klass, obj):
         'usage',
         'epilog',
         'stacked_on',
+        'stacked_type',
         'hide',
     ]
     interface.validate(IController, obj, members, meta=meta)
@@ -34,14 +36,17 @@ def controller_validator(klass, obj):
     # also check _meta.arguments values
     errmsg = "Controller arguments must be a list of tuples.  I.e. " + \
              "[ (['-f', '--foo'], dict(action='store')), ]"
-    try:
-        for _args, _kwargs in obj._meta.arguments:
-            if not type(_args) is list:
+
+    if obj._meta.arguments is not None:
+        if type(obj._meta.arguments) is not list:
+            raise exc.InterfaceError(errmsg)
+        for item in obj._meta.arguments:
+            if type(item) is not tuple:
                 raise exc.InterfaceError(errmsg)
-            if not type(_kwargs) is dict:
+            if type(item[0]) is not list:
                 raise exc.InterfaceError(errmsg)
-    except ValueError:
-        raise exc.InterfaceError(errmsg)
+            if type(item[1]) is not dict:
+                raise exc.InterfaceError(errmsg)
 
 
 class IController(interface.Interface):
@@ -143,13 +148,16 @@ class expose(object):
         self.aliases = aliases
 
     def __call__(self, func):
-        self.func = func
-        self.func.label = self.func.__name__
-        self.func.exposed = True
-        self.func.hide = self.hide
-        self.func.help = self.help
-        self.func.aliases = self.aliases
-        return self.func
+        metadict = {}
+        metadict['label'] = re.sub('_', '-', func.__name__)
+        metadict['func_name'] = func.__name__
+        metadict['exposed'] = True
+        metadict['hide'] = self.hide
+        metadict['help'] = self.help
+        metadict['aliases'] = self.aliases
+        metadict['controller'] = None  # added by the controller
+        func.__cement_meta__ = metadict
+        return func
 
 
 # pylint: disable=R0921
@@ -184,6 +192,7 @@ class CementBaseController(handler.CementBaseHandler):
                 label = 'second_controller'
                 aliases = ['sec', 'secondary']
                 stacked_on = 'base'
+                stacked_type = 'embedded'
                 # ...
 
     """
@@ -237,9 +246,17 @@ class CementBaseController(handler.CementBaseHandler):
 
         """
 
-        stacked_on = None
+        stacked_on = 'base'
         """
         A label of another controller to 'stack' commands/arguments on top of.
+        """
+
+        stacked_type = 'embedded'
+        """
+        Whether to `embed` commands and arguments within the parent controller
+        or to simply `nest` the controller under the parent controller (making
+        it a sub-sub-command).  Must be one of `['embedded', 'nested']` only
+        if `stacked_on` is not `None`.
         """
 
         hide = False
@@ -263,21 +280,15 @@ class CementBaseController(handler.CementBaseHandler):
         The argument formatter class to use to display --help output.
         """
 
-    ### FIX ME: What is this used for???
-    ignored = ['visible', 'hidden', 'exposed']
-
     def __init__(self, *args, **kw):
         super(CementBaseController, self).__init__(*args, **kw)
 
         self.app = None
-        self.command = 'default'
-        self.config = None
-        self.log = None
-        self.pargs = None
-        self.visible = {}
-        self.hidden = {}
-        self.exposed = {}
-        self._arguments = []
+        self._commands = {}  # used to store collected commands
+        self._visible_commands = []  # used to sort visible command labels
+        self._arguments = []  # used to store collected arguments
+        self._dispatch_map = {}  # used to map commands/aliases to controller
+        self._dispatch_command = None  # set during _parse_args()
 
     def _setup(self, app_obj):
         """
@@ -289,41 +300,104 @@ class CementBaseController(handler.CementBaseHandler):
             self._meta.description = "%s Controller" % \
                 self._meta.label.capitalize()
 
-        # shortcuts
-        self.config = self.app.config
-        self.log = self.app.log
-        self.pargs = self.app.pargs
-        self.render = self.app.render
-        self._collect()
+        self.app = app_obj
+
+    def _collect(self):
+        self.app.log.debug("collecting arguments/commands for %s" % self)
+        arguments = []
+        commands = []
+
+        # process my arguments and commands first
+        arguments = list(self._meta.arguments)
+
+        for member in dir(self):
+            if member.startswith('_'):
+                continue
+            elif hasattr(getattr(self, member), '__cement_meta__'):
+                func = getattr(self, member).__cement_meta__
+                func['controller'] = self
+                commands.append(func)
+
+        # process stacked controllers second for commands and args
+        for contr in handler.list('controller'):
+            # don't include self here
+            if contr == self.__class__:
+                continue
+                
+            contr = contr()
+            contr._setup(self.app)
+            if contr._meta.stacked_on == self._meta.label:
+                if contr._meta.stacked_type == 'embedded':
+                    contr_arguments, contr_commands = contr._collect()
+                    for arg in contr_arguments:
+                        arguments.append(arg)
+                    for func in contr_commands:
+                        commands.append(func)
+                elif contr._meta.stacked_type == 'nested':
+                    metadict = {}
+                    metadict['label'] = re.sub('_', '-', contr._meta.label)
+                    metadict['func_name'] = '_dispatch'
+                    metadict['exposed'] = True
+                    metadict['hide'] = contr._meta.hide
+                    metadict['help'] = contr._meta.description
+                    metadict['aliases'] = contr._meta.aliases
+                    metadict['controller'] = contr
+                    commands.append(metadict)
+                else:
+                    raise exc.FrameworkError(
+                        "Controller '%s' " % contr._meta.label +
+                        "has an unknown stacked type of '%s'." %
+                        contr._meta.stacked_type
+                    )
+        return (arguments, commands)
+
+    def _process_arguments(self):
+        for _arg, _kw in self._arguments:
+            try:
+                self.app.args.add_argument(*_arg, **_kw)
+            except argparse.ArgumentError as e:
+                raise exc.FrameworkError(e)
+
+    def _process_commands(self):
+        self._dispatch_map = {}
+        self._visible_commands = []
+
+        for cmd in self._commands:
+            # process command labels
+            if cmd['label'] in self._dispatch_map.keys():
+                raise exc.FrameworkError(
+                    "Duplicate command named '%s' " % cmd['label'] +
+                    "found in controller '%s'" % cmd['controller']
+                )
+            self._dispatch_map[cmd['label']] = cmd
+
+            if not cmd['hide']:
+                self._visible_commands.append(cmd['label'])
+
+            # process command aliases
+            for alias in cmd['aliases']:
+                if alias in self._dispatch_map.keys():
+                    raise exc.FrameworkError(
+                        "The alias '%s' of the " % alias +
+                        "'%s' controller collides " % cmd['controller'] +
+                        "with a command or alias of the same name."
+                    )
+                self._dispatch_map[alias] = cmd
+        self._visible_commands.sort()
+
+    def _get_dispatch_command(self):
+        if (len(self.app.argv) <= 0) or (self.app.argv[0].startswith('-')):
+            if 'default' in self._dispatch_map.keys():
+                self._dispatch_command = self._dispatch_map['default']
+        elif self.app.argv[0] in self._dispatch_map.keys():
+            self._dispatch_command = self._dispatch_map[self.app.argv[0]]
+            self.app.argv.pop(0)
 
     def _parse_args(self):
-        """
-        Parses command line arguments and determine a command to dispatch.
-
-        """
-        # chop off a command argument if it matches an exposed command
-        if len(self.app.argv) > 0 and not self.app.argv[0].startswith('-'):
-
-            # translate dashes back to underscores
-            cmd = re.sub('-', '_', self.app.argv[0])
-            if cmd in self.exposed:
-                self.command = cmd
-                self.app.argv.pop(0)
-            else:
-                # FIX ME: This seems inefficient.  Would be better to have an
-                # alias map... with key: controller_label.func_name
-                for label, func in self.exposed.items():
-                    if self.app.argv[0] in func['aliases']:
-                        self.command = func['label']
-                        self.app.argv.pop(0)
-                        break
-
         self.app.args.description = self._help_text
         self.app.args.usage = self._usage_text
         self.app.args.formatter_class = self._meta.argument_formatter
-
         self.app._parse_args()
-        self.pargs = self.app.pargs
 
     def _dispatch(self):
         """
@@ -331,217 +405,24 @@ class CementBaseController(handler.CementBaseHandler):
         command to dispatch, and if so... dispatches it.
 
         """
-        self._add_arguments_to_parser()
-        self._parse_args()
+        self._arguments, self._commands = self._collect()
+        self._process_commands()
+        self._get_dispatch_command()
 
-        if not self.command:
-            LOG.debug("no command to dispatch")
-        else:
-            func = self.exposed[self.command]
-            LOG.debug("dispatching command: %s.%s" %
-                      (func['controller'], func['label']))
-
-            if func['controller'] == self._meta.label:
-                getattr(self, func['label'])()
+        if self._dispatch_command:
+            if self._dispatch_command['func_name'] == '_dispatch':
+                func = getattr(self._dispatch_command['controller'],
+                               '_dispatch')
+                func()
             else:
-                controller = handler.get('controller', func['controller'])()
-                controller._setup(self.app)
-                getattr(controller, func['label'])()
-
-    @expose(hide=True, help='default command')
-    def default(self):
-        """
-        This is the default action if no arguments (sub-commands) are passed
-        at command line.
-
-        :raises: NotImplementedError
-
-        """
-        raise NotImplementedError
-
-    def _add_arguments_to_parser(self):
-        """
-        Run after _collect().  Add the collected arguments to the apps
-        argument parser.
-
-        """
-        for _args, _kwargs in self._arguments:
-            self.app.args.add_argument(*_args, **_kwargs)
-
-    def _collect_from_self(self):
-        """
-        Collect arguments from this controller.
-
-        :raises: cement.core.exc.FrameworkError
-
-        """
-        # collect our Meta arguments
-        for _args, _kwargs in self._meta.arguments:
-            if (_args, _kwargs) not in self._arguments:
-                self._arguments.append((_args, _kwargs))
-
-        # epilog only good for non-stacked controllers
-        if hasattr(self._meta, 'epilog'):
-            if not hasattr(self._meta, 'stacked_on') or \
-                    not self._meta.stacked_on:
-                self.app.args.epilog = self._meta.epilog
-
-        # collect exposed commands from ourself
-        for member in dir(self):
-            if member in self.ignored or member.startswith('_'):
-                continue
-
-            func = getattr(self, member)
-            if hasattr(func, 'exposed'):
-                func_dict = dict(
-                    controller=self._meta.label,
-                    label=func.label,
-                    help=func.help,
-                    aliases=func.aliases,
-                    hide=func.hide,
-                )
-
-                if func_dict['label'] == self._meta.label:
-                    raise exc.FrameworkError(
-                        "Controller command '%s' " % func_dict['label'] +
-                        "matches controller label.  Use 'default' instead."
-                    )
-
-                self.exposed[func.label] = func_dict
-
-                if func.hide:
-                    self.hidden[func.label] = func_dict
-                else:
-                    if not getattr(self._meta, 'hide', None):
-                        self.visible[func.label] = func_dict
-
-    def _collect_from_non_stacked_controller(self, controller):
-        """
-        Collect arguments from non-stacked controllers.
-
-        :param controller: The controller to collect arguments from.
-        :type controller: Uninstantiated controller class
-
-        """
-        contr = controller()
-        LOG.debug('exposing %s controller' % contr._meta.label)
-
-        func_dict = dict(
-            controller=contr._meta.label,
-            label=contr._meta.label,
-            help=contr._meta.description,
-            aliases=contr._meta.aliases,  # for display only
-            hide=False,
-        )
-
-        # expose the controller label as a sub command
-        self.exposed[contr._meta.label] = func_dict
-        if not getattr(contr._meta, 'hide', None):
-            self.visible[contr._meta.label] = func_dict
-
-    def _collect_from_stacked_controller(self, controller):
-        """
-        Collect arguments from stacked controllers.
-
-        :param controller: The controller to collect arguments from.
-        :type controller: Uninstantiated controller class
-        :raises: cement.core.exc.FrameworkError
-
-        """
-        contr = controller()
-        contr._setup(self.app)
-        contr._collect()
-
-        # add stacked arguments into ours
-        for _args, _kwargs in contr._arguments:
-            if (_args, _kwargs) not in self._arguments:
-                self._arguments.append((_args, _kwargs))
-
-        # add stacked commands into ours
-
-        # determine hidden vs. visible commands
-        func_dicts = contr.exposed
-        for label in func_dicts:
-            if label in self.exposed:
-                if label == 'default':
-                    LOG.debug(
-                        "ignoring duplicate command '%s' " % label +
-                        "found in '%s' " % contr._meta.label +
-                        "controller."
-                    )
-                    continue
-                else:
-                    raise exc.FrameworkError(
-                        "Duplicate command '%s' " % label +
-                        "found in '%s' " % contr._meta.label +
-                        "controller."
-                    )
-            if func_dicts[label]['hide']:
-                self.hidden[label] = func_dicts[label]
-            elif not getattr(contr._meta, 'hide', False):
-                self.visible[label] = func_dicts[label]
-            self.exposed[label] = func_dicts[label]
-
-    def _collect_from_controllers(self):
-        """Collect arguments from all controllers."""
-
-        for controller in handler.list('controller'):
-            contr = controller()
-            if contr._meta.label == self._meta.label:
-                continue
-
-            # expose other controllers as commands also
-            if not hasattr(contr._meta, 'stacked_on') \
-                    or contr._meta.stacked_on is None:
-                # only show non-stacked controllers under base
-                if self._meta.label == 'base':
-                    self._collect_from_non_stacked_controller(controller)
-            elif contr._meta.stacked_on == self._meta.label:
-                self._collect_from_stacked_controller(controller)
-
-    def _collect(self):
-        """
-        Collects all commands and arguments from this controller, and other
-        availble controllers.
-
-        :raises: cement.core.exc.FrameworkError
-
-        """
-
-        LOG.debug("collecting arguments and commands from '%s' controller" %
-                  self)
-
-        self.visible = {}
-        self.hidden = {}
-        self.exposed = {}
-        self._arguments = []
-
-        self._collect_from_self()
-        self._collect_from_controllers()
-        self._check_for_duplicates_on_aliases()
-
-    def _check_for_duplicates_on_aliases(self):
-        known_aliases = {}
-        for label in self.exposed:
-            func = self.exposed[label]
-            for alias in func['aliases']:
-                if alias in known_aliases:
-                    raise exc.FrameworkError(
-                        "Alias '%s' " % alias +
-                        "from the '%s' controller " % func['controller'] +
-                        "collides with an alias of the same name " +
-                        "in the '%s' controller." % known_aliases[
-                            alias]['controller']
-                    )
-                elif alias in self.exposed.keys():
-                    raise exc.FrameworkError(
-                        "Alias '%s' " % alias +
-                        "from the '%s' controller " % func['controller'] +
-                        "collides with a command of the same name in the " +
-                        "'%s' " % self.exposed[alias]['controller'] +
-                        "controller."
-                    )
-                known_aliases[alias] = func
+                self._process_arguments()
+                self._parse_args()
+                func = getattr(self._dispatch_command['controller'],
+                               self._dispatch_command['func_name'])
+                func()
+        else:
+            self._process_arguments()
+            self._parse_args()
 
     @property
     def _usage_text(self):
@@ -550,12 +431,8 @@ class CementBaseController(handler.CementBaseHandler):
         if self._meta.usage is not None:
             return self._meta.usage
 
-        if self == self.app._meta.base_controller:
-            txt = "%s <CMD> -opt1 --opt2=VAL [arg1] [arg2] ..." % \
-                self.app.args.prog
-        else:
-            txt = "%s %s <CMD> -opt1 --opt2=VAL [arg1] [arg2] ..." % \
-                  (self.app.args.prog, self._meta.label)
+        txt = "%s (sub-commands ...) [options ...] {arguments ...}" % \
+              self.app.args.prog
         return txt
 
     @property
@@ -563,29 +440,16 @@ class CementBaseController(handler.CementBaseHandler):
         """Returns the help text displayed when '--help' is passed."""
 
         cmd_txt = ''
-
-        # hack it up to keep commands in alphabetical order
-        sorted_labels = []
-        for label in list(self.visible.keys()):
-            old_label = label
-            label = re.sub('_', '-', label)
-            sorted_labels.append(label)
-
-            if label != old_label:
-                self.visible[label] = self.visible[old_label]
-                del self.visible[old_label]
-        sorted_labels.sort()
-
-        for label in sorted_labels:
-            func = self.visible[label]
-            if len(func['aliases']) > 0:
+        for label in self._visible_commands:
+            cmd = self._dispatch_map[label]
+            if len(cmd['aliases']) > 0:
                 cmd_txt = cmd_txt + "  %s (aliases: %s)\n" % \
-                    (label, ', '.join(func['aliases']))
+                    (label, ', '.join(cmd['aliases']))
             else:
                 cmd_txt = cmd_txt + "  %s\n" % label
 
-            if func['help']:
-                cmd_txt = cmd_txt + "    %s\n\n" % func['help']
+            if cmd['help']:
+                cmd_txt = cmd_txt + "    %s\n\n" % cmd['help']
             else:
                 cmd_txt = cmd_txt + "\n"
 

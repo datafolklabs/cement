@@ -747,33 +747,6 @@ class CementApp(meta.MetaMixin):
                 raise exc.FrameworkError("Base controllers must have " +
                                          "a label of 'base'.")
 
-        # Trump all with whats passed at the command line, and pop off the arg
-        if len(self.argv) > 0:
-            controller = None
-
-            # translate dashes to underscore
-            label = re.sub('-', '_', self.argv[0])
-
-            h = handler.get('controller', label, None)
-            if h:
-                controller = h()
-            else:
-                # controller aliases
-                for han in handler.list('controller'):
-                    contr = han()
-                    if label in contr._meta.aliases:
-                        controller = contr
-                        break
-
-            if controller:
-                self.controller = controller
-                self.controller._setup(self)
-                self.argv.pop(0)
-
-        # if no handler can be found, that's ok
-        if not self.controller:
-            LOG.debug("no controller could be found.")
-
     def validate_config(self):
         """
         Validate application config settings.

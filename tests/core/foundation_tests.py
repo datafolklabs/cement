@@ -146,19 +146,6 @@ class FoundationTestCase(test.CementTestCase):
         app._meta.output_handler = None
         app._setup_output_handler()
 
-    @test.raises(NotImplementedError)
-    def test_controller_handler(self):
-        app = self.make_app('test',
-            base_controller=controller.CementBaseController,
-            argv=['default'],
-            )
-        handler.register(controller.CementBaseController)
-        app.setup()
-        try:
-            app.run()
-        except NotImplementedError as e:
-            raise
-
     def test_lay_cement(self):
         app = self.make_app('test', argv=['--quiet'])
         app = self.make_app('test', argv=['--json', '--yaml'])
@@ -219,4 +206,10 @@ class FoundationTestCase(test.CementTestCase):
     def test_base_controller_label(self):
         app = self.make_app('myapp', base_controller=BogusBaseController)
         app.setup()
+    
+    def test_pargs(self):
+        app = self.make_app(argv=['--debug'])
+        app.setup()
+        app.run()
+        self.eq(app.pargs.debug, True)
         

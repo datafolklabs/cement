@@ -19,6 +19,8 @@ class TestApp(foundation.CementApp):
         label = 'test'
         config_files = []
         argv = []
+        base_controller = None
+        arguments = []
 
 
 class CementTestCase(unittest.TestCase):

@@ -149,3 +149,7 @@ class HandlerTestCase(test.CementTestCase):
     def test_handler_registered(self):
         self.app.setup()
         self.eq(handler.registered('output', 'null'), True)
+    
+    def test_handler_get_fallback(self):
+        self.app.setup()
+        self.eq(handler.get('log', 'foo', 'bar'), 'bar')
