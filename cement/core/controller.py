@@ -323,7 +323,7 @@ class CementBaseController(handler.CementBaseHandler):
             # don't include self here
             if contr == self.__class__:
                 continue
-                
+
             contr = contr()
             contr._setup(self.app)
             if contr._meta.stacked_on == self._meta.label:
