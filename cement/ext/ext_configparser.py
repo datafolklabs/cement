@@ -8,8 +8,9 @@ else:
     from configparser import RawConfigParser  # pragma: no cover
 
 from ..core import backend, config, handler
+from ..utils.misc import minimal_logger
 
-LOG = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 
 class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):

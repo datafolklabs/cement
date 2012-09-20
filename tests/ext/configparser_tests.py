@@ -1,10 +1,10 @@
 
 from cement.utils import test
-from cement.core import backend
+from cement.utils.misc import init_defaults
 
 class ConfigParserConfigHandlerTestCase(test.CementTestCase):
     def test_has_key(self):
-        defaults = backend.defaults('test')
+        defaults = init_defaults('test')
         defaults['test']['foo'] = 'bar'
         app = self.make_app(config_defaults=defaults)
         app.setup()

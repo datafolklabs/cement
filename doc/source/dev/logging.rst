@@ -69,8 +69,9 @@ handler.  You can override this via config_defaults:
 .. code-block:: python
 
     from cement.core import foundation, backend
-
-    defaults = backend.defaults('myapp', 'log')
+    from cement.utils.misc import init_defaults
+    
+    defaults = init_defaults('myapp', 'log')
     defaults['log']['level'] = 'WARN'
     
     app = foundation.CementApp('myapp', config_defaults=defaults)
@@ -179,8 +180,9 @@ defaults, or via a configuration file.
 .. code-block:: python
 
     from cement.core import foundation, backend
-
-    defaults = backend.defaults('myapp', 'log')
+    from cement.utils.misc import init_defaults
+    
+    defaults = init_defaults('myapp', 'log')
     defaults['log']['file'] = 'my.log'
 
     app = foundation.CementApp('myapp', defaults=defaults)

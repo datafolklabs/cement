@@ -82,8 +82,9 @@ is part of our 'myapp' application, so the extension module would be
 .. code-block:: python
 
     from cement.core import backend, handler, output
-
-    Log = backend.minimal_logger(__name__)
+    from cement.utils.misc import minimal_logger
+    
+    Log = minimal_logger(__name__)
 
     class MyAppOutputHandler(output.CementOutputHandler):
         class Meta:
@@ -98,7 +99,7 @@ is part of our 'myapp' application, so the extension module would be
         handler.register(MyAppOutputHandler)
 
 Take note of two things.  One is, the 'Log' we are using is from 
-cement.core.backend.minimal_logger(__name__).  Framework extensions do not 
+cement.utils.misc.minimal_logger(__name__).  Framework extensions do not 
 use the application log handler, ever.  Use the minimal_logger(), and only
 log to 'DEBUG' (recommended).
 

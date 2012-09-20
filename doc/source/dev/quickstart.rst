@@ -109,10 +109,11 @@ config creation, and logging.
 
 .. code-block:: python
     
-    from cement.core import backend, foundation, hook
-
+    from cement.core import foundation, hook
+    from cement.utils.misc import init_defaults
+    
     # set default config options
-    defaults = backend.defaults('myapp')
+    defaults = init_defaults('myapp')
     defaults['myapp']['debug'] = False
     defaults['myapp']['foo'] = 'bar'
 

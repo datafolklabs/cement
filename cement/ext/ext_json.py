@@ -3,8 +3,9 @@
 import sys
 import json
 from ..core import output, backend, hook, handler
+from ..utils.misc import minimal_logger
 
-LOG = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 
 class JsonOutputHandler(output.CementOutputHandler):

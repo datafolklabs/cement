@@ -1,8 +1,9 @@
 """Cement core plugins module."""
 
 from ..core import backend, exc, interface, handler
+from ..utils.misc import minimal_logger
 
-LOG = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 
 def plugin_validator(klass, obj):

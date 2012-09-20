@@ -63,7 +63,10 @@ Incompatible Changes:
     * :issue:`177` - Renamed several cement.core.backend pieces including: 
       `handlers` -> `__handlers__`, `hooks` -> `__hooks__`, `SAVED_STDOUT` 
       -> `__saved_stdout__`, and `SAVED_STDERR` -> `__saved_stderr__`.
-
+    * :issue:`178` - Moved `backend.defaults()` to 
+      `utils.misc.init_defaults()`, and `backend.minimal_logger()` to
+      `utils.misc.minimal_logger()`
+    
 2.0.0 - Fri Aug 03, 2012
 ------------------------------------------------------------------------------
 

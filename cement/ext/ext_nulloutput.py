@@ -1,8 +1,9 @@
 """NullOutput Framework Extension"""
 
 from ..core import backend, output, handler
+from ..utils.misc import minimal_logger
 
-Log = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 
 class NullOutputHandler(output.CementOutputHandler):
@@ -32,8 +33,8 @@ class NullOutputHandler(output.CementOutputHandler):
         :returns: None
 
         """
-        Log.debug("not rendering any output to console")
-        Log.debug("DATA: %s" % data_dict)
+        LOG.debug("not rendering any output to console")
+        LOG.debug("DATA: %s" % data_dict)
         return None
 
 

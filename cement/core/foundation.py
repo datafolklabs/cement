@@ -9,13 +9,13 @@ from ..core import backend, exc, handler, hook, log, config, plugin
 from ..core import output, extension, arg, controller, meta, cache
 from ..ext import ext_configparser, ext_argparse, ext_logging
 from ..ext import ext_nulloutput, ext_plugin
-from ..utils.misc import is_true
+from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
 
 if sys.version_info[0] >= 3:
     from imp import reload  # pragma: nocover
 
-LOG = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 
 class NullOut(object):

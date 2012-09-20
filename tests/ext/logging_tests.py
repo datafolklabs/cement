@@ -6,6 +6,7 @@ from tempfile import mkstemp
 from cement.core import handler, backend, log
 from cement.utils import test
 from cement.ext import ext_logging
+from cement.utils.misc import init_defaults
 
 class MyLog(ext_logging.LoggingLogHandler):
     class Meta:
@@ -17,7 +18,7 @@ class MyLog(ext_logging.LoggingLogHandler):
     
 class LoggingExtTestCase(test.CementTestCase):
     def test_alternate_namespaces(self):
-        defaults = backend.defaults('myapp', 'log')
+        defaults = init_defaults('myapp', 'log')
         defaults['log']['to_console'] = False
         defaults['log']['file'] = '/dev/null'
         defaults['log']['level'] = 'debug'
@@ -42,7 +43,7 @@ class LoggingExtTestCase(test.CementTestCase):
         app.log.debug('TEST', __name__)
         
     def test_bad_level(self):
-        defaults = backend.defaults()
+        defaults = init_defaults()
         defaults['log'] = dict(
             level='BOGUS'
             )
@@ -58,7 +59,7 @@ class LoggingExtTestCase(test.CementTestCase):
 
     def test_rotate(self):
         log_file = mkstemp()[1]
-        defaults = backend.defaults()
+        defaults = init_defaults()
         defaults['log'] = dict(
             file=log_file,
             level='DEBUG',
@@ -83,7 +84,7 @@ class LoggingExtTestCase(test.CementTestCase):
         if os.path.exists(tmp_path):
             os.remove(tmp_path)
         
-        defaults = backend.defaults()
+        defaults = init_defaults()
         defaults['log'] = dict(
             file=os.path.join(tmp_path, 'myapp.log'),
             )

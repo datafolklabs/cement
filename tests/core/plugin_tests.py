@@ -6,6 +6,7 @@ import shutil
 from tempfile import mkdtemp
 from cement.core import exc, backend, plugin, handler
 from cement.utils import test
+from cement.utils.misc import init_defaults
 
 CONF = """
 [myplugin]
@@ -87,7 +88,7 @@ class PluginTestCase(test.CementTestCase):
         f.write(PLUGIN)
         f.close()
     
-        defaults = backend.defaults()
+        defaults = init_defaults()
         defaults['myplugin'] = dict()
         defaults['myplugin']['enable_plugin'] = True
         defaults['myplugin2'] = dict()

@@ -5,10 +5,10 @@ import sys
 import glob
 import imp
 from ..core import backend, handler, plugin, exc
-from ..utils.misc import is_true
+from ..utils.misc import is_true, minimal_logger
 from ..utils.fs import abspath
 
-LOG = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 ### FIX ME: This is a redundant name... ?
 

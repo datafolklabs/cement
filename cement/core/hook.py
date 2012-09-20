@@ -2,8 +2,9 @@
 
 import operator
 from ..core import backend, exc
+from ..utils.misc import minimal_logger
 
-LOG = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 
 def define(name):

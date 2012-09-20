@@ -28,7 +28,7 @@ An applications configuration is made up of a number of things, including
 default settings, handler defaults, config file settings, etc.  The following
 is the order in which configurations are discovered:
 
-    * Loaded from backend.defaults()
+    * Defaults passed to CementApp()
     * Extended by any handler Meta.config_defaults (not overridden)
     * Overridden by a config_defaults dict passed to foundation.CementApp()
     * Overridden by the configuration files
@@ -56,8 +56,10 @@ Is equivalent to:
 
 .. code-block:: python
 
-    from cement.core import foundation, backend
-    defaults = backend.defaults('myapp')
+    from cement.core import foundation
+    from cement.utils.misc import init_defaults
+    
+    defaults = init_defaults('myapp')
     app = foundation.CementApp('myapp', config_defaults=defaults)
     
 
@@ -66,9 +68,10 @@ so:
 
 .. code-block:: python
 
-    from cement.core import foundation, backend
+    from cement.core import foundation
+    from cement.utils.misc import init_defaults
     
-    defaults = backend.defaults('myapp', 'section1','section2')
+    defaults = init_defaults('myapp', 'section1','section2')
     defaults['section1']['foo'] = 'bar'
     defaults['section2']['foo2'] = 'bar2'
     
@@ -222,8 +225,9 @@ happen in *all* config sections:
 .. code-block:: python
 
     from cement.core import foundation
+    from cement.utils.misc import init_defaults
     
-    defaults = backend.defaults('base')
+    defaults = init_defaults('base')
     defaults['base']['foo'] = 'bar'
     
     app = foundation.CementApp('myapp', 

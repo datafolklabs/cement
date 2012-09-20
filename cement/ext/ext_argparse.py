@@ -2,8 +2,9 @@
 
 from argparse import ArgumentParser
 from ..core import backend, arg, handler
+from ..utils.misc import minimal_logger
 
-LOG = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 
 class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):

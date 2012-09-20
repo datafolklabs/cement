@@ -1,8 +1,9 @@
 """Cement core cache module."""
 
-from ..core import backend, interface, handler
+from ..core import interface, handler
+from ..utils.misc import minimal_logger
 
-LOG = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 
 def cache_validator(klass, obj):

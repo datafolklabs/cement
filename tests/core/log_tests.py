@@ -3,6 +3,7 @@
 import logging
 from cement.core import exc, backend, handler, log
 from cement.utils import test
+from cement.utils.misc import init_defaults
 
 class BogusHandler1(log.CementLogHandler):
     class Meta:
@@ -21,7 +22,7 @@ class LogTestCase(test.CementTestCase):
             raise
 
     def test_logging(self):
-        defaults = backend.defaults()
+        defaults = init_defaults()
         defaults['log'] = dict(
             file='/dev/null',
             to_console=True

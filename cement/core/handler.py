@@ -5,8 +5,9 @@ Cement core handler module.
 
 import re
 from ..core import exc, backend, meta
+from ..utils.misc import minimal_logger
 
-LOG = backend.minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 
 
 class CementBaseHandler(meta.MetaMixin):

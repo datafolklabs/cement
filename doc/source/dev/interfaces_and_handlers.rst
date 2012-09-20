@@ -308,9 +308,10 @@ passed to the CementApp().
 
 .. code-block:: python
 
-    from cement.core import foundation, backend
+    from cement.core import foundation
+    from cement.utils.misc import init_defaults
 
-    defaults = backend.defaults('myinterface.myhandler')
+    defaults = init_defaults('myinterface.myhandler')
     defaults['myinterface.myhandler'] = dict(foo='bar')
     app = foundation.CementApp('myapp', config_defaults=defaults)
 
