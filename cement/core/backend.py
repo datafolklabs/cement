@@ -72,13 +72,13 @@ def minimal_logger(name, debug=False):
 
 
 # global handlers dict
-handlers = {}
+__handlers__ = {}
 
 # global hooks dict
-hooks = {}
+__hooks__ = {}
 
 # Save original stdout/stderr for supressing output.  This is actually reset
 # in foundation.CementApp.lay_cement() before nullifying output, but we set
 # it here just for a default.
-SAVED_STDOUT = sys.stdout
-SAVED_STDERR = sys.stderr
+__saved_stdout__ = sys.stdout
+__saved_stderr__ = sys.stderr

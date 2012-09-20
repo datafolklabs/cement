@@ -45,8 +45,8 @@ class JsonOutputHandler(output.CementOutputHandler):
 
         """
         LOG.debug("rendering output as Json via %s" % self.__module__)
-        sys.stdout = backend.SAVED_STDOUT
-        sys.stderr = backend.SAVED_STDERR
+        sys.stdout = backend.__saved_stdout__
+        sys.stderr = backend.__saved_stderr__
         return json.dumps(data_dict)
 
 

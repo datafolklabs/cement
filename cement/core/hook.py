@@ -23,9 +23,9 @@ def define(name):
 
     """
     LOG.debug("defining hook '%s'", name)
-    if name in backend.hooks:
+    if name in backend.__hooks__:
         raise exc.FrameworkError("Hook name '%s' already defined!" % name)
-    backend.hooks[name] = []
+    backend.__hooks__[name] = []
 
 
 def defined(hook_name):
@@ -38,7 +38,7 @@ def defined(hook_name):
     :rtype: boolean
 
     """
-    if hook_name in backend.hooks:
+    if hook_name in backend.__hooks__:
         return True
     else:
         return False
@@ -70,7 +70,7 @@ def register(name, func, weight=0):
         hook.register('post_setup', my_hook)
 
     """
-    if name not in backend.hooks:
+    if name not in backend.__hooks__:
         LOG.debug("hook name '%s' is not defined! ignoring..." % name)
         return False
 
@@ -78,7 +78,7 @@ def register(name, func, weight=0):
               (func.__name__, func.__module__, name))
 
     # Hooks are as follows: (weight, name, func)
-    backend.hooks[name].append((int(weight), func.__name__, func))
+    backend.__hooks__[name].append((int(weight), func.__name__, func))
 
 
 def run(name, *args, **kwargs):
@@ -102,12 +102,12 @@ def run(name, *args, **kwargs):
             # do something with result from each hook function
             ...
     """
-    if name not in backend.hooks:
+    if name not in backend.__hooks__:
         raise exc.FrameworkError("Hook name '%s' is not defined!" % name)
 
     # Will order based on weight (the first item in the tuple)
-    backend.hooks[name].sort(key=operator.itemgetter(0))
-    for hook in backend.hooks[name]:
+    backend.__hooks__[name].sort(key=operator.itemgetter(0))
+    for hook in backend.__hooks__[name]:
         LOG.debug("running hook '%s' (%s) from %s" %
                  (name, hook[2], hook[2].__module__))
         res = hook[2](*args, **kwargs)

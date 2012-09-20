@@ -89,12 +89,12 @@ def get(handler_type, handler_label, *args):
         output.render(dict(foo='bar'))
 
     """
-    if handler_type not in backend.handlers:
+    if handler_type not in backend.__handlers__:
         raise exc.FrameworkError("handler type '%s' does not exist!" %
                                  handler_type)
 
-    if handler_label in backend.handlers[handler_type]:
-        return backend.handlers[handler_type][handler_label]
+    if handler_label in backend.__handlers__[handler_type]:
+        return backend.__handlers__[handler_type][handler_label]
     elif len(args) > 0:
         return args[0]
     else:
@@ -112,15 +112,15 @@ def list(handler_type):
     :raises: cement.core.exc.FrameworkError
 
     """
-    if handler_type not in backend.handlers:
+    if handler_type not in backend.__handlers__:
         raise exc.FrameworkError("handler type '%s' does not exist!" %
                                  handler_type)
 
     res = []
-    for label in backend.handlers[handler_type]:
+    for label in backend.__handlers__[handler_type]:
         if label == '__interface__':
             continue
-        res.append(backend.handlers[handler_type][label])
+        res.append(backend.__handlers__[handler_type][label])
     return res
 
 
@@ -153,10 +153,10 @@ def define(interface):
     LOG.debug("defining handler type '%s' (%s)" %
               (interface.IMeta.label, interface.__name__))
 
-    if interface.IMeta.label in backend.handlers:
+    if interface.IMeta.label in backend.__handlers__:
         raise exc.FrameworkError("Handler type '%s' already defined!" %
                                  interface.IMeta.label)
-    backend.handlers[interface.IMeta.label] = {'__interface__': interface}
+    backend.__handlers__[interface.IMeta.label] = {'__interface__': interface}
 
 
 def defined(handler_type):
@@ -168,7 +168,7 @@ def defined(handler_type):
     :rtype: boolean
 
     """
-    if handler_type in backend.handlers:
+    if handler_type in backend.__handlers__:
         return True
     else:
         return False
@@ -223,22 +223,22 @@ def register(handler_obj):
     LOG.debug("registering handler '%s' into handlers['%s']['%s']" %
              (orig_obj, handler_type, obj._meta.label))
 
-    if handler_type not in backend.handlers:
+    if handler_type not in backend.__handlers__:
         raise exc.FrameworkError("Handler type '%s' doesn't exist." %
                                  handler_type)
-    if obj._meta.label in backend.handlers[handler_type] and \
-            backend.handlers[handler_type][obj._meta.label] != obj:
+    if obj._meta.label in backend.__handlers__[handler_type] and \
+            backend.__handlers__[handler_type][obj._meta.label] != obj:
         raise exc.FrameworkError("handlers['%s']['%s'] already exists" %
                                 (handler_type, obj._meta.label))
 
-    interface = backend.handlers[handler_type]['__interface__']
+    interface = backend.__handlers__[handler_type]['__interface__']
     if hasattr(interface.IMeta, 'validator'):
         interface.IMeta().validator(obj)
     else:
         LOG.debug("Interface '%s' does not have a validator() function!" %
                   interface)
 
-    backend.handlers[handler_type][obj.Meta.label] = orig_obj
+    backend.__handlers__[handler_type][obj.Meta.label] = orig_obj
 
 
 def registered(handler_type, handler_label):
@@ -251,8 +251,8 @@ def registered(handler_type, handler_label):
     :rtype: boolean
 
     """
-    if handler_type in backend.handlers and \
-            handler_label in backend.handlers[handler_type]:
+    if handler_type in backend.__handlers__ and \
+            handler_label in backend.__handlers__[handler_type]:
         return True
 
     return False

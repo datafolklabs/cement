@@ -60,7 +60,10 @@ Incompatible Changes:
     * :issue:`179` - CementBaseController `hidden`, `visible`, and `exposed`
       have been removed infavor of private methods.
     * CementBaseController no longer implements a `default` command.
-    
+    * :issue:`177` - Renamed several cement.core.backend pieces including: 
+      `handlers` -> `__handlers__`, `hooks` -> `__hooks__`, `SAVED_STDOUT` 
+      -> `__saved_stdout__`, and `SAVED_STDERR` -> `__saved_stderr__`.
+
 2.0.0 - Fri Aug 03, 2012
 ------------------------------------------------------------------------------
 

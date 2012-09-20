@@ -57,10 +57,10 @@ class CementTestCase(unittest.TestCase):
         Remove all registered hooks and handlers from the backend.
 
         """
-        for _handler in backend.handlers.copy():
-            del backend.handlers[_handler]
-        for _hook in backend.hooks.copy():
-            del backend.hooks[_hook]
+        for _handler in backend.__handlers__.copy():
+            del backend.__handlers__[_handler]
+        for _hook in backend.__hooks__.copy():
+            del backend.__hooks__[_hook]
 
     def ok(self, expr, msg=None):
         """Shorthand for assert."""

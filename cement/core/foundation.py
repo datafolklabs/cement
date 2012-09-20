@@ -543,14 +543,14 @@ class CementApp(meta.MetaMixin):
 
         if suppress_output:
             LOG.debug('suppressing all console output per runtime config')
-            backend.SAVED_STDOUT = sys.stdout
-            backend.SAVED_STDERR = sys.stderr
+            backend.__saved_stdout__ = sys.stdout
+            backend.__saved_stderr__ = sys.stderr
             sys.stdout = NullOut()
             sys.stderr = NullOut()
 
         # start clean
-        backend.hooks = {}
-        backend.handlers = {}
+        backend.__hooks__ = {}
+        backend.__handlers__ = {}
 
         # define framework hooks
         hook.define('pre_setup')
@@ -607,7 +607,7 @@ class CementApp(meta.MetaMixin):
     def _resolve_handler(self, handler_type, handler_def, raise_error=True):
         """
         Resolves the actual handler as it can be either a string identifying
-        the handler to load from backend.handlers, or it can be an
+        the handler to load from backend.__handlers__, or it can be an
         instantiated or non-instantiated handler class.
 
         :param handler_type: The type of handler (aka the interface label)

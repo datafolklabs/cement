@@ -78,7 +78,7 @@ That said, what is required is an 'iMeta' class that is used to interact
 with the interface.  At the very least, this must include a unique 'label'
 to identify the interface.  This can also be considered the 'handler type'.  
 For example, the ILog interface has a label of 'log' and any handlers 
-registered to that interface are stored in backend.handlers['log'].
+registered to that interface are stored in backend.__handlers__['log'].
 
 Notice that we defined 'Meta' and 'my_var' as Interface Attributes.  This is
 a simple identifier that describes an attribute that an implementation is 
@@ -154,7 +154,7 @@ is a handler that implements the MyInterface above:
 The above is a simple class that meets all the expectations of the interface.
 When calling handler.register(), MyHandler is passed to the validator (if 
 defined in the interface) and if it passes validation will be registered into
-the cement.core.backend.handlers dictionary.  
+the cement.core.backend.__handlers__ dictionary.  
 
 Using Handlers
 --------------
@@ -178,7 +178,7 @@ The following are a few examples of working with handlers:
     # Check if the handler 'argparse' is registered to the 'argument' interface
     handler.registered('argument', 'argparse')
     
-It is important to note that handlers are stored in backend.handlers as 
+It is important to note that handlers are stored in backend.__handlers__ as 
 uninstantiated objects.  Meaning you must instantiate them after retrieval 
 like so:
 

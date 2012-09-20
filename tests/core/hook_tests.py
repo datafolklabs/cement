@@ -25,7 +25,7 @@ class HookTestCase(test.CementTestCase):
         hook.define('nosetests_hook')
         
     def test_define(self):
-        self.ok('nosetests_hook' in backend.hooks)
+        self.ok('nosetests_hook' in backend.__hooks__)
 
     @test.raises(exc.FrameworkError)
     def test_define_again(self):
@@ -39,7 +39,7 @@ class HookTestCase(test.CementTestCase):
         hook.register('nosetests_hook', cement_hook_one, weight=99)
         hook.register('nosetests_hook', cement_hook_two, weight=-1)
         hook.register('some_bogus_hook', cement_hook_three, weight=-99)
-        self.eq(len(backend.hooks['nosetests_hook']), 2)
+        self.eq(len(backend.__hooks__['nosetests_hook']), 2)
     
     def test_run(self):
         hook.register('nosetests_hook', cement_hook_one, weight=99)

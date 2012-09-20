@@ -141,7 +141,7 @@ class PluginTestCase(test.CementTestCase):
         app.setup()
         shutil.rmtree(tmpdir)
     
-        res = 'test_output_handler' not in backend.handlers['output']
+        res = 'test_output_handler' not in backend.__handlers__['output']
         self.ok(res)
 
         res = 'myplugin2' not in app.plugin.get_enabled_plugins()

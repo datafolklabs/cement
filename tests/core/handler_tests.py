@@ -84,7 +84,7 @@ class HandlerTestCase(test.CementTestCase):
         try:
             handler.register(BogusOutputHandler2)
         except exc.InterfaceError:
-            del backend.handlers['output']
+            del backend.__handlers__['output']
             raise
 
     def test_verify_handler(self):
