@@ -33,6 +33,8 @@ Bugs:
 Features:
 
     * :issue:`161` - Ability to override `usage`
+    * :issue:`164` - Store previously rendered data as app._last_rendered, and
+      retrievable by app.get_last_rendered().
     * :issue:`165` - Allow utils.fs.backup() to support a suffix kwarg
     * :issue:`166` - Ability to set the 'app' for CementTestCase.make_app()
     * :issue:`170` - Added support for `nested` and `embedded` controllers.

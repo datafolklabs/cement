@@ -343,7 +343,8 @@ class CementApp(meta.MetaMixin):
         self._validate_label()
         self._loaded_bootstrap = None
         self._parsed_args = None
-
+        self._last_rendered = None
+        
         self.ext = None
         self.config = None
         self.log = None
@@ -511,8 +512,18 @@ class CementApp(meta.MetaMixin):
             else:
                 out_text = str(res)
 
+        self._last_rendered = (data, out_text)
         return out_text
 
+    def get_last_rendered(self):
+        """
+        Return the (data, output_text) tuple of the last time self.render() was
+        called.
+        
+        :returns: tuple (data, output_text)
+        """
+        return self._last_rendered
+        
     @property
     def pargs(self):
         """

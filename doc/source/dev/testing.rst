@@ -56,6 +56,11 @@ The following outlines a basic test case using the cement.utils.test module.
             # Run the applicaion, if necessary
             self.app.run()
             
+            # Test the last rendered output (if app.render was used)
+            data, output = app.get_last_rendered()
+            self.eq(data, {'foo':'bar'})
+            self.eq(output, 'some rendered output text)
+            
             # Close the application, again if necessary
             self.app.close()
             

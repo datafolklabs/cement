@@ -213,3 +213,9 @@ class FoundationTestCase(test.CementTestCase):
         app.run()
         self.eq(app.pargs.debug, True)
         
+    def test_last_rendered(self):
+        self.app.setup()
+        output_text = self.app.render({'foo':'bar'})
+        last_data, last_output = self.app.get_last_rendered()
+        self.eq({'foo':'bar'}, last_data)
+        self.eq(output_text, last_output)
