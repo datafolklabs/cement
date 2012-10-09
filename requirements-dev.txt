@@ -3,3 +3,4 @@ nose
 coverage
 sphinx
 pep8
+autopep8

@@ -9,7 +9,7 @@ introduce a standard, and feature-full platform for both simple and complex
 command line applications as well as support rapid development needs without 
 sacrificing quality.
 
-[![Continuous Integration Status](http://travis-ci.org/cement/cement.png)](http://travis-ci.org/cement/cement)
+[![Continuous Integration Status](https://travis-ci.org/cement/cement.png)](https://travis-ci.org/cement/cement)
 
 Cement core features include (but are not limited to):
 
@@ -40,8 +40,8 @@ More Information
  * DOCS: http://builtoncement.com/2.1/
  * CODE: http://github.com/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
- * SITE: http://builtoncement.org/
- * T-CI: http://travis-ci.org/cement/cement
+ * SITE: http://builtoncement.com/
+ * T-CI: https://travis-ci.org/cement/cement
  * HELP: cement@librelist.org - #cement
     
 License

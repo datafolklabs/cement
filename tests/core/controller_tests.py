@@ -15,6 +15,17 @@ class TestController(controller.CementBaseController):
     def default(self):
         pass
 
+class TestWithPositionalController(controller.CementBaseController):
+    class Meta:
+        label = 'base'
+        arguments = [
+            (['foo'], dict(help='foo option', nargs='?'))
+        ]
+        
+    @controller.expose(hide=True)
+    def default(self):
+        self.app.render(dict(foo=self.app.pargs.foo))
+        
 class Embedded(controller.CementBaseController):
     class Meta:
         label = 'embedded_controller'
@@ -168,3 +179,10 @@ class ControllerTestCase(test.CementTestCase):
         handler.register(ArgumentConflict)
         app.setup()
         app.run()
+    
+    def test_default_command_with_positional(self):
+        app = self.make_app(base_controller=TestWithPositionalController, 
+                            argv=['mypositional'])
+        app.setup()
+        app.run()
+        self.eq(app.get_last_rendered()[0]['foo'], 'mypositional')

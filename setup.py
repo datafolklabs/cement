@@ -2,7 +2,9 @@
 from setuptools import setup, find_packages
 import sys, os
 
-VERSION = '2.1.2'
+from cement.utils import version
+
+VERSION = version.get_version()
 
 LONG = """
 Cement is an advanced CLI Application Framework for Python.  Its goal is to 
