@@ -388,11 +388,17 @@ class CementBaseController(handler.CementBaseHandler):
 
     def _get_dispatch_command(self):
         if (len(self.app.argv) <= 0) or (self.app.argv[0].startswith('-')):
+            # if no command is passed, then use default
             if 'default' in self._dispatch_map.keys():
                 self._dispatch_command = self._dispatch_map['default']
         elif self.app.argv[0] in self._dispatch_map.keys():
             self._dispatch_command = self._dispatch_map[self.app.argv[0]]
             self.app.argv.pop(0)
+        else:
+            # check for default again (will get here if command line has
+            # positional arguments that don't start with a -)
+            if 'default' in self._dispatch_map.keys():
+                self._dispatch_command = self._dispatch_map['default']
 
     def _parse_args(self):
         self.app.args.description = self._help_text
