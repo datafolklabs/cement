@@ -344,7 +344,7 @@ class CementApp(meta.MetaMixin):
         self._loaded_bootstrap = None
         self._parsed_args = None
         self._last_rendered = None
-        
+
         self.ext = None
         self.config = None
         self.log = None
@@ -519,11 +519,11 @@ class CementApp(meta.MetaMixin):
         """
         Return the (data, output_text) tuple of the last time self.render() was
         called.
-        
+
         :returns: tuple (data, output_text)
         """
         return self._last_rendered
-        
+
     @property
     def pargs(self):
         """
