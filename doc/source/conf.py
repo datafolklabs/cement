@@ -11,15 +11,16 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-VERSION = '2.1'
-RELEASE = '2.1.2'
-
 import sys, os
 sys.path.insert(0, os.path.abspath('../cement/'))
 
 # If we dont' prep an app, then we'll get runtime errors
-from cement.utils import test
+from cement.utils import test, version
 app = test.TestApp()
+
+RELEASE = version.get_version()
+VERSION = '.'.join(RELEASE.split('.')[:2])
+
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -59,7 +60,7 @@ copyright = u'2009-2012, BJ Dierkes'
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
-#
+#a
 # The short X.Y version.
 version = VERSION
 

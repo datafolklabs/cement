@@ -2,6 +2,7 @@
 
 import sys
 
+VERSION = (2, 1, 1, 'alpha', 0)
 
 # global handlers dict
 __handlers__ = {}
