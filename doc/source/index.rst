@@ -16,7 +16,7 @@ command line applications as well as support rapid development needs without
 sacrificing quality.
 
 .. image:: https://secure.travis-ci.org/cement/cement.png
-  :target: http://travis-ci.org/#!/cement/cement
+  :target: https://travis-ci.org/#!/cement/cement
 
 Core features include (but are not limited to):
 
