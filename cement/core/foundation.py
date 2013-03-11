@@ -648,7 +648,7 @@ class CementApp(meta.MetaMixin):
         
         if self._meta.config_files is None:
             label = self._meta.label
-            user_home = os.path.abspath(os.path.expanduser(os.environ['HOME']))
+            user_home = os.path.abspath(os.path.expanduser('~'))
             self._meta.config_files = [
                 os.path.join('/', 'etc', label, '%s.conf' % label),
                 os.path.join(user_home, '.%s.conf' % label),
