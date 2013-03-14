@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PYCHECK=$(python -c 'import sys; print sys.version_info < (2, 7)')
+PYCHECK=$(python -c 'import sys; print(sys.version_info < (2, 7))')
 if [ "$PYCHECK" == "True" ]; then
     pip install argparse --use-mirrors
 fi
