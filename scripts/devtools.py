@@ -36,7 +36,7 @@ class CementDevtoolsController(CementBaseController):
             
     @expose(hide=True) 
     def default(self):
-        raise AssertionError, "A sub-command is required.  See --help."
+        raise AssertionError("A sub-command is required.  See --help.")
         
     def _do_git(self):
         # make sure we don't have any uncommitted changes
@@ -89,8 +89,8 @@ class CementDevtoolsController(CementBaseController):
     @expose(help='run all unit tests')
     def run_tests(self):
         print('')
-        print("Running Tests for Cement Version %s" % VERSION)
-        print('-' * 77)
+        print(("Running Tests for Cement Version %s" % VERSION))
+        print(('-' * 77))
         self._do_pep8()
         self._do_tests()
         print('')
@@ -107,15 +107,15 @@ class CementDevtoolsController(CementBaseController):
     @expose(help='create a cement release')
     def make_release(self):
         print('')
-        print("Making Release for Version %s" % VERSION)
-        print('-' * 77)
+        print(("Making Release for Version %s" % VERSION))
+        print(('-' * 77))
         if not self.app.pargs.noprompt:
-            res = raw_input("Continue? [yN] ")
+            res = eval(input("Continue? [yN] "))
             if res not in ['Y', 'y', '1']:
                 sys.exit(1)
         
         tmp = tempfile.mkdtemp()
-        print("Destination: %s" % tmp)
+        print(("Destination: %s" % tmp))
         os.makedirs(os.path.join(tmp, 'source'))
         os.makedirs(os.path.join(tmp, 'doc'))
         
@@ -157,7 +157,7 @@ def main():
         app.setup()
         app.run()
     except AssertionError as e:
-        print("AssertionError => %s" % e.args[0])
+        print(("AssertionError => %s" % e.args[0]))
     finally:
         app.close()
 
