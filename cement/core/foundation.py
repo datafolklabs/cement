@@ -9,7 +9,9 @@ from ..core import backend, exc, handler, hook, log, config, plugin
 from ..core import output, extension, arg, controller, meta, cache
 from ..ext import ext_configparser, ext_argparse, ext_logging
 from ..ext import ext_nulloutput, ext_plugin
+from ..utils import fs
 from ..utils.misc import is_true
+
 
 if sys.version_info[0] >= 3: 
     from imp import reload  # pragma: nocover
@@ -648,7 +650,12 @@ class CementApp(meta.MetaMixin):
         
         if self._meta.config_files is None:
             label = self._meta.label
-            user_home = os.path.abspath(os.path.expanduser(os.environ['HOME']))
+            if 'HOME' in os.environ:
+                user_home = fs.abspath(os.environ['HOME'])
+            else:
+                # Kinda dirty, but should resolve issues on Windows
+                user_home = fs.abspath('~') # pragma: nocover
+
             self._meta.config_files = [
                 os.path.join('/', 'etc', label, '%s.conf' % label),
                 os.path.join(user_home, '.%s.conf' % label),

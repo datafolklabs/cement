@@ -16,6 +16,15 @@ is available online at:
 
     <BR><BR>
 
+2.0.3 - development (will be released as 2.0.4 stable)
+------------------------------------------------------------------------------
+
+Bugs:
+
+    * :issue:`183` - os.environ['HOME'] does not exist on Windows
+
+
+
 2.0.2 - Thu Aug 23, 2012
 ------------------------------------------------------------------------------
 
