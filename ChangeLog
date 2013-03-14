@@ -29,7 +29,8 @@ Bugs:
     * :issue:`167` - Non-stacked controllers not listed in --help
     * :issue:`169` - Fixed tests.utils.shell_tests timeout issue
     * :issue:`171` - No handlers could be found for logger
-    
+    * :issue:`183` - os.environ['HOME'] does not exist on Windows
+
 Features:
 
     * :issue:`161` - Ability to override `usage`
