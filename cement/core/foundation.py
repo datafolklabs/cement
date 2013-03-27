@@ -616,41 +616,10 @@ class CementApp(meta.MetaMixin):
             signal.signal(signum, self._meta.signal_handler)
 
     def _resolve_handler(self, handler_type, handler_def, raise_error=True):
-        """
-        Resolves the actual handler as it can be either a string identifying
-        the handler to load from backend.__handlers__, or it can be an
-        instantiated or non-instantiated handler class.
-
-        :param handler_type: The type of handler (aka the interface label)
-        :param hander_def: The handler as defined in CementApp.Meta.
-        :type handler_def: str, uninstantiated object, or instantiated object
-        :param raise_error: Whether or not to raise an exception if unable
-            to resolve the handler.
-        :type raise_error: boolean
-        :returns: The instantiated handler object.
-
-        """
-        han = None
-        if type(handler_def) == str:
-            han = handler.get(handler_type, handler_def)()
-        elif hasattr(handler_def, '_meta'):
-            if not handler.registered(handler_type, handler_def._meta.label):
-                handler.register(handler_def.__class__)
-            han = handler_def
-        elif hasattr(handler_def, 'Meta'):
-            han = handler_def()
-            if not handler.registered(handler_type, han._meta.label):
-                handler.register(handler_def)
-
-        msg = "Unable to resolve handler '%s' of type '%s'" % \
-              (handler_def, handler_type)
+        han = handler.resolve(handler_type, handler_def, raise_error)
         if han is not None:
             han._setup(self)
             return han
-        elif han is None and raise_error:
-            raise exc.FrameworkError(msg)
-        elif han is None:
-            LOG.debug(msg)
 
     def _setup_extension_handler(self):
         LOG.debug("setting up %s.extension handler" % self._meta.label)

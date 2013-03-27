@@ -257,3 +257,41 @@ def registered(handler_type, handler_label):
         return True
 
     return False
+
+
+def resolve(handler_type, handler_def, raise_error=True):
+    """
+    Resolves the actual handler, as it can be either a string identifying
+    the handler to load from backend.__handlers__, or it can be an
+    instantiated or non-instantiated handler class.
+
+    :param handler_type: The type of handler (aka the interface label)
+    :param hander_def: The handler as defined in CementApp.Meta.
+    :type handler_def: str, uninstantiated object, or instantiated object
+    :param raise_error: Whether or not to raise an exception if unable
+        to resolve the handler.
+    :type raise_error: boolean
+    :returns: The instantiated handler object.
+
+    """
+    han = None
+    if type(handler_def) == str:
+        han = get(handler_type, handler_def)()
+    elif hasattr(handler_def, '_meta'):
+        if not registered(handler_type, handler_def._meta.label):
+            register(handler_def.__class__)
+        han = handler_def
+    elif hasattr(handler_def, 'Meta'):
+        han = handler_def()
+        if not registered(handler_type, han._meta.label):
+            register(handler_def)
+
+    msg = "Unable to resolve handler '%s' of type '%s'" % \
+          (handler_def, handler_type)
+    if han is not None:
+        return han
+    elif han is None and raise_error:
+        raise exc.FrameworkError(msg)
+    elif han is None:
+        LOG.debug(msg)
+        return None

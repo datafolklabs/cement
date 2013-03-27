@@ -43,7 +43,9 @@ Features:
 Misc:
     
     * :issue:`172` - 100% PEP8 Compliant
-    
+    * :issue:`160` - Refactor CementApp._resolve_handler() as 
+      handler.resolve()
+      
 Deprecation Notices:
 
     * :issue:`173` - ConfigParserConfigHandler.has_key() is now deprecated,
@@ -69,6 +71,7 @@ Incompatible Changes:
     * :issue:`178` - Moved `backend.defaults()` to 
       `utils.misc.init_defaults()`, and `backend.minimal_logger()` to
       `utils.misc.minimal_logger()`
+
     
 2.0.0 - Fri Aug 03, 2012
 ------------------------------------------------------------------------------
