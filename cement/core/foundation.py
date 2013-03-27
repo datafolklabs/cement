@@ -676,8 +676,8 @@ class CementApp(meta.MetaMixin):
             if 'HOME' in os.environ:
                 user_home = fs.abspath(os.environ['HOME'])
             else:
-                # Kinda dirty, but should resolve issues on Windows
-                user_home = fs.abspath('~')
+                # Kinda dirty, but should resolve issues on Windows per #183
+                user_home = fs.abspath('~')  # pragma: nocover
 
             self._meta.config_files = [
                 os.path.join('/', 'etc', label, '%s.conf' % label),

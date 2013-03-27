@@ -33,14 +33,17 @@
 # modified.  Please adhere to the above copyright and license for the code
 # in this file.
 
-import datetime
-import os
-import subprocess
+# Note: Nothing is covered here because this file is imported before nose and
+# coverage take over.. and so its a false positive that nothing is covered.
 
-from cement.core.backend import VERSION
+import datetime  # pragma: nocover
+import os  # pragma: nocover
+import subprocess  # pragma: nocover
+
+from cement.core.backend import VERSION  # pragma: nocover
 
 
-def get_version(version=VERSION):
+def get_version(version=VERSION):  # pragma: nocover
     "Returns a PEP 386-compliant version number from VERSION."
     assert len(version) == 5
     assert version[3] in ('alpha', 'beta', 'rc', 'final')
@@ -66,7 +69,7 @@ def get_version(version=VERSION):
     return main + sub
 
 
-def get_git_changeset():
+def get_git_changeset():  # pragma: nocover
     """Returns a numeric identifier of the latest git changeset.
 
     The result is the UTC timestamp of the changeset in YYYYMMDDHHMMSS format.
