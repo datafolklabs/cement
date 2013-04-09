@@ -26,7 +26,7 @@ DEPS = [
     ]
 
 # Python < 2.7/3.2 require argparse
-if (sys.version_info[0] < 2 and sys.version_info < (2, 7)) or \
+if (sys.version_info[0] < 3 and sys.version_info < (2, 7)) or \
    (sys.version_info[0] >= 3 and sys.version_info < (3, 2)):
     DEPS.append('argparse')
 
