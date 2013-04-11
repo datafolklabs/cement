@@ -1,7 +1,6 @@
 
+import sys
 from setuptools import setup, find_packages
-import sys, os
-
 from cement.utils import version
 
 VERSION = version.get_version()
@@ -18,6 +17,18 @@ More Information please visit the official site at:
 
 """
 
+DEPS = [
+    ### Required to build documentation
+    # "Sphinx >= 1.0",
+    ### Required for testing
+    # "nose",
+    # "coverage",
+    ]
+
+# Python < 2.7/3.2 require argparse
+if (sys.version_info[0] < 3 and sys.version_info < (2, 7)) or \
+   (sys.version_info[0] >= 3 and sys.version_info < (3, 2)):
+    DEPS.append('argparse')
 
 setup(name='cement',
     version=VERSION,
@@ -33,15 +44,8 @@ setup(name='cement',
     include_package_data=True,
     zip_safe=False,
     test_suite='nose.collector',
-    install_requires=[
-        ### Required to build documentation
-        # "Sphinx >= 1.0",
-        ### Required for testing
-        # "nose",
-        # "coverage",
-        ],
-    setup_requires=[
-        ],
+    install_requires=DEPS,
+    setup_requires=[],
     entry_points="""
     """,
     namespace_packages=[
