@@ -120,7 +120,7 @@ application shows how to configure an application to load plugins:
     from cement.core import backend, foundation
     
     app = foundation.CementApp('myapp', 
-            plugin_config_dir='/etc/myapp/plugins.d/plugins.d',
+            plugin_config_dir='/etc/myapp/plugins.d',
             plugin_dir='/usr/lib/myapp/plugins',
             plugin_bootstrap='myapp.bootstrap',
             )
