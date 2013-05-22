@@ -57,6 +57,7 @@ class CementBaseHandler(meta.MetaMixin):
 
         """
         self.app = app_obj
+
         if self._meta.config_section is None:
             self._meta.config_section = "%s.%s" % \
                 (self._meta.interface.IMeta.label, self._meta.label)
