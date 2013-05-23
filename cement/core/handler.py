@@ -254,7 +254,7 @@ def registered(handler_type, handler_label):
 
     """
     if handler_type in backend.__handlers__ and \
-            handler_label in backend.__handlers__[handler_type]:
+       handler_label in backend.__handlers__[handler_type]:
         return True
 
     return False
