@@ -2,6 +2,7 @@
 
 import sys
 import logging
+from textwrap import TextWrapper
 
 
 def init_defaults(*sections):
@@ -86,3 +87,20 @@ def is_true(item):
         return True
     else:
         return False
+
+
+def wrap(text, width=77, indent=''):
+    """
+    Wrap text for cleaner output (this is a simple wrapper around
+    `textwrap.TextWrapper` in the standard library).
+
+    :param text: The text to wrap
+    :param width: The max width of a line before breaking
+    :param indent: String to prefix subsequent lines after breaking
+    :returns: str(text)
+
+    """
+    wrapper = TextWrapper(subsequent_indent=indent, width=width,
+                          break_long_words=False,
+                          break_on_hyphens=False)
+    return wrapper.fill(text)

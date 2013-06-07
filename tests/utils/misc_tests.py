@@ -19,3 +19,14 @@ class BackendTestCase(test.CementTestCase):
         # set logging back to non-debug
         misc.minimal_logger(__name__, debug=False)
         pass
+
+    def test_wrap(self):
+        text = "aaaaa bbbbb ccccc"
+        new_text = misc.wrap(text, width=5)
+        parts = new_text.split('\n')
+        self.eq(len(parts), 3)
+        self.eq(parts[1], 'bbbbb')
+    
+        new_text = misc.wrap(text, width=5, indent='***')
+        parts = new_text.split('\n')
+        self.eq(parts[2], '***ccccc')

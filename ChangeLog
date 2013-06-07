@@ -25,7 +25,7 @@ Bugs:
     
 Features:
 
-    * None
+    * :issue:`196` - Added utils.misc.wrap
 
 
 2.1.2 - Thu Nov 1st, 2012 (DEVELOPMENT)
