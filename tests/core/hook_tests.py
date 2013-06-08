@@ -69,6 +69,8 @@ class HookTestCase(test.CementTestCase):
         hook.register('post_setup', cement_hook_one)
         hook.register('pre_run', cement_hook_one)
         hook.register('post_run', cement_hook_one)
+        hook.register('pre_argument_parsing', cement_hook_one)
+        hook.register('post_argument_parsing', cement_hook_one)
         hook.register('pre_close', cement_hook_one)
         hook.register('post_close', cement_hook_one)
         hook.register('signal', cement_hook_one)

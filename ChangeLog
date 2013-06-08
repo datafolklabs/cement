@@ -25,6 +25,7 @@ Bugs:
     
 Features:
 
+    * :issue:`194` - Added pre_argument_parsing/post_argument_parsing hooks
     * :issue:`196` - Added utils.misc.wrap
 
 

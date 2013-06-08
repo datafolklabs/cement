@@ -205,7 +205,7 @@ passed as an argument.  Nothing is expected in return.
 post_setup
 ^^^^^^^^^^
         
-Run last when CementApp.setup() is called.  The application object object is
+Run last when CementApp.setup() is called.  The application object is
 passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
@@ -220,7 +220,7 @@ passed as an argument.  Nothing is expected in return.
 pre_run
 ^^^^^^^
         
-Run first when CementApp.run() is called.  The application object object is
+Run first when CementApp.run() is called.  The application object is
 passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
@@ -237,7 +237,7 @@ passed as an argument.  Nothing is expected in return.
 post_run
 ^^^^^^^^
         
-Run last when CementApp.run() is called.  The application object object is
+Run last when CementApp.run() is called.  The application object is
 passed as an argument.  Nothing is expected in return.
 
 .. code-block:: python
@@ -249,6 +249,44 @@ passed as an argument.  Nothing is expected in return.
         return
 
     hook.register('post_run', my_hook)
+
+pre_argument_parsing
+^^^^^^^^^^^^^^^^^^^^
+        
+Run after CementApp.run() is called, just *before* argument parsing happens.  
+The application object is passed as an argument to these hook 
+functions.  Nothing is expected in return.
+
+.. code-block:: python
+
+    from cement.core import hook
+    
+    def my_hook(app):
+        # do something before argument parsing happens
+        pass
+
+    hook.register('pre_argument_parsing', my_hook)
+    
+pre_argument_parsing
+^^^^^^^^^^^^^^^^^^^^
+        
+Run after CementApp.run() is called, just *after* argument parsing happens.  
+The application object is passed as an argument to these hook 
+functions.  Nothing is expected in return.
+
+This hook is generally useful where the developer needs to perform actions
+based on the arguments that were passed at command line, but before the 
+logic of `app.run()` happens.
+
+.. code-block:: python
+
+    from cement.core import hook
+    
+    def my_hook(app):
+        # do something after argument parsing happens
+        pass
+
+    hook.register('post_argument_parsing', my_hook)
     
 pre_render
 ^^^^^^^^^^

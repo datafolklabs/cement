@@ -568,6 +568,8 @@ class CementApp(meta.MetaMixin):
         hook.define('post_setup')
         hook.define('pre_run')
         hook.define('post_run')
+        hook.define('pre_argument_parsing')
+        hook.define('post_argument_parsing')
         hook.define('pre_close')
         hook.define('post_close')
         hook.define('signal')
@@ -589,7 +591,13 @@ class CementApp(meta.MetaMixin):
         handler.register(extension.CementExtensionHandler)
 
     def _parse_args(self):
+        for res in hook.run('pre_argument_parsing', self):
+            pass
+
         self._parsed_args = self.args.parse(self.argv)
+
+        for res in hook.run('post_argument_parsing', self):
+            pass
 
         if self._meta.arguments_override_config is True:
             for member in dir(self._parsed_args):
