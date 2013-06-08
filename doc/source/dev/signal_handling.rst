@@ -162,8 +162,8 @@ callback.
         # do something with signum/frame
         print 'Caught signal %s' % signum
         
-        # execute the cement 'signal' hook
-        for res in hook.run('cement 'signal' hook', signum, frame):
+        # execute the cement signal hook
+        for res in hook.run('signal', signum, frame):
             pass 
 
     app = foundation.CementApp('myapp', 
