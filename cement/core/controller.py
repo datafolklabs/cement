@@ -116,10 +116,10 @@ class expose(object):
     Used to expose controller functions to be listed as commands, and to
     decorate the function with Meta data for the argument parser.
 
-    :param hide: Whether the command should be visible.
-    :type hide: boolean
     :param help: Help text to display for that command.
     :type help: str
+    :param hide: Whether the command should be visible.
+    :type hide: boolean
     :param aliases: Aliases to this command.
     :type aliases: list
 
@@ -143,7 +143,7 @@ class expose(object):
 
     """
     # pylint: disable=W0622
-    def __init__(self, hide=False, help='', aliases=[]):
+    def __init__(self, help='', hide=False, aliases=[]):
         self.hide = hide
         self.help = help
         self.aliases = aliases
