@@ -596,9 +596,6 @@ class CementApp(meta.MetaMixin):
 
         self._parsed_args = self.args.parse(self.argv)
 
-        for res in hook.run('post_argument_parsing', self):
-            pass
-
         if self._meta.arguments_override_config is True:
             for member in dir(self._parsed_args):
                 if member and member.startswith('_'):
@@ -613,6 +610,9 @@ class CementApp(meta.MetaMixin):
                     if member in self.config.keys(section):
                         self.config.set(section, member,
                                         getattr(self._parsed_args, member))
+
+        for res in hook.run('post_argument_parsing', self):
+            pass
 
     def _setup_signals(self):
         if not self._meta.catch_signals:

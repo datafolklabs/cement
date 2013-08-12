@@ -21,7 +21,8 @@ is available online at:
 
 Bugs:
 
-    * None
+    * :issue:`199` - Moved post_argument_parsing hook down, after     
+      arguments_override_config logic happens.
     
 Features:
 
