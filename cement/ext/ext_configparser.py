@@ -98,38 +98,6 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         """
         return self.options(section)
 
-    def has_key(self, section, key):
-        """
-        Return whether or not a 'section' has the given 'key'.
-
-        :param section: The section of the configuration.
-         I.e. [block_section].
-        :param key: The key within 'section'.
-        :returns: True if the config `section` has `key`.
-        :rtype: boolean
-
-        *This function is deprecated as of Cement 2.1.1, and will be removed
-        in future versions.  Use `if 'key' in config.keys('section')`
-        instead.*
-        """
-        if self.app._meta.ignore_deprecation_warnings:
-            LOG.debug("ConfigParserConfigHandler.has_key() is " +
-                      "deprecated as of Cement 2.1.1.  Please use " +
-                      "`if key in app.config.keys(section)` " +
-                      "instead.")
-        else:
-            LOG.warn("ConfigParserConfigHandler.has_key() is " +
-                     "deprecated as of Cement 2.1.1.  Please use " +
-                     "`if key in app.config.keys(section)` " +
-                     "instead.  You can disable this warning by setting " +
-                     "`ignore_deprecation_warnings = true` under the " +
-                     "applications primary config section.")
-
-        if key in self.keys(section):
-            return True
-        else:
-            return False
-
     def get_sections(self):
         """
         Return a list of configuration sections or [blocks].

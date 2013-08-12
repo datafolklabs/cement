@@ -89,6 +89,8 @@ class CementDevtoolsController(CementBaseController):
     @expose(help='run all unit tests')
     def run_tests(self):
         print('')
+        print('Python Version: %s' % sys.version)
+        print('')
         print("Running Tests for Cement Version %s" % VERSION)
         print('-' * 77)
         self._do_pep8()

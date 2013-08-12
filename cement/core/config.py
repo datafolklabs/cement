@@ -8,7 +8,6 @@ def config_validator(klass, obj):
     members = [
         '_setup',
         'keys',
-        'has_key',
         'get_sections',
         'get_section_dict',
         'get',

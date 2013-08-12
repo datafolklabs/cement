@@ -29,6 +29,10 @@ Features:
     * :issue:`194` - Added pre_argument_parsing/post_argument_parsing hooks
     * :issue:`196` - Added utils.misc.wrap
 
+Incompatible:
+
+    * :issue:`173` - Deprecated 'has_key()' from configparser extension
+
 
 2.1.2 - Thu Nov 1st, 2012 (DEVELOPMENT)
 ------------------------------------------------------------------------------
