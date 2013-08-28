@@ -44,5 +44,6 @@ Cement Extension Modules
    ext/ext_configparser
    ext/ext_json
    ext/ext_logging
+   ext/ext_mustache
    ext/ext_nulloutput
    ext/ext_plugin
