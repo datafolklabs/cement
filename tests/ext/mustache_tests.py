@@ -6,8 +6,6 @@ import random
 from cement.core import exc, foundation, handler, backend, controller
 from cement.utils import test
 
-if sys.version_info[0] >= 3:
-    raise test.SkipTest('Mustache does not support Python 3') # pragma: no cover
         
 class MustacheExtTestCase(test.CementTestCase):
     def setUp(self):
@@ -23,12 +21,13 @@ class MustacheExtTestCase(test.CementTestCase):
         res = self.app.render(dict(foo=rando), 'test_template.mustache')
         mustache_res = "foo equals %s" % rando
         self.eq(res, mustache_res)
-
+    
+    @test.raises(exc.FrameworkError)
     def test_mustache_bad_template(self):    
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'bad_template.mustache')
+        res = self.app.render(dict(foo='bar'), 'bad_template2.mustache')
 
-    @test.raises(IOError)
+    @test.raises(exc.FrameworkError)
     def test_mustache_nonexistent_template(self):    
         self.app.setup()
         res = self.app.render(dict(foo='bar'), 'missing_template.mustache')
@@ -39,11 +38,11 @@ class MustacheExtTestCase(test.CementTestCase):
         try:
             res = self.app.render(dict(foo='bar'), None)
         except exc.FrameworkError as e:
-            self.eq(e.msg, "Invalid template 'None'.")
+            self.eq(e.msg, "Invalid template path 'None'.")
             raise
 
     @test.raises(exc.FrameworkError)
     def test_mustache_bad_module(self):
         self.app.setup()
-        self.app.output._meta.template_module = 'this_is_a_bogus_module'
+        self.app._meta.template_module = 'this_is_a_bogus_module'
         res = self.app.render(dict(foo='bar'), 'bad_template.mustache')

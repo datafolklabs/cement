@@ -1,7 +1,11 @@
 """Cement core output module."""
 
+import os
+import sys
+import pkgutil
 from ..core import backend, exc, interface, handler
 from ..utils.misc import minimal_logger
+from ..utils import fs
 
 LOG = minimal_logger(__name__)
 
@@ -60,14 +64,12 @@ class IOutput(interface.Interface):
 
         """
 
-    def render(data_dict, template=None):
+    def render(data_dict):
         """
         Render the data_dict into output in some fashion.
 
         :param data_dict: The dictionary whose data we need to render into
             output.
-        :param template: A template to use for rendering (in module form).
-            I.e ``myapp.templates.some_command``.
         :returns: string or unicode string or None
 
         """
@@ -92,3 +94,83 @@ class CementOutputHandler(handler.CementBaseHandler):
 
     def __init__(self, *args, **kw):
         super(CementOutputHandler, self).__init__(*args, **kw)
+
+
+class TemplateOutputHandler(CementOutputHandler):
+    """
+    Base class for template base output handlers.
+
+    """
+    def _load_template_from_file(self, template_path):
+        template_prefix = self.app._meta.template_dir.rstrip('/')
+        template_path = template_path.lstrip('/')
+        full_path = fs.abspath(os.path.join(template_prefix, template_path))
+        LOG.debug("attemping to load output template from file %s" %
+                  full_path)
+        if os.path.exists(full_path):
+            content = open(full_path, 'r').read()
+            LOG.debug("loaded output template from file %s" %
+                      full_path)
+            return content
+        else:
+            LOG.debug("output template file %s does not exist" %
+                      full_path)
+            return None
+
+    def _load_template_from_module(self, template_path):
+        template_module = self.app._meta.template_module
+        template_path = template_path.lstrip('/')
+
+        LOG.debug("attemping to load output template '%s' from module %s" %
+                 (template_path, template_module))
+
+        # see if the module exists first
+        if template_module not in sys.modules:
+            try:
+                __import__(template_module, globals(), locals(), [], 0)
+            except ImportError as e:
+                LOG.debug("unable to import template module '%s'."
+                          % template_module)
+                return None
+
+        # get the template content
+        try:
+            content = pkgutil.get_data(template_module, template_path)
+            LOG.debug("loaded output template '%s' from module %s" %
+                     (template_path, template_module))
+            return content
+        except IOError as e:
+            LOG.debug("output template '%s' does not exist in module %s" %
+                     (template_path, template_module))
+            return None
+
+    def load_template(self, template_path):
+        """
+        Loads a template file first from ``self.app._meta.template_dir`` and
+        secondly from ``self.app._meta.template_module``.  The
+        ``template_dir`` has presedence.
+
+        :param template_path: The secondary path of the template *after*
+            either ``template_module`` or ``template_dir`` prefix (set via
+            CementApp.Meta)
+        :returns: The content of the template (str)
+        :raises: FrameworkError if the template does not exist in either the
+            ``template_module`` or ``template_dir``.
+        """
+        if not template_path:
+            raise exc.FrameworkError("Invalid template path '%s'." %
+                                     template_path)
+
+        # first attempt to load from file
+        content = self._load_template_from_file(template_path)
+        if content is None:
+            # second attempt to load from module
+            content = self._load_template_from_module(template_path)
+
+        # if content is None, that means we didn't find a template file in
+        # either and that is an exception
+        if content is not None:
+            return content
+        else:
+            raise exc.FrameworkError("Could not locate template: %s" %
+                                     template_path)

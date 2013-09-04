@@ -157,6 +157,9 @@ class CementApp(meta.MetaMixin):
         This provides a facility for applications that use 'namespace'
         packages allowing plugins to share the applications python
         namespace.
+
+        Note: Though the meta default is None, Cement will set this to
+        ``<app_label>.plugins`` if not set during app.setup().
         """
 
         plugin_dir = None
@@ -311,6 +314,7 @@ class CementApp(meta.MetaMixin):
             'plugin_config_dir',
             'plugin_dir',
             'ignore_deprecation_warnings',
+            'template_dir',
         ]
         """
         List of meta options that can/will be overridden by config options
@@ -333,6 +337,27 @@ class CementApp(meta.MetaMixin):
 
         ignore_deprecation_warnings = False
         """Disabled deprecation warnings from being logged by Cement."""
+
+        template_module = None
+        """
+        A python package (dotted import path) where template files can be
+        loaded from.  This is generally something like 'myapp.templates'
+        where a plugin file would live at ``myapp/templates/mytemplate.txt``.
+        Templates are first loaded from ``CementApp.Meta.template_dir``, and
+        and secondly from ``CementApp.Meta.template_module``.
+        """
+
+        template_dir = None
+        """
+        A directory path where template files can be loaded from.  By default,
+        this setting is also overridden by the '[base] -> template_dir' config
+        setting parsed in any of the application configuration files (where
+        [base] is the base configuration section of the application which is
+        determinedby Meta.config_section but defaults to Meta.label).
+
+        Note: Though the meta default is None, Cement will set this to
+        ``/usr/lib/<app_label>/templates/`` if not set during app.setup()
+        """
 
     def __init__(self, label=None, **kw):
         super(CementApp, self).__init__(**kw)
@@ -500,7 +525,7 @@ class CementApp(meta.MetaMixin):
             else:
                 data = res
 
-        if not self.output:
+        if self.output is None:
             LOG.debug('render() called, but no output handler defined.')
             out_text = ''
         else:
@@ -521,6 +546,7 @@ class CementApp(meta.MetaMixin):
         called.
 
         :returns: tuple (data, output_text)
+
         """
         return self._last_rendered
 
@@ -615,7 +641,7 @@ class CementApp(meta.MetaMixin):
             pass
 
     def _setup_signals(self):
-        if not self._meta.catch_signals:
+        if self._meta.catch_signals is None:
             LOG.debug("catch_signals=None... not handling any signals")
             return
 
@@ -679,12 +705,14 @@ class CementApp(meta.MetaMixin):
         LOG.debug("setting up %s.plugin handler" % self._meta.label)
 
         # modify app defaults if not set
-        if not self._meta.plugin_config_dir:
+        if self._meta.plugin_config_dir is None:
             self._meta.plugin_config_dir = '/etc/%s/plugins.d/' % \
                                            self._meta.label
 
-        if not self._meta.plugin_dir:
+        if self._meta.plugin_dir is None:
             self._meta.plugin_dir = '/usr/lib/%s/plugins' % self._meta.label
+        if self._meta.plugin_bootstrap is None:
+            self._meta.plugin_bootstrap = '%s.plugins' % self._meta.label
 
         self.plugin = self._resolve_handler('plugin',
                                             self._meta.plugin_handler)
@@ -700,6 +728,11 @@ class CementApp(meta.MetaMixin):
         self.output = self._resolve_handler('output',
                                             self._meta.output_handler,
                                             raise_error=False)
+        if self._meta.template_module is None:
+            self._meta.template_module = '%s.templates' % self._meta.label
+        if self._meta.template_dir is None:
+            self._meta.template_dir = '/usr/lib/%s/templates' % \
+                                      self._meta.label
 
     def _setup_cache_handler(self):
         if self._meta.cache_handler is None:

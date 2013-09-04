@@ -1,6 +1,8 @@
 API Reference
 =============
 
+.. _api-core:
+
 Cement Core Modules
 -------------------
 
@@ -23,6 +25,8 @@ Cement Core Modules
    core/output
    core/plugin
 
+.. _api-utils:
+
 Cement Utility Modules
 ----------------------
 
@@ -34,6 +38,8 @@ Cement Utility Modules
    utils/misc
    utils/test
    
+.. _api-ext:
+
 Cement Extension Modules
 ------------------------
 

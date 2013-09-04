@@ -128,14 +128,21 @@ class CementPluginHandler(plugin.CementPluginHandler):
         :raises: ImportError
 
         """
-        if base_package is None:
-            LOG.debug("plugin bootstrap module is set to None, unusable.")
-            return False
 
         full_module = '%s.%s' % (base_package, plugin_name)
+
+        # If the base package doesn't exist, we return False rather than
+        # bombing out.
+        if base_package not in sys.modules:
+            try:
+                __import__(base_package, globals(), locals(), [], 0)
+            except ImportError as e:
+                LOG.debug("unable to import plugin bootstrap module '%s'."
+                          % base_package)
+                return False
+
         LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
                                                          base_package))
-
         # We don't catch this because it would make debugging a nightmare
         if full_module not in sys.modules:
             __import__(full_module, globals(), locals(), [], 0)

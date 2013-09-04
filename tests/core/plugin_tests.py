@@ -214,3 +214,4 @@ class PluginTestCase(test.CementTestCase):
         self.ok(res)
         
         shutil.rmtree(tmpdir)
+

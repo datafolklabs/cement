@@ -16,11 +16,13 @@ The following extension handlers are included and maintained with Cement:
     * :ref:`CementExtensionHandler <cement.core.extension>`
 
 Please reference the :ref:`IExtension <cement.core.extension>` interface 
-documentation for writing your own extension handler.
+documentation for writing your own extension handler.  Additionally, more
+information on available extensions and their use is available in the 
+:ref:`Cement API Documentation <api-ext>`
 
 **Important Note**: As of Cement 2.1.3, optional extensions with external 
 dependencies are now being shipped along with mainline sources.  This means,
-that Cement Core continues to maintain 100% zero dependency policy, however 
+that Cement Core continues to maintain a 100% zero dependency policy, however 
 Framework Extensions *can*.  It is the responsibility of the application 
 developer to include these dependencies via their application (as the Cement
 package does not include these dependencies).
