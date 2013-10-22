@@ -37,6 +37,7 @@ Features:
 Incompatible:
 
     * :issue:`173` - Deprecated 'has_key()' from configparser extension
+    * :issue:`201` - Add Deprecation Warning for CementApp.get_last_rendered()
 
 
 2.1.2 - Thu Nov 1st, 2012 (DEVELOPMENT)

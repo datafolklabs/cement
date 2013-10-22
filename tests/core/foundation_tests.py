@@ -216,6 +216,14 @@ class FoundationTestCase(test.CementTestCase):
     def test_last_rendered(self):
         self.app.setup()
         output_text = self.app.render({'foo':'bar'})
+        last_data, last_output = self.app.last_rendered
+        self.eq({'foo':'bar'}, last_data)
+        self.eq(output_text, last_output)
+    
+    def test_get_last_rendered(self):
+        ### DEPRECATED - REMOVE AFTER THE FUNCTION IS REMOVED
+        self.app.setup()
+        output_text = self.app.render({'foo':'bar'})
         last_data, last_output = self.app.get_last_rendered()
         self.eq({'foo':'bar'}, last_data)
         self.eq(output_text, last_output)

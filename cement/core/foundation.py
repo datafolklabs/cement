@@ -336,7 +336,7 @@ class CementApp(meta.MetaMixin):
         """
 
         ignore_deprecation_warnings = False
-        """Disabled deprecation warnings from being logged by Cement."""
+        """Disable deprecation warnings from being logged by Cement."""
 
         template_module = None
         """
@@ -541,6 +541,27 @@ class CementApp(meta.MetaMixin):
         return out_text
 
     def get_last_rendered(self):
+        """
+        DEPRECATION WARNING: This function is deprecated as of Cement 2.1.3
+        in favor of the `self.last_rendered` property, and will be removed in 
+        future versions of Cement.
+        
+        Return the (data, output_text) tuple of the last time self.render() 
+        was called.
+
+        :returns: tuple (data, output_text)
+
+        """
+        if not self._meta.ignore_deprecation_warnings:
+            self.log.warn("Cement Deprecation Warning: " +
+                          "CementApp.get_last_rendered() has been " +
+                          "deprecated, and will be removed in future " +
+                          "versions of Cement.  You should use the " +
+                          "CementApp.last_rendered property instead.")
+        return self._last_rendered
+
+    @property
+    def last_rendered(self):
         """
         Return the (data, output_text) tuple of the last time self.render() was
         called.
