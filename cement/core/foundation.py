@@ -552,7 +552,7 @@ class CementApp(meta.MetaMixin):
         :returns: tuple (data, output_text)
 
         """
-        if not self._meta.ignore_deprecation_warnings:
+        if not is_true(self._meta.ignore_deprecation_warnings):
             self.log.warn("Cement Deprecation Warning: " +
                           "CementApp.get_last_rendered() has been " +
                           "deprecated, and will be removed in future " +
