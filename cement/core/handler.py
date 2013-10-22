@@ -63,7 +63,8 @@ class CementBaseHandler(meta.MetaMixin):
                 (self._meta.interface.IMeta.label, self._meta.label)
 
         if self._meta.config_defaults is not None:
-            LOG.debug("merging config defaults from '%s'" % self)
+            LOG.debug("merging config defaults from '%s' " % self +
+                      "into section '%s'" % self._meta.config_section)
             dict_obj = dict()
             dict_obj[self._meta.config_section] = self._meta.config_defaults
             self.app.config.merge(dict_obj, override=False)

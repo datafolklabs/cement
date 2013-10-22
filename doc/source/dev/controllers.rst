@@ -50,18 +50,18 @@ handle command dispatch and rapid development.
         
         @controller.expose(hide=True, aliases=['run'])
         def default(self):
-            self.log.info('Inside base.default function.')
-            if self.pargs.foo:
-                self.log.info("Recieved option 'foo' with value '%s'." % \
-                              self.pargs.foo)
+            self.app.log.info('Inside base.default function.')
+            if self.app.pargs.foo:
+                self.app.log.info("Recieved option 'foo' with value '%s'." % \
+                              self.app.pargs.foo)
                           
         @controller.expose(help="this command does relatively nothing useful.")
         def command1(self):
-            self.log.info("Inside base.command1 function.")
+            self.app.log.info("Inside base.command1 function.")
         
         @controller.expose(aliases=['cmd2'], help="more of nothing.")
         def command2(self):
-            self.log.info("Inside base.command2 function.")
+            self.app.log.info("Inside base.command2 function.")
     
     # create an application
     app = foundation.CementApp('example', base_controller=MyAppBaseController)

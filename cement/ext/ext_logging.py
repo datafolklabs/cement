@@ -31,7 +31,8 @@ class LoggingLogHandler(log.CementLogHandler):
 
     Configuration Options
 
-    The following configuration options are recognized in this class:
+    The following configuration options are recognized in this class
+    (assuming that Meta.config_section is `log`):
 
         log.level
 
@@ -126,9 +127,10 @@ class LoggingLogHandler(log.CementLogHandler):
 
         # hack for application debugging
         if is_true(self.app._meta.debug):
-            self.app.config.set('log', 'level', 'DEBUG')
+            self.app.config.set(self._meta.config_section, 'level', 'DEBUG')
 
-        self.set_level(self.app.config.get('log', 'level'))
+        level = self.app.config.get(self._meta.config_section, 'level')
+        self.set_level(level)
 
         # clear loggers?
         if is_true(self._meta.clear_loggers):
@@ -140,8 +142,8 @@ class LoggingLogHandler(log.CementLogHandler):
         # file
         self._setup_file_log()
 
-        self.debug("logging initialized for '%s' using LoggingLogHandler" %
-                   self._meta.namespace)
+        self.debug("logging initialized for '%s' using %s" %
+                  (self._meta.namespace, self.__class__.__name__))
 
     def set_level(self, level):
         """
@@ -178,8 +180,9 @@ class LoggingLogHandler(log.CementLogHandler):
 
     def _setup_console_log(self):
         """Add a console log handler."""
-
-        if is_true(self.app.config.get('log', 'to_console')):
+        to_console = self.app.config.get(self._meta.config_section,
+                                         'to_console')
+        if is_true(to_console):
             console_handler = logging.StreamHandler()
             if self.get_level() == logging.getLevelName(logging.DEBUG):
                 format = logging.Formatter(self._meta.debug_format)
@@ -195,18 +198,24 @@ class LoggingLogHandler(log.CementLogHandler):
     def _setup_file_log(self):
         """Add a file log handler."""
 
-        if self.app.config.get('log', 'file'):
-            file_path = fs.abspath(self.app.config.get('log', 'file'))
+        file_path = self.app.config.get(self._meta.config_section, 'file')
+        rotate = self.app.config.get(self._meta.config_section, 'rotate')
+        max_bytes = self.app.config.get(self._meta.config_section,
+                                        'max_bytes')
+        max_files = self.app.config.get(self._meta.config_section,
+                                        'max_files')
+        if file_path:
+            file_path = fs.abspath(file_path)
             log_dir = os.path.dirname(file_path)
             if not os.path.exists(log_dir):
                 os.makedirs(log_dir)
 
-            if self.app.config.get('log', 'rotate'):
+            if rotate:
                 from logging.handlers import RotatingFileHandler
                 file_handler = RotatingFileHandler(
                     file_path,
-                    maxBytes=int(self.app.config.get('log', 'max_bytes')),
-                    backupCount=int(self.app.config.get('log', 'max_files')),
+                    maxBytes=int(max_bytes),
+                    backupCount=int(max_files),
                 )
             else:
                 from logging import FileHandler

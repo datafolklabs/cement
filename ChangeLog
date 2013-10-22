@@ -23,7 +23,8 @@ Bugs:
 
     * :issue:`199` - Moved post_argument_parsing hook down, after     
       arguments_override_config logic happens.
-    
+    * :issue:`208` - LoggingLogHandler does not honor Meta.config_section
+
 Features:
 
     * :issue:`194` - Added pre_argument_parsing/post_argument_parsing hooks
