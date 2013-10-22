@@ -89,7 +89,7 @@ def is_true(item):
         return False
 
 
-def wrap(text, width=77, indent=''):
+def wrap(text, width=77, indent='', long_words=False, hyphens=False):
     """
     Wrap text for cleaner output (this is a simple wrapper around
     `textwrap.TextWrapper` in the standard library).
@@ -97,10 +97,15 @@ def wrap(text, width=77, indent=''):
     :param text: The text to wrap
     :param width: The max width of a line before breaking
     :param indent: String to prefix subsequent lines after breaking
+    :param long_words: Break on long words
+    :param hyphens: Break on hyphens
     :returns: str(text)
 
     """
+    if type(text) != str:
+        raise TypeError("`text` must be a string.")
+
     wrapper = TextWrapper(subsequent_indent=indent, width=width,
-                          break_long_words=False,
-                          break_on_hyphens=False)
+                          break_long_words=long_words,
+                          break_on_hyphens=hyphens)
     return wrapper.fill(text)

@@ -20,7 +20,7 @@ class BackendTestCase(test.CementTestCase):
         misc.minimal_logger(__name__, debug=False)
         pass
 
-    def test_wrap(self):
+    def test_wrap_str(self):
         text = "aaaaa bbbbb ccccc"
         new_text = misc.wrap(text, width=5)
         parts = new_text.split('\n')
@@ -30,3 +30,21 @@ class BackendTestCase(test.CementTestCase):
         new_text = misc.wrap(text, width=5, indent='***')
         parts = new_text.split('\n')
         self.eq(parts[2], '***ccccc')
+    
+    @test.raises(TypeError)
+    def test_wrap_int(self):
+        text = int('1' * 80)
+        try:
+            new_text = misc.wrap(text, width=5)
+        except TypeError as e:
+            self.eq(e.args[0], "`text` must be a string.")
+            raise
+
+    @test.raises(TypeError)
+    def test_wrap_none(self):
+        text = None
+        try:
+            new_text = misc.wrap(text, width=5)
+        except TypeError as e:
+            self.eq(e.args[0], "`text` must be a string.")
+            raise
