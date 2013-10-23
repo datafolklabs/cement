@@ -12,7 +12,7 @@ class BogusExtensionHandler(extension.CementExtensionHandler):
         interface = IBogus
         label = 'bogus'
 
-class ExtensionTestCase(test.CementTestCase):
+class ExtensionTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_invalid_extension_handler(self):
         # the handler type bogus doesn't exist

@@ -14,6 +14,7 @@ LOG = minimal_logger(__name__)
 
 
 class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
+
     """
     This class is an implementation of the :ref:`IConfig <cement.core.config>`
     interface.  It handles configuration file parsing and the like by
@@ -26,6 +27,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
     RawConfigParser on initialization.
     """
     class Meta:
+
         """Handler meta-data."""
 
         interface = config.IConfig

@@ -2,12 +2,14 @@
 
 
 class FrameworkError(Exception):
+
     """
     General framework (non-application) related errors.
 
     :param msg: The error message.
 
     """
+
     def __init__(self, msg):
         Exception.__init__(self)
         self.msg = msg
@@ -17,11 +19,13 @@ class FrameworkError(Exception):
 
 
 class InterfaceError(FrameworkError):
+
     """Interface related errors."""
     pass
 
 
 class CaughtSignal(FrameworkError):
+
     """
     Raised when a defined signal is caught.  For more information regarding
     signals, reference the
@@ -31,6 +35,7 @@ class CaughtSignal(FrameworkError):
     :param frame: The signal frame.
 
     """
+
     def __init__(self, signum, frame):
         msg = 'Caught signal %s' % signum
         super(CaughtSignal, self).__init__(msg)

@@ -20,7 +20,7 @@ class TestHandler2(handler.CementBaseHandler):
 class TestHandler3():
     pass
     
-class InterfaceTestCase(test.CementTestCase):
+class InterfaceTestCase(test.CementCoreTestCase):
     def setUp(self):
         self.app = self.make_app()
         

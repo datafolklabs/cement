@@ -16,7 +16,7 @@ class TestOutputHandler(output.TemplateOutputHandler):
 
 TEST_TEMPLATE = "%(foo)s"
 
-class OutputTestCase(test.CementTestCase):
+class OutputTestCase(test.CementCoreTestCase):
     def setUp(self):
         self.app = self.make_app()
     

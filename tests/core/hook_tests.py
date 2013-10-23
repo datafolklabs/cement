@@ -19,7 +19,7 @@ def nosetests_hook(*args, **kw):
 def cement_hook_five(app, data):
     return data
     
-class HookTestCase(test.CementTestCase):
+class HookTestCase(test.CementCoreTestCase):
     def setUp(self):
         self.app = self.make_app()
         hook.define('nosetests_hook')

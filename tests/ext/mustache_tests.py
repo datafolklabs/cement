@@ -7,7 +7,7 @@ from cement.core import exc, foundation, handler, backend, controller
 from cement.utils import test
 
         
-class MustacheExtTestCase(test.CementTestCase):
+class MustacheExtTestCase(test.CementExtTestCase):
     def setUp(self):
         self.app = self.make_app('tests', 
             extensions=['mustache'],

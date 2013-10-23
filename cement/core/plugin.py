@@ -21,6 +21,7 @@ def plugin_validator(klass, obj):
 
 
 class IPlugin(interface.Interface):
+
     """
     This class defines the Plugin Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
@@ -86,12 +87,14 @@ class IPlugin(interface.Interface):
 
 
 class CementPluginHandler(handler.CementBaseHandler):
+
     """
     Base class that all Plugin Handlers should sub-class from.
 
     """
 
     class Meta:
+
         """
         Handler meta-data (can be passed as keyword arguments to the parent
         class).

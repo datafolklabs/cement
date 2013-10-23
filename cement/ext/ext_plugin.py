@@ -10,10 +10,11 @@ from ..utils.fs import abspath
 
 LOG = minimal_logger(__name__)
 
-### FIX ME: This is a redundant name... ?
+# FIX ME: This is a redundant name... ?
 
 
 class CementPluginHandler(plugin.CementPluginHandler):
+
     """
     This class is an internal implementation of the
     :ref:`IPlugin <cement.core.plugin>` interface. It does not take any
@@ -22,6 +23,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
     """
 
     class Meta:
+
         """Handler meta-data."""
 
         interface = plugin.IPlugin

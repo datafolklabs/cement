@@ -11,9 +11,11 @@ LOG = minimal_logger(__name__)
 
 
 class CementBaseHandler(meta.MetaMixin):
+
     """Base handler class that all Cement Handlers should subclass from."""
 
     class Meta:
+
         """
         Handler meta-data (can also be passed as keyword arguments to the
         parent class).

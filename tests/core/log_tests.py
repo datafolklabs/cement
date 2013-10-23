@@ -10,7 +10,7 @@ class BogusHandler1(log.CementLogHandler):
         interface = log.ILog
         label = 'bogus'
 
-class LogTestCase(test.CementTestCase):
+class LogTestCase(test.CementCoreTestCase):
     def setUp(self):
         self.app = self.make_app()
         

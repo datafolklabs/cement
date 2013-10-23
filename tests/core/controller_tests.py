@@ -87,7 +87,7 @@ class ArgumentConflict(controller.CementBaseController):
         stacked_type = 'embedded'
         arguments = [(['-f', '--foo'], dict())]
                 
-class ControllerTestCase(test.CementTestCase):
+class ControllerTestCase(test.CementCoreTestCase):
     def test_default(self):
         app = self.make_app(base_controller=TestController)
         app.setup()

@@ -14,7 +14,7 @@ class BogusConfigHandler(config.CementConfigHandler):
     class Meta:
         label = 'bogus'
 
-class ConfigTestCase(test.CementTestCase):        
+class ConfigTestCase(test.CementCoreTestCase):        
     @test.raises(exc.InterfaceError)
     def test_invalid_config_handler(self):
         handler.register(BogusConfigHandler)

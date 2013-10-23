@@ -9,22 +9,26 @@ DEFAULT_META = ['interface', 'label', 'config_defaults', 'config_section']
 
 
 class Interface(object):
+
     """
     An interface definition class.  All Interfaces should subclass from
     here.  Note that this is not an implementation and should never be
     used directly.
     """
+
     def __init__(self):
         raise exc.InterfaceError("Interfaces can not be used directly.")
 
 
 class Attribute(object):
+
     """
     An interface attribute definition.
 
     :param description: The description of the attribute.
 
     """
+
     def __init__(self, description):
         self.description = description
 

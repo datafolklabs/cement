@@ -21,6 +21,7 @@ def config_validator(klass, obj):
 
 
 class IConfig(interface.Interface):
+
     """
     This class defines the Config Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
@@ -51,6 +52,7 @@ class IConfig(interface.Interface):
     """
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+
         """Interface meta-data."""
         label = 'config'
         """The string identifier of the interface."""
@@ -169,11 +171,13 @@ class IConfig(interface.Interface):
 
 
 class CementConfigHandler(handler.CementBaseHandler):
+
     """
     Base class that all Config Handlers should sub-class from.
 
     """
     class Meta:
+
         """
         Handler meta-data (can be passed as keyword arguments to the parent
         class).

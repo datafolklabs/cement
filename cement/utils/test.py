@@ -4,13 +4,15 @@ import unittest
 from ..core import backend, foundation
 
 # shortcuts
+from nose import SkipTest
 from nose.tools import ok_ as ok
 from nose.tools import eq_ as eq
 from nose.tools import raises
-from nose import SkipTest
+from nose.plugins.attrib import attr
 
 
 class TestApp(foundation.CementApp):
+
     """
     Basic CementApp for generic testing.
 
@@ -24,6 +26,7 @@ class TestApp(foundation.CementApp):
 
 
 class CementTestCase(unittest.TestCase):
+
     """
     A sub-class of unittest.TestCase.
 
@@ -69,3 +72,15 @@ class CementTestCase(unittest.TestCase):
     def eq(self, a, b, msg=None):
         """Shorthand for 'assert a == b, "%r != %r" % (a, b)'. """
         return eq(a, b, msg)
+
+# The following are for internal, Cement unit testing only
+
+
+@attr('core')
+class CementCoreTestCase(CementTestCase):
+    pass
+
+
+@attr('ext')
+class CementExtTestCase(CementTestCase):
+    pass

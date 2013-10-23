@@ -6,7 +6,7 @@ from cement.utils import shell, test
 def add(a, b):
     return a + b
     
-class ShellUtilsTestCase(test.CementTestCase):
+class ShellUtilsTestCase(test.CementCoreTestCase):
     def test_exec_cmd(self):
         out, err, ret = shell.exec_cmd(['echo', 'KAPLA!'])
         self.eq(ret, 0)

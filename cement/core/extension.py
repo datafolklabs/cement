@@ -25,6 +25,7 @@ def extension_validator(klass, obj):
 
 
 class IExtension(interface.Interface):
+
     """
     This class defines the Extension Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
@@ -48,6 +49,7 @@ class IExtension(interface.Interface):
 
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+
         """Interface meta-data."""
 
         label = 'extension'
@@ -93,7 +95,9 @@ class IExtension(interface.Interface):
 
 
 class CementExtensionHandler(handler.CementBaseHandler):
+
     class Meta:
+
         """
         Handler meta-data (can be passed as keyword arguments to the parent
         class).

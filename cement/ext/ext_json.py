@@ -9,6 +9,7 @@ LOG = minimal_logger(__name__)
 
 
 class JsonOutputHandler(output.CementOutputHandler):
+
     """
     This class implements the :ref:`IOutput <cement.core.output>`
     interface.  It provides JSON output from a data dictionary using the
@@ -22,6 +23,7 @@ class JsonOutputHandler(output.CementOutputHandler):
 
     """
     class Meta:
+
         """Handler meta-data"""
 
         interface = output.IOutput

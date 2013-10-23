@@ -16,7 +16,8 @@ class MyLog(ext_logging.LoggingLogHandler):
     def __init__(self, *args, **kw):
         super(MyLog, self).__init__(*args, **kw)
     
-class LoggingExtTestCase(test.CementTestCase):
+@test.attr('core')
+class LoggingExtTestCase(test.CementExtTestCase):
     def test_alternate_namespaces(self):
         defaults = init_defaults('myapp', 'log')
         defaults['log']['to_console'] = False

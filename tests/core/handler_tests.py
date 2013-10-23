@@ -50,7 +50,7 @@ class TestHandler(meta.MetaMixin):
         interface = TestInterface
         label = 'test'
         
-class HandlerTestCase(test.CementTestCase):
+class HandlerTestCase(test.CementCoreTestCase):
     def setUp(self):
         self.app = self.make_app()
         

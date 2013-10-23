@@ -4,7 +4,7 @@ import os
 import tempfile
 from cement.utils import fs, test
 
-class FsUtilsTestCase(test.CementTestCase):
+class FsUtilsTestCase(test.CementCoreTestCase):
     def test_abspath(self):
         path = fs.abspath('.')
         self.ok(path.startswith('/'))

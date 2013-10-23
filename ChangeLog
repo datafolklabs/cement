@@ -29,11 +29,12 @@ Bugs:
     
 Features:
 
+    * :issue:`190` - Merge daemon extension into core
     * :issue:`194` - Added pre_argument_parsing/post_argument_parsing hooks
     * :issue:`196` - Added utils.misc.wrap
     * :issue:`200` - Merge ext.mustache into mainline.
     * :issue:`203` - Added support for external template directory
-    
+
 Incompatible:
 
     * :issue:`173` - Deprecated 'has_key()' from configparser extension

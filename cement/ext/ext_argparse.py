@@ -8,6 +8,7 @@ LOG = minimal_logger(__name__)
 
 
 class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
+
     """
     This class implements the :ref:`IArgument <cement.core.arg>`
     interface, and sub-classes from `argparse.ArgumentParser
@@ -20,6 +21,7 @@ class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
     """
 
     class Meta:
+
         """Handler meta-data."""
 
         interface = arg.IArgument

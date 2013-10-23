@@ -2,6 +2,7 @@
 
 
 class Meta(object):
+
     """
     Model that acts as a container class for a meta attributes for a larger
     class. It stuffs any kwarg it gets in it's init as an attribute of itself.
@@ -17,6 +18,7 @@ class Meta(object):
 
 
 class MetaMixin(object):
+
     """
     Mixin that provides the Meta class support to add settings to instances
     of slumber objects. Meta settings cannot start with a _.

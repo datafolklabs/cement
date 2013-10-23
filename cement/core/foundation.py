@@ -19,6 +19,7 @@ LOG = minimal_logger(__name__)
 
 
 class NullOut(object):
+
     def write(self, s):
         pass
 
@@ -45,6 +46,7 @@ def cement_signal_handler(signum, frame):
 
 
 class CementApp(meta.MetaMixin):
+
     """
     The primary class to build applications from.
 
@@ -98,6 +100,7 @@ class CementApp(meta.MetaMixin):
 
     """
     class Meta:
+
         """
         Application meta-data (can also be passed as keyword arguments to the
         parent class).
@@ -543,10 +546,10 @@ class CementApp(meta.MetaMixin):
     def get_last_rendered(self):
         """
         DEPRECATION WARNING: This function is deprecated as of Cement 2.1.3
-        in favor of the `self.last_rendered` property, and will be removed in 
+        in favor of the `self.last_rendered` property, and will be removed in
         future versions of Cement.
-        
-        Return the (data, output_text) tuple of the last time self.render() 
+
+        Return the (data, output_text) tuple of the last time self.render()
         was called.
 
         :returns: tuple (data, output_text)
@@ -587,7 +590,7 @@ class CementApp(meta.MetaMixin):
         LOG.debug("laying cement for the '%s' application" %
                   self._meta.label)
 
-        ### overrides via command line
+        # overrides via command line
         suppress_output = False
 
         if '--debug' in self._meta.argv:

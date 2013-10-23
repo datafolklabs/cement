@@ -3,7 +3,7 @@
 from cement.core import exc
 from cement.utils import test
 
-class ExceptionTestCase(test.CementTestCase):
+class ExceptionTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_cement_runtime_error(self):
         try:

@@ -2,7 +2,7 @@
 
 from cement.utils import test, misc
 
-class BackendTestCase(test.CementTestCase):
+class BackendTestCase(test.CementCoreTestCase):
     def test_defaults(self):
         defaults = misc.init_defaults('myapp', 'section2', 'section3')
         defaults['myapp']['debug'] = True

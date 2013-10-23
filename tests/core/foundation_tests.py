@@ -40,7 +40,7 @@ def my_hook_two(app):
 def my_hook_three(app):
     return 3
                 
-class FoundationTestCase(test.CementTestCase):
+class FoundationTestCase(test.CementCoreTestCase):
     def setUp(self):
         self.app = self.make_app('my_app')
         

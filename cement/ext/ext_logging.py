@@ -11,6 +11,7 @@ try:                                        # pragma: no cover
 except AttributeError as e:                 # pragma: no cover
     # Not supported on Python < 3.1/2.7     # pragma: no cover
     class NullHandler(logging.Handler):     # pragma: no cover
+
         def handle(self, record):           # pragma: no cover
             pass                            # pragma: no cover
                                             # pragma: no cover
@@ -24,6 +25,7 @@ except AttributeError as e:                 # pragma: no cover
 
 
 class LoggingLogHandler(log.CementLogHandler):
+
     """
     This class is an implementation of the :ref:`ILog <cement.core.log>`
     interface, and sets up the logging facility using the standard Python
@@ -61,6 +63,7 @@ class LoggingLogHandler(log.CementLogHandler):
 
     """
     class Meta:
+
         """Handler meta-data."""
 
         interface = log.ILog

@@ -20,6 +20,7 @@ def cache_validator(klass, obj):
 
 
 class ICache(interface.Interface):
+
     """
     This class defines the Cache Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
@@ -42,6 +43,7 @@ class ICache(interface.Interface):
     """
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+
         """Interface meta-data."""
 
         label = 'cache'
@@ -109,11 +111,13 @@ class ICache(interface.Interface):
 
 
 class CementCacheHandler(handler.CementBaseHandler):
+
     """
     Base class that all Cache Handlers should sub-class from.
 
     """
     class Meta:
+
         """
         Handler meta-data (can be passed as keyword arguments to the parent
         class).

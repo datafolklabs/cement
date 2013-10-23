@@ -19,7 +19,8 @@ class MyCacheHandler(cache.CementCacheHandler):
     def purge(self):
         pass
         
-class CacheTestCase(test.CementTestCase):
+@test.attr('core')
+class CacheTestCase(test.CementCoreTestCase):
     def setUp(self):
         super(CacheTestCase, self).setUp()
         self.app = self.make_app(cache_handler=MyCacheHandler)

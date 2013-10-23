@@ -5,7 +5,7 @@ import sys
 from cement.core import handler, backend, hook
 from cement.utils import test
 
-class JsonExtTestCase(test.CementTestCase):
+class JsonExtTestCase(test.CementExtTestCase):
     def setUp(self):
         self.app = self.make_app('tests', 
             extensions=['json'],

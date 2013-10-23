@@ -21,6 +21,7 @@ def output_validator(klass, obj):
 
 
 class IOutput(interface.Interface):
+
     """
     This class defines the Output Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
@@ -43,6 +44,7 @@ class IOutput(interface.Interface):
     """
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+
         """Interface meta-data."""
 
         label = 'output'
@@ -76,11 +78,13 @@ class IOutput(interface.Interface):
 
 
 class CementOutputHandler(handler.CementBaseHandler):
+
     """
     Base class that all Output Handlers should sub-class from.
 
     """
     class Meta:
+
         """
         Handler meta-data (can be passed as keyword arguments to the parent
         class).
@@ -97,10 +101,12 @@ class CementOutputHandler(handler.CementBaseHandler):
 
 
 class TemplateOutputHandler(CementOutputHandler):
+
     """
     Base class for template base output handlers.
 
     """
+
     def _load_template_from_file(self, template_path):
         template_prefix = self.app._meta.template_dir.rstrip('/')
         template_path = template_path.lstrip('/')

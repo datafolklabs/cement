@@ -7,6 +7,7 @@ LOG = minimal_logger(__name__)
 
 
 class NullOutputHandler(output.CementOutputHandler):
+
     """
     This class is an internal implementation of the
     :ref:`IOutput <cement.core.output>` interface. It does not take any
@@ -14,6 +15,7 @@ class NullOutputHandler(output.CementOutputHandler):
 
     """
     class Meta:
+
         """Handler meta-data"""
 
         interface = output.IOutput

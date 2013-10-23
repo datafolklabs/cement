@@ -54,7 +54,7 @@ def load():
 
 """
 
-class PluginTestCase(test.CementTestCase):
+class PluginTestCase(test.CementCoreTestCase):
     def setUp(self):
         self.app = self.make_app()
 

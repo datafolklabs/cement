@@ -23,6 +23,7 @@ def argument_validator(klass, obj):
 
 # pylint: disable=W0105,W0232,W0232,R0903,E0213,R0923
 class IArgument(interface.Interface):
+
     """
     This class defines the Argument Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
@@ -41,6 +42,7 @@ class IArgument(interface.Interface):
 
     """
     class IMeta:
+
         """Interface meta-data options."""
 
         label = 'argument'
@@ -101,9 +103,11 @@ class IArgument(interface.Interface):
 
 # pylint: disable=W0105
 class CementArgumentHandler(handler.CementBaseHandler):
+
     """Base class that all Argument Handlers should sub-class from."""
 
     class Meta:
+
         """
         Handler meta-data (can be passed as keyword arguments to the parent
         class).

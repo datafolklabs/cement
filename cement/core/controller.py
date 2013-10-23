@@ -51,6 +51,7 @@ def controller_validator(klass, obj):
 
 
 class IController(interface.Interface):
+
     """
     This class defines the Controller Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
@@ -71,6 +72,7 @@ class IController(interface.Interface):
     """
     # pylint: disable=W0232, C0111, R0903
     class IMeta:
+
         """Interface meta-data."""
 
         label = 'controller'
@@ -112,6 +114,7 @@ class IController(interface.Interface):
 
 
 class expose(object):
+
     """
     Used to expose controller functions to be listed as commands, and to
     decorate the function with Meta data for the argument parser.
@@ -143,6 +146,7 @@ class expose(object):
 
     """
     # pylint: disable=W0622
+
     def __init__(self, help='', hide=False, aliases=[]):
         self.hide = hide
         self.help = help
@@ -163,6 +167,7 @@ class expose(object):
 
 # pylint: disable=R0921
 class CementBaseController(handler.CementBaseHandler):
+
     """
     This is an implementation of the
     `IControllerHandler <#cement.core.controller.IController>`_ interface, but
@@ -198,6 +203,7 @@ class CementBaseController(handler.CementBaseHandler):
 
     """
     class Meta:
+
         """
         Controller meta-data (can be passed as keyword arguments to the parent
         class).
