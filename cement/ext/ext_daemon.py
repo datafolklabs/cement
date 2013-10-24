@@ -90,6 +90,8 @@ class Environment(object):
             f.write(pid)
             f.close()
 
+            os.chown(self.pid_file, self.user.pw_uid, self.group.gr_gid)
+
     def switch(self):
         """
         Switch the current process's user/group to self.user, and
