@@ -8,8 +8,8 @@ import grp
 from ..core import handler, hook, backend, exc
 from ..utils.misc import minimal_logger
 
-Log = minimal_logger(__name__)
-Log = minimal_logger(__name__)
+LOG = minimal_logger(__name__)
+LOG = minimal_logger(__name__)
 CEMENT_DAEMON_ENV = None
 CEMENT_DAEMON_APP = None
 
@@ -82,15 +82,13 @@ class Environment(object):
         Writes os.getpid() out to self.pid_file.
         """
         pid = str(os.getpid())
-        Log.debug('writing pid (%s) out to %s' % (pid, self.pid_file))
+        LOG.debug('writing pid (%s) out to %s' % (pid, self.pid_file))
 
         # setup pid
         if self.pid_file:
             f = open(self.pid_file, 'w')
             f.write(pid)
             f.close()
-            os.chown(os.path.dirname(self.pid_file),
-                     self.user.pw_uid, self.group.gr_gid)
 
     def switch(self):
         """
@@ -99,7 +97,7 @@ class Environment(object):
         current pid out to self.pid_file.
         """
         # set the running uid/gid
-        Log.debug('setting process uid(%s) and gid(%s)' %
+        LOG.debug('setting process uid(%s) and gid(%s)' %
                  (self.user.pw_uid, self.group.gr_gid))
         os.setgid(self.group.gr_gid)
         os.setuid(self.user.pw_uid)
@@ -126,12 +124,12 @@ class Environment(object):
             W. Richard Stevens, 1992, Addison-Wesley, ISBN 0-201-56317-7.
 
         """
-        Log.debug('attempting to daemonize the current process')
+        LOG.debug('attempting to daemonize the current process')
         # Do first fork.
         try:
             pid = os.fork()
             if pid > 0:
-                Log.debug('successfully detached from first parent')
+                LOG.debug('successfully detached from first parent')
                 os._exit(os.EX_OK)
         except OSError as e:
             sys.stderr.write("Fork #1 failed: (%d) %s\n" %
@@ -147,7 +145,7 @@ class Environment(object):
         try:
             pid = os.fork()
             if pid > 0:
-                Log.debug('successfully detached from second parent')
+                LOG.debug('successfully detached from second parent')
                 os._exit(os.EX_OK)
         except OSError as e:
             sys.stderr.write("Fork #2 failed: (%d) %s\n" %
@@ -253,7 +251,7 @@ def cleanup(app):
 
     if CEMENT_DAEMON_ENV and CEMENT_DAEMON_ENV.pid_file:
         if os.path.exists(CEMENT_DAEMON_ENV.pid_file):
-            Log.debug('Cleaning up pid_file...')
+            LOG.debug('Cleaning up pid_file...')
             pid = open(CEMENT_DAEMON_ENV.pid_file, 'r').read().strip()
 
             # only remove it if we created it.
