@@ -3,9 +3,12 @@
 from subprocess import Popen, PIPE
 from multiprocessing import Process
 from threading import Thread
+from signal import signal, alarm, SIGALRM
 
+def timeout_handler(signum, frame):
+    raise Exception('shell operation timed out')
 
-def exec_cmd(cmd_args, shell=False):
+def exec_cmd(cmd_args, shell=False, timeout=False):
     """
     Execute a shell call using Subprocess.
 
@@ -14,6 +17,8 @@ def exec_cmd(cmd_args, shell=False):
     :param shell: See `Subprocess
         <http://docs.python.org/library/subprocess.html>`_
     :type shell: boolean
+    :param timeout: an optional integer timeout value
+    :type timeout: integer, False to ignore
     :returns: The (stdout, stderror, return_code) of the command
     :rtype: tuple
 
@@ -26,13 +31,18 @@ def exec_cmd(cmd_args, shell=False):
         stdout, stderr, exitcode = shell.exec_cmd(['echo', 'helloworld'])
 
     """
+    if timeout:
+        signal(SIGALRM, time_handler)
+        alarm( int(timeout) )
     proc = Popen(cmd_args, stdout=PIPE, stderr=PIPE, shell=shell)
     (stdout, stderr) = proc.communicate()
     proc.wait()
+    if timeout:
+        alarm(0)
     return (stdout, stderr, proc.returncode)
 
 
-def exec_cmd2(cmd_args, shell=False):
+def exec_cmd2(cmd_args, shell=False, timeout=False):
     """
     Similar to exec_cmd, however does not capture stdout, stderr (therefore
     allowing it to print to console).
@@ -42,6 +52,8 @@ def exec_cmd2(cmd_args, shell=False):
     :param shell: See `Subprocess
         <http://docs.python.org/library/subprocess.html>`_
     :type shell: boolean
+    :param timeout: an optional integer timeout value
+    :type timeout: integer, False to ignore
     :returns: The integer return code of the command.
     :rtype: int
 
@@ -54,8 +66,13 @@ def exec_cmd2(cmd_args, shell=False):
         exitcode = shell.exec_cmd2(['echo', 'helloworld'])
 
     """
+    if timeout:
+        signal(SIGALRM, time_handler)
+        alarm( int(timeout) )
     proc = Popen(cmd_args, shell=shell)
     proc.wait()
+    if timeout:
+        alarm(0)
     return proc.returncode
 
 
