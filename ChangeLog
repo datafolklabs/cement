@@ -2,7 +2,7 @@
 ChangeLog
 ==============================================================================
 
-All bugs/feature details can be found at: 
+All bugs/feature details can be found at:
 
    https://github.com/cement/cement/issues/XXXXX
 
@@ -21,12 +21,13 @@ is available online at:
 
 Bugs:
 
-    * :issue:`199` - Moved post_argument_parsing hook down, after     
+    * :issue:`191` - KeyError when using minimal logger with --debug
+    * :issue:`199` - Moved post_argument_parsing hook down, after
       arguments_override_config logic happens.
     * :issue:`204` - utils.misc.wrap should handle None type
     * :issue:`208` - LoggingLogHandler does not honor Meta.config_section
-    
-    
+
+
 Features:
 
     * :issue:`190` - Merge daemon extension into core
@@ -37,6 +38,11 @@ Features:
 
 Incompatible:
 
+    * :issue:`163` - LoggingLogHandler.Meta.clear_loggers was changed from a
+      boolean option, to a list.  Additionally,
+      LoggingLogHandler.clear_loggers() now requires a `namespace` argument.
+      Additionally, ILog no longer defined `clear_loggers()` as a required
+      function (though ILog interfaces are welcome to implement one).
     * :issue:`173` - Deprecated 'has_key()' from configparser extension
     * :issue:`201` - Add Deprecation Warning for CementApp.get_last_rendered()
 
@@ -45,7 +51,7 @@ Incompatible:
 ------------------------------------------------------------------------------
 
 This is a branch off of the 2.0.x stable code base.  Maintenance releases for
-2.0.x will happen under the stable/2.0.x git branch, while forward feature 
+2.0.x will happen under the stable/2.0.x git branch, while forward feature
 development will happen here under as 2.1.x under the git master branch.
 
 Bugs:
@@ -64,25 +70,25 @@ Features:
     * :issue:`165` - Allow utils.fs.backup() to support a suffix kwarg
     * :issue:`166` - Ability to set the 'app' for CementTestCase.make_app()
     * :issue:`170` - Added support for `nested` and `embedded` controllers.
-    
+
 Misc:
-    
+
     * :issue:`172` - 100% PEP8 Compliant
-    * :issue:`160` - Refactor CementApp._resolve_handler() as 
+    * :issue:`160` - Refactor CementApp._resolve_handler() as
       handler.resolve()
-      
+
 Deprecation Notices:
 
     * :issue:`173` - ConfigParserConfigHandler.has_key() is now deprecated,
       and will be removed in future versions.  Please use `if key in
       app.config.keys(section)` instead.
-      
+
 Incompatible Changes:
-    
+
     * :issue:`141` - Removed shortcuts from CementBaseController (such as
       log, pargs, etc).  Use `self.app.<shortcut>` instead.
-    * :issue:`167` - Listed above, in order to fix this issue as well as 
-      restrict future issues we implemented a hard requirement that all 
+    * :issue:`167` - Listed above, in order to fix this issue as well as
+      restrict future issues we implemented a hard requirement that all
       base controllers have the label 'base'.  This should not be a major
       change for anyone using Cement 2.0.x as it is a simple 1 line change
       in any one application.  As all documentation encourages the use of the
@@ -90,19 +96,19 @@ Incompatible Changes:
     * :issue:`179` - CementBaseController `hidden`, `visible`, and `exposed`
       have been removed infavor of private methods.
     * CementBaseController no longer implements a `default` command.
-    * :issue:`177` - Renamed several cement.core.backend pieces including: 
-      `handlers` -> `__handlers__`, `hooks` -> `__hooks__`, `SAVED_STDOUT` 
+    * :issue:`177` - Renamed several cement.core.backend pieces including:
+      `handlers` -> `__handlers__`, `hooks` -> `__hooks__`, `SAVED_STDOUT`
       -> `__saved_stdout__`, and `SAVED_STDERR` -> `__saved_stderr__`.
-    * :issue:`178` - Moved `backend.defaults()` to 
+    * :issue:`178` - Moved `backend.defaults()` to
       `utils.misc.init_defaults()`, and `backend.minimal_logger()` to
       `utils.misc.minimal_logger()`
 
-    
+
 2.0.0 - Fri Aug 03, 2012
 ------------------------------------------------------------------------------
 
-This is the initial stable release of the 2.0.x branch.  Future releases of 
-this branch will include bug/security fixes and minor feature updates.  
+This is the initial stable release of the 2.0.x branch.  Future releases of
+this branch will include bug/security fixes and minor feature updates.
 Forward moving feature development will continue out of the 2.1.x branch.
 
 Bugs:
@@ -111,11 +117,11 @@ Bugs:
       now supports an optional 'namespace' argument allowing the developer
       to override the log prefix.
     * :issue:`150` - foundation.CementApp.Meta.argv now defaults to None,
-      but is overridden in __init__() with sys.argv if no other argv is 
+      but is overridden in __init__() with sys.argv if no other argv is
       passed as meta.
-    
+
 Features:
-    
+
     * :issue:`138` - Added 'shell' argument to utils.shell.exec_cmd() and
       utils.shell.exec_cmd2().
     * :issue:`140` - Included ~/.myapp/config in default config search
@@ -128,35 +134,35 @@ Incompatible Changes:
 
     * :issue:`100` - Interfaces audit.
         * ILog.level() redefined as ILog.get_level()
-        * IPlugin.loaded_plugins attribute redefined as 
+        * IPlugin.loaded_plugins attribute redefined as
           IPlugin.get_loaded_plugins()
-        * IPlugin.enable_plugins attribute redefined as 
+        * IPlugin.enable_plugins attribute redefined as
           IPlugin.get_enabled_plugins()
-        * IPlugin.disabled_plugins attribute redefined as 
+        * IPlugin.disabled_plugins attribute redefined as
           IPlugin.get_disabled_plugins()
-    * :issue:`145` - The IArgument interface no longer specifies that the 
+    * :issue:`145` - The IArgument interface no longer specifies that the
       `parsed_args` be maintained by the handler implementation.  This means
-      that `app.args.parsed_args` is no longer available, however 
-      `app.pargs` functions just the same as it points to 
+      that `app.args.parsed_args` is no longer available, however
+      `app.pargs` functions just the same as it points to
       `app._parsed_args`.
     * :issue:`148` - The CementExtensionHandler.loaded_extensions property is
         now a callable at CementExtensionHandler.get_loaded_extensions().
     * :issue:`151` - Removed all previously deprecated code including:
-        * Removed CementApp.Meta.defaults, and CementBaseHandler.Meta.defaults.  
+        * Removed CementApp.Meta.defaults, and CementBaseHandler.Meta.defaults.
           Now use `config_defaults` instead.
         * Removed cement.foundation.lay_cement().  Now use CementApp directly.
-        * Removed cement.handler.enabled().  Now use `handler.registered()` 
+        * Removed cement.handler.enabled().  Now use `handler.registered()`
           instead.
     * :issue:`154` - Validate for handler config_defaults and config_section
       by default.  Only incompatible if not previously sub-classing from
-      handler.CementBaseHandler.        
+      handler.CementBaseHandler.
     * :issue:`157` - CementRuntimeError renamed as FrameworkError
     * :issue:`158` - CementSignalError renamed as CaughtSignal
     * :issue:`159` - CementInterfaceError renamed as InterfaceError
 
 Misc:
 
-    * :issue:`155` - Removed unused CementArgumentError, and 
+    * :issue:`155` - Removed unused CementArgumentError, and
       CementConfigError.  These types of exceptions should be defined at
       the application level.
 
@@ -170,17 +176,17 @@ Bugs:
 Feature Enhancements:
 
     * :issue:`131` - Controller aliases
-    * :issue:`126` - Add a 'bootstrap' importer to CementApp    
+    * :issue:`126` - Add a 'bootstrap' importer to CementApp
     * Added cement.utils.test.CementTestCase for improved testing.
-    
+
 Incompatible Changes:
 
     * :issue:`129` - Simplify extensions/plugins/hooks/etc.
         * Hooks renamed from 'cement_xxx_hook' to just 'xxx'.  For example, the
           'cement_pre_setup_hook' is now simply 'pre_setup'.  Additionally, the
-          'cement_on_close_hook' is now broken out into 'pre_close', and 
+          'cement_on_close_hook' is now broken out into 'pre_close', and
           'post_close'.
-        * The cement.core.hooks.register decorator was replaced with a  simple 
+        * The cement.core.hooks.register decorator was replaced with a  simple
           function of the same name.  New usage is:
           register('hook_name', hook_func).
         * Plugins, extensions, and the application bootstrap now attempt to
@@ -191,7 +197,7 @@ Incompatible Changes:
     * By default, command line arguments no longer override config settings.
       This is now configurable by the CementApp.Meta.arguments_override_config
       boolean.  Related: :issue:`136`.
-      
+
 
 1.9.12 - Thu Jul 05, 2012
 ------------------------------------------------------------------------------
@@ -207,10 +213,10 @@ Bugs:
 Feature Enhancements:
 
     * :issue:`118` - Added utils.fs.backup() to safely backup files/dirs.
-    
+
 Misc:
 
-    * :issue:`111` - Use relative imports (makes cement more portable as it 
+    * :issue:`111` - Use relative imports (makes cement more portable as it
       can be included and distributed with 3rd party sources).
     * :issue:`120` - Use standard json rather than relying on jsonpickle
 
@@ -219,10 +225,10 @@ Incompatible Changes:
     * core.util.abspath moved to utils.fs.abspath
     * core.util.is_true moved to utils.misc.is_true
     * Namespace reverted from 'cement2' back to 'cement'.
-    * The following extensions have been removed from the cement source tree, 
-      and are now available externally (see: http://github.com/cement): daemon, 
+    * The following extensions have been removed from the cement source tree,
+      and are now available externally (see: http://github.com/cement): daemon,
       memcached, configobj, yaml, genshi.
-    
+
 
 1.9.8 - Thu May 3, 2012
 ------------------------------------------------------------------------------
@@ -232,7 +238,7 @@ Feature Enhancements:
     * :issue:`95` - Add a 'config_section' Meta default for all handlers.
       Required to parse config options for a handler.
     * :issue:`97` - Add a standard cache handler interface.
-    * :issue:`105` - Add 'meta_override' and 'core_meta_override' list to 
+    * :issue:`105` - Add 'meta_override' and 'core_meta_override' list to
       CementApp().Meta.  Also resolves :issue:`104`.
     * :issue:`108` - Add CementApp.extend() functionality.
     * :issue:`109` - Add cement.ext.memcached extension
@@ -251,7 +257,7 @@ Bug Fixes:
     * :issue:`89` - Secondary controllers display under other controllers
     * :issue:`90` - Logging to file doesn't expand '~'
     * :issue:`91` - Logging to file doesn't create basedir
-    
+
 Feature Enhancements:
 
     * :issue:`88` - Add cement.ext.genshi extension, provides Genshi Text
@@ -261,7 +267,7 @@ Feature Enhancements:
 Refactoring:
 
     * :issue:`87` - Refactor Meta handling
-    
+
 Incompatible Changes:
 
     * :issue:`96` - Move 'setup()' functions to '_setup()'
@@ -269,46 +275,46 @@ Incompatible Changes:
     * Moved CementBaseController.usage_text to _usage_text()
     * Moved CementBaseController.help_text to _help_text()
     * backend.defaults() no longer accepts an app name as an argument.
-    * foundation.lay_cement() is deprecated.  Use foundation.CementApp() 
+    * foundation.lay_cement() is deprecated.  Use foundation.CementApp()
       directly.
     * No longer pass anything but 'app' object to handlers _setup() functions.
     * handler.enabled() is deprecated.  Use handler.registered().
-    
+
 1.9.4 - Wed Dec 21, 2011
 ------------------------------------------------------------------------------
 
 Bug Fixes:
 
     * :issue:`73` - Hooks broken in Python 3
-    * :issue:`81` - Controller defaults should be processed before base 
+    * :issue:`81` - Controller defaults should be processed before base
       controller.setup()
-      
+
 Feature Enhancements:
 
-    * :issue:`65` - Added 'daemon' extension.  Process is daemonized by 
+    * :issue:`65` - Added 'daemon' extension.  Process is daemonized by
       passing the '--daemon' option.  Handles switching the run user/group, as
       well as managing a pid file.
     * :issue:`72` - Added new framework hooks.
-    * :issue:`76` - Added app.close() functionality including a 
+    * :issue:`76` - Added app.close() functionality including a
       cement_on_close_hook() allowing plugins/extensions/etc to be able to
       cleanup on application exit.
     * :issue:`77` - Added default signal handler for SIGINT/SIGTERM as well as
-      the cement_signal_hook which is called when any catch_signals are 
+      the cement_signal_hook which is called when any catch_signals are
       encountered.
     * :issue:`78` - Added cement_pre_render_hook, and cement_post_render_hook
       allowing developers to control the data that is rendered to console.
     * :issue:`84` - Ability to run all tests from utils/run_tests.sh
-    
+
 Incompatible Changes:
 
-    * :issue:`72` - The framework hooks 'cement_add_args_hook' and 
-      'cement_validate_config' were removed in favor of the new pre/post setup 
+    * :issue:`72` - The framework hooks 'cement_add_args_hook' and
+      'cement_validate_config' were removed in favor of the new pre/post setup
       and run hooks.
-    * :issue:`82` - Change 'meta' classes to Python-proper 'Meta', and 
+    * :issue:`82` - Change 'meta' classes to Python-proper 'Meta', and
       interfaces to use 'IMeta'.  Old functionality will be completely removed
       before Cement stable release.
-    
-    
+
+
 
 1.9.2 - Wed Nov 02, 2011
 ------------------------------------------------------------------------------

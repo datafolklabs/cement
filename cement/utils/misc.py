@@ -5,6 +5,61 @@ import logging
 from textwrap import TextWrapper
 
 
+class MinimalLogger(object):
+    def __init__(self, namespace, debug, *args, **kw):
+        self.namespace = namespace
+        self.backend = logging.getLogger(namespace)
+        formatter = logging.Formatter(
+            "%(asctime)s (%(levelname)s) %(namespace)s : %(message)s"
+            )
+        console = logging.StreamHandler()
+        console.setFormatter(formatter)
+        console.setLevel(logging.INFO)
+        self.backend.setLevel(logging.INFO)
+
+        # FIX ME: really don't want to hard check sys.argv like this but
+        # can't figure any better way get logging started (only for debug)
+        # before the app logging is setup.
+        if '--debug' in sys.argv or debug:
+            console.setLevel(logging.DEBUG)
+            self.backend.setLevel(logging.DEBUG)
+
+        self.backend.addHandler(console)
+
+    def _get_logging_kwargs(self, namespace, **kw):
+        if not namespace:
+            namespace = self.namespace
+
+        if 'extra' in kw.keys() and 'namespace' in kw['extra'].keys():
+            pass
+        elif 'extra' in kw.keys() and 'namespace' not in kw['extra'].keys():
+            kw['extra']['namespace'] = namespace
+        else:
+            kw['extra'] = dict(namespace=namespace)
+
+        return kw
+
+    def info(self, msg, namespace=None, **kw):
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.info(msg, **kwargs)
+
+    def warn(self, msg, namespace=None, **kw):
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.warn(msg, **kwargs)
+
+    def error(self, msg, namespace=None, **kw):
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.error(msg, **kwargs)
+
+    def fatal(self, msg, namespace=None, **kw):
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.fatal(msg, **kwargs)
+
+    def debug(self, msg, namespace=None, **kw):
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.debug(msg, **kwargs)
+
+
 def init_defaults(*sections):
     """
     Returns a standard dictionary object to use for application defaults.
@@ -33,14 +88,14 @@ def init_defaults(*sections):
     return defaults
 
 
-def minimal_logger(name, debug=False):
+def minimal_logger(namespace, debug=False):
     """
     Setup just enough for cement to be able to do debug logging.  This is the
     logger used by the Cement framework, which is setup and accessed before
     the application is functional (and more importantly before the
     applications log handler is usable).
 
-    :param name: The logging namespace.  This is generally '__name__' or
+    :param namespace: The logging namespace.  This is generally '__name__' or
         anything you want.
     :param debug: Toggle debug output. Default: False
     :type debug: boolean
@@ -53,24 +108,7 @@ def minimal_logger(name, debug=False):
         LOG.debug('This is a debug message')
 
     """
-
-    log = logging.getLogger(name)
-    formatter = logging.Formatter(
-        "%(asctime)s (%(levelname)s) %(name)s : %(message)s")
-    console = logging.StreamHandler()
-    console.setFormatter(formatter)
-    console.setLevel(logging.INFO)
-    log.setLevel(logging.INFO)
-
-    # FIX ME: really don't want to hard check sys.argv like this but can't
-    # figure any better way get logging started (only for debug) before the
-    # app logging is setup.
-    if '--debug' in sys.argv or debug:
-        console.setLevel(logging.DEBUG)
-        log.setLevel(logging.DEBUG)
-
-    log.addHandler(console)
-    return log
+    return MinimalLogger(namespace, debug)
 
 
 def is_true(item):

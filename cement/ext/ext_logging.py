@@ -92,8 +92,15 @@ class LoggingLogHandler(log.CementLogHandler):
                        "%(message)s"
         """The logging format for both file and console if ``debug==True``."""
 
-        clear_loggers = True
-        """Whether of not to clear previous loggers first."""
+        clear_loggers = []
+        """
+        List of logger namespaces to clear.  Useful when imported software
+        also sets up logging and you end up with duplicate log entries.
+
+        Changes in Cement 2.1.3.  Previous versions only supported
+        `clear_loggers` as a boolean, but did fully support clearing non-app
+        logging namespaces.
+        """
 
         # These are the default config values, overridden by any '[log]'
         # section in parsed config files.
@@ -135,16 +142,6 @@ class LoggingLogHandler(log.CementLogHandler):
         level = self.app.config.get(self._meta.config_section, 'level')
         self.set_level(level)
 
-        # clear loggers?
-        if is_true(self._meta.clear_loggers):
-            self.clear_loggers()
-
-        # console
-        self._setup_console_log()
-
-        # file
-        self._setup_file_log()
-
         self.debug("logging initialized for '%s' using %s" %
                   (self._meta.namespace, self.__class__.__name__))
 
@@ -156,6 +153,10 @@ class LoggingLogHandler(log.CementLogHandler):
         :param level: The log level to set.
 
         """
+        self.clear_loggers(self._meta.namespace)
+        for namespace in self._meta.clear_loggers:
+            self.clear_loggers(namespace)
+
         level = level.upper()
         if level not in self.levels:
             level = 'INFO'
@@ -163,23 +164,22 @@ class LoggingLogHandler(log.CementLogHandler):
 
         self.backend.setLevel(level)
 
-        for handler in logging.getLogger(self._meta.namespace).handlers:
-            handler.setLevel(level)
+        # console
+        self._setup_console_log()
+
+        # file
+        self._setup_file_log()
 
     def get_level(self):
         """Returns the current log level."""
         return logging.getLevelName(self.backend.level)
 
-    def clear_loggers(self):
-        """Clear any previously configured logging namespaces."""
+    def clear_loggers(self, namespace):
+        """Clear any previously configured loggers for `namespace`."""
 
-        if not self._meta.namespace:
-            # _setup() probably wasn't run
-            return
-
-        for i in logging.getLogger(self._meta.namespace).handlers:
-            logging.getLogger(self._meta.namespace).removeHandler(i)
-            self.backend = logging.getLogger(self._meta.namespace)
+        for i in logging.getLogger(namespace).handlers:
+            logging.getLogger(namespace).removeHandler(i)
+            self.backend = logging.getLogger(namespace)
 
     def _setup_console_log(self):
         """Add a console log handler."""

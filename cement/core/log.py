@@ -11,7 +11,6 @@ def log_validator(klass, obj):
 
     members = [
         '_setup',
-        'clear_loggers',
         'set_level',
         'get_level',
         'info',
@@ -68,9 +67,6 @@ class ILog(interface.Interface):
         :param app_obj: The application object.
 
         """
-
-    def clear_loggers():
-        """Clear all existing loggers."""
 
     def set_level():
         """
