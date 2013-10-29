@@ -35,6 +35,8 @@ Features:
     * :issue:`196` - Added utils.misc.wrap
     * :issue:`200` - Merge ext.mustache into mainline.
     * :issue:`203` - Added support for external template directory
+    * :issue:`207` - Support alternative 'display' name for stacked
+      controllers
 
 Incompatible:
 

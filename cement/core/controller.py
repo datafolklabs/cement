@@ -124,6 +124,11 @@ class expose(object):
     :param hide: Whether the command should be visible.
     :type hide: boolean
     :param aliases: Aliases to this command.
+    :param aliases_only: Whether to only display the aliases (not the label).
+     This is useful for situations where you have obscure function names
+     which you do not want displayed.  Effecively, if there are aliases and
+     `aliases_only` is True, then aliases[0] will appear as the actual
+     command/function label.
     :type aliases: list
 
     Usage:
@@ -147,10 +152,11 @@ class expose(object):
     """
     # pylint: disable=W0622
 
-    def __init__(self, help='', hide=False, aliases=[]):
+    def __init__(self, help='', hide=False, aliases=[], aliases_only=False):
         self.hide = hide
         self.help = help
         self.aliases = aliases
+        self.aliases_only = aliases_only
 
     def __call__(self, func):
         metadict = {}
@@ -160,6 +166,7 @@ class expose(object):
         metadict['hide'] = self.hide
         metadict['help'] = self.help
         metadict['aliases'] = self.aliases
+        metadict['aliases_only'] = self.aliases_only
         metadict['controller'] = None  # added by the controller
         func.__cement_meta__ = metadict
         return func
@@ -222,6 +229,17 @@ class CementBaseController(handler.CementBaseHandler):
         command/function aliases for non-stacked controllers.  For example:
         'myapp <controller_label> --help' is the same as
         'myapp <controller_alias> --help'.
+        """
+
+        aliases_only = False
+        """
+        When set to True, the controller label will not be displayed at
+        command line, only the aliases will.  Effectively, aliases[0] will
+        appear as the label.  This feature is useful for the situation Where
+        you might want two controllers to have the same label when stacked
+        on top of separate controllers.  For example, 'myapp users list' and
+        'myapp servers list' where 'list' is a stacked controller, not a
+        function.
         """
 
         description = None
@@ -348,6 +366,7 @@ class CementBaseController(handler.CementBaseHandler):
                     metadict['hide'] = contr._meta.hide
                     metadict['help'] = contr._meta.description
                     metadict['aliases'] = contr._meta.aliases
+                    metadict['aliases_only'] = contr._meta.aliases_only
                     metadict['controller'] = contr
                     commands.append(metadict)
                 else:
@@ -455,7 +474,14 @@ class CementBaseController(handler.CementBaseHandler):
         cmd_txt = ''
         for label in self._visible_commands:
             cmd = self._dispatch_map[label]
-            if len(cmd['aliases']) > 0:
+            if len(cmd['aliases']) > 0 and cmd['aliases_only']:
+                if len(cmd['aliases']) > 1:
+                    first = cmd['aliases'].pop(0)
+                    cmd_txt = cmd_txt + "  %s (aliases: %s)\n" % \
+                        (first, ', '.join(cmd['aliases']))
+                else:
+                    cmd_txt = cmd_txt + "  %s\n" % cmd['aliases'][0]
+            elif len(cmd['aliases']) > 0:
                 cmd_txt = cmd_txt + "  %s (aliases: %s)\n" % \
                     (label, ', '.join(cmd['aliases']))
             else:
