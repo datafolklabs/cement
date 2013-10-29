@@ -5,7 +5,7 @@
 
 import sys  # pragma: nocover
 
-VERSION = (2, 1, 4, 'alpha', 0)  # pragma: nocover
+VERSION = (2, 1, 5, 'alpha', 0)  # pragma: nocover
 
 # global handlers dict
 __handlers__ = {}  # pragma: nocover
