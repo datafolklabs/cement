@@ -1,4 +1,4 @@
-"""Mustache Framework Extension."""
+"""Mustache extension module."""
 
 import sys
 import pystache
