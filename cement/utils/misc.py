@@ -11,7 +11,7 @@ class MinimalLogger(object):
         self.backend = logging.getLogger(namespace)
         formatter = logging.Formatter(
             "%(asctime)s (%(levelname)s) %(namespace)s : %(message)s"
-            )
+        )
         console = logging.StreamHandler()
         console.setFormatter(formatter)
         console.setLevel(logging.INFO)

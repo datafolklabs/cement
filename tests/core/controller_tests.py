@@ -198,10 +198,19 @@ class ControllerTestCase(test.CementCoreTestCase):
 
     @test.raises(exc.FrameworkError)
     def test_argument_conflict(self):
-        app = self.make_app(base_controller=TestController)
-        handler.register(ArgumentConflict)
-        app.setup()
-        app.run()
+        try:
+            app = self.make_app(base_controller=TestController)
+            handler.register(ArgumentConflict)
+            app.setup()
+            app.run()
+        except NameError as e:
+            # This is a hack due to a Travis-CI Bug:
+            # https://github.com/travis-ci/travis-ci/issues/998
+            if e.args[0] == "global name 'ngettext' is not defined":
+                bug = "https://github.com/travis-ci/travis-ci/issues/998"
+                raise test.SkipTest("Travis-CI Bug: %s" % bug)
+            else:
+                raise
 
     def test_default_command_with_positional(self):
         app = self.make_app(base_controller=TestWithPositionalController,
