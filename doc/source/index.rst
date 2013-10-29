@@ -6,13 +6,13 @@
 Cement CLI Application Framework for Python
 ===========================================
 
-.. warning:: This documentation is for the development version of Cement 
-    2.1.x.  For production please use, and reference the current stable version of 
+.. warning:: This documentation is for the development version of Cement
+    2.1.x.  For production please use, and reference the current stable version of
     `Cement 2.0.x <http://builtoncement.com/2.0/>`_.
 
-Cement is an advanced CLI Application Framework for Python.  Its goal is to 
-introduce a standard, and feature-full platform for both simple and complex 
-command line applications as well as support rapid development needs without 
+Cement is an advanced CLI Application Framework for Python.  Its goal is to
+introduce a standard, and feature-full platform for both simple and complex
+command line applications as well as support rapid development needs without
 sacrificing quality.
 
 .. image:: https://secure.travis-ci.org/cement/cement.png
@@ -35,10 +35,13 @@ Core features include (but are not limited to):
  * 100% test coverage using Nose
  * 100% PEP8 compliant using `pep8` and `autopep8` tools
  * Extensive Sphinx documentation
- * Tested on Python 2.6, 2.7, 3.1, and 3.2
+ * Tested on Python 2.6, 2.7, 3.2, and 3.3
 
-*Note that argparse is required as an external dependency for Python < 2.7 
-and < 3.2.*
+*Note that argparse is required as an external dependency for Python < 2.7
+and < 3.2.  Additionally, some *optional* extensions that are shipped with the
+mainline Cement sources do require external dependencies.  It is the
+responsibility of the application developer to include these dependencies
+along with their application, as Cement explicitly does not include them.*
 
 Getting More Information
 ------------------------
@@ -55,12 +58,12 @@ Documentation
 
 .. toctree::
    :maxdepth: 1
-   
+
    changes
    license
    contributors
-   api/index    
-   
+   api/index
+
 .. toctree::
    :maxdepth: 2
 
@@ -71,4 +74,4 @@ Documentation
 
    examples/index
 
-  
+

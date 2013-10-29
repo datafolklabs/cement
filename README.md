@@ -1,12 +1,12 @@
 Cement CLI Application Framework for Python
 ===========================================
 
-**NOTE: 2.1.x is the development version of Cement.  Please use 2.0.x in 
+**NOTE: 2.1.x is the development version of Cement.  Please use 2.0.x in
 production.**
 
-Cement is an advanced CLI Application Framework for Python.  Its goal is to 
-introduce a standard, and feature-full platform for both simple and complex 
-command line applications as well as support rapid development needs without 
+Cement is an advanced CLI Application Framework for Python.  Its goal is to
+introduce a standard, and feature-full platform for both simple and complex
+command line applications as well as support rapid development needs without
 sacrificing quality.
 
 [![Continuous Integration Status](https://travis-ci.org/cement/cement.png)](https://travis-ci.org/cement/cement)
@@ -28,13 +28,13 @@ Cement core features include (but are not limited to):
  * 100% test coverage using Nose
  * 100% PEP8 compliant using `pep8` and `autopep8` tools
  * Extensive Sphinx documentation
- * Tested on Python 2.6, 2.7, 3.1, and 3.2
+ * Tested on Python 2.6, 2.7, 3.2, and 3.3
 
-*Note that argparse is required as an external dependency for Python < 2.7 
-and < 3.2.  Additionally, some extensions that are shipped with the mainline
-cement sources do require external dependencies.  It is the responsibility
-of the application developer to include these dependencies along with their
-application, as Cement explicitly does not include them.*
+*Note that argparse is required as an external dependency for Python < 2.7
+and < 3.2.  Additionally, some *optional* extensions that are shipped with the
+mainline Cement sources do require external dependencies.  It is the
+responsibility of the application developer to include these dependencies
+along with their application, as Cement explicitly does not include them.*
 
 
 More Information
@@ -46,10 +46,10 @@ More Information
  * SITE: http://builtoncement.com/
  * T-CI: https://travis-ci.org/cement/cement
  * HELP: cement@librelist.org - #cement
-    
+
 License
 -------
 
-The Cement CLI Application Framework is Open Source and is distributed under 
-the BSD License (three clause).  Please see the LICENSE file included with 
-this software.  
+The Cement CLI Application Framework is Open Source and is distributed under
+the BSD License (three clause).  Please see the LICENSE file included with
+this software.
