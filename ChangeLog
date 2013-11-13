@@ -21,7 +21,7 @@ is available online at:
 
 Bugs:
 
-    * None
+    * :issue:`215` - Epilog not printed on --help
 
 Features:
 

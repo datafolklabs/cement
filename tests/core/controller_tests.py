@@ -10,6 +10,7 @@ class TestController(controller.CementBaseController):
             (['-f', '--foo'], dict(help='foo option'))
         ]
         usage = 'My Custom Usage TXT'
+        epilog = "This is the epilog"
 
     @controller.expose(hide=True)
     def default(self):
@@ -108,6 +109,12 @@ class ControllerTestCase(test.CementCoreTestCase):
         app = self.make_app(base_controller=TestController)
         app.setup()
         app.run()
+
+    def test_epilog(self):
+        app = self.make_app(base_controller=TestController)
+        app.setup()
+        app.run()
+        self.eq(app.args.epilog, 'This is the epilog')
 
     def test_txt_defined_base_controller(self):
         handler.register(TestController)
