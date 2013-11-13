@@ -437,9 +437,9 @@ class CementBaseController(handler.CementBaseHandler):
         command to dispatch, and if so... dispatches it.
 
         """
-        if hasattr(self._meta, 'epilog') \
-            and self._meta.epilog is not None:
-            self.app.args.epilog = self._meta.epilog
+        if hasattr(self._meta, 'epilog'):
+            if self._meta.epilog is not None:
+                self.app.args.epilog = self._meta.epilog
 
         self._arguments, self._commands = self._collect()
         self._process_commands()
