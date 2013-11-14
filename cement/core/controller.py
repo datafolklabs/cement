@@ -382,7 +382,7 @@ class CementBaseController(handler.CementBaseHandler):
             try:
                 self.app.args.add_argument(*_arg, **_kw)
             except argparse.ArgumentError as e:
-                raise exc.FrameworkError(e)
+                raise exc.FrameworkError(e.__str__())
 
     def _process_commands(self):
         self._dispatch_map = {}
