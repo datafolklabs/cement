@@ -468,7 +468,6 @@ class CementApp(meta.MetaMixin):
         self._setup_signals()
         self._setup_extension_handler()
         self._setup_config_handler()
-        self.validate_config()
         self._setup_cache_handler()
         self._setup_log_handler()
         self._setup_plugin_handler()
@@ -711,8 +710,11 @@ class CementApp(meta.MetaMixin):
                 os.path.join(user_home, '.%s.conf' % label),
                 os.path.join(user_home, '.%s' % label, 'config'),
             ]
+
         for _file in self._meta.config_files:
             self.config.parse_file(_file)
+
+        self.validate_config()
 
         # override select Meta via config
         base_dict = self.config.get_section_dict(self._meta.config_section)

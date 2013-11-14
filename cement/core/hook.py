@@ -23,7 +23,7 @@ def define(name):
         hook.define('myhookname_hook')
 
     """
-    LOG.debug("defining hook '%s'", name)
+    LOG.debug("defining hook '%s'" % name)
     if name in backend.__hooks__:
         raise exc.FrameworkError("Hook name '%s' already defined!" % name)
     backend.__hooks__[name] = []
