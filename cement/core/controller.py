@@ -382,11 +382,11 @@ class CementBaseController(handler.CementBaseHandler):
                 self.app.args.epilog = self._meta.epilog
              
         # collect exposed commands from ourself
-        for member in dir(self):
+        for member in dir(self.__class__):
             if member in self.ignored or member.startswith('_'):
                 continue
-                
-            func = getattr(self, member)
+
+            func = getattr(self.__class__, member)
             if hasattr(func, 'exposed'):
                 func_dict = dict(
                     controller=self._meta.label,
