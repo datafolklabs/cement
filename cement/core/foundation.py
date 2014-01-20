@@ -394,6 +394,16 @@ class CementApp(meta.MetaMixin):
         self._lay_cement()
 
     @property
+    def debug(self):
+        """
+        Returns boolean based on whether `--debug` was passed at command line
+        or set via the application's configuration file.
+
+        :returns: boolean
+        """
+        return self._meta.debug
+
+    @property
     def argv(self):
         """The arguments list that will be used when self.run() is called."""
         return self._meta.argv
@@ -721,7 +731,11 @@ class CementApp(meta.MetaMixin):
         for key in base_dict:
             if key in self._meta.core_meta_override or \
                     key in self._meta.meta_override:
-                setattr(self._meta, key, base_dict[key])
+                # kind of a hack for core_meta_override
+                if key in ['debug']:
+                    setattr(self._meta, key, is_true(base_dict[key]))
+                else:
+                    setattr(self._meta, key, base_dict[key])
 
     def _setup_log_handler(self):
         LOG.debug("setting up %s.log handler" % self._meta.label)
