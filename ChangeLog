@@ -27,6 +27,7 @@ Features:
 
     * :issue:`209` - Added app.debug property to allow developers to know if
       `--debug` was passed at command line of via the config.
+    * :issue:`219` - Merged ext.memcached into mainline.
 
 
 2.1.4 - Tue Oct 29, 2013 (DEVELOPMENT)
@@ -43,12 +44,12 @@ Bugs:
 
 Features:
 
-    * :issue:`190` - Merge daemon extension into core
+    * :issue:`190` - Merged daemon extension into core
     * :issue:`194` - Added pre_argument_parsing/post_argument_parsing hooks
     * :issue:`196` - Added utils.misc.wrap
-    * :issue:`200` - Merge ext.mustache into mainline.
+    * :issue:`200` - Merged ext.mustache into mainline.
     * :issue:`203` - Added support for external template directory
-    * :issue:`207` - Support alternative 'display' name for stacked
+    * :issue:`207` - Added support for alternative 'display' name for stacked
       controllers
 
 Incompatible:
