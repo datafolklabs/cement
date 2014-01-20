@@ -335,11 +335,14 @@ class CementBaseController(handler.CementBaseHandler):
         # process my arguments and commands first
         arguments = list(self._meta.arguments)
 
-        for member in dir(self):
+        for member in dir(self.__class__):
             if member.startswith('_'):
                 continue
-            elif hasattr(getattr(self, member), '__cement_meta__'):
-                func = getattr(self, member).__cement_meta__
+            try:
+                func = getattr(self.__class__, member).__cement_meta__
+            except AttributeError:
+                continue
+            else:
                 func['controller'] = self
                 commands.append(func)
 
