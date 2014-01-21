@@ -7,7 +7,12 @@ if [ "$PYCHECK" == "True" ]; then
     pip install argparse --use-mirrors
 fi
 
-pip install -r requirements.txt --use-mirrors
-pip install -r requirements-dev.txt --use-mirrors
+PYCHECK=$(python -c 'import sys; print(sys.version_info > (3, 0))')
+if [ "$PYCHECK" == "True" ]; then
+    pip install -r requirements-dev-py3.txt --use-mirrors
+else
+    pip install -r requirements-dev.txt --use-mirrors
+fi
+
 python setup.py nosetests
 exit $?

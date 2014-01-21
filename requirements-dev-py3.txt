@@ -5,8 +5,6 @@ sphinx
 pep8
 autopep8
 
-# Required for optional extensions
+# Required for optional extensions (only the ones supported on py3)
 pystache
 pyYaml
-configobj
-pylibmc
