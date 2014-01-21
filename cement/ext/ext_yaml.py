@@ -7,6 +7,7 @@ from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
+
 class YamlOutputHandler(output.CementOutputHandler):
     """
     This class implements the :ref:`IOutput <cement.core.output>`
@@ -48,6 +49,7 @@ class YamlOutputHandler(output.CementOutputHandler):
         sys.stderr = backend.__saved_stderr__
         return yaml.dump(data_dict)
 
+
 def add_yaml_option(app):
     """
     This is a ``post_setup`` hook that adds the ``--yaml`` argument to the
@@ -56,8 +58,12 @@ def add_yaml_option(app):
     :param app: The application object.
 
     """
-    app.args.add_argument('--yaml', dest='output_handler',
-        action='store_const', help='toggle yaml output handler', const='yaml')
+    app.args.add_argument('--yaml',
+                          dest='output_handler',
+                          action='store_const',
+                          help='toggle yaml output handler',
+                          const='yaml')
+
 
 def set_output_handler(app):
     """
@@ -70,6 +76,7 @@ def set_output_handler(app):
     if '--yaml' in app._meta.argv:
         app._meta.output_handler = 'yaml'
         app._setup_output_handler()
+
 
 def load():
     """Called by the framework when the extension is 'loaded'."""

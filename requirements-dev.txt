@@ -10,4 +10,5 @@ pystache
 pyYaml
 
 # Note that the following will fail to install on py3
+configobj
 pylibmc

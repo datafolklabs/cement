@@ -47,6 +47,7 @@ Cement Extension Modules
    :maxdepth: 1
 
    ext/ext_argparse
+   ext/ext_configobj
    ext/ext_configparser
    ext/ext_daemon
    ext/ext_json

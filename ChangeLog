@@ -28,6 +28,7 @@ Features:
     * :issue:`209` - Added app.debug property to allow developers to know if
       `--debug` was passed at command line of via the config.
     * :issue:`219` - Merged ext.memcached into mainline.
+    * :issue:`222` - Merged ext.configobj into mainline.
     * :issue:`224` - Merged ext.yaml into mainline.
 
 
