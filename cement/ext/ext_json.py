@@ -55,7 +55,8 @@ class JsonOutputHandler(output.CementOutputHandler):
 
 def add_json_option(app):
     """
-    Adds the '--json' argument to the argument object.
+    This is a ``post_setup`` hook that adds the ``--json`` argument to the
+    argument object.
 
     :param app: The application object.
 
@@ -68,8 +69,8 @@ def add_json_option(app):
 
 def set_output_handler(app):
     """
-    Overrides the configured output handler if ``--json`` is passed at the
-    command line.
+    This is a ``pre_run`` hook that overrides the configured output handler
+    if ``--json`` is passed at the command line.
 
     :param app: The application object.
 

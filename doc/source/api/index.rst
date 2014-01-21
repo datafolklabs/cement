@@ -55,3 +55,4 @@ Cement Extension Modules
    ext/ext_mustache
    ext/ext_nulloutput
    ext/ext_plugin
+   ext/ext_yaml

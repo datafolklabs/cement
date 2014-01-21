@@ -1,4 +1,4 @@
 [report]
 
 # These are problematic for coverage reporting
-omit = cement/ext/ext_daemon.py
+#omit = cement/ext/ext_daemon.py

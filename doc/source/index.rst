@@ -31,17 +31,19 @@ Core features include (but are not limited to):
  * Output handler interface renders return dictionaries to console
  * Cache handler interface adds caching support for improved performance
  * Controller handler supports sub-commands, and nested controllers
- * Zero external dependencies* (ext's with dependencies ship separately)
+ * Zero external dependencies* of the core library
  * 100% test coverage using Nose
  * 100% PEP8 compliant using `pep8` and `autopep8` tools
  * Extensive Sphinx documentation
  * Tested on Python 2.6, 2.7, 3.2, and 3.3
 
 *Note that argparse is required as an external dependency for Python < 2.7
-and < 3.2.  Additionally, some *optional* extensions that are shipped with the
-mainline Cement sources do require external dependencies.  It is the
+and < 3.2.  Additionally, some optional extensions that are shipped with
+the mainline Cement sources do require external dependencies.  It is the
 responsibility of the application developer to include these dependencies
-along with their application, as Cement explicitly does not include them.*
+along with their application if they intend to use any optional extensions
+that have external dependencies, as Cement explicitly does not include them.*
+
 
 Getting More Information
 ------------------------
@@ -52,6 +54,7 @@ Getting More Information
  * SITE: http://builtoncement.com/
  * T-CI: http://travis-ci.org/cement/cement
  * HELP: cement@librelist.org - #cement
+
 
 Documentation
 -------------

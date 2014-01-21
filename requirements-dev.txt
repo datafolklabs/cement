@@ -8,3 +8,4 @@ autopep8
 # Required for optional extensions
 pystache
 pylibmc
+pyYaml
