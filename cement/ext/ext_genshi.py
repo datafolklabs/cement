@@ -1,10 +1,14 @@
 """Genshi extension module."""
 
 import sys
-from genshi.template import NewTextTemplate
 from ..core import output, exc, handler
 from ..utils.misc import minimal_logger
 
+if sys.version_info[0] >= 3:
+    raise exc.CementRuntimeError('Genshi does not support Python 3.') \
+        # pragma: no cover
+
+from genshi.template import NewTextTemplate
 LOG = minimal_logger(__name__)
 
 

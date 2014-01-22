@@ -6,6 +6,10 @@ import random
 from cement.core import exc, foundation, handler, backend, controller
 from cement.utils import test
 
+if sys.version_info[0] < 3:
+    import configobj
+else:
+    raise test.SkipTest('Genshi does not support Python 3') # pragma: no cover
 
 class GenshiExtTestCase(test.CementExtTestCase):
     def setUp(self):
