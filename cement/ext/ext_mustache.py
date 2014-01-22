@@ -35,7 +35,7 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
         # ...
 
     From here, you would then put a Mustache template file in
-    `myapp.templates.my_template.mustache` and then render a data dictionary
+    `myapp/templates/my_template.mustache` and then render a data dictionary
     with it:
 
     .. code-block:: python

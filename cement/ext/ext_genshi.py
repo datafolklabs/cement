@@ -35,7 +35,7 @@ class GenshiOutputHandler(output.TemplateOutputHandler):
         # ...
 
     From here, you would then put a Genshi template file in
-    ``myapp.templates.my_template.genshi`` and then render a data dictionary
+    ``myapp/templates/my_template.genshi`` and then render a data dictionary
     with it:
 
     .. code-block:: python
