@@ -1,5 +1,6 @@
 """Tests for cement.ext.ext_configobj."""
 
+import os
 import sys
 from tempfile import mkstemp
 from cement.core import handler, backend, log
@@ -18,21 +19,29 @@ my_param = my_value
 
 class ConfigObjExtTestCase(test.CementTestCase):
     def setUp(self):
+        _, self.tmppath = mkstemp()
+        f = open(self.tmppath, 'w+')
+        f.write(CONFIG)
+        f.close()
         self.app = self.make_app('myapp',
             extensions=['configobj'],
             config_handler='configobj',
+            config_files = [self.tmppath],
             argv=[]
             )
+
+    def tearDown(self):
+        if os.path.exists(self.tmppath):
+            os.remove(self.tmppath)
 
     def test_configobj(self):
         self.app.setup()
 
+    def test_has_section(self):
+        self.app.setup()
+        self.ok(self.app.config.has_section('my_section'))
+
     def test_keys(self):
-        _, tmppath = mkstemp()
-        f = open(tmppath, 'w+')
-        f.write(CONFIG)
-        f.close()
-        self.app._meta.config_files = [tmppath]
         self.app.setup()
         res = 'my_param' in self.app.config.keys('my_section')
         self.ok(res)
@@ -42,13 +51,10 @@ class ConfigObjExtTestCase(test.CementTestCase):
         self.app.setup()
 
     def test_parse_file(self):
-        _, tmppath = mkstemp()
-        f = open(tmppath, 'w+')
-        f.write(CONFIG)
-        f.close()
-        self.app._meta.config_files = [tmppath]
         self.app.setup()
         self.eq(self.app.config.get('my_section', 'my_param'), 'my_value')
 
         self.eq(self.app.config.get_section_dict('my_section'),
                 {'my_param': 'my_value'})
+
+

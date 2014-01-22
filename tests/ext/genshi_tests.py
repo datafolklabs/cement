@@ -1,4 +1,4 @@
-"""Tests for cement.ext.ext_mustache."""
+"""Tests for cement.ext.ext_genshi."""
 
 import sys
 import random
@@ -7,33 +7,33 @@ from cement.core import exc, foundation, handler, backend, controller
 from cement.utils import test
 
 
-class MustacheExtTestCase(test.CementExtTestCase):
+class GenshiExtTestCase(test.CementExtTestCase):
     def setUp(self):
         self.app = self.make_app('tests',
-            extensions=['mustache'],
-            output_handler='mustache',
+            extensions=['genshi'],
+            output_handler='genshi',
             argv=[]
             )
 
-    def test_mustache(self):
+    def test_genshi(self):
         self.app.setup()
         rando = random.random()
-        res = self.app.render(dict(foo=rando), 'test_template.mustache')
-        mustache_res = "foo equals %s\n" % rando
-        self.eq(res, mustache_res)
+        res = self.app.render(dict(foo=rando), 'test_template.genshi')
+        genshi_res = "foo equals %s\n" % rando
+        self.eq(res, genshi_res)
 
     @test.raises(exc.FrameworkError)
-    def test_mustache_bad_template(self):
+    def test_genshi_bad_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'bad_template2.mustache')
+        res = self.app.render(dict(foo='bar'), 'bad_template2.genshi')
 
     @test.raises(exc.FrameworkError)
-    def test_mustache_nonexistent_template(self):
+    def test_genshi_nonexistent_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'missing_template.mustache')
+        res = self.app.render(dict(foo='bar'), 'missing_template.genshi')
 
     @test.raises(exc.FrameworkError)
-    def test_mustache_none_template(self):
+    def test_genshi_none_template(self):
         self.app.setup()
         try:
             res = self.app.render(dict(foo='bar'), None)
@@ -42,7 +42,7 @@ class MustacheExtTestCase(test.CementExtTestCase):
             raise
 
     @test.raises(exc.FrameworkError)
-    def test_mustache_bad_module(self):
+    def test_genshi_bad_module(self):
         self.app.setup()
         self.app._meta.template_module = 'this_is_a_bogus_module'
-        res = self.app.render(dict(foo='bar'), 'bad_template.mustache')
+        res = self.app.render(dict(foo='bar'), 'bad_template.genshi')

@@ -29,6 +29,7 @@ Features:
       `--debug` was passed at command line of via the config.
     * :issue:`219` - Merged ext.memcached into mainline.
     * :issue:`222` - Merged ext.configobj into mainline.
+    * :issue:`223` - Merged ext.genshi into mainline.
     * :issue:`224` - Merged ext.yaml into mainline.
 
 

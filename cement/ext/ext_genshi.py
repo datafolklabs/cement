@@ -1,21 +1,21 @@
-"""Mustache extension module."""
+"""Genshi extension module."""
 
 import sys
-import pystache
+from genshi.template import NewTextTemplate
 from ..core import output, exc, handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class MustacheOutputHandler(output.TemplateOutputHandler):
+class GenshiOutputHandler(output.TemplateOutputHandler):
     """
     This class implements the :ref:`IOutput <cement.core.output>`
     interface.  It provides text output from template and uses the
-    `Mustache Templating Language <http://mustache.github.com>`_.
-
-    **Note** This extension has an external dependency on ``pystache``.  You
-    must include ``pystache`` in your applications dependencies as Cement
+    `Genshi Text Templating Language
+    <http://genshi.edgewall.org/wiki/Documentation/text-templates.html>`_.
+    **Note** This extension has an external dependency on ``genshi``.  You
+    must include ``genshi`` in your applications dependencies as Cement
     explicitly does *not* include external dependencies for optional
     extensions.
 
@@ -28,23 +28,23 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
         class MyApp(foundation.CementApp):
             class Meta:
                 label = 'myapp'
-                extensions = ['mustache']
-                output_handler = 'mustache'
+                extensions = ['genshi']
+                output_handler = 'genshi'
                 template_module = 'myapp.templates'
                 template_dir = '/usr/lib/myapp/templates'
         # ...
 
-    From here, you would then put a Mustache template file in
-    `myapp.templates.my_template.mustache` and then render a data dictionary
+    From here, you would then put a Genshi template file in
+    ``myapp.templates.my_template.genshi`` and then render a data dictionary
     with it:
 
     .. code-block:: python
 
         # via the app object
-        myapp.render(some_data_dict, 'my_template.mustache')
+        myapp.render(some_data_dict, 'my_template.genshi')
 
         # or from within a controller or handler
-        self.app.render(some_data_dict, 'my_template.mustache')
+        self.app.render(some_data_dict, 'my_template.genshi')
 
 
 
@@ -59,7 +59,7 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
 
     class Meta:
         interface = output.IOutput
-        label = 'mustache'
+        label = 'genshi'
 
     def render(self, data_dict, template):
         """
@@ -76,8 +76,9 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
         """
         LOG.debug("rendering output using '%s' as a template." % template)
         content = self.load_template(template)
-        return pystache.render(content, data_dict)
+        tmpl = NewTextTemplate(content)
+        return tmpl.generate(**data_dict).render()
 
 
 def load():
-    handler.register(MustacheOutputHandler)
+    handler.register(GenshiOutputHandler)

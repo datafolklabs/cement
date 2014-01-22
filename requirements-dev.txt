@@ -10,3 +10,4 @@ pystache
 pyYaml
 configobj
 pylibmc
+genshi
