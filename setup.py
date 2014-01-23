@@ -6,13 +6,13 @@ from cement.utils import version
 VERSION = version.get_version()
 
 LONG = """
-Cement is an advanced CLI Application Framework for Python.  Its goal is to 
-introduce a standard, and feature-full platform for both simple and complex 
-command line applications as well as support rapid development needs without 
+Cement is an advanced CLI Application Framework for Python.  Its goal is to
+introduce a standard, and feature-full platform for both simple and complex
+command line applications as well as support rapid development needs without
 sacrificing quality.
 
-More Information please visit the official site at:
-    
+For more information please visit the official site at:
+
     * http://builtoncement.com/
 
 """
@@ -34,7 +34,7 @@ setup(name='cement',
     version=VERSION,
     description="CLI Application Framework for Python",
     long_description=LONG,
-    classifiers=[], 
+    classifiers=[],
     keywords='cli framework',
     author='Data Folk Labs, LLC',
     author_email='team@datafolklabs.com',
@@ -48,8 +48,5 @@ setup(name='cement',
     setup_requires=[],
     entry_points="""
     """,
-    namespace_packages=[
-        'cement',
-        'cement.ext',
-        ],
+    namespace_packages=[],
     )

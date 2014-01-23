@@ -26,11 +26,19 @@ Bugs:
 Features:
 
     * :issue:`209` - Added app.debug property to allow developers to know if
-      `--debug` was passed at command line of via the config.
-    * :issue:`219` - Merged ext.memcached into mainline.
-    * :issue:`222` - Merged ext.configobj into mainline.
-    * :issue:`223` - Merged ext.genshi into mainline.
-    * :issue:`224` - Merged ext.yaml into mainline.
+      `--debug` was passed at command line of via the config
+    * :issue:`219` - Merged ext.memcached into mainline
+    * :issue:`222` - Merged ext.configobj into mainline
+    * :issue:`223` - Merged ext.genshi into mainline
+    * :issue:`224` - Merged ext.yaml into mainline
+
+Incompatible:
+
+    * :issue:`202` - Deprecated namespace packaging for cement and cement.ext.
+      Resolves issues with certain IDE's and other situations where the lack
+      of a proper ``__init__.py`` causes issues.  This change means that
+      external extensions can no longer share the ``cement.ext`` module
+      namespace, and must have it's own unique module path.
 
 
 2.1.4 - Tue Oct 29, 2013 (DEVELOPMENT)
