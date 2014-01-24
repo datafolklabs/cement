@@ -1,3 +1,4 @@
+.. _changelog:
 
 ChangeLog
 ==============================================================================
@@ -12,9 +13,10 @@ is available online at:
 
     http://cement.readthedocs.org/en/latest/changes/
 
-.. raw:: html
 
-    <BR><BR>
+See the :ref:`upgrading` section for more information related to
+any incompatible changes, and how to update your application to fix them.
+
 
 2.1.5 - current master (DEVELOPMENT)
 ------------------------------------------------------------------------------
@@ -68,8 +70,9 @@ Incompatible:
     * :issue:`163` - LoggingLogHandler.Meta.clear_loggers was changed from a
       boolean option, to a list.  Additionally,
       LoggingLogHandler.clear_loggers() now requires a `namespace` argument.
-      Additionally, ILog no longer defined `clear_loggers()` as a required
-      function (though ILog interfaces are welcome to implement one).
+      ILog interface no longer defines `clear_loggers()` as a required
+      function (though ILog interfaces are welcome to implement one if
+      necessary).
     * :issue:`173` - Deprecated 'has_key()' from configparser extension
     * :issue:`201` - Add Deprecation Warning for CementApp.get_last_rendered()
 
@@ -121,7 +124,8 @@ Incompatible Changes:
       in any one application.  As all documentation encourages the use of the
       label 'base' it should not be a wide spread incompatibility.
     * :issue:`179` - CementBaseController `hidden`, `visible`, and `exposed`
-      have been removed infavor of private methods.
+      have been removed, and replaced by other private means of managing
+      the dispatch of commands.
     * CementBaseController no longer implements a `default` command.
     * :issue:`177` - Renamed several cement.core.backend pieces including:
       `handlers` -> `__handlers__`, `hooks` -> `__hooks__`, `SAVED_STDOUT`

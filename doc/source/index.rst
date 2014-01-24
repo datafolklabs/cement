@@ -65,6 +65,7 @@ Documentation
    changes
    license
    contributors
+   upgrading
    api/index
 
 .. toctree::
