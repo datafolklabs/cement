@@ -66,6 +66,7 @@ Documentation
    license
    contributors
    upgrading
+   faq
    api/index
 
 .. toctree::
