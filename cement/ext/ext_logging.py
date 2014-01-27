@@ -97,8 +97,8 @@ class LoggingLogHandler(log.CementLogHandler):
         #: non-app logging namespaces.
         clear_loggers = []
 
-        #: The section of the application configuration that holds this handlers
-        #: configuration.
+        #: The section of the application configuration that holds this
+        #: handlers configuration.
         config_section = 'log'
 
         #: The default configuration dictionary to populate the ``log``
@@ -123,7 +123,8 @@ class LoggingLogHandler(log.CementLogHandler):
         if self._meta.namespace is None:
             self._meta.namespace = self.app._meta.label
 
-        self.backend = logging.getLogger("%s:%s" % (self.app._meta.label, self._meta.namespace))
+        self.backend = logging.getLogger("%s:%s" % (self.app._meta.label,
+                                                    self._meta.namespace))
 
         # hack for application debugging
         if is_true(self.app._meta.debug):
