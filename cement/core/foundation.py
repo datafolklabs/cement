@@ -751,7 +751,7 @@ class CementApp(meta.MetaMixin):
         self.validate_config()
 
         # hack for --debug
-        if '--debug' in sys.argv:
+        if '--debug' in self.argv:
             self.config.set(self._meta.config_section, 'debug', True)
 
         # override select Meta via config

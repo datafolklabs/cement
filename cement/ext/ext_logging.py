@@ -121,10 +121,10 @@ class LoggingLogHandler(log.CementLogHandler):
     def _setup(self, app_obj):
         super(LoggingLogHandler, self)._setup(app_obj)
         if self._meta.namespace is None:
-            self._meta.namespace = self.app._meta.label
+            self._meta.namespace = "%s:%s" % (self.app._meta.label,
+                                              self._meta.namespace)
 
-        self.backend = logging.getLogger("%s:%s" % (self.app._meta.label,
-                                                    self._meta.namespace))
+        self.backend = logging.getLogger(self._meta.namespace)
 
         # hack for application debugging
         if is_true(self.app._meta.debug):
