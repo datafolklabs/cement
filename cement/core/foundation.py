@@ -192,6 +192,24 @@ class CementApp(meta.MetaMixin):
         A boolean to toggle whether command line arguments should
         override configuration values if the argument name matches the
         config key.  I.e. --foo=bar would override config['myapp']['foo'].
+
+        This is different from ``override_arguments`` in that if
+        ``arguments_override_config`` is ``True``, then all arguments will
+        override (you don't have to list them all).
+        """
+
+        override_arguments = ['debug']
+        """
+        List of arguments that override their configuration counter-part.
+        For example, if ``--debug`` is passed (and it's config value is
+        ``debug``) then the ``debug`` key of all configuration sections will
+        be overridden by the value of the command line option (``True`` in
+        this example).
+
+        This is different from ``arguments_override_config`` in that this is
+        a selective list of specific arguments to override the config with
+        (and not all arguments that match the config).  This list will take
+        affect whether ``arguments_override_config`` is ``True`` or ``False``.
         """
 
         config_section = None
@@ -670,6 +688,12 @@ class CementApp(meta.MetaMixin):
                         self.config.set(section, member,
                                         getattr(self._parsed_args, member))
 
+        for member in self._meta.override_arguments:
+            for section in self.config.get_sections():
+                if member in self.config.keys(section):
+                    self.config.set(section, member,
+                                    getattr(self._parsed_args, member))
+
         for res in hook.run('post_argument_parsing', self):
             pass
 
@@ -725,6 +749,10 @@ class CementApp(meta.MetaMixin):
             self.config.parse_file(_file)
 
         self.validate_config()
+
+        # hack for --debug
+        if '--debug' in sys.argv:
+            self.config.set(self._meta.config_section, 'debug', True)
 
         # override select Meta via config
         base_dict = self.config.get_section_dict(self._meta.config_section)

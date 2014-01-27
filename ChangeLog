@@ -23,6 +23,7 @@ any incompatible changes, and how to update your application to fix them.
 
 Bugs:
 
+    * :issue:`211` - LoggingLogHandler namespace causes issues
     * :issue:`215` - Epilog not printed on --help
 
 Features:

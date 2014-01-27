@@ -62,54 +62,47 @@ class LoggingLogHandler(log.CementLogHandler):
         max_files = 4
 
     """
+
+    #: Handler meta-data.
     class Meta:
-
-        """Handler meta-data."""
-
+        #: The interface that this class implements.
         interface = log.ILog
-        """The interface that this class implements."""
 
+        #: The string identifier of this handler.
         label = 'logging'
-        """The string identifier of this handler."""
 
+        #: The logging namespace.
+        #:
+        #: Note: Although Meta.namespace defaults to None, Cement will set
+        #: this to the application label (CementApp.Meta.label) if not set
+        #: during setup.
         namespace = None
-        """
-        The logging namespace.
 
-        Note: Although Meta.namespace defaults to None, Cement will set this
-        to the application label (CementApp.Meta.label) if not set during
-        setup.
-        """
-
+        #: The logging format for the file logger.
         file_format = "%(asctime)s (%(levelname)s) %(namespace)s : " + \
                       "%(message)s"
-        """The logging format for the file logger."""
 
+        #: The logging format for the consoler logger.
         console_format = "%(levelname)s: %(message)s"
-        """The logging format for the consoler logger."""
 
+        #: The logging format for both file and console if ``debug==True``.
         debug_format = "%(asctime)s (%(levelname)s) %(namespace)s : " + \
                        "%(message)s"
-        """The logging format for both file and console if ``debug==True``."""
 
+        #: List of logger namespaces to clear.  Useful when imported software
+        #: also sets up logging and you end up with duplicate log entries.
+        #:
+        #: Changes in Cement 2.1.3.  Previous versions only supported
+        #: `clear_loggers` as a boolean, but did fully support clearing
+        #: non-app logging namespaces.
         clear_loggers = []
-        """
-        List of logger namespaces to clear.  Useful when imported software
-        also sets up logging and you end up with duplicate log entries.
 
-        Changes in Cement 2.1.3.  Previous versions only supported
-        `clear_loggers` as a boolean, but did fully support clearing non-app
-        logging namespaces.
-        """
-
-        # These are the default config values, overridden by any '[log]'
-        # section in parsed config files.
+        #: The section of the application configuration that holds this handlers
+        #: configuration.
         config_section = 'log'
-        """
-        The section of the application configuration that holds this handlers
-        configuration.
-        """
 
+        #: The default configuration dictionary to populate the ``log``
+        #: section.
         config_defaults = dict(
             file=None,
             level='INFO',
@@ -118,9 +111,6 @@ class LoggingLogHandler(log.CementLogHandler):
             max_bytes=512000,
             max_files=4,
         )
-        """
-        The default configuration dictionary to populate the ``log`` section.
-        """
 
     levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
 
@@ -133,7 +123,7 @@ class LoggingLogHandler(log.CementLogHandler):
         if self._meta.namespace is None:
             self._meta.namespace = self.app._meta.label
 
-        self.backend = logging.getLogger(self._meta.namespace)
+        self.backend = logging.getLogger("%s:%s" % (self.app._meta.label, self._meta.namespace))
 
         # hack for application debugging
         if is_true(self.app._meta.debug):
