@@ -63,7 +63,6 @@ class LoggingExtTestCase(test.CementExtTestCase):
         MyLog = ext_logging.LoggingLogHandler(clear_loggers="%s:%s" % (self.app._meta.label, self.app._meta.label))
         MyLog._setup(self.app)
 
-
     def test_rotate(self):
         log_file = mkstemp()[1]
         defaults = init_defaults()
