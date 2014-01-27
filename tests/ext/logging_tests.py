@@ -60,7 +60,9 @@ class LoggingExtTestCase(test.CementExtTestCase):
         Log.clear_loggers(self.app._meta.label)
 
         #previous_logger = logging.getLogger(name)
-        MyLog = ext_logging.LoggingLogHandler(clear_loggers="%s:%s" % (self.app._meta.label, self.app._meta.label))
+        MyLog = ext_logging.LoggingLogHandler(clear_loggers="%s:%s" % \
+                                             (self.app._meta.label,
+                                              self.app._meta.label))
         MyLog._setup(self.app)
 
     def test_rotate(self):
