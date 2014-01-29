@@ -53,7 +53,9 @@ def get_version(version=VERSION):  # pragma: nocover
     # sub = .devN - for pre-alpha releases
     #     | {a|b|c}N - for alpha, beta and rc releases
 
-    parts = 2 if version[2] == 0 else 3
+    # We want to explicitly include all three version/release numbers
+    # parts = 2 if version[2] == 0 else 3
+    parts = 3
     main = '.'.join(str(x) for x in version[:parts])
 
     sub = ''

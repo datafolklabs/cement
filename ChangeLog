@@ -11,14 +11,14 @@ All bugs/feature details can be found at:
 Where XXXXX is the 'Issue #' referenced below.  Additionally, this change log
 is available online at:
 
-    http://cement.readthedocs.org/en/latest/changes/
+    http://builtoncement.com/2.2/changes/
 
 
 See the :ref:`upgrading` section for more information related to
 any incompatible changes, and how to update your application to fix them.
 
 
-2.1.5 - current master (DEVELOPMENT)
+2.2.0 - Wed Jan 29, 2014
 ------------------------------------------------------------------------------
 
 Bugs:

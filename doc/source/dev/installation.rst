@@ -30,7 +30,11 @@ To run tests, do the following from the root of the source:
 
 .. code-block:: text
 
-    $ pip install nose coverage
+    # Python 2.x
+    $ pip install -r requirements-dev.txt
+
+    # Python 3.x
+    $ pip install -r requirements-dev-py3.txt
 
     $ python setup.py nosetests
 
