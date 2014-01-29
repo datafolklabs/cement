@@ -39,7 +39,7 @@ extensions = [
     'sphinx.ext.extlinks',
     ]
 
-extlinks = {'issue' : ('https://github.com/cement/cement/issues/%s', 'Issue #')}
+extlinks = {'issue' : ('https://github.com/datafolklabs/cement/issues/%s', 'Issue #')}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

@@ -7,7 +7,7 @@ them in your applications.
 
 .. toctree::
    :maxdepth: 20
-   
+
    installation
    quickstart
    interfaces_and_handlers
@@ -25,4 +25,4 @@ them in your applications.
    testing
    boss_templates
    contributing
-   
+

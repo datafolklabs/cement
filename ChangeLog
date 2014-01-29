@@ -5,7 +5,7 @@ ChangeLog
 
 All bugs/feature details can be found at:
 
-   https://github.com/cement/cement/issues/XXXXX
+   https://github.com/datafolklabs/cement/issues/XXXXX
 
 
 Where XXXXX is the 'Issue #' referenced below.  Additionally, this change log
@@ -42,6 +42,10 @@ Incompatible:
       of a proper ``__init__.py`` causes issues.  This change means that
       external extensions can no longer share the ``cement.ext`` module
       namespace, and must have it's own unique module path.
+
+Misc:
+
+    * Official Git repo relocated to: http://github.com/datafolklabs/cement
 
 
 2.1.4 - Tue Oct 29, 2013 (DEVELOPMENT)

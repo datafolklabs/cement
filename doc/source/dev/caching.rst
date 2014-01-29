@@ -18,9 +18,6 @@ General Usage
 
 For this example we use the Memcached extension.  This requires the pylibmc
 library to be installed, as well as a Memcached server running on localhost.
-You can find more information on this extension here:
-
-    * http://github.com/cement/cement.ext.memcache
 
 Example:
 
@@ -28,7 +25,9 @@ Example:
 
     from cement.core import foundation
 
-    app = foundation.CementApp('myapp', extensions=['memcached'])
+    app = foundation.CementApp('myapp',
+                               extensions=['memcached'],
+                               cache_handler='memcached')
 
     try:
         app.setup()
