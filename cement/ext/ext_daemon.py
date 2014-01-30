@@ -267,7 +267,7 @@ class Environment(object):
         else:
             self._write_pid_file()
 
-    def daemonize(self):
+    def daemonize(self): # pragma: no cover
         """
         Fork the current process into a daemon.
 
@@ -338,7 +338,7 @@ class Environment(object):
         self._write_pid_file()
 
 
-def daemonize():
+def daemonize(): # pragma: no cover
     """
     This function switches the running user/group to that configured in
     config['daemon']['user'] and config['daemon']['group'].  The default user
@@ -399,7 +399,7 @@ def extend_app(app):
     app.extend('daemonize', daemonize)
 
 
-def cleanup(app):
+def cleanup(app): # pragma: no cover
     """
     After application run time, this hook just attempts to clean up the
     pid_file if one was set, and exists.

@@ -1,5 +1,9 @@
 """Tests for cement.ext.ext_daemon."""
 
+### NOTE: A large portion of ext_daemon is tested, but not included in
+### Coverage report because nose/coverage lose sight of things after the
+### sub-process is forked.
+
 import os
 import tempfile
 from random import random
@@ -73,18 +77,27 @@ class DaemonExtTestCase(test.CementExtTestCase):
     def test_daemon(self):
         (_, tmpfile) = tempfile.mkstemp()
         os.remove(tmpfile)
+        from cement.utils import shell
 
-        app = self.make_app('test', argv=['--daemon'], extensions=['daemon'])
+        # Test in a sub-process to avoid Nose hangup
+        def target():
+            app = self.make_app('test', argv=['--daemon'],
+                                extensions=['daemon'])
 
-        app.setup()
-        app.config.set('daemon', 'pid_file', tmpfile)
+            app.setup()
+            app.config.set('daemon', 'pid_file', tmpfile)
 
-        try:
-            ### FIX ME: Can't daemonize, because nose loses sight of it
-            app.run()
-        finally:
-            app.close()
-            ext_daemon.cleanup(app)
+            try:
+                ### FIX ME: Can't daemonize, because nose loses sight of it
+                app.daemonize()
+                app.run()
+            finally:
+                app.close()
+                ext_daemon.cleanup(app)
+
+        p = shell.spawn_process(target)
+        p.join()
+        self.eq(p.exitcode, 0)
 
     def test_daemon_not_passed(self):
         app = self.make_app('myapp', extensions=['daemon'])

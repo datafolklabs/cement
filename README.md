@@ -22,7 +22,7 @@ Cement core features include (but are not limited to):
  * Cache handler interface adds caching support for improved performance
  * Controller handler supports sub-commands, and nested controllers
  * Zero external dependencies* (not including optional extensions)
- * 100% test coverage using Nose
+ * 100% test coverage using Nose*
  * 100% PEP8 compliant using `pep8` and `autopep8` tools
  * Extensive Sphinx documentation
  * Tested on Python 2.6, 2.7, 3.2, and 3.3
