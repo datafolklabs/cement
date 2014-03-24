@@ -185,7 +185,7 @@ defaults, or via a configuration file.
     defaults = init_defaults('myapp', 'log')
     defaults['log']['file'] = 'my.log'
 
-    app = foundation.CementApp('myapp', defaults=defaults)
+    app = foundation.CementApp('myapp', config_defaults=defaults)
     app.setup()
     app.run()
     app.log.info('This is my info message')
