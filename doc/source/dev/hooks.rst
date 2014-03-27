@@ -267,8 +267,8 @@ functions.  Nothing is expected in return.
 
     hook.register('pre_argument_parsing', my_hook)
     
-pre_argument_parsing
-^^^^^^^^^^^^^^^^^^^^
+post_argument_parsing
+^^^^^^^^^^^^^^^^^^^^^
         
 Run after CementApp.run() is called, just *after* argument parsing happens.  
 The application object is passed as an argument to these hook 
