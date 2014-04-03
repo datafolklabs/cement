@@ -86,7 +86,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
                 for key in pconfig.keys(plugin):
                     self.app.config.set(plugin, key, pconfig.get(plugin, key))
             else:
-                self._disabled_plugins.append(section)
+                self._disabled_plugins.append(plugin)
 
     def _load_plugin_from_dir(self, plugin_name, plugin_dir):
         """
