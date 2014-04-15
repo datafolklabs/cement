@@ -123,7 +123,7 @@ class LoggingLogHandler(log.CementLogHandler):
         if self._meta.namespace is None:
             self._meta.namespace = "%s" % self.app._meta.label
 
-        self.backend = logging.getLogger("cement:app:%s" % \
+        self.backend = logging.getLogger("cement:app:%s" %
                                          self._meta.namespace)
 
         # hack for application debugging
