@@ -121,10 +121,10 @@ class LoggingLogHandler(log.CementLogHandler):
     def _setup(self, app_obj):
         super(LoggingLogHandler, self)._setup(app_obj)
         if self._meta.namespace is None:
-            self._meta.namespace = "%s:%s" % (self.app._meta.label,
-                                              self._meta.namespace)
+            self._meta.namespace = "%s" % self.app._meta.label
 
-        self.backend = logging.getLogger(self._meta.namespace)
+        self.backend = logging.getLogger("cement:app:%s" % \
+                                         self._meta.namespace)
 
         # hack for application debugging
         if is_true(self.app._meta.debug):
@@ -168,9 +168,9 @@ class LoggingLogHandler(log.CementLogHandler):
     def clear_loggers(self, namespace):
         """Clear any previously configured loggers for `namespace`."""
 
-        for i in logging.getLogger(namespace).handlers:
-            logging.getLogger(namespace).removeHandler(i)
-            self.backend = logging.getLogger(namespace)
+        for i in logging.getLogger("cement:app:%s" % namespace).handlers:
+            logging.getLogger("cement:app:%s" % namespace).removeHandler(i)
+            self.backend = logging.getLogger("cement:app:%s" % namespace)
 
     def _setup_console_log(self):
         """Add a console log handler."""

@@ -26,11 +26,11 @@ class TestApp(foundation.CementApp):
 
 
 class CementTestCase(unittest.TestCase):
-
     """
     A sub-class of unittest.TestCase.
 
     """
+
     app_class = TestApp
     """The test class that is used by self.make_app to create an app."""
 

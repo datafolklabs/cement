@@ -46,7 +46,8 @@ class LoggingExtTestCase(test.CementExtTestCase):
     def test_bad_level(self):
         defaults = init_defaults()
         defaults['log'] = dict(
-            level='BOGUS'
+            level='BOGUS',
+            to_console=False,
             )
         app = self.make_app(config_defaults=defaults)
         app.setup()
