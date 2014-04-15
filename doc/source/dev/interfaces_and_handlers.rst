@@ -39,7 +39,7 @@ The following defines a basic interface:
     from cement.core import interface, handler
 
     class MyInterface(interface.Interface):
-        class iMeta:
+        class IMeta:
             label = 'myinterface'
 
         # Must be provided by the implementation
@@ -74,7 +74,7 @@ functionality, and should never been used directly.  This is why the class
 functions do not have an argument of 'self', nor do they contain any code
 other than comments.
 
-That said, what is required is an 'iMeta' class that is used to interact
+That said, what is required is an 'IMeta' class that is used to interact
 with the interface.  At the very least, this must include a unique 'label'
 to identify the interface.  This can also be considered the 'handler type'.
 For example, the ILog interface has a label of 'log' and any handlers
@@ -87,7 +87,7 @@ expected to provide.
 Validating Interfaces
 ---------------------
 
-A validator call back function can be defined in the interfaces iMeta class
+A validator call back function can be defined in the interfaces IMeta class
 like this:
 
 .. code-block:: python
@@ -103,7 +103,7 @@ like this:
         interface.validate(MyInterface, obj, members)
 
     class MyInterface(interface.Interface):
-        class iMeta:
+        class IMeta:
             label = 'myinterface'
             validator = my_validator
         ...
