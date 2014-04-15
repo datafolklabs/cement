@@ -12,6 +12,22 @@ Upgrading from 2.0.x to 2.2.x
 Cement 2.2 introduced a few incompatible changes from the previous 2.0 stable
 release, as noted in the :ref:`Changelog <changelog>`.
 
+ImportError: cannot import name version
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When attempting to install Cement > 2.1 on a system that already has an older
+version of Cement < 2.1 you will likely run into this error:
+
+.. code-block:: text
+
+    ImportError: cannot import name version
+
+
+Currently we do not have a way to resolve this programatically in Cement.  The
+resolution is to remove the older version of Cement < 2.1, and then re-install
+the newer version.
+
+
 Discontinued use of Setuptools Namespace Packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
