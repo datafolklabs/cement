@@ -27,6 +27,49 @@ Currently we do not have a way to resolve this programatically in Cement.  The
 resolution is to remove the older version of Cement < 2.1, and then re-install
 the newer version.
 
+Related:
+
+    * :issue:`237`
+
+
+FrameworkError: Duplicate Arguments/Commands
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After upgrading, you might encounter one or both of the following errors
+related to application controllers:
+
+.. code-block:: text
+
+    cement.core.exc.FrameworkError: Duplicate command named 'mycommand' found
+    in controller '<__main__.MySecondController object at 0x10669ab50>'
+
+
+.. code-block:: text
+
+    cement.core.exc.FrameworkError: argument -f/--foo: conflicting option
+    string(s): -f, --foo
+
+
+This is likely due to a change in how application controllers are configured.
+By default, all controllers are of type `embedded`, meaning that their
+arguments and commands are added to the parent controller.  To resolve this
+issue you can change the `stacked_type` to `nested`, meaning that the stacked
+controller will be an additional sub-command under the parent (nesting a new
+level commands/arguments).
+
+For example:
+
+.. code-block:: python
+
+    class MyStackedController(CementBaseController):
+        class Meta:
+            label = 'my_stacked_controller'
+            stacked_on = 'base'
+            stacked_type = 'nested'
+
+Related:
+
+    * :issue:`234`
 
 Discontinued use of Setuptools Namespace Packages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
