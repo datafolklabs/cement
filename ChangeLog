@@ -27,6 +27,9 @@ development will happen here as 2.3.x under the git master branch.
 Bugs:
 
     * :issue:`211` - LoggingLogHandler namespace causes issues (regression)
+    * :issue:`235` - Duplicate Config Section when plugin already loaded
+    * :issue:`246` - Plugin extension does not disable after already being
+                     enabled
 
 Features:
 

@@ -82,6 +82,8 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         """
         file_path = os.path.abspath(os.path.expanduser(file_path))
         if os.path.exists(file_path):
+            LOG.debug("config file '%s' exists, loading settings..." %
+                      file_path)
             self.read(file_path)
             return True
         else:

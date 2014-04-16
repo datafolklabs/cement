@@ -37,9 +37,13 @@ class CementPluginHandler(plugin.CementPluginHandler):
         self._loaded_plugins = []
         self._enabled_plugins = []
         self._disabled_plugins = []
+        self._enabled_plugin_configs = {}
 
     def _setup(self, app_obj):
         super(CementPluginHandler, self)._setup(app_obj)
+        self._enabled_plugins = []
+        self._disabled_plugins = []
+        self._enabled_plugin_configs = {}
         self.config_dir = abspath(self.app._meta.plugin_config_dir)
         self.bootstrap = self.app._meta.plugin_bootstrap
         self.load_dir = abspath(self.app._meta.plugin_dir)
@@ -47,46 +51,73 @@ class CementPluginHandler(plugin.CementPluginHandler):
         # grab a generic config handler object
         config_handler = handler.get('config', self.app.config._meta.label)
 
-        # parse all app configs for plugins
-        for section in self.app.config.get_sections():
-            if not 'enable_plugin' in self.app.config.keys(section):
-                continue
-            if is_true(self.app.config.get(section, 'enable_plugin')):
-                self._enabled_plugins.append(section)
-            else:
-                self._disabled_plugins.append(section)
-
-        # parse plugin config dir for enabled plugins, or return
+        # first parse plugin config dir for enabled plugins
         if self.config_dir:
             if not os.path.exists(self.config_dir):
                 LOG.debug('plugin config dir %s does not exist.' %
                           self.config_dir)
-                return
-
-        for config in glob.glob("%s/*.conf" % self.config_dir):
-            config = os.path.abspath(os.path.expanduser(config))
-            LOG.debug("loading plugin config from '%s'." % config)
-            pconfig = config_handler()
-            pconfig._setup(self.app)
-            pconfig.parse_file(config)
-
-            if not pconfig.get_sections():
-                LOG.debug("config file '%s' has no sections." % config)
-                continue
-
-            plugin = pconfig.get_sections()[0]
-            if not 'enable_plugin' in pconfig.keys(plugin):
-                continue
-
-            if is_true(pconfig.get(plugin, 'enable_plugin')):
-                self._enabled_plugins.append(plugin)
-                self.app.config.add_section(plugin)
-
-                # set the app config per the already parsed plugin config
-                for key in pconfig.keys(plugin):
-                    self.app.config.set(plugin, key, pconfig.get(plugin, key))
             else:
-                self._disabled_plugins.append(plugin)
+
+                for config in glob.glob("%s/*.conf" % self.config_dir):
+                    config = os.path.abspath(os.path.expanduser(config))
+                    LOG.debug("loading plugin config from '%s'." % config)
+                    pconfig = config_handler()
+                    pconfig._setup(self.app)
+                    pconfig.parse_file(config)
+
+                    if not pconfig.get_sections():
+                        LOG.debug("config file '%s' has no sections." %
+                                  config)
+                        continue
+
+                    plugin = pconfig.get_sections()[0]
+                    if not 'enable_plugin' in pconfig.keys(plugin):
+                        continue
+
+                    if is_true(pconfig.get(plugin, 'enable_plugin')):
+                        LOG.debug("enabling plugin '%s' per plugin config" %
+                                  plugin)
+                        if plugin not in self._enabled_plugins:
+                            self._enabled_plugins.append(plugin)
+                        if plugin in self._disabled_plugins:
+                            self._disabled_plugins.remove(plugin)
+
+                        # store the config for later use in load_plugin()
+                        if plugin not in self._enabled_plugin_configs.keys():
+                            self._enabled_plugin_configs[plugin] = {}
+
+                        for key in pconfig.keys(plugin):
+                            val = pconfig.get(plugin, key)
+                            self._enabled_plugin_configs[plugin][key] = val
+
+                    else:
+                        LOG.debug("disabling plugin '%s' per plugin config" %
+                                  plugin)
+                        if plugin not in self._disabled_plugins:
+                            self._disabled_plugins.append(plugin)
+                        if plugin in self._enabled_plugins:
+                            self._enabled_plugins.remove(plugin)
+
+        # second, parse all app configs for plugins. Note: these are already
+        # loaded from files when app.config was setup.  The application
+        # configuration OVERRIDES plugin configs.
+        for plugin in self.app.config.get_sections():
+            if not 'enable_plugin' in self.app.config.keys(plugin):
+                continue
+            if is_true(self.app.config.get(plugin, 'enable_plugin')):
+                LOG.debug("enabling plugin '%s' per application config" %
+                          plugin)
+                if plugin not in self._enabled_plugins:
+                    self._enabled_plugins.append(plugin)
+                if plugin in self._disabled_plugins:
+                    self._disabled_plugins.remove(plugin)
+            else:
+                LOG.debug("disabling plugin '%s' per application config" %
+                          plugin)
+                if plugin not in self._disabled_plugins:
+                    self._disabled_plugins.append(plugin)
+                if plugin in self._enabled_plugins:
+                    self._enabled_plugins.remove(plugin)
 
     def _load_plugin_from_dir(self, plugin_name, plugin_dir):
         """
@@ -180,6 +211,17 @@ class CementPluginHandler(plugin.CementPluginHandler):
         else:
             raise exc.FrameworkError("Unable to load plugin '%s'." %
                                      plugin_name)
+
+        # merge in missing config (app config settings take precedence)
+        # note that we loaded the plugin configs during _setup() into
+        # self._enabled_plugin_configs... this is fucking dirty.
+        if plugin_name not in self.app.config.get_sections():
+            self.app.config.add_section(plugin_name)
+
+        for plugin,plugin_config in self._enabled_plugin_configs.items():
+            for key,val in plugin_config.items():
+                if key not in self.app.config.keys(plugin):
+                    self.app.config.set(plugin, key, val)
 
     def load_plugins(self, plugin_list):
         """
