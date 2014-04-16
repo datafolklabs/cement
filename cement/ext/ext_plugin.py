@@ -218,8 +218,8 @@ class CementPluginHandler(plugin.CementPluginHandler):
         if plugin_name not in self.app.config.get_sections():
             self.app.config.add_section(plugin_name)
 
-        for plugin,plugin_config in self._enabled_plugin_configs.items():
-            for key,val in plugin_config.items():
+        for plugin, plugin_config in self._enabled_plugin_configs.items():
+            for key, val in plugin_config.items():
                 if key not in self.app.config.keys(plugin):
                     self.app.config.set(plugin, key, val)
 
