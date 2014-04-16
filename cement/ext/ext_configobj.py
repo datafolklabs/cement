@@ -70,11 +70,14 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
         """
         file_path = os.path.abspath(os.path.expanduser(file_path))
         if os.path.exists(file_path):
+            LOG.debug("config file '%s' exists, loading settings..." %
+                      file_path)
             _c = ConfigObj(file_path)
             self.merge(_c.dict())
             return True
         else:
-            LOG.debug("file '%s' does not exist, skipping..." % file_path)
+            LOG.debug("config file '%s' does not exist, skipping..." %
+                      file_path)
             return False
 
     def keys(self, section):
