@@ -17,19 +17,15 @@ is available online at:
 See the :ref:`upgrading` section for more information related to
 any incompatible changes, and how to update your application to fix them.
 
-2.2.1 - DEVELOPMENT (will be released as 2.2.2 stable)
+2.2.2 - Wed Apr 16, 2014
 ------------------------------------------------------------------------------
 
 Bugs:
 
     * :issue:`211` - LoggingLogHandler namespace causes issues (regression)
     * :issue:`235` - Duplicate Config Section when plugin already loaded
-    * :issue:`246` - Plugin extension does not disable after already being
-                     enabled
-
-Features:
-
-    * None
+    * :issue:`246` - Plugin loading broken when multiple config files exist
+      for the same plugin
 
 
 2.2.0 - Wed Jan 29, 2014
