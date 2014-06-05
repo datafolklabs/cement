@@ -517,7 +517,7 @@ class CementApp(meta.MetaMixin):
 
         # If controller exists, then pass controll to it
         if self.controller:
-            self.render(self.controller._dispatch())
+            self.controller._dispatch()
         else:
             self._parse_args()
 
