@@ -198,7 +198,7 @@ handle command dispatch and rapid development.
             self.app.log.info('Inside base.default function.')
             if self.app.pargs.foo:
                 self.app.log.info("Recieved option 'foo' with value '%s'." % \
-                              self.pargs.foo)
+                              self.app.pargs.foo)
 
         @controller.expose(help="this command does relatively nothing useful.")
         def command1(self):
