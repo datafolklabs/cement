@@ -5,7 +5,6 @@ import sys
 import yaml
 from ..core import backend, output, hook, handler, config
 from ..utils.misc import minimal_logger
-from ..utils.fs import abspath
 from ..ext.ext_configparser import ConfigParserConfigHandler
 
 LOG = minimal_logger(__name__)

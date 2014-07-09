@@ -41,7 +41,7 @@ class YamlConfigObjConfigHandler(ConfigObjConfigHandler):
         :returns: boolean
 
         """
-        self.merge(dict(yaml.load(open(file_path))))
+        self.merge(yaml.load(open(file_path)))
 
         # FIX ME: Should check that file was read properly, however if not it
         # will likely raise an exception anyhow.

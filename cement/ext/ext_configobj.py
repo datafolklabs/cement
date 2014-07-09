@@ -4,11 +4,6 @@ import os
 import sys
 from ..core import config, exc, handler
 from ..utils.misc import minimal_logger
-
-if sys.version_info[0] >= 3:
-    raise exc.CementRuntimeError('ConfigObj does not support Python 3.') \
-        # pragma: no cover
-
 from configobj import ConfigObj
 
 LOG = minimal_logger(__name__)

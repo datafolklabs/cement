@@ -1,4 +1,4 @@
-"""Tests for cement.ext.ext_json."""
+"""Tests for cement.ext.ext_json_configobj."""
 
 import json
 import sys
@@ -6,7 +6,12 @@ from tempfile import mkstemp
 from cement.core import handler, backend, hook
 from cement.utils import test
 
-class JsonExtTestCase(test.CementExtTestCase):
+if sys.version_info[0] < 3:
+    import configobj
+else:
+    raise test.SkipTest('ConfigObj does not support Python 3') # pragma: no cover
+
+class JsonConfigObjExtTestCase(test.CementExtTestCase):
     CONFIG = '''{
         "section": {
             "subsection": {
@@ -34,19 +39,10 @@ class JsonExtTestCase(test.CementExtTestCase):
         f.write(self.CONFIG)
         f.close()
         self.app = self.make_app('tests',
-            extensions=['json'],
-            output_handler='json',
-            config_handler='json',
+            extensions=['json_configobj'],
+            config_handler='json_configobj',
             config_files = [self.tmppath],
-            argv=['--json']
             )
-
-    def test_json(self):
-        self.app.setup()
-        self.app.run()
-        res = self.app.render(dict(foo='bar'))
-        json_res = json.dumps(dict(foo='bar'))
-        self.eq(res, json_res)
 
     def test_has_section(self):
         self.app.setup()

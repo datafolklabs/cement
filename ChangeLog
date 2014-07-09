@@ -35,7 +35,8 @@ Features:
 
     * :issue:`257` - CementBaseController._dispatch() should return result
                      of controller function.
-    * :issue:`259` - Yaml extension now includes a config handler
+    * :issue:`259` - Add yaml and yaml_configobj config handlers
+    * :issue:`262` - Add json and json_configobj config handlers
 
 Incompatible:
 

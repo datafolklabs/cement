@@ -52,6 +52,7 @@ Cement Extension Modules
    ext/ext_daemon
    ext/ext_genshi
    ext/ext_json
+   ext/ext_json_configobj
    ext/ext_logging
    ext/ext_memcached
    ext/ext_mustache
