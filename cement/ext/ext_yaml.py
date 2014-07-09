@@ -105,7 +105,7 @@ class YamlConfigHandler(ConfigParserConfigHandler):
     def __init__(self, *args, **kw):
         super(YamlConfigHandler, self).__init__(*args, **kw)
 
-    def parse_file(self, file_path):
+    def _parse_file(self, file_path):
         """
         Parse YAML configuration file settings from file_path, overwriting
         existing config settings.  If the file does not exist, returns False.
@@ -114,17 +114,11 @@ class YamlConfigHandler(ConfigParserConfigHandler):
         :returns: boolean
 
         """
-        file_path = os.path.abspath(os.path.expanduser(file_path))
-        if os.path.exists(file_path):
-            LOG.debug("config file '%s' exists, loading settings..." %
-                      file_path)
-            self.merge(yaml.load(open(file_path)))
-            return True
-        else:
-            LOG.debug("config file '%s' does not exist, skipping..." %
-                      file_path)
-            return False
+        self.merge(yaml.load(open(file_path)))
 
+        # FIX ME: Should check that file was read properly, however if not it
+        # will likely raise an exception anyhow.
+        return True
 
 def load(app):
     """Called by the framework when the extension is 'loaded'."""

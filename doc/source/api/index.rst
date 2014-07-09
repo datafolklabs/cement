@@ -58,3 +58,4 @@ Cement Extension Modules
    ext/ext_nulloutput
    ext/ext_plugin
    ext/ext_yaml
+   ext/ext_yaml_configobj
