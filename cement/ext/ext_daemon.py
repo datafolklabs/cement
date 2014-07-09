@@ -417,6 +417,6 @@ def cleanup(app):  # pragma: no cover
                 os.remove(CEMENT_DAEMON_ENV.pid_file)
 
 
-def load():
+def load(app):
     hook.register('post_setup', extend_app)
     hook.register('pre_close', cleanup)

@@ -6,6 +6,44 @@ Upgrading
 This section outlines any information and changes that might need to be made
 in order to update your application built on previous versions of Cement.
 
+Upgrading from 2.2.x to 2.4.x
+-----------------------------
+
+Cement 2.4 introduced a few incompatible changes from the previous 2.2 stable
+release, as noted in the :ref:`Changelog <changelog>`.
+
+TypeError: load() takes no arguments (1 given)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After upgrading to Cement > 2.3.2 you might encounter the error:
+
+.. code-block:: text
+
+    TypeError: load() takes no arguments (1 given)
+
+
+Previous versions of Cement < 2.3.2 did not require an `app` argument to be
+passed to the `load()` functions of extensions/plugins/bootstrap modules.
+In Cement > 2.3.2 all extension/plugins/bootstrap modules must accept a single
+argument named `app` which is the application object in its current state when
+`load()` is called.
+
+To resolve this issue simply modify all relevant `load()` functions to accept
+the `app` argument.  For example:
+
+.. code-block:: python
+
+    def load():
+        pass
+
+To:
+
+.. code-block:: python
+
+    def load(app):
+        pass
+
+
 Upgrading from 2.0.x to 2.2.x
 -----------------------------
 

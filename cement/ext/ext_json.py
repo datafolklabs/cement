@@ -80,7 +80,7 @@ def set_output_handler(app):
         app._setup_output_handler()
 
 
-def load():
+def load(app):
     """Called by the framework when the extension is 'loaded'."""
     hook.register('post_setup', add_json_option)
     hook.register('pre_run', set_output_handler)

@@ -163,6 +163,6 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
                 # further down to more nested dicts.
 
 
-def load():
+def load(app):
     """Called by the framework when the extension is 'loaded'."""
     handler.register(ConfigObjConfigHandler)

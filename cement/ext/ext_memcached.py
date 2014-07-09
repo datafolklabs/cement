@@ -214,7 +214,7 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
         self.mc.flush_all(**kw)
 
 
-def load():
+def load(app):
     """
     Registers the MemcachedCacheHandler, generally called by the CementApp
     during extension loading.

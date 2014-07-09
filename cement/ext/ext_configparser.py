@@ -137,7 +137,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         super(ConfigParserConfigHandler, self).add_section(section)
 
 
-def load():
+def load(app):
     """Called by the framework when the extension is 'loaded'."""
 
     handler.register(ConfigParserConfigHandler)

@@ -33,8 +33,15 @@ Bugs:
 
 Features:
 
-    * None
+    * :issue:`257` - CementBaseController._dispatch() should return result
+                     of controller function.
+    * :issue:`259` - Yaml extension now includes a config handler
 
+Incompatible:
+
+    * :issue:`260` - Extensions/Plugins/Bootstrap modules must accept `app`
+                     argument in `load()` function.  See Upgrading doc for
+                     more information.
 
 
 2.2.0 - Wed Jan 29, 2014

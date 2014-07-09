@@ -55,7 +55,7 @@ class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
         return super(ArgumentParser, self).add_argument(*args, **kw)
 
 
-def load():
+def load(app):
     """Called by the framework when the extension is 'loaded'."""
 
     handler.register(ArgParseArgumentHandler)

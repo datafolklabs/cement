@@ -1,4 +1,4 @@
 """Test bootstrap file"""
 
-def load():
+def load(app):
     pass

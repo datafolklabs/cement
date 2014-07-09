@@ -147,7 +147,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         f, path, desc = imp.find_module(plugin_name, [plugin_dir])
         mod = imp.load_module(plugin_name, f, path, desc)
         if mod and hasattr(mod, 'load'):
-            mod.load()
+            mod.load(self.app)
         return True
 
     def _load_plugin_from_bootstrap(self, plugin_name, base_package):
@@ -186,7 +186,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
             __import__(full_module, globals(), locals(), [], 0)
 
         if hasattr(sys.modules[full_module], 'load'):
-            sys.modules[full_module].load()
+            sys.modules[full_module].load(self.app)
 
         return True
 
@@ -255,6 +255,6 @@ class CementPluginHandler(plugin.CementPluginHandler):
         return self._disabled_plugins
 
 
-def load():
+def load(app):
     """Called by the framework when the extension is 'loaded'."""
     handler.register(CementPluginHandler)

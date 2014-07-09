@@ -49,7 +49,7 @@ class TestOutputHandler(output.CementOutputHandler):
     def render(self, data_dict, template=None):
         pass
 
-def load():
+def load(app):
     handler.register(TestOutputHandler)
 
 """

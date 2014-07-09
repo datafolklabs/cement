@@ -148,7 +148,7 @@ class CementExtensionHandler(handler.CementBaseHandler):
                 __import__(ext_module, globals(), locals(), [], 0)
 
             if hasattr(sys.modules[ext_module], 'load'):
-                sys.modules[ext_module].load()
+                sys.modules[ext_module].load(self.app)
 
             if ext_module not in self._loaded_extensions:
                 self._loaded_extensions.append(ext_module)

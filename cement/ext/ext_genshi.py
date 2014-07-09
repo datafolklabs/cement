@@ -84,5 +84,5 @@ class GenshiOutputHandler(output.TemplateOutputHandler):
         return tmpl.generate(**data_dict).render()
 
 
-def load():
+def load(app):
     handler.register(GenshiOutputHandler)

@@ -79,5 +79,5 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
         return pystache.render(content, data_dict)
 
 
-def load():
+def load(app):
     handler.register(MustacheOutputHandler)
