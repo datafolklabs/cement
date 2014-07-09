@@ -452,13 +452,13 @@ class CementBaseController(handler.CementBaseHandler):
             if self._dispatch_command['func_name'] == '_dispatch':
                 func = getattr(self._dispatch_command['controller'],
                                '_dispatch')
-                func()
+                return func()
             else:
                 self._process_arguments()
                 self._parse_args()
                 func = getattr(self._dispatch_command['controller'],
                                self._dispatch_command['func_name'])
-                func()
+                return func()
         else:
             self._process_arguments()
             self._parse_args()
