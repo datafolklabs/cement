@@ -1,9 +1,11 @@
 """YAML Framework Extension"""
 
+import os
 import sys
 import yaml
 from ..core import backend, output, hook, handler
 from ..utils.misc import minimal_logger
+import cement.ext.ext_configparser
 
 LOG = minimal_logger(__name__)
 
@@ -78,8 +80,27 @@ def set_output_handler(app):
         app._setup_output_handler()
 
 
+class YamlConfigHandler(cement.ext.ext_configobj.ConfigObjConfigHandler):
+    class Meta:
+        interface = cement.core.config.IConfig
+        label = 'yaml'
+
+    def parse_file(self, file_path):
+        file_path = os.path.abspath(os.path.expanduser(file_path))
+        if os.path.exists(file_path):
+            LOG.debug("config file '%s' exists, loading settings..." %
+                    file_path)
+            self.merge(dict(yaml.load(open(file_path))))
+            return True
+        else:
+            LOG.debug("config file '%s' does not exist, skipping..." %
+                      file_path)
+            return False
+
+
 def load():
     """Called by the framework when the extension is 'loaded'."""
     handler.register(YamlOutputHandler)
+    handler.register(YamlConfigHandler)
     hook.register('post_setup', add_yaml_option)
     hook.register('pre_run', set_output_handler)
