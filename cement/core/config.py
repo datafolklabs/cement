@@ -1,7 +1,11 @@
 """Cement core config module."""
 
+import os
 from ..core import interface, handler
+from ..utils.fs import abspath
+from ..utils.misc import minimal_logger
 
+LOG = minimal_logger(__name__)
 
 def config_validator(klass, obj):
     """Validates a handler implementation against the IConfig interface."""
@@ -191,3 +195,40 @@ class CementConfigHandler(handler.CementBaseHandler):
 
     def __init__(self, *args, **kw):
         super(CementConfigHandler, self).__init__(*args, **kw)
+
+    def _parse_file(self, file_path):
+        """
+        Parse a configuration file at `file_path` and store it.  This function
+        must be provided by the handler implementation (that is sub-classing
+        this).
+
+        :param file_path: The file system path to the configuration file.
+        :returns: boolean (True if file was read properly, False otherwise)
+
+        """
+        raise NotImplementedError
+
+    def parse_file(self, file_path):
+        """
+        Ensure we are using the absolute/expanded path to `file_path`, and
+        then call `_parse_file` to parse config file settings from it,
+        overwriting existing config settings.  If the file does not exist,
+        returns False.
+
+        Developers sub-classing from here should generally override
+        `_parse_file` which handles just the parsing of the file and leaving
+        this function to wrap any checks/logging/etc.
+
+        :param file_path: The file system path to the configuration file.
+        :returns: boolean
+
+        """
+        file_path = abspath(file_path)
+        if os.path.exists(file_path):
+            LOG.debug("config file '%s' exists, loading settings..." %
+                      file_path)
+            return self._parse_file(file_path)
+        else:
+            LOG.debug("config file '%s' does not exist, skipping..." %
+                      file_path)
+            return False

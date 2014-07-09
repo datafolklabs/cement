@@ -19,6 +19,13 @@ class ConfigTestCase(test.CementCoreTestCase):
     def test_invalid_config_handler(self):
         handler.register(BogusConfigHandler)
 
+    @test.raises(NotImplementedError)
+    def test_parse_file_not_implemented(self):
+        _, tmppath = mkstemp()
+        c = config.CementConfigHandler()
+        c._setup(self.app)
+        c._parse_file(tmppath)
+
     def test_has_key(self):
         self.app.setup()
         self.ok(self.app.config.has_section(self.app._meta.config_section))

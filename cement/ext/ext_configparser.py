@@ -71,25 +71,19 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
                 # we don't support nested config blocks, so no need to go
                 # further down to more nested dicts.
 
-    def parse_file(self, file_path):
+    def _parse_file(self, file_path):
         """
-        Parse config file settings from file_path, overwriting existing
-        config settings.  If the file does not exist, returns False.
+        Parse a configuration file at `file_path` and store it.
 
         :param file_path: The file system path to the configuration file.
-        :returns: boolean
+        :returns: boolean (True if file was read properly, False otherwise)
 
         """
-        file_path = os.path.abspath(os.path.expanduser(file_path))
-        if os.path.exists(file_path):
-            LOG.debug("config file '%s' exists, loading settings..." %
-                      file_path)
-            self.read(file_path)
-            return True
-        else:
-            LOG.debug("config file '%s' does not exist, skipping..." %
-                      file_path)
-            return False
+        self.read(file_path)
+
+        # FIX ME: Should check that file was read properly, however if not it
+        # will likely raise an exception anyhow.
+        return True
 
     def keys(self, section):
         """

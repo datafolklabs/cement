@@ -59,26 +59,20 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
             dict_obj[key] = self.get(section, key)
         return dict_obj
 
-    def parse_file(self, file_path):
+    def _parse_file(self, file_path):
         """
-        Parse config file settings from file_path, overwriting existing
-        config settings.  If the file does not exist, returns False.
+        Parse a configuration file at `file_path` and store it.
 
         :param file_path: The file system path to the configuration file.
-        :returns: bool
+        :returns: boolean (True if file was read properly, False otherwise)
 
         """
-        file_path = os.path.abspath(os.path.expanduser(file_path))
-        if os.path.exists(file_path):
-            LOG.debug("config file '%s' exists, loading settings..." %
-                      file_path)
-            _c = ConfigObj(file_path)
-            self.merge(_c.dict())
-            return True
-        else:
-            LOG.debug("config file '%s' does not exist, skipping..." %
-                      file_path)
-            return False
+        _c = ConfigObj(file_path)
+        self.merge(_c.dict())
+
+        # FIX ME: Should check that file was read properly, however if not it
+        # will likely raise an exception anyhow.
+        return True
 
     def keys(self, section):
         """
