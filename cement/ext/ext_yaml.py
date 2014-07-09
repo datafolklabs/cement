@@ -10,6 +10,7 @@ from ..ext.ext_configparser import ConfigParserConfigHandler
 
 LOG = minimal_logger(__name__)
 
+
 class YamlOutputHandler(output.CementOutputHandler):
     """
     This class implements the :ref:`IOutput <cement.core.output>`
@@ -116,13 +117,14 @@ class YamlConfigHandler(ConfigParserConfigHandler):
         file_path = os.path.abspath(os.path.expanduser(file_path))
         if os.path.exists(file_path):
             LOG.debug("config file '%s' exists, loading settings..." %
-                    file_path)
+                      file_path)
             self.merge(yaml.load(open(file_path)))
             return True
         else:
             LOG.debug("config file '%s' does not exist, skipping..." %
                       file_path)
             return False
+
 
 def load(app):
     """Called by the framework when the extension is 'loaded'."""

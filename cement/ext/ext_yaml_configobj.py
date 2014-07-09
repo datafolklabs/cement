@@ -9,6 +9,7 @@ from ..ext.ext_configobj import ConfigObjConfigHandler
 
 LOG = minimal_logger(__name__)
 
+
 class YamlConfigObjConfigHandler(ConfigObjConfigHandler):
     """
     This class implements the :ref:`IConfig <cement.core.config>`
@@ -43,7 +44,7 @@ class YamlConfigObjConfigHandler(ConfigObjConfigHandler):
         file_path = abspath(file_path)
         if os.path.exists(file_path):
             LOG.debug("config file '%s' exists, loading settings..." %
-                    file_path)
+                      file_path)
             self.merge(dict(yaml.load(open(file_path))))
             return True
         else:
