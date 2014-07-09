@@ -3,12 +3,12 @@
 import os
 import sys
 import yaml
-from ..core import backend, output, hook, handler
+from ..core import backend, output, hook, handler, config
 from ..utils.misc import minimal_logger
-import cement.ext.ext_configparser
+from ..utils.fs import abspath
+from ..ext.ext_configparser import ConfigParserConfigHandler
 
 LOG = minimal_logger(__name__)
-
 
 class YamlOutputHandler(output.CementOutputHandler):
     """
@@ -17,10 +17,14 @@ class YamlOutputHandler(output.CementOutputHandler):
     `pyYAML <http://pyyaml.org/wiki/PyYAMLDocumentation>`_ to dump it to
     STDOUT.
 
-    Note: The cement framework detects the '--yaml' option and suppresses
+    **Note** The cement framework detects the '--yaml' option and suppresses
     output (same as if passing --quiet).  Therefore, if debugging or
     troubleshooting issues you must pass the --debug option to see whats
     going on.
+
+    **Note** This extension has an external dependency on `pyYAML`.  You must
+    include `pyYAML` in your application's dependencies as Cement explicitly
+    does *not* include external dependencies for optional extensions.
 
     """
     class Meta:
@@ -80,25 +84,47 @@ def set_output_handler(app):
         app._setup_output_handler()
 
 
-class YamlConfigHandler(cement.ext.ext_configobj.ConfigObjConfigHandler):
+class YamlConfigHandler(ConfigParserConfigHandler):
+    """
+    This class implements the :ref:`IConfig <cement.core.config>`
+    interface, and provides the same functionality of
+    :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>`
+    but with YAML configuration files.  See
+    `pyYAML <http://pyyaml.org/wiki/PyYAMLDocumentation>`_ for more
+    information on pyYAML.
+
+    **Note** This extension has an external dependency on `pyYAML`.  You must
+    include `pyYAML` in your application's dependencies as Cement explicitly
+    does *not* include external dependencies for optional extensions.
+
+    """
     class Meta:
-        interface = cement.core.config.IConfig
         label = 'yaml'
 
+    def __init__(self, *args, **kw):
+        super(YamlConfigHandler, self).__init__(*args, **kw)
+
     def parse_file(self, file_path):
+        """
+        Parse YAML configuration file settings from file_path, overwriting
+        existing config settings.  If the file does not exist, returns False.
+
+        :param file_path: The file system path to the YAML configuration file.
+        :returns: boolean
+
+        """
         file_path = os.path.abspath(os.path.expanduser(file_path))
         if os.path.exists(file_path):
             LOG.debug("config file '%s' exists, loading settings..." %
                     file_path)
-            self.merge(dict(yaml.load(open(file_path))))
+            self.merge(yaml.load(open(file_path)))
             return True
         else:
             LOG.debug("config file '%s' does not exist, skipping..." %
                       file_path)
             return False
 
-
-def load():
+def load(app):
     """Called by the framework when the extension is 'loaded'."""
     handler.register(YamlOutputHandler)
     handler.register(YamlConfigHandler)

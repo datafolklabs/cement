@@ -1,4 +1,4 @@
-"""Tests for cement.ext.ext_yaml."""
+"""Tests for cement.ext.ext_yaml_configobj."""
 
 import os
 import sys
@@ -7,8 +7,12 @@ from tempfile import mkstemp
 from cement.core import handler, hook
 from cement.utils import test
 
+if sys.version_info[0] < 3:
+    import configobj
+else:
+    raise test.SkipTest('ConfigObj does not support Python 3') # pragma: no cover
 
-class YamlExtTestCase(test.CementTestCase):
+class YamlConfigObjExtTestCase(test.CementTestCase):
     CONFIG = '''
         section:
             subsection:
@@ -37,23 +41,14 @@ class YamlExtTestCase(test.CementTestCase):
         f.write(self.CONFIG)
         f.close()
         self.app = self.make_app('tests',
-            extensions=['yaml'],
-            config_handler='yaml',
-            output_handler='yaml',
+            extensions=['yaml_configobj'],
+            config_handler='yaml_configobj',
             config_files = [self.tmppath],
-            argv=['--yaml']
             )
 
     def tearDown(self):
         if os.path.exists(self.tmppath):
             os.remove(self.tmppath)
-
-    def test_yaml(self):
-        self.app.setup()
-        self.app.run()
-        res = self.app.render(dict(foo='bar'))
-        yaml_res = yaml.dump(dict(foo='bar'))
-        self.eq(res, yaml_res)
 
     def test_has_section(self):
         self.app.setup()
