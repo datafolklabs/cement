@@ -33,6 +33,10 @@ Bugs:
 
 Features:
 
+    * :issue:`249` - Allow utils.shell.exec_cmd* to accept additional
+      parameters, passing all `args` and `kwargs` down to subprocess.Popen.
+      Allows features such as changing the current working directory, and
+      setting a timeout value, etc (everything that Popen supports).
     * :issue:`257` - CementBaseController._dispatch() should return result
                      of controller function.
     * :issue:`259` - Add yaml and yaml_configobj config handlers
