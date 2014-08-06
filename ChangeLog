@@ -32,6 +32,10 @@ Bugs:
     * :issue:`235` - Duplicate Config Section when plugin already loaded
     * :issue:`246` - Plugin loading broken when multiple config files exist
       for the same plugin
+    * :issue:`249` - Allow utils.shell.exec_cmd* to accept additional
+      parameters, passing all `args` and `kwargs` down to subprocess.Popen.
+      Allows features such as changing the current working directory, and
+      setting a timeout value, etc (everything that Popen supports).
 
 
 2.2.0 - Wed Jan 29, 2014

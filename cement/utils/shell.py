@@ -5,16 +5,17 @@ from multiprocessing import Process
 from threading import Thread
 
 
-def exec_cmd(cmd_args, shell=False):
+def exec_cmd(cmd_args, *args, **kw):
     """
-    Execute a shell call using Subprocess.
+    Execute a shell call using Subprocess.  All additional `*args` and
+    `**kwargs` are passed directly to subprocess.Popen.  See `Subprocess
+    <http://docs.python.org/library/subprocess.html>`_
 
     :param cmd_args: List of command line arguments.
-    :type cmd_args: list
-    :param shell: See `Subprocess
-        <http://docs.python.org/library/subprocess.html>`_
-    :type shell: boolean
-    :returns: The (stdout, stderror, return_code) of the command
+    :type cmd_args: list.
+    :param args: Additional arguments are passed to Popen().
+    :param kwargs: Additional keyword arguments are passed to Popen().
+    :returns: The (stdout, stderror, return_code) of the command.
     :rtype: tuple
 
     Usage:
@@ -26,22 +27,28 @@ def exec_cmd(cmd_args, shell=False):
         stdout, stderr, exitcode = shell.exec_cmd(['echo', 'helloworld'])
 
     """
-    proc = Popen(cmd_args, stdout=PIPE, stderr=PIPE, shell=shell)
+    if not 'stdout' in kw.keys():
+        kw['stdout'] = PIPE
+    if not 'stderr' in kw.keys():
+        kw['stderr'] = PIPE
+
+    proc = Popen(cmd_args, *args, **kw)
     (stdout, stderr) = proc.communicate()
     proc.wait()
     return (stdout, stderr, proc.returncode)
 
 
-def exec_cmd2(cmd_args, shell=False):
+def exec_cmd2(cmd_args, *args, **kw):
     """
     Similar to exec_cmd, however does not capture stdout, stderr (therefore
-    allowing it to print to console).
+    allowing it to print to console).  All additional `*args` and
+    `**kwargs` are passed directly to subprocess.Popen.  See `Subprocess
+    <http://docs.python.org/library/subprocess.html>`_
 
     :param cmd_args: List of command line arguments.
-    :type cmd_args: list
-    :param shell: See `Subprocess
-        <http://docs.python.org/library/subprocess.html>`_
-    :type shell: boolean
+    :type cmd_args: list.
+    :param args: Additional arguments are passed to Popen().
+    :param kwargs: Additional keyword arguments are passed to Popen().
     :returns: The integer return code of the command.
     :rtype: int
 
@@ -54,7 +61,7 @@ def exec_cmd2(cmd_args, shell=False):
         exitcode = shell.exec_cmd2(['echo', 'helloworld'])
 
     """
-    proc = Popen(cmd_args, shell=shell)
+    proc = Popen(cmd_args, *args, **kw)
     proc.wait()
     return proc.returncode
 
