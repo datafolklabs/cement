@@ -7,6 +7,7 @@ from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
+
 def config_validator(klass, obj):
     """Validates a handler implementation against the IConfig interface."""
     members = [

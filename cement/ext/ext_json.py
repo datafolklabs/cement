@@ -22,6 +22,7 @@ def add_json_option(app):
                           help='toggle json output handler',
                           const='json')
 
+
 def set_output_handler(app):
     """
     This is a ``pre_run`` hook that overrides the configured output handler
@@ -33,6 +34,7 @@ def set_output_handler(app):
     if '--json' in app._meta.argv:
         app._meta.output_handler = 'json'
         app._setup_output_handler()
+
 
 class JsonOutputHandler(output.CementOutputHandler):
 
@@ -77,6 +79,7 @@ class JsonOutputHandler(output.CementOutputHandler):
         sys.stdout = backend.__saved_stdout__
         sys.stderr = backend.__saved_stderr__
         return json.dumps(data_dict)
+
 
 class JsonConfigHandler(ConfigParserConfigHandler):
     """

@@ -119,6 +119,7 @@ class YamlConfigHandler(ConfigParserConfigHandler):
         # will likely raise an exception anyhow.
         return True
 
+
 def load(app):
     """Called by the framework when the extension is 'loaded'."""
     handler.register(YamlOutputHandler)

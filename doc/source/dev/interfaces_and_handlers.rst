@@ -129,21 +129,21 @@ is a handler that implements the MyInterface above:
     from cement.core import handler
     from myapp.interfaces import MyInterface
 
-    class MyHandler(object):
+    class MyHandler(handler.CementBaseHandler):
         class Meta:
             interface = MyInterface
             label = 'my_handler'
             description = 'This handler implements MyInterface'
-            config_defaults = {
+            config_defaults = dict(
                 foo='bar'
-                }
+                )
 
         my_var = 'This is my var'
 
         def __init__(self):
             self.app = None
 
-        def _setup(app_obj):
+        def _setup(self, app_obj):
             self.app = app_obj
 
         def do_something(self):
