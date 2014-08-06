@@ -1,11 +1,12 @@
 """Common Shell Utilities."""
 
+import os
 from subprocess import Popen, PIPE
 from multiprocessing import Process
 from threading import Thread
 
 
-def exec_cmd(cmd_args, shell=False):
+def exec_cmd(cmd_args, shell=False, cwd=os.getcwd()):
     """
     Execute a shell call using Subprocess.
 
@@ -26,7 +27,7 @@ def exec_cmd(cmd_args, shell=False):
         stdout, stderr, exitcode = shell.exec_cmd(['echo', 'helloworld'])
 
     """
-    proc = Popen(cmd_args, stdout=PIPE, stderr=PIPE, shell=shell)
+    proc = Popen(cmd_args, stdout=PIPE, stderr=PIPE, shell=shell, cwd=cwd)
     (stdout, stderr) = proc.communicate()
     proc.wait()
     return (stdout, stderr, proc.returncode)
