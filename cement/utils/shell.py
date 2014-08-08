@@ -1,9 +1,10 @@
 """Common Shell Utilities."""
 
+import os
 from subprocess import Popen, PIPE
 from multiprocessing import Process
 from threading import Thread
-
+from ..core.meta import MetaMixin
 
 def exec_cmd(cmd_args, *args, **kw):
     """
@@ -138,3 +139,206 @@ def spawn_thread(target, start=True, join=False, *args, **kwargs):
         thr.start()
         thr.join()
     return thr
+
+class Prompt(MetaMixin):
+    """
+    A wrapper around `raw_input` whose purpose is to limit the redundent
+    tasks of gather user input.  Can be used in several ways depending on the
+    user case (simple input, options, and numbered selection).
+
+    :param text: The text displayed at the input prompt.
+
+    Usage:
+
+    Simple prompt to halt operations and wait for user to hit enter:
+
+    .. code-block:: python
+
+        p = shell.Prompt("Press Enter To Continue", default='ENTER')
+
+    .. code-block:: text
+
+        $ python myapp.py
+        Press Enter To Continue
+
+        $
+
+
+    Provide a numbered list for longer selections:
+
+    .. code-block:: python
+
+        p = Prompt("Where do you live?",
+                options=[
+                    'San Antonio, TX',
+                    'Austin, TX',
+                    'Dallas, TX',
+                    'Houston, TX',
+                    ],
+                numbered = True,
+                )
+
+    .. code-block:: text
+
+        Where do you live?
+
+        1: San Antonio, TX
+        2: Austin, TX
+        3: Dallas, TX
+        4: Houston, TX
+
+        Enter the number for your selection:
+
+
+    Create a more complex prompt, and process the input from the user:
+
+    .. code-block:: python
+
+        class MyPrompt(Prompt):
+            class Meta:
+                text = "Do you agree to the terms?"
+                options = ['Yes', 'no']
+                options_separator = '|'
+                default = 'no'
+                auto = False
+                clear = True
+
+            def process_input(self):
+                if self.input.lower() == 'yes':
+                    # do something crazy
+                    pass
+                else:
+                    # don't do anything... maybe exit?
+                    print("User doesn't agree! I'm outa here")
+                    sys.exit(1)
+
+        p = MyPrompt()
+        p.prompt()
+
+    .. code-block:: text
+
+        $ python myapp.py
+        [TERMINAL CLEAR]
+
+        Do you agree to the terms? [Yes|no] no
+        User doesn't agree! I'm outa here
+
+        $ echo $?
+
+        $ 1
+
+    """
+    class Meta:
+        """
+        Optional meta-data (can also be passed as keyword arguments to the
+        parent class).
+        """
+        # The text that is displayed to prompt the user
+        text = "Tell me someting interesting:"
+
+        #: A default value to use if the user doesn't provide any input
+        default = None
+
+        #: Options to provide to the user.  If set, the input must match one
+        #: of the items in the options selection.
+        options = None
+
+        #: Separator to use within the option selection (non-numbered)
+        options_separator = ','
+
+        #: Display options in a numbered list, where the user can enter a
+        #: number.  Useful for long selections.
+        numbered = False
+
+        #: The text to display along with the numbered selection for user
+        #: input.
+        selection_text = "Enter the number for your selection:"
+
+        #: Whether or not to automatically prompt() the user once the class
+        #: is instantiated.
+        auto = True
+
+        #: Whether to treat user input as case insensitive (only used to
+        #: compare user input with available options).
+        case_insensitive = True
+
+        #: Whether or not to clear the terminal when prompting the user.
+        clear = False
+
+        #: Command to issue when clearing the terminal.
+        clear_command = 'clear'
+
+    def __init__(self, text=None, *args, **kw):
+        if text is not None:
+            kw['text'] = text
+        super(Prompt, self).__init__(*args, **kw)
+
+        self.input = None
+        if self._meta.auto:
+            self.prompt()
+
+    def _prompt(self):
+        if self._meta.clear:
+            os.system(self._meta.clear_command)
+
+        text = ""
+        if self._meta.options is not None:
+            if self._meta.numbered is True:
+                text = text + self._meta.text + "\n\n"
+                count = 1
+                for option in self._meta.options:
+                    text = text + "%s: %s\n" % (count, option)
+                    count += 1
+                text = text + "\n"
+                text = text + self._meta.selection_text
+            else:
+                sep = self._meta.options_separator
+                text = "%s [%s]" % (self._meta.text,
+                                     sep.join(self._meta.options))
+        else:
+            text = self._meta.text
+
+        self.input = raw_input("%s " % text)
+        if self.input == '' and self._meta.default is not None:
+            self.input = self._meta.default
+        elif self.input == '':
+            self.input = None
+
+    def prompt(self):
+        """
+        Prompt the user, and store their input as `self.input`.
+        """
+
+        while self.input is None:
+            self._prompt()
+
+            if self.input is None:
+                continue
+            elif self._meta.options is not None:
+                if self._meta.numbered:
+                    try:
+                        self.input = self._meta.options[int(self.input)-1]
+                    except (IndexError,ValueError) as e:
+                        self.input = None
+                        continue
+                else:
+                    if self._meta.case_insensitive is True:
+                        lower_options = [x.lower()
+                                         for x in self._meta.options]
+                        if not self.input.lower() in lower_options:
+                            self.input = None
+                            continue
+                    else:
+                        if not self.input in self._meta.options:
+                            self.input = None
+                            continue
+
+        self.process_input()
+        return self.input
+
+    def process_input(self):
+        """
+        Does not do anything.  Is intended to be used in a sub-class to handle
+        user input after it is prompted.
+        """
+        pass

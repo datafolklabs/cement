@@ -1,10 +1,8 @@
-.. _cement.utils.shell:    
+.. _cement.utils.shell:
 
 :mod:`cement.utils.shell`
 -------------------------
 
 .. automodule:: cement.utils.shell
-    :members:    
-    :undoc-members:
-    :private-members:
+    :members:
     :show-inheritance:

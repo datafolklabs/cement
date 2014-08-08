@@ -33,6 +33,8 @@ Bugs:
 
 Features:
 
+    * :issue:`119` - Added cement.utils.shell.Prompt to quickly gather user
+      input in several different ways.
     * :issue:`249` - Allow utils.shell.exec_cmd* to accept additional
       parameters, passing all `args` and `kwargs` down to subprocess.Popen.
       Allows features such as changing the current working directory, and
