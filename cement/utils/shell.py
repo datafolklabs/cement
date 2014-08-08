@@ -1,10 +1,13 @@
 """Common Shell Utilities."""
 
 import os
+import sys
 from subprocess import Popen, PIPE
 from multiprocessing import Process
 from threading import Thread
 from ..core.meta import MetaMixin
+from ..core.exc import FrameworkError
+
 
 def exec_cmd(cmd_args, *args, **kw):
     """
@@ -142,9 +145,10 @@ def spawn_thread(target, start=True, join=False, *args, **kwargs):
 
 class Prompt(MetaMixin):
     """
-    A wrapper around `raw_input` whose purpose is to limit the redundent
-    tasks of gather user input.  Can be used in several ways depending on the
-    user case (simple input, options, and numbered selection).
+    A wrapper around `raw_input` or `input` (py3) whose purpose is to limit
+    the redundent tasks of gather user input.  Can be used in several ways
+    depending on the user case (simple input, options, and numbered
+    selection).
 
     :param text: The text displayed at the input prompt.
 
@@ -268,6 +272,13 @@ class Prompt(MetaMixin):
         #: Command to issue when clearing the terminal.
         clear_command = 'clear'
 
+        #: Max attempts to get proper input from the user before giving up.
+        max_attempts = 10
+
+        #: Raise an exception when max_attempts is hit?  If not, Prompt
+        #: passes the input through as `None`.
+        max_attempts_exception = True
+
     def __init__(self, text=None, *args, **kw):
         if text is not None:
             kw['text'] = text
@@ -298,7 +309,11 @@ class Prompt(MetaMixin):
         else:
             text = self._meta.text
 
-        self.input = raw_input("%s " % text)
+        if sys.version_info[0] < 3:                     # pragma: nocover
+            self.input = raw_input("%s " % text)        # pragma: nocover
+        else:                                           # pragma: nocover
+            self.input = input("%s " % text)            # pragma: nocover
+
         if self.input == '' and self._meta.default is not None:
             self.input = self._meta.default
         elif self.input == '':
@@ -309,7 +324,16 @@ class Prompt(MetaMixin):
         Prompt the user, and store their input as `self.input`.
         """
 
+        attempt = 0
         while self.input is None:
+            if attempt >= int(self._meta.max_attempts):
+                if self._meta.max_attempts_exception is True:
+                    raise FrameworkError("Maximum attempts exceeded getting "
+                                         "valid user input")
+                else:
+                    return self.input
+
+            attempt += 1
             self._prompt()
 
             if self.input is None:
