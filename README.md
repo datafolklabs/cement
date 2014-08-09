@@ -1,13 +1,21 @@
-Cement CLI Application Framework for Python
-===========================================
+Cement Framework
+================
 
 **NOTE: 2.3.x is the development version of Cement.  Please use 2.2.x in
-production.**
+production until version 2.4.x is released.**
 
 Cement is an advanced CLI Application Framework for Python.  Its goal is to
 introduce a standard, and feature-full platform for both simple and complex
 command line applications as well as support rapid development needs without
-sacrificing quality.
+sacrificing quality.  Cement is flexible, and it's use cases span from the
+simplicity of a micro-framework to the complexity of a mega-framework.
+Whether it's a single file script, or a multi-tier application, Cement is the
+foundation you've been looking for.
+
+The first commit to Git was on Dec 4, 2009.  Since then, the framework has
+seen several iterations in design, and has continued to grow and improve
+since it's inception.  Cement is the most stable, and complete framework for
+command line and backend application development.
 
 [![Continuous Integration Status](https://travis-ci.org/datafolklabs/cement.png)](https://travis-ci.org/datafolklabs/cement)
 

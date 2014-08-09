@@ -13,7 +13,8 @@ def exec_cmd(cmd_args, *args, **kw):
     """
     Execute a shell call using Subprocess.  All additional `*args` and
     `**kwargs` are passed directly to subprocess.Popen.  See `Subprocess
-    <http://docs.python.org/library/subprocess.html>`_
+    <http://docs.python.org/library/subprocess.html>`_ for more information
+    on the features of `Popen()`.
 
     :param cmd_args: List of command line arguments.
     :type cmd_args: list.
@@ -47,7 +48,8 @@ def exec_cmd2(cmd_args, *args, **kw):
     Similar to exec_cmd, however does not capture stdout, stderr (therefore
     allowing it to print to console).  All additional `*args` and
     `**kwargs` are passed directly to subprocess.Popen.  See `Subprocess
-    <http://docs.python.org/library/subprocess.html>`_
+    <http://docs.python.org/library/subprocess.html>`_ for more information
+    on the features of `Popen()`.
 
     :param cmd_args: List of command line arguments.
     :type cmd_args: list.
@@ -74,6 +76,9 @@ def spawn_process(target, start=True, join=False, *args, **kwargs):
     """
     A quick wrapper around multiprocessing.Process().  By default the start()
     function will be called before the spawned process object is returned.
+    See `MultiProcessing
+    <https://docs.python.org/2/library/multiprocessing.html>`_ for more
+    information on the features of `Process()`.
 
     :param target: The target function to execute in the sub-process.
     :param start: Call start() on the process before returning the process
@@ -111,6 +116,9 @@ def spawn_thread(target, start=True, join=False, *args, **kwargs):
     """
     A quick wrapper around threading.Thread().  By default the start()
     function will be called before the spawned thread object is returned
+    See `Threading
+    <https://docs.python.org/2/library/threading.html>`_ for more
+    information on the features of `Thread()`.
 
     :param target: The target function to execute in the thread.
     :param start: Call start() on the thread before returning the thread

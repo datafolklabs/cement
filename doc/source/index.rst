@@ -3,17 +3,26 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Cement CLI Application Framework for Python
-===========================================
+Cement Framework
+================
 
 .. warning:: This documentation is for the development version of Cement
     2.3.x.  For production please use, and reference the current stable version of
-    `Cement 2.2.x <http://builtoncement.com/2.2/>`_.
+    `Cement 2.2.x <http://builtoncement.com/2.2/>`_ until this version is
+    officially released as 2.4.x stable.
 
 Cement is an advanced CLI Application Framework for Python.  Its goal is to
 introduce a standard, and feature-full platform for both simple and complex
 command line applications as well as support rapid development needs without
-sacrificing quality.
+sacrificing quality.  Cement is flexible, and it's use cases span from the
+simplicity of a micro-framework to the complexity of a mega-framework.
+Whether it's a single file script, or a multi-tier application, Cement is the
+foundation you've been looking for.
+
+The first commit to Git was on Dec 4, 2009.  Since then, the framework has
+seen several iterations in design, and has continued to grow and improve
+since it's inception.  Cement is the most stable, and complete framework for
+command line and backend application development.
 
 .. image:: https://secure.travis-ci.org/datafolklabs/cement.png
   :target: https://travis-ci.org/#!/datafolklabs/cement
