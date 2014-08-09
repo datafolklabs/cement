@@ -10,3 +10,4 @@ with Cement.
    multiple_stacked_controllers
    abstract_base_controllers
    controllers_with_same_label
+   bash_auto_completion
