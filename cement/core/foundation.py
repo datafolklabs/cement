@@ -365,7 +365,8 @@ class CementApp(meta.MetaMixin):
         loaded from.  This is generally something like 'myapp.templates'
         where a plugin file would live at ``myapp/templates/mytemplate.txt``.
         Templates are first loaded from ``CementApp.Meta.template_dir``, and
-        and secondly from ``CementApp.Meta.template_module``.
+        and secondly from ``CementApp.Meta.template_module``.  The
+        ``template_dir`` has presedence.
         """
 
         template_dir = None

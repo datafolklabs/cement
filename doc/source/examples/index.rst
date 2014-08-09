@@ -11,3 +11,4 @@ with Cement.
    abstract_base_controllers
    controllers_with_same_label
    bash_auto_completion
+   handling_extra_arguments
