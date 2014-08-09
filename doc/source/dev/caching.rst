@@ -1,5 +1,5 @@
-Cache Handling
-==============
+Caching
+=======
 
 Cement defines a cache interface called :ref:`ICache <cement.core.cache>`,
 but does not implement caching by default.  The documentation below references
@@ -8,7 +8,8 @@ implementation.
 
 The following cache handlers are included and maintained with Cement:
 
-    * None
+    * :ref:`MemcachedCacheHandler <cement.ext.ext_memcached>`
+
 
 Please reference the :ref:`ICache <cement.core.cache>` interface
 documentation for writing your own cache handler.
