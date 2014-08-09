@@ -146,8 +146,8 @@ def spawn_thread(target, start=True, join=False, *args, **kwargs):
 class Prompt(MetaMixin):
     """
     A wrapper around `raw_input` or `input` (py3) whose purpose is to limit
-    the redundent tasks of gather user input.  Can be used in several ways
-    depending on the user case (simple input, options, and numbered
+    the redundent tasks of gather usr input.  Can be used in several ways
+    depending on the use case (simple input, options, and numbered
     selection).
 
     :param text: The text displayed at the input prompt.
@@ -201,11 +201,11 @@ class Prompt(MetaMixin):
         class MyPrompt(Prompt):
             class Meta:
                 text = "Do you agree to the terms?"
-                options = ['Yes', 'no']
+                options = ['Yes', 'no', 'maybe-so']
                 options_separator = '|'
                 default = 'no'
-                auto = False
                 clear = True
+                max_attempts = 99
 
             def process_input(self):
                 if self.input.lower() == 'yes':
@@ -216,15 +216,14 @@ class Prompt(MetaMixin):
                     print("User doesn't agree! I'm outa here")
                     sys.exit(1)
 
-        p = MyPrompt()
-        p.prompt()
+        MyPrompt()
 
     .. code-block:: text
 
         $ python myapp.py
         [TERMINAL CLEAR]
 
-        Do you agree to the terms? [Yes|no] no
+        Do you agree to the terms? [Yes|no|maybe-so] no
         User doesn't agree! I'm outa here
 
         $ echo $?

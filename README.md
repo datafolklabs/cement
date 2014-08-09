@@ -31,7 +31,7 @@ Cement core features include (but are not limited to):
  * Tested on Python 2.6, 2.7, 3.2, and 3.3
 
 *Note that argparse is required as an external dependency for Python < 2.7
-and < 3.2.  Additionally, some *optional* extensions that are shipped with the
+and < 3.2.  Additionally, some optional extensions that are shipped with the
 mainline Cement sources do require external dependencies.  It is the
 responsibility of the application developer to include these dependencies
 along with their application, as Cement explicitly does not include them.*
