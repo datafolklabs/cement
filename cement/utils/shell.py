@@ -143,6 +143,7 @@ def spawn_thread(target, start=True, join=False, *args, **kwargs):
         thr.join()
     return thr
 
+
 class Prompt(MetaMixin):
     """
     A wrapper around `raw_input` or `input` (py3) whose purpose is to limit
@@ -304,7 +305,7 @@ class Prompt(MetaMixin):
             else:
                 sep = self._meta.options_separator
                 text = "%s [%s]" % (self._meta.text,
-                                     sep.join(self._meta.options))
+                                    sep.join(self._meta.options))
         else:
             text = self._meta.text
 
@@ -341,7 +342,7 @@ class Prompt(MetaMixin):
                 if self._meta.numbered:
                     try:
                         self.input = self._meta.options[int(self.input)-1]
-                    except (IndexError,ValueError) as e:
+                    except (IndexError, ValueError) as e:
                         self.input = None
                         continue
                 else:
