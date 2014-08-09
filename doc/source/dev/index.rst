@@ -23,6 +23,7 @@ them in your applications.
    cleanup
    caching
    testing
+   application_design
    boss_templates
    contributing
 
