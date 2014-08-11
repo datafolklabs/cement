@@ -526,7 +526,7 @@ class CementApp(meta.MetaMixin):
         for res in hook.run('post_run', self):
             pass
 
-    def close(self):
+    def close(self, exit_code=0):
         """
         Close the application.  This runs the pre_close and post_close hooks
         allowing plugins/extensions/etc to 'cleanup' at the end of program
@@ -540,6 +540,8 @@ class CementApp(meta.MetaMixin):
 
         for res in hook.run('post_close', self):
             pass
+        
+        sys.exit(exit_code)
 
     def render(self, data, template=None):
         """
