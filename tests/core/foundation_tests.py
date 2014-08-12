@@ -247,3 +247,23 @@ class FoundationTestCase(test.CementCoreTestCase):
         last_data, last_output = self.app.get_last_rendered()
         self.eq({'foo':'bar'}, last_data)
         self.eq(output_text, last_output)
+
+    @test.raises(SystemExit)
+    def test_close_with_code(self):
+        self.app.setup()
+        self.app.run()
+        try:
+            self.app.close(114)
+        except SystemExit as e:
+            self.eq(e.code, 114)
+            raise
+
+    @test.raises(AssertionError)
+    def test_close_with_bad_code(self):
+        self.app.setup()
+        self.app.run()
+        try:
+            self.app.close('Not An Int')
+        except AssertionError as e:
+            self.eq(e.args[0], "Invalid exit status code (must be integer)")
+            raise

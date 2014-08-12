@@ -17,7 +17,22 @@ The following outlines creating a sample 'helloworld' application.
     finally:
         app.close()
 
-Executing the application:
+Note that `app.close()` by default does not `exit` the application, but you
+can easily do that here also:
+
+.. code-block:: python
+
+    # non-error exit status is generally 0
+    app.close(0)
+
+    # or exit with an error
+    app.close(1)
+
+
+If an `exit code` is passed to `app.close()` then Cement with call
+`sys.exit(code)` at the end of execution.
+
+And running the application looks like:
 
 .. code-block:: text
 

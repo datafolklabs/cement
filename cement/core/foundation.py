@@ -526,11 +526,14 @@ class CementApp(meta.MetaMixin):
         for res in hook.run('post_run', self):
             pass
 
-    def close(self):
+    def close(self, code=None):
         """
         Close the application.  This runs the pre_close and post_close hooks
         allowing plugins/extensions/etc to 'cleanup' at the end of program
         execution.
+
+        :param code: An exit status to exit with (`int`).  If a code is given
+          then call `sys.exit(code)`, otherwise `sys.exit()` is not called.
 
         """
         for res in hook.run('pre_close', self):
@@ -540,6 +543,11 @@ class CementApp(meta.MetaMixin):
 
         for res in hook.run('post_close', self):
             pass
+
+        if code is not None:
+            assert type(code) == int, \
+                "Invalid exit status code (must be integer)"
+            sys.exit(code)
 
     def render(self, data, template=None):
         """

@@ -44,6 +44,8 @@ Features:
                      of controller function.
     * :issue:`259` - Add yaml and yaml_configobj config handlers.
     * :issue:`262` - Add json and json_configobj config handlers.
+    * :issue:`269` - Allow app.close() to accept an exit code, and exit with
+      that code.
 
 Incompatible:
 

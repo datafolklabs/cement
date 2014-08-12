@@ -182,11 +182,9 @@ The below example catches common framework exceptions that Cement might throw:
                 traceback.print_tb(exc_traceback, limit=20, file=sys.stdout)
                 print("")
 
-            # allow everything to cleanup nicely, so run the close() operations
-            app.close()
-
-        # exit with our return code (always after app.close() is called)
-        sys.exit(ret)
+            # allow everything to cleanup nicely, and exit with out custom
+            # error code
+            app.close(ret)
 
     if __name__ == '__main__':
         main()
