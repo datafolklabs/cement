@@ -4,6 +4,8 @@ coverage
 sphinx
 pep8
 autopep8
+mock
+sphinx_rtd_theme
 
 # Required for optional extensions
 pystache
