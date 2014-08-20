@@ -29,7 +29,7 @@ Bugs:
     * :issue:`211` - LoggingLogHandler namespace causes issues (regression)
     * :issue:`235` - Duplicate Config Section when plugin already loaded
     * :issue:`246` - Plugin extension does not disable after already being
-                     enabled
+      enabled
 
 Features:
 
@@ -41,7 +41,7 @@ Features:
       Allows features such as changing the current working directory, and
       setting a timeout value, etc (everything that Popen supports).
     * :issue:`257` - CementBaseController._dispatch() should return result
-                     of controller function.
+      of controller function.
     * :issue:`259` - Add yaml and yaml_configobj config handlers.
     * :issue:`262` - Add json and json_configobj config handlers.
     * :issue:`269` - Allow app.close() to accept an exit code, and exit with
@@ -50,8 +50,7 @@ Features:
 Incompatible:
 
     * :issue:`260` - Extensions/Plugins/Bootstrap modules must accept `app`
-                     argument in `load()` function.  See Upgrading doc for
-                     more information.
+      argument in `load()` function.  See Upgrading doc for more information.
 
 
 2.2.0 - Wed Jan 29, 2014
@@ -84,7 +83,7 @@ Misc:
     * Official Git repo relocated to: http://github.com/datafolklabs/cement
 
 
-2.1.4 - Tue Oct 29, 2013 (DEVELOPMENT)
+2.1.4 - Tue Oct 29, 2013
 ------------------------------------------------------------------------------
 
 Bugs:
@@ -118,7 +117,7 @@ Incompatible:
     * :issue:`201` - Add Deprecation Warning for CementApp.get_last_rendered()
 
 
-2.1.2 - Thu Nov 1st, 2012 (DEVELOPMENT)
+2.1.2 - Thu Nov 1st, 2012
 ------------------------------------------------------------------------------
 
 This is a branch off of the 2.0.x stable code base.  Maintenance releases for
