@@ -267,5 +267,4 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
 
 def load(app):
-    """Called by the framework when the extension is 'loaded'."""
     handler.register(CementPluginHandler)

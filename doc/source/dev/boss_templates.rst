@@ -55,10 +55,13 @@ Add the following to ~/myapp.conf (or whereever your config file is):
 .. code-block:: text
 
     [myapp]
+    plugin_config_dir = /path/to/myapp/config/plugins.d
     plugin_dir = /path/to/myapp/plugins
 
+    # Enable the plugin here, or in plugins.d/myplugin.conf
     [myplugin]
     enable_plugin = 1
+
 
 And it should be enabled when you run your app (though it doesn't do anything
 out of the box).

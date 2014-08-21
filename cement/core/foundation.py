@@ -148,32 +148,32 @@ class CementApp(meta.MetaMixin):
         plugin_config_dirs = None
         """
         A list of directory paths where plugin config files can be found.
-        Files must end in '.conf' or they will be ignored.
+        Files must end in `.conf` or they will be ignored.
 
-        Note: Though Meta.plugin_config_dirs defaults to None, Cement will
-        set this to a default list based on Meta.label (or in other words,
-        the name of the application).  This will equate to:
+        Note: Though ``CementApp.Meta.plugin_config_dirs`` is ``None``, Cement
+        will set this to a default list based on ``CementApp.Meta.label``.
+        This will equate to:
 
         .. code-block:: python
 
             ['/etc/<app_label>/plugins.d', '~/.<app_label>/plugin.d']
 
 
-        Files are loaded in order, and have precedence in order.  Therefore,
-        the last configuration loaded has precedence (and overwrites settings
-        loaded from previous configuration files).
+        Files are loaded in order, and have precedence in that order.
+        Therefore, the last configuration loaded has precedence (and
+        overwrites settings loaded from previous configuration files).
         """
 
         plugin_config_dir = None
         """
         A directory path where plugin config files can be found.  Files
-        must end in '.conf'.  By default, this setting is also overwritten
-        by the '[base] -> plugin_config_dir' config setting parsed in any
-        of the application configuration files (where 'base' is the app
-        label).
+        must end in `.conf`.  By default, this setting is also overridden
+        by the ``[<app_label>] -> plugin_config_dir`` config setting parsed in
+        any of the application configuration files.
 
-        If set, this item will be **appended** to ``Meta.plugin_config_dirs``
-        so that it's settings will have presedence over other config files.
+        If set, this item will be **appended** to
+        ``CementApp.Meta.plugin_config_dirs`` so that it's settings will have
+        presedence over other configuration files.
 
         In general, this setting should not be defined by the developer, as it
         is primarily used to allow the end-user to define a
@@ -184,14 +184,14 @@ class CementApp(meta.MetaMixin):
         plugin_bootstrap = None
         """
         A python package (dotted import path) where plugin code can be
-        loaded from.  This is generally something like 'myapp.plugins'
+        loaded from.  This is generally something like ``myapp.plugins``
         where a plugin file would live at ``myapp/plugins/myplugin.py``.
-        This provides a facility for applications that use 'namespace'
-        packages allowing plugins to share the applications python
-        namespace.
+        This provides a facility for applications that have builtin plugins
+        that ship with the applications source code and live in the same
+        Python module.
 
-        Note: Though the meta default is None, Cement will set this to
-        ``<app_label>.plugins`` if not set during app.setup().
+        Note: Though the meta default is ``None``, Cement will set this to
+        ``<app_label>.plugins`` if not set.
         """
 
         plugin_dirs = None
@@ -199,9 +199,9 @@ class CementApp(meta.MetaMixin):
         A list of directory paths where plugin code (modules) can be loaded
         from.
 
-        Note: Though ``Meta.plugin_dirs`` defaults to None, Cement will set
-        this to a default list based on Meta.label (or in other words, the
-        name of the application).  This will equate to:
+        Note: Though ``CementApp.Meta.plugin_dirs`` is None, Cement will set
+        this to a default list based on ``CementApp.Meta.label`` if not set.
+        This will equate to:
 
         .. code-block:: python
 
@@ -210,18 +210,16 @@ class CementApp(meta.MetaMixin):
 
         Modules are attempted to be loaded in order, and will stop loading
         once a plugin is successfully loaded from a directory.  Therefore
-        this is the oposite of configuration file loaded, in that the first
-        has precedence.
+        this is the oposite of configuration file loading, in that here the
+        first has precedence.
         """
 
         plugin_dir = None
         """
         A directory path where plugin code (modules) can be loaded from.
         By default, this setting is also overridden by the
-        '[base] -> plugin_dir' config setting parsed in any of the
-        application configuration files (where [base] is the
-        base configuration section of the application which is determined
-        by ``Meta.config_section`` but defaults to ``Meta.label``).
+        ``[<app_label>] -> plugin_dir`` config setting parsed in any of the
+        application configuration files.
 
         If set, this item will be **prepended** to ``Meta.plugin_dirs`` so
         that a users defined ``plugin_dir`` has precedence over others.

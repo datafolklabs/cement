@@ -215,9 +215,4 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
 
 
 def load(app):
-    """
-    Registers the MemcachedCacheHandler, generally called by the CementApp
-    during extension loading.
-
-    """
     handler.register(MemcachedCacheHandler)

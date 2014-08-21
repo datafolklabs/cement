@@ -121,7 +121,6 @@ class YamlConfigHandler(ConfigParserConfigHandler):
 
 
 def load(app):
-    """Called by the framework when the extension is 'loaded'."""
     handler.register(YamlOutputHandler)
     handler.register(YamlConfigHandler)
     hook.register('post_setup', add_yaml_option)

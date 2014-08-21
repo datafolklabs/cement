@@ -112,7 +112,6 @@ class JsonConfigHandler(ConfigParserConfigHandler):
 
 
 def load(app):
-    """Called by the framework when the extension is 'loaded'."""
     hook.register('post_setup', add_json_option)
     hook.register('pre_run', set_output_handler)
     handler.register(JsonOutputHandler)

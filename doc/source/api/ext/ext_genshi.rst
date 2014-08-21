@@ -5,8 +5,6 @@
 
 .. automodule:: cement.ext.ext_genshi
     :members:
-    :undoc-members:
-    :private-members:
     :show-inheritance:
 
 

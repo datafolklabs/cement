@@ -1,10 +1,8 @@
-.. _cement.utils.fs:    
+.. _cement.utils.fs:
 
 :mod:`cement.utils.fs`
 ----------------------
 
 .. automodule:: cement.utils.fs
-    :members:    
-    :undoc-members:
-    :private-members:
+    :members:
     :show-inheritance:

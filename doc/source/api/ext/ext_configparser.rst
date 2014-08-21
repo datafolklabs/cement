@@ -5,6 +5,4 @@
 
 .. automodule:: cement.ext.ext_configparser
     :members:
-    :undoc-members:
-    :private-members:
     :show-inheritance:
