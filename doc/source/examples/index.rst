@@ -7,6 +7,7 @@ with Cement.
 .. toctree::
    :maxdepth: 1
 
+   version_option
    multiple_stacked_controllers
    abstract_base_controllers
    controllers_with_same_label
