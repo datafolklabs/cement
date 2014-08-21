@@ -47,3 +47,9 @@ def backup(path, suffix='.bak'):
         else:
             break
     return new_path
+
+# Kinda dirty, but should resolve issues on Windows per #183
+if 'HOME' in os.environ:
+    HOME_DIR = abspath(os.environ['HOME'])
+else:
+    HOME_DIR = abspath('~')  # pragma: nocover

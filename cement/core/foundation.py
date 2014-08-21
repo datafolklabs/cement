@@ -132,6 +132,10 @@ class CementApp(meta.MetaMixin):
              '~/.<app_label>.conf',
              '~/.<app_label>/config']
 
+
+        Files are loaded in order, and have precedence in order.  Therefore,
+        the last configuration loaded has precedence (and overwrites settings
+        loaded from previous configuration files).
         """
 
         plugins = []
@@ -141,15 +145,40 @@ class CementApp(meta.MetaMixin):
         via a plugin config file.
         """
 
+        plugin_config_dirs = None
+        """
+        A list of directory paths where plugin config files can be found.
+        Files must end in '.conf' or they will be ignored.
+
+        Note: Though Meta.plugin_config_dirs defaults to None, Cement will
+        set this to a default list based on Meta.label (or in other words,
+        the name of the application).  This will equate to:
+
+        .. code-block:: python
+
+            ['/etc/<app_label>/plugins.d', '~/.<app_label>/plugin.d']
+
+
+        Files are loaded in order, and have precedence in order.  Therefore,
+        the last configuration loaded has precedence (and overwrites settings
+        loaded from previous configuration files).
+        """
+
         plugin_config_dir = None
         """
         A directory path where plugin config files can be found.  Files
-        must end in '.conf'.  By default, this setting is also overridden
+        must end in '.conf'.  By default, this setting is also overwritten
         by the '[base] -> plugin_config_dir' config setting parsed in any
-        of the application configuration files.
+        of the application configuration files (where 'base' is the app
+        label).
 
-        Note: Though the meta default is None, Cement will set this to
-        ``/etc/<app_label>/plugins.d/`` if not set during app.setup().
+        If set, this item will be **appended** to ``Meta.plugin_config_dirs``
+        so that it's settings will have presedence over other config files.
+
+        In general, this setting should not be defined by the developer, as it
+        is primarily used to allow the end-user to define a
+        ``plugin_config_dir`` without completely trumping the hard-coded list
+        of default ``plugin_config_dirs`` defined by the app/developer.
         """
 
         plugin_bootstrap = None
@@ -165,6 +194,26 @@ class CementApp(meta.MetaMixin):
         ``<app_label>.plugins`` if not set during app.setup().
         """
 
+        plugin_dirs = None
+        """
+        A list of directory paths where plugin code (modules) can be loaded
+        from.
+
+        Note: Though ``Meta.plugin_dirs`` defaults to None, Cement will set
+        this to a default list based on Meta.label (or in other words, the
+        name of the application).  This will equate to:
+
+        .. code-block:: python
+
+            ['/usr/lib/<app_label>/plugins', '~/.<app_label>/plugins']
+
+
+        Modules are attempted to be loaded in order, and will stop loading
+        once a plugin is successfully loaded from a directory.  Therefore
+        this is the oposite of configuration file loaded, in that the first
+        has precedence.
+        """
+
         plugin_dir = None
         """
         A directory path where plugin code (modules) can be loaded from.
@@ -172,10 +221,15 @@ class CementApp(meta.MetaMixin):
         '[base] -> plugin_dir' config setting parsed in any of the
         application configuration files (where [base] is the
         base configuration section of the application which is determined
-        by Meta.config_section but defaults to Meta.label).
+        by ``Meta.config_section`` but defaults to ``Meta.label``).
 
-        Note: Though the meta default is None, Cement will set this to
-        ``/usr/lib/<app_label>/plugins/`` if not set during app.setup()
+        If set, this item will be **prepended** to ``Meta.plugin_dirs`` so
+        that a users defined ``plugin_dir`` has precedence over others.
+
+        In general, this setting should not be defined by the developer, as it
+        is primarily used to allow the end-user to define a
+        ``plugin_dir`` without completely trumping the hard-coded list
+        of default ``plugin_dirs`` defined by the app/developer.
         """
 
         argv = None
@@ -369,16 +423,30 @@ class CementApp(meta.MetaMixin):
         ``template_dir`` has presedence.
         """
 
+        template_dirs = None
+        """
+        A list of directory paths where template files can be loaded
+        from.
+
+        Note: Though ``Meta.template_dirs`` defaults to None, Cement will set
+        this to a default list based on Meta.label (or in other words, the
+        name of the application).  This will equate to:
+
+        .. code-block:: python
+
+            ['/usr/lib/<app_label>/templates', '~/.<app_label>/templates']
+
+        """
+
         template_dir = None
         """
         A directory path where template files can be loaded from.  By default,
         this setting is also overridden by the '[base] -> template_dir' config
         setting parsed in any of the application configuration files (where
         [base] is the base configuration section of the application which is
-        determinedby Meta.config_section but defaults to Meta.label).
+        determinedby ``Meta.config_section`` but defaults to Meta.label).
 
-        Note: Though the meta default is None, Cement will set this to
-        ``/usr/lib/<app_label>/templates/`` if not set during app.setup()
+        If set, this item will be appended to ``Meta.template_dirs``.
         """
 
     def __init__(self, label=None, **kw):
@@ -743,16 +811,10 @@ class CementApp(meta.MetaMixin):
         if self._meta.config_files is None:
             label = self._meta.label
 
-            if 'HOME' in os.environ:
-                user_home = fs.abspath(os.environ['HOME'])
-            else:
-                # Kinda dirty, but should resolve issues on Windows per #183
-                user_home = fs.abspath('~')  # pragma: nocover
-
             self._meta.config_files = [
                 os.path.join('/', 'etc', label, '%s.conf' % label),
-                os.path.join(user_home, '.%s.conf' % label),
-                os.path.join(user_home, '.%s' % label, 'config'),
+                os.path.join(fs.HOME_DIR, '.%s.conf' % label),
+                os.path.join(fs.HOME_DIR, '.%s' % label, 'config'),
             ]
 
         for _file in self._meta.config_files:
@@ -781,14 +843,33 @@ class CementApp(meta.MetaMixin):
 
     def _setup_plugin_handler(self):
         LOG.debug("setting up %s.plugin handler" % self._meta.label)
+        label = self._meta.label
 
-        # modify app defaults if not set
-        if self._meta.plugin_config_dir is None:
-            self._meta.plugin_config_dir = '/etc/%s/plugins.d/' % \
-                                           self._meta.label
+        # plugin config dirs
+        if self._meta.plugin_config_dirs is None:
+            self._meta.plugin_config_dirs = [
+                '/etc/%s/plugins.d/' % self._meta.label,
+                os.path.join(fs.HOME_DIR, '.%s' % label, 'plugins.d'),
+            ]
+        config_dir = self._meta.plugin_config_dir
+        if config_dir is not None:
+            if config_dir not in self._meta.plugin_config_dirs:
+                # append so that this config has precedence
+                self._meta.plugin_config_dirs.append(config_dir)
 
-        if self._meta.plugin_dir is None:
-            self._meta.plugin_dir = '/usr/lib/%s/plugins' % self._meta.label
+        # plugin dirs
+        if self._meta.plugin_dirs is None:
+            self._meta.plugin_dirs = [
+                '/usr/lib/%s/plugins' % self._meta.label,
+                os.path.join(fs.HOME_DIR, '.%s' % label, 'plugins'),
+            ]
+        plugin_dir = self._meta.plugin_dir
+        if plugin_dir is not None:
+            if plugin_dir not in self._meta.plugin_dirs:
+                # insert so that this dir has precedence
+                self._meta.plugin_dirs.insert(0, plugin_dir)
+
+        # plugin bootstrap
         if self._meta.plugin_bootstrap is None:
             self._meta.plugin_bootstrap = '%s.plugins' % self._meta.label
 

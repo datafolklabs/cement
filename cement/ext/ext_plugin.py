@@ -44,22 +44,25 @@ class CementPluginHandler(plugin.CementPluginHandler):
         self._enabled_plugins = []
         self._disabled_plugins = []
         self._plugin_configs = {}
-        self.config_dir = abspath(self.app._meta.plugin_config_dir)
+        self.config_dirs = self.app._meta.plugin_config_dirs
         self.bootstrap = self.app._meta.plugin_bootstrap
-        self.load_dir = abspath(self.app._meta.plugin_dir)
+        self.load_dirs = self.app._meta.plugin_dirs
 
         # grab a generic config handler object
         config_handler = handler.get('config', self.app.config._meta.label)
 
         # first parse plugin config dir for enabled plugins
-        if self.config_dir:
-            if not os.path.exists(self.config_dir):
+        for config_dir in self.config_dirs:
+            config_dir = abspath(config_dir)
+
+            if not os.path.exists(config_dir):
                 LOG.debug('plugin config dir %s does not exist.' %
-                          self.config_dir)
+                          config_dir)
+                continue
             else:
                 # sort so that we always load plugins in the same order
                 # regardless of OS (seems some don't sort reliably)
-                plugin_config_files = glob.glob("%s/*.conf" % self.config_dir)
+                plugin_config_files = glob.glob("%s/*.conf" % config_dir)
                 plugin_config_files.sort()
 
                 for config in plugin_config_files:
@@ -207,13 +210,21 @@ class CementPluginHandler(plugin.CementPluginHandler):
         """
         LOG.debug("loading application plugin '%s'" % plugin_name)
 
-        # first attempt to load from plugin_dir, then from a bootstrap module
+        # first attempt to load from plugin_dirs
+        for load_dir in self.load_dirs:
+            load_dir = abspath(load_dir)
 
-        if self._load_plugin_from_dir(plugin_name, self.load_dir):
-            self._loaded_plugins.append(plugin_name)
-        elif self._load_plugin_from_bootstrap(plugin_name, self.bootstrap):
-            self._loaded_plugins.append(plugin_name)
-        else:
+            if self._load_plugin_from_dir(plugin_name, load_dir):
+                self._loaded_plugins.append(plugin_name)
+                break
+
+        # then from a bootstrap module
+        if not plugin_name in self._loaded_plugins:
+            if self._load_plugin_from_bootstrap(plugin_name, self.bootstrap):
+                self._loaded_plugins.append(plugin_name)
+
+        # otherwise it's a bust
+        if not plugin_name in self._loaded_plugins:
             raise exc.FrameworkError("Unable to load plugin '%s'." %
                                      plugin_name)
 
