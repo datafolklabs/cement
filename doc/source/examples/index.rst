@@ -13,3 +13,4 @@ with Cement.
    controllers_with_same_label
    bash_auto_completion
    handling_extra_arguments
+   load_extensions_via_config
