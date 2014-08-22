@@ -48,6 +48,7 @@ Features:
       `plugin_config_dirs`
     * :issue:`269` - Allow app.close() to accept an exit code, and exit with
       that code.
+    * :issue:`270` - Add support for multiple template_dirs
 
 Incompatible:
 
