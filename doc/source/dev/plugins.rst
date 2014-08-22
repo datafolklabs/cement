@@ -80,7 +80,7 @@ plugin_dirs = ``None``
 
     .. code-block:: python
 
-        ['/usr/lib/<app_label>/plugins', '~/.<app_label>/plugins']
+        ['~/.<app_label>/plugins', '/usr/lib/<app_label>/plugins']
 
 
     Modules are attempted to be loaded in order, and will stop loading

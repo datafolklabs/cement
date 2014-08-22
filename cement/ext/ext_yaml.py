@@ -15,7 +15,8 @@ class YamlOutputHandler(output.CementOutputHandler):
     This class implements the :ref:`IOutput <cement.core.output>`
     interface.  It provides YAML output from a data dictionary and uses
     `pyYAML <http://pyyaml.org/wiki/PyYAMLDocumentation>`_ to dump it to
-    STDOUT.
+    STDOUT.  Please see the developer documentation on
+    :ref:`Output Handling <dev_output_handling>`.
 
     **Note** The cement framework detects the '--yaml' option and suppresses
     output (same as if passing --quiet).  Therefore, if debugging or

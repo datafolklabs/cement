@@ -147,6 +147,11 @@ they do, Cement will honor them (overriding built-in defaults).
         If set, this item will be appended to
         ``CementApp.Meta.template_dirs``.
 
+        In general, this setting should not be defined by the developer, as it
+        is primarily used to allow the end-user to define a ``template_dir``
+        without completely trumping the hard-coded list of default
+        ``template_dirs`` defined by the app/developer.
+
 
 Application Configuration Defaults vs Handler Configuration Defaults
 --------------------------------------------------------------------

@@ -37,12 +37,12 @@ def set_output_handler(app):
 
 
 class JsonOutputHandler(output.CementOutputHandler):
-
     """
     This class implements the :ref:`IOutput <cement.core.output>`
     interface.  It provides JSON output from a data dictionary using the
     `json <http://docs.python.org/library/json.html>`_ module of the standard
-    library.
+    library.  Please see the developer documentation on
+    :ref:`Output Handling <dev_output_handling>`.
 
     Note: The cement framework detects the '--json' option and suppresses
     output (same as if passing --quiet).  Therefore, if debugging or

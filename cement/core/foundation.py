@@ -205,7 +205,7 @@ class CementApp(meta.MetaMixin):
 
         .. code-block:: python
 
-            ['/usr/lib/<app_label>/plugins', '~/.<app_label>/plugins']
+            ['~/.<app_label>/plugins', '/usr/lib/<app_label>/plugins']
 
 
         Modules are attempted to be loaded in order, and will stop loading
@@ -414,11 +414,11 @@ class CementApp(meta.MetaMixin):
         template_module = None
         """
         A python package (dotted import path) where template files can be
-        loaded from.  This is generally something like 'myapp.templates'
+        loaded from.  This is generally something like ``myapp.templates``
         where a plugin file would live at ``myapp/templates/mytemplate.txt``.
-        Templates are first loaded from ``CementApp.Meta.template_dir``, and
+        Templates are first loaded from ``CementApp.Meta.template_dirs``, and
         and secondly from ``CementApp.Meta.template_module``.  The
-        ``template_dir`` has presedence.
+        ``template_dirs`` setting has presedence.
         """
 
         template_dirs = None
@@ -426,25 +426,29 @@ class CementApp(meta.MetaMixin):
         A list of directory paths where template files can be loaded
         from.
 
-        Note: Though ``Meta.template_dirs`` defaults to None, Cement will set
-        this to a default list based on Meta.label (or in other words, the
-        name of the application).  This will equate to:
+        Note: Though ``CementApp.Meta.template_dirs`` defaults to ``None``,
+        Cement will set this to a default list based on
+        ``CementApp.Meta.label``.  This will equate to:
 
         .. code-block:: python
 
-            ['/usr/lib/<app_label>/templates', '~/.<app_label>/templates']
+            ['~/.<app_label>/templates', '/usr/lib/<app_label>/templates']
 
+
+        Templates are attempted to be loaded in order, and will stop loading
+        once a template is successfully loaded from a directory.
         """
 
         template_dir = None
         """
         A directory path where template files can be loaded from.  By default,
-        this setting is also overridden by the '[base] -> template_dir' config
-        setting parsed in any of the application configuration files (where
-        [base] is the base configuration section of the application which is
-        determinedby ``Meta.config_section`` but defaults to Meta.label).
+        this setting is also overridden by the
+        ``[<app_label>] -> template_dir`` config setting parsed in any of the
+        application configuration files .
 
-        If set, this item will be appended to ``Meta.template_dirs``.
+        If set, this item will be **prepended** to
+        ``CementApp.Meta.template_dirs`` (giving it precedence over other
+        ``template_dirs``.
         """
 
     def __init__(self, label=None, **kw):
@@ -858,8 +862,8 @@ class CementApp(meta.MetaMixin):
         # plugin dirs
         if self._meta.plugin_dirs is None:
             self._meta.plugin_dirs = [
-                '/usr/lib/%s/plugins' % self._meta.label,
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'plugins'),
+                '/usr/lib/%s/plugins' % self._meta.label,
             ]
         plugin_dir = self._meta.plugin_dir
         if plugin_dir is not None:
@@ -881,15 +885,26 @@ class CementApp(meta.MetaMixin):
             LOG.debug("no output handler defined, skipping.")
             return
 
+        label = self._meta.label
         LOG.debug("setting up %s.output handler" % self._meta.label)
         self.output = self._resolve_handler('output',
                                             self._meta.output_handler,
                                             raise_error=False)
+        # template module
         if self._meta.template_module is None:
-            self._meta.template_module = '%s.templates' % self._meta.label
-        if self._meta.template_dir is None:
-            self._meta.template_dir = '/usr/lib/%s/templates' % \
-                                      self._meta.label
+            self._meta.template_module = '%s.templates' % label
+
+        # template dirs
+        if self._meta.template_dirs is None:
+            self._meta.template_dirs = [
+                os.path.join(fs.HOME_DIR, '.%s' % label, 'templates'),
+                '/usr/lib/%s/templates' % label,
+            ]
+        template_dir = self._meta.template_dir
+        if template_dir is not None:
+            if template_dir not in self._meta.template_dirs:
+                # insert so that this dir has precedence
+                self._meta.template_dirs.insert(0, template_dir)
 
     def _setup_cache_handler(self):
         if self._meta.cache_handler is None:

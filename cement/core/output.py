@@ -108,20 +108,24 @@ class TemplateOutputHandler(CementOutputHandler):
     """
 
     def _load_template_from_file(self, template_path):
-        template_prefix = self.app._meta.template_dir.rstrip('/')
-        template_path = template_path.lstrip('/')
-        full_path = fs.abspath(os.path.join(template_prefix, template_path))
-        LOG.debug("attemping to load output template from file %s" %
-                  full_path)
-        if os.path.exists(full_path):
-            content = open(full_path, 'r').read()
-            LOG.debug("loaded output template from file %s" %
+        for template_dir in self.app._meta.template_dirs:
+            template_prefix = template_dir.rstrip('/')
+            template_path = template_path.lstrip('/')
+            full_path = fs.abspath(os.path.join(template_prefix,
+                                                template_path))
+            LOG.debug("attemping to load output template from file %s" %
                       full_path)
-            return content
-        else:
-            LOG.debug("output template file %s does not exist" %
-                      full_path)
-            return None
+            if os.path.exists(full_path):
+                content = open(full_path, 'r').read()
+                LOG.debug("loaded output template from file %s" %
+                          full_path)
+                return content
+            else:
+                LOG.debug("output template file %s does not exist" %
+                          full_path)
+                continue
+
+        return None
 
     def _load_template_from_module(self, template_path):
         template_module = self.app._meta.template_module
@@ -152,16 +156,16 @@ class TemplateOutputHandler(CementOutputHandler):
 
     def load_template(self, template_path):
         """
-        Loads a template file first from ``self.app._meta.template_dir`` and
+        Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
-        ``template_dir`` has presedence.
+        ``template_dirs`` have presedence.
 
-        :param template_path: The secondary path of the template *after*
-            either ``template_module`` or ``template_dir`` prefix (set via
-            CementApp.Meta)
+        :param template_path: The secondary path of the template **after**
+            either ``template_module`` or ``template_dirs`` prefix (set via
+            ``CementApp.Meta``)
         :returns: The content of the template (str)
         :raises: FrameworkError if the template does not exist in either the
-            ``template_module`` or ``template_dir``.
+            ``template_module`` or ``template_dirs``.
         """
         if not template_path:
             raise exc.FrameworkError("Invalid template path '%s'." %

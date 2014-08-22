@@ -14,6 +14,9 @@ class GenshiOutputHandler(output.TemplateOutputHandler):
     interface.  It provides text output from template and uses the
     `Genshi Text Templating Language
     <http://genshi.edgewall.org/wiki/Documentation/text-templates.html>`_.
+    Please see the developer documentation on
+    :ref:`Output Handling <dev_output_handling>`.
+
     **Note** This extension has an external dependency on ``genshi``.  You
     must include ``genshi`` in your applications dependencies as Cement
     explicitly does *not* include external dependencies for optional
@@ -31,10 +34,15 @@ class GenshiOutputHandler(output.TemplateOutputHandler):
                 extensions = ['genshi']
                 output_handler = 'genshi'
                 template_module = 'myapp.templates'
-                template_dir = '/usr/lib/myapp/templates'
+                template_dirs = [
+                    '~/.myapp/templates',
+                    '/usr/lib/myapp/templates',
+                    ]
         # ...
 
-    From here, you would then put a Genshi template file in
+    Note that the above ``template_module`` and ``template_dirs`` are the
+    auto-defined defaults but are added here for clarity.  From here, you
+    would then put a Genshi template file in
     ``myapp/templates/my_template.genshi`` and then render a data dictionary
     with it:
 
@@ -50,10 +58,15 @@ class GenshiOutputHandler(output.TemplateOutputHandler):
 
     Configuration:
 
-    This extension honors the ``template_dir`` configuration option under the
-    base configuration section of any application configuration file.  It
-    also honors the ``template_module`` and ``template_dir`` meta options
-    under the main application object.
+    To **prepend** a directory to the ``template_dirs`` list defined by the
+    application/developer, an end-user can add the configuration option
+    ``template_dir`` to their application configuration file under the main
+    config section:
+
+    .. code-block:: text
+
+        [myapp]
+        template_dir = /path/to/my/templates
 
     """
 
@@ -69,8 +82,8 @@ class GenshiOutputHandler(output.TemplateOutputHandler):
 
         :param data_dict: The data dictionary to render.
         :param template: The path to the template, after the
-            ``template_module`` or ``template_dir`` prefix as defined in the
-            application.
+         ``template_module`` or ``template_dirs`` prefix as defined in the
+         application.
         :returns: str (the rendered template text)
 
         """
