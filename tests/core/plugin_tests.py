@@ -6,7 +6,9 @@ import shutil
 from tempfile import mkdtemp
 from cement.core import exc, backend, plugin, handler
 from cement.utils import test
-from cement.utils.misc import init_defaults
+from cement.utils.misc import init_defaults, rando
+
+APP = rando()[:12]
 
 CONF = """
 [myplugin]
@@ -68,7 +70,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -85,7 +87,7 @@ class PluginTestCase(test.CementCoreTestCase):
     def test_load_order_presedence_one(self):
         # App config defines it as enabled, even though the plugin config has
         # it disabled... app trumps
-        defaults = init_defaults('myapp', 'myplugin')
+        defaults = init_defaults(APP, 'myplugin')
         defaults['myplugin']['enable_plugin'] = True
         tmpdir = mkdtemp()
 
@@ -97,7 +99,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -119,7 +121,7 @@ class PluginTestCase(test.CementCoreTestCase):
     def test_load_order_presedence_two(self):
         # App config defines it as false, even though the plugin config has
         # it enabled... app trumps
-        defaults = init_defaults('myapp', 'myplugin')
+        defaults = init_defaults(APP, 'myplugin')
         defaults['myplugin']['enable_plugin'] = False
         tmpdir = mkdtemp()
 
@@ -131,7 +133,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -153,7 +155,7 @@ class PluginTestCase(test.CementCoreTestCase):
     def test_load_order_presedence_three(self):
         # Multiple plugin configs, first plugin conf defines it as disabled,
         # but last read should make it enabled.
-        defaults = init_defaults('myapp', 'myplugin')
+        defaults = init_defaults(APP, 'myplugin')
         tmpdir = mkdtemp()
 
         f = open(os.path.join(tmpdir, 'a.conf'), 'w')
@@ -168,7 +170,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -190,7 +192,7 @@ class PluginTestCase(test.CementCoreTestCase):
     def test_load_order_presedence_four(self):
         # Multiple plugin configs, first plugin conf defines it as enabled,
         # but last read should make it disabled.
-        defaults = init_defaults('myapp', 'myplugin')
+        defaults = init_defaults(APP, 'myplugin')
         tmpdir = mkdtemp()
 
         f = open(os.path.join(tmpdir, 'a.conf'), 'w')
@@ -205,7 +207,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -226,7 +228,7 @@ class PluginTestCase(test.CementCoreTestCase):
 
     def test_load_order_presedence_five(self):
         # Multiple plugin configs, enable -> disabled -> enable
-        defaults = init_defaults('myapp', 'myplugin')
+        defaults = init_defaults(APP, 'myplugin')
         tmpdir = mkdtemp()
 
         f = open(os.path.join(tmpdir, 'a.conf'), 'w')
@@ -253,7 +255,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -283,7 +285,7 @@ class PluginTestCase(test.CementCoreTestCase):
         defaults['myplugin']['enable_plugin'] = True
         defaults['myplugin2'] = dict()
         defaults['myplugin2']['enable_plugin'] = False
-        app = self.make_app('myapp', config_defaults=defaults,
+        app = self.make_app(APP, config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -323,7 +325,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -349,7 +351,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(CONF5)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -368,7 +370,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(CONF)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir='./some/bogus/path',
@@ -392,7 +394,7 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(CONF4)
         f.close()
 
-        app = self.make_app('myapp',
+        app = self.make_app(APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,

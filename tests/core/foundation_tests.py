@@ -5,7 +5,10 @@ import sys
 from cement.core import foundation, exc, backend, config, extension, plugin
 from cement.core import log, output, handler, hook, arg, controller
 from cement.utils import test
-from cement.utils.misc import init_defaults
+from cement.utils.misc import init_defaults, rando
+
+APP = rando()[:12]
+
 
 def my_extended_func():
     return 'KAPLA'
@@ -46,7 +49,7 @@ class FoundationTestCase(test.CementCoreTestCase):
         self.app = self.make_app('my_app')
 
     def test_argv_is_none(self):
-        app = self.make_app('myapp', argv=None)
+        app = self.make_app(APP, argv=None)
         app.setup()
         self.eq(app.argv, list(sys.argv[1:]))
 
@@ -204,14 +207,14 @@ class FoundationTestCase(test.CementCoreTestCase):
         self.app.extend('config', my_extended_func)
 
     def test_no_handler(self):
-        app = self.make_app('myapp')
+        app = self.make_app(APP)
         app._resolve_handler('cache', None, raise_error=False)
 
     def test_config_files_is_none(self):
-        app = self.make_app('myapp', config_files=None)
+        app = self.make_app(APP, config_files=None)
         app.setup()
 
-        label = 'myapp'
+        label = APP
         user_home = os.path.abspath(os.path.expanduser(os.environ['HOME']))
         files = [
                 os.path.join('/', 'etc', label, '%s.conf' % label),
@@ -224,7 +227,7 @@ class FoundationTestCase(test.CementCoreTestCase):
 
     @test.raises(exc.FrameworkError)
     def test_base_controller_label(self):
-        app = self.make_app('myapp', base_controller=BogusBaseController)
+        app = self.make_app(APP, base_controller=BogusBaseController)
         app.setup()
 
     def test_pargs(self):

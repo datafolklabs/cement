@@ -2,7 +2,24 @@
 
 import sys
 import logging
+import hashlib
 from textwrap import TextWrapper
+from random import random
+
+
+def rando(salt=None):
+    """
+    Generate a random MD5 hash for whatever purpose.  Useful for testing
+    or any other time that something random is required.
+
+    :param salt: Optional 'salt', if None then random() is used.
+    :returns: Random MD5 hash (str).
+    """
+
+    if salt is None:
+        salt = random()
+
+    return hashlib.md5(str(salt).encode()).hexdigest()
 
 
 class MinimalLogger(object):

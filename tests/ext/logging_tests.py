@@ -4,9 +4,11 @@ import os
 import logging
 from tempfile import mkstemp
 from cement.core import handler, backend, log
-from cement.utils import test
 from cement.ext import ext_logging
-from cement.utils.misc import init_defaults
+from cement.utils import test
+from cement.utils.misc import init_defaults, rando
+
+APP = rando()[:12]
 
 class MyLog(ext_logging.LoggingLogHandler):
     class Meta:
@@ -19,7 +21,7 @@ class MyLog(ext_logging.LoggingLogHandler):
 @test.attr('core')
 class LoggingExtTestCase(test.CementExtTestCase):
     def test_alternate_namespaces(self):
-        defaults = init_defaults('myapp', 'log')
+        defaults = init_defaults(APP, 'log')
         defaults['log']['to_console'] = False
         defaults['log']['file'] = '/dev/null'
         defaults['log']['level'] = 'debug'
@@ -95,7 +97,7 @@ class LoggingExtTestCase(test.CementExtTestCase):
 
         defaults = init_defaults()
         defaults['log'] = dict(
-            file=os.path.join(tmp_path, 'myapp.log'),
+            file=os.path.join(tmp_path, '%s.log' % APP),
             )
         app = self.make_app(config_defaults=defaults)
         app.setup()

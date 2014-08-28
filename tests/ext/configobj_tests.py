@@ -5,12 +5,15 @@ import sys
 from tempfile import mkstemp
 from cement.core import handler, backend, log
 from cement.utils import test
+from cement.utils.misc import rando
 
 if sys.version_info[0] < 3:
     import configobj
 else:
     raise test.SkipTest('ConfigObj does not support Python 3') # pragma: no cover
 
+
+APP = rando()[:12]
 
 CONFIG = """
 [my_section]
@@ -23,7 +26,7 @@ class ConfigObjExtTestCase(test.CementTestCase):
         f = open(self.tmppath, 'w+')
         f.write(CONFIG)
         f.close()
-        self.app = self.make_app('myapp',
+        self.app = self.make_app(APP,
             extensions=['configobj'],
             config_handler='configobj',
             config_files = [self.tmppath],

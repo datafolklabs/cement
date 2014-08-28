@@ -10,7 +10,11 @@ from random import random
 from cement.core import handler, backend, log, hook, exc
 from cement.utils import shell
 from cement.utils import test
+from cement.utils.misc import rando
 from cement.ext import ext_daemon
+
+APP = rando()[:12]
+
 
 class DaemonExtTestCase(test.CementExtTestCase):
     def setUp(self):
@@ -100,7 +104,7 @@ class DaemonExtTestCase(test.CementExtTestCase):
         self.eq(p.exitcode, 0)
 
     def test_daemon_not_passed(self):
-        app = self.make_app('myapp', extensions=['daemon'])
+        app = self.make_app(APP, extensions=['daemon'])
 
         app.setup()
         app.config.set('daemon', 'pid_file', None)
