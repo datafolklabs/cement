@@ -2,6 +2,7 @@
 
 import os
 import sys
+import json
 from cement.core import foundation, exc, backend, config, extension, plugin
 from cement.core import log, output, handler, hook, arg, controller
 from cement.utils import test
@@ -46,6 +47,7 @@ def my_hook_three(app):
 
 class FoundationTestCase(test.CementCoreTestCase):
     def setUp(self):
+        super(FoundationTestCase, self).setUp()
         self.app = self.make_app('my_app')
 
     def test_argv_is_none(self):
@@ -139,6 +141,34 @@ class FoundationTestCase(test.CementCoreTestCase):
         app.output = None
         app.render(dict(foo='bar'))
 
+    def test_render_out_to_file(self):
+        self.app = self.make_app(APP, extensions=['json'],
+                                 output_handler='json')
+        self.app.setup()
+        self.app.run()
+
+        f = open(self.tmp_file, 'w')
+        self.app.render(dict(foo='bar'), out=f)
+        f.close()
+
+        f = open(self.tmp_file, 'r')
+        data = json.load(f)
+        f.close()
+
+        self.eq(data, dict(foo='bar'))
+
+    @test.raises(TypeError)
+    def test_render_bad_out(self):
+        self.app.setup()
+        self.app.run()
+
+        try:
+            self.app.render(dict(foo='bar'), out='bogus type')
+        except TypeError as e:
+            self.eq(e.args[0], "Argument 'out' must be a 'file' like object")
+            raise
+
+
     @test.raises(exc.FrameworkError)
     def test_bad_label(self):
         try:
@@ -171,7 +201,6 @@ class FoundationTestCase(test.CementCoreTestCase):
 
     def test_lay_cement(self):
         app = self.make_app('test', argv=['--quiet'])
-        app = self.make_app('test', argv=['--json', '--yaml'])
 
     def test_none_member(self):
         class Test(object):
@@ -270,3 +299,42 @@ class FoundationTestCase(test.CementCoreTestCase):
         except AssertionError as e:
             self.eq(e.args[0], "Invalid exit status code (must be integer)")
             raise
+
+    def test_handler_override_options(self):
+        app = self.make_app(APP,
+                argv=['-o', 'json'],
+                extensions=['yaml', 'json'],
+                )
+        app.setup()
+        app.run()
+        self.eq(app._meta.output_handler, 'json')
+
+    def test_handler_override_options_is_none(self):
+        app = self.make_app(APP,
+                core_handler_override_options=None,
+                handler_override_options=None
+                )
+        app.setup()
+        app.run()
+
+    def test_handler_override_invalid_interface(self):
+        app = self.make_app(APP,
+                handler_override_options=dict(
+                    bogus_interface = (['-f'], ['--foo'], {}),
+                    )
+                )
+        app.setup()
+        app.run()
+
+    def test_handler_override_options_not_passed(self):
+        app = self.make_app(APP,
+                extensions=['yaml', 'json'],
+                )
+        app.setup()
+        app.run()
+
+    def test_suppress_output_while_debug(self):
+        app = self.make_app(APP, debug=True)
+        app.setup()
+        app._suppress_output()
+

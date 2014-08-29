@@ -6,6 +6,9 @@ import yaml
 from tempfile import mkstemp
 from cement.core import handler, hook
 from cement.utils import test
+from cement.utils.misc import rando
+
+APP = rando()[:12]
 
 
 class YamlExtTestCase(test.CementTestCase):
@@ -41,7 +44,7 @@ class YamlExtTestCase(test.CementTestCase):
             config_handler='yaml',
             output_handler='yaml',
             config_files = [self.tmppath],
-            argv=['--yaml']
+            argv=['-o', 'yaml']
             )
 
     def tearDown(self):
@@ -74,3 +77,13 @@ class YamlExtTestCase(test.CementTestCase):
 
         self.eq(self.app.config.get_section_dict('section'),
                 self.CONFIG_PARSED['section'])
+
+    def test_handler_override_options_is_none(self):
+        app = self.make_app(APP,
+                extensions=['yaml'],
+                core_handler_override_options=None,
+                handler_override_options=None
+                )
+        app.setup()
+        app.run()
+        app.render(dict(foo='bar'))

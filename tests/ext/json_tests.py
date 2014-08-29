@@ -5,6 +5,10 @@ import sys
 from tempfile import mkstemp
 from cement.core import handler, backend, hook
 from cement.utils import test
+from cement.utils.misc import rando
+
+APP = rando()[:12]
+
 
 class JsonExtTestCase(test.CementExtTestCase):
     CONFIG = '''{
@@ -38,7 +42,7 @@ class JsonExtTestCase(test.CementExtTestCase):
             output_handler='json',
             config_handler='json',
             config_files = [self.tmppath],
-            argv=['--json']
+            argv=['-o', 'json']
             )
 
     def test_json(self):
@@ -67,3 +71,13 @@ class JsonExtTestCase(test.CementExtTestCase):
 
         self.eq(self.app.config.get_section_dict('section'),
                 self.CONFIG_PARSED['section'])
+
+    def test_handler_override_options_is_none(self):
+        app = self.make_app(APP,
+                extensions=['json'],
+                core_handler_override_options={},
+                handler_override_options={}
+                )
+        app.setup()
+        app.run()
+        app.render(dict(foo='bar'))

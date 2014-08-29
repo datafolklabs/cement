@@ -5,7 +5,8 @@ import os
 import sys
 import signal
 
-from ..core import backend, exc, handler, hook, log, config, plugin
+
+from ..core import backend, exc, handler, hook, log, config, plugin, interface
 from ..core import output, extension, arg, controller, meta, cache
 from ..ext import ext_configparser, ext_argparse, ext_logging
 from ..ext import ext_nulloutput, ext_plugin
@@ -14,71 +15,90 @@ from ..utils import fs
 
 if sys.version_info[0] >= 3:
     from imp import reload  # pragma: nocover
+    from io import StringIO  # pragma: nocover
+else:
+    from StringIO import StringIO  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
 
 class NullOut(object):
-
     def write(self, s):
         pass
 
     def flush(self):
         pass
 
-def add_output_handler_override_option(app):
+
+def add_handler_override_options(app):
     """
-    This is a ``post_setup`` hook that adds the ``--json`` argument to the
-    argument object.
+    This is a ``post_setup`` hook that adds the handler override options to
+    the argument parser
 
     :param app: The application object.
 
     """
-    if len(handler.list('output')) > 1:
-        output_handlers = []
-        for h in handler.list('output'):
-            output_handlers.append(h())
+    if app._meta.handler_override_options is None:
+        return
 
-        output_options = [x._meta.label
-                            for x in output_handlers
-                            if x._meta.display_override_option is True]
+    for i in app._meta.handler_override_options:
+        if i not in interface.list():
+            LOG.debug("interface '%s'" % i +
+                      " is not defined, can not override handlers")
+            continue
 
-        # don't display the option if not output handlers have
-        # display_override_option enabled
-        if len(output_options) > 0:
+        if len(handler.list(i)) > 1:
+            handlers = []
+            for h in handler.list(i):
+                handlers.append(h())
 
-            help_txt = "%s [%s]" % (
-                            app._meta.output_handler_override_help,
-                            ', '.join(output_options)
+            choices = [x._meta.label
+                       for x in handlers
+                       if x._meta.overridable is True]
+
+            # don't display the option if no handlers are overridable
+            if not len(choices) > 0:
+                LOG.debug("no handlers are overridable within the " +
+                          "%s interface" % i)
+                continue
+
+            # override things that we need to control
+            argument_kw = app._meta.handler_override_options[i][1]
+            argument_kw['dest'] = '%s_handler_override' % i
+            argument_kw['action'] = 'store'
+            argument_kw['choices'] = choices
+
+            app.args.add_argument(
+                *app._meta.handler_override_options[i][0],
+                **app._meta.handler_override_options[i][1]
             )
 
-            if app._meta.output_handler_override is not None:
-                app.args.add_argument(
-                    *app._meta.output_handler_override,
-                    help=help_txt,
-                    dest='output_handler_handler',
-                    action='store',
-                    metavar='STR'
-                )
 
-def output_handler_override(app):
+def handler_override(app):
     """
-    This is a ``post_argument_parsing`` hook that overrides the configured
-    output handler if ``CementApp.Meta.output_handler_override`` is enabled
-    and is passed at the command line.
+    This is a ``post_argument_parsing`` hook that overrides a configured
+    handler if defined in ``CementApp.Meta.handler_override_options`` and
+    the option is passed at command line with a valid handler label.
 
     :param app: The application object.
 
     """
-    if app._meta.output_handler_override is None:
+    if app._meta.handler_override_options is None:
         return
 
-    elif not hasattr(app.pargs, 'output_handler_override'):
-        return
+    for i in app._meta.handler_override_options.keys():
+        if not hasattr(app.pargs, '%s_handler_override' % i):
+            continue
+        elif getattr(app.pargs, '%s_handler_override' % i) is None:
+            continue
+        else:
+            # get the argument value from command line
+            argument = getattr(app.pargs, '%s_handler_override' % i)
+            setattr(app._meta, '%s_handler' % i, argument)
 
-    if app.pargs.output_handler_override is not None:
-        app._meta.output_handler = app.pargs.output_handler_override
-        app._setup_output_handler()
+            # and then re-setup the handler
+            getattr(app, '_setup_%s_handler' % i)()
+
 
 def cement_signal_handler(signum, frame):
     """
@@ -317,6 +337,43 @@ class CementApp(meta.MetaMixin):
         affect whether ``arguments_override_config`` is ``True`` or ``False``.
         """
 
+        core_handler_override_options = dict(
+            output=(['-o'], dict(help='output handler')),
+        )
+        """
+        Similar to ``CementApp.Meta.handler_override_options`` but these are
+        the core defaults required by Cement.  This dictionary can be
+        overridden by ``CementApp.Meta.handler_override_options`` (when they
+        are merged together).
+        """
+
+        handler_override_options = {}
+        """
+        Dictionary of handler override options that will be added to the
+        argument parser, and allow the end-user to override handlers.  Useful
+        for interfaces that have multiple uses within the same application
+        (for example: Output Handler (json, yaml, etc) or maybe a Cloud
+        Provider Handler (rackspace, digitalocean, amazon, etc).
+
+        This dictionary will merge with
+        ``CementApp.Meta.core_handler_override_options`` but this one has
+        precedence.
+
+        Dictionary Format:
+
+        .. code-block:: text
+
+            <interface_name> = (option_arguments, help_text)
+
+
+        See ``CementApp.Meta.core_handler_override_options`` for an example
+        of what this should look like.
+
+        Note, if set to ``None`` then no options will be defined, and the
+        ``CementApp.Meta.core_meta_override_options`` will be ignore (not
+        recommended as some extensions rely on this feature).
+        """
+
         config_section = None
         """
         The base configuration section for the application.
@@ -378,19 +435,6 @@ class CementApp(meta.MetaMixin):
         A handler class that implements the IOutput interface.  This can
         be a string (label of a registered handler), an uninstantiated
         class, or an instantiated class object.
-        """
-
-        output_handler_override = ['-o', '--output']
-        """
-        Options added to ``argument_handler`` command line arguments allowing
-        the user to override the ``output_handler`` (i.e. ``-o json``,
-        ``-o yaml``, etc.
-        """
-
-        output_handler_override_help = "output handler"
-        """
-        Help text that is displayed for the
-        ``output_handler_override_option``.
         """
 
         cache_handler = None
@@ -515,12 +559,6 @@ class CementApp(meta.MetaMixin):
         If set, this item will be **prepended** to
         ``CementApp.Meta.template_dirs`` (giving it precedence over other
         ``template_dirs``.
-        """
-
-        suppress_output = False
-        """
-        Used internally to suppress all console output (for example, when
-        ``--quiet`` is passed at command line).
         """
 
     def __init__(self, label=None, **kw):
@@ -691,7 +729,7 @@ class CementApp(meta.MetaMixin):
                 "Invalid exit status code (must be integer)"
             sys.exit(code)
 
-    def render(self, data, template=None):
+    def render(self, data, template=None, out=sys.stdout):
         """
         This is a simple wrapper around self.output.render() which simply
         returns an empty string if no self.output handler is defined.
@@ -699,6 +737,9 @@ class CementApp(meta.MetaMixin):
         :param data: The data dictionary to render.
         :param template: The template to render to.  Default: None (some
             output handlers do not use templates).
+        :param out: A file like object (sys.stdout, or actual file).  Set to
+         ``None`` is no output is desired (just render and return).
+         Default: sys.stdout
 
         """
         for res in hook.run('pre_render', self, data):
@@ -718,6 +759,13 @@ class CementApp(meta.MetaMixin):
                 LOG.debug('post_render hook did not return a str()')
             else:
                 out_text = str(res)
+
+        if out is not None and not hasattr(out, 'write'):
+            raise TypeError("Argument 'out' must be a 'file' like object")
+        elif out is not None and out_text is None:
+            LOG.debug('render() called but output text is None')
+        elif out:
+            out.write(out_text)
 
         self._last_rendered = (data, out_text)
         return out_text
@@ -764,6 +812,22 @@ class CementApp(meta.MetaMixin):
         """A shortcut for self.args.add_argument."""
         self.args.add_argument(*args, **kw)
 
+    def _suppress_output(self):
+        if self._meta.debug is True:
+            LOG.debug('not suppressing console output because of debug mode')
+            return
+
+        LOG.debug('suppressing all console output')
+        backend.__saved_stdout__ = sys.stdout
+        backend.__saved_stderr__ = sys.stderr
+        sys.stdout = NullOut()
+        sys.stderr = NullOut()
+
+    def _unsuppress_output(self):
+        LOG.debug('unsuppressing all console output')
+        sys.stdout = backend.__saved_stdout__
+        sys.stderr = backend.__saved_stderr__
+
     def _lay_cement(self):
         """Initialize the framework."""
         LOG.debug("laying cement for the '%s' application" %
@@ -772,16 +836,7 @@ class CementApp(meta.MetaMixin):
         if '--debug' in self._meta.argv:
             self._meta.debug = True
         elif '--quiet' in self._meta.argv:
-            # the following are hacks to suppress console output
-            # for flag in ['--quiet', '--json', '--yaml']:
-            self._meta.suppress_output = True
-
-        if self._meta.suppress_output:
-            LOG.debug('suppressing all console output per runtime config')
-            backend.__saved_stdout__ = sys.stdout
-            backend.__saved_stderr__ = sys.stderr
-            sys.stdout = NullOut()
-            sys.stderr = NullOut()
+            self._suppress_output()
 
         # start clean
         backend.__hooks__ = {}
@@ -801,8 +856,8 @@ class CementApp(meta.MetaMixin):
         hook.define('post_render')
 
         # register some built-in framework hooks
-        hook.register('post_setup', add_output_handler_override_option)
-        hook.register('post_argument_parsing', output_handler_override)
+        hook.register('post_setup', add_handler_override_options, weight=-99)
+        hook.register('post_argument_parsing', handler_override, weight=-99)
 
         # define and register handlers
         handler.define(extension.IExtension)
@@ -997,6 +1052,16 @@ class CementApp(meta.MetaMixin):
         self.args.add_argument('--quiet', dest='suppress_output',
                                action='store_true',
                                help='suppress all output')
+
+        # merge handler override meta data
+        if self._meta.handler_override_options is not None:
+            # fucking long names... fuck.  anyway, merge the core handler
+            # override options with developer defined options
+            core = self._meta.core_handler_override_options.copy()
+            dev = self._meta.handler_override_options.copy()
+            core.update(dev)
+
+            self._meta.handler_override_options = core
 
     def _setup_controllers(self):
         LOG.debug("setting up application controllers")

@@ -82,6 +82,8 @@ class IArgument(interface.Interface):
         :keyword help: The help text for --help output (for that argument).
         :keyword action: Must support: ['store', 'store_true', 'store_false',
             'store_const']
+        :keyword choices:  A list of valid values that can be passed to an
+         option whose action is ``store``.
         :keyword const: The value stored if action == 'store_const'.
         :keyword default: The default value.
         :returns: None

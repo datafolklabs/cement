@@ -160,11 +160,11 @@ And this looks like:
     The value of the 'foo' variable is => 'bar'
 
 
-Optionally, we can use the ``JsonOutputHandler`` via ``--json`` to trigger
+Optionally, we can use the ``JsonOutputHandler`` via ``-o json`` to trigger
 just Json output (supressing all other output) using our return dictionary:
 
 .. code-block:: text
 
-    $ python myapp.py --json
+    $ python myapp.py -o json
     {"foo": "bar"}
 

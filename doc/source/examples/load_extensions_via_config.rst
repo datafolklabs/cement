@@ -73,12 +73,13 @@ Which looks like:
     MyApp Does Amazing Things
 
     optional arguments:
-      -h, --help  show this help message and exit
-      --debug     toggle debug output
-      --quiet     suppress all output
-      --json      toggle json output handler
-      --yaml      toggle yaml output handler
+      -h, --help     show this help message and exit
+      --debug        toggle debug output
+      --quiet        suppress all output
+      -o {json,yaml} output format
 
 
-Note the ``--json`` and ``--yaml`` configuration options that are provided
-by the loaded extensions.
+Note the ``-o`` command line option that are provided by Cement allowing the
+end user to override the output handler with the available/loaded extensions
+(that support this feature).
+

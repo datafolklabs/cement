@@ -35,6 +35,8 @@ Features:
 
     * :issue:`119` - Added cement.utils.shell.Prompt to quickly gather user
       input in several different ways.
+    * :issue:`229` - Ability to override handlers via command line options.
+      Also related: :issue:`225`.
     * :issue:`248` - Added documentation for BASH Auto-Completion example.
     * :issue:`249` - Allow utils.shell.exec_cmd* to accept additional.
       parameters, passing all `args` and `kwargs` down to subprocess.Popen.
@@ -49,12 +51,15 @@ Features:
     * :issue:`269` - Allow app.close() to accept an exit code, and exit with
       that code.
     * :issue:`270` - Add support for multiple template_dirs
+    * :issue:`274` - Add cement.core.interface.list function
 
 Incompatible:
 
     * :issue:`227` - Standardize handler config section naming conventions.
       All handler config sections are now labeled after ``interface.handler``
       (i.e. ``output.json``, or ``mail.sendgrid``, etc).
+    * :issue:`229` - Handler override options deprecate the use of ``--json``,
+      and ``--yaml`` output handler options.
     * :issue:`260` - Extensions/Plugins/Bootstrap modules must accept `app`
       argument in `load()` function.  See Upgrading doc for more information.
 

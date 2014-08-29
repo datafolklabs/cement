@@ -9,31 +9,48 @@ from ..ext.ext_configparser import ConfigParserConfigHandler
 LOG = minimal_logger(__name__)
 
 
-# def add_json_option(app):
-#     """
-#     This is a ``post_setup`` hook that adds the ``--json`` argument to the
-#     argument object.
+def suppress_output_before_run(app):
+    """
+    This is a ``post_argument_parsing`` hook that suppresses console output if
+    the ``JsonOutputHandler`` is triggered via command line.
 
-#     :param app: The application object.
+    :param app: The application object.
 
-#     """
-#     app.args.add_argument('--json', dest='output_handler',
-#                           action='store_const',
-#                           help='toggle json output handler',
-#                           const='json')
+    """
+    if not hasattr(app.pargs, 'output_handler_override'):
+        return
+    elif app.pargs.output_handler_override == 'json':
+        app._suppress_output()
 
 
-# def set_output_handler(app):
-#     """
-#     This is a ``pre_run`` hook that overrides the configured output handler
-#     if ``--json`` is passed at the command line.
+def unsuppress_output_before_render(app, data):
+    """
+    This is a ``pre_render`` that unsuppresses console output if
+    the ``JsonOutputHandler`` is triggered via command line so that the JSON
+    is the only thing in the output.
 
-#     :param app: The application object.
+    :param app: The application object.
 
-#     """
-#     if '--json' in app._meta.argv:
-#         app._meta.output_handler = 'json'
-#         app._setup_output_handler()
+    """
+    if not hasattr(app.pargs, 'output_handler_override'):
+        return
+    elif app.pargs.output_handler_override == 'json':
+        app._unsuppress_output()
+
+
+def suppress_output_after_render(app, out_text):
+    """
+    This is a ``post_render`` hook that suppresses console output again after
+    rendering, only if the ``JsonOutputHandler`` is triggered via command
+    line.
+
+    :param app: The application object.
+
+    """
+    if not hasattr(app.pargs, 'output_handler_override'):
+        return
+    elif app.pargs.output_handler_override == 'json':
+        app._suppress_output()
 
 
 class JsonOutputHandler(output.CementOutputHandler):
@@ -44,10 +61,15 @@ class JsonOutputHandler(output.CementOutputHandler):
     library.  Please see the developer documentation on
     :ref:`Output Handling <dev_output_handling>`.
 
-    Note: The cement framework detects the '--json' option and suppresses
-    output (same as if passing --quiet).  Therefore, if debugging or
-    troubleshooting issues you must pass the --debug option to see whats
-    going on.
+    Note: By default, Cement adds the ``-o`` command line option to allow the
+    end user to override the output handler.  For example: passing ``-o json``
+    will override the default output handler and set it to
+    ``JsonOutputHandler``.  See ``CementApp.Meta.handler_override_options``.
+
+    This extension forces Cement to suppress console output until
+    ``app.render`` is called (keeping the output pure JSON).  If
+    troubleshooting issues, you will need to pass the ``--debug`` option in
+    order to unsuppress output and see what's happening.
 
     """
     class Meta:
@@ -60,7 +82,7 @@ class JsonOutputHandler(output.CementOutputHandler):
         label = 'json'
         """The string identifier of this handler."""
 
-        display_override_option = True
+        overridable = True
 
     def __init__(self, *args, **kw):
         super(JsonOutputHandler, self).__init__(*args, **kw)
@@ -78,8 +100,6 @@ class JsonOutputHandler(output.CementOutputHandler):
 
         """
         LOG.debug("rendering output as Json via %s" % self.__module__)
-        sys.stdout = backend.__saved_stdout__
-        sys.stderr = backend.__saved_stderr__
         return json.dumps(data_dict)
 
 
@@ -114,7 +134,8 @@ class JsonConfigHandler(ConfigParserConfigHandler):
 
 
 def load(app):
-    #hook.register('post_setup', add_json_option)
-    #hook.register('pre_run', set_output_handler)
+    hook.register('post_argument_parsing', suppress_output_before_run)
+    hook.register('pre_render', unsuppress_output_before_render)
+    hook.register('post_render', suppress_output_after_render)
     handler.register(JsonOutputHandler)
     handler.register(JsonConfigHandler)

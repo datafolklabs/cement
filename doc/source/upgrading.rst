@@ -12,6 +12,40 @@ Upgrading from 2.2.x to 2.4.x
 Cement 2.4 introduced a few incompatible changes from the previous 2.2 stable
 release, as noted in the :ref:`Changelog <changelog>`.
 
+
+error: unrecognized arguments: --json/--yaml
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After upgrading to Cement > 2.3.2 you might encounter the error:
+
+.. code-block:: text
+
+    error: unrecognized arguments: --json
+
+
+Or similar errors like:
+
+.. code-block:: text
+
+    error: unrecognized arguments: --yaml
+
+
+This is due to a design change, and a new feature allowing the end user to
+optionally override handlers via command line.  Rather than having a unique
+option for every type of output handler, you now have one option that allows
+overriding the defined output handler by passing it the handler label.
+
+Note that only handlers that have ``overridable = True`` in their meta-data
+will be valid options.
+
+To resolve this issue, you simply need to pass ``-o json`` or ``-o yaml`` at
+command line to override the default output handler.
+
+Related:
+
+    * :issue:`229`
+
+
 NoSectionError: No section: 'log'
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -31,6 +65,11 @@ Another issue you might encounter due to the above change is that log related
 configuration settings read from a configuration file would no longer work.
 The necessary change to resolve this issue is to change all references of
 ``log`` in relation to the log configuration section, to ``log.logging``.
+
+
+Related:
+
+    * :issue:`227`
 
 
 TypeError: load() takes no arguments (1 given)

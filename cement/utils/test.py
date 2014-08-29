@@ -1,6 +1,7 @@
 """Cement testing utilities."""
 
 import unittest
+from tempfile import mkstemp, mkdtemp
 from ..core import backend, foundation
 
 # shortcuts
@@ -45,6 +46,8 @@ class CementTestCase(unittest.TestCase):
 
         """
         self.app = self.make_app()
+        _, self.tmp_file = mkstemp()
+        self.tmp_dir = mkdtemp()
 
     def make_app(self, *args, **kw):
         """

@@ -254,9 +254,9 @@ Multiple Registered Handlers
 All handlers and interfaces are unique.  In most cases, where the framework
 is concerned, only one handler is used.  For example, whatever is configured
 for the ``log_handler`` will be used and setup as ``app.log``.  However, take
-for example an Output handler.  You might have a default ``output_handler`` of
+for example an Output Handler.  You might have a default ``output_handler`` of
 ``mustache``' (a text templating language) but may also want to override that
-handler with the ``json`` output handler when '--json' is passed at command
+handler with the ``json`` output handler when ``-o json`` is passed at command
 line.  In order to allow this functionality, both the ``mustache`` and
 ``json`` output handlers must be registered.
 
@@ -337,3 +337,105 @@ In the real world this may look like ``[cache.memcached]``, or
 ``[database.mysql]`` depending on what the interface label, and handler
 label's are.  Additionally, individual handlers can override their config
 section by setting ``Meta.config_section``.
+
+
+Overriding Handlers Via Command Line
+------------------------------------
+
+In some use cases, you will want the end user to have access to override the
+default handler of a particular interface.  For example, Cement ships with
+multiple Output Handlers including ``json``, ``yaml``, and ``mustache``.  A
+typical application might default to using ``mustache`` to render console
+output from text templates.  That said, without changing any code in the
+application, the end user can simply pass the ``-o json`` command line
+option and output the same data that is rendered to template, out in pure
+JSON.
+
+The only built-in handler override that Cement includes is for the above
+mentioned example, but you can add any that your application requires.
+
+The following example shows this in action... note that the following is
+already setup by Cement, but we're putting it here for clarity:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+
+            # define what extensions we want to load
+            extensions = ['mustache', 'json', 'yaml']
+
+            # define our default output handler
+            output_handler = 'mustache'
+
+            # define our handler override options
+            handler_override_options = dict(
+                output = (['-o'], dict(help='output format')),
+                )
+
+
+    # create the app
+    app = MyApp()
+
+    try:
+        # setup the app
+        app.setup()
+
+        # define some data for the output handler
+        data = dict(foo='bar')
+
+        # run the app
+        app.run()
+
+        # render something using our output handlers, using mustache by
+        # default which use the default.m template
+        app.render(data, 'default.m')
+
+    finally:
+        # close the app
+        app.close()
+
+
+Note what we see at command line:
+
+.. code-block:: text
+
+    $ python myapp.py --help
+    usage: myapp.py [-h] [--debug] [--quiet] [-o {yaml,json}]
+
+    optional arguments:
+      -h, --help      show this help message and exit
+      --debug         toggle debug output
+      --quiet         suppress all output
+      -o {yaml,json}  output format
+
+
+Notice the ``-o`` command line option, that includes the choices: ``yaml``
+and ``json``.  This feature will include all Output Handlers that have the
+``overridable`` meta-data option set to ``True``.  The MustacheOutputHandler
+does not set this option, therefore it does not show up as a valid choice.
+
+Now what happens when we run it?
+
+.. code-block:: text
+
+    $ python myapp.py
+
+    This text is being rendered via Mustache.
+    The value of the 'foo' variable is => 'bar'
+
+The above is the default output, using ``mustache`` as our ``output_handler``,
+and rendering the output text from a template called ``default.m``.  We can
+now override the output handler using the ``-o`` option and modify the output
+format:
+
+.. code-block:: text
+
+    $ python myapp.py -o json
+    {"foo": "bar"}
+
+
+Again, any handler can be overridden in this fashion.

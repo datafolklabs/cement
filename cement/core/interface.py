@@ -3,9 +3,20 @@ Cement core interface module.
 
 """
 
-from ..core import exc
+from ..core import exc, backend
 
 DEFAULT_META = ['interface', 'label', 'config_defaults', 'config_section']
+
+
+def list():
+    """
+    Return a list of defined interfaces (handler types).
+
+    :returns: List of defined interfaces
+    :rtype: list
+
+    """
+    return backend.__handlers__.keys()
 
 
 class Interface(object):
