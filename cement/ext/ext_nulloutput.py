@@ -24,6 +24,8 @@ class NullOutputHandler(output.CementOutputHandler):
         label = 'null'
         """The string identifier of this handler."""
 
+        display_override_option = False
+
     def render(self, data_dict, template=None):
         """
         This implementation does not actually render anything to output, but

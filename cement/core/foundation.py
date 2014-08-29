@@ -26,6 +26,59 @@ class NullOut(object):
     def flush(self):
         pass
 
+def add_output_handler_override_option(app):
+    """
+    This is a ``post_setup`` hook that adds the ``--json`` argument to the
+    argument object.
+
+    :param app: The application object.
+
+    """
+    if len(handler.list('output')) > 1:
+        output_handlers = []
+        for h in handler.list('output'):
+            output_handlers.append(h())
+
+        output_options = [x._meta.label
+                            for x in output_handlers
+                            if x._meta.display_override_option is True]
+
+        # don't display the option if not output handlers have
+        # display_override_option enabled
+        if len(output_options) > 0:
+
+            help_txt = "%s [%s]" % (
+                            app._meta.output_handler_override_help,
+                            ', '.join(output_options)
+            )
+
+            if app._meta.output_handler_override is not None:
+                app.args.add_argument(
+                    *app._meta.output_handler_override,
+                    help=help_txt,
+                    dest='output_handler_handler',
+                    action='store',
+                    metavar='STR'
+                )
+
+def output_handler_override(app):
+    """
+    This is a ``post_argument_parsing`` hook that overrides the configured
+    output handler if ``CementApp.Meta.output_handler_override`` is enabled
+    and is passed at the command line.
+
+    :param app: The application object.
+
+    """
+    if app._meta.output_handler_override is None:
+        return
+
+    elif not hasattr(app.pargs, 'output_handler_override'):
+        return
+
+    if app.pargs.output_handler_override is not None:
+        app._meta.output_handler = app.pargs.output_handler_override
+        app._setup_output_handler()
 
 def cement_signal_handler(signum, frame):
     """
@@ -327,6 +380,19 @@ class CementApp(meta.MetaMixin):
         class, or an instantiated class object.
         """
 
+        output_handler_override = ['-o', '--output']
+        """
+        Options added to ``argument_handler`` command line arguments allowing
+        the user to override the ``output_handler`` (i.e. ``-o json``,
+        ``-o yaml``, etc.
+        """
+
+        output_handler_override_help = "output handler"
+        """
+        Help text that is displayed for the
+        ``output_handler_override_option``.
+        """
+
         cache_handler = None
         """
         A handler class that implements the ICache interface.  This can
@@ -449,6 +515,12 @@ class CementApp(meta.MetaMixin):
         If set, this item will be **prepended** to
         ``CementApp.Meta.template_dirs`` (giving it precedence over other
         ``template_dirs``.
+        """
+
+        suppress_output = False
+        """
+        Used internally to suppress all console output (for example, when
+        ``--quiet`` is passed at command line).
         """
 
     def __init__(self, label=None, **kw):
@@ -697,19 +769,14 @@ class CementApp(meta.MetaMixin):
         LOG.debug("laying cement for the '%s' application" %
                   self._meta.label)
 
-        # overrides via command line
-        suppress_output = False
-
         if '--debug' in self._meta.argv:
             self._meta.debug = True
-        else:
+        elif '--quiet' in self._meta.argv:
             # the following are hacks to suppress console output
-            for flag in ['--quiet', '--json', '--yaml']:
-                if flag in self._meta.argv:
-                    suppress_output = True
-                    break
+            # for flag in ['--quiet', '--json', '--yaml']:
+            self._meta.suppress_output = True
 
-        if suppress_output:
+        if self._meta.suppress_output:
             LOG.debug('suppressing all console output per runtime config')
             backend.__saved_stdout__ = sys.stdout
             backend.__saved_stderr__ = sys.stderr
@@ -732,6 +799,10 @@ class CementApp(meta.MetaMixin):
         hook.define('signal')
         hook.define('pre_render')
         hook.define('post_render')
+
+        # register some built-in framework hooks
+        hook.register('post_setup', add_output_handler_override_option)
+        hook.register('post_argument_parsing', output_handler_override)
 
         # define and register handlers
         handler.define(extension.IExtension)

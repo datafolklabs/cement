@@ -31,6 +31,7 @@ class YamlOutputHandler(output.CementOutputHandler):
     class Meta:
         interface = output.IOutput
         label = 'yaml'
+        display_override_option = True
 
     def __init__(self, *args, **kw):
         super(YamlOutputHandler, self).__init__(*args, **kw)
@@ -57,32 +58,32 @@ class YamlOutputHandler(output.CementOutputHandler):
         return yaml.dump(data_dict)
 
 
-def add_yaml_option(app):
-    """
-    This is a ``post_setup`` hook that adds the ``--yaml`` argument to the
-    command line.
+# def add_yaml_option(app):
+#     """
+#     This is a ``post_setup`` hook that adds the ``--yaml`` argument to the
+#     command line.
 
-    :param app: The application object.
+#     :param app: The application object.
 
-    """
-    app.args.add_argument('--yaml',
-                          dest='output_handler',
-                          action='store_const',
-                          help='toggle yaml output handler',
-                          const='yaml')
+#     """
+#     app.args.add_argument('--yaml',
+#                           dest='output_handler',
+#                           action='store_const',
+#                           help='toggle yaml output handler',
+#                           const='yaml')
 
 
-def set_output_handler(app):
-    """
-    This is a ``pre_run`` hook that overrides the configured output handler
-    if ``--yaml`` is passed at the command line.
+# def set_output_handler(app):
+#     """
+#     This is a ``pre_run`` hook that overrides the configured output handler
+#     if ``--yaml`` is passed at the command line.
 
-    :param app: The application object.
+#     :param app: The application object.
 
-    """
-    if '--yaml' in app._meta.argv:
-        app._meta.output_handler = 'yaml'
-        app._setup_output_handler()
+#     """
+#     if '--yaml' in app._meta.argv:
+#         app._meta.output_handler = 'yaml'
+#         app._setup_output_handler()
 
 
 class YamlConfigHandler(ConfigParserConfigHandler):
@@ -124,5 +125,5 @@ class YamlConfigHandler(ConfigParserConfigHandler):
 def load(app):
     handler.register(YamlOutputHandler)
     handler.register(YamlConfigHandler)
-    hook.register('post_setup', add_yaml_option)
-    hook.register('pre_run', set_output_handler)
+    #hook.register('post_setup', add_yaml_option)
+    #hook.register('pre_run', set_output_handler)

@@ -9,31 +9,31 @@ from ..ext.ext_configparser import ConfigParserConfigHandler
 LOG = minimal_logger(__name__)
 
 
-def add_json_option(app):
-    """
-    This is a ``post_setup`` hook that adds the ``--json`` argument to the
-    argument object.
+# def add_json_option(app):
+#     """
+#     This is a ``post_setup`` hook that adds the ``--json`` argument to the
+#     argument object.
 
-    :param app: The application object.
+#     :param app: The application object.
 
-    """
-    app.args.add_argument('--json', dest='output_handler',
-                          action='store_const',
-                          help='toggle json output handler',
-                          const='json')
+#     """
+#     app.args.add_argument('--json', dest='output_handler',
+#                           action='store_const',
+#                           help='toggle json output handler',
+#                           const='json')
 
 
-def set_output_handler(app):
-    """
-    This is a ``pre_run`` hook that overrides the configured output handler
-    if ``--json`` is passed at the command line.
+# def set_output_handler(app):
+#     """
+#     This is a ``pre_run`` hook that overrides the configured output handler
+#     if ``--json`` is passed at the command line.
 
-    :param app: The application object.
+#     :param app: The application object.
 
-    """
-    if '--json' in app._meta.argv:
-        app._meta.output_handler = 'json'
-        app._setup_output_handler()
+#     """
+#     if '--json' in app._meta.argv:
+#         app._meta.output_handler = 'json'
+#         app._setup_output_handler()
 
 
 class JsonOutputHandler(output.CementOutputHandler):
@@ -59,6 +59,8 @@ class JsonOutputHandler(output.CementOutputHandler):
 
         label = 'json'
         """The string identifier of this handler."""
+
+        display_override_option = True
 
     def __init__(self, *args, **kw):
         super(JsonOutputHandler, self).__init__(*args, **kw)
@@ -112,7 +114,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
 
 
 def load(app):
-    hook.register('post_setup', add_json_option)
-    hook.register('pre_run', set_output_handler)
+    #hook.register('post_setup', add_json_option)
+    #hook.register('pre_run', set_output_handler)
     handler.register(JsonOutputHandler)
     handler.register(JsonConfigHandler)

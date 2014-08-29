@@ -44,6 +44,14 @@ class CementBaseHandler(meta.MetaMixin):
         override any existing defaults under that section.
         """
 
+        display_override_option = False
+        """
+        Whether or not to display this handlers label along with other
+        override options (if handler override options are enabled in
+        ``CementApp``).  Generally used for things like
+        ``CementApp.Meta.output_handler_override``
+        """
+
     def __init__(self, **kw):
         super(CementBaseHandler, self).__init__(**kw)
         self.app = None
