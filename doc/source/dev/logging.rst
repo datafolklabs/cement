@@ -1,22 +1,22 @@
 Log Handling
 ============
 
-Cement defines a logging interface called :ref:`ILog <cement.core.log>`, 
-as well as the default :ref:`LoggingLogHandler <cement.ext.ext_logging>` 
-that implements the interface.   This 
-handler is built on top of the `Logging <http://docs.python.org/library/logging.html>`_ 
-module which is included in the Python standard library.  
+Cement defines a logging interface called :ref:`ILog <cement.core.log>`,
+as well as the default :ref:`LoggingLogHandler <cement.ext.ext_logging>`
+that implements the interface.   This
+handler is built on top of the `Logging <http://docs.python.org/library/logging.html>`_
+module which is included in the Python standard library.
 
 Please note that there may be other handler's that implement the ILog
-interface.  The documentation below only references usage based on the 
+interface.  The documentation below only references usage based on the
 interface and not the full capabilities of the implementation.
 
 The following log handlers are included and maintained with Cement:
 
     * :ref:`LoggingLogHandler <cement.ext.ext_logging>`
-    
 
-Please reference the :ref:`ILog <cement.core.config>` interface 
+
+Please reference the :ref:`ILog <cement.core.config>` interface
 documentation for writing your own log handler.
 
 Logging Messages
@@ -28,28 +28,28 @@ The following shows logging to each of the defined log levels.
 
     from cement.core import foundation
     app = foundation.CementApp('myapp')
-    
+
     # First setup the application
     app.setup()
-    
+
     # Run the application (even though it doesn't do much here)
     app.run()
-    
+
     # Log a debug message
     app.log.debug('This is a debug message.')
-    
+
     # Log an info message
     app.log.info('This is an info message.')
-    
+
     # Log a warning message
     app.log.warn('This is a warning message.')
-    
+
     # Log an error message
     app.log.error('This is an error message.')
-    
+
     # Log an fatal error message
     app.log.fatal('This is a fatal message.')
-    
+
     # Close the application
     app.close()
 
@@ -63,22 +63,22 @@ and fatal... but you will not receive INFO, or DEBUG level messages.
 Changing Log Level
 ------------------
 
-The log level defaults to INFO, based on the 'config_defaults' of the log 
+The log level defaults to INFO, based on the 'config_defaults' of the log
 handler.  You can override this via config_defaults:
 
 .. code-block:: python
 
     from cement.core import foundation, backend
     from cement.utils.misc import init_defaults
-    
-    defaults = init_defaults('myapp', 'log')
-    defaults['log']['level'] = 'WARN'
-    
+
+    defaults = init_defaults('myapp', 'log.logging')
+    defaults['log.logging']['level'] = 'WARN'
+
     app = foundation.CementApp('myapp', config_defaults=defaults)
     app.setup()
-    
-This will also be overridden by the 'level' setting under a '[log]' section
-in any of the applications configuration files that are parsed.
+
+This will also be overridden by the 'level' setting under a '[log.logging]'
+section in any of the applications configuration files that are parsed.
 
 You should also note that Cement includes a '--debug' command line option by
 default.  This triggers the log level to 'DEBUG' and is helpful for quickly
@@ -134,17 +134,17 @@ debugging issues:
     2012-07-13 02:19:42,279 (DEBUG) cement.core.foundation : no controller could be found.
     2012-07-13 02:19:42,280 (DEBUG) cement.core.foundation : closing the application
 
-You can see that debug logging is extremely verbose.  In the above you will 
+You can see that debug logging is extremely verbose.  In the above you will
 note the message format is:
 
 .. code-block:: text
-    
+
     TIMESTAMP - LEVEL - MODULE - MESSAGE
-    
+
 The Cement framework only logs to DEBUG, where the MODULE is displayed as
-'cement.core.whatever'.  Note that Cement uses a minimal logger that is 
+'cement.core.whatever'.  Note that Cement uses a minimal logger that is
 separate from the application log, therefore settings you change in your
-application do not affect it.  
+application do not affect it.
 
 Logging to Console
 ------------------
@@ -166,24 +166,25 @@ When running this script at command line you would get:
 
     $ python test.py
     INFO: This is my info message
-    
+
 This can be disabled by setting 'to_console=False' in either the application
-defaults, or in an application configuration file under the '[log]' section.
+defaults, or in an application configuration file under the '[log.logging]'
+section.
 
 Logging to a File
 -----------------
 
 File logging is disabled by default, but is just one line to enable.  Simply
-set the 'file' setting under the '[log]' config section either by application
+set the 'file' setting under the '[log.logging]' config section either by application
 defaults, or via a configuration file.
 
 .. code-block:: python
 
     from cement.core import foundation, backend
     from cement.utils.misc import init_defaults
-    
-    defaults = init_defaults('myapp', 'log')
-    defaults['log']['file'] = 'my.log'
+
+    defaults = init_defaults('myapp', 'log.logging')
+    defaults['log.logging']['file'] = 'my.log'
 
     app = foundation.CementApp('myapp', config_defaults=defaults)
     app.setup()
@@ -197,23 +198,23 @@ Running this we will see:
 
     $ python test.py
     INFO: This is my info message
-    
+
     $ cat my.log
     2011-08-26 17:50:16,306 (INFO) myapp : This is my info message
-    
 
-Notice that the logging is a bit more verbose when logged to a file. 
+
+Notice that the logging is a bit more verbose when logged to a file.
 
 
 Tips on Debugging
 -----------------
 
-Note: The following is specific to the default 
+Note: The following is specific to the default
 :ref:`LoggingLogHandler <cement.ext.ext_logging>` only, and is not
 an implementation of the ILog interface.
 
 Logging to 'app.log.debug()' is pretty straight forward, however adding an
-additional parameter for the 'namespace' can greatly increase insight into 
+additional parameter for the 'namespace' can greatly increase insight into
 where that log is happening.  The 'namespace' defaults to the application name
 which you will see in every log like this:
 
@@ -226,24 +227,24 @@ For debugging, it might be more useful to change this to __name__:
 .. code-block:: python
 
     app.log.debug('This is my info message', __name__)
-    
+
 Which looks like:
 
 .. code-block:: text
 
     2012-07-30 18:05:11,357 (DEBUG) myapp.somepackage.test : This is my message
-    
+
 Or even more verbose, the __file__ and a line number of the log:
 
 .. code-block:: python
 
     app.log.debug('This is my info message', '%s,L2734' % __file__)
-    
+
 Which looks like:
 
 .. code-block:: text
 
     2012-07-30 18:05:11,357 (DEBUG) myapp/somepackage/test.py,L2345 : This is my message
 
-You can override this with anything... it doesn't have to be just for 
+You can override this with anything... it doesn't have to be just for
 debugging.

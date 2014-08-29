@@ -52,6 +52,9 @@ Features:
 
 Incompatible:
 
+    * :issue:`227` - Standardize handler config section naming conventions.
+      All handler config sections are now labeled after ``interface.handler``
+      (i.e. ``output.json``, or ``mail.sendgrid``, etc).
     * :issue:`260` - Extensions/Plugins/Bootstrap modules must accept `app`
       argument in `load()` function.  See Upgrading doc for more information.
 

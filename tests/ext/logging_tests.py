@@ -21,10 +21,10 @@ class MyLog(ext_logging.LoggingLogHandler):
 @test.attr('core')
 class LoggingExtTestCase(test.CementExtTestCase):
     def test_alternate_namespaces(self):
-        defaults = init_defaults(APP, 'log')
-        defaults['log']['to_console'] = False
-        defaults['log']['file'] = '/dev/null'
-        defaults['log']['level'] = 'debug'
+        defaults = init_defaults(APP, 'log.logging')
+        defaults['log.logging']['to_console'] = False
+        defaults['log.logging']['file'] = '/dev/null'
+        defaults['log.logging']['level'] = 'debug'
         app = self.make_app(config_defaults=defaults)
         app.setup()
         app.log.info('TEST', extra=dict(namespace=__name__))
@@ -47,7 +47,7 @@ class LoggingExtTestCase(test.CementExtTestCase):
 
     def test_bad_level(self):
         defaults = init_defaults()
-        defaults['log'] = dict(
+        defaults['log.logging'] = dict(
             level='BOGUS',
             to_console=False,
             )
@@ -71,7 +71,7 @@ class LoggingExtTestCase(test.CementExtTestCase):
     def test_rotate(self):
         log_file = mkstemp()[1]
         defaults = init_defaults()
-        defaults['log'] = dict(
+        defaults['log.logging'] = dict(
             file=log_file,
             level='DEBUG',
             rotate=True,
@@ -96,7 +96,7 @@ class LoggingExtTestCase(test.CementExtTestCase):
             os.remove(tmp_path)
 
         defaults = init_defaults()
-        defaults['log'] = dict(
+        defaults['log.logging'] = dict(
             file=os.path.join(tmp_path, '%s.log' % APP),
             )
         app = self.make_app(config_defaults=defaults)

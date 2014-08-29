@@ -34,7 +34,7 @@ class CementBaseHandler(meta.MetaMixin):
 
         Note: Though Meta.config_section defaults to None, Cement will
         set this to the value of ``<interface_label>.<handler_label>`` if
-        no section is set by the user/develop.
+        no section is set by the user/developer.
         """
 
         config_defaults = None

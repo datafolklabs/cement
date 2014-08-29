@@ -34,26 +34,21 @@ class LoggingLogHandler(log.CementLogHandler):
     Configuration Options
 
     The following configuration options are recognized in this class
-    (assuming that Meta.config_section is `log`):
+    (assuming that Meta.config_section is `log.logging`):
 
-        log.level
-
-        log.file
-
-        log.to_console
-
-        log.rotate
-
-        log.max_bytes
-
-        log.max_files
+        * level
+        * file
+        * to_console
+        * rotate
+        * max_bytes
+        * max_files
 
 
     A sample config section (in any config file) might look like:
 
     .. code-block:: text
 
-        [log]
+        [log.logging]
         file = /path/to/config/file
         level = info
         to_console = true
@@ -96,10 +91,6 @@ class LoggingLogHandler(log.CementLogHandler):
         #: `clear_loggers` as a boolean, but did fully support clearing
         #: non-app logging namespaces.
         clear_loggers = []
-
-        #: The section of the application configuration that holds this
-        #: handlers configuration.
-        config_section = 'log'
 
         #: The default configuration dictionary to populate the ``log``
         #: section.

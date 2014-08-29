@@ -101,7 +101,7 @@ Oh nice, ok... ArgParse is already setup with a few options I see.  What else?
     2014-04-15 12:28:24,714 (DEBUG) cement.ext.ext_configparser : config file '/Users/derks/.helloworld/config' does not exist, skipping...
     2014-04-15 12:28:24,715 (DEBUG) cement.core.foundation : no cache handler defined, skipping.
     2014-04-15 12:28:24,715 (DEBUG) cement.core.foundation : setting up helloworld.log handler
-    2014-04-15 12:28:24,715 (DEBUG) cement.core.handler : merging config defaults from '<cement.ext.ext_logging.LoggingLogHandler object at 0x1015c4ed0>' into section 'log'
+    2014-04-15 12:28:24,715 (DEBUG) cement.core.handler : merging config defaults from '<cement.ext.ext_logging.LoggingLogHandler object at 0x1015c4ed0>' into section 'log.logging'
     2014-04-15 12:28:24,715 (DEBUG) helloworld:None : logging initialized for 'helloworld:None' using LoggingLogHandler
     2014-04-15 12:28:24,715 (DEBUG) cement.core.foundation : setting up helloworld.plugin handler
     2014-04-15 12:28:24,715 (DEBUG) cement.ext.ext_plugin : plugin config dir /Users/derks/Development/boss/tmp/helloworld/config/plugins.d does not exist.

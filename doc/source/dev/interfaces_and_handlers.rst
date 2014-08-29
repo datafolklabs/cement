@@ -11,13 +11,13 @@ between.
 The Cement Interface code is loosely modeled after `Zope Interface <http://old.zope.org/Products/ZopeInterface>`_
 which allows a developer to define an interface that other developers can then
 create implementations for.  For example, an interface might define that a
-class have a function called '_setup()'.  Any implementation of that interface
-must provide a function called '_setup()', and perform the expected actions
-when called.
+class have a function called ``_setup()``.  Any implementation of that
+interface must provide a function called ``_setup()``, and perform the
+expected actions when called.
 
-In Cement, we call the implementation of interfaces 'handlers' and provide the
-ability to easily register, and retrieve them via the :ref:`cement.core.handler`
-library.
+In Cement, we call the implementation of interfaces ``handlers`` and provide
+the ability to easily register, and retrieve them via the
+:ref:`cement.core.handler` library.
 
 API References:
 
@@ -70,18 +70,18 @@ The following defines a basic interface:
     handler.define(MyInterface)
 
 The above simply defines the interface.  It does *not* implement any
-functionality, and should never been used directly.  This is why the class
-functions do not have an argument of 'self', nor do they contain any code
+functionality, and can't be used directly.  This is why the class
+functions do not have an argument of ``self``, nor do they contain any code
 other than comments.
 
-That said, what is required is an 'IMeta' class that is used to interact
-with the interface.  At the very least, this must include a unique 'label'
+That said, what is required is an ``IMeta`` class that is used to interact
+with the interface.  At the very least, this must include a unique ``label``
 to identify the interface.  This can also be considered the 'handler type'.
-For example, the ILog interface has a label of 'log' and any handlers
-registered to that interface are stored in backend.__handlers__['log'].
+For example, the ILog interface has a label of ``log`` and any handlers
+registered to that interface are stored in ``backend.__handlers__['log']``.
 
-Notice that we defined 'Meta' and 'my_var' as Interface Attributes.  This is
-a simple identifier that describes an attribute that an implementation is
+Notice that we defined ``Meta`` and ``my_var`` as Interface Attributes.  This
+is a simple identifier that describes an attribute that an implementation is
 expected to provide.
 
 Validating Interfaces
@@ -108,14 +108,15 @@ like this:
             validator = my_validator
         ...
 
-When 'handler.register()' is called to register a handler to an interface,
+When ``handler.register()`` is called to register a handler to an interface,
 the validator is called and the handler object is passed to the validator.  In
 the above example, we simply define what members we want to validate for and
-then call interface.validate() which will raise
-cement.core.exc.InterfaceError if validation fails.  It is not
-necessary to use interface.validate() but it is useful and recommended.  In
-general, the key thing to note is that a validator either raises
-InterfaceError or does nothing if validation passes.
+then call ``interface.validate()`` which will raise
+``cement.core.exc.InterfaceError`` if validation fails.  It is not
+necessary to use ``interface.validate()`` but it is useful and recommended.
+In general, the key thing to note is that a validator either raises
+``InterfaceError`` or does nothing if validation passes.
+
 
 Registering Handlers to an Interface
 ------------------------------------
@@ -151,10 +152,12 @@ is a handler that implements the MyInterface above:
 
     handler.register(MyHandler)
 
+
 The above is a simple class that meets all the expectations of the interface.
-When calling handler.register(), MyHandler is passed to the validator (if
-defined in the interface) and if it passes validation will be registered into
-the cement.core.backend.__handlers__ dictionary.
+When calling ``handler.register()``, ``MyHandler`` is passed to the validator
+(if defined in the interface) and if it passes validation will be registered
+into the ``cement.core.backend.__handlers__`` dictionary.
+
 
 Using Handlers
 --------------
@@ -184,9 +187,11 @@ The following are a few examples of working with handlers:
     # Check if the handler 'argparse' is registered to the 'argument' interface
     handler.registered('argument', 'argparse')
 
-It is important to note that handlers are stored in backend.__handlers__ as
-uninstantiated objects.  Meaning you must instantiate them after retrieval,
-and call '_setup(app)' when using handlers directly (as in the above example).
+
+It is important to note that handlers are stored in ``backend.__handlers__``
+as uninstantiated objects.  Meaning you must instantiate them after retrieval,
+and call ``_setup(app)`` when using handlers directly (as in the above
+example).
 
 
 Overriding Default Handlers
@@ -194,7 +199,7 @@ Overriding Default Handlers
 
 Cement sets up a number of default handlers for logging, config parsing, etc.
 These can be overridden in a number of ways.  The first way is by passing
-them as keyword arguments to CementApp():
+them as keyword arguments to ``CementApp``:
 
 .. code-block:: python
 
@@ -204,8 +209,9 @@ them as keyword arguments to CementApp():
     # Create the application
     app = foundation.CementApp('myapp', log_handler=MyLogHandler)
 
+
 The second way to override a handler is by setting it directly in the
-CementApp meta data:
+``CementApp`` meta data:
 
 .. code-block:: python
 
@@ -218,6 +224,7 @@ CementApp meta data:
             log_handler = MyLogHandler
 
     app = MyApp()
+
 
 There are times that you may want to pre-instantiate handlers before
 passing them to CementApp().  The following works just the same:
@@ -236,20 +243,22 @@ passing them to CementApp().  The following works just the same:
 
     app = MyApp()
 
+
 To see what default handlers can be overridden, see the
 :ref:`cement.core.foundation <cement.core.foundation>` documentation.
+
 
 Multiple Registered Handlers
 ----------------------------
 
 All handlers and interfaces are unique.  In most cases, where the framework
 is concerned, only one handler is used.  For example, whatever is configured
-for the 'log_handler' will be used and setup as 'app.log'.  However, take for
-example an Output handler.  You might have a default output_handler of
-'genshi' (a text templating language) but may also want to override that
-handler with the 'json' output handler when '--json' is passed at command
-line.  In order to allow this functionality, both the 'genshi' and 'json'
-output handlers must be registered.
+for the ``log_handler`` will be used and setup as ``app.log``.  However, take
+for example an Output handler.  You might have a default ``output_handler`` of
+``mustache``' (a text templating language) but may also want to override that
+handler with the ``json`` output handler when '--json' is passed at command
+line.  In order to allow this functionality, both the ``mustache`` and
+``json`` output handlers must be registered.
 
 Any number of handlers can be registered to an interface.  You might have a
 use case for an Interface/Handler that may provide different compatibility
@@ -257,14 +266,15 @@ base on the operating system, or perhaps based on simply how the application
 is called.  A good example would be an application that automates building
 packages for Linux distributions.  An interface would define what a build
 handler needs to provide, but the build handler would be different based on
-the OS.  The application might have an 'rpm' build handler, or a 'debian'
+the OS.  The application might have an ``rpm`` build handler, or a ``dpkg``
 build handler to perform the build process differently.
+
 
 Customizing Handlers
 --------------------
 
 The most common way to customize a handler is to subclass it, and then pass
-it to CementApp():
+it to ``CementApp``:
 
 .. code-block:: python
 
@@ -281,23 +291,22 @@ it to CementApp():
 
     app = foundation.CementApp('myapp', log_handler=MyLogHandler)
 
+
 Hander Default Configuration Settings
 -------------------------------------
 
-All handlers can define default config file settings via the 'config_defaults'
-meta option.  These will be merged into the app.config under the
-'<handler_interface>.<handler_label>' section.  These settings are overridden
-in the following order.
+All handlers can define default config file settings via their
+``config_defaults`` meta option.  These will be merged into the ``app.config``
+under the ``[handler_interface].[handler_label]`` section.  These settings are
+overridden in the following order.
 
- * The config_defaults dictionary passed to CementApp()
+ * The config_defaults dictionary passed to ``CementApp``
  * Via any application config files with a
-   [<handler_interface>.<handler_type>] block
+   ``[handler_interface].[handler_type]`` block (i.e. ``cache.memcached``)
+
 
 The following shows how to override defaults by passing them with the defaults
-dictionary to CementApp():
-
-The first way is to pass the overrides via the config_defaults dictionary
-passed to the CementApp().
+dictionary to ``CementApp``:
 
 .. code-block:: python
 
@@ -308,21 +317,23 @@ passed to the CementApp().
     defaults['myinterface.myhandler'] = dict(foo='bar')
     app = foundation.CementApp('myapp', config_defaults=defaults)
 
-Cement will use all defaults set via MyHandler.Meta.config_defaults (for this
-example), and then override just what is passed via
-config_defaults['myinterface.myhandler'].  You should use this approach only
-to modify the global defaults for your application.  The second way is to then
-set configuration file defaults under the [myinterface.myhandler] section.
-For example:
 
-*my.config*
+Cement will use all defaults set via ``MyHandler.Meta.config_defaults`` (for
+this example), and then override just what is passed via
+``config_defaults['myinterface.myhandler']``.  You should use this approach
+only to modify the global defaults for your application.  The second way is to
+then set configuration file defaults under the ``[myinterface.myhandler]``
+section.  For example:
+
+**my.config**
 
 .. code-block:: text
 
     [myinterface.myhandler]
     foo = bar
 
-In the real world this may look like '[controller.tasks]', or
-'[database.mysql]' depending on what the interface label, and handler label's
-are.  Additionally, individual handlers can override their config section
-by setting Meta.config_section.
+
+In the real world this may look like ``[cache.memcached]``, or
+``[database.mysql]`` depending on what the interface label, and handler
+label's are.  Additionally, individual handlers can override their config
+section by setting ``Meta.config_section``.

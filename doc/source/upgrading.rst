@@ -12,6 +12,27 @@ Upgrading from 2.2.x to 2.4.x
 Cement 2.4 introduced a few incompatible changes from the previous 2.2 stable
 release, as noted in the :ref:`Changelog <changelog>`.
 
+NoSectionError: No section: 'log'
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After upgrading to Cement > 2.3.2 you might encounter the error:
+
+.. code-block:: text
+
+    NoSectionError: No section: 'log'
+
+
+In previous versions of Cement < 2.3.2, the default logging configuration
+section in the config file was ``[log]``.  This has been changed to
+``[log.logging]`` in order to be consistent with all other handler
+configuration sections.
+
+Another issue you might encounter due to the above change is that log related
+configuration settings read from a configuration file would no longer work.
+The necessary change to resolve this issue is to change all references of
+``log`` in relation to the log configuration section, to ``log.logging``.
+
+
 TypeError: load() takes no arguments (1 given)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

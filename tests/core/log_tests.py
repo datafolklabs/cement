@@ -23,7 +23,7 @@ class LogTestCase(test.CementCoreTestCase):
 
     def test_logging(self):
         defaults = init_defaults()
-        defaults['log'] = dict(
+        defaults['log.logging'] = dict(
             file='/dev/null',
             to_console=True
             )
@@ -38,8 +38,8 @@ class LogTestCase(test.CementCoreTestCase):
     def test_bogus_log_level(self):
         app = self.make_app('test')
         app.setup()
-        app.config.set('log', 'file', '/dev/null')
-        app.config.set('log', 'to_console', True)
+        app.config.set('log.logging', 'file', '/dev/null')
+        app.config.set('log.logging', 'to_console', True)
 
         # setup logging again
         app.log._setup(app)
@@ -53,8 +53,8 @@ class LogTestCase(test.CementCoreTestCase):
         app = self.make_app('test', debug=True)
         app.setup()
 
-        app.config.set('log', 'file', '/dev/null')
-        app.config.set('log', 'to_console', True)
+        app.config.set('log.logging', 'file', '/dev/null')
+        app.config.set('log.logging', 'to_console', True)
 
         app.log._setup(app)
         app.log.info('Tested.')
