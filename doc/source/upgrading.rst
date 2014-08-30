@@ -13,6 +13,28 @@ Cement 2.4 introduced a few incompatible changes from the previous 2.2 stable
 release, as noted in the :ref:`Changelog <changelog>`.
 
 
+CementApp.render() Prints Output Without Calling print()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Before Cement 2.3.2 the ``app.render()`` function did not actually print
+anything, therefore you would have to call ``print app.render()``.  This
+now defaults to writing output to ``sys.stdout``, but can be modified for the
+older behavior by passing ``out=None`` when calling it:
+
+.. code-block:: python
+
+    app.render(data, out=None)
+
+
+Additionally, you can also now write directly to a file:
+
+.. code-block:: python
+
+    myfile = open('/path/to/myfile', 'w')
+    app.render(data, out=myfile)
+    myfile.close()
+
+
 error: unrecognized arguments: --json/--yaml
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
