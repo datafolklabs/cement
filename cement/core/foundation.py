@@ -7,7 +7,7 @@ import signal
 
 
 from ..core import backend, exc, handler, hook, log, config, plugin, interface
-from ..core import output, extension, arg, controller, meta, cache
+from ..core import output, extension, arg, controller, meta, cache, mail
 from ..ext import ext_configparser, ext_argparse, ext_logging
 from ..ext import ext_nulloutput, ext_plugin
 from ..utils.misc import is_true, minimal_logger
@@ -397,51 +397,42 @@ class CementApp(meta.MetaMixin):
 
         config_handler = ext_configparser.ConfigParserConfigHandler
         """
-        A handler class that implements the IConfig interface.  This can
-        be a string (label of a registered handler), an uninstantiated
-        class, or an instantiated class object.
+        A handler class that implements the IConfig interface.
+        """
+
+        mail_handler = mail.DummyMailHandler
+        """
+        A handler class that implements the IMail interface.
         """
 
         extension_handler = extension.CementExtensionHandler
         """
-        A handler class that implements the IExtension interface.  This can
-        be a string (label of a registered handler), an uninstantiated
-        class, or an instantiated class object.
+        A handler class that implements the IExtension interface.
         """
 
         log_handler = ext_logging.LoggingLogHandler
         """
-        A handler class that implements the ILog interface.  This can
-        be a string (label of a registered handler), an uninstantiated
-        class, or an instantiated class object.
+        A handler class that implements the ILog interface.
         """
 
         plugin_handler = ext_plugin.CementPluginHandler
         """
-        A handler class that implements the IPlugin interface.  This can
-        be a string (label of a registered handler), an uninstantiated
-        class, or an instantiated class object.
+        A handler class that implements the IPlugin interface.
         """
 
         argument_handler = ext_argparse.ArgParseArgumentHandler
         """
-        A handler class that implements the IArgument interface.  This can
-        be a string (label of a registered handler), an uninstantiated
-        class, or an instantiated class object.
+        A handler class that implements the IArgument interface.
         """
 
         output_handler = ext_nulloutput.NullOutputHandler
         """
-        A handler class that implements the IOutput interface.  This can
-        be a string (label of a registered handler), an uninstantiated
-        class, or an instantiated class object.
+        A handler class that implements the IOutput interface.
         """
 
         cache_handler = None
         """
-        A handler class that implements the ICache interface.  This can
-        be a string (label of a registered handler), an uninstantiated
-        class, or an instantiated class object.
+        A handler class that implements the ICache interface.
         """
 
         base_controller = None
@@ -678,6 +669,7 @@ class CementApp(meta.MetaMixin):
         self._setup_signals()
         self._setup_extension_handler()
         self._setup_config_handler()
+        self._setup_mail_handler()
         self._setup_cache_handler()
         self._setup_log_handler()
         self._setup_plugin_handler()
@@ -863,6 +855,7 @@ class CementApp(meta.MetaMixin):
         handler.define(extension.IExtension)
         handler.define(log.ILog)
         handler.define(config.IConfig)
+        handler.define(mail.IMail)
         handler.define(plugin.IPlugin)
         handler.define(output.IOutput)
         handler.define(arg.IArgument)
@@ -964,6 +957,11 @@ class CementApp(meta.MetaMixin):
                     setattr(self._meta, key, is_true(base_dict[key]))
                 else:
                     setattr(self._meta, key, base_dict[key])
+
+    def _setup_mail_handler(self):
+        LOG.debug("setting up %s.mail handler" % self._meta.label)
+        self.mail = self._resolve_handler('mail',
+                                          self._meta.mail_handler)
 
     def _setup_log_handler(self):
         LOG.debug("setting up %s.log handler" % self._meta.label)

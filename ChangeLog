@@ -35,6 +35,7 @@ Features:
 
     * :issue:`119` - Added cement.utils.shell.Prompt to quickly gather user
       input in several different ways.
+    * :issue:`182` - Added an mail interface with basic implementations.
     * :issue:`229` - Ability to override handlers via command line options.
       Also related: :issue:`225`.
     * :issue:`248` - Added documentation for BASH Auto-Completion example.
@@ -52,7 +53,7 @@ Features:
       that code.
     * :issue:`270` - Add support for multiple template_dirs
     * :issue:`274` - Add cement.core.interface.list function
-    * :issue:`775` - Added `examples/` directory with working examples based
+    * :issue:`275` - Added `examples/` directory with working examples based
       on Examples section of the documentation.
 
 Incompatible:
