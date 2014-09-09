@@ -9,7 +9,7 @@ line, rather than option flags.  For example:
     $ myapp some-command some-argument --foo=bar
 
 
-In the above, `some-command` would be the function under whatever controller
+In the above, ``some-command`` would be the function under whatever controller
 it is exposed from, and `some-argument` would be just an arbtrary argument.
 In most cases, the argument within the code is generic, but its uses vary.
 For example:
@@ -21,8 +21,8 @@ For example:
     $ myapp create-group admins
 
 
-In the above, the sub-commands are `create-user` and `create-group`, and in
-this use case they are under the same controller.  The `argument` however
+In the above, the sub-commands are ``create-user`` and ``create-group``, and
+in this use case they are under the same controller.  The ``argument`` however
 differs for each command, though it is passed to the app the same (the first
 positional argument, that is not a controller/command).
 
@@ -47,16 +47,12 @@ Example
             label = 'second'
             stacked_type = 'nested'
             stacked_on = 'base'
+            description = 'this is the second controller namespace'
             arguments = [
-                (
-                    ['-f', '--foo'],
-                    dict(help='Notorious foo option', action='store')
-                ),
-                (
-                    ['extra_arguments'],
-                    dict(action='store', nargs='*')
-                ),
-
+                (['-f', '--foo'],
+                 dict(help='the notorious foo option', action='store')),
+                (['extra_arguments'],
+                 dict(action='store', nargs='*')),
             ]
 
         @expose()

@@ -5,168 +5,145 @@ For larger, complex applications it is often very useful to have abstract
 base controllers that hold shared arguments and commands that a number of
 other controllers have in common.  Note that in the example below, you can
 not override the Meta.arguments in a sub-class or you overwrite the shared
-arguments.  That said, you can add any number of additional commands in the
-sub-class but still maintain the existing shared commands.
+arguments, but it is possible to `append` to them in order to maintain the
+defaults while having unique options/arguments for the sub-classed controller.
+As well, you can add any number of additional commands in the sub-class but
+still maintain the existing shared commands (or override them as necessary).
 
 .. code-block:: python
 
-    from cement.core import foundation, controller, handler
-        
-    class AbstractBaseController(controller.CementBaseController):
+    from cement.core import foundation, handler
+    from cement.core.controller import CementBaseController, expose
+
+    class AbstractBaseController(CementBaseController):
         """
         This is an abstract base class that is useless on its own, but used
         by other classes to sub-class from and to share common commands and
-        arguments.
-    
+        arguments.  This should not be confused with the `MyAppBaseController`
+        used as the ``base_controller`` namespace.
+
         """
         class Meta:
+            stacked_on = 'base'
+            stacked_type = 'nested'
             arguments = [
                 ( ['-f', '--foo'], dict(help='notorious foo option')),
                 ]
-        
+
         def _setup(self, base_app):
-            """
-            Add a common object that is useful in multiple sub-classed
-            controllers.
-        
-            """
             super(AbstractBaseController, self)._setup(base_app)
-            self.my_shared_obj = dict()
-        
-        @controller.expose(hide=True)
+
+            # add a common object that will be used in any sub-class
+            self.reusable_dict = dict()
+
+        @expose(hide=True)
         def default(self):
             """
             This command will be shared within all controllers that sub-class
             from here.  It can also be overridden in the sub-class, but for
             this example we are making it dynamic.
-        
+
             """
             # do something with self.my_shared_obj here?
-            print(self.my_shared_obj)
-        
+            if 'some_key' in self.reusable_dict.keys():
+                pass
+
             # or do something with parsed args?
             if self.app.pargs.foo:
-                print "Foo option was passed!"
-            
+                print "Foo option was passed with value: %s" % self.app.pargs.foo
+
             # or maybe do something dynamically
-            if self._meta.label == 'controller1':
-                # do something for controller1
-                print("Inside Controller1.default()")
-            else:
-                # do something else
-                print("Inside %s.default()" % self._meta.label.capitalize())
-    
-    class MyBaseController(controller.CementBaseController):
+            print("Inside %s.default()" % self.__class__.__name__)
+
+    class MyAppBaseController(CementBaseController):
         """
         This is the application base controller, but we don't want to use our
         abstract base class here.
-    
+
         """
         class Meta:
             label = 'base'
-        
-        @controller.expose(hide=True)
+
+        @expose(hide=True)
         def default(self):
-            print("Inside MyBaseController.default()")
-        
+            print("Inside MyAppBaseController.default()")
+
     class Controller1(AbstractBaseController):
         """
         This controller sub-classes from the abstract base class as to inherite
         shared arguments, and commands.
-    
+
         """
         class Meta:
             label = 'controller1'
-            description = 'Controller1 Does Amazing Things'
-        
-        @controller.expose()
+
+        @expose()
         def command1(self):
             print("Inside Controller1.command1()")
-    
+
     class Controller2(AbstractBaseController):
         """
-        This controller also sub-classes from the abstract base class as to 
+        This controller also sub-classes from the abstract base class as to
         inherite shared arguments, and commands.
-    
+
         """
         class Meta:
             label = 'controller2'
-            description = 'Controller2 Also Does Amazing Things'
-        
-        @controller.expose()
+
+        @expose()
         def command2(self):
             print("Inside Controller2.command2()")
-    
-    app = foundation.CementApp('myapp', base_controller=MyBaseController)
 
-    try:    
-        # register non-base controller handlers
-        handler.register(Controller1)
-        handler.register(Controller2)
-    
-        app.setup()
-        app.run()
-    finally:
-        app.close()
-    
+    def main():
+        app = foundation.CementApp('myapp')
+
+        try:
+            # register controllers handlers
+            handler.register(MyAppBaseController)
+            handler.register(Controller1)
+            handler.register(Controller2)
+
+            app.setup()
+            app.run()
+        finally:
+            app.close()
+
+    if __name__ == '__main__':
+        main()
+
 And:
 
 .. code-block:: text
 
-    $ python test.py 
-    Inside MyBaseController.default()
+    $ python myapp.py
+    Inside MyAppBaseController.default()
 
-
-    $ python test.py --help
-    usage: test.py <CMD> -opt1 --opt2=VAL [arg1] [arg2] ...
+    $ python myapp.py --help
+    usage: myapp.py (sub-commands ...) [options ...] {arguments ...}
 
     Base Controller
 
     commands:
 
       controller1
-        Controller1 Does Amazing Things
+        Controller1 Controller
 
       controller2
-        Controller2 Also Does Amazing Things
+        Controller2 Controller
 
     optional arguments:
       -h, --help  show this help message and exit
       --debug     toggle debug output
       --quiet     suppress all output
-  
-
-    $ python test.py controller1 --help
-    usage: test.py controller1 <CMD> -opt1 --opt2=VAL [arg1] [arg2] ...
-
-    Controller1 Does Amazing Things
-
-    commands:
-
-      command1
-
-    optional arguments:
-      -h, --help         show this help message and exit
-      --debug            toggle debug output
-      --quiet            suppress all output
-      -f FOO, --foo FOO  notorious foo option
- 
-
-    $ python test.py controller1 command1 
-    Inside Controller1.command1()
 
 
-    $ python test.py controller2 command2
-    Inside Controller2.command2()
-
-
-    $ python test.py controller1 --foo=bar
-    {}
-    Foo option was passed!
+    $ python myapp.py controller1
     Inside Controller1.default()
 
+    $ python myapp.py controller1 --foo=bar
+    Foo option was passed with value: bar
+    Inside Controller1.default()
 
-    $ python test.py controller2 --foo=bar
-    {}
-    Foo option was passed!
+    $ python myapp.py controller2
     Inside Controller2.default()
+

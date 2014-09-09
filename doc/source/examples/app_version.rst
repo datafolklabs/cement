@@ -1,5 +1,5 @@
-Adding a --version Option to Your App
-=====================================
+Adding a Version Option to Your App
+===================================
 
 Almost every app out there supports a ``--version`` option of some sort that
 provides the end user with version information.  This is pretty important to

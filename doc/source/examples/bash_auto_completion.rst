@@ -8,7 +8,7 @@ The difficulty is that this auto-completion code must be maintained outside of
 Cement and your application code, and be implemented in the shell environment
 generally by use of an "RC" file, or similar means.  This then must be updated
 anytime your application is modified (or atleast any time the
-sub-commands/controllers are modified).
+sub-commands/controllers/arguments are modified).
 
 Note that, in the future, we would love to include some form of
 "BASH RC Generator" that will do this for you, however in the meantime the
@@ -23,8 +23,8 @@ sub-commands, that are implemented via nested-controllers.
 
 .. code-block:: python
 
+    from cement.core import foundation, handler
     from cement.core.controller import CementBaseController, expose
-    from cement.core import foundation, controller, handler
 
     class BaseController(CementBaseController):
         class Meta:
@@ -32,56 +32,52 @@ sub-commands, that are implemented via nested-controllers.
 
         @expose()
         def base_cmd1(self):
-            print("Inside BaseController.cmd1()")
-
-        @expose()
-        def base_cmd2(self):
-            print("Inside BaseController.cmd2()")
+            print("Inside BaseController.base_cmd1()")
 
     class EmbeddedController(CementBaseController):
         class Meta:
             label = 'embedded'
-            description = "Embedded with Base Namespace"
+            description = "embedded with base namespace"
             stacked_on = 'base'
             stacked_type = 'embedded'
 
         @expose()
-        def embedded_cmd1(self):
-            print("Inside EmbeddedController.cmd1()")
+        def base_cmd2(self):
+            print("Inside EmbeddedController.base_cmd2()")
 
         @expose()
-        def embedded_cmd2(self):
-            print("Inside EmbeddedController.cmd2()")
+        def embedded_cmd3(self):
+            print("Inside EmbeddedController.embedded_cmd3()")
 
     class SecondLevelController(CementBaseController):
         class Meta:
             label = 'second'
-            description = "Second Level Namespace After The Base"
+            description = ''
             stacked_on = 'base'
             stacked_type = 'nested'
 
         @expose()
-        def second_cmd1(self):
-            print("Inside SecondLevelController.cmd1()")
+        def second_cmd4(self):
+            print("Inside SecondLevelController.second_cmd4()")
 
         @expose()
-        def second_cmd2(self):
-            print("Inside SecondLevelController.cmd2()")
+        def second_cmd5(self):
+            print("Inside SecondLevelController.second_cmd5()")
 
     class ThirdLevelController(CementBaseController):
         class Meta:
             label = 'third'
-            description = "Third Level Namespace After The Second"
+            description = ''
             stacked_on = 'second'
             stacked_type = 'nested'
 
         @expose()
-        def third_cmd1(self):
-            print("Inside ThirdLevelController.cmd1()")
+        def third_cmd6(self):
+            print("Inside ThirdLevelController.third_cmd6()")
 
         @expose()
-        def third_cmd2(self):
-            print("Inside ThirdLevelController.cmd2()")
+        def third_cmd7(self):
+            print("Inside ThirdLevelController.third_cmd7()")
 
     class MyApp(foundation.CementApp):
         class Meta:
@@ -127,42 +123,30 @@ This looks like:
 
       base-cmd2
 
-      embedded-cmd1
-
-      embedded-cmd2
+      embedded-cmd3
 
       second
-        Second Level Namespace After The Base
-
-    optional arguments:
-      -h, --help  show this help message and exit
-      --debug     toggle debug output
-      --quiet     suppress all output
 
 
     $ python myapp.py second --help
 
-    Second Level Namespace After The Base
-
     commands:
 
-      second-cmd1
+      second-cmd4
 
-      second-cmd2
+      second-cmd5
 
       third
-        Third Level Namespace After The Second
 
 
     $ python myapp.py second third --help
 
-    Third Level Namespace After The Second
-
     commands:
 
-      third-cmd1
+      third-cmd6
 
-      third-cmd2
+      third-cmd7
+
 
 
 For demonstration purposes, we are going to create a BASH alias here so that
@@ -196,6 +180,8 @@ example and is not intended to be copy and pasted:
 
 .. code-block:: bash
 
+    alias myapp="python ./myapp.py"
+
     _myapp_complete()
     {
         local cur prev BASE_LEVEL
@@ -207,7 +193,7 @@ example and is not intended to be copy and pasted:
         # SETUP THE BASE LEVEL (everything after "myapp")
         if [ $COMP_CWORD -eq 1 ]; then
             COMPREPLY=( $(compgen \
-                          -W "base-cmd1 base-cmd2 embedded-cmd1 embedded-cmd2 second" \
+                          -W "base-cmd1 base-cmd2 embedded-cmd3 second" \
                           -- $cur) )
 
 
@@ -218,7 +204,7 @@ example and is not intended to be copy and pasted:
                 # HANDLE EVERYTHING AFTER THE SECOND LEVEL NAMESPACE
                 "second")
                     COMPREPLY=( $(compgen \
-                                  -W "second-cmd1 second-cmd2 third" \
+                                  -W "second-cmd4 second-cmd5 third" \
                                   -- $cur) )
                     ;;
 
@@ -240,7 +226,7 @@ example and is not intended to be copy and pasted:
                 # HANDLE EVERYTHING AFTER THE THIRD LEVEL NAMESPACE
                 "third")
                     COMPREPLY=( $(compgen \
-                                  -W "third-cmd1 third-cmd2" \
+                                  -W "third-cmd6 third-cmd7" \
                                   -- $cur) )
                     ;;
 
@@ -262,6 +248,7 @@ example and is not intended to be copy and pasted:
     complete -F _myapp_complete myapp
 
 
+
 You would then "source" the RC file:
 
 .. code-block:: bash
@@ -270,7 +257,7 @@ You would then "source" the RC file:
 
 
 In the "real world" you would probably put this in a system wide location
-such at `/etc/profile.d` or similar (in a production deployment).
+such at ``/etc/profile.d`` or similar (in a production deployment).
 
 Finally, this is what it looks like:
 
@@ -278,13 +265,13 @@ Finally, this is what it looks like:
 
     # show all sub-commands at the base level
     $ myapp [tab] [tab]
-    base-cmd1      base-cmd2      embedded-cmd1  embedded-cmd2  second
+    base-cmd1      base-cmd2      embedded-cmd3      second
 
     # auto-complete a partial matching sub-command
     $ myapp base [tab]
 
     $ myapp base-cmd [tab] [tab]
-    base-cmd1  base-cmd2
+    base-cmd1      base-cmd2
 
     # auto-complete a full matching sub-command
     $ myapp sec [tab]
@@ -293,9 +280,9 @@ Finally, this is what it looks like:
 
     # show all sub-commands under the second namespace
     $ myapp second [tab] [tab]
-    second-cmd1  second-cmd2  third
+    second-cmd4      second-cmd5      third
 
     # show all sub-commands under the third namespace
     $ myapp second third [tab] [tab]
-    third-cmd1   third-cmd2
+    third-cmd6      third-cmd7
 

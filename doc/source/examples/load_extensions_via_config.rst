@@ -23,6 +23,10 @@ before ``app.setup()`` completes (such as in early framework hooks).
         class Meta:
             label = 'myapp'
 
+            config_files = [
+                './myapp.conf',
+                ]
+
         def validate_config(self):
             if 'extensions' in self.config.keys('myapp'):
                 exts = self.config.get('myapp', 'extensions')
@@ -48,12 +52,16 @@ before ``app.setup()`` completes (such as in early framework hooks).
                     # add to meta data
                     self._meta.extensions.append(ext)
 
-    app = MyApp()
-    try:
-        app.setup()
-        app.run()
-    finally:
-        app.close()
+    def main():
+        app = MyApp()
+        try:
+            app.setup()
+            app.run()
+        finally:
+            app.close()
+
+    if __name__ == '__main__':
+        main()
 
 **myapp.conf**
 

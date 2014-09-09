@@ -52,6 +52,8 @@ Features:
       that code.
     * :issue:`270` - Add support for multiple template_dirs
     * :issue:`274` - Add cement.core.interface.list function
+    * :issue:`775` - Added `examples/` directory with working examples based
+      on Examples section of the documentation.
 
 Incompatible:
 

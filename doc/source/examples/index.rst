@@ -7,10 +7,10 @@ with Cement.
 .. toctree::
    :maxdepth: 1
 
-   version_option
+   app_version
    multiple_stacked_controllers
    abstract_base_controllers
    controllers_with_same_label
    bash_auto_completion
-   handling_extra_arguments
+   arbitrary_extra_arguments
    load_extensions_via_config

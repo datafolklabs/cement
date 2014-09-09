@@ -26,26 +26,29 @@ and a 'hosts' controller and we want to have a 'list' sub-command under both:
 
 .. code-block:: python
 
-    from cement.core import foundation, controller, handler
+    from cement.core import foundation, handler
+    from cement.core.controller import CementBaseController, expose
 
     # define application controllers
-    class MyAppBaseController(controller.CementBaseController):
+    class MyAppBaseController(CementBaseController):
         class Meta:
             label = 'base'
 
-    class UsersController(controller.CementBaseController):
+    class UsersController(CementBaseController):
         class Meta:
             label = 'users'
+            description = "this is the users controller"
             stacked_on = 'base'
             stacked_type = 'nested'
 
-    class HostsController(controller.CementBaseController):
+    class HostsController(CementBaseController):
         class Meta:
             label = 'hosts'
+            description = "this is the hosts controller"
             stacked_on = 'base'
             stacked_type = 'nested'
 
-    class UsersListController(controller.CementBaseController):
+    class UsersListController(CementBaseController):
         class Meta:
             label = 'users_list'
             description = 'list all available users'
@@ -54,56 +57,61 @@ and a 'hosts' controller and we want to have a 'list' sub-command under both:
             stacked_on = 'users'
             stacked_type = 'nested'
 
-        @controller.expose(hide=True)
+        @expose(hide=True)
         def default(self):
             print "Inside UsersListController.default()"
 
-    class HostsListController(controller.CementBaseController):
+    class HostsListController(CementBaseController):
         class Meta:
             label = 'hosts_list'
             description = 'list all available hosts'
             aliases = ['list']
             aliases_only = True
-            interface = controller.IController
             stacked_on = 'hosts'
             stacked_type = 'nested'
 
-        @controller.expose(hide=True)
+        @expose(hide=True)
         def default(self):
             print "Inside HostsListController.default()"
 
-    try:
-        # create the application
-        app = foundation.CementApp('myapp')
+    def main():
+        try:
+            # create the application
+            app = foundation.CementApp('myapp')
 
-        # register non-base controllers
-        handler.register(MyAppBaseController)
-        handler.register(UsersController)
-        handler.register(HostsController)
-        handler.register(UsersListController)
-        handler.register(HostsListController)
+            # register non-base controllers
+            handler.register(MyAppBaseController)
+            handler.register(UsersController)
+            handler.register(HostsController)
+            handler.register(UsersListController)
+            handler.register(HostsListController)
 
-        # setup the application
-        app.setup()
+            # setup the application
+            app.setup()
 
-        app.run()
-    finally:
-        app.close()
+            # run it
+            app.run()
+        finally:
+            # close it
+            app.close()
+
+    if __name__ == '__main__':
+        main()
 
 .. code-block:: text
 
-    $ myapp --help
-    usage: myapp (sub-commands ...) [options ...] {arguments ...}
+    $ python myapp.py --help
+    usage: myapp.py (sub-commands ...) [options ...] {arguments ...}
 
     Base Controller
 
     commands:
 
       hosts
-        Hosts Controller
+        this is the hosts controller
 
       users
-        Users Controller
+        this is the users controller
 
     optional arguments:
       -h, --help  show this help message and exit
@@ -111,10 +119,10 @@ and a 'hosts' controller and we want to have a 'list' sub-command under both:
       --quiet     suppress all output
 
 
-    $ myapp users --help
-    usage: myapp (sub-commands ...) [options ...] {arguments ...}
+    $ python myapp.py users --help
+    usage: myapp.py (sub-commands ...) [options ...] {arguments ...}
 
-    Users Controller
+    this is the users controller
 
     commands:
 
@@ -127,25 +135,9 @@ and a 'hosts' controller and we want to have a 'list' sub-command under both:
       --quiet     suppress all output
 
 
-    $ myapp hosts --help
-    usage: myapp (sub-commands ...) [options ...] {arguments ...}
-
-    Hosts Controller
-
-    commands:
-
-      list
-        list all available hosts
-
-    optional arguments:
-      -h, --help  show this help message and exit
-      --debug     toggle debug output
-      --quiet     suppress all output
-
-
-    $ myapp users list
+    $ python myapp.py users list
     Inside UsersListController.default()
 
-
-    $ myapp hosts list
+    $ python myapp.py hosts list
     Inside HostsListController.default()
+
