@@ -185,10 +185,10 @@ class SMTPMailHandler(mail.CementMailHandler):
         .. code-block:: python
 
             # Using all configuration defaults
-            app.send('This is my message body')
+            app.mail.send('This is my message body')
 
             # Overriding configuration defaults
-            app.send('My message body'
+            app.mail.send('My message body'
                 from_addr='me@example.com',
                 to=['john@example.com'],
                 cc=['jane@example.com', 'rita@example.com'],

@@ -184,10 +184,10 @@ class DummyMailHandler(mail.CementMailHandler):
         .. code-block:: python
 
             # Using all configuration defaults
-            app.send('This is my message body')
+            app.mail.send('This is my message body')
 
             # Overriding configuration defaults
-            app.send('My message body'
+            app.mail.send('My message body'
                 to=['john@example.com'],
                 from_addr='me@example.com',
                 cc=['jane@example.com', 'rita@example.com'],
