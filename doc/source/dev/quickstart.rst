@@ -86,8 +86,8 @@ Oh nice, ok... ArgParse is already setup with a few options I see.  What else?
     2014-04-15 12:28:24,706 (DEBUG) cement.core.foundation : adding signal handler for signal 15
     2014-04-15 12:28:24,712 (DEBUG) cement.core.foundation : adding signal handler for signal 2
     2014-04-15 12:28:24,712 (DEBUG) cement.core.foundation : setting up helloworld.extension handler
-    2014-04-15 12:28:24,712 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_nulloutput' framework extension
-    2014-04-15 12:28:24,712 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_nulloutput.NullOutputHandler'>' into handlers['output']['null']
+    2014-04-15 12:28:24,712 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_dummy' framework extension
+    2014-04-15 12:28:24,712 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_dummy.DummyOutputHandler'>' into handlers['output']['null']
     2014-04-15 12:28:24,712 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_plugin' framework extension
     2014-04-15 12:28:24,713 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
     2014-04-15 12:28:24,713 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_configparser' framework extension

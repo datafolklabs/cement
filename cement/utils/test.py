@@ -3,6 +3,7 @@
 import unittest
 from tempfile import mkstemp, mkdtemp
 from ..core import backend, foundation
+from ..utils.misc import rando
 
 # shortcuts
 from nose import SkipTest
@@ -19,7 +20,7 @@ class TestApp(foundation.CementApp):
 
     """
     class Meta:
-        label = 'test'
+        label = "app-%s" % rando()[:12]
         config_files = []
         argv = []
         base_controller = None

@@ -14,7 +14,7 @@ def mail_validator(klass, obj):
         'send',
     ]
 
-    ### FIX ME: Validate Configuration Defaults Here
+    ### FIX ME: Validate Meta/Configuration Defaults Here
 
     interface.validate(IMail, obj, members)
 
@@ -27,7 +27,21 @@ class IMail(interface.Interface):
 
     Implementations do *not* subclass from interfaces.
 
-    Usage:
+    **Configuration**
+
+    Implementations much support the following configuration settings:
+
+     * **to** - Default ``to`` addresses (list, or comma separated depending
+       on the ConfigHandler in use)
+     * **from_addr** - Default ``from_addr`` address
+     * **cc** - Default ``cc`` addresses (list, or comma separated depending
+       on the ConfigHandler in use)
+     * **bcc** - Default ``bcc`` addresses (list, or comma separated depending
+       on the ConfigHandler in use)
+     * **subject** - Default ``subject``
+     * **subject_prefix** - Additional string to prepend to the ``subject``
+
+    **Usage**
 
     .. code-block:: python
 
@@ -67,19 +81,38 @@ class IMail(interface.Interface):
 
     def send(body, **kwargs):
         """
-        Send a mail message.  Keyword arguments override defaults defined
-        in the handler implementations configuration (see possible keyword
-        arguments below).
+        Send a mail message.  Keyword arguments override configuration
+        defaults (cc, bcc, etc).
 
         :param body: The message body to send
-        :type body: Multiline string
+        :type body: multiline string
         :keyword to: List of recipients (generally email addresses)
+        :type to: list
+        :keyword from_addr: Address (generally email) of the sender
+        :type from_addr: string
         :keyword cc: List of CC Recipients
+        :type cc: list
         :keyword bcc: List of BCC Recipients
-        :keyword from: Address (generall email) of the sender
+        :type bcc: list
         :keyword subject: Message subject line
+        :type subject: string
         :returns: Boolean (``True`` if message is sent successfully, ``False``
          otherwise)
+
+        **Usage**
+
+        .. code-block:: python
+
+            # Using all configuration defaults
+            app.send('This is my message body')
+
+            # Overriding configuration defaults
+            app.send('My message body'
+                to=['john@example.com'],
+                from_addr='me@example.com',
+                cc=['jane@example.com', 'rita@example.com'],
+                subject='This is my subject',
+                )
 
         """
 
@@ -87,6 +120,10 @@ class IMail(interface.Interface):
 class CementMailHandler(handler.CementBaseHandler):
     """
     Base class that all Mail Handlers should sub-class from.
+
+    **Configuration Options**
+
+    This handler supports the following configuration options under a
 
     """
     class Meta:
@@ -104,7 +141,7 @@ class CementMailHandler(handler.CementBaseHandler):
         #: Configuration default values
         config_defaults = {
             'to' : [],
-            'from' : 'noreply@example.com',
+            'from_addr' : 'noreply@example.com',
             'cc' : [],
             'bcc' : [],
             'subject' : 'Default Subject Line',
@@ -132,47 +169,10 @@ class CementMailHandler(handler.CementBaseHandler):
                     value_list = value.split(',')
 
                     # clean up extra space if they had it inbetween commas
-                    value_list = (x.strip() for x in value_list)
+                    value_list = [x.strip() for x in value_list]
 
                     # set the new extensions value in the config
                     self.app.config.set(self._meta.config_section, item,
                                         value_list)
 
-
-class DummyMailHandler(CementMailHandler):
-    class Meta:
-        label = 'dummy'
-
-    def _get_params(self, **kw):
-        params = dict()
-        for item in ['to', 'from', 'cc', 'bcc', 'subject', 'subject_prefix']:
-            config_item = self.app.config.get(self._meta.config_section, item)
-            params[item] = getattr(kw, item, config_item)
-
-        return params
-
-    def send(self, body, **kw):
-        # shorted config values
-        params = self._get_params(**kw)
-        msg = "\n" + "=" * 77 + "\n"
-        msg += "DUMMY MAIL MESSAGE\n"
-        msg += "-" * 77 + "\n\n"
-        msg += "To: %s\n" % ', '.join(params['to'])
-        msg += "From: %s\n" % params['from']
-        msg += "CC: %s\n" % ', '.join(params['cc'])
-        msg += "BCC: %s\n" % ', '.join(params['bcc'])
-        msg += "Subject: %s%s\n\n---\n\n" % (params['subject_prefix'],
-                                    params['subject'])
-        msg += body + "\n"
-
-        msg += "\n" + "-" * 77 + "\n"
-
-        print msg
-
-class SMTPMailHandler(CementMailHandler):
-    class Meta:
-        label = 'smtp'
-
-    def send(self, body, **kw):
-        pass
 

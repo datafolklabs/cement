@@ -21,6 +21,7 @@ Cement Core Modules
    core/hook
    core/interface
    core/log
+   core/mail
    core/meta
    core/output
    core/plugin
@@ -56,7 +57,8 @@ Cement Extension Modules
    ext/ext_logging
    ext/ext_memcached
    ext/ext_mustache
-   ext/ext_nulloutput
+   ext/ext_dummy
    ext/ext_plugin
+   ext/ext_smtp
    ext/ext_yaml
    ext/ext_yaml_configobj

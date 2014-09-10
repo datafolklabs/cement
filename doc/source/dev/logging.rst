@@ -110,8 +110,8 @@ debugging issues:
     2012-07-13 02:19:42,272 (DEBUG) cement.core.foundation : adding signal handler for signal 15
     2012-07-13 02:19:42,273 (DEBUG) cement.core.foundation : adding signal handler for signal 2
     2012-07-13 02:19:42,273 (DEBUG) cement.core.foundation : setting up myapp.extension handler
-    2012-07-13 02:19:42,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_nulloutput' framework extension
-    2012-07-13 02:19:42,273 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_nulloutput.NullOutputHandler'>' into handlers['output']['null']
+    2012-07-13 02:19:42,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_dummy' framework extension
+    2012-07-13 02:19:42,273 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_dummy.DummyOutputHandler'>' into handlers['output']['null']
     2012-07-13 02:19:42,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_plugin' framework extension
     2012-07-13 02:19:42,273 (DEBUG) cement.core.handler : registering handler '<class 'cement.ext.ext_plugin.CementPluginHandler'>' into handlers['plugin']['cement']
     2012-07-13 02:19:42,273 (DEBUG) cement.core.extension : loading the 'cement.ext.ext_configparser' framework extension

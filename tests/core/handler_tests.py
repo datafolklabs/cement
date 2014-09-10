@@ -26,7 +26,7 @@ class BogusHandler4(meta.MetaMixin):
 class DuplicateHandler(output.CementOutputHandler):
     class Meta:
         interface = output.IOutput
-        label = 'null'
+        label = 'dummy'
 
     def _setup(self, config_obj):
         pass
@@ -72,8 +72,8 @@ class HandlerTestCase(test.CementCoreTestCase):
 
     @test.raises(exc.FrameworkError)
     def test_register_duplicate_handler(self):
-        from cement.ext import ext_nulloutput
-        handler.register(ext_nulloutput.NullOutputHandler)
+        from cement.ext import ext_dummy
+        handler.register(ext_dummy.DummyOutputHandler)
         try:
             handler.register(DuplicateHandler)
         except exc.FrameworkError:
@@ -89,7 +89,7 @@ class HandlerTestCase(test.CementCoreTestCase):
 
     def test_verify_handler(self):
         self.app.setup()
-        self.ok(handler.registered('output', 'null'))
+        self.ok(handler.registered('output', 'dummy'))
         self.eq(handler.registered('output', 'bogus_handler'), False)
         self.eq(handler.registered('bogus_type', 'bogus_handler'), False)
 
@@ -148,7 +148,7 @@ class HandlerTestCase(test.CementCoreTestCase):
 
     def test_handler_registered(self):
         self.app.setup()
-        self.eq(handler.registered('output', 'null'), True)
+        self.eq(handler.registered('output', 'dummy'), True)
 
     def test_handler_get_fallback(self):
         self.app.setup()

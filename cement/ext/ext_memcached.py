@@ -53,6 +53,12 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
 
     .. code-block:: text
 
+        [myapp]
+
+        # set the cache handler to use
+        cache_handler = memcached
+
+
         [cache.memcached]
 
         # time in seconds that an item in the cache will expire

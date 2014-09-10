@@ -90,7 +90,7 @@ class FoundationTestCase(test.CementCoreTestCase):
         from cement.ext import ext_logging
         from cement.ext import ext_argparse
         from cement.ext import ext_plugin
-        from cement.ext import ext_nulloutput
+        from cement.ext import ext_dummy
 
         # forces CementApp._resolve_handler to register the handler
         from cement.ext import ext_json
@@ -102,6 +102,7 @@ class FoundationTestCase(test.CementCoreTestCase):
             extension_handler=extension.CementExtensionHandler(),
             plugin_handler=ext_plugin.CementPluginHandler(),
             output_handler=ext_json.JsonOutputHandler(),
+            mail_handler=ext_dummy.DummyMailHandler(),
             argv=[__file__, '--debug']
             )
 
@@ -337,4 +338,11 @@ class FoundationTestCase(test.CementCoreTestCase):
         app = self.make_app(APP, debug=True)
         app.setup()
         app._suppress_output()
+
+    def test_core_meta_override(self):
+        defaults = init_defaults(APP)
+        defaults[APP]['mail_handler'] = 'dummy'
+        app = self.make_app(APP, debug=True, config_defaults=defaults)
+        app.setup()
+        app.run()
 

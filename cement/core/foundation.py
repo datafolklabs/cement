@@ -4,12 +4,8 @@ import re
 import os
 import sys
 import signal
-
-
 from ..core import backend, exc, handler, hook, log, config, plugin, interface
 from ..core import output, extension, arg, controller, meta, cache, mail
-from ..ext import ext_configparser, ext_argparse, ext_logging
-from ..ext import ext_nulloutput, ext_plugin
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
 
@@ -395,37 +391,37 @@ class CementApp(meta.MetaMixin):
         signal_handler = cement_signal_handler
         """A function that is called to handle any caught signals."""
 
-        config_handler = ext_configparser.ConfigParserConfigHandler
+        config_handler = 'configparser'
         """
         A handler class that implements the IConfig interface.
         """
 
-        mail_handler = mail.DummyMailHandler
+        mail_handler = 'dummy'
         """
         A handler class that implements the IMail interface.
         """
 
-        extension_handler = extension.CementExtensionHandler
+        extension_handler = 'cement'
         """
         A handler class that implements the IExtension interface.
         """
 
-        log_handler = ext_logging.LoggingLogHandler
+        log_handler = 'logging'
         """
         A handler class that implements the ILog interface.
         """
 
-        plugin_handler = ext_plugin.CementPluginHandler
+        plugin_handler = 'cement'
         """
         A handler class that implements the IPlugin interface.
         """
 
-        argument_handler = ext_argparse.ArgParseArgumentHandler
+        argument_handler = 'argparse'
         """
         A handler class that implements the IArgument interface.
         """
 
-        output_handler = ext_nulloutput.NullOutputHandler
+        output_handler = 'dummy'
         """
         A handler class that implements the IOutput interface.
         """
@@ -466,7 +462,7 @@ class CementApp(meta.MetaMixin):
         """
 
         core_extensions = [
-            'cement.ext.ext_nulloutput',
+            'cement.ext.ext_dummy',
             'cement.ext.ext_plugin',
             'cement.ext.ext_configparser',
             'cement.ext.ext_logging',
@@ -489,6 +485,8 @@ class CementApp(meta.MetaMixin):
             'plugin_dir',
             'ignore_deprecation_warnings',
             'template_dir',
+            'cache_handler',
+            'mail_handler',
         ]
         """
         List of meta options that can/will be overridden by config options
@@ -552,6 +550,7 @@ class CementApp(meta.MetaMixin):
         ``template_dirs``.
         """
 
+
     def __init__(self, label=None, **kw):
         super(CementApp, self).__init__(**kw)
 
@@ -571,6 +570,7 @@ class CementApp(meta.MetaMixin):
         self.output = None
         self.controller = None
         self.cache = None
+        self.mail = None
 
         # setup argv... this has to happen before lay_cement()
         if self._meta.argv is None:
@@ -949,6 +949,7 @@ class CementApp(meta.MetaMixin):
 
         # override select Meta via config
         base_dict = self.config.get_section_dict(self._meta.config_section)
+
         for key in base_dict:
             if key in self._meta.core_meta_override or \
                     key in self._meta.meta_override:
@@ -957,6 +958,31 @@ class CementApp(meta.MetaMixin):
                     setattr(self._meta, key, is_true(base_dict[key]))
                 else:
                     setattr(self._meta, key, base_dict[key])
+
+        # load extensions from configuraton file
+        if 'extensions' in self.config.keys(self._meta.label):
+            exts = self.config.get(self._meta.label, 'extensions')
+
+            # convert a comma-separated string to a list
+            if type(exts) is str:
+                ext_list = exts.split(',')
+
+                # clean up extra space if they had it inbetween commas
+                ext_list = [x.strip() for x in ext_list]
+
+                # set the new extensions value in the config
+                self.config.set(self._meta.label, 'extensions', ext_list)
+
+            # otherwise, if it's a list (ConfigObj?)
+            elif type(exts) is list:
+                ext_list = exts
+
+            for ext in ext_list:
+                # load the extension
+                self.ext.load_extension(ext)
+
+                # add to meta data
+                self._meta.extensions.append(ext)
 
     def _setup_mail_handler(self):
         LOG.debug("setting up %s.mail handler" % self._meta.label)
@@ -1096,6 +1122,8 @@ class CementApp(meta.MetaMixin):
                     label = 'myapp'
 
                 def validate_config(self):
+                    super(MyApp, self).validate_config()
+
                     # test that the log file directory exist, if not create it
                     logdir = os.path.dirname(self.config.get('log', 'file'))
 

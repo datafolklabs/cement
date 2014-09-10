@@ -2,6 +2,10 @@
 
 from cement.core import exc, controller, handler
 from cement.utils import test
+from cement.utils.misc import rando, init_defaults
+
+APP = "app-%s" % rando()[:12]
+
 
 class TestController(controller.CementBaseController):
     class Meta:
@@ -225,3 +229,40 @@ class ControllerTestCase(test.CementCoreTestCase):
         app.setup()
         app.run()
         self.eq(app.get_last_rendered()[0]['foo'], 'mypositional')
+
+    def test_load_extensions_from_config_list(self):
+        defaults = init_defaults(APP)
+        defaults[APP]['extensions'] = ['json', 'yaml']
+
+        app = self.make_app(
+            label=APP,
+            extensions=[],
+            config_defaults=defaults,
+            )
+        app.setup()
+        app.run()
+
+        res = 'cement.ext.ext_json' in app.ext._loaded_extensions
+        self.ok(res)
+
+        res = 'cement.ext.ext_yaml' in app.ext._loaded_extensions
+        self.ok(res)
+
+    def test_load_extensions_from_config_str(self):
+        defaults = init_defaults(APP)
+        defaults[APP]['extensions'] = 'json, yaml'
+
+        app = self.make_app(
+            label=APP,
+            extensions=[],
+            config_defaults=defaults,
+            )
+        app.setup()
+        app.run()
+
+        res = 'cement.ext.ext_json' in app.ext._loaded_extensions
+        self.ok(res)
+
+        res = 'cement.ext.ext_yaml' in app.ext._loaded_extensions
+        self.ok(res)
+

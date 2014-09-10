@@ -35,7 +35,9 @@ Features:
 
     * :issue:`119` - Added cement.utils.shell.Prompt to quickly gather user
       input in several different ways.
-    * :issue:`182` - Added an mail interface with basic implementations.
+    * :issue:`182` - Added an mail interface with basic implementations of
+      'dummy' (just prints message to console) and 'smtp' supporting sending
+      email via SMTP.
     * :issue:`229` - Ability to override handlers via command line options.
       Also related: :issue:`225`.
     * :issue:`248` - Added documentation for BASH Auto-Completion example.
