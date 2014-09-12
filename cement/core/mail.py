@@ -140,13 +140,13 @@ class CementMailHandler(handler.CementBaseHandler):
 
         #: Configuration default values
         config_defaults = {
-            'to' : [],
-            'from_addr' : 'noreply@example.com',
-            'cc' : [],
-            'bcc' : [],
-            'subject' : 'Default Subject Line',
-            'subject_prefix' : '',
-            }
+            'to': [],
+            'from_addr': 'noreply@example.com',
+            'cc': [],
+            'bcc': [],
+            'subject': 'Default Subject Line',
+            'subject_prefix': '',
+        }
 
     def __init__(self, *args, **kw):
         super(CementMailHandler, self).__init__(*args, **kw)
@@ -156,7 +156,7 @@ class CementMailHandler(handler.CementBaseHandler):
         self._validate_config()
 
     def send(self, body, **kw):
-        raise NotImplementedError
+        raise NotImplementedError   # pragma: nocover
 
     def _validate_config(self):
         # convert comma separated strings to lists (ConfigParser)
@@ -174,5 +174,3 @@ class CementMailHandler(handler.CementBaseHandler):
                     # set the new extensions value in the config
                     self.app.config.set(self._meta.config_section, item,
                                         value_list)
-
-

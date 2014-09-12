@@ -22,6 +22,7 @@ them in your applications.
    signal_handling
    cleanup
    caching
+   mail
    testing
    application_design
    boss_templates

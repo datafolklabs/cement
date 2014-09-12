@@ -121,21 +121,21 @@ class SMTPMailHandler(mail.CementMailHandler):
 
         #: Configuration default values
         config_defaults = {
-            'to' : [],
-            'from_addr' : 'noreply@localhost',
-            'cc' : [],
-            'bcc' : [],
-            'subject' : None,
-            'subject_prefix' : None,
-            'host' : 'localhost',
-            'port' : '25',
-            'timeout' : 30,
-            'ssl' : False,
-            'tls' : False,
-            'auth' : False,
-            'username' : None,
-            'password' : None,
-            }
+            'to': [],
+            'from_addr': 'noreply@localhost',
+            'cc': [],
+            'bcc': [],
+            'subject': None,
+            'subject_prefix': None,
+            'host': 'localhost',
+            'port': '25',
+            'timeout': 30,
+            'ssl': False,
+            'tls': False,
+            'auth': False,
+            'username': None,
+            'password': None,
+        }
 
     def _get_params(self, **kw):
         params = dict()
@@ -154,9 +154,9 @@ class SMTPMailHandler(mail.CementMailHandler):
 
         # also grab the subject_prefix
         params['subject_prefix'] = self.app.config.get(
-                                        self._meta.config_section,
-                                        'subject_prefix'
-                                        )
+            self._meta.config_section,
+            'subject_prefix'
+        )
 
         return params
 
@@ -210,7 +210,6 @@ class SMTPMailHandler(mail.CementMailHandler):
             server = smtplib.SMTP(params['host'], params['port'],
                                   params['timeout'])
 
-
         if is_true(params['auth']):
             server.login(params['username'], params['password'])
 
@@ -233,6 +232,7 @@ class SMTPMailHandler(mail.CementMailHandler):
                         params['to']+params['cc']+params['bcc'],
                         msg)
         server.quit()
+
 
 def load(app):
     handler.register(SMTPMailHandler)

@@ -152,9 +152,9 @@ class DummyMailHandler(mail.CementMailHandler):
 
         # also grab the subject_prefix
         params['subject_prefix'] = self.app.config.get(
-                                        self._meta.config_section,
-                                        'subject_prefix'
-                                        )
+            self._meta.config_section,
+            'subject_prefix'
+        )
 
         return params
 
@@ -214,7 +214,8 @@ class DummyMailHandler(mail.CementMailHandler):
 
         msg += "\n" + "-" * 77 + "\n"
 
-        print msg
+        print(msg)
+        return True
 
 
 def load(app):

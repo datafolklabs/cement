@@ -463,6 +463,7 @@ class CementApp(meta.MetaMixin):
 
         core_extensions = [
             'cement.ext.ext_dummy',
+            'cement.ext.ext_smtp',
             'cement.ext.ext_plugin',
             'cement.ext.ext_configparser',
             'cement.ext.ext_logging',
@@ -549,7 +550,6 @@ class CementApp(meta.MetaMixin):
         ``CementApp.Meta.template_dirs`` (giving it precedence over other
         ``template_dirs``.
         """
-
 
     def __init__(self, label=None, **kw):
         super(CementApp, self).__init__(**kw)
