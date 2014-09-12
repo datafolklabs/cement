@@ -26,15 +26,19 @@ class SMTPMailHandlerTestCase(test.CementTestCase):
         defaults['mail.smtp']['subject'] = 'Test Email To nobody@localhost'
         defaults['mail.smtp']['subject_prefix'] = 'PREFIX >'
 
-        self.app = self.make_app(APP,
-            config_defaults=defaults,
-            extensions=['smtp'],
-            mail_handler='smtp',
-            argv=[],
-            )
-        self.app.setup()
-        self.app.run()
-        self.app.mail.send('TEST MESSAGE')
+        with mock.patch('smtplib.SMTP') as mock_smtp:
+            self.app = self.make_app(APP,
+                config_defaults=defaults,
+                extensions=['smtp'],
+                mail_handler='smtp',
+                argv=[],
+                )
+            self.app.setup()
+            self.app.run()
+            self.app.mail.send('TEST MESSAGE')
+
+            instance = mock_smtp.return_value
+            self.eq(instance.sendmail.call_count, 1)
 
     def test_smtp_ssl_tls(self):
         defaults = init_defaults(APP, 'mail.smtp')
@@ -83,3 +87,4 @@ class SMTPMailHandlerTestCase(test.CementTestCase):
 
             instance = mock_smtp.return_value
             self.eq(instance.login.call_count, 1)
+            self.eq(instance.sendmail.call_count, 1)
