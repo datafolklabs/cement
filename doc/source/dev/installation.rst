@@ -1,10 +1,12 @@
 Installation
 ============
 
-It is recommended to work out of a `VirtualENV <http://pypi.python.org/pypi/virtualenv>`_
+It is recommended to work out of a
+`VirtualENV <http://pypi.python.org/pypi/virtualenv>`_
 during development of your application, which is reference throughout this
-documentation.  VirtualENV is easily installed on most platforms either with
-via pip or by your OS distributions packaging system (yum, apt, brew, etc).
+documentation.  VirtualENV is easily installed on most platforms either
+via PIP or by your OS distributions packaging system (Yum, Apt, Brew, etc).
+
 
 Installation
 ------------
@@ -26,9 +28,14 @@ Installation
 Running Tests
 -------------
 
-To run tests, do the following from the root of the source:
+To run tests, you will need to ensure any dependent services are running
+(for example Memcached), and then do the following from the root of the
+source:
 
 .. code-block:: text
+
+    # Start services
+    $ memcached &
 
     # Python 2.x
     $ pip install -r requirements-dev.txt
@@ -45,7 +52,5 @@ Building Documentation
 To build this documentation, do the following from the root of the source:
 
 .. code-block:: text
-
-    $ pip install sphinx
 
     $ python setup.py build_sphinx

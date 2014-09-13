@@ -1,55 +1,57 @@
 Argument and Option Handling
 ============================
 
-Cement defines an argument interface called :ref:`IArgument <cement.core.arg>`, 
-as well as the default :ref:`ArgParseArgumentHandler <cement.ext.ext_argparse>` 
-that implements the interface.  This handler is built on top of the 
-`ArgParse <http://docs.python.org/library/argparse.html>`_ module which is 
-included in the Python standard library.  
+Cement defines an argument interface called
+:ref:`IArgument <cement.core.arg>`, as well as the default
+:ref:`ArgParseArgumentHandler <cement.ext.ext_argparse>` that implements the
+interface.  This handler is built on top of the
+`ArgParse <http://docs.python.org/library/argparse.html>`_ module which is
+included in the Python standard library.
 
-Please note that there may be other handler's that implement the IArgument
-interface.  The documentation below only references usage based on the 
+Please note that there may be other handler's that implement the ``IArgument``
+interface.  The documentation below only references usage based on the
 interface and not the full capabilities of the implementation.
 
 The following argument handlers are included and maintained with Cement:
 
     * :ref:`ArgParseArgumentHandler <cement.ext.ext_argparse>`
-    
-Please reference the :ref:`IArgument <cement.core.arg>` interface 
+
+
+Please reference the :ref:`IArgument <cement.core.arg>` interface
 documentation for writing your own argument handler.
 
 Adding Arguments
 ----------------
 
-The IArgument interface is loosely based on ArgParse directly.  That said,
-it only defines a minimal set of params that must be honored by the 
+The ``IArgument`` interface is loosely based on ``ArgParse`` directly.  That
+said, it only defines a minimal set of params that must be honored by the
 handler implementation, even though the handler itself may except more than
 that.  The following shows some basic examples of adding
-arguments based on the interface (meaning, these examples should work 
+arguments based on the interface (meaning, these examples should work
 regardless of what the handler is):
 
 .. code-block:: python
 
     from cement.core import foundation
 
-    # Create the application
+    # create the application
     app = foundation.CementApp('myapp')
 
-    # Then setup the application... which will use our 'mylog' handler
+    # then setup the application... which will use our 'mylog' handler
     app.setup()
 
-    # Add any arguments after setup(), and before run()
+    # add any arguments after setup(), and before run()
     app.args.add_argument('-f', '--foo', action='store', dest='foo',
                           help='the notorious foo option')
     app.args.add_argument('-V', action='store_true', dest='vendetta',
-                          help='V for Vendetta')
+                          help='v for vendetta')
     app.args.add_argument('-A', action='store_const', const=12345,
-                          help='the A option')
+                          help='the big a option')
 
-    # Then run the application
+    # then run the application
     app.run()
 
-    # Access the parsed args from the app.pargs shortcut
+    # access the parsed args from the app.pargs shortcut
     if app.pargs.foo:
         print "Received foo option with value %s" % app.pargs.foo
     if app.pargs.vendetta:
@@ -57,11 +59,12 @@ regardless of what the handler is):
     if app.pargs.A:
         print "Received the A option with value %s" % app.pargs.A
 
-    # Close the application
+    # close the application
     app.close()
 
-Here we setup a basic application, and then add a '-f/--foo' optional argument
-to the parser.  
+
+Here we have setup a basic application, and then add a few arguments to the
+parser.
 
 .. code-block:: text
 
@@ -73,30 +76,29 @@ to the parser.
       --debug            toggle debug output
       --quiet            suppress all output
       -f FOO, --foo FOO  the notorious foo option
-      -V                 V for Vendetta
-      -A                 the A option
-    
+      -V                 v for vendetta
+      -A                 the big a option
+
     $ python test.py --foo=bar
     Received foo option with value bar
-    
+
     $ python test.py -V
     Received V for Vendetta!
-    
+
 
 Accessing Parsed Arguments
 --------------------------
 
-The IArgument interface defines that the 'parse()' function return any type 
-of object that stores the name of the argument as a member.  Meaning, when
-adding the 'foo' option with action='store' and the value is stored as the 
-'foo' destination... that would be accessible as app.pargs.foo.  In the case
-of the ArgParseArgumentHandler the return object is exactly what you would 
-expect by calling parser.parse_args().. but maybe different with other handler
-implementations.
+The ``IArgument`` interface defines that the ``parse()`` function return any
+type of object that stores the name of the argument as a class member.
+Meaning, when adding the ``foo`` option with ``action='store'`` and the value
+is stored as the ``foo`` destination... that would be accessible as
+``app.pargs.foo``.  In the case of the ``ArgParseArgumentHandler`` the return
+object is exactly what you would expect by calling ``parser.parse_args()``,
+but may be different with other argument handler implementations.
 
-The parsed arguments are actually stored as 'app._parsed_args', but are 
-exposed as 'app.pargs'.
-
-Accessing app.pargs can be seen in the examples above.
+The parsed arguments are actually stored as ``app._parsed_args``, but are
+exposed as ``app.pargs``.  Accessing ``app.pargs`` can be seen in the examples
+above.
 
 

@@ -98,7 +98,8 @@ Built-in Defaults
 -----------------
 
 The following are not required to exist in the config defaults, however if
-they do, Cement will honor them (overriding built-in defaults).
+they do, Cement will honor them (overriding or appending to built-in
+defaults).
 
     debug = ``False``
         Toggles debug output.  By default, this setting is also overridden
@@ -107,6 +108,10 @@ they do, Cement will honor them (overriding built-in defaults).
 
     ignore_deprecation_warnings = ``False``
         Disable deprecation warnings from being logged by Cement.
+
+    extensions = ``None``
+        List of additional framework extensions to load.  Any extensions
+        defined here will be appended to the application's defined extensions.
 
     plugin_config_dir = ``None``
         A directory path where plugin config files can be found.  Files
@@ -172,8 +177,8 @@ configuration.
 Accessing Configuration Settings
 --------------------------------
 
-After application creation, you can access the config handler via the
-``app.config`` object.  For example:
+After application creation and setup, you can access the config handler via
+the ``app.config`` object.  For example:
 
 .. code-block:: python
 
@@ -236,8 +241,12 @@ Note that Cement automatically parses any config files listed in the
     from cement.core import foundation, backend
 
     app = foundation.CementApp('myapp',
-        config_files=['/path/to/config1', '/path/to/config2'],
-        )
+            config_files = [
+                '/path/to/config1',
+                '/path/to/config2'
+                ],
+            )
+
 
 If no ``config_files`` meta is provided, Cement will set the defaults to the
 following common and sane defaults:
@@ -250,7 +259,7 @@ following common and sane defaults:
 Overriding Configurations with Command Line Options
 ---------------------------------------------------
 
-Config settings can be automatically overridden by a passed command line
+Config settings can **optionally** overridden by a passed command line
 option if the option name matches a configuration key.  Note that this will
 happen in *all* config sections if enabled:
 
@@ -263,10 +272,10 @@ happen in *all* config sections if enabled:
     defaults['myapp']['foo'] = 'bar'
 
     app = foundation.CementApp(
-        label='myapp',
-        config_defaults=defaults,
-        arguments_override_config=True,
-        )
+            label='myapp',
+            config_defaults=defaults,
+            arguments_override_config=True,
+            )
 
     try:
         # First setup the application
@@ -275,16 +284,19 @@ happen in *all* config sections if enabled:
         # Add arguments
         app.args.add_argument('--foo', action='store', dest='foo')
 
-        # Run the application (this parsed command line, among other things)
+        # Run the application (this parses command line, among other things)
         app.run()
 
     finally:
         # close the application
         app.close()
 
-At the command line, running the application and passing the
-``--foo=some_value`` option will override the ``foo`` setting under the
-``[myapp]`` section as well as any other section that has a matching key.
+
+With ``arguments_override_config`` enabled, running the application and
+passing the ``--foo=some_value`` option will override the ``foo`` setting
+under the ``[myapp]`` section as well as any other section that has a matching
+key.
+
 
 Configuration Options Versus Meta Options
 -----------------------------------------

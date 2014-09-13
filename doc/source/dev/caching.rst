@@ -17,33 +17,52 @@ documentation for writing your own cache handler.
 General Usage
 -------------
 
-For this example we use the Memcached extension.  This requires the pylibmc
-library to be installed, as well as a Memcached server running on localhost.
+For this example we use the Memcached extension, which requires the
+``pylibmc`` library to be installed, as well as a Memcached server running on
+localhost.
 
 Example:
+
+**/path/to/myapp.conf**
+
+.. code-block:: text
+
+    [myapp]
+    extensions = memcached
+
+    [cache.memcached]
+    # comma separated list of hosts to use
+    hosts = 127.0.0.1
+
+    # time in milliseconds
+    expire_time = 300
+
+**myapp.py**
 
 .. code-block:: python
 
     from cement.core import foundation
 
-    app = foundation.CementApp('myapp',
-                               extensions=['memcached'],
-                               cache_handler='memcached')
+    # create the application
+    app = foundation.CementApp('myapp')
 
     try:
+        # setup the application
         app.setup()
+
+        # run the application
         app.run()
 
-        # Set a cached value
+        # set a cached value
         app.cache.set('my_key', 'my value')
 
-        # Get a cached value
+        # get a cached value
         app.cache.get('my_key')
 
-        # Delete a cached value
+        # delete a cached value
         app.cache.delete('my_key')
 
-        # Delete the entire cache
+        # delete the entire cache
         app.cache.purge()
 
     finally:

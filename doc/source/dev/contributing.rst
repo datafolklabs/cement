@@ -19,7 +19,7 @@ Submitting Bug Reports and Feature Requests
 -------------------------------------------
 
 If you've found a bug, or would like to request a feature please create a
-detailed tracker for it at `<http://github.com/datafolklabs/cement>`_.
+detailed issue for it at `<http://github.com/datafolklabs/cement/issues>`_.
 
 The ideal bug report would include:
 
@@ -35,6 +35,8 @@ The ideal feature request would include:
 
     * Feature description
     * Example code, or pseudo code of how you might use the feature
+    * Example command line session showing how the feature would be used by
+      the end-user
     * A pull request including:
         * The feature you would like added
         * At least one test case that tests the feature and maintains 100%
@@ -50,7 +52,7 @@ Guidelines for Code Contributions
 All contributors should attempt to abide by the following:
 
     * Contributors fork the project on GitHub onto their own account
-    * All changes should be commited, and pushed to your repository
+    * All changes should be commited, and pushed to their repository
     * All pull requests are from a topic branch, not an existing Cement branch
     * Contributors make every effort to comply with
       `PEP8 <http://www.python.org/dev/peps/pep-0008/>`_
@@ -99,6 +101,7 @@ That said, for more complex commits, please use the following as an example
      - Typically a hyphen or asterisk is used for the bullet, preceded by a
        single space, with blank lines in between, but conventions vary here
 
+
 Source Code and Versioning
 --------------------------
 
@@ -112,6 +115,7 @@ Active 'forward' development happens out of two branches:
 
     * master - Development for the next minor stable release.
     * portland - Development for the next major release.
+
 
 Additionally, specific development branches might exist in the future for
 larger releases that may require iterative 'release candidate' handling before
@@ -154,14 +158,18 @@ This means:
       not happen often.
 
 It should be noted that both the Minor, and Bugfix versions follow a
-'even number == stable', and 'odd number == development' scheme.  Therefore,
+``even == stable``, and ``odd == development`` scheme.  Therefore,
 the current version in git will always end in an 'odd number'.  For example,
-if the current stable version is '2.0.18', then the version in 'stable/2.0.x'
-would be '2.0.19'.  That said, the 'master' branch might then be '2.1.1' which
-is the first version of the next minor release.  Bugfixes would get applied to
-both branches, however feature updates would only be applied to 'master'.
-The next stable release would then be '2.2.0' and a new git branch of
-'stable/2.2.x' will be created.
+if the current stable version is ``2.0.18``, then the version in
+``stable/2.0.x`` would be ``2.0.19``.  That said, the ``master`` branch might
+then be ``2.1.1`` which is the first version of the next minor release.
+Bugfixes would get applied to both branches, however feature updates would
+only be applied to ``master``. The next stable release would then be ``2.2.0``
+and a new git branch of ``stable/2.2.x`` will be created.
+
+The ``portland`` branch is always very forward looking, and will contain
+significant (and likely broken) code changes.  It should never be used for
+anything other than development and testing.
 
 
 
