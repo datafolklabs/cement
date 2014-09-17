@@ -11,11 +11,12 @@ All bugs/feature details can be found at:
 Where XXXXX is the 'Issue #' referenced below.  Additionally, this change log
 is available online at:
 
-    http://builtoncement.com/2.3/changes/
+    http://builtoncement.com/2.5/changes/
 
 
 See the :ref:`upgrading` section for more information related to
 any incompatible changes, and how to update your application to fix them.
+
 
 2.5.1 - DEVELOPMENT (will be released as 2.5./dev or 2.6.0/stable)
 ------------------------------------------------------------------------------
