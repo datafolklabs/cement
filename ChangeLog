@@ -11,18 +11,19 @@ All bugs/feature details can be found at:
 Where XXXXX is the 'Issue #' referenced below.  Additionally, this change log
 is available online at:
 
-    http://builtoncement.com/2.3/changes/
+    http://builtoncement.com/2.4/changes.html
 
 
 See the :ref:`upgrading` section for more information related to
 any incompatible changes, and how to update your application to fix them.
 
-2.3.1 - DEVELOPMENT (will be released as 2.3.2)
+
+2.4.0 - Wed Sep 17, 2014
 ------------------------------------------------------------------------------
 
-This is a branch off of the 2.2.x stable code base.  Maintenance releases for
-2.2.x will happen under the stable/2.2.x git branch, while forward feature
-development will happen here as 2.3.x under the git master branch.
+This is a new branch of the 2.x.x stable code base.  Maintenance releases for
+2.4.x will happen under the stable/2.4.x git branch, while forward feature
+development will happen as 2.5.x under the git master branch.
 
 Bugs:
 

@@ -8,7 +8,8 @@ pieces of the framework and allow customization of how Cement handles
 everything from logging to config file parsing, and almost every action in
 between.
 
-The Cement Interface code is loosely modeled after `Zope Interface <http://old.zope.org/Products/ZopeInterface>`_
+The Cement Interface code is loosely modeled after
+`Zope Interface <http://old.zope.org/Products/ZopeInterface>`_
 which allows a developer to define an interface that other developers can then
 create implementations for.  For example, an interface might define that a
 class have a function called ``_setup()``.  Any implementation of that
