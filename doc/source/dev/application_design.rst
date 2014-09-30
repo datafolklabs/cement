@@ -15,7 +15,7 @@ out of a single file.  The following is a minimal example that creates a
 .. code-block:: python
 
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
 
 
@@ -40,26 +40,15 @@ out of a single file.  The following is a minimal example that creates a
         def cmd2(self):
             print("Inside BaseController.cmd2()")
 
-    class MyApp(foundation.CementApp):
+    class MyApp(CementApp):
         class Meta:
             label = 'myapp'
             base_controller = BaseController
 
 
     def main():
-        # create the app - before the try/except/finally block
-        app = MyApp()
-
-        try:
-            # setup the app
-            app.setup()
-
-            # run the app
+        with MyApp() as app:
             app.run()
-
-        finally:
-            # close the app
-            app.close()
 
     if __name__ == '__main__':
         main()
@@ -87,7 +76,7 @@ application layout, and is a great starting point for anyone new to Cement.
 The primary detail about how to layout your code is this:  All CLI/Cement
 related code should live separate from the "core logic" of your application.
 Most likely, you will have some code that is re-usable by other people and you
-do not want to mix this with your Cement code, becuase that will rely on
+do not want to mix this with your Cement code, because that will rely on
 Cement being loaded to function properly (like it is when called from command
 line).
 
@@ -130,7 +119,8 @@ The following expands on the above to give an example of how you might handle
 exceptions at the highest level (wrapped around the app object).  It is very
 well known that exception handling should happen as close to the source of the
 exception as possible, and you should do that.  However at the top level
-(generally in your ``main.py`` or similar) you want to handle the exception so
+(generally in your ``main.py`` or similar) you want to handle certain
+exceptions (such as argument errors, or user interaction related errors) so
 that they are presented nicely to the user.  End-users don't like stack
 traces!
 
@@ -140,57 +130,40 @@ but you could also catch your own application specific exception this way:
 .. code-block:: python
 
     import sys
-    from cement.core.exc import FrameworkError, CaughtSignal
+
     from cement.core.foundation import CementApp
+    from cement.core.exc import FrameworkError, CaughtSignal
+
 
     def main():
-        # create the app
-        app = CementApp('myapp')
+        with CementApp('myapp') as app:
+            try:
+                app.run()
 
-        # default our exit status (return code) to 0 (non-error)
-        ret = 0
+            except CaughtSignal as e:
+                # determine what the signal is, and do something with it?
+                from signal import SIGINT, SIGABRT
 
-        try:
-            # setup the app
-            app.setup()
+                if e.signum == SIGINT:
+                    # do something... maybe change the exit code?
+                    app.exit_code = 110
+                elif e.signum == SIGABRT:
+                    # do something else...
+                    app.exit_code = 111
 
-            # run the app
-            app.run()
+            except FrameworkError as e:
+                # do something when a framework error happens
+                print("FrameworkError => %s" % e)
 
-        except CaughtSignal as e:
-            # maybe determine what the signal is, and do something with it?
-            from signal import SIGINT, SIGABRT
+                # and maybe set the exit code to something unique as well
+                app.exit_code = 300
 
-            if e.signum == SIGINT:
-                # do something... maybe change the return status
-                ret = 110
-            elif e.signum == SIGABRT:
-                # do something else...
-                ret = 111
-
-        except FrameworkError as e:
-            # do something when a framework error happens
-            print("FrameworkError => %s" % e)
-
-            # set the exit status to 1 (error)
-            ret = 1
-
-        finally:
-            # if --debug was passed, we want to see a full stack trace
-            if app.debug:
-                import traceback
-                print("")
-                print('TRACEBACK:')
-                print('-' * 77)
-
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                traceback.print_tb(exc_traceback, limit=20, file=sys.stdout)
-
-                print("")
-
-            # allow everything to cleanup nicely, and exit with out custom
-            # error code
-            app.close(ret)
+            finally:
+                # Maybe we want to see a full-stack trace for the above
+                # exceptions, but only if --debug was passed?
+                if app.debug:
+                    import traceback
+                    traceback.print_exc()
 
     if __name__ == '__main__':
         main()

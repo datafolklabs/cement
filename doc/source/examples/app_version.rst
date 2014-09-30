@@ -31,12 +31,9 @@ include, so we've added an example below.
             base_controller = MyBaseController
 
 
-    app = MyApp()
-    try:
-        app.setup()
+    with MyApp() as app:
         app.run()
-    finally:
-        app.close()
+
 
 This looks like:
 

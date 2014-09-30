@@ -60,22 +60,20 @@ The following example shows how to alter these settings for your application:
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
     from cement.core.ext import CementExtensionHandler
 
     class MyExtensionHandler(CementExtensionHandler):
         pass
 
-    app = foundation.CementApp('myapp',
-        extension_handler = MyExtensionHandler
-        extensions = ['myapp.ext.ext_something_fancy']
-        )
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extension_handler = MyExtensionHandler
+            extensions = ['myapp.ext.ext_something_fancy']
 
-    try:
-        app.setup()
+    with MyApp() as app:
         app.run()
-    finally:
-        app.close()
 
 
 Creating an Extension
@@ -145,17 +143,15 @@ in ``myapp/ext/ext_something_fancy.py``:
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
 
-    app = foundation.CementApp('myapp',
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
             extensions = ['myapp.ext.ext_something_fancy']
-            )
 
-    try:
-        app.setup()
+    with MyApp() as app:
         app.run()
-    finally:
-        app.close()
 
 
 Note that Cement provides a shortcut for Cement extensions.  For example, the
@@ -163,14 +159,14 @@ following:
 
 .. code-block:: python
 
-    app = foundation.CementApp('myapp', extensions=['json', 'daemon'])
+    CementApp('myapp', extensions=['json', 'daemon'])
 
 
 Is equivalent to:
 
 .. code-block:: python
 
-    app = foundation.CementApp('myapp',
+    CementApp('myapp',
         extensions=[
             'cement.ext.ext_json',
             'cement.ext.ext_daemon',
@@ -211,12 +207,8 @@ configuration files are loaded).
                 ]
 
     def main():
-        app = MyApp()
-        try:
-            app.setup()
+        with MyApp() as app:
             app.run()
-        finally:
-            app.close()
 
     if __name__ == '__main__':
         main()

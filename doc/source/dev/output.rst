@@ -132,12 +132,8 @@ the Mustache templating langugage, as well as Json output handling.
             output_handler = 'mustache'
 
 
-    app = MyApp()
-    try:
-        app.setup()
+    with MyApp() as app:
         app.run()
-    finally:
-        app.close()
 
 
 **/usr/lib/myapp/templates/default.m**

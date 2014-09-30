@@ -22,24 +22,25 @@ API Reference:
 Defining a Hook
 ---------------
 
-A hook can be defined as follows:
+A hook can be defined anywhere, however it is generally recommended to define
+the hook as early as possible, and within the application setup if possible:
 
 .. code-block:: python
 
-    from cement.core import foundation, hook
+    from cement.core.foundation import CementApp
+    from cement.core import hook
 
-    # First create the application
-    app = foundation.CementApp('myapp')
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
 
-    # Then define any application hooks
-    hook.define('my_example_hook')
+        def setup(self):
+            # always run core setup first
+            super(MyApp, self).setup()
 
-    # Setup the application
-    app.setup()
+            # define application hooks here
+            hook.define('my_example_hook')
 
-
-Hooks should be defined as early on in the bootstrap process as possible,
-after the CementApp() is instantiated, but before 'app.setup()' is called.
 
 
 Registering Functions to a Hook
@@ -47,35 +48,21 @@ Registering Functions to a Hook
 
 A hook is just an identifier, but the functions registered to that hook are
 what get run when the hook is called.  Registering a hook function should also
-be done early on in the bootstrap process (before the hook is called
-obviously).
+be done early on in the bootstrap process, any time after the application has
+been created, after the hook is defined, and before the hook is run.  Note
+that every hook is different, and therefore should be clearly documented by
+the 'owner' of the hook (application developer, plugin developer, etc).
 
 .. code-block:: python
 
-    from cement.core import foundation, hook
+    from cement.core import hook
 
-    # First create the application
-    app = foundation.CementApp('myapp')
-
-    # Then define any application hooks
-    hook.define('my_example_hook')
-
-    def my_func():
-        # do something
-        something = "The result of my hook."
-        return something
-
-    def my_other_func():
-        # do something
+    def my_func(app):
         pass
 
-    # Register any hook functions.  In the real world, this would likely be
-    # done elsewhere in the application such as in plugins.
-    hook.register('my_example_hook', my_func)
-    hook.register('my_example_hook', my_other_func)
-
-    # Setup the application
-    app.setup()
+    with CementApp('myapp') as app:
+        hook.register('my_example_hook', my_func)
+        app.run()
 
 
 What you return depends on what the developer defining the hook is expecting.
@@ -108,10 +95,11 @@ That said, this is how you run a hook:
         # do something with res?
         pass
 
+
 As you can see we iterate over the hook, rather than just calling
 ``hook.run()``.  This is necessary because ``hook.run()`` yields the results
-from each hook as they are run.  Hooks can be run anywhere *after* the hook is
-defined, and hooks are registered to that hook.
+from each hook function as they are run.  Hooks can be run anywhere *after*
+the hook is defined, and hooks are registered to that hook.
 
 
 Controlling Hook Run Order
@@ -127,62 +115,55 @@ a custom application hook:
 
 .. code-block:: python
 
-    from cement.core import foundation, controller, handler, hook
+    from cement.core.foundation import CementApp
+    from cement.core import handler, hook
 
-    # define an application base controller
-    class MyAppBaseController(controller.CementBaseController):
+    class MyApp(CementApp):
         class Meta:
-            interface = controller.IController
-            label = 'base'
-            description = "My Application does amazing things!"
+            label = 'myapp'
 
-            config_defaults = {}
-            arguments = []
+        def setup(self):
+            # always run core setup
+            super(MyApp, self).setup()
 
-        @controller.expose(hide=True, aliases=['run'])
-        def default(self):
-            for res in hook.run('myapp_default_command_hook', self.app):
-                pass
+            # define hooks in setup
+            hook.define('my_hook')
 
-    # create an application
-    app = foundation.CementApp('myapp', base_controller=MyAppBaseController)
 
-    # define a hook
-    hook.define('my_hook')
-
+    # the following are the function that will run when ``my_hook`` is called
     def func1(app):
-        print 'Inside func1 of %s.' % app.name
+        print 'Inside hook func1'
 
     def func2(app):
-        print 'Inside func2 of %s.' % app.name
+        print 'Inside hook func2'
 
     def func3(app):
-        print 'Inside func3 of %s.' % app.name
+        print 'Inside hook func3'
 
-    # register some hook functions
-    hook.register('my_hook', func1, weight=0)
-    hook.register('my_hook', func2, weight=100)
-    hook.register('my_hook', func3, weight=-99)
 
-    try:
-        # setup the application
-        app.setup()
+    with MyApp() as app:
+        # register all hook functions *after* the hook is defined (setup) but
+        # also *before* the hook is called (different for every hook)
+        hook.register('my_hook', func1, weight=0)
+        hook.register('my_hook', func2, weight=100)
+        hook.register('my_hook', func3, weight=-99)
 
         # run the application
         app.run()
 
-    finally:
-        # close the application
-        app.close()
+        # run our custom hook
+        for res in hook.run('my_hook', app):
+            pass
+
 
 And the result is:
 
 .. code-block:: text
 
-    $ python test.py
-    Inside func3 of myapp.
-    Inside func1 of myapp.
-    Inside func2 of myapp.
+    $ python my_hook_test.py
+    Inside hook func3
+    Inside hook func1
+    Inside hook func2
 
 
 As you can see, it doesn’t matter what order we register the hook, the

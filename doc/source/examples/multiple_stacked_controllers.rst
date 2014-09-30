@@ -5,8 +5,9 @@ Multiple Stacked Controllers
 
 .. code-block:: python
 
-    from cement.core import foundation, controller, handler
+    from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
+    from cement.core import handler
 
     # define application controllers
     class MyAppBaseController(CementBaseController):
@@ -74,7 +75,7 @@ Multiple Stacked Controllers
     def main():
         try:
             # create the application
-            app = foundation.CementApp('myapp')
+            app = CementApp('myapp')
 
             # register controllers
             handler.register(MyAppBaseController)

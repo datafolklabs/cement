@@ -265,37 +265,28 @@ happen in *all* config sections if enabled:
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
     from cement.utils.misc import init_defaults
 
     defaults = init_defaults('myapp')
     defaults['myapp']['foo'] = 'bar'
 
-    app = foundation.CementApp(
-            label='myapp',
-            config_defaults=defaults,
-            arguments_override_config=True,
-            )
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            config_defaults = defaults
+            arguments_override_config = True
 
-    try:
-        # First setup the application
-        app.setup()
-
-        # Add arguments
+    with MyApp() as app:
         app.args.add_argument('--foo', action='store', dest='foo')
-
-        # Run the application (this parses command line, among other things)
         app.run()
 
-    finally:
-        # close the application
-        app.close()
 
 
-With ``arguments_override_config`` enabled, running the application and
+With ``arguments_override_config`` enabled, running the above application and
 passing the ``--foo=some_value`` option will override the ``foo`` setting
-under the ``[myapp]`` section as well as any other section that has a matching
-key.
+under a ``[myapp]`` configuration section as well as any other section that
+has a matching ``foo`` key.
 
 
 Configuration Options Versus Meta Options

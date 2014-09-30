@@ -23,8 +23,9 @@ sub-commands, that are implemented via nested-controllers.
 
 .. code-block:: python
 
-    from cement.core import foundation, handler
+    from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
+    from cement.core import handler
 
     class BaseController(CementBaseController):
         class Meta:
@@ -79,31 +80,30 @@ sub-commands, that are implemented via nested-controllers.
         def third_cmd7(self):
             print("Inside ThirdLevelController.third_cmd7()")
 
-    class MyApp(foundation.CementApp):
+
+    class MyApp(CementApp):
         class Meta:
             label = 'myapp'
 
 
     def main():
-        try:
-            # create the app
-            app = MyApp()
+        # create the app
+        app = MyApp()
 
-            # register controllers to the app
-            handler.register(BaseController)
-            handler.register(EmbeddedController)
-            handler.register(SecondLevelController)
-            handler.register(ThirdLevelController)
+        # register controllers to the app
+        handler.register(BaseController)
+        handler.register(EmbeddedController)
+        handler.register(SecondLevelController)
+        handler.register(ThirdLevelController)
 
-            # setup the app
-            app.setup()
+        # setup the app
+        app.setup()
 
-            # run the app
-            app.run()
+        # run the app
+        app.run()
 
-        finally:
-            # close the app
-            app.close()
+        # close the app
+        app.close()
 
     if __name__ == '__main__':
         main()

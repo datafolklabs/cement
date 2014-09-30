@@ -86,9 +86,8 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
                 extensions = ['memcached']
                 cache_handler = 'memcached'
 
-        app = MyApp()
-        try:
-            app.setup()
+        with MyApp() as app:
+            # Run the app
             app.run()
 
             # Set a cached value
@@ -102,9 +101,6 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
 
             # Delete the entire cache
             app.cache.purge()
-
-        finally:
-            app.close()
 
     """
     class Meta:

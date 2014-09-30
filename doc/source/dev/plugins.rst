@@ -206,12 +206,8 @@ same if not defined:
 
 
     def main():
-        app = MyApp()
-        try:
-            app.setup()
+        with MyApp() as app:
             app.run()
-        finally:
-            app.close()
 
     if __name__ == '__main__':
         main()

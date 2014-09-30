@@ -41,15 +41,9 @@ Example:
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
 
-    # create the application
-    app = foundation.CementApp('myapp')
-
-    try:
-        # setup the application
-        app.setup()
-
+    with CementApp('myapp') as app:
         # run the application
         app.run()
 
@@ -65,5 +59,3 @@ Example:
         # delete the entire cache
         app.cache.purge()
 
-    finally:
-        app.close()

@@ -73,11 +73,9 @@ Example
         app = MyApp()
         handler.register(MySecondController)
 
-        try:
-            app.setup()
-            app.run()
-        finally:
-            app.close()
+        app.setup()
+        app.run()
+        app.close()
 
     if __name__ == '__main__':
         main()

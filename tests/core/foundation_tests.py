@@ -281,12 +281,17 @@ class FoundationTestCase(test.CementCoreTestCase):
         self.eq({'foo':'bar'}, last_data)
         self.eq(output_text, last_output)
 
+    def test_with_operator(self):
+        with self.app_class() as app:
+            app.run()
+
     @test.raises(SystemExit)
     def test_close_with_code(self):
-        self.app.setup()
-        self.app.run()
+        app = self.make_app(APP, exit_on_close=True)
+        app.setup()
+        app.run()
         try:
-            self.app.close(114)
+            app.close(114)
         except SystemExit as e:
             self.eq(e.code, 114)
             raise

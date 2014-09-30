@@ -18,7 +18,7 @@ See the :ref:`upgrading` section for more information related to
 any incompatible changes, and how to update your application to fix them.
 
 
-2.5.1 - DEVELOPMENT (will be released as 2.5./dev or 2.6.0/stable)
+2.5.1 - DEVELOPMENT (will be released as 2.5.2/dev or 2.6.0/stable)
 ------------------------------------------------------------------------------
 
 This is a branch off of the 2.4.x stable code base.  Maintenance releases for
@@ -31,7 +31,7 @@ Bugs:
 
 Features:
 
-    * None
+    * :issue:`281` - Added support for Python `with` operation
 
 
 2.4.0 - Wed Sep 17, 2014

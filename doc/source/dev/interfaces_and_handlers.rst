@@ -377,26 +377,17 @@ already setup by Cement, but we're putting it here for clarity:
                 )
 
 
-    # create the app
-    app = MyApp()
-
-    try:
-        # setup the app
-        app.setup()
+    with MyApp() as app:
+        # run the application
+        app.run()
 
         # define some data for the output handler
         data = dict(foo='bar')
 
-        # run the app
-        app.run()
-
-        # render something using our output handlers, using mustache by
-        # default which use the default.m template
+        # render something using out output handlers, using mustache by
+        # default which will use the default.m templae
         app.render(data, 'default.m')
 
-    finally:
-        # close the app
-        app.close()
 
 
 Note what we see at command line:

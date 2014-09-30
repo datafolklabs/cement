@@ -12,8 +12,10 @@ still maintain the existing shared commands (or override them as necessary).
 
 .. code-block:: python
 
-    from cement.core import foundation, handler
+    from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
+    from cement.core import handler
+
 
     class AbstractBaseController(CementBaseController):
         """
@@ -95,18 +97,16 @@ still maintain the existing shared commands (or override them as necessary).
             print("Inside Controller2.command2()")
 
     def main():
-        app = foundation.CementApp('myapp')
+        app = CementApp('myapp')
 
-        try:
-            # register controllers handlers
-            handler.register(MyAppBaseController)
-            handler.register(Controller1)
-            handler.register(Controller2)
+        # register controllers handlers
+        handler.register(MyAppBaseController)
+        handler.register(Controller1)
+        handler.register(Controller2)
 
-            app.setup()
-            app.run()
-        finally:
-            app.close()
+        app.setup()
+        app.run()
+        app.close()
 
     if __name__ == '__main__':
         main()

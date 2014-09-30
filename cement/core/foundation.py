@@ -125,21 +125,32 @@ class CementApp(meta.MetaMixin):
 
     .. code-block:: python
 
-        from cement.core import foundation
-        app = foundation.CementApp('helloworld')
-        try:
-            app.setup()
+        from cement.core.foundation import CementApp
+
+        with CementApp('helloworld') as app:
             app.run()
-        finally:
-            app.close()
+
+
+    Alternatively, the above could be written as:
+
+    .. code-block:: python
+
+        from cement.core.foundation import CementApp
+
+        app = foundation.CementApp('helloworld')
+        app.setup()
+        app.run()
+        app.close()
+
 
     A more advanced example looks like:
 
     .. code-block:: python
 
-        from cement.core import foundation, controller
+        from cement.core.foundation import CementApp
+        from cement.core.controller import CementBaseController, expose
 
-        class MyController(controller.CementBaseController):
+        class MyController(CementBaseController):
             class Meta:
                 label = 'base'
                 arguments = [
@@ -150,22 +161,18 @@ class CementApp(meta.MetaMixin):
                     some_config_param='some_value',
                     )
 
-            @controller.expose(help='This is the default command', hide=True)
+            @expose(help='This is the default command', hide=True)
             def default(self):
                 print('Hello World')
 
-        class MyApp(foundation.CementApp):
+        class MyApp(CementApp):
             class Meta:
                 label = 'helloworld'
                 extensions = ['daemon','json',]
                 base_controller = MyController
 
-        app = MyApp()
-        try:
-            app.setup()
+        with MyApp() as app:
             app.run()
-        finally:
-            app.close()
 
     """
     class Meta:
@@ -186,6 +193,13 @@ class CementApp(meta.MetaMixin):
         """
         Used internally, and should not be used by developers.  This is set
         to `True` if `--debug` is passed at command line."""
+
+        exit_on_close = True
+        """
+        Whether or not to call ``sys.exit()`` when ``close()`` is called.
+        Generally only used for testing to avoid having to catch
+        ``SystemExit`` three thousand times.
+        """
 
         config_files = None
         """
@@ -561,6 +575,7 @@ class CementApp(meta.MetaMixin):
         self._loaded_bootstrap = None
         self._parsed_args = None
         self._last_rendered = None
+        self.exit_code = 0
 
         self.ext = None
         self.config = None
@@ -698,14 +713,23 @@ class CementApp(meta.MetaMixin):
         for res in hook.run('post_run', self):
             pass
 
+    def __enter__(self):
+        self.setup()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        # only close the app if there are no unhandled exceptions
+        if exc_type is None:
+            self.close()
+
     def close(self, code=None):
         """
         Close the application.  This runs the pre_close and post_close hooks
         allowing plugins/extensions/etc to 'cleanup' at the end of program
         execution.
 
-        :param code: An exit status to exit with (`int`).  If a code is given
-          then call `sys.exit(code)`, otherwise `sys.exit()` is not called.
+        :param code: An exit code to exit with (`int`), if `None` is passed
+         then exit with whatever `self.exit_code` is currently set to.
 
         """
         for res in hook.run('pre_close', self):
@@ -719,7 +743,10 @@ class CementApp(meta.MetaMixin):
         if code is not None:
             assert type(code) == int, \
                 "Invalid exit status code (must be integer)"
-            sys.exit(code)
+            self.exit_code = code
+
+        if self._meta.exit_on_close is True:
+            sys.exit(self.exit_code)
 
     def render(self, data, template=None, out=sys.stdout):
         """

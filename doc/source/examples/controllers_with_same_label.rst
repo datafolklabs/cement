@@ -26,8 +26,9 @@ and a 'hosts' controller and we want to have a 'list' sub-command under both:
 
 .. code-block:: python
 
-    from cement.core import foundation, handler
+    from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
+    from cement.core import handler
 
     # define application controllers
     class MyAppBaseController(CementBaseController):
@@ -75,25 +76,24 @@ and a 'hosts' controller and we want to have a 'list' sub-command under both:
             print "Inside HostsListController.default()"
 
     def main():
-        try:
-            # create the application
-            app = foundation.CementApp('myapp')
+        # create the application
+        app = CementApp('myapp')
 
-            # register non-base controllers
-            handler.register(MyAppBaseController)
-            handler.register(UsersController)
-            handler.register(HostsController)
-            handler.register(UsersListController)
-            handler.register(HostsListController)
+        # register non-base controllers
+        handler.register(MyAppBaseController)
+        handler.register(UsersController)
+        handler.register(HostsController)
+        handler.register(UsersListController)
+        handler.register(HostsListController)
 
-            # setup the application
-            app.setup()
+        # setup the application
+        app.setup()
 
-            # run it
-            app.run()
-        finally:
-            # close it
-            app.close()
+        # run it
+        app.run()
+
+        # close it
+        app.close()
 
     if __name__ == '__main__':
         main()

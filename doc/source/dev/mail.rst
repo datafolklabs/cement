@@ -31,10 +31,7 @@ Example Usage
         class Meta:
             label = 'myapp'
 
-    app = MyApp()
-
-    try:
-        app.setup()
+    with MyApp() as app:
         app.run()
 
         # send an email message
@@ -45,9 +42,6 @@ Example Usage
             cc=['him@example.com', 'her@example.com'],
             bcc=['boss@example.com']
             )
-
-    finally:
-        app.close()
 
 
 Note that the default mail handler simply prints messages to the screen, and

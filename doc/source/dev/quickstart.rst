@@ -1,38 +1,32 @@
 Quick Start
 ===========
 
-The following outlines creating a sample 'helloworld' application.
+The following creates and runs a sample 'helloworld' application.
 
 *helloworld.py*
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
 
-    app = foundation.CementApp('helloworld')
-    try:
-        app.setup()
+    with CementApp('helloworld') as app:
         app.run()
-        print('Hello World')
-    finally:
-        app.close()
 
-Note that `app.close()` by default does not `exit` the application, but you
-can easily do that here also:
+
+The above is equivalent to (should you need more control over setup and
+closing an application):
 
 .. code-block:: python
 
-    # non-error exit status is generally 0
-    app.close(0)
+    from cement.core.foundation import CementApp
 
-    # or exit with an error
-    app.close(1)
+    app = CementApp('helloworld')
+    app.setup()
+    app.run()
+    app.close()
 
 
-If an `exit code` is passed to `app.close()` then Cement with call
-`sys.exit(code)` at the end of execution.
-
-And running the application looks like:
+Running the application looks like:
 
 .. code-block:: text
 
@@ -125,43 +119,44 @@ config creation, and logging.
 
 .. code-block:: python
 
-    from cement.core import foundation, hook
+    from cement.core.foundation import CementApp
+    from cement.core import hook
     from cement.utils.misc import init_defaults
 
-    # set default config options
+    # define our default configuration options
     defaults = init_defaults('myapp')
     defaults['myapp']['debug'] = False
-    defaults['myapp']['foo'] = 'bar'
+    defaults['myapp']['some_param'] = 'some value'
 
-    # create an application
-    app = foundation.CementApp('myapp', config_defaults=defaults)
+    # define any hook functions here
+    def my_cleanup_hook(app):
+        pass
 
-    # register any framework hook functions after app creation, and before
-    # app.setup()
-    def my_hook(app):
-        assert 'foo' in app.config.keys('myapp')
+    # define the application class
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            config_defaults = defaults
+            extensions = ['daemon', memcached', 'json', 'yaml']
 
-    hook.register('post_setup', my_hook)
+    with MyApp() as app:
+        # register framework or custom application hooks
+        hook.register('pre_close', my_cleanup_hook)
 
-    try:
-        # setup the application
-        app.setup()
-
-        # add arguments
+        # add arguments to the parser
         app.args.add_argument('-f', '--foo', action='store', metavar='STR',
                               help='the notorious foo option')
+
+        # log stuff
         app.log.debug("About to run my myapp application!")
+
+        # run the application
         app.run()
 
-        # add application logic
+        # continue with additional application logic
         if app.pargs.foo:
-            app.log.info("Received the 'foo' option with value '%s'." % app.pargs.foo)
-        else:
-            app.log.warn("Did not receive a value for 'foo' option.")
+            app.log.info("Received option: foo => %s" % app.pargs.foo)
 
-    finally:
-        # close the application
-        app.close()
 
 And execution:
 
@@ -177,7 +172,7 @@ And execution:
       -f STR, --foo STR  the notorious foo option
 
     $ python myapp.py --foo=bar
-    INFO: Received the 'foo' option with value 'bar'.
+    INFO: Received option: foo => bar
 
 
 Diving Right In
@@ -190,53 +185,52 @@ handle command dispatch and rapid development.
 
 .. code-block:: python
 
-    from cement.core import backend, foundation, controller, handler
+    from cement.core.foundation import CementApp
+    from cement.core.controller import CementBaseController, expose
+    from cement.core import handler
 
-    # define an application base controller
-    class MyAppBaseController(controller.CementBaseController):
+    class MyBaseController(CementBaseController):
         class Meta:
             label = 'base'
             description = "My Application does amazing things!"
-
-            config_defaults = dict(
-                foo='bar',
-                some_other_option='my default value',
-                )
-
             arguments = [
-                (['-f', '--foo'], dict(action='store', help='the notorious foo option')),
-                (['-C'], dict(action='store_true', help='the big C option'))
+                ( ['-f', '--foo'],
+                  dict(action='store', help='the notorious foo option') ),
+                ( ['-C'],
+                  dict(action='store_true', help='the big C option') ),
                 ]
 
-        @controller.expose(hide=True, aliases=['run'])
+        @expose(hide=True)
         def default(self):
-            self.app.log.info('Inside base.default function.')
+            self.app.log.info('Inside MyBaseController.default()')
             if self.app.pargs.foo:
-                self.app.log.info("Recieved option 'foo' with value '%s'." % \
-                              self.pargs.foo)
+                print("Recieved option: foo => %s" % self.app.pargs.foo)
 
-        @controller.expose(help="this command does relatively nothing useful.")
+        @expose(help="this command does relatively nothing useful")
         def command1(self):
-            self.app.log.info("Inside base.command1 function.")
+            self.app.log.info("Inside MyBaseController.command1()")
 
-        @controller.expose(aliases=['cmd2'], help="more of nothing.")
+        @expose(aliases=['cmd2'], help="more of nothing")
         def command2(self):
-            self.app.log.info("Inside base.command2 function.")
+            self.app.log.info("Inside MyBaseController.command2()")
 
-    # define a second controller
-    class MySecondController(controller.CementBaseController):
+
+    class MySecondController(CementBaseController):
         class Meta:
-            label = 'secondary'
+            label = 'second'
             stacked_on = 'base'
 
-        @controller.expose(help='this is some command', aliases=['some-cmd'])
-        def some_other_command(self):
-            pass
+        @expose(help='this is some command', aliases=['some-cmd'])
+        def second_cmd1(self):
+            self.app.log.info("Inside MySecondController.second_cmd1")
 
-    class MyApp(foundation.CementApp):
+
+    class MyApp(CementApp):
         class Meta:
-            label = 'helloworld'
-            base_controller = MyAppBaseController
+            label = 'myapp'
+            base_controller = MyBaseController
+
+
 
     # create the app
     app = MyApp()
@@ -244,15 +238,15 @@ handle command dispatch and rapid development.
     # Register any handlers that aren't passed directly to CementApp
     handler.register(MySecondController)
 
-    try:
-        # setup the application
-        app.setup()
+    # setup the application
+    app.setup()
 
-        # run the application
-        app.run()
-    finally:
-        # close the app
-        app.close()
+    # run the application
+    app.run()
+
+    # close the app
+    app.close()
+
 
 As you can see, we're able to build out the core functionality of our app such
 as arguments and sub-commands via controller classes.
@@ -269,10 +263,10 @@ Lets see what this looks like:
     commands:
 
       command1
-        this command does relatively nothing useful.
+        this command does relatively nothing useful
 
       command2 (aliases: cmd2)
-        more of nothing.
+        more of nothing
 
       some-other-command (aliases: some-cmd)
         this is some command
@@ -284,11 +278,14 @@ Lets see what this looks like:
       -f FOO, --foo FOO  the notorious foo option
       -C                 the big C option
 
+    $ python myapp.py
+    INFO: Inside MyBaseController.default()
+
     $ python myapp.py command1
-    INFO: Inside base.command1 function.
+    INFO: Inside MyBaseController.command1()
 
     $ python myapp.py command2
-    INFO: Inside base.command2 function.
+    INFO: Inside MyBaseController.command2()
 
-    $ python myapp.py cmd2
-    INFO: Inside base.command2 function.
+    $ python myapp.py second-cmd1
+    INFO: Inside MySecondController.second_cmd1()

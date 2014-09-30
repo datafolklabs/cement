@@ -25,6 +25,7 @@ class TestApp(foundation.CementApp):
         argv = []
         base_controller = None
         arguments = []
+        exit_on_close = False
 
 
 class CementTestCase(unittest.TestCase):

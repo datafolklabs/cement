@@ -77,12 +77,14 @@ trigger daemon functionality before app.run() is called.
 .. code-block:: python
 
     from time import sleep
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
 
-    app = foundation.CementApp('myapp', extensions=['daemon'])
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['daemon']
 
-    try:
-        app.setup()
+    with MyApp() as app:
         app.daemonize()
         app.run()
 
@@ -91,11 +93,10 @@ trigger daemon functionality before app.run() is called.
             count = count + 1
             print('Iteration: %s' % count)
             sleep(10)
-    finally:
-        app.close()
 
 
-An alternative to the above is to put app.daemonize() within a framework hook:
+An alternative to the above is to put the ``daemonize()`` call within a
+framework hook:
 
 .. code-block:: python
 
@@ -114,11 +115,16 @@ rather than the entire parent application.  For example:
 
     from cement.core import foundation, controller, handler
 
-    class MyAppBaseController(controller.CementBaseController):
+    from cement.core.foundation import CementApp
+    from cement.core.controller import CementBaseController, expose
+    from cement.core import handler
+
+
+    class MyBaseController(CementBaseController):
         class Meta:
             label = 'base'
 
-        @controller.expose(help="run the daemon command.")
+        @expose(help="run the daemon command.")
         def run_forever(self):
             from time import sleep
             self.app.daemonize()
@@ -129,17 +135,15 @@ rather than the entire parent application.  For example:
                 print(count)
                 sleep(10)
 
-    app = foundation.CementApp('myapp',
-        extensions=['daemon'],
-        base_controller=MyAppBaseController,
-        )
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            base_controller = MyBaseController
+            extensions = ['daemon']
 
-    try:
-        app.setup()
+
+    with MyApp() as app:
         app.run()
-    finally:
-        app.close()
-
 
 By default, even after app.daemonize() is called... the application will
 continue to run in the foreground, but will still manage the pid and

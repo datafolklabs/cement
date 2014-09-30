@@ -70,18 +70,15 @@ handle command dispatch and rapid development.
         def command2(self):
             self.app.log.info("Inside base.command2 function.")
 
-    # create an application
-    app = CementApp('example', base_controller=MyAppBaseController)
 
-    try:
-        # setup the application
-        app.setup()
+    class MyApp(CementApp):
+        class Meta:
+            label = 'example'
+            base_controller = MyAppBaseController
 
-        # run the application
+
+    with MyApp() as app:
         app.run()
-    finally:
-        # close the application
-        app.close()
 
 
 As you can see, we're able to build out the core functionality of our app

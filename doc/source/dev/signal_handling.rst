@@ -49,76 +49,61 @@ A basic application using default handling might look like:
 .. code-block:: python
 
     import signal
-    from cement.core import foundation, exc
+    from cement.core.foundation import CementApp
+    from cement.core.exc import CaughtSignal
 
-    app = foundation.CementApp('myapp')
+    with CementApp('myapp') as app:
+        try:
+            app.run()
+        except CaughtSignal as e:
+            # do something with e.signum or e.frame (passed from signal)
+            if e.signum == signal.SIGTERM:
+                print("Caught SIGTERM...")
+            elif e.signum == signal.SIGINT:
+                print("Caught SIGINT...")
 
-    try:
-        app.setup()
-        app.run()
-    except exc.CaughtSignal as e:
-        # do something with e.signum or e.frame (passed from signal library)
 
-        if e.signum == signal.SIGTERM:
-            print("Caught signal SIGTERM...")
-            # do something to handle signal here
-        elif e.signum == signal.SIGINT:
-            print("Caught signal SIGINT...")
-            # do something to handle signal here
-    finally:
-        app.close()
+The above provides a very simple means of handling the most common
+signals, which in turns allowes our application to "exit clean" by running
+``app.close()`` and any ``pre_close`` or ``post_close`` hooks.  If we don't
+catch the signals, then the exceptions will be unhandled and the application
+will not exit clean.
 
-As you can see, this provides a very simple means of handling the most common
-signals allowing us to still call app.close() after handling the signal.  This
-is extremely important as 'app.close()' is where the 'pre_close' and
-'post_close' hooks are called, allowing the
-framework/application/extensions/plugins to all perform any cleanup actions
-they may need.
 
 Using The Signal Hook
 ---------------------
 
 An alternative way of adding multiple callbacks to a signal handler is by
-using the cement signal hook.  This hook is called anytime a handled signal
+using the Cement signal hook.  This hook is called anytime a handled signal
 is encountered.
 
 .. code-block:: python
 
     import signal
-    from cement.core import foundation, exc, hook
-
-    app = foundation.CementApp('myapp')
+    from cement.core.foundation import CementApp
+    from cement.core.exc import CaughtSignal
+    from cement.core import hook
 
     def my_signal_handler(signum, frame):
-        # do something with signum/frame
-
         if signum == signal.SIGTERM:
-            print("Caught signal SIGTERM...")
-            # do something to handle signal here
+            print("Caught SIGTERM...")
         elif signum == signal.SIGINT:
-            print("Caught signal SIGINT...")
-            # do something to handle signal here
+            print("Caught SIGINT...")
 
-    hook.register('signal', my_signal_handler)
-
-    try:
-        app.setup()
+    with CementApp('myapp') as app:
+        hook.register('signal', my_signal_handler)
         app.run()
-    except exc.CaughtSignal as e:
-        pass
-    finally:
-        app.close()
 
 
 The key thing to note here is that the main application itself handles the
-exc.CaughtSignal exception, where as using the cement 'signal' hook is
+``CaughtSignal`` exception, where as using the cement ``signal`` hook is
 useful for plugins and extensions to be able to tie into the signal handling
 outside of the main application.  Both serve the same purpose however the
-application object is not available (passed to) the cement 'signal' hook which
-limits what can be done within the callback function.  For this reason
-any extensions or plugins should use the 'pre_close' hook as much as
-possible as it is always run when app.close() is called and receives the
-app object as one of its parameters.
+application object is not available (passed to) the cement ``signal`` hook
+which limits what can be done within the callback function.  For this reason
+any extensions or plugins should use the ``pre_close`` hook as much as
+possible as it is always run when ``app.close()`` is called and receives the
+``app`` object as one of its parameters.
 
 
 Configuring Which Signals To Catch
@@ -130,18 +115,20 @@ foundation.CementApp():
 .. code-block:: python
 
     import signal
-    from cement.core import foundation, exc
+    from cement.core.foundation import CementApp
 
     SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
 
-    app = foundation.CementApp('myapp', catch_signals=SIGNALS)
+    CementApp('myapp', catch_signals=SIGNALS)
     ...
+
 
 What happens is, Cement iterates over the catch_signals list and adds a
 generic handler function (the same) for each signal.  Because the handler
 calls the cement 'signal' hook, and then raises an exception which both pass the
 'signum' and 'frame' parameters, you are able to handle the logic elsewhere
 rather than assigning a unique callback function for every signal.
+
 
 What If I Don't Like Your Signal Handler Callback?
 --------------------------------------------------
@@ -154,33 +141,34 @@ callback.
 .. code-block:: python
 
     import signal
-    from cement.core import foundation, exc, hook
+    from cement.core.foundation import CementApp
+    from cement.core import hook
 
     SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
 
     def my_signal_handler(signum, frame):
-        # do something with signum/frame
         print 'Caught signal %s' % signum
 
         # execute the cement signal hook
         for res in hook.run('signal', signum, frame):
             pass
 
-    app = foundation.CementApp('myapp',
-                                catch_signals=SIGNALS,
-                                signal_handler=my_signal_handler)
-    ...
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            catch_signals = SIGNALS
+            signal_handler = my_signal_handler
+
 
 
 This Is Stupid, and UnPythonic - How Do I Disable It?
 -----------------------------------------------------
 
 To each their own.  If you simply do not want any kind of signal handling
-performed, just set 'catch_signals=None'.
+performed, just set ``catch_signals=None``.
 
 .. code-block:: python
 
-    import signal
-    from cement.core import foundation, exc
+    from cement.core.foundation import foundation
 
-    app = foundation.CementApp('myapp', catch_signals=None)
+    CementApp('myapp', catch_signals=None)
