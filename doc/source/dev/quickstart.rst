@@ -11,6 +11,7 @@ The following creates and runs a sample 'helloworld' application.
 
     with CementApp('helloworld') as app:
         app.run()
+        print('Hello World')
 
 
 The above is equivalent to (should you need more control over setup and
@@ -23,6 +24,7 @@ closing an application):
     app = CementApp('helloworld')
     app.setup()
     app.run()
+    print('Hello World')
     app.close()
 
 
