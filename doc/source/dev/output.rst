@@ -115,7 +115,7 @@ the Mustache templating langugage, as well as Json output handling.
         @expose(hide=True)
         def default(self):
             data = dict(foo='bar')
-            print self.app.render(data, 'default.m')
+            self.app.render(data, 'default.m')
 
             # always return the data, some output handlers require this
             # such as Json/Yaml (which don't use templates)
