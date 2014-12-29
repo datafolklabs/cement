@@ -139,7 +139,7 @@ config creation, and logging.
         class Meta:
             label = 'myapp'
             config_defaults = defaults
-            extensions = ['daemon', memcached', 'json', 'yaml']
+            extensions = ['daemon', 'memcached', 'json', 'yaml']
 
     with MyApp() as app:
         # register framework or custom application hooks
