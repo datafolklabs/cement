@@ -1067,6 +1067,8 @@ class CementBaseController3(handler.CementBaseHandler):
         self.app = None
         self._sub_parser_parents = dict()
         self._sub_parsers = dict()
+        self._controllers = []
+        self._nesting_parents = []
 
     def _setup(self, app):
         """
@@ -1074,6 +1076,24 @@ class CementBaseController3(handler.CementBaseHandler):
         """
         super(CementBaseController3, self)._setup(app)
         self.app = app
+
+    def _setup_controllers(self):
+        self._controllers = []
+        self._nesting_parents = []
+
+        # treat base/self separately
+        self._controllers.append(self)
+
+        for contr in handler.list('controller'):
+            # ignore self
+            if contr == self.__class__:
+                continue
+
+            contr = contr()
+            contr._setup(self.app)
+            if contr._meta.stacked_on not in self._nesting_parents:
+                self._nesting_parents.append(contr._meta.stacked_on)
+            self._controllers.append(contr)
 
     def _setup_parsers(self):
         # this should only be run by the base controller
@@ -1091,31 +1111,22 @@ class CementBaseController3(handler.CementBaseHandler):
 
         parsers['base'] = self.app.args
 
-        if len(handler.list('controller')) > 1:
-            # handle base controller separately
-            sub = self.app.args.add_subparsers(dest=dest, title='sub-commands')
-            parents['base'] = sub
+        # only base controller registered
+        if len(handler.list('controller')) <= 1:
+            return True
 
-        setup_controllers = []
-        nesting_parents = []
-        for contr in handler.list('controller'):
-            if contr == self.__class__:
-                continue
-
-            contr = contr()
-            contr._setup(self.app)
-            if contr._meta.stacked_on not in nesting_parents:
-                nesting_parents.append(contr._meta.stacked_on)
-            setup_controllers.append(contr)
+        # handle base controller separately
+        sub = self.app.args.add_subparsers(dest=dest, title='sub-commands')
+        parents['base'] = sub
 
         # This is odd... but there is a circular dependency on stacked
         # controllers.  We don't know what order we are handling them, and we
         # need to ensure all parsers are setup (before a stacked controller
         # can access it's parser)
 
-        tmp_controllers = list(setup_controllers)
+        tmp_controllers = list(self._controllers)
         while tmp_controllers:
-            for contr in setup_controllers:
+            for contr in self._controllers:
                 label = contr._meta.label
                 stacked_on = contr._meta.stacked_on
                 stacked_type = contr._meta.stacked_type
@@ -1134,7 +1145,7 @@ class CementBaseController3(handler.CementBaseHandler):
                                                  help=contr._meta.description)
                     # if other controllers are nested on this one we need to
                     # setup additional subparsers in this namespace
-                    if label in nesting_parents:
+                    if label in self._nesting_parents:
                         parents[label] = parsers[label]\
                                          .add_subparsers(dest=dest,
                                                          title='sub-commands')
@@ -1147,22 +1158,38 @@ class CementBaseController3(handler.CementBaseHandler):
 
                 tmp_controllers.remove(contr)
 
-    def _get_parser(self):
-        return self.app.args._cement_sub_parsers[self._meta.label]
+    def _get_parser(self, parser):
+        return self._sub_parsers[parser]
 
-    def _process_arguments(self, arguments):
-        parser = self._get_parser()
+    def _process_arguments(self, parser, arguments):
+        parser = self._get_parser(parser)
         for arg, kw in arguments:
             try:
                 parser.add_argument(*arg, **kw)
             except argparse.ArgumentError as e:
                 raise exc.FrameworkError(e.__str__())
 
-    def _dispatch(self):
-        # Only setup parsers once if we're the base controller
-        if self._meta.label == 'base':
-            self._setup_parsers()
+    def _collect(self):
+        self.app.log.debug("collecting arguments/commands for %s" % self)
+        arguments = self._meta.arguments
+        commands = []
 
-        #self._collect()
+        for member in dir(self.__class__):
+            if member.startswith('_'):
+                continue
+            elif hasattr(getattr(self, member), '__cement_meta__'):
+                func = getattr(self.__class__, member).__cement_meta__
+                commands.append(func)
+
+        return (arguments, commands)
+
+    def _dispatch(self):
+        self._setup_controllers()
+        self._setup_parsers()
+
+        for contr in self._controllers:
+            arguments, commands = contr._collect()
+            self._process_arguments(contr._meta.stacked_on, arguments)
+
         self.app.args.parse_args()
 
