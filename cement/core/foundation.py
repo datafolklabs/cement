@@ -703,11 +703,11 @@ class CementApp(meta.MetaMixin):
         for res in hook.run('pre_run', self):
             pass
 
-        # If controller exists, then pass controll to it
+        # If controller exists, then dispatch it
         if self.controller:
             self.controller._dispatch()
-        else:
-            self._parse_args()
+
+        self._parse_args()
 
         for res in hook.run('post_run', self):
             pass

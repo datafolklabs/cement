@@ -676,7 +676,7 @@ class CementBaseController2(handler.CementBaseHandler):
         # need to maintain a global object outside the controller
         self.app.args._cement_sub_parser_parents = dict()
         self.app.args._cement_sub_parsers = dict()
-        dest = '_controller'
+        dest = 'command'
 
         # parents are sub-parser namespaces (that we can add subparsers to)
         # where-as parsers are the actual root parser and sub-parsers to
@@ -965,6 +965,19 @@ commands:
 
         return textwrap.dedent(txt)
 
+def argparse_action(controller, func_name):
+    class CustomAction(argparse.Action):
+        def __call__(self, parser, args, values, option_string=None):
+            setattr(args, self.dest, values)
+
+            # this is wierd, but this func gets called before the
+            # app can set self._parsed_args (which the controller)
+            # used as app.pargs
+            controller.app._parsed_args = args
+            func = getattr(controller, func_name)
+            func()
+    return CustomAction
+
 class CementBaseController3(handler.CementBaseHandler):
     class Meta:
 
@@ -1062,6 +1075,11 @@ class CementBaseController3(handler.CementBaseHandler):
         The argument formatter class to use to display --help output.
         """
 
+        action = argparse_action
+        """
+        The action function to set for controller/command actions.
+        """
+
     def __init__(self, *args, **kw):
         super(CementBaseController3, self).__init__(*args, **kw)
         self.app = None
@@ -1101,7 +1119,7 @@ class CementBaseController3(handler.CementBaseHandler):
             raise FrameworkError('Private function _setup_parsers() called'
                                  'from non-base controller')
 
-        dest = '_controller'
+        dest = 'command'
 
         # parents are sub-parser namespaces (that we can add subparsers to)
         # where-as parsers are the actual root parser and sub-parsers to
@@ -1143,10 +1161,17 @@ class CementBaseController3(handler.CementBaseHandler):
                     parsers[label] = parents[stacked_on]\
                                      .add_parser(label,
                                                  help=contr._meta.description)
+                    # if hasattr(contr, 'default').__cement_meta__
+                    # parsers[label].add_argument('default',
+                    #         action=self._meta.action(contr, 'default'),
+                    #         nargs='?',
+                    #         help=argparse.SUPPRESS,
+                    #         )
+
                     # if other controllers are nested on this one we need to
                     # setup additional subparsers in this namespace
-                    if label in self._nesting_parents:
-                        parents[label] = parsers[label]\
+                    #if label in self._nesting_parents:
+                    parents[label] = parsers[label]\
                                          .add_subparsers(dest=dest,
                                                          title='sub-commands')
 
@@ -1169,6 +1194,26 @@ class CementBaseController3(handler.CementBaseHandler):
             except argparse.ArgumentError as e:
                 raise exc.FrameworkError(e.__str__())
 
+    def _process_commands(self, parser, commands):
+        parser = self._get_parser(parser)
+        for command in commands:
+            kwargs = {}
+            if not command['hide'] == True:
+                kwargs['help'] = command['help']
+
+            contr_label = command['controller']._meta.label
+            cmd_parent = self._sub_parser_parents[contr_label]
+            command_parser = cmd_parent.add_parser(command['label'], **kwargs)
+
+            # this just make argparse run the command
+            command_parser.add_argument('run',
+                action=self._meta.action(
+                    command['controller'],
+                    command['func_name']),
+                nargs='?',
+                help=argparse.SUPPRESS,
+                )
+
     def _collect(self):
         self.app.log.debug("collecting arguments/commands for %s" % self)
         arguments = self._meta.arguments
@@ -1179,6 +1224,7 @@ class CementBaseController3(handler.CementBaseHandler):
                 continue
             elif hasattr(getattr(self, member), '__cement_meta__'):
                 func = getattr(self.__class__, member).__cement_meta__
+                func['controller'] = self
                 commands.append(func)
 
         return (arguments, commands)
@@ -1190,6 +1236,7 @@ class CementBaseController3(handler.CementBaseHandler):
         for contr in self._controllers:
             arguments, commands = contr._collect()
             self._process_arguments(contr._meta.stacked_on, arguments)
+            self._process_commands(contr._meta.stacked_on, commands)
 
-        self.app.args.parse_args()
+        #self.app.args.parse_args()
 
