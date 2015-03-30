@@ -2,26 +2,41 @@
 
 import re
 import argparse
-from argparse import ArgumentParser
+from argparse import ArgumentParser as OriginalArgumentParser
 from ..core import backend, arg, handler
 from ..core.controller import IController
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
+class ArgumentParser(OriginalArgumentParser):
+    def parse_args(self, *args, **kw):
+        res = super(ArgumentParser, self).parse_args(*args, **kw)
+        #print(res)
+        return res
 
 def argparse_action(controller, command, func_name):
     class CustomAction(argparse.Action):
         def __init__(self, option_strings, dest, nargs=None, **kwargs):
             super(CustomAction, self).__init__(option_strings, dest, **kwargs)
+            self.controller = controller
+            self.command = command
+            self.func_name = func_name
 
         def __call__(self, parser, namespace, values, option_string=None):
             # this is wierd, but this func gets called before the
             # app can set self._parsed_args (which the controllers use as
             # app.pargs generally
-            if namespace.command == command:
-                controller.app._parsed_args = namespace
-                func = getattr(controller, func_name)
+            print(parser)
+            print(namespace)
+            print(values)
+            print(option_string)
+            print(self.controller)
+            print(self.command)
+            print(self.func_name)
+            if namespace.command == self.command:
+                self.controller.app._parsed_args = namespace
+                func = getattr(self.controller, self.func_name)
                 func()
             setattr(namespace, self.dest, values)
 
@@ -322,13 +337,9 @@ class ArgparseController(handler.CementBaseHandler):
             kwargs['title'] = 'sub-commands'
         if 'dest' not in kwargs.keys():
             kwargs['dest'] = 'command'
-        kwargs['action'] = 'store_true'
-        #if 'action' not in kwargs.keys():
-        #    kwargs['action'] = contr._meta.parser_action(
-        #                            contr,
-        #                            contr._meta.label,
-        #                            'default',
-        #                            )
+        if 'parser_class' not in kwargs.keys():
+            kwargs['parser_class'] = ArgumentParser
+
         return kwargs
 
     def _setup_parsers(self):
@@ -344,19 +355,16 @@ class ArgparseController(handler.CementBaseHandler):
         # add arguments to
         parents = self._sub_parser_parents
         parsers = self._sub_parsers
-
         parsers['base'] = self.app.args
 
-        # only base controller registered
-        if len(handler.list('controller')) <= 1:
-            return True
-
-
-        kwargs = self._get_subparser_kwargs(self)
-        print kwargs
         # handle base controller separately
+        kwargs = self._get_subparser_kwargs(self)
         sub = self.app.args.add_subparsers(**kwargs)
         parents['base'] = sub
+
+        # and if only base controller registered... go ahead and return
+        if len(handler.list('controller')) <= 1:
+            return
 
         # This is odd... but there is a circular dependency on stacked
         # controllers.  We don't know what order we are handling them, and we
@@ -369,14 +377,6 @@ class ArgparseController(handler.CementBaseHandler):
                 label = contr._meta.label
                 stacked_on = contr._meta.stacked_on
                 stacked_type = contr._meta.stacked_type
-
-                # kwargs = {}
-                # if not contr._meta.hide == True:
-                #     kwargs['help'] = contr._meta.help
-                #     self._meta.subparser_options['help'] =
-                # kwargs['title'] = contr._meta.title
-                # kwargs['aliases'] = contr._meta.aliases
-                # kwargs['descripton'] = contr._meta.description
 
                 # if the controller this one is stacked on is not setup yet
                 # we need to skip it and then come back to it
@@ -424,22 +424,30 @@ class ArgparseController(handler.CementBaseHandler):
             kwargs = {}
             if not command['hide'] == True:
                 kwargs['help'] = command['help']
-            kwargs['aliases'] = command['aliases']
 
             contr = command['controller']
+
             cmd_parent = self._sub_parser_parents[contr._meta.label]
             command_parser = cmd_parent.add_parser(command['label'], **kwargs)
+            #command_parser.set_defaults(command='default')
 
-            # create a default command for the controller
-            command_parser.add_argument('run',
-                action=contr._meta.parser_action(
+            action=contr._meta.parser_action(
                     command['controller'],
                     command['label'],
                     command['func_name'],
                     ),
-                nargs='?',
-                help=argparse.SUPPRESS,
-                )
+            self.app.args._add_action(action)
+
+            # create a default command for the parser (cluster fuck)
+            # command_parser.add_argument('__cement_default__',
+            #     action=contr._meta.parser_action(
+            #         command['controller'],
+            #         command['label'],
+            #         command['func_name'],
+            #         ),
+            #     nargs='?',
+            #     help=argparse.SUPPRESS,
+            #     )
 
     def _collect(self):
         self.app.log.debug("collecting arguments/commands for %s" % self)
@@ -460,13 +468,12 @@ class ArgparseController(handler.CementBaseHandler):
         self.app.log.debug("controller dispatch passed off to %s" % self)
         self._setup_controllers()
         self._setup_parsers()
-
         for contr in self._controllers:
             arguments, commands = contr._collect()
             self._process_arguments(contr._meta.stacked_on, arguments)
             self._process_commands(contr._meta.stacked_on, commands)
 
-        #self.app.args.parse_args()
+        # args = self.app.args.parse_args()
 
 def load(app):
     handler.register(ArgParseArgumentHandler)

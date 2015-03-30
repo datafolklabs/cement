@@ -1096,6 +1096,7 @@ class CementApp(meta.MetaMixin):
         LOG.debug("setting up %s.arg handler" % self._meta.label)
         self.args = self._resolve_handler('argument',
                                           self._meta.argument_handler)
+        self.args.prog = self._meta.label
         self.args.add_argument('--debug', dest='debug',
                                action='store_true',
                                help='toggle debug output')
