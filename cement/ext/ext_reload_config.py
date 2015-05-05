@@ -5,49 +5,72 @@ import pyinotify
 import signal
 from ..core import backend, hook
 from ..utils.misc import minimal_logger
-from ..utils import shell
+from ..utils import shell, fs
 
 LOG = minimal_logger(__name__)
 MASK = pyinotify.IN_CLOSE_WRITE
 NOTIFIER = None
 
 class ConfigEventHandler(pyinotify.ProcessEvent):
-    def __init__(self, app, watched_paths, **kw):
+    def __init__(self, app, watched_files, **kw):
         self.app = app
-        self.watched_paths = watched_paths
+        self.watched_files = watched_files
         super(ConfigEventHandler, self).__init__()
 
     def process_default(self, event):
-        if event.pathname in self.watched_paths:
+        if event.pathname in self.watched_files:
             self.app.log.debug('Config path modified: mask=%s, path=%s' % \
                               (event.maskname, event.pathname))
-            self.app.log.info('Reloading configuration...')
+            self.app.log.warn('Reloading configuration...')
             for res in hook.run('pre_reload_config', self.app):
                 pass
-            self.app._setup_config_handler()
+            self.app.config.parse_file(event.pathname)
             for res in hook.run('post_reload_config', self.app):
                 pass
 
 
 def spawn_watcher(app):
     global NOTIFIER
+
+    # directories to tell inotify to watch
     watched_dirs = []
-    watched_paths = []
+
+    # files to actual perform actions on
+    watched_files = []
 
     # watch manager
     wm = pyinotify.WatchManager()
+
+    # watch all config files, and plugin config files
+    watched_files = list(app._meta.config_files)
+
+    for plugin_dir in app._meta.plugin_config_dirs:
+        plugin_dir = fs.abspath(plugin_dir)
+        if not os.path.exists(plugin_dir):
+            continue
+
+        if plugin_dir not in watched_dirs:
+            watched_dirs.append(plugin_dir)
+
+        
+        for plugin_config in os.walk(plugin_dir).next()[2]:
+            full_plugin_path = os.path.join(plugin_dir, plugin_config)
+            if full_plugin_path not in watched_files:
+                watched_files.append(full_plugin_path)
+
     for path in app._meta.config_files:
         if os.path.exists(path):
-            watched_paths.append(path)
+            watched_files.append(path)
 
             this_dir = os.path.dirname(path)
             if this_dir not in watched_dirs:
                 watched_dirs.append(this_dir)
             
-            wm.add_watch(this_dir, MASK, rec=True)
+    for path in watched_dirs:
+        wm.add_watch(path, MASK, rec=True)
 
     # event handler
-    eh = ConfigEventHandler(app, watched_paths)
+    eh = ConfigEventHandler(app, watched_files)
 
     # notifier
     NOTIFIER = pyinotify.ThreadedNotifier(wm, eh)
