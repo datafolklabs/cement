@@ -49,7 +49,7 @@ class Mock(object):
         else:
             return Mock()
 
-MOCK_MODULES = ['pylibmc']
+MOCK_MODULES = ['pylibmc', 'pyinotify']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
 

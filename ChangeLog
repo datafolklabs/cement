@@ -32,7 +32,9 @@ Bugs:
 Features:
 
     * :issue:`281` - Added support for Python `with` operation
-
+    * :issue:`297` - Added **experimental** support for reloading 
+      configurations anytime config files and/or plugin config files are
+      modified.  Optional extension `ext_reload_config`.
 
 2.4.0 - Wed Sep 17, 2014
 ------------------------------------------------------------------------------
