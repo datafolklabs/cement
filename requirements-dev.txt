@@ -13,3 +13,4 @@ pyYaml
 configobj
 pylibmc
 genshi
+pyinotify

@@ -1,8 +1,8 @@
 """Config Reloader Framework Extension"""
 
 import os
-import pyinotify
 import signal
+import pyinotify
 from ..core import backend, hook
 from ..utils.misc import minimal_logger
 from ..utils import shell, fs
@@ -19,9 +19,8 @@ class ConfigEventHandler(pyinotify.ProcessEvent):
 
     def process_default(self, event):
         if event.pathname in self.watched_files:
-            self.app.log.debug('Config path modified: mask=%s, path=%s' % \
+            LOG.debug('Config path modified: mask=%s, path=%s' % \
                               (event.maskname, event.pathname))
-            self.app.log.warn('Reloading configuration...')
             for res in hook.run('pre_reload_config', self.app):
                 pass
             self.app.config.parse_file(event.pathname)
@@ -42,7 +41,7 @@ def spawn_watcher(app):
     wm = pyinotify.WatchManager()
 
     # watch all config files, and plugin config files
-    watched_files = list(app._meta.config_files)
+    watched_files = []
 
     for plugin_dir in app._meta.plugin_config_dirs:
         plugin_dir = fs.abspath(plugin_dir)
@@ -52,15 +51,21 @@ def spawn_watcher(app):
         if plugin_dir not in watched_dirs:
             watched_dirs.append(plugin_dir)
 
-        
-        for plugin_config in os.walk(plugin_dir).next()[2]:
+        # just want the first one... looks wierd, but python 2/3 compat
+        res = os.walk(plugin_dir)
+        for path, dirs, files in os.walk(plugin_dir):
+            plugin_config_files = files
+            break
+
+        for plugin_config in plugin_config_files:
             full_plugin_path = os.path.join(plugin_dir, plugin_config)
             if full_plugin_path not in watched_files:
                 watched_files.append(full_plugin_path)
 
     for path in app._meta.config_files:
         if os.path.exists(path):
-            watched_files.append(path)
+            if path not in watched_files:
+                watched_files.append(path)
 
             this_dir = os.path.dirname(path)
             if this_dir not in watched_dirs:
