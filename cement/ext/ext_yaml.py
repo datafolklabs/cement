@@ -55,6 +55,7 @@ def suppress_output_after_render(app, out_text):
 
 
 class YamlOutputHandler(output.CementOutputHandler):
+
     """
     This class implements the :ref:`IOutput <cement.core.output>`
     interface.  It provides YAML output from a data dictionary and uses
@@ -104,6 +105,7 @@ class YamlOutputHandler(output.CementOutputHandler):
 
 
 class YamlConfigHandler(ConfigParserConfigHandler):
+
     """
     This class implements the :ref:`IConfig <cement.core.config>`
     interface, and provides the same functionality of

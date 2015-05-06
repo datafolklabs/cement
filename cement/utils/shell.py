@@ -32,9 +32,9 @@ def exec_cmd(cmd_args, *args, **kw):
         stdout, stderr, exitcode = shell.exec_cmd(['echo', 'helloworld'])
 
     """
-    if not 'stdout' in kw.keys():
+    if 'stdout' not in kw.keys():
         kw['stdout'] = PIPE
-    if not 'stderr' in kw.keys():
+    if 'stderr' not in kw.keys():
         kw['stderr'] = PIPE
 
     proc = Popen(cmd_args, *args, **kw)
@@ -153,6 +153,7 @@ def spawn_thread(target, start=True, join=False, *args, **kwargs):
 
 
 class Prompt(MetaMixin):
+
     """
     A wrapper around `raw_input` or `input` (py3) whose purpose is to limit
     the redundent tasks of gather usr input.  Can be used in several ways
@@ -241,6 +242,7 @@ class Prompt(MetaMixin):
 
     """
     class Meta:
+
         """
         Optional meta-data (can also be passed as keyword arguments to the
         parent class).
@@ -349,7 +351,7 @@ class Prompt(MetaMixin):
             elif self._meta.options is not None:
                 if self._meta.numbered:
                     try:
-                        self.input = self._meta.options[int(self.input)-1]
+                        self.input = self._meta.options[int(self.input) - 1]
                     except (IndexError, ValueError) as e:
                         self.input = None
                         continue
@@ -361,7 +363,7 @@ class Prompt(MetaMixin):
                             self.input = None
                             continue
                     else:
-                        if not self.input in self._meta.options:
+                        if self.input not in self._meta.options:
                             self.input = None
                             continue
 

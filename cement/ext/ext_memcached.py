@@ -9,6 +9,7 @@ LOG = minimal_logger(__name__)
 
 
 class MemcachedCacheHandler(cache.CementCacheHandler):
+
     """
     This class implements the :ref:`ICache <cement.core.cache>`
     interface.  It provides a caching interface using the

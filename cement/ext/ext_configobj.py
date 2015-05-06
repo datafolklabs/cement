@@ -10,6 +10,7 @@ LOG = minimal_logger(__name__)
 
 
 class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
+
     """
     This class implements the :ref:`IConfig <cement.core.config>`
     interface, and sub-classes from `configobj.ConfigObj
@@ -137,7 +138,7 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
         """
         for section in list(dict_obj.keys()):
             if type(dict_obj[section]) == dict:
-                if not section in self.get_sections():
+                if section not in self.get_sections():
                     self.add_section(section)
 
                 for key in list(dict_obj[section].keys()):

@@ -78,7 +78,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
                         continue
 
                     plugin = pconfig.get_sections()[0]
-                    if not 'enable_plugin' in pconfig.keys(plugin):
+                    if 'enable_plugin' not in pconfig.keys(plugin):
                         continue
 
                     if is_true(pconfig.get(plugin, 'enable_plugin')):
@@ -110,7 +110,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         # loaded from files when app.config was setup.  The application
         # configuration OVERRIDES plugin configs.
         for plugin in self.app.config.get_sections():
-            if not 'enable_plugin' in self.app.config.keys(plugin):
+            if 'enable_plugin' not in self.app.config.keys(plugin):
                 continue
             if is_true(self.app.config.get(plugin, 'enable_plugin')):
                 LOG.debug("enabling plugin '%s' per application config" %
@@ -219,12 +219,12 @@ class CementPluginHandler(plugin.CementPluginHandler):
                 break
 
         # then from a bootstrap module
-        if not plugin_name in self._loaded_plugins:
+        if plugin_name not in self._loaded_plugins:
             if self._load_plugin_from_bootstrap(plugin_name, self.bootstrap):
                 self._loaded_plugins.append(plugin_name)
 
         # otherwise it's a bust
-        if not plugin_name in self._loaded_plugins:
+        if plugin_name not in self._loaded_plugins:
             raise exc.FrameworkError("Unable to load plugin '%s'." %
                                      plugin_name)
 

@@ -6,7 +6,7 @@ import json
 from cement.core import foundation, exc, backend, config, extension, plugin
 from cement.core import log, output, handler, hook, arg, controller
 from cement.utils import test
-from cement.utils.misc import init_defaults, rando
+from cement.utils.misc import init_defaults, rando, minimal_logger
 
 APP = rando()[:12]
 
@@ -54,6 +54,30 @@ class FoundationTestCase(test.CementCoreTestCase):
         app = self.make_app(APP, argv=None)
         app.setup()
         self.eq(app.argv, list(sys.argv[1:]))
+
+    def test_framework_logging_is_true(self):
+        del os.environ['CEMENT_FRAMEWORK_LOGGING']
+
+        app = self.make_app(APP, argv=None, framework_logging=True)
+        app.setup()
+        self.eq(os.environ['CEMENT_FRAMEWORK_LOGGING'], '1')
+
+        ml = minimal_logger(__name__)
+        self.eq(ml.logging_is_enabled, True)
+
+    def test_framework_logging_is_false(self):
+        del os.environ['CEMENT_FRAMEWORK_LOGGING']
+
+        app = self.make_app(APP, argv=None, framework_logging=False)
+        app.setup()
+        self.eq(os.environ['CEMENT_FRAMEWORK_LOGGING'], '0')
+
+        ml = minimal_logger(__name__)
+        self.eq(ml.logging_is_enabled, False)
+
+        # coverage... should default to True if no key in os.environ
+        del os.environ['CEMENT_FRAMEWORK_LOGGING']        
+        self.eq(ml.logging_is_enabled, True)
 
     def test_bootstrap(self):
         app = self.make_app('my_app', bootstrap='tests.bootstrap')

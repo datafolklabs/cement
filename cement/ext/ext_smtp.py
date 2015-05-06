@@ -229,7 +229,7 @@ class SMTPMailHandler(mail.CementMailHandler):
         msg += body + "\n"
 
         server.sendmail(params['from_addr'],
-                        params['to']+params['cc']+params['bcc'],
+                        params['to'] + params['cc'] + params['bcc'],
                         msg)
         server.quit()
 

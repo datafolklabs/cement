@@ -14,12 +14,13 @@ def mail_validator(klass, obj):
         'send',
     ]
 
-    ### FIX ME: Validate Meta/Configuration Defaults Here
+    # FIX ME: Validate Meta/Configuration Defaults Here
 
     interface.validate(IMail, obj, members)
 
 
 class IMail(interface.Interface):
+
     """
     This class defines the Mail Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
@@ -118,6 +119,7 @@ class IMail(interface.Interface):
 
 
 class CementMailHandler(handler.CementBaseHandler):
+
     """
     Base class that all Mail Handlers should sub-class from.
 
@@ -127,6 +129,7 @@ class CementMailHandler(handler.CementBaseHandler):
 
     """
     class Meta:
+
         """
         Handler meta-data (can be passed as keyword arguments to the parent
         class).

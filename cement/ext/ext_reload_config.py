@@ -29,17 +29,17 @@ Features
  * New configurations settings are accessible via ``CementApp.config`` nearly
    immediately once the kernel (inotify) picks up the change.
  * Provides a ``pre_reload_config`` and ``post_reload_config`` hook so that
-   applications can tie into the event and perform operations any time a 
+   applications can tie into the event and perform operations any time a
    configuration file is modified.
- * Asynchronously monitors configuration files for changes via inotify.  Long 
-   running processes are not blocked by the operations performed when files 
+ * Asynchronously monitors configuration files for changes via inotify.  Long
+   running processes are not blocked by the operations performed when files
    are detected to be modified.
 
 
 Limitations
 -----------
 
- * Currently this extension only re-parses configuration files into the 
+ * Currently this extension only re-parses configuration files into the
    config handler.  Some applications may need further work in-order to truly
    honor those changes.  For example, if a configuration settings toggles
    something on or off, or triggers something else to happen (like making an
@@ -172,6 +172,7 @@ NOTIFIER = None
 
 
 class ConfigEventHandler(pyinotify.ProcessEvent):
+
     def __init__(self, app, watched_files, **kw):
         self.app = app
         self.watched_files = watched_files
@@ -180,7 +181,7 @@ class ConfigEventHandler(pyinotify.ProcessEvent):
     def process_default(self, event):
         if event.pathname in self.watched_files:
             LOG.debug('config path modified: mask=%s, path=%s' %
-                     (event.maskname, event.pathname))
+                      (event.maskname, event.pathname))
             for res in hook.run('pre_reload_config', self.app):
                 pass
             self.app.config.parse_file(event.pathname)

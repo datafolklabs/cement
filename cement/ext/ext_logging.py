@@ -14,11 +14,11 @@ except AttributeError as e:                 # pragma: no cover
 
         def handle(self, record):           # pragma: no cover
             pass                            # pragma: no cover
-                                            # pragma: no cover
+            # pragma: no cover
 
         def emit(self, record):             # pragma: no cover
             pass                            # pragma: no cover
-                                            # pragma: no cover
+            # pragma: no cover
 
         def createLock(self):               # pragma: no cover
             self.lock = None                # pragma: no cover
@@ -125,7 +125,7 @@ class LoggingLogHandler(log.CementLogHandler):
         self.set_level(level)
 
         self.debug("logging initialized for '%s' using %s" %
-                  (self._meta.namespace, self.__class__.__name__))
+                   (self._meta.namespace, self.__class__.__name__))
 
     def set_level(self, level):
         """

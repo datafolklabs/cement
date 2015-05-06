@@ -132,7 +132,7 @@ class TemplateOutputHandler(CementOutputHandler):
         template_path = template_path.lstrip('/')
 
         LOG.debug("attemping to load output template '%s' from module %s" %
-                 (template_path, template_module))
+                  (template_path, template_module))
 
         # see if the module exists first
         if template_module not in sys.modules:
@@ -147,11 +147,11 @@ class TemplateOutputHandler(CementOutputHandler):
         try:
             content = pkgutil.get_data(template_module, template_path)
             LOG.debug("loaded output template '%s' from module %s" %
-                     (template_path, template_module))
+                      (template_path, template_module))
             return content
         except IOError as e:
             LOG.debug("output template '%s' does not exist in module %s" %
-                     (template_path, template_module))
+                      (template_path, template_module))
             return None
 
     def load_template(self, template_path):

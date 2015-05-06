@@ -175,6 +175,7 @@ CEMENT_DAEMON_APP = None
 
 
 class Environment(object):
+
     """
     This class provides a mechanism for altering the running processes
     environment.
@@ -260,7 +261,7 @@ class Environment(object):
         """
         # set the running uid/gid
         LOG.debug('setting process uid(%s) and gid(%s)' %
-                 (self.user.pw_uid, self.group.gr_gid))
+                  (self.user.pw_uid, self.group.gr_gid))
         os.setgid(self.group.gr_gid)
         os.setuid(self.user.pw_uid)
         os.environ['HOME'] = self.user.pw_dir
@@ -295,7 +296,7 @@ class Environment(object):
                 os._exit(os.EX_OK)
         except OSError as e:
             sys.stderr.write("Fork #1 failed: (%d) %s\n" %
-                            (e.errno, e.strerror))
+                             (e.errno, e.strerror))
             sys.exit(1)
 
         # Decouple from parent environment.
@@ -311,7 +312,7 @@ class Environment(object):
                 os._exit(os.EX_OK)
         except OSError as e:
             sys.stderr.write("Fork #2 failed: (%d) %s\n" %
-                            (e.errno, e.strerror))
+                             (e.errno, e.strerror))
             sys.exit(1)
 
         # Redirect standard file descriptors.
