@@ -100,6 +100,7 @@ still maintain the existing shared commands (or override them as necessary).
     class MyApp(CementApp):
         class Meta:
             label = 'myapp'
+            base_controller = 'base'
             handlers = [
                 MyAppBaseController,
                 Controller1,
