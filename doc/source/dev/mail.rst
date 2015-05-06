@@ -1,12 +1,12 @@
 Sending Email Messages
 ======================
 
-Cement defines a configuration interface called
-:ref:`IMail <cement.core.config>`, as well as the default
+Cement defines a mail interface called
+:ref:`IMail <cement.core.mail>`, as well as the default
 :ref:`DummyMailHandler <cement.ext.ext_dummy>` that implements
 the interface.
 
-Please note that there are other handlers that implement the ``IConfig``
+Please note that there are other handlers that implement the ``IMail``
 interface.  The documentation below only references usage based on the
 interface and not the full capabilities of the implementation.
 
