@@ -230,24 +230,13 @@ handle command dispatch and rapid development.
     class MyApp(CementApp):
         class Meta:
             label = 'myapp'
-            base_controller = MyBaseController
+            base_controller = 'base'
+            handlers = [MyBaseController, MySecondController)
 
 
 
-    # create the app
-    app = MyApp()
-
-    # Register any handlers that aren't passed directly to CementApp
-    handler.register(MySecondController)
-
-    # setup the application
-    app.setup()
-
-    # run the application
-    app.run()
-
-    # close the app
-    app.close()
+    with MyApp() as app:
+        app.run()
 
 
 As you can see, we're able to build out the core functionality of our app such

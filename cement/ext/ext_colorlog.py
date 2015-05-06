@@ -107,7 +107,7 @@ class ColorLogHandler(LoggingLogHandler):
             'WARNING':  'yellow',
             'ERROR':    'red',
             'CRITICAL': 'red',
-            }
+        }
 
     def __init__(self, *args, **kw):
         super(ColorLogHandler, self).__init__(*args, **kw)

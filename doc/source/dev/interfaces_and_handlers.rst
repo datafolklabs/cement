@@ -69,6 +69,20 @@ The following defines a basic interface:
 
             """
 
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            define_handlers = [MyInterface]
+
+
+Alternatively, if you need more control you might define a handler this 
+way:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+    from cement.core import handler
+    
     with CementApp('myapp') as app:
         # define interfaces after app is created
         handler.define(MyInterface)
@@ -157,6 +171,18 @@ is a handler that implements the MyInterface above:
 
         def do_something(self):
             print "Doing work!"
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            handlers = [MyHandler]
+
+Alternatively, if you need more control you might use this approach:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+    from cement.core import handler
 
     with CementApp('myapp') as app:
         # register handler after the app is created

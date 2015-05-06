@@ -5,6 +5,7 @@ import sys
 import json
 from cement.core import foundation, exc, backend, config, extension, plugin
 from cement.core import log, output, handler, hook, arg, controller
+from cement.core.interface import Interface
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando, minimal_logger
 
@@ -18,6 +19,18 @@ class DeprecatedApp(foundation.CementApp):
     class Meta:
         label = 'deprecated'
         defaults = None
+
+class HookTestException(Exception):
+    pass
+
+class MyTestInterface(Interface):
+    class IMeta:
+        label = 'my_test_interface'
+
+class MyTestHandler(handler.CementBaseHandler):
+    class Meta:
+        label = 'my_test_handler'
+        interface = MyTestInterface
 
 class TestOutputHandler(output.CementOutputHandler):
     file_suffix = None
@@ -374,4 +387,36 @@ class FoundationTestCase(test.CementCoreTestCase):
         app = self.make_app(APP, debug=True, config_defaults=defaults)
         app.setup()
         app.run()
+
+    def test_define_hooks_meta(self):
+        app = self.make_app(APP, define_hooks=['my_custom_hook'])
+        app.setup()
+        self.ok(hook.defined('my_custom_hook'))
+
+    @test.raises(HookTestException)
+    def test_register_hooks_meta(self):
+        def my_custom_hook_func():
+            raise HookTestException('OK')
+
+        app = self.make_app(APP, 
+            define_hooks=['my_custom_hook'],
+            hooks=[('my_custom_hook', my_custom_hook_func)])
+
+        app.setup()
+        
+        for res in hook.run('my_custom_hook'):
+            pass
+
+    def test_define_handlers_meta(self):
+        app = self.make_app(APP, define_handlers=[MyTestInterface])
+        app.setup()
+        self.ok(handler.defined('my_test_interface'))
+
+    def test_register_handlers_meta(self):
+        app = self.make_app(APP, 
+                define_handlers=[MyTestInterface],
+                handlers=[MyTestHandler],
+                )
+        app.setup()
+        self.ok(handler.registered('my_test_interface', 'my_test_handler'))        
 

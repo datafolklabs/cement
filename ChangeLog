@@ -39,6 +39,8 @@ Features:
 
     * :issue:`197` - Added support for colorized logging.
     * :issue:`281` - Added support for Python `with` operation.
+    * :issue:`282` - Added support to define/register hooks and handlers via
+      ``CementApp.Meta``.
     * :issue:`290` - Added ability to disable Cement framework logging via
       ``CementApp.Meta.framework_logging = False``.
     * :issue:`297` - Added **experimental** support for reloading 

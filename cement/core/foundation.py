@@ -580,6 +580,40 @@ class CementApp(meta.MetaMixin):
         it enabled.
         """
 
+        define_hooks = []
+        """
+        List of hook definitions (label).  Will be passed to
+        ``hook.define(<hook_label>)``.  Must be a list of strings.
+
+        I.e. ``['my_custom_hook', 'some_other_hook']``
+        """
+
+        hooks = []
+        """
+        List of hooks to register when the app is created.  Will be passed to
+        ``hook.register(<hook_label>, <hook_func>)``.  Must be a list of
+        tuples in the form of ``(<hook_label>, <hook_func>)``.
+
+        I.e. ``[('post_argument_parsing', my_hook_func)]``.
+        """
+
+        define_handlers = []
+        """
+        List of interfaces classes to define handlers.  Must be a list of
+        uninstantiated interface classes.
+
+        I.e. ``['MyCustomInterface', 'SomeOtherInterface']``
+        """
+
+        handlers = []
+        """
+        List of handler classes to register.  Will be passed to
+        ``handler.register(<handler_class>)``.  Must be a list of
+        uninstantiated handler classes.
+
+        I.e. ``[MyCustomHandler, SomeOtherHandler]``
+        """
+
     def __init__(self, label=None, **kw):
         super(CementApp, self).__init__(**kw)
 
@@ -895,9 +929,17 @@ class CementApp(meta.MetaMixin):
         hook.define('pre_render')
         hook.define('post_render')
 
+        # define application hooks from meta
+        for label in self._meta.define_hooks:
+            hook.define(label)
+
         # register some built-in framework hooks
         hook.register('post_setup', add_handler_override_options, weight=-99)
         hook.register('post_argument_parsing', handler_override, weight=-99)
+
+        # register application hooks from meta
+        for label, func in self._meta.hooks:
+            hook.register(label, func)
 
         # define and register handlers
         handler.define(extension.IExtension)
@@ -910,9 +952,17 @@ class CementApp(meta.MetaMixin):
         handler.define(controller.IController)
         handler.define(cache.ICache)
 
+        # define application handlers
+        for interface_class in self._meta.define_handlers:
+            handler.define(interface_class)
+
         # extension handler is the only thing that can't be loaded... as,
         # well, an extension.  ;)
         handler.register(extension.CementExtensionHandler)
+
+        # register application handlers
+        for handler_class in self._meta.handlers:
+            handler.register(handler_class)
 
     def _parse_args(self):
         for res in hook.run('pre_argument_parsing', self):
