@@ -163,6 +163,9 @@ class LoggingLogHandler(log.CementLogHandler):
             logging.getLogger("cement:app:%s" % namespace).removeHandler(i)
             self.backend = logging.getLogger("cement:app:%s" % namespace)
 
+    def _get_formatter(self, format):
+        return logging.Formatter(format)
+
     def _setup_console_log(self):
         """Add a console log handler."""
         to_console = self.app.config.get(self._meta.config_section,
@@ -170,9 +173,10 @@ class LoggingLogHandler(log.CementLogHandler):
         if is_true(to_console):
             console_handler = logging.StreamHandler()
             if self.get_level() == logging.getLevelName(logging.DEBUG):
-                format = logging.Formatter(self._meta.debug_format)
+                format = self._get_formatter(self._meta.debug_format)
             else:
-                format = logging.Formatter(self._meta.console_format)
+                format = self._get_formatter(self._meta.console_format)
+
             console_handler.setFormatter(format)
             console_handler.setLevel(getattr(logging, self.get_level()))
         else:
