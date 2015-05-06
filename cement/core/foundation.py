@@ -19,6 +19,7 @@ LOG = minimal_logger(__name__)
 
 
 class NullOut(object):
+
     def write(self, s):
         pass
 
@@ -565,8 +566,29 @@ class CementApp(meta.MetaMixin):
         ``template_dirs``.
         """
 
+        framework_logging = True
+        """
+        Whether or not to enable Cement framework logging.  This is separate
+        from the application log, and is generally used for debugging issues
+        with the framework and/or extensions primarily in development.
+
+        This option is overridden by the environment variable
+        `CEMENT_FRAMEWORK_LOGGING`.  Therefore, if in production you do not
+        want the Cement framework log enabled, you can set this option to
+        ``False`` but override it in your environment by doing something like
+        ``export CEMENT_FRAMEWORK_LOGGING=1`` in your shell whenever you need
+        it enabled.
+        """
+
     def __init__(self, label=None, **kw):
         super(CementApp, self).__init__(**kw)
+
+        # disable framework logging?
+        if 'CEMENT_FRAMEWORK_LOGGING' not in os.environ.keys():
+            if self._meta.framework_logging is True:
+                os.environ['CEMENT_FRAMEWORK_LOGGING'] = '1'
+            else:
+                os.environ['CEMENT_FRAMEWORK_LOGGING'] = '0'
 
         # for convenience we translate this to _meta
         if label:
@@ -631,7 +653,7 @@ class CementApp(meta.MetaMixin):
             raise exc.FrameworkError("App member '%s' already exists!" %
                                      member_name)
         LOG.debug("extending appication with '.%s' (%s)" %
-                 (member_name, member_object))
+                  (member_name, member_object))
         setattr(self, member_name, member_object)
 
     def _validate_label(self):
@@ -952,7 +974,7 @@ class CementApp(meta.MetaMixin):
             self._meta.config_section = self._meta.label
         self.config.add_section(self._meta.config_section)
 
-        if not self._meta.config_defaults is None:
+        if self._meta.config_defaults is not None:
             self.config.merge(self._meta.config_defaults)
 
         if self._meta.config_files is None:
