@@ -36,10 +36,10 @@ memcached &
 deactivate ||:
 
 source ~/.env/cement/bin/activate
-pip install -r requirements-dev.txt
+pip install -r requirements-dev-linux.txt
 python setup.py develop
 
 source ~/.env/cement-py3/bin/activate
-pip install -r requirements-dev-py3.txt
+pip install -r requirements-dev-py3-linux.txt
 python setup.py develop
 

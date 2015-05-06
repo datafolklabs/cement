@@ -9,4 +9,3 @@ mock
 # Required for optional extensions (only the ones supported on py3)
 pystache
 pyYaml
-pyinotify
