@@ -36,15 +36,17 @@ The following defines a basic interface:
 
 .. code-block:: python
 
-    from cement.core import interface, handler
+    from cement.core.foundation import CementApp
+    from cement.core.interface import Interface, Attribute
+    from cement.core import handler
 
-    class MyInterface(interface.Interface):
+    class MyInterface(Interface):
         class IMeta:
             label = 'myinterface'
 
         # Must be provided by the implementation
-        Meta = interface.Attribute('Handler Meta-data')
-        my_var = interface.Attribute('A variable of epic proportions.')
+        Meta = Attribute('Handler Meta-data')
+        my_var = Attribute('A variable of epic proportions.')
 
         def _setup(app_obj):
             """
@@ -67,7 +69,12 @@ The following defines a basic interface:
 
             """
 
-    handler.define(MyInterface)
+    with CementApp('myapp') as app:
+        # define interfaces after app is created
+        handler.define(MyInterface)
+
+        app.run()
+
 
 The above simply defines the interface.  It does *not* implement any
 functionality, and can't be used directly.  This is why the class
@@ -127,6 +134,7 @@ is a handler that implements the MyInterface above:
 
 .. code-block:: python
 
+    from cement.core.foundation import CementApp
     from cement.core import handler
     from myapp.interfaces import MyInterface
 
@@ -150,7 +158,11 @@ is a handler that implements the MyInterface above:
         def do_something(self):
             print "Doing work!"
 
-    handler.register(MyHandler)
+    with CementApp('myapp') as app:
+        # register handler after the app is created
+        handler.register(MyHandler)
+
+        app.run()
 
 
 The above is a simple class that meets all the expectations of the interface.
