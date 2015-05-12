@@ -63,8 +63,8 @@ This extension defines the following hooks:
 pre_reload_config
 ^^^^^^^^^^^^^^^^^
 
-Run right before any framework actions are performed once modifications to 
-any of the watched files are detected.  Expects a single argument, which is 
+Run right before any framework actions are performed once modifications to
+any of the watched files are detected.  Expects a single argument, which is
 the ``app`` object, and does not expect anything in return.
 
 .. code-block:: python
@@ -76,8 +76,8 @@ the ``app`` object, and does not expect anything in return.
 post_reload_config
 ^^^^^^^^^^^^^^^^^^
 
-Run right after any framework actions are performed once modifications to any 
-of the watched files are detected.  Expects a single argument, which is the 
+Run right after any framework actions are performed once modifications to any
+of the watched files are detected.  Expects a single argument, which is the
 ``app`` object, and does not expect anything in return.
 
 .. code-block:: python
