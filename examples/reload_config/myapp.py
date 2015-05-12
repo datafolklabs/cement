@@ -7,7 +7,6 @@ from cement.core.controller import CementBaseController, expose
 
 def print_foo(app):
     print("Foo => %s" % app.config.get('myapp', 'foo'))
-    print("Example Foo => %s" % app.config.get('example', 'foo'))
 
 
 class Base(CementBaseController):

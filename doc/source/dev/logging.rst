@@ -14,6 +14,7 @@ interface and not the full capabilities of the implementation.
 The following log handlers are included and maintained with Cement:
 
     * :ref:`LoggingLogHandler <cement.ext.ext_logging>`
+    * :ref:`ColorLogHandler <cement.ext.ext_colorlog>`
 
 
 Please reference the :ref:`ILog <cement.core.config>` interface

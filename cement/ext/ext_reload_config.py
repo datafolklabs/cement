@@ -46,6 +46,7 @@ Limitations
    API connection, etc)... this extension does not currently handle that, and
    it is left up to the application developer to tie into the events via the
    provided hooks.
+ * Only available on Linux based systems.
 
 
 Configuration
@@ -59,11 +60,31 @@ Hooks
 
 This extension defines the following hooks:
 
- * ``pre_reload_config``: Run right before any framework actions are performed
-   once modifications to any of the watched files are detected.
+pre_reload_config
+^^^^^^^^^^^^^^^^^
 
- * ``post_reload_config``: Run right after any framework actions are
-   performed once modifications to any of the watched files are detected.
+Run right before any framework actions are performed once modifications to 
+any of the watched files are detected.  Expects a single argument, which is 
+the ``app`` object, and does not expect anything in return.
+
+.. code-block:: python
+
+    def my_pre_reload_config_hook(app):
+        # do something with app?
+        pass
+
+post_reload_config
+^^^^^^^^^^^^^^^^^^
+
+Run right after any framework actions are performed once modifications to any 
+of the watched files are detected.  Expects a single argument, which is the 
+``app`` object, and does not expect anything in return.
+
+.. code-block:: python
+
+    def my_post_reload_config_hook(app):
+        # do something with app?
+        pass
 
 
 Usage
@@ -156,6 +177,7 @@ or any other configuration file is modified (spaces added for clarity):
                                     'post_reload_config' (<function print_foo
                                     at 0x7f1b52a5ab70>) from __main__
     Foo => bar3
+
 
 """
 

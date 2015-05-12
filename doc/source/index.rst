@@ -75,6 +75,7 @@ Documentation
    license
    contributors
    upgrading
+   whats_new
    faq
    api/index
 
