@@ -32,13 +32,13 @@ Bugs:
       By default, this will attempt to explicitly call the ``default`` command
       rather than using ``default`` as the argument.  This fix adds
       ``CementBaseController.Meta.default_func`` allowing the developer to
-      override the name of the default function that is called if not matching
+      override the name of the default function that is called if no matching
       sub-command is passed.
 
 Features:
 
     * :issue:`197` - Added support for colorized logging.
-    * :issue:`281` - Added support for Python `with` operation.
+    * :issue:`281` - Added support for Python `with` statement.
     * :issue:`282` - Added support to define/register hooks and handlers via
       ``CementApp.Meta``.
     * :issue:`290` - Added ability to disable Cement framework logging via
@@ -46,6 +46,16 @@ Features:
     * :issue:`297` - Added **experimental** support for reloading 
       configurations anytime config files and/or plugin config files are
       modified.  Optional extension `ext_reload_config`.
+
+Incompatible:
+
+    * :issue:`308` - No longer require explicit 
+      ``CementApp.Meta.base_controller`` if a controller with the label of 
+      ``base`` is registered.  This is potentially backward in-compatible in
+      that previously ``CementBaseController.Meta.label`` defaulted to 
+      ``base``.  It now defaults to ``None``, which makes more sense but will
+      break for any controllers that have not explicitly set a ``label`` of 
+      ``base``.
 
 
 2.4.0 - Wed Sep 17, 2014

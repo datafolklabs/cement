@@ -220,7 +220,7 @@ class CementBaseController(handler.CementBaseHandler):
         interface = IController
         """The interface this class implements."""
 
-        label = 'base'
+        label = None
         """The string identifier for the controller."""
 
         aliases = []
