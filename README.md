@@ -18,7 +18,7 @@ command line and backend application development.
 
 Cement core features include (but are not limited to):
 
- * Core pieces of the framework are customizable via handlers/interfaces
+ * Pieces of the framework are customizable via handlers/interfaces
  * Extension handler interface to easily extend framework functionality
  * Config handler supports parsing multiple config files into one config
  * Argument handler parses command line arguments and merges with config
