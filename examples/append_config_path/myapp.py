@@ -4,7 +4,8 @@ from cement.core.controller import CementBaseController, expose
 def append_config_path(app):
     if app.pargs.config_path:
         app._meta.config_files.append(app.pargs.config_path)
-        app.config.parse_file(app.pargs.config_path)
+        #app.config.parse_file(app.pargs.config_path)
+        app._setup_config_handler()
 
 class Base(CementBaseController):
     class Meta:
