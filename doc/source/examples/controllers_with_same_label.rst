@@ -75,25 +75,20 @@ and a 'hosts' controller and we want to have a 'list' sub-command under both:
         def default(self):
             print "Inside HostsListController.default()"
 
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            handlers = [
+                MyAppBaseController,
+                UsersController,
+                HostsController,
+                UsersListController,
+                HostsListController,
+                ]
+
     def main():
-        # create the application
-        app = CementApp('myapp')
-
-        # register non-base controllers
-        handler.register(MyAppBaseController)
-        handler.register(UsersController)
-        handler.register(HostsController)
-        handler.register(UsersListController)
-        handler.register(HostsListController)
-
-        # setup the application
-        app.setup()
-
-        # run it
-        app.run()
-
-        # close it
-        app.close()
+        with MyApp() as app:
+            app.run()
 
     if __name__ == '__main__':
         main()

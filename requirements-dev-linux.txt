@@ -1,0 +1,5 @@
+-r requirements-dev.txt
+
+# additional optional requirements for extensions available only on linux
+pyinotify
+

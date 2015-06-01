@@ -67,16 +67,16 @@ Example
     class MyApp(CementApp):
         class Meta:
             label = 'myapp'
-            base_controller = MyBaseController
+            base_controller = 'base'
+            handlers = [
+                MyBaseController,
+                MySecondController,
+                ]
 
     def main():
-        app = MyApp()
-        handler.register(MySecondController)
-
-        app.setup()
-        app.run()
-        app.close()
-
+        with MyApp() as app:
+            app.run()
+        
     if __name__ == '__main__':
         main()
 

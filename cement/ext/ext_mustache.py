@@ -9,6 +9,7 @@ LOG = minimal_logger(__name__)
 
 
 class MustacheOutputHandler(output.TemplateOutputHandler):
+
     """
     This class implements the :ref:`IOutput <cement.core.output>`
     interface.  It provides text output from template and uses the

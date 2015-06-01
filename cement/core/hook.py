@@ -110,7 +110,7 @@ def run(name, *args, **kwargs):
     backend.__hooks__[name].sort(key=operator.itemgetter(0))
     for hook in backend.__hooks__[name]:
         LOG.debug("running hook '%s' (%s) from %s" %
-                 (name, hook[2], hook[2].__module__))
+                  (name, hook[2], hook[2].__module__))
         res = hook[2](*args, **kwargs)
 
         # Results are yielded, so you must fun a for loop on it, you can not

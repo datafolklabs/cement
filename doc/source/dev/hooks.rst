@@ -23,7 +23,25 @@ Defining a Hook
 ---------------
 
 A hook can be defined anywhere, however it is generally recommended to define
-the hook as early as possible, and within the application setup if possible:
+the hook as early as possible.  A hook definition simply gives a label to the
+hook, and allows the developer to register functions to that hook.  It's label
+is arbitrary.
+
+The most convenient way to define a hook is via 
+``CementApp.Meta.define_hooks``:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            define_hooks = ['my_example_hook']
+
+
+Alternatively, if you need more control you might do it in 
+``CementApp.setup()``:
 
 .. code-block:: python
 
@@ -42,7 +60,6 @@ the hook as early as possible, and within the application setup if possible:
             hook.define('my_example_hook')
 
 
-
 Registering Functions to a Hook
 -------------------------------
 
@@ -53,15 +70,46 @@ been created, after the hook is defined, and before the hook is run.  Note
 that every hook is different, and therefore should be clearly documented by
 the 'owner' of the hook (application developer, plugin developer, etc).
 
+The most convenient way to register a hook function is with 
+``CementApp.Meta.hooks``:
+
 .. code-block:: python
 
+    from cement.core.foundation import CementApp
     from cement.core import hook
 
-    def my_func(app):
+    def my_hook1(app):
+        pass
+
+    def my_hook2(app):
+        pass
+
+    class MyApp(CementApp):
+        class Meta:
+            hooks = [
+                ('post_argument_parsing', my_hook1),
+                ('pre_close', my_hook2),
+                ]
+
+    with MyApp() as app:
+        app.run()
+
+
+Where ``CementApp.Meta.hooks`` is a list of tuples that define the hook label,
+and the function to register to that hook.
+
+Alternatively, if you need more control you might use:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+    from cement.core import hook
+
+    def my_hook1(app):
         pass
 
     with CementApp('myapp') as app:
-        hook.register('my_example_hook', my_func)
+        hook.register('post_argument_parsing', my_hook1)
         app.run()
 
 

@@ -1,0 +1,4 @@
+-r requirements-dev-py3.txt
+
+# additional optional requirements for extensions available only on linux
+pyinotify

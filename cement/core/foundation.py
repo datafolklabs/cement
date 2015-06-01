@@ -19,6 +19,7 @@ LOG = minimal_logger(__name__)
 
 
 class NullOut(object):
+
     def write(self, s):
         pass
 
@@ -565,8 +566,63 @@ class CementApp(meta.MetaMixin):
         ``template_dirs``.
         """
 
+        framework_logging = True
+        """
+        Whether or not to enable Cement framework logging.  This is separate
+        from the application log, and is generally used for debugging issues
+        with the framework and/or extensions primarily in development.
+
+        This option is overridden by the environment variable
+        `CEMENT_FRAMEWORK_LOGGING`.  Therefore, if in production you do not
+        want the Cement framework log enabled, you can set this option to
+        ``False`` but override it in your environment by doing something like
+        ``export CEMENT_FRAMEWORK_LOGGING=1`` in your shell whenever you need
+        it enabled.
+        """
+
+        define_hooks = []
+        """
+        List of hook definitions (label).  Will be passed to
+        ``hook.define(<hook_label>)``.  Must be a list of strings.
+
+        I.e. ``['my_custom_hook', 'some_other_hook']``
+        """
+
+        hooks = []
+        """
+        List of hooks to register when the app is created.  Will be passed to
+        ``hook.register(<hook_label>, <hook_func>)``.  Must be a list of
+        tuples in the form of ``(<hook_label>, <hook_func>)``.
+
+        I.e. ``[('post_argument_parsing', my_hook_func)]``.
+        """
+
+        define_handlers = []
+        """
+        List of interfaces classes to define handlers.  Must be a list of
+        uninstantiated interface classes.
+
+        I.e. ``['MyCustomInterface', 'SomeOtherInterface']``
+        """
+
+        handlers = []
+        """
+        List of handler classes to register.  Will be passed to
+        ``handler.register(<handler_class>)``.  Must be a list of
+        uninstantiated handler classes.
+
+        I.e. ``[MyCustomHandler, SomeOtherHandler]``
+        """
+
     def __init__(self, label=None, **kw):
         super(CementApp, self).__init__(**kw)
+
+        # disable framework logging?
+        if 'CEMENT_FRAMEWORK_LOGGING' not in os.environ.keys():
+            if self._meta.framework_logging is True:
+                os.environ['CEMENT_FRAMEWORK_LOGGING'] = '1'
+            else:
+                os.environ['CEMENT_FRAMEWORK_LOGGING'] = '0'
 
         # for convenience we translate this to _meta
         if label:
@@ -631,7 +687,7 @@ class CementApp(meta.MetaMixin):
             raise exc.FrameworkError("App member '%s' already exists!" %
                                      member_name)
         LOG.debug("extending appication with '.%s' (%s)" %
-                 (member_name, member_object))
+                  (member_name, member_object))
         setattr(self, member_name, member_object)
 
     def _validate_label(self):
@@ -873,9 +929,17 @@ class CementApp(meta.MetaMixin):
         hook.define('pre_render')
         hook.define('post_render')
 
+        # define application hooks from meta
+        for label in self._meta.define_hooks:
+            hook.define(label)
+
         # register some built-in framework hooks
         hook.register('post_setup', add_handler_override_options, weight=-99)
         hook.register('post_argument_parsing', handler_override, weight=-99)
+
+        # register application hooks from meta
+        for label, func in self._meta.hooks:
+            hook.register(label, func)
 
         # define and register handlers
         handler.define(extension.IExtension)
@@ -888,9 +952,17 @@ class CementApp(meta.MetaMixin):
         handler.define(controller.IController)
         handler.define(cache.ICache)
 
+        # define application handlers
+        for interface_class in self._meta.define_handlers:
+            handler.define(interface_class)
+
         # extension handler is the only thing that can't be loaded... as,
         # well, an extension.  ;)
         handler.register(extension.CementExtensionHandler)
+
+        # register application handlers
+        for handler_class in self._meta.handlers:
+            handler.register(handler_class)
 
     def _parse_args(self):
         for res in hook.run('pre_argument_parsing', self):
@@ -952,7 +1024,7 @@ class CementApp(meta.MetaMixin):
             self._meta.config_section = self._meta.label
         self.config.add_section(self._meta.config_section)
 
-        if not self._meta.config_defaults is None:
+        if self._meta.config_defaults is not None:
             self.config.merge(self._meta.config_defaults)
 
         if self._meta.config_files is None:

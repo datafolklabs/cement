@@ -49,7 +49,7 @@ class Mock(object):
         else:
             return Mock()
 
-MOCK_MODULES = ['pylibmc']
+MOCK_MODULES = ['pylibmc', 'pyinotify']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
 
@@ -86,7 +86,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Cement'
-copyright = u'2009-2014, Data Folk Labs, LLC'
+copyright = u'2009-2015, Data Folk Labs, LLC'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

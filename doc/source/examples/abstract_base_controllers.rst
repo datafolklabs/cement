@@ -96,17 +96,20 @@ still maintain the existing shared commands (or override them as necessary).
         def command2(self):
             print("Inside Controller2.command2()")
 
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            base_controller = 'base'
+            handlers = [
+                MyAppBaseController,
+                Controller1,
+                Controller2,
+                ]
+
     def main():
-        app = CementApp('myapp')
-
-        # register controllers handlers
-        handler.register(MyAppBaseController)
-        handler.register(Controller1)
-        handler.register(Controller2)
-
-        app.setup()
-        app.run()
-        app.close()
+        with MyApp() as app:
+            app.run()
 
     if __name__ == '__main__':
         main()

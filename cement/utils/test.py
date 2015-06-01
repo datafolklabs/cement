@@ -29,6 +29,7 @@ class TestApp(foundation.CementApp):
 
 
 class CementTestCase(unittest.TestCase):
+
     """
     A sub-class of unittest.TestCase.
 

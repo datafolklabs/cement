@@ -84,26 +84,17 @@ sub-commands, that are implemented via nested-controllers.
     class MyApp(CementApp):
         class Meta:
             label = 'myapp'
+            handlers = [
+                BaseController,
+                EmbeddedController,
+                SecondLevelController,
+                ThirdLevelController,
+                ]
 
 
     def main():
-        # create the app
-        app = MyApp()
-
-        # register controllers to the app
-        handler.register(BaseController)
-        handler.register(EmbeddedController)
-        handler.register(SecondLevelController)
-        handler.register(ThirdLevelController)
-
-        # setup the app
-        app.setup()
-
-        # run the app
-        app.run()
-
-        # close the app
-        app.close()
+        with MyApp() as app:
+            app.run()
 
     if __name__ == '__main__':
         main()

@@ -25,6 +25,7 @@ class InterfaceError(FrameworkError):
 
 
 class CaughtSignal(FrameworkError):
+
     """
     Raised when a defined signal is caught.  For more information regarding
     signals, reference the

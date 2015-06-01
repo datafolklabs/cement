@@ -40,7 +40,7 @@ import datetime  # pragma: nocover
 import os  # pragma: nocover
 import subprocess  # pragma: nocover
 
-from cement.core.backend import VERSION  # pragma: nocover
+from ..core.backend import VERSION  # pragma: nocover
 
 
 def get_version(version=VERSION):  # pragma: nocover

@@ -23,6 +23,7 @@ def log_validator(klass, obj):
 
 
 class ILog(interface.Interface):
+
     """
     This class defines the Log Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
@@ -120,6 +121,7 @@ class ILog(interface.Interface):
 
 
 class CementLogHandler(handler.CementBaseHandler):
+
     """
     Base class that all Log Handlers should sub-class from.
 

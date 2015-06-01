@@ -19,6 +19,7 @@ them in your applications.
    extensions
    plugins
    hooks
+   extending_cementapp
    signal_handling
    cleanup
    caching

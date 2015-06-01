@@ -9,9 +9,9 @@ fi
 
 PYCHECK=$(python -c 'import sys; print(sys.version_info > (3, 0))')
 if [ "$PYCHECK" == "True" ]; then
-    pip install -r requirements-dev-py3.txt --use-mirrors
+    pip install -r requirements-dev-py3-linux.txt --use-mirrors
 else
-    pip install -r requirements-dev.txt --use-mirrors
+    pip install -r requirements-dev-linux.txt --use-mirrors
 fi
 
 python setup.py nosetests

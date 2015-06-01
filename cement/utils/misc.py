@@ -1,5 +1,6 @@
 """Misc utilities."""
 
+import os
 import sys
 import logging
 import hashlib
@@ -22,7 +23,27 @@ def rando(salt=None):
     return hashlib.md5(str(salt).encode()).hexdigest()
 
 
+# class NullLogger(object):
+#    def __init__(self, namespace, debug, *args, **kw):
+#        pass
+
+    # def info(self, *args, **kw):
+    #     pass
+
+    # def warn(self, *args, **kw):
+    #     pass
+
+    # def error(self, *args, **kw):
+    #     pass
+
+    # def fatal(self, *args, **kw):
+    #     pass
+
+    # def debug(self, *args, **kw):
+    #     pass
+
 class MinimalLogger(object):
+
     def __init__(self, namespace, debug, *args, **kw):
         self.namespace = namespace
         self.backend = logging.getLogger(namespace)
@@ -56,25 +77,42 @@ class MinimalLogger(object):
 
         return kw
 
+    @property
+    def logging_is_enabled(self):
+        if 'CEMENT_FRAMEWORK_LOGGING' in os.environ.keys():
+            if is_true(os.environ['CEMENT_FRAMEWORK_LOGGING']):
+                res = True
+            else:
+                res = False
+        else:
+            res = True
+
+        return res
+
     def info(self, msg, namespace=None, **kw):
-        kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.info(msg, **kwargs)
+        if self.logging_is_enabled:
+            kwargs = self._get_logging_kwargs(namespace, **kw)
+            self.backend.info(msg, **kwargs)
 
     def warn(self, msg, namespace=None, **kw):
-        kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.warn(msg, **kwargs)
+        if self.logging_is_enabled:
+            kwargs = self._get_logging_kwargs(namespace, **kw)
+            self.backend.warn(msg, **kwargs)
 
     def error(self, msg, namespace=None, **kw):
-        kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.error(msg, **kwargs)
+        if self.logging_is_enabled:
+            kwargs = self._get_logging_kwargs(namespace, **kw)
+            self.backend.error(msg, **kwargs)
 
     def fatal(self, msg, namespace=None, **kw):
-        kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.fatal(msg, **kwargs)
+        if self.logging_is_enabled:
+            kwargs = self._get_logging_kwargs(namespace, **kw)
+            self.backend.fatal(msg, **kwargs)
 
     def debug(self, msg, namespace=None, **kw):
-        kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.debug(msg, **kwargs)
+        if self.logging_is_enabled:
+            kwargs = self._get_logging_kwargs(namespace, **kw)
+            self.backend.debug(msg, **kwargs)
 
 
 def init_defaults(*sections):

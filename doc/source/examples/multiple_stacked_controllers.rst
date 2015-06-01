@@ -72,25 +72,20 @@ Multiple Stacked Controllers
         def command4(self):
             print "Inside FourthController.command4()"
 
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            handlers = [
+                MyAppBaseController,
+                SecondController,
+                ThirdController,
+                FourthController,
+                ]
+
     def main():
-        try:
-            # create the application
-            app = CementApp('myapp')
-
-            # register controllers
-            handler.register(MyAppBaseController)
-            handler.register(SecondController)
-            handler.register(ThirdController)
-            handler.register(FourthController)
-
-            # setup the application
-            app.setup()
-
-            # run the application
+        with MyApp() as app:
             app.run()
-        finally:
-            # close the application
-            app.close()
+            
 
     if __name__ == '__main__':
         main()

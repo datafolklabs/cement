@@ -11,6 +11,7 @@ LOG = minimal_logger(__name__)
 
 
 class YamlConfigObjConfigHandler(ConfigObjConfigHandler):
+
     """
     This class implements the :ref:`IConfig <cement.core.config>`
     interface, and provides the same functionality of

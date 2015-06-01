@@ -234,7 +234,7 @@ def register(handler_obj):
 
     handler_type = obj._meta.interface.IMeta.label
     LOG.debug("registering handler '%s' into handlers['%s']['%s']" %
-             (orig_obj, handler_type, obj._meta.label))
+              (orig_obj, handler_type, obj._meta.label))
 
     if handler_type not in backend.__handlers__:
         raise exc.FrameworkError("Handler type '%s' doesn't exist." %
@@ -242,7 +242,7 @@ def register(handler_obj):
     if obj._meta.label in backend.__handlers__[handler_type] and \
             backend.__handlers__[handler_type][obj._meta.label] != obj:
         raise exc.FrameworkError("handlers['%s']['%s'] already exists" %
-                                (handler_type, obj._meta.label))
+                                 (handler_type, obj._meta.label))
 
     interface = backend.__handlers__[handler_type]['__interface__']
     if hasattr(interface.IMeta, 'validator'):

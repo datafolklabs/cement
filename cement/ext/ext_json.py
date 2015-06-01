@@ -54,6 +54,7 @@ def suppress_output_after_render(app, out_text):
 
 
 class JsonOutputHandler(output.CementOutputHandler):
+
     """
     This class implements the :ref:`IOutput <cement.core.output>`
     interface.  It provides JSON output from a data dictionary using the
@@ -104,6 +105,7 @@ class JsonOutputHandler(output.CementOutputHandler):
 
 
 class JsonConfigHandler(ConfigParserConfigHandler):
+
     """
     This class implements the :ref:`IConfig <cement.core.config>`
     interface, and provides the same functionality of

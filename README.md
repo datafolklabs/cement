@@ -1,8 +1,8 @@
 Cement Framework
 ================
 
-**NOTE: 2.5.x is the development version of Cement.  Please use 2.4.x in
-production until version 2.6.x is released.**
+**NOTE: 2.7.x is the development version of Cement.  Please use 2.6.x in
+production until version 2.8.x is released.**
 
 Cement is an advanced CLI Application Framework for Python.  Its goal is to
 introduce a standard, and feature-full platform for both simple and complex
@@ -36,7 +36,7 @@ Cement core features include (but are not limited to):
  * 100% test coverage using Nose*
  * 100% PEP8 compliant using `pep8` and `autopep8` tools
  * Extensive Sphinx documentation
- * Tested on Python 2.6, 2.7, 3.2, and 3.3
+ * Tested on Python 2.6, 2.7, 3.2, 3.3, and 3.4
 
 *Note that argparse is required as an external dependency for Python < 2.7
 and < 3.2.  Additionally, some optional extensions that are shipped with the

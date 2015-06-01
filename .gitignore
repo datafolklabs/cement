@@ -62,3 +62,6 @@ test.log
 
 example.py
 extensions
+.env
+.vagrant
+myapp*.py

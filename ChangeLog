@@ -11,27 +11,58 @@ All bugs/feature details can be found at:
 Where XXXXX is the 'Issue #' referenced below.  Additionally, this change log
 is available online at:
 
-    http://builtoncement.com/2.5/changes/
+    http://builtoncement.com/2.7/changes/
 
 
 See the :ref:`upgrading` section for more information related to
 any incompatible changes, and how to update your application to fix them.
+Also check out the :ref:`whats_new` section for details on new features.
 
 
-2.5.1 - DEVELOPMENT (will be released as 2.5.2/dev or 2.6.0/stable)
+2.7.1 - DEVELOPMENT (will be released as 2.7.2/dev or 2.8.0/stable)
 ------------------------------------------------------------------------------
 
-This is a branch off of the 2.4.x stable code base.  Maintenance releases for
-2.4.x will happen under the stable/2.4.x git branch, while forward feature
-development will happen as 2.5.x under the git master branch.
+This is a branch off of the 2.6.x stable code base.  Maintenance releases for
+2.6.x will happen under the stable/2.6.x git branch, while forward feature
+development will happen as 2.7.x under the git master branch.
+
+ * None
+
+
+2.6.0 - Thu May 14, 2015
+------------------------------------------------------------------------------
 
 Bugs:
 
-    * None
+    * :issue:`294` - Added work-around for scenario where an app wants to 
+      support arbitrary positional argument with a value of ``default``.  
+      By default, this will attempt to explicitly call the ``default`` command
+      rather than using ``default`` as the argument.  This fix adds
+      ``CementBaseController.Meta.default_func`` allowing the developer to
+      override the name of the default function that is called if no matching
+      sub-command is passed.
 
 Features:
 
-    * :issue:`281` - Added support for Python `with` operation
+    * :issue:`197` - Added support for colorized logging.
+    * :issue:`281` - Added support for Python `with` statement.
+    * :issue:`282` - Added support to define/register hooks and handlers via
+      ``CementApp.Meta``.
+    * :issue:`290` - Added ability to disable Cement framework logging via
+      ``CementApp.Meta.framework_logging = False``.
+    * :issue:`297` - Added **experimental** support for reloading 
+      configurations anytime config files and/or plugin config files are
+      modified.  Optional extension `ext_reload_config`.
+
+Incompatible:
+
+    * :issue:`308` - No longer require explicit 
+      ``CementApp.Meta.base_controller`` if a controller with the label of 
+      ``base`` is registered.  This is potentially backward in-compatible in
+      that previously ``CementBaseController.Meta.label`` defaulted to 
+      ``base``.  It now defaults to ``None``, which makes more sense but will
+      break for any controllers that have not explicitly set a ``label`` of 
+      ``base``.
 
 
 2.4.0 - Wed Sep 17, 2014

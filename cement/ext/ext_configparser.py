@@ -2,13 +2,13 @@
 
 import os
 import sys
+from ..core import backend, config, handler
+from ..utils.misc import minimal_logger
+
 if sys.version_info[0] < 3:
     from ConfigParser import RawConfigParser  # pragma: no cover
 else:
     from configparser import RawConfigParser  # pragma: no cover
-
-from ..core import backend, config, handler
-from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
@@ -57,7 +57,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         """
         for section in list(dict_obj.keys()):
             if type(dict_obj[section]) == dict:
-                if not section in self.get_sections():
+                if section not in self.get_sections():
                     self.add_section(section)
 
                 for key in list(dict_obj[section].keys()):
@@ -65,7 +65,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
                         self.set(section, key, dict_obj[section][key])
                     else:
                         # only set it if the key doesn't exist
-                        if not key in self.keys(section):
+                        if key not in self.keys(section):
                             self.set(section, key, dict_obj[section][key])
 
                 # we don't support nested config blocks, so no need to go

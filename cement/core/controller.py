@@ -223,7 +223,7 @@ class CementBaseController(handler.CementBaseHandler):
         interface = IController
         """The interface this class implements."""
 
-        label = 'base'
+        label = None
         """The string identifier for the controller."""
 
         aliases = []
@@ -306,6 +306,13 @@ class CementBaseController(handler.CementBaseHandler):
         argument_formatter = argparse.RawDescriptionHelpFormatter
         """
         The argument formatter class to use to display --help output.
+        """
+
+        default_func = 'default'
+        """
+        Function to call if no sub-command is passed.  Note that this can
+        **not** start with an ``_`` due to backward compatibility restraints
+        in how Cement discovers and maps commands.
         """
 
     def __init__(self, *args, **kw):
@@ -418,18 +425,22 @@ class CementBaseController(handler.CementBaseHandler):
         self._visible_commands.sort()
 
     def _get_dispatch_command(self):
+        default_func = self._meta.default_func
+        default_func_key = re.sub('_', '-', self._meta.default_func)
+
         if (len(self.app.argv) <= 0) or (self.app.argv[0].startswith('-')):
             # if no command is passed, then use default
-            if 'default' in self._dispatch_map.keys():
-                self._dispatch_command = self._dispatch_map['default']
+            if default_func_key in self._dispatch_map.keys():
+                self._dispatch_command = self._dispatch_map[default_func_key]
+
         elif self.app.argv[0] in self._dispatch_map.keys():
             self._dispatch_command = self._dispatch_map[self.app.argv[0]]
             self.app.argv.pop(0)
         else:
             # check for default again (will get here if command line has
             # positional arguments that don't start with a -)
-            if 'default' in self._dispatch_map.keys():
-                self._dispatch_command = self._dispatch_map['default']
+            if default_func_key in self._dispatch_map.keys():
+                self._dispatch_command = self._dispatch_map[default_func_key]
 
     def _parse_args(self):
         self.app.args.description = self._help_text

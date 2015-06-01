@@ -6,11 +6,37 @@ Upgrading
 This section outlines any information and changes that might need to be made
 in order to update your application built on previous versions of Cement.
 
+Upgrading from 2.4.x to 2.6.x
+-----------------------------
+
+Cement 2.6 introduced a few incompatible changes from the previous 2.4 stable
+release, as noted in the :ref:`Changelog <changelog>`.
+
+InterfaceError: Invalid handler ... missing '_meta.label'.
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Prior to Cement 2.5.2, ``CementBaseController.Meta.label`` defaulted to 
+``base``.  The new default is ``None``, causing the potential for breakage of
+a controller that did not explicity set the ``label`` meta option.
+
+You can resolve this error by explicity setting the ``label`` meta option:
+
+.. code-block:: python
+
+    class MyBaseController(CementBaseController):
+        class Meta:
+            label = 'base'
+
+
 Upgrading from 2.2.x to 2.4.x
 -----------------------------
 
 Cement 2.4 introduced a few incompatible changes from the previous 2.2 stable
 release, as noted in the :ref:`Changelog <changelog>`.
+
+Related:
+
+    * :issue:`308`
 
 
 CementApp.render() Prints Output Without Calling print()

@@ -14,11 +14,11 @@ except AttributeError as e:                 # pragma: no cover
 
         def handle(self, record):           # pragma: no cover
             pass                            # pragma: no cover
-                                            # pragma: no cover
+            # pragma: no cover
 
         def emit(self, record):             # pragma: no cover
             pass                            # pragma: no cover
-                                            # pragma: no cover
+            # pragma: no cover
 
         def createLock(self):               # pragma: no cover
             self.lock = None                # pragma: no cover
@@ -125,7 +125,7 @@ class LoggingLogHandler(log.CementLogHandler):
         self.set_level(level)
 
         self.debug("logging initialized for '%s' using %s" %
-                  (self._meta.namespace, self.__class__.__name__))
+                   (self._meta.namespace, self.__class__.__name__))
 
     def set_level(self, level):
         """
@@ -163,6 +163,9 @@ class LoggingLogHandler(log.CementLogHandler):
             logging.getLogger("cement:app:%s" % namespace).removeHandler(i)
             self.backend = logging.getLogger("cement:app:%s" % namespace)
 
+    def _get_formatter(self, format):
+        return logging.Formatter(format)
+
     def _setup_console_log(self):
         """Add a console log handler."""
         to_console = self.app.config.get(self._meta.config_section,
@@ -170,9 +173,10 @@ class LoggingLogHandler(log.CementLogHandler):
         if is_true(to_console):
             console_handler = logging.StreamHandler()
             if self.get_level() == logging.getLevelName(logging.DEBUG):
-                format = logging.Formatter(self._meta.debug_format)
+                format = self._get_formatter(self._meta.debug_format)
             else:
-                format = logging.Formatter(self._meta.console_format)
+                format = self._get_formatter(self._meta.console_format)
+
             console_handler.setFormatter(format)
             console_handler.setLevel(getattr(logging, self.get_level()))
         else:
