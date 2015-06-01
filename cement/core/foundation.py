@@ -762,8 +762,8 @@ class CementApp(meta.MetaMixin):
         # If controller exists, then dispatch it
         if self.controller:
             self.controller._dispatch()
-
-        self._parse_args()
+        else:
+            self._parse_args()
 
         for res in hook.run('post_run', self):
             pass

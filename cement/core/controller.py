@@ -442,11 +442,11 @@ class CementBaseController(handler.CementBaseHandler):
             if default_func_key in self._dispatch_map.keys():
                 self._dispatch_command = self._dispatch_map[default_func_key]
 
-    def _parse_args(self):
-        self.app.args.description = self._help_text
-        self.app.args.usage = self._usage_text
-        self.app.args.formatter_class = self._meta.argument_formatter
-        self.app._parse_args()
+    # def _parse_args(self):
+    #     self.app.args.description = self._help_text
+    #     self.app.args.usage = self._usage_text
+    #     self.app.args.formatter_class = self._meta.argument_formatter
+    #     self.app._parse_args()
 
     def _dispatch(self):
         """
@@ -469,13 +469,13 @@ class CementBaseController(handler.CementBaseHandler):
                 return func()
             else:
                 self._process_arguments()
-                #self._parse_args()
+                self.app._parse_args()
                 func = getattr(self._dispatch_command['controller'],
                                self._dispatch_command['func_name'])
                 return func()
         else:
             self._process_arguments()
-            #self._parse_args()
+            self.app._parse_args()
 
     @property
     def _usage_text(self):

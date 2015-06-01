@@ -9,6 +9,12 @@ from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
+def clean_command_label(label):
+    return re.sub('_', '-', label)
+
+def clean_command_func(func):
+    return re.sub('-', '_', func)
+
 class ArgumentParser(OriginalArgumentParser):
     def parse_args(self, *args, **kw):
         res = super(ArgumentParser, self).parse_args(*args, **kw)
@@ -138,7 +144,7 @@ class expose(object):
 
     def __call__(self, func):
         metadict = {}
-        metadict['label'] = re.sub('_', '-', func.__name__)
+        metadict['label'] = clean_command_label(func.__name__)
         metadict['func_name'] = func.__name__
         metadict['exposed'] = True
         metadict['hide'] = self.hide
@@ -298,6 +304,13 @@ class ArgparseController(handler.CementBaseHandler):
         #: called to add arguments.
         argument_options = {}
 
+        default_func = 'default'
+        """
+        Function to call if no sub-command is passed.  Note that this can
+        **not** start with an ``_`` due to backward compatibility restraints
+        in how Cement discovers and maps commands.
+        """
+
     def __init__(self, *args, **kw):
         super(ArgparseController, self).__init__(*args, **kw)
         self.app = None
@@ -411,46 +424,87 @@ class ArgparseController(handler.CementBaseHandler):
         return self._sub_parsers[parser]
 
     def _process_arguments(self, parser, arguments):
+        label = self._meta.label
+        self.app.log.debug("processing arguments for '%s' " % label + \
+                           "controller namespace")
         parser = self._get_parser(parser)
         for arg, kw in arguments:
             try:
+                self.app.log.debug('adding argument (args=%s, kwargs=%s)' % \
+                                  (arg, kw))
                 parser.add_argument(*arg, **kw)
             except argparse.ArgumentError as e:
                 raise exc.FrameworkError(e.__str__())
 
     def _process_commands(self, parser, commands):
+        label = self._meta.label
+        self.app.log.debug("processing commands for '%s' " % label + \
+                           "controller namespace")
         parser = self._get_parser(parser)
         for command in commands:
             kwargs = {}
+            contr = command['controller']
+            func_name = command['func_name']
+            self.app.log.debug("adding command '%s' " % command['label'] + \
+                               "(controller=%s, func=%s)" % \
+                               (contr._meta.label, func_name))
+
             if not command['hide'] == True:
                 kwargs['help'] = command['help']
 
-            contr = command['controller']
-
             cmd_parent = self._sub_parser_parents[contr._meta.label]
             command_parser = cmd_parent.add_parser(command['label'], **kwargs)
-            #command_parser.set_defaults(command='default')
 
-            action=contr._meta.parser_action(
-                    command['controller'],
-                    command['label'],
-                    command['func_name'],
-                    ),
-            self.app.args._add_action(action)
+            # action = contr._meta.parser_action(
+            #             command['controller'],
+            #             command['label'],
+            #             command['func_name'],
+            #             )
+            #self.app.args._add_action(action)
+
+            class CustomAction(argparse.Action):
+                def __call__(self, parser, namespace, values, option_string=None):
+                    controller = command['controller']
+                    func_name = clean_command_func(namespace.command)
+
+                    print('---')
+                    # if namespace.command == None:
+                    #     command = 'default'
+                    # else:
+                    #     command = namespace.command
+                    print('Namespace > %s' % namespace)
+                    print('Controller > %s' % controller)
+                    print('Func > %s' % func_name)
+
+                    #print('Execute Command => %s' % command)
+                    #print('Parser => %s' % parser)
+                    #print('Namespace => %s' % namespace)
+                    #print('Values => %s' % values)
+                    #print('Option String => %s' % option_string)
+                    #print('---')
+                    #if namespace.command == self.command:
+                    controller.app._parsed_args = namespace
+                    func = getattr(controller, func_name)
+                    func()
+                    setattr(namespace, self.dest, values)
 
             # create a default command for the parser (cluster fuck)
-            # command_parser.add_argument('__cement_default__',
-            #     action=contr._meta.parser_action(
-            #         command['controller'],
-            #         command['label'],
-            #         command['func_name'],
-            #         ),
-            #     nargs='?',
-            #     help=argparse.SUPPRESS,
-            #     )
+            command_parser.add_argument('__controller__',
+                # action=contr._meta.parser_action(
+                #     command['controller'],
+                #     command['label'],
+                #     command['func_name'],
+                #     ),
+                default=command['controller']._meta.label,
+                action=CustomAction,
+                nargs='?',
+                help=argparse.SUPPRESS,
+                )
 
     def _collect(self):
-        self.app.log.debug("collecting arguments/commands for %s" % self)
+        self.app.log.debug("collecting arguments/commands from %s " % self +
+                           "(stacked_on='%s', stacked_type='%s')" % \
+                           (self._meta.stacked_on, self._meta.stacked_type))
         arguments = self._meta.arguments
         commands = []
 
@@ -469,11 +523,33 @@ class ArgparseController(handler.CementBaseHandler):
         self._setup_controllers()
         self._setup_parsers()
         for contr in self._controllers:
+            ### FIX ME: Seems the ordering of collecting commands/args is not
+            ### consistent... sometimes controllers are handled in different order
+            ### making sub-commands not available
+            
             arguments, commands = contr._collect()
             self._process_arguments(contr._meta.stacked_on, arguments)
             self._process_commands(contr._meta.stacked_on, commands)
 
-        # args = self.app.args.parse_args()
+        self.app._parse_args()
+
+        print(self.app.pargs)
+
+        if not hasattr(self.app.pargs, '__controller__'):
+            if self.app.pargs.command is None:
+                # no sub-command was passed, so we can assume default
+                func_name = clean_command_func(self._meta.default_func)
+                func = getattr(self, func_name)
+                func()
+            else:
+                # then this is the name of the controller given as a 
+                # sub-command
+                contr = handler.get('controller', self.app.pargs.command)()
+                contr._setup(self.app)
+                func_name = clean_command_func(contr._meta.default_func)
+                func = getattr(contr, func_name)
+                func()
+                
 
 def load(app):
     handler.register(ArgParseArgumentHandler)
