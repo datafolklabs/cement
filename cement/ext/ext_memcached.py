@@ -1,8 +1,7 @@
 """Memcached Framework Extension."""
 
-import sys
 import pylibmc
-from ..core import cache, handler
+from ..core import cache
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -218,4 +217,4 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
 
 
 def load(app):
-    handler.register(MemcachedCacheHandler)
+    app.handlers.register(MemcachedCacheHandler)

@@ -3,8 +3,8 @@
 import os
 import sys
 import json
-from cement.core import foundation, exc, backend, config, extension, plugin
-from cement.core import log, output, handler, hook, arg, controller
+from cement.core import foundation, exc, extension
+from cement.core import output, handler, hook, controller
 from cement.core.interface import Interface
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando, minimal_logger
@@ -15,22 +15,27 @@ APP = rando()[:12]
 def my_extended_func():
     return 'KAPLA'
 
+
 class DeprecatedApp(foundation.CementApp):
     class Meta:
         label = 'deprecated'
         defaults = None
 
+
 class HookTestException(Exception):
     pass
+
 
 class MyTestInterface(Interface):
     class IMeta:
         label = 'my_test_interface'
 
+
 class MyTestHandler(handler.CementBaseHandler):
     class Meta:
         label = 'my_test_handler'
         interface = MyTestInterface
+
 
 class TestOutputHandler(output.CementOutputHandler):
     file_suffix = None
@@ -45,18 +50,23 @@ class TestOutputHandler(output.CementOutputHandler):
     def render(self, data_dict, template=None):
         return None
 
+
 class BogusBaseController(controller.CementBaseController):
     class Meta:
         label = 'bad_base_controller_label'
 
+
 def my_hook_one(app):
     return 1
+
 
 def my_hook_two(app):
     return 2
 
+
 def my_hook_three(app):
     return 3
+
 
 class FoundationTestCase(test.CementCoreTestCase):
     def setUp(self):
@@ -89,7 +99,7 @@ class FoundationTestCase(test.CementCoreTestCase):
         self.eq(ml.logging_is_enabled, False)
 
         # coverage... should default to True if no key in os.environ
-        del os.environ['CEMENT_FRAMEWORK_LOGGING']        
+        del os.environ['CEMENT_FRAMEWORK_LOGGING']
         self.eq(ml.logging_is_enabled, True)
 
     def test_bootstrap(self):
@@ -132,7 +142,8 @@ class FoundationTestCase(test.CementCoreTestCase):
         # forces CementApp._resolve_handler to register the handler
         from cement.ext import ext_json
 
-        app = self.make_app('my-app-test',
+        app = self.make_app(
+            'my-app-test',
             config_handler=ext_configparser.ConfigParserConfigHandler,
             log_handler=ext_logging.LoggingLogHandler(),
             arg_handler=ext_argparse.ArgParseArgumentHandler(),
@@ -150,12 +161,10 @@ class FoundationTestCase(test.CementCoreTestCase):
         app.setup()
         self.eq(app.debug, False)
 
-        self.reset_backend()
         app = self.make_app('my-app-test', argv=[__file__, '--debug'])
         app.setup()
         self.eq(app.debug, True)
 
-        self.reset_backend()
         defaults = init_defaults('my-app-test')
         defaults['my-app-test']['debug'] = True
         app = self.make_app('my-app-test', argv=[__file__],
@@ -206,7 +215,6 @@ class FoundationTestCase(test.CementCoreTestCase):
             self.eq(e.args[0], "Argument 'out' must be a 'file' like object")
             raise
 
-
     @test.raises(exc.FrameworkError)
     def test_bad_label(self):
         try:
@@ -250,16 +258,6 @@ class FoundationTestCase(test.CementCoreTestCase):
             self.app._parse_args()
         except SystemExit:
             pass
-
-    @test.raises(exc.CaughtSignal)
-    def test_cement_signal_handler(self):
-        import signal
-        try:
-            foundation.cement_signal_handler(signal.SIGTERM, 5)
-        except exc.CaughtSignal as e:
-            self.eq(e.signum, signal.SIGTERM)
-            self.eq(e.frame, 5)
-            raise
 
     def test_cement_without_signals(self):
         app = self.make_app('test', catch_signals=None)
@@ -391,32 +389,33 @@ class FoundationTestCase(test.CementCoreTestCase):
     def test_define_hooks_meta(self):
         app = self.make_app(APP, define_hooks=['my_custom_hook'])
         app.setup()
-        self.ok(hook.defined('my_custom_hook'))
+        self.ok(app.hooks.defined('my_custom_hook'))
 
     @test.raises(HookTestException)
     def test_register_hooks_meta(self):
         def my_custom_hook_func():
             raise HookTestException('OK')
 
-        app = self.make_app(APP, 
+        app = self.make_app(
+            APP,
             define_hooks=['my_custom_hook'],
             hooks=[('my_custom_hook', my_custom_hook_func)])
 
         app.setup()
-        
-        for res in hook.run('my_custom_hook'):
+        for _ in app.hooks.run('my_custom_hook'):
             pass
 
     def test_define_handlers_meta(self):
         app = self.make_app(APP, define_handlers=[MyTestInterface])
         app.setup()
-        self.ok(handler.defined('my_test_interface'))
+        self.ok(app.handlers.defined('my_test_interface'))
 
     def test_register_handlers_meta(self):
-        app = self.make_app(APP, 
-                define_handlers=[MyTestInterface],
-                handlers=[MyTestHandler],
-                )
+        app = self.make_app(
+            APP,
+            define_handlers=[MyTestInterface],
+            handlers=[MyTestHandler],
+            )
         app.setup()
-        self.ok(handler.registered('my_test_interface', 'my_test_handler'))        
+        self.ok(app.handlers.registered('my_test_interface', 'my_test_handler'))
 

@@ -165,7 +165,7 @@ import sys
 import io
 import pwd
 import grp
-from ..core import handler, hook, exc
+from ..core import exc
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -226,7 +226,7 @@ class Environment(object):
 
         try:
             self.user = pwd.getpwnam(self.user)
-        except KeyError as e:
+        except KeyError:
             raise exc.FrameworkError("Daemon user '%s' doesn't exist." %
                                      self.user)
 
@@ -234,7 +234,7 @@ class Environment(object):
             self.group = kw.get('group',
                                 grp.getgrgid(self.user.pw_gid).gr_name)
             self.group = grp.getgrnam(self.group)
-        except KeyError as e:
+        except KeyError:
             raise exc.FrameworkError("Daemon group '%s' doesn't exist." %
                                      self.group)
 
@@ -423,5 +423,5 @@ def cleanup(app):  # pragma: no cover
 
 
 def load(app):
-    hook.register('post_setup', extend_app)
-    hook.register('pre_close', cleanup)
+    app.hooks.register('post_setup', extend_app)
+    app.hooks.register('pre_close', cleanup)

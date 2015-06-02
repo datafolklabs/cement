@@ -1,9 +1,8 @@
 """YAML Framework Extension"""
 
-import os
 import sys
 import yaml
-from ..core import backend, output, hook, handler, config
+from ..core import output, backend
 from ..utils.misc import minimal_logger
 from ..ext.ext_configparser import ConfigParserConfigHandler
 
@@ -142,8 +141,8 @@ class YamlConfigHandler(ConfigParserConfigHandler):
 
 
 def load(app):
-    hook.register('post_argument_parsing', suppress_output_before_run)
-    hook.register('pre_render', unsuppress_output_before_render)
-    hook.register('post_render', suppress_output_after_render)
-    handler.register(YamlOutputHandler)
-    handler.register(YamlConfigHandler)
+    app.hooks.register('post_argument_parsing', suppress_output_before_run)
+    app.hooks.register('pre_render', unsuppress_output_before_render)
+    app.hooks.register('post_render', suppress_output_after_render)
+    app.handlers.register(YamlOutputHandler)
+    app.handlers.register(YamlConfigHandler)

@@ -39,14 +39,14 @@ def controller_validator(klass, obj):
              "[ (['-f', '--foo'], dict(action='store')), ]"
 
     if obj._meta.arguments is not None:
-        if type(obj._meta.arguments) is not list:
+        if not isinstance(obj._meta.arguments, list):
             raise exc.InterfaceError(errmsg)
         for item in obj._meta.arguments:
-            if type(item) is not tuple:
+            if not isinstance(item, tuple):
                 raise exc.InterfaceError(errmsg)
-            if type(item[0]) is not list:
+            if not isinstance(item[0], list):
                 raise exc.InterfaceError(errmsg)
-            if type(item[1]) is not dict:
+            if not isinstance(item[1], dict):
                 raise exc.InterfaceError(errmsg)
 
 
@@ -152,9 +152,11 @@ class expose(object):
     """
     # pylint: disable=W0622
 
-    def __init__(self, help='', hide=False, aliases=[], aliases_only=False):
+    def __init__(self, help='', hide=False, aliases=None, aliases_only=False):
         self.hide = hide
         self.help = help
+        if aliases is None:
+            aliases = []
         self.aliases = aliases
         self.aliases_only = aliases_only
 
@@ -354,36 +356,37 @@ class CementBaseController(handler.CementBaseHandler):
                 commands.append(func)
 
         # process stacked controllers second for commands and args
-        for contr in handler.list('controller'):
+        for name, contr in self.app.handlers.get('controller').items():
             # don't include self here
             if contr == self.__class__:
                 continue
 
             contr = contr()
             contr._setup(self.app)
-            if contr._meta.stacked_on == self._meta.label:
-                if contr._meta.stacked_type == 'embedded':
+            contr_meta = contr._meta
+            if contr_meta.stacked_on == self._meta.label:
+                if contr_meta.stacked_type == 'embedded':
                     contr_arguments, contr_commands = contr._collect()
                     for arg in contr_arguments:
                         arguments.append(arg)
                     for func in contr_commands:
                         commands.append(func)
-                elif contr._meta.stacked_type == 'nested':
+                elif contr_meta.stacked_type == 'nested':
                     metadict = {}
-                    metadict['label'] = re.sub('_', '-', contr._meta.label)
+                    metadict['label'] = re.sub('_', '-', contr_meta.label)
                     metadict['func_name'] = '_dispatch'
                     metadict['exposed'] = True
-                    metadict['hide'] = contr._meta.hide
-                    metadict['help'] = contr._meta.description
-                    metadict['aliases'] = contr._meta.aliases
-                    metadict['aliases_only'] = contr._meta.aliases_only
+                    metadict['hide'] = contr_meta.hide
+                    metadict['help'] = contr_meta.description
+                    metadict['aliases'] = contr_meta.aliases
+                    metadict['aliases_only'] = contr_meta.aliases_only
                     metadict['controller'] = contr
                     commands.append(metadict)
                 else:
                     raise exc.FrameworkError(
-                        "Controller '%s' " % contr._meta.label +
+                        "Controller '%s' " % contr_meta.label +
                         "has an unknown stacked type of '%s'." %
-                        contr._meta.stacked_type
+                        contr_meta.stacked_type
                     )
         return (arguments, commands)
 
@@ -422,7 +425,6 @@ class CementBaseController(handler.CementBaseHandler):
         self._visible_commands.sort()
 
     def _get_dispatch_command(self):
-        default_func = self._meta.default_func
         default_func_key = re.sub('_', '-', self._meta.default_func)
 
         if (len(self.app.argv) <= 0) or (self.app.argv[0].startswith('-')):

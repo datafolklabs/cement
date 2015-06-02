@@ -1,14 +1,15 @@
 """Tests for cement.core.log."""
 
-import logging
-from cement.core import exc, backend, handler, log
+from cement.core import exc, log
 from cement.utils import test
 from cement.utils.misc import init_defaults
+
 
 class BogusHandler1(log.CementLogHandler):
     class Meta:
         interface = log.ILog
         label = 'bogus'
+
 
 class LogTestCase(test.CementCoreTestCase):
     def setUp(self):
@@ -17,7 +18,7 @@ class LogTestCase(test.CementCoreTestCase):
     @test.raises(exc.InterfaceError)
     def test_unproviding_handler(self):
         try:
-            handler.register(BogusHandler1)
+            self.app.handlers.register(BogusHandler1)
         except exc.InterfaceError:
             raise
 

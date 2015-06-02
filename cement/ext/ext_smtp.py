@@ -1,6 +1,6 @@
 
 import smtplib
-from ..core import handler, mail
+from ..core import mail
 from ..utils.misc import minimal_logger, is_true
 
 LOG = minimal_logger(__name__)
@@ -235,4 +235,4 @@ class SMTPMailHandler(mail.CementMailHandler):
 
 
 def load(app):
-    handler.register(SMTPMailHandler)
+    app.handlers.register(SMTPMailHandler)

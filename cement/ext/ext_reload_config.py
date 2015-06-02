@@ -184,9 +184,8 @@ or any other configuration file is modified (spaces added for clarity):
 import os
 import signal
 import pyinotify
-from ..core import backend, hook
 from ..utils.misc import minimal_logger
-from ..utils import shell, fs
+from ..utils import fs
 
 LOG = minimal_logger(__name__)
 MASK = pyinotify.IN_CLOSE_WRITE
@@ -204,10 +203,10 @@ class ConfigEventHandler(pyinotify.ProcessEvent):
         if event.pathname in self.watched_files:
             LOG.debug('config path modified: mask=%s, path=%s' %
                       (event.maskname, event.pathname))
-            for res in hook.run('pre_reload_config', self.app):
+            for _ in self.app.hooks.run('pre_reload_config', self.app):
                 pass
             self.app.config.parse_file(event.pathname)
-            for res in hook.run('post_reload_config', self.app):
+            for _ in self.app.hooks.run('post_reload_config', self.app):
                 pass
 
 
@@ -277,8 +276,8 @@ def signal_handler(signum, frame):
 
 
 def load(app):
-    hook.define('pre_reload_config')
-    hook.define('post_reload_config')
-    hook.register('pre_run', spawn_watcher)
-    hook.register('pre_close', kill_watcher)
-    hook.register('signal', signal_handler)
+    app.hooks.define('pre_reload_config')
+    app.hooks.define('post_reload_config')
+    app.hooks.register('pre_run', spawn_watcher)
+    app.hooks.register('pre_close', kill_watcher)
+    app.hooks.register('signal', signal_handler)

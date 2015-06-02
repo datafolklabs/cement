@@ -7,12 +7,6 @@ import sys  # pragma: nocover
 
 VERSION = (2, 7, 1, 'alpha', 0)  # pragma: nocover
 
-# global handlers dict
-__handlers__ = {}  # pragma: nocover
-
-# global hooks dict
-__hooks__ = {}  # pragma: nocover
-
 # Save original stdout/stderr for supressing output.  This is actually reset
 # in foundation.CementApp.lay_cement() before nullifying output, but we set
 # it here just for a default.

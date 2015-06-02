@@ -1,10 +1,7 @@
 """JSON ConfigObj Framework Extension"""
 
-import os
 import json
-from ..core import handler
 from ..utils.misc import minimal_logger
-from ..utils.fs import abspath
 from ..ext.ext_configobj import ConfigObjConfigHandler
 
 LOG = minimal_logger(__name__)
@@ -48,4 +45,4 @@ class JsonConfigObjConfigHandler(ConfigObjConfigHandler):
 
 
 def load(app):
-    handler.register(JsonConfigObjConfigHandler)
+    app.handlers.register(JsonConfigObjConfigHandler)

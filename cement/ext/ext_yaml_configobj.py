@@ -1,10 +1,7 @@
 """YAML ConfigObj Framework Extension"""
 
-import os
 import yaml
-from ..core import handler
 from ..utils.misc import minimal_logger
-from ..utils.fs import abspath
 from ..ext.ext_configobj import ConfigObjConfigHandler
 
 LOG = minimal_logger(__name__)
@@ -50,4 +47,4 @@ class YamlConfigObjConfigHandler(ConfigObjConfigHandler):
 
 
 def load(app):
-    handler.register(YamlConfigObjConfigHandler)
+    app.handlers.register(YamlConfigObjConfigHandler)

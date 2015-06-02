@@ -3,20 +3,9 @@ Cement core interface module.
 
 """
 
-from ..core import exc, backend
+from ..core import exc
 
 DEFAULT_META = ['interface', 'label', 'config_defaults', 'config_section']
-
-
-def list():
-    """
-    Return a list of defined interfaces (handler types).
-
-    :returns: List of defined interfaces
-    :rtype: list
-
-    """
-    return backend.__handlers__.keys()
 
 
 class Interface(object):
@@ -47,7 +36,7 @@ class Attribute(object):
         return "<interface.Attribute - '%s'>" % self.description
 
 
-def validate(interface, obj, members=[], meta=DEFAULT_META):
+def validate(interface, obj, members=None, meta=DEFAULT_META):
     """
     A wrapper to validate interfaces.
 
@@ -58,6 +47,8 @@ def validate(interface, obj, members=[], meta=DEFAULT_META):
     :raises: cement.core.exc.InterfaceError
 
     """
+    if members is None:
+        members = []
     invalid = []
 
     if hasattr(obj, '_meta') and interface != obj._meta.interface:

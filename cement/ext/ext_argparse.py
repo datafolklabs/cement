@@ -1,7 +1,7 @@
 """ArgParse Framework Extension"""
 
 from argparse import ArgumentParser
-from ..core import backend, arg, handler
+from ..core import arg
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -56,4 +56,4 @@ class ArgParseArgumentHandler(arg.CementArgumentHandler, ArgumentParser):
 
 
 def load(app):
-    handler.register(ArgParseArgumentHandler)
+    app.handlers.register(ArgParseArgumentHandler)

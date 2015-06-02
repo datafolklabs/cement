@@ -1,8 +1,7 @@
 """ConfigParser Framework Extension."""
 
-import os
 import sys
-from ..core import backend, config, handler
+from ..core import config
 from ..utils.misc import minimal_logger
 
 if sys.version_info[0] < 3:
@@ -56,7 +55,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
 
         """
         for section in list(dict_obj.keys()):
-            if type(dict_obj[section]) == dict:
+            if isinstance(dict_obj[section], dict):
                 if section not in self.get_sections():
                     self.add_section(section)
 
@@ -132,4 +131,4 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
 
 
 def load(app):
-    handler.register(ConfigParserConfigHandler)
+    app.handlers.register(ConfigParserConfigHandler)

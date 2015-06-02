@@ -1,8 +1,7 @@
 """JSON Framework Extension"""
 
-import sys
 import json
-from ..core import output, backend, hook, handler
+from ..core import output
 from ..utils.misc import minimal_logger
 from ..ext.ext_configparser import ConfigParserConfigHandler
 
@@ -136,8 +135,8 @@ class JsonConfigHandler(ConfigParserConfigHandler):
 
 
 def load(app):
-    hook.register('post_argument_parsing', suppress_output_before_run)
-    hook.register('pre_render', unsuppress_output_before_render)
-    hook.register('post_render', suppress_output_after_render)
-    handler.register(JsonOutputHandler)
-    handler.register(JsonConfigHandler)
+    app.hooks.register('post_argument_parsing', suppress_output_before_run)
+    app.hooks.register('pre_render', unsuppress_output_before_render)
+    app.hooks.register('post_render', suppress_output_after_render)
+    app.handlers.register(JsonOutputHandler)
+    app.handlers.register(JsonConfigHandler)
