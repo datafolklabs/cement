@@ -3,7 +3,7 @@
 import re
 import argparse
 from argparse import ArgumentParser
-from ..core import backend, arg, handler
+from ..core import backend, arg, handler, hook
 from ..core.controller import IController
 from ..utils.misc import minimal_logger
 
@@ -239,7 +239,7 @@ class ArgparseController(handler.CementBaseHandler):
 
         #: Class used to create new sub-parsers.
         parser_class = argparse.ArgumentParser
-        
+
         default_func = 'default'
         """
         Function to call if no sub-command is passed.  Note that this can
@@ -326,6 +326,9 @@ class ArgparseController(handler.CementBaseHandler):
 
         
         self._controllers = resolved_controllers
+
+    def _process_parsed_arguments(self):
+        pass
 
     def _get_subparser_options(self, contr):
         kwargs = contr._meta.subparser_options.copy()
@@ -512,10 +515,22 @@ class ArgparseController(handler.CementBaseHandler):
             cmd_parent = self._get_parser_parent_by_controller(controller)
             command_parser = cmd_parent.add_parser(command['label'], **kwargs)
 
+            # can't call self inside the CustomAction
+            _controllers = self._controllers
+
             class CustomAction(argparse.Action):
                 def __call__(self, parser, namespace, values, option_string=None):
                     func_name = _clean_command_func(namespace.command)
                     command['controller'].app._parsed_args = namespace
+
+                    # app._pre_parse_args() happends in _dispace
+
+                    # let all controllers process arguments
+                    for contr in _controllers:
+                        contr._process_parsed_arguments()
+
+                    command['controller'].app._post_parse_args()
+
                     func = getattr(command['controller'], func_name)
                     func()
                     setattr(namespace, self.dest, values)
@@ -574,9 +589,17 @@ class ArgparseController(handler.CementBaseHandler):
             self._process_arguments(contr)
             self._process_commands(contr)
 
+        for res in hook.run('pre_argument_parsing', self):
+            pass
+
+        self.app._pre_parse_args()
         self.app._parse_args()
 
         if not hasattr(self.app.pargs, '__controller__'):
+            # this happens in the CustomAction if __controller__ is set
+            for res in hook.run('pre_argument_parsing', self):
+                pass
+
             if self.app.pargs.command is None:
                 # no sub-command was passed, so we can assume default
                 func_name = _clean_command_func(self._meta.default_func)
