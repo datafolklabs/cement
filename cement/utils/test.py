@@ -57,6 +57,13 @@ class CementTestCase(unittest.TestCase):
         """
         return self.app_class(*args, **kw)
 
+    def reset_backend(self):
+        """
+        Remove all registered hooks and handlers from the backend.
+        """
+        # TODO: deprecation warning
+        pass
+
     def ok(self, expr, msg=None):
         """Shorthand for assert."""
         return ok(expr, msg)

@@ -1,8 +1,9 @@
 """Cement core hooks module."""
 
+import sys
 import operator
 from ..core import exc
-from ..utils.misc import minimal_logger
+from ..utils.misc import minimal_logger, _inspect_app
 
 LOG = minimal_logger(__name__)
 
@@ -12,6 +13,12 @@ class Hooks(object):
 
     def __init__(self):
         self._hooks = {}
+
+    def __contains__(self, name):
+        return name in self._hooks
+
+    def __getitem__(self, name):
+        return self._hooks[name]
 
     def define(self, name):
         """
@@ -121,3 +128,28 @@ class Hooks(object):
             # Results are yielded, so you must fun a for loop on it, you can
             # not simply call run_hooks().
             yield res
+
+
+# Backwards compatibility
+def define(name):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    app.hooks.define(name)
+
+
+def defined(hook_name):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    return app.hooks.defined(hook_name)
+
+
+def register(name, func, weight=0):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    app.hooks.register(name, func, weight)
+
+
+def run(name, *args, **kwargs):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    return app.hooks.run(name, *args, **kwargs)

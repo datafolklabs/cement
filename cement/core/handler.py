@@ -4,10 +4,16 @@ Cement core handler module.
 """
 
 import re
+import sys
 from ..core import exc, meta
-from ..utils.misc import minimal_logger
+from ..utils.misc import minimal_logger, _inspect_app
 
 LOG = minimal_logger(__name__)
+
+if sys.version_info[0] < 3:
+    builtins = __builtin__  # noqa
+else:
+    builtins = __builtins__  # noqa
 
 
 class CementBaseHandler(meta.MetaMixin):
@@ -293,3 +299,46 @@ class Handlers(object):
         elif han is None:
             LOG.debug(msg)
             return None
+
+
+# Backwards compatibility
+def get(handler_type, handler_label, *args):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    return app.handlers.get(handler_type, handler_label, *args)
+
+
+def list(handler_type):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    return builtins['list'](app.handlers.get(handler_type).values())
+
+
+def define(interface):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    app.handlers.define(interface)
+
+
+def defined(handler_type):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    return app.handlers.defined(handler_type)
+
+
+def register(handler_obj):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    app.handlers.register(handler_obj)
+
+
+def registered(handler_type, handler_label):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    return app.handlers.registered(handler_type, handler_label)
+
+
+def resolve(handler_type, handler_def, raise_error=True):
+    # TODO: deprecation warning
+    app = _inspect_app(sys._getframe(1))
+    return app.handlers.resolve(handler_type, handler_def, raise_error)
