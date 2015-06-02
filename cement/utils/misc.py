@@ -202,3 +202,16 @@ def wrap(text, width=77, indent='', long_words=False, hyphens=False):
                           break_long_words=long_words,
                           break_on_hyphens=hyphens)
     return wrapper.fill(text)
+
+
+def _inspect_app(frame):
+    """Tries to find the CementApp instance in the frame."""
+    from cement.core.foundation import CementApp
+    frame_locals = frame.f_locals
+    for pretender in frame.f_locals.values():
+        if isinstance(pretender, CementApp):
+            return pretender
+    # Unit tests define app via self attribute, let's try to find it there
+    if 'self' in frame_locals:
+        return frame_locals['self'].app
+    raise Exception  # XXX

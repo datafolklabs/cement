@@ -2,7 +2,7 @@
 
 import unittest
 from tempfile import mkstemp, mkdtemp
-from ..core import backend, foundation
+from ..core import foundation
 from ..utils.misc import rando
 
 # shortcuts
@@ -43,10 +43,7 @@ class CementTestCase(unittest.TestCase):
 
     def setUp(self):
         """
-        Sets up self.app with a generic TestApp().  Also resets the backend
-        hooks and handlers so that everytime an app is created it is setup
-        clean each time.
-
+        Sets up self.app with a generic TestApp().
         """
         self.app = self.make_app()
         _, self.tmp_file = mkstemp()
@@ -58,18 +55,14 @@ class CementTestCase(unittest.TestCase):
         are passed to the app.
 
         """
-        self.reset_backend()
         return self.app_class(*args, **kw)
 
     def reset_backend(self):
         """
         Remove all registered hooks and handlers from the backend.
-
         """
-        for _handler in backend.__handlers__.copy():
-            del backend.__handlers__[_handler]
-        for _hook in backend.__hooks__.copy():
-            del backend.__hooks__[_hook]
+        # TODO: deprecation warning
+        pass
 
     def ok(self, expr, msg=None):
         """Shorthand for assert."""

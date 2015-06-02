@@ -1,8 +1,7 @@
 """Tests for cement.core.config."""
 
-import os
 from tempfile import mkstemp
-from cement.core import exc, config, handler, backend
+from cement.core import exc, config
 from cement.utils import test
 
 CONFIG = """
@@ -10,14 +9,16 @@ CONFIG = """
 my_param = my_value
 """
 
+
 class BogusConfigHandler(config.CementConfigHandler):
     class Meta:
         label = 'bogus'
 
+
 class ConfigTestCase(test.CementCoreTestCase):
     @test.raises(exc.InterfaceError)
     def test_invalid_config_handler(self):
-        handler.register(BogusConfigHandler)
+        self.app.handlers.register(BogusConfigHandler)
 
     @test.raises(NotImplementedError)
     def test_parse_file_not_implemented(self):

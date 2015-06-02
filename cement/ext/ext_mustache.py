@@ -1,8 +1,7 @@
 """Mustache extension module."""
 
-import sys
 import pystache
-from ..core import output, exc, handler
+from ..core import output
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -94,4 +93,4 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
 
 
 def load(app):
-    handler.register(MustacheOutputHandler)
+    app.handlers.register(MustacheOutputHandler)

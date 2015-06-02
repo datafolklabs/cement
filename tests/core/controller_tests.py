@@ -1,6 +1,6 @@
 """Tests for cement.core.controller."""
 
-from cement.core import exc, controller, handler
+from cement.core import exc, controller
 from cement.utils import test
 from cement.utils.misc import rando, init_defaults
 
@@ -20,6 +20,7 @@ class TestController(controller.CementBaseController):
     def default(self):
         pass
 
+
 class TestWithPositionalController(controller.CementBaseController):
     class Meta:
         label = 'base'
@@ -30,6 +31,7 @@ class TestWithPositionalController(controller.CementBaseController):
     @controller.expose(hide=True)
     def default(self):
         self.app.render(dict(foo=self.app.pargs.foo))
+
 
 class Embedded(controller.CementBaseController):
     class Meta:
@@ -42,6 +44,7 @@ class Embedded(controller.CementBaseController):
     def embedded_cmd1(self):
         pass
 
+
 class Nested(controller.CementBaseController):
     class Meta:
         label = 'nested_controller'
@@ -52,6 +55,7 @@ class Nested(controller.CementBaseController):
     @controller.expose()
     def nested_cmd1(self):
         pass
+
 
 class AliasesOnly(controller.CementBaseController):
     class Meta:
@@ -69,6 +73,7 @@ class AliasesOnly(controller.CementBaseController):
     def aliases_only_cmd2(self):
         pass
 
+
 class DuplicateCommand(controller.CementBaseController):
     class Meta:
         label = 'duplicate_command'
@@ -78,6 +83,7 @@ class DuplicateCommand(controller.CementBaseController):
     @controller.expose()
     def default(self):
         pass
+
 
 class DuplicateAlias(controller.CementBaseController):
     class Meta:
@@ -89,10 +95,12 @@ class DuplicateAlias(controller.CementBaseController):
     def cmd(self):
         pass
 
+
 class Bad(controller.CementBaseController):
     class Meta:
         label = 'bad_controller'
         arguments = []
+
 
 class BadStackedType(controller.CementBaseController):
     class Meta:
@@ -101,12 +109,14 @@ class BadStackedType(controller.CementBaseController):
         stacked_type = 'bogus'
         arguments = []
 
+
 class ArgumentConflict(controller.CementBaseController):
     class Meta:
         label = 'embedded'
         stacked_on = 'base'
         stacked_type = 'embedded'
         arguments = [(['-f', '--foo'], dict())]
+
 
 class ControllerTestCase(test.CementCoreTestCase):
     def test_default(self):
@@ -121,33 +131,33 @@ class ControllerTestCase(test.CementCoreTestCase):
         self.eq(app.args.epilog, 'This is the epilog')
 
     def test_txt_defined_base_controller(self):
-        handler.register(TestController)
         self.app.setup()
+        self.app.handlers.register(TestController)
 
     @test.raises(exc.InterfaceError)
     def test_invalid_arguments_1(self):
         Bad.Meta.arguments = ['this is invalid']
-        handler.register(Bad)
+        self.app.handlers.register(Bad)
 
     @test.raises(exc.InterfaceError)
     def test_invalid_arguments_2(self):
         Bad.Meta.arguments = [('this is also invalid', dict())]
-        handler.register(Bad)
+        self.app.handlers.register(Bad)
 
     @test.raises(exc.InterfaceError)
     def test_invalid_arguments_3(self):
         Bad.Meta.arguments = [(['-f'], 'and this is invalid')]
-        handler.register(Bad)
+        self.app.handlers.register(Bad)
 
     @test.raises(exc.InterfaceError)
     def test_invalid_arguments_4(self):
         Bad.Meta.arguments = 'totally jacked'
-        handler.register(Bad)
+        self.app.handlers.register(Bad)
 
     def test_embedded_controller(self):
         app = self.make_app(argv=['embedded-cmd1'])
-        handler.register(TestController)
-        handler.register(Embedded)
+        app.handlers.register(TestController)
+        app.handlers.register(Embedded)
         app.setup()
         app.run()
 
@@ -160,8 +170,8 @@ class ControllerTestCase(test.CementCoreTestCase):
 
     def test_nested_controller(self):
         app = self.make_app(argv=['nested-controller'])
-        handler.register(TestController)
-        handler.register(Nested)
+        app.handlers.register(TestController)
+        app.handlers.register(Nested)
         app.setup()
         app.run()
 
@@ -172,38 +182,38 @@ class ControllerTestCase(test.CementCoreTestCase):
 
     def test_aliases_only_controller(self):
         app = self.make_app(argv=['aliases-only-controller'])
-        handler.register(TestController)
-        handler.register(AliasesOnly)
+        app.handlers.register(TestController)
+        app.handlers.register(AliasesOnly)
         app.setup()
         app.run()
 
     @test.raises(exc.FrameworkError)
     def test_bad_stacked_type(self):
         app = self.make_app()
-        handler.register(TestController)
-        handler.register(BadStackedType)
+        app.handlers.register(TestController)
+        app.handlers.register(BadStackedType)
         app.setup()
         app.run()
 
     @test.raises(exc.FrameworkError)
     def test_duplicate_command(self):
         app = self.make_app()
-        handler.register(TestController)
-        handler.register(DuplicateCommand)
+        app.handlers.register(TestController)
+        app.handlers.register(DuplicateCommand)
         app.setup()
         app.run()
 
     @test.raises(exc.FrameworkError)
     def test_duplicate_alias(self):
         app = self.make_app()
-        handler.register(TestController)
-        handler.register(DuplicateAlias)
+        app.handlers.register(TestController)
+        app.handlers.register(DuplicateAlias)
         app.setup()
         app.run()
 
     def test_usage_txt(self):
         app = self.make_app()
-        handler.register(TestController)
+        app.handlers.register(TestController)
         app.setup()
         self.eq(app.controller._usage_text, 'My Custom Usage TXT')
 
@@ -211,7 +221,7 @@ class ControllerTestCase(test.CementCoreTestCase):
     def test_argument_conflict(self):
         try:
             app = self.make_app(base_controller=TestController)
-            handler.register(ArgumentConflict)
+            app.handlers.register(ArgumentConflict)
             app.setup()
             app.run()
         except NameError as e:
@@ -265,4 +275,3 @@ class ControllerTestCase(test.CementCoreTestCase):
 
         res = 'cement.ext.ext_yaml' in app.ext._loaded_extensions
         self.ok(res)
-

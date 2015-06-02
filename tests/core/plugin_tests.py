@@ -4,7 +4,7 @@ import os
 import sys
 import shutil
 from tempfile import mkdtemp
-from cement.core import exc, backend, plugin, handler
+from cement.core import exc
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando
 
@@ -38,7 +38,7 @@ CONF5 = ''
 
 PLUGIN = """
 
-from cement.core import handler, output
+from cement.core import output
 
 class TestOutputHandler(output.CementOutputHandler):
     class Meta:
@@ -52,9 +52,10 @@ class TestOutputHandler(output.CementOutputHandler):
         pass
 
 def load(app):
-    handler.register(TestOutputHandler)
+    app.handlers.register(TestOutputHandler)
 
 """
+
 
 class PluginTestCase(test.CementCoreTestCase):
     def setUp(self):
@@ -70,7 +71,8 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -79,7 +81,7 @@ class PluginTestCase(test.CementCoreTestCase):
         app.setup()
 
         try:
-            han = handler.get('output', 'test_output_handler')()
+            han = app.handlers.get('output', 'test_output_handler')()
             self.eq(han._meta.label, 'test_output_handler')
         finally:
             shutil.rmtree(tmpdir)
@@ -99,7 +101,8 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -133,7 +136,8 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -159,18 +163,19 @@ class PluginTestCase(test.CementCoreTestCase):
         tmpdir = mkdtemp()
 
         f = open(os.path.join(tmpdir, 'a.conf'), 'w')
-        f.write(CONF2) # disabled config
+        f.write(CONF2)  # disabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'b.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -196,18 +201,19 @@ class PluginTestCase(test.CementCoreTestCase):
         tmpdir = mkdtemp()
 
         f = open(os.path.join(tmpdir, 'a.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'b.conf'), 'w')
-        f.write(CONF2) # disabled config
+        f.write(CONF2)  # disabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -232,30 +238,31 @@ class PluginTestCase(test.CementCoreTestCase):
         tmpdir = mkdtemp()
 
         f = open(os.path.join(tmpdir, 'a.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'b.conf'), 'w')
-        f.write(CONF2) # disabled config
+        f.write(CONF2)  # disabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'c.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'e.conf'), 'w')
-        f.write(CONF2) # disabled config
+        f.write(CONF2)  # disabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'f.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
@@ -285,7 +292,9 @@ class PluginTestCase(test.CementCoreTestCase):
         defaults['myplugin']['enable_plugin'] = True
         defaults['myplugin2'] = dict()
         defaults['myplugin2']['enable_plugin'] = False
-        app = self.make_app(APP, config_defaults=defaults,
+        app = self.make_app(
+            APP,
+            config_defaults=defaults,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -294,7 +303,7 @@ class PluginTestCase(test.CementCoreTestCase):
         app.setup()
 
         try:
-            han = handler.get('output', 'test_output_handler')()
+            han = app.handlers.get('output', 'test_output_handler')()
             self.eq(han._meta.label, 'test_output_handler')
         finally:
             shutil.rmtree(tmpdir)
@@ -325,7 +334,8 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(PLUGIN)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -334,7 +344,7 @@ class PluginTestCase(test.CementCoreTestCase):
         app.setup()
         shutil.rmtree(tmpdir)
 
-        res = 'test_output_handler' not in backend.__handlers__['output']
+        res = 'test_output_handler' not in app.handlers.get('output')
         self.ok(res)
 
         res = 'myplugin2' not in app.plugin.get_enabled_plugins()
@@ -351,7 +361,8 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(CONF5)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -370,7 +381,8 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(CONF)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir='./some/bogus/path',
@@ -378,9 +390,9 @@ class PluginTestCase(test.CementCoreTestCase):
             )
         try:
             app.setup()
-        except ImportError as e:
+        except ImportError:
             raise
-        except exc.FrameworkError as e:
+        except exc.FrameworkError:
             raise
         finally:
             shutil.rmtree(tmpdir)
@@ -394,7 +406,8 @@ class PluginTestCase(test.CementCoreTestCase):
         f.write(CONF4)
         f.close()
 
-        app = self.make_app(APP,
+        app = self.make_app(
+            APP,
             config_files=[],
             plugin_config_dir=tmpdir,
             plugin_dir=tmpdir,
@@ -406,4 +419,3 @@ class PluginTestCase(test.CementCoreTestCase):
         self.ok(res)
 
         shutil.rmtree(tmpdir)
-

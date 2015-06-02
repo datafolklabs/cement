@@ -1,14 +1,13 @@
 """Tests for cement.ext.ext_logging."""
 
 import os
-import logging
 from tempfile import mkstemp
-from cement.core import handler, backend, log
 from cement.ext import ext_logging
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando
 
 APP = rando()[:12]
+
 
 class MyLog(ext_logging.LoggingLogHandler):
     class Meta:
@@ -17,6 +16,7 @@ class MyLog(ext_logging.LoggingLogHandler):
 
     def __init__(self, *args, **kw):
         super(MyLog, self).__init__(*args, **kw)
+
 
 @test.attr('core')
 class LoggingExtTestCase(test.CementExtTestCase):
@@ -58,14 +58,14 @@ class LoggingExtTestCase(test.CementExtTestCase):
     def test_clear_loggers(self):
         self.app.setup()
 
-        han = handler.get('log', 'logging')
+        han = self.app.handlers.get('log', 'logging')
         Log = han()
         Log.clear_loggers(self.app._meta.label)
 
-        #previous_logger = logging.getLogger(name)
-        MyLog = ext_logging.LoggingLogHandler(clear_loggers="%s:%s" % \
-                                             (self.app._meta.label,
-                                              self.app._meta.label))
+        MyLog = ext_logging.LoggingLogHandler(
+            clear_loggers="%s:%s" % (self.app._meta.label,
+                                     self.app._meta.label)
+        )
         MyLog._setup(self.app)
 
     def test_rotate(self):

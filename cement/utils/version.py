@@ -1,4 +1,3 @@
-
 # Copyright (c) Django Software Foundation and individual contributors.
 # All rights reserved.
 #
@@ -87,6 +86,6 @@ def get_git_changeset():  # pragma: nocover
     timestamp = git_log.communicate()[0]
     try:
         timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
-    except ValueError: 	# pragma: nocover
-        return None  	# pragma: nocover
+    except ValueError:  # pragma: nocover
+        return None     # pragma: nocover
     return timestamp.strftime('%Y%m%d%H%M%S')

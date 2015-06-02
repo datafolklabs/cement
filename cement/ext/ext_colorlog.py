@@ -2,9 +2,7 @@
 
 import os
 import sys
-import logging
 from colorlog import ColoredFormatter
-from ..core import handler
 from ..ext.ext_logging import LoggingLogHandler
 
 
@@ -122,4 +120,4 @@ class ColorLogHandler(LoggingLogHandler):
 
 
 def load(app):
-    handler.register(ColorLogHandler)
+    app.handlers.register(ColorLogHandler)
