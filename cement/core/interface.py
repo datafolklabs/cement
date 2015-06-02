@@ -9,11 +9,6 @@ from ..utils.misc import _inspect_app
 
 DEFAULT_META = ['interface', 'label', 'config_defaults', 'config_section']
 
-if sys.version_info[0] < 3:
-    builtins = __builtin__  # noqa
-else:
-    builtins = __builtins__  # noqa
-
 
 class Interface(object):
 
@@ -82,4 +77,4 @@ def validate(interface, obj, members=None, meta=DEFAULT_META):
 def list():
     # TODO: deprecation warning
     app = _inspect_app(sys._getframe(1))
-    return builtins['list'](app.handlers._handlers.keys())
+    return __builtins__['list'](app.handlers._handlers.keys())

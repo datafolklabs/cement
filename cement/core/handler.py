@@ -10,11 +10,6 @@ from ..utils.misc import minimal_logger, _inspect_app
 
 LOG = minimal_logger(__name__)
 
-if sys.version_info[0] < 3:
-    builtins = __builtin__  # noqa
-else:
-    builtins = __builtins__  # noqa
-
 
 class CementBaseHandler(meta.MetaMixin):
 
@@ -311,7 +306,7 @@ def get(handler_type, handler_label, *args):
 def list(handler_type):
     # TODO: deprecation warning
     app = _inspect_app(sys._getframe(1))
-    return builtins['list'](app.handlers.get(handler_type).values())
+    return __builtins__['list'](app.handlers.get(handler_type).values())
 
 
 def define(interface):
