@@ -2,6 +2,7 @@
 
 import re
 import argparse
+import sys
 from argparse import ArgumentParser
 from ..core import backend, arg, handler, hook
 from ..core.controller import IController
@@ -69,13 +70,12 @@ class expose(object):
     Used to expose controller functions to be listed as commands, and to
     decorate the function with Meta data for the argument parser.
 
-    :param help: Help text to display for that command.
-    :type help: str
     :param hide: Whether the command should be visible.
     :type hide: boolean
-    :param aliases: Aliases to this command.
-     command/function label.
-    :type aliases: list
+    :param arguments: List of tuples that define arguments to add to this 
+     command sub-parser.
+    :keyword parser_options: Additional options to pass to ArgParse.
+    :type parser_options: dict
 
     Usage:
 
@@ -87,11 +87,19 @@ class expose(object):
             class Meta:
                 label = 'base'
 
-            @expose(hide=True, aliases=['run'])
+            # Note: Default functions only work on Python 3.4+
+            @expose(hide=True)
             def default(self):
                 print("In MyAppBaseController.default()")
 
-            @expose()
+            @expose(
+                help='this is the help message for my_command',
+                aliases=['my_cmd'], # only available in Python 3+
+                arguments=[
+                    (['-f', '--foo'], 
+                     dict(help='foo option', action='store', dest='foo')),
+                ]
+            )
             def my_command(self):
                 print("In MyAppBaseController.my_command()")
 
@@ -170,7 +178,8 @@ class ArgparseController(handler.CementBaseHandler):
         #: The string identifier for the controller.
         label = 'base'
 
-        #: A list of aliases for the controller/sub-parser.
+        #: A list of aliases for the controller/sub-parser.  **Only available
+        #: in Python 3+.
         aliases = []
 
         #: A config [section] to merge config_defaults into.  Cement will
@@ -245,6 +254,10 @@ class ArgparseController(handler.CementBaseHandler):
         Function to call if no sub-command is passed.  Note that this can
         **not** start with an ``_`` due to backward compatibility restraints
         in how Cement discovers and maps commands.
+
+        Note: Currently, default function/sub-command only functions on 
+        Python 3.4+.  Previous versions of Python/ArgParse will throw the 
+        exception ``error: too few arguments``.
         """
 
     def __init__(self, *args, **kw):
@@ -346,8 +359,10 @@ class ArgparseController(handler.CementBaseHandler):
     def _get_parser_options(self, contr):
         kwargs = contr._meta.parser_options.copy()
 
-        if 'aliases' not in kwargs.keys():
-            kwargs['aliases'] = contr._meta.aliases
+        if sys.version_info[0] > 3:
+            if 'aliases' not in kwargs.keys():
+                kwargs['aliases'] = contr._meta.aliases
+
         if 'description' not in kwargs.keys():
             kwargs['description'] = contr._meta.description
         if 'usage' not in kwargs.keys():
@@ -403,6 +418,9 @@ class ArgparseController(handler.CementBaseHandler):
         kwargs = self._get_subparser_options(self)
         sub = self.app.args.add_subparsers(**kwargs)
         parents['base'] = sub
+        base_parser_options = self._get_parser_options(self)
+        for key,val in base_parser_options.items():
+            setattr(self.app.args, key, val)
 
         # and if only base controller registered... go ahead and return
         if len(handler.list('controller')) <= 1:
@@ -441,6 +459,13 @@ class ArgparseController(handler.CementBaseHandler):
                     #if label in self._nesting_parents:
                     kwargs = self._get_subparser_options(contr)
                     parents[label] = parsers[label].add_subparsers(**kwargs)
+
+                    parsers[label].add_argument('__controller__',
+                        action='store',
+                        default=contr._meta.label,
+                        nargs='?',
+                        help=argparse.SUPPRESS,
+                        )
 
                 # if it's embedded, then just set the use the same as the
                 # controller its stacked on
@@ -503,41 +528,75 @@ class ArgparseController(handler.CementBaseHandler):
 
         commands = controller._collect_commands()
         for command in commands:
-            # FIX ME: this is confusting... prob need one for controller, one for 
-            # commands
             kwargs = self._get_command_parser_options(command)
 
             func_name = command['func_name']
             LOG.debug("adding command '%s' " % command['label'] + \
-                               "(controller=%s, func=%s)" % \
-                               (controller._meta.label, func_name))
+                      "(controller=%s, func=%s)" % \
+                      (controller._meta.label, func_name))
 
             cmd_parent = self._get_parser_parent_by_controller(controller)
             command_parser = cmd_parent.add_parser(command['label'], **kwargs)
 
             # can't call self inside the CustomAction
-            _controllers = self._controllers
+            #_controllers = self._controllers
 
-            class CustomAction(argparse.Action):
-                def __call__(self, parser, namespace, values, option_string=None):
-                    func_name = _clean_command_func(namespace.command)
-                    command['controller'].app._parsed_args = namespace
+            ### FIX ME: This Works on Python 3.3, but not on Python 3.4
+            # class BadCustomAction(argparse.Action):
+            #     def __call__(self, parser, namespace, values, option_string=None):
+            #         func_name = _clean_command_func(namespace.command)
+            #         command['controller'].app._parsed_args = namespace
 
-                    # app._pre_parse_args() happends in _dispace
+            #         # app._pre_parse_args() happends in _dispatch
 
-                    # let all controllers process arguments
-                    for contr in _controllers:
-                        contr._process_parsed_arguments()
+            #         # let all controllers process arguments
+            #         for contr in _controllers:
+            #             contr._process_parsed_arguments()
 
-                    command['controller'].app._post_parse_args()
+            #         command['controller'].app._post_parse_args()
 
-                    func = getattr(command['controller'], func_name)
-                    func()
-                    setattr(namespace, self.dest, values)
+            #         func = getattr(command['controller'], func_name)
+            #         func()
+            #         setattr(namespace, self.dest, values)
+
+            # command_parser.add_argument('__controller__',
+            #     action=CustomAction,
+            #     nargs='?',
+            #     help=argparse.SUPPRESS,
+            #     )
+
+            
+            # class CustomAction(argparse.Action):
+            #     def __call__(self, parser, namespace, values, option_string=None):
+            #         print("Namespace > %s" % namespace)
+            #         print("Values > %s" % values)
+
+            #         func_name = _clean_command_func(namespace.command)
+            #         command['controller'].app._parsed_args = namespace
+
+            #         # app._pre_parse_args() happends in _dispatch
+
+            #         # let all controllers process arguments
+            #         for contr in _controllers:
+            #             contr._process_parsed_arguments()
+
+            #         command['controller'].app._post_parse_args()
+
+            #         func = getattr(command['controller'], func_name)
+            #         func()
+            #         setattr(namespace, self.dest, values)
+
 
             # create a default command for the parser (cluster fuck)
             command_parser.add_argument('__controller__',
-                action=CustomAction,
+                action='store',
+                default=command['controller']._meta.label,
+                nargs='?',
+                help=argparse.SUPPRESS,
+                )
+            command_parser.add_argument('command',
+                action='store',
+                default=command['label'],
                 nargs='?',
                 help=argparse.SUPPRESS,
                 )
@@ -560,14 +619,14 @@ class ArgparseController(handler.CementBaseHandler):
 
     def _collect_arguments(self):
         LOG.debug("collecting arguments from %s " % self +
-                           "(stacked_on='%s', stacked_type='%s')" % \
-                           (self._meta.stacked_on, self._meta.stacked_type))
+                  "(stacked_on='%s', stacked_type='%s')" % \
+                  (self._meta.stacked_on, self._meta.stacked_type))
         return self._meta.arguments
 
     def _collect_commands(self):
         LOG.debug("collecting commands from %s " % self +
-                           "(stacked_on='%s', stacked_type='%s')" % \
-                           (self._meta.stacked_on, self._meta.stacked_type))
+                  "(stacked_on='%s', stacked_type='%s')" % \
+                  (self._meta.stacked_on, self._meta.stacked_type))
         
         commands = []
         for member in dir(self.__class__):
@@ -589,30 +648,39 @@ class ArgparseController(handler.CementBaseHandler):
             self._process_arguments(contr)
             self._process_commands(contr)
 
-        for res in hook.run('pre_argument_parsing', self):
-            pass
-
-        self.app._pre_parse_args()
         self.app._parse_args()
 
-        if not hasattr(self.app.pargs, '__controller__'):
-            # this happens in the CustomAction if __controller__ is set
-            for res in hook.run('pre_argument_parsing', self):
-                pass
+        for contr in self._controllers:
+            contr._process_parsed_arguments()
 
-            if self.app.pargs.command is None:
-                # no sub-command was passed, so we can assume default
-                func_name = _clean_command_func(self._meta.default_func)
-                func = getattr(self, func_name)
-                func()
+        if hasattr(self.app.pargs, '__controller__'):
+            if self.app.pargs.__controller__ == 'base':
+                contr = self
             else:
-                # then this is the name of the controller given as a 
-                # sub-command
-                contr = handler.get('controller', self.app.pargs.command)()
+                # FIX ME: Create a dict after self._controllers is setup so 
+                # that we can just call the controller from there (already 
+                # setup)
+                contr = handler.get('controller', 
+                                    self.app.pargs.__controller__)()
                 contr._setup(self.app)
-                func_name = _clean_command_func(contr._meta.default_func)
-                func = getattr(contr, func_name)
-                func()
+
+        else:
+            # if no __controller__ is set then assume base controller
+            contr = self
+                     
+
+        if self.app.pargs.command is None:
+            func_name = _clean_command_func(contr._meta.default_func)
+        else:
+            func_name = _clean_command_func(self.app.pargs.command)
+
+        if hasattr(contr, func_name):
+            func = getattr(contr, func_name)
+            func()
+        else:
+            self.app.log.fatal(
+                "Controller function does not exist " + \
+                "%s.%s()" % (contr.__class__, func_name))
                 
 
 def load(app):

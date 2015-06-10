@@ -967,14 +967,12 @@ class CementApp(meta.MetaMixin):
         for handler_class in self._meta.handlers:
             handler.register(handler_class)
 
-    def _pre_parse_args(self):
+    def _parse_args(self):
         for res in hook.run('pre_argument_parsing', self):
             pass
 
-    def _parse_args(self):
         self._parsed_args = self.args.parse(self.argv)
-
-    def _post_parse_args(self):
+        
         if self._meta.arguments_override_config is True:
             for member in dir(self._parsed_args):
                 if member and member.startswith('_'):
@@ -1174,6 +1172,7 @@ class CementApp(meta.MetaMixin):
         self.args = self._resolve_handler('argument',
                                           self._meta.argument_handler)
         self.args.prog = self._meta.label
+
         self.args.add_argument('--debug', dest='debug',
                                action='store_true',
                                help='toggle debug output')
