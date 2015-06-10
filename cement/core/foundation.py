@@ -763,10 +763,7 @@ class CementApp(meta.MetaMixin):
         if self.controller:
             self.controller._dispatch()
         else:
-            # stupid but controller needs to be able to call these differently
-            self._pre_parse_args()
             self._parse_args()
-            self._post_parse_args()
 
         for res in hook.run('post_run', self):
             pass
