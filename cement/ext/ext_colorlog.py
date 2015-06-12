@@ -97,6 +97,10 @@ class ColorLogHandler(LoggingLogHandler):
 
     """
     class Meta:
+
+        """Handler meta-data."""
+
+        #: The string identifier of the handler.
         label = "colorlog"
 
         #: Color mapping for each log level
