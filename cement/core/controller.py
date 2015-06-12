@@ -335,7 +335,7 @@ class CementBaseController(handler.CementBaseHandler):
         self.app = app_obj
 
     def _collect(self):
-        self.app.log.debug("collecting arguments/commands for %s" % self)
+        LOG.debug("collecting arguments/commands for %s" % self)
         arguments = []
         commands = []
 
