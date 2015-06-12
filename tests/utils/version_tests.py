@@ -2,7 +2,9 @@
 
 from cement.utils import version, test
 
+
 class VersionUtilsTestCase(test.CementCoreTestCase):
+
     def test_get_version(self):
         ver = version.get_version()
         self.ok(ver.startswith('2.7'))

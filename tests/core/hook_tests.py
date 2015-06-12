@@ -11,19 +11,25 @@ APP = rando()[:12]
 def cement_hook_one(*args, **kw):
     return 'kapla 1'
 
+
 def cement_hook_two(*args, **kw):
     return 'kapla 2'
+
 
 def cement_hook_three(*args, **kw):
     return 'kapla 3'
 
+
 def nosetests_hook(*args, **kw):
     return 'kapla 4'
+
 
 def cement_hook_five(app, data):
     return data
 
+
 class HookTestCase(test.CementCoreTestCase):
+
     def setUp(self):
         self.app = self.make_app()
         hook.define('nosetests_hook')

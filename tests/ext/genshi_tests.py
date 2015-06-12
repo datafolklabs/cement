@@ -9,15 +9,17 @@ from cement.utils import test
 if sys.version_info[0] < 3:
     import configobj
 else:
-    raise test.SkipTest('Genshi does not support Python 3') # pragma: no cover
+    raise test.SkipTest('Genshi does not support Python 3')  # pragma: no cover
+
 
 class GenshiExtTestCase(test.CementExtTestCase):
+
     def setUp(self):
         self.app = self.make_app('tests',
-            extensions=['genshi'],
-            output_handler='genshi',
-            argv=[]
-            )
+                                 extensions=['genshi'],
+                                 output_handler='genshi',
+                                 argv=[]
+                                 )
 
     def test_genshi(self):
         self.app.setup()

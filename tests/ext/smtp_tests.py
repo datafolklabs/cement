@@ -9,13 +9,14 @@ APP = "app-%s" % rando()[:12]
 
 
 class SMTPMailHandlerTestCase(test.CementTestCase):
+
     def setUp(self):
         super(SMTPMailHandlerTestCase, self).setUp()
         self.app = self.make_app(APP,
-            extensions=['smtp'],
-            mail_handler='smtp',
-            argv=[],
-            )
+                                 extensions=['smtp'],
+                                 mail_handler='smtp',
+                                 argv=[],
+                                 )
 
     def test_smtp_defaults(self):
         defaults = init_defaults(APP, 'mail.smtp')
@@ -28,11 +29,11 @@ class SMTPMailHandlerTestCase(test.CementTestCase):
 
         with mock.patch('smtplib.SMTP') as mock_smtp:
             self.app = self.make_app(APP,
-                config_defaults=defaults,
-                extensions=['smtp'],
-                mail_handler='smtp',
-                argv=[],
-                )
+                                     config_defaults=defaults,
+                                     extensions=['smtp'],
+                                     mail_handler='smtp',
+                                     argv=[],
+                                     )
             self.app.setup()
             self.app.run()
             self.app.mail.send('TEST MESSAGE')
@@ -48,17 +49,17 @@ class SMTPMailHandlerTestCase(test.CementTestCase):
 
         with mock.patch('smtplib.SMTP_SSL') as mock_smtp:
             self.app = self.make_app(APP,
-                config_defaults=defaults,
-                extensions=['smtp'],
-                mail_handler='smtp',
-                argv=[],
-                )
+                                     config_defaults=defaults,
+                                     extensions=['smtp'],
+                                     mail_handler='smtp',
+                                     argv=[],
+                                     )
             self.app.setup()
             self.app.run()
             self.app.mail.send('TEST MESSAGE',
-                to=['me@localhost'],
-                from_addr='noreply@localhost',
-                )
+                               to=['me@localhost'],
+                               from_addr='noreply@localhost',
+                               )
 
             instance = mock_smtp.return_value
             self.eq(instance.sendmail.call_count, 1)
@@ -73,17 +74,17 @@ class SMTPMailHandlerTestCase(test.CementTestCase):
 
         with mock.patch('smtplib.SMTP') as mock_smtp:
             self.app = self.make_app(APP,
-                config_defaults=defaults,
-                extensions=['smtp'],
-                mail_handler='smtp',
-                argv=[],
-                )
+                                     config_defaults=defaults,
+                                     extensions=['smtp'],
+                                     mail_handler='smtp',
+                                     argv=[],
+                                     )
             self.app.setup()
             self.app.run()
             self.app.mail.send('TEST MESSAGE',
-                to=['me@localhost'],
-                from_addr='noreply@localhost',
-                )
+                               to=['me@localhost'],
+                               from_addr='noreply@localhost',
+                               )
 
             instance = mock_smtp.return_value
             self.eq(instance.login.call_count, 1)

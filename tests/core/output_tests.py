@@ -10,6 +10,7 @@ APP = rando()[:12]
 
 
 class TestOutputHandler(output.TemplateOutputHandler):
+
     class Meta:
         label = 'test_output_handler'
 
@@ -19,7 +20,9 @@ class TestOutputHandler(output.TemplateOutputHandler):
 
 TEST_TEMPLATE = "%(foo)s"
 
+
 class OutputTestCase(test.CementCoreTestCase):
+
     def setUp(self):
         self.app = self.make_app()
 
@@ -32,10 +35,10 @@ class OutputTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_files=[],
-            template_dir=tmpdir,
-            output_handler=TestOutputHandler,
-            )
+                            config_files=[],
+                            template_dir=tmpdir,
+                            output_handler=TestOutputHandler,
+                            )
         app.setup()
         app.run()
         self.ok(app.render(dict(foo='bar'), 'mytemplate.txt'))
@@ -46,10 +49,10 @@ class OutputTestCase(test.CementCoreTestCase):
         template = os.path.join(tmpdir, 'my-bogus-template.txt')
 
         app = self.make_app(APP,
-            config_files=[],
-            template_dir=tmpdir,
-            output_handler=TestOutputHandler,
-            )
+                            config_files=[],
+                            template_dir=tmpdir,
+                            output_handler=TestOutputHandler,
+                            )
         app.setup()
         app.run()
         app.render(dict(foo='bar'), 'my-bogus-template.txt')

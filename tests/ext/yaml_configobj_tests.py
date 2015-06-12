@@ -10,7 +10,9 @@ from cement.utils import test
 if sys.version_info[0] < 3:
     import configobj
 else:
-    raise test.SkipTest('ConfigObj does not support Python 3') # pragma: no cover
+    raise test.SkipTest(
+        'ConfigObj does not support Python 3')  # pragma: no cover
+
 
 class YamlConfigObjExtTestCase(test.CementTestCase):
     CONFIG = '''
@@ -32,8 +34,8 @@ class YamlConfigObjExtTestCase(test.CementTestCase):
                 key='value'),
             key1='ok1',
             key2='ok2',
-            ),
-        )
+        ),
+    )
 
     def setUp(self):
         _, self.tmppath = mkstemp()
@@ -41,10 +43,10 @@ class YamlConfigObjExtTestCase(test.CementTestCase):
         f.write(self.CONFIG)
         f.close()
         self.app = self.make_app('tests',
-            extensions=['yaml_configobj'],
-            config_handler='yaml_configobj',
-            config_files = [self.tmppath],
-            )
+                                 extensions=['yaml_configobj'],
+                                 config_handler='yaml_configobj',
+                                 config_files=[self.tmppath],
+                                 )
 
     def tearDown(self):
         if os.path.exists(self.tmppath):

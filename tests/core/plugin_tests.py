@@ -56,7 +56,9 @@ def load(app):
 
 """
 
+
 class PluginTestCase(test.CementCoreTestCase):
+
     def setUp(self):
         self.app = self.make_app()
 
@@ -71,11 +73,11 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap=None,
-            )
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap=None,
+                            )
         app.setup()
 
         try:
@@ -100,12 +102,12 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_defaults=defaults,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap=None,
-            )
+                            config_defaults=defaults,
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap=None,
+                            )
         app.setup()
 
         try:
@@ -134,12 +136,12 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_defaults=defaults,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap=None,
-            )
+                            config_defaults=defaults,
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap=None,
+                            )
         app.setup()
 
         try:
@@ -159,11 +161,11 @@ class PluginTestCase(test.CementCoreTestCase):
         tmpdir = mkdtemp()
 
         f = open(os.path.join(tmpdir, 'a.conf'), 'w')
-        f.write(CONF2) # disabled config
+        f.write(CONF2)  # disabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'b.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
@@ -171,12 +173,12 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_defaults=defaults,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap=None,
-            )
+                            config_defaults=defaults,
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap=None,
+                            )
         app.setup()
 
         try:
@@ -196,11 +198,11 @@ class PluginTestCase(test.CementCoreTestCase):
         tmpdir = mkdtemp()
 
         f = open(os.path.join(tmpdir, 'a.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'b.conf'), 'w')
-        f.write(CONF2) # disabled config
+        f.write(CONF2)  # disabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
@@ -208,12 +210,12 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_defaults=defaults,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap=None,
-            )
+                            config_defaults=defaults,
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap=None,
+                            )
         app.setup()
 
         try:
@@ -232,23 +234,23 @@ class PluginTestCase(test.CementCoreTestCase):
         tmpdir = mkdtemp()
 
         f = open(os.path.join(tmpdir, 'a.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'b.conf'), 'w')
-        f.write(CONF2) # disabled config
+        f.write(CONF2)  # disabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'c.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'e.conf'), 'w')
-        f.write(CONF2) # disabled config
+        f.write(CONF2)  # disabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'f.conf'), 'w')
-        f.write(CONF) # enabled config
+        f.write(CONF)  # enabled config
         f.close()
 
         f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
@@ -256,12 +258,12 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_defaults=defaults,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap=None,
-            )
+                            config_defaults=defaults,
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap=None,
+                            )
         app.setup()
 
         try:
@@ -286,11 +288,11 @@ class PluginTestCase(test.CementCoreTestCase):
         defaults['myplugin2'] = dict()
         defaults['myplugin2']['enable_plugin'] = False
         app = self.make_app(APP, config_defaults=defaults,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap=None,
-            )
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap=None,
+                            )
         app.setup()
 
         try:
@@ -326,11 +328,11 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap=None,
-            )
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap=None,
+                            )
         app.setup()
         shutil.rmtree(tmpdir)
 
@@ -352,11 +354,11 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap=None,
-            )
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap=None,
+                            )
         app.setup()
         shutil.rmtree(tmpdir)
 
@@ -371,11 +373,11 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir='./some/bogus/path',
-            plugin_bootstrap=None,
-            )
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir='./some/bogus/path',
+                            plugin_bootstrap=None,
+                            )
         try:
             app.setup()
         except ImportError as e:
@@ -395,15 +397,14 @@ class PluginTestCase(test.CementCoreTestCase):
         f.close()
 
         app = self.make_app(APP,
-            config_files=[],
-            plugin_config_dir=tmpdir,
-            plugin_dir=tmpdir,
-            plugin_bootstrap='cement.ext',
-            )
+                            config_files=[],
+                            plugin_config_dir=tmpdir,
+                            plugin_dir=tmpdir,
+                            plugin_bootstrap='cement.ext',
+                            )
         app.setup()
 
         res = 'ext_json' in app.plugin.get_enabled_plugins()
         self.ok(res)
 
         shutil.rmtree(tmpdir)
-

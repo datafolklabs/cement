@@ -8,6 +8,7 @@ APP = "app-%s" % rando()[:12]
 
 
 class TestController(controller.CementBaseController):
+
     class Meta:
         label = 'base'
         arguments = [
@@ -20,7 +21,9 @@ class TestController(controller.CementBaseController):
     def default(self):
         pass
 
+
 class TestWithPositionalController(controller.CementBaseController):
+
     class Meta:
         label = 'base'
         arguments = [
@@ -31,7 +34,9 @@ class TestWithPositionalController(controller.CementBaseController):
     def default(self):
         self.app.render(dict(foo=self.app.pargs.foo))
 
+
 class Embedded(controller.CementBaseController):
+
     class Meta:
         label = 'embedded_controller'
         stacked_on = 'base'
@@ -42,7 +47,9 @@ class Embedded(controller.CementBaseController):
     def embedded_cmd1(self):
         pass
 
+
 class Nested(controller.CementBaseController):
+
     class Meta:
         label = 'nested_controller'
         stacked_on = 'base'
@@ -53,7 +60,9 @@ class Nested(controller.CementBaseController):
     def nested_cmd1(self):
         pass
 
+
 class AliasesOnly(controller.CementBaseController):
+
     class Meta:
         label = 'aliases_only_controller'
         stacked_on = 'base'
@@ -69,7 +78,9 @@ class AliasesOnly(controller.CementBaseController):
     def aliases_only_cmd2(self):
         pass
 
+
 class DuplicateCommand(controller.CementBaseController):
+
     class Meta:
         label = 'duplicate_command'
         stacked_on = 'base'
@@ -79,7 +90,9 @@ class DuplicateCommand(controller.CementBaseController):
     def default(self):
         pass
 
+
 class DuplicateAlias(controller.CementBaseController):
+
     class Meta:
         label = 'duplicate_command'
         stacked_on = 'base'
@@ -89,26 +102,34 @@ class DuplicateAlias(controller.CementBaseController):
     def cmd(self):
         pass
 
+
 class Bad(controller.CementBaseController):
+
     class Meta:
         label = 'bad_controller'
         arguments = []
 
+
 class BadStackedType(controller.CementBaseController):
+
     class Meta:
         label = 'bad_stacked_type'
         stacked_on = 'base'
         stacked_type = 'bogus'
         arguments = []
 
+
 class ArgumentConflict(controller.CementBaseController):
+
     class Meta:
         label = 'embedded'
         stacked_on = 'base'
         stacked_type = 'embedded'
         arguments = [(['-f', '--foo'], dict())]
 
+
 class ControllerTestCase(test.CementCoreTestCase):
+
     def test_default(self):
         app = self.make_app(base_controller=TestController)
         app.setup()
@@ -238,7 +259,7 @@ class ControllerTestCase(test.CementCoreTestCase):
             label=APP,
             extensions=[],
             config_defaults=defaults,
-            )
+        )
         app.setup()
         app.run()
 
@@ -256,7 +277,7 @@ class ControllerTestCase(test.CementCoreTestCase):
             label=APP,
             extensions=[],
             config_defaults=defaults,
-            )
+        )
         app.setup()
         app.run()
 
@@ -265,4 +286,3 @@ class ControllerTestCase(test.CementCoreTestCase):
 
         res = 'cement.ext.ext_yaml' in app.ext._loaded_extensions
         self.ok(res)
-

@@ -8,12 +8,13 @@ from cement.utils import test
 
 
 class MustacheExtTestCase(test.CementExtTestCase):
+
     def setUp(self):
         self.app = self.make_app('tests',
-            extensions=['mustache'],
-            output_handler='mustache',
-            argv=[]
-            )
+                                 extensions=['mustache'],
+                                 output_handler='mustache',
+                                 argv=[]
+                                 )
 
     def test_mustache(self):
         self.app.setup()
