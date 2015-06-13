@@ -41,7 +41,7 @@ class ColorLogHandler(LoggingLogHandler):
             app.log.info('This is my info message')
             app.log.warn('This is my warning message')
             app.log.error('This is my error message')
-            app.log.critical('This is my critical message')
+            app.log.fatal('This is my critical message')
 
 
     The colors can be customized by overriding the
