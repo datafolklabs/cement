@@ -140,11 +140,11 @@ config creation, and logging.
             label = 'myapp'
             config_defaults = defaults
             extensions = ['daemon', 'memcached', 'json', 'yaml']
+            hooks = [
+                ('pre_close', my_cleanup_hook),
+            ]
 
     with MyApp() as app:
-        # register framework or custom application hooks
-        hook.register('pre_close', my_cleanup_hook)
-
         # add arguments to the parser
         app.args.add_argument('-f', '--foo', action='store', metavar='STR',
                               help='the notorious foo option')
