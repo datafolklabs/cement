@@ -10,18 +10,21 @@ from cement.utils.misc import init_defaults
 if sys.version_info[0] < 3:
     import pylibmc
 else:
-    raise test.SkipTest('pylibmc does not support Python 3') # pragma: no cover
+    raise test.SkipTest(
+        'pylibmc does not support Python 3')  # pragma: no cover
+
 
 class MemcachedExtTestCase(test.CementTestCase):
+
     def setUp(self):
         self.key = "cement-tests-random-key-%s" % random()
         defaults = init_defaults('tests', 'cache.memcached')
         defaults['cache.memcached']['hosts'] = '127.0.0.1, localhost'
         self.app = self.make_app('tests',
-            config_defaults=defaults,
-            extensions=['memcached'],
-            cache_handler='memcached',
-            )
+                                 config_defaults=defaults,
+                                 extensions=['memcached'],
+                                 cache_handler='memcached',
+                                 )
         self.app.setup()
 
     def tearDown(self):
@@ -31,25 +34,25 @@ class MemcachedExtTestCase(test.CementTestCase):
         defaults = init_defaults('tests', 'cache.memcached')
         defaults['cache.memcached']['hosts'] = ['127.0.0.1', 'localhost']
         self.app = self.make_app('tests',
-            config_defaults=defaults,
-            extensions=['memcached'],
-            cache_handler='memcached',
-            )
+                                 config_defaults=defaults,
+                                 extensions=['memcached'],
+                                 cache_handler='memcached',
+                                 )
         self.app.setup()
         self.eq(self.app.config.get('cache.memcached', 'hosts'),
-            ['127.0.0.1', 'localhost'])
+                ['127.0.0.1', 'localhost'])
 
     def test_memcache_str_type_config(self):
         defaults = init_defaults('tests', 'cache.memcached')
         defaults['cache.memcached']['hosts'] = '127.0.0.1, localhost'
         self.app = self.make_app('tests',
-            config_defaults=defaults,
-            extensions=['memcached'],
-            cache_handler='memcached',
-            )
+                                 config_defaults=defaults,
+                                 extensions=['memcached'],
+                                 cache_handler='memcached',
+                                 )
         self.app.setup()
         self.eq(self.app.config.get('cache.memcached', 'hosts'),
-            ['127.0.0.1', 'localhost'])
+                ['127.0.0.1', 'localhost'])
 
     def test_memcached_set(self):
         self.app.cache.set(self.key, 1001)
@@ -75,4 +78,3 @@ class MemcachedExtTestCase(test.CementTestCase):
         self.app.cache.set(self.key, 1003, time=2)
         sleep(3)
         self.eq(self.app.cache.get(self.key), None)
-

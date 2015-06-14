@@ -10,7 +10,9 @@ from cement.utils.misc import init_defaults, rando
 
 APP = rando()[:12]
 
+
 class MyLog(ext_logging.LoggingLogHandler):
+
     class Meta:
         label = 'mylog'
         level = 'INFO'
@@ -18,8 +20,10 @@ class MyLog(ext_logging.LoggingLogHandler):
     def __init__(self, *args, **kw):
         super(MyLog, self).__init__(*args, **kw)
 
+
 @test.attr('core')
 class LoggingExtTestCase(test.CementExtTestCase):
+
     def test_alternate_namespaces(self):
         defaults = init_defaults(APP, 'log.logging')
         defaults['log.logging']['to_console'] = False
@@ -50,7 +54,7 @@ class LoggingExtTestCase(test.CementExtTestCase):
         defaults['log.logging'] = dict(
             level='BOGUS',
             to_console=False,
-            )
+        )
         app = self.make_app(config_defaults=defaults)
         app.setup()
         self.eq(app.log.get_level(), 'INFO')
@@ -63,13 +67,13 @@ class LoggingExtTestCase(test.CementExtTestCase):
         Log.clear_loggers(self.app._meta.label)
 
         #previous_logger = logging.getLogger(name)
-        MyLog = ext_logging.LoggingLogHandler(clear_loggers="%s:%s" % \
-                                             (self.app._meta.label,
-                                              self.app._meta.label))
+        MyLog = ext_logging.LoggingLogHandler(clear_loggers="%s:%s" %
+                                              (self.app._meta.label,
+                                               self.app._meta.label))
         MyLog._setup(self.app)
 
     def test_rotate(self):
-        log_file = mkstemp()[1]
+        log_file = os.path.join(self.tmp_dir, '%s.log' % APP)
         defaults = init_defaults()
         defaults['log.logging'] = dict(
             file=log_file,
@@ -77,10 +81,13 @@ class LoggingExtTestCase(test.CementExtTestCase):
             rotate=True,
             max_bytes=10,
             max_files=2,
-            )
+        )
         app = self.make_app(config_defaults=defaults)
         app.setup()
         app.log.info('test log message')
+        app.log.info('test log message 2')
+        app.log.info('test log message 3')
+        app.log.info('test log message 4')
 
         # check that a second file was created, because this log is over 12
         # bytes.
@@ -98,6 +105,6 @@ class LoggingExtTestCase(test.CementExtTestCase):
         defaults = init_defaults()
         defaults['log.logging'] = dict(
             file=os.path.join(tmp_path, '%s.log' % APP),
-            )
+        )
         app = self.make_app(config_defaults=defaults)
         app.setup()

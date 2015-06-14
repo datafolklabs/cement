@@ -501,8 +501,10 @@ class CementApp(meta.MetaMixin):
             'plugin_dir',
             'ignore_deprecation_warnings',
             'template_dir',
-            'cache_handler',
             'mail_handler',
+            'cache_handler',
+            'log_handler',
+            'output_handler',
         ]
         """
         List of meta options that can/will be overridden by config options

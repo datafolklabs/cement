@@ -9,7 +9,9 @@ from cement.utils import test
 if sys.version_info[0] < 3:
     import configobj
 else:
-    raise test.SkipTest('ConfigObj does not support Python 3') # pragma: no cover
+    raise test.SkipTest(
+        'ConfigObj does not support Python 3')  # pragma: no cover
+
 
 class JsonConfigObjExtTestCase(test.CementExtTestCase):
     CONFIG = '''{
@@ -31,18 +33,19 @@ class JsonConfigObjExtTestCase(test.CementExtTestCase):
                 key='value'),
             key1='ok1',
             key2='ok2',
-            ),
-        )
+        ),
+    )
+
     def setUp(self):
         _, self.tmppath = mkstemp()
         f = open(self.tmppath, 'w+')
         f.write(self.CONFIG)
         f.close()
         self.app = self.make_app('tests',
-            extensions=['json_configobj'],
-            config_handler='json_configobj',
-            config_files = [self.tmppath],
-            )
+                                 extensions=['json_configobj'],
+                                 config_handler='json_configobj',
+                                 config_files=[self.tmppath],
+                                 )
 
     def test_has_section(self):
         self.app.setup()

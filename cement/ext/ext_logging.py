@@ -3,8 +3,10 @@
 import os
 import logging
 from ..core import exc, log, handler
-from ..utils.misc import is_true
+from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
+
+LOG = minimal_logger(__name__)
 
 try:                                        # pragma: no cover
     NullHandler = logging.NullHandler       # pragma: no cover
@@ -73,6 +75,9 @@ class LoggingLogHandler(log.CementLogHandler):
         #: during setup.
         namespace = None
 
+        #: Class to use as the formatter
+        formatter_class = logging.Formatter
+
         #: The logging format for the file logger.
         file_format = "%(asctime)s (%(levelname)s) %(namespace)s : " + \
                       "%(message)s"
@@ -124,8 +129,8 @@ class LoggingLogHandler(log.CementLogHandler):
         level = self.app.config.get(self._meta.config_section, 'level')
         self.set_level(level)
 
-        self.debug("logging initialized for '%s' using %s" %
-                   (self._meta.namespace, self.__class__.__name__))
+        LOG.debug("logging initialized for '%s' using %s" %
+                  (self._meta.namespace, self.__class__.__name__))
 
     def set_level(self, level):
         """
@@ -163,8 +168,27 @@ class LoggingLogHandler(log.CementLogHandler):
             logging.getLogger("cement:app:%s" % namespace).removeHandler(i)
             self.backend = logging.getLogger("cement:app:%s" % namespace)
 
-    def _get_formatter(self, format):
-        return logging.Formatter(format)
+    def _get_console_format(self):
+        if self.get_level() == logging.getLevelName(logging.DEBUG):
+            format = self._meta.debug_format
+        else:
+            format = self._meta.console_format
+
+        return format
+
+    def _get_file_format(self):
+        if self.get_level() == logging.getLevelName(logging.DEBUG):
+            format = self._meta.debug_format
+        else:
+            format = self._meta.file_format
+
+        return format
+
+    def _get_file_formatter(self, format):
+        return self._meta.formatter_class(format)
+
+    def _get_console_formatter(self, format):
+        return self._meta.formatter_class(format)
 
     def _setup_console_log(self):
         """Add a console log handler."""
@@ -172,12 +196,9 @@ class LoggingLogHandler(log.CementLogHandler):
                                          'to_console')
         if is_true(to_console):
             console_handler = logging.StreamHandler()
-            if self.get_level() == logging.getLevelName(logging.DEBUG):
-                format = self._get_formatter(self._meta.debug_format)
-            else:
-                format = self._get_formatter(self._meta.console_format)
-
-            console_handler.setFormatter(format)
+            format = self._get_console_format()
+            formatter = self._get_console_formatter(format)
+            console_handler.setFormatter(formatter)
             console_handler.setLevel(getattr(logging, self.get_level()))
         else:
             console_handler = NullHandler()
@@ -210,11 +231,9 @@ class LoggingLogHandler(log.CementLogHandler):
                 from logging import FileHandler
                 file_handler = FileHandler(file_path)
 
-            if self.get_level() == logging.getLevelName(logging.DEBUG):
-                format = logging.Formatter(self._meta.debug_format)
-            else:
-                format = logging.Formatter(self._meta.file_format)
-            file_handler.setFormatter(format)
+            format = self._get_file_format()
+            formatter = self._get_file_formatter(format)
+            file_handler.setFormatter(formatter)
             file_handler.setLevel(getattr(logging, self.get_level()))
         else:
             file_handler = NullHandler()

@@ -30,20 +30,21 @@ class JsonExtTestCase(test.CementExtTestCase):
                 key='value'),
             key1='ok1',
             key2='ok2',
-            ),
-        )
+        ),
+    )
+
     def setUp(self):
         _, self.tmppath = mkstemp()
         f = open(self.tmppath, 'w+')
         f.write(self.CONFIG)
         f.close()
         self.app = self.make_app('tests',
-            extensions=['json'],
-            output_handler='json',
-            config_handler='json',
-            config_files = [self.tmppath],
-            argv=['-o', 'json']
-            )
+                                 extensions=['json'],
+                                 output_handler='json',
+                                 config_handler='json',
+                                 config_files=[self.tmppath],
+                                 argv=['-o', 'json']
+                                 )
 
     def test_json(self):
         self.app.setup()
@@ -74,10 +75,10 @@ class JsonExtTestCase(test.CementExtTestCase):
 
     def test_handler_override_options_is_none(self):
         app = self.make_app(APP,
-                extensions=['json'],
-                core_handler_override_options={},
-                handler_override_options={}
-                )
+                            extensions=['json'],
+                            core_handler_override_options={},
+                            handler_override_options={}
+                            )
         app.setup()
         app.run()
         app.render(dict(foo='bar'))

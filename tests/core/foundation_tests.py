@@ -15,22 +15,30 @@ APP = rando()[:12]
 def my_extended_func():
     return 'KAPLA'
 
+
 class DeprecatedApp(foundation.CementApp):
+
     class Meta:
         label = 'deprecated'
         defaults = None
 
+
 class HookTestException(Exception):
     pass
 
+
 class MyTestInterface(Interface):
+
     class IMeta:
         label = 'my_test_interface'
 
+
 class MyTestHandler(handler.CementBaseHandler):
+
     class Meta:
         label = 'my_test_handler'
         interface = MyTestInterface
+
 
 class TestOutputHandler(output.CementOutputHandler):
     file_suffix = None
@@ -45,20 +53,27 @@ class TestOutputHandler(output.CementOutputHandler):
     def render(self, data_dict, template=None):
         return None
 
+
 class BogusBaseController(controller.CementBaseController):
+
     class Meta:
         label = 'bad_base_controller_label'
+
 
 def my_hook_one(app):
     return 1
 
+
 def my_hook_two(app):
     return 2
+
 
 def my_hook_three(app):
     return 3
 
+
 class FoundationTestCase(test.CementCoreTestCase):
+
     def setUp(self):
         super(FoundationTestCase, self).setUp()
         self.app = self.make_app('my_app')
@@ -89,7 +104,7 @@ class FoundationTestCase(test.CementCoreTestCase):
         self.eq(ml.logging_is_enabled, False)
 
         # coverage... should default to True if no key in os.environ
-        del os.environ['CEMENT_FRAMEWORK_LOGGING']        
+        del os.environ['CEMENT_FRAMEWORK_LOGGING']
         self.eq(ml.logging_is_enabled, True)
 
     def test_bootstrap(self):
@@ -133,15 +148,15 @@ class FoundationTestCase(test.CementCoreTestCase):
         from cement.ext import ext_json
 
         app = self.make_app('my-app-test',
-            config_handler=ext_configparser.ConfigParserConfigHandler,
-            log_handler=ext_logging.LoggingLogHandler(),
-            arg_handler=ext_argparse.ArgParseArgumentHandler(),
-            extension_handler=extension.CementExtensionHandler(),
-            plugin_handler=ext_plugin.CementPluginHandler(),
-            output_handler=ext_json.JsonOutputHandler(),
-            mail_handler=ext_dummy.DummyMailHandler(),
-            argv=[__file__, '--debug']
-            )
+                            config_handler=ext_configparser.ConfigParserConfigHandler,
+                            log_handler=ext_logging.LoggingLogHandler(),
+                            arg_handler=ext_argparse.ArgParseArgumentHandler(),
+                            extension_handler=extension.CementExtensionHandler(),
+                            plugin_handler=ext_plugin.CementPluginHandler(),
+                            output_handler=ext_json.JsonOutputHandler(),
+                            mail_handler=ext_dummy.DummyMailHandler(),
+                            argv=[__file__, '--debug']
+                            )
 
         app.setup()
 
@@ -205,7 +220,6 @@ class FoundationTestCase(test.CementCoreTestCase):
         except TypeError as e:
             self.eq(e.args[0], "Argument 'out' must be a 'file' like object")
             raise
-
 
     @test.raises(exc.FrameworkError)
     def test_bad_label(self):
@@ -284,10 +298,10 @@ class FoundationTestCase(test.CementCoreTestCase):
         label = APP
         user_home = os.path.abspath(os.path.expanduser(os.environ['HOME']))
         files = [
-                os.path.join('/', 'etc', label, '%s.conf' % label),
-                os.path.join(user_home, '.%s.conf' % label),
-                os.path.join(user_home, '.%s' % label, 'config'),
-                ]
+            os.path.join('/', 'etc', label, '%s.conf' % label),
+            os.path.join(user_home, '.%s.conf' % label),
+            os.path.join(user_home, '.%s' % label, 'config'),
+        ]
         for f in files:
             res = f in app._meta.config_files
             self.ok(res)
@@ -305,17 +319,17 @@ class FoundationTestCase(test.CementCoreTestCase):
 
     def test_last_rendered(self):
         self.app.setup()
-        output_text = self.app.render({'foo':'bar'})
+        output_text = self.app.render({'foo': 'bar'})
         last_data, last_output = self.app.last_rendered
-        self.eq({'foo':'bar'}, last_data)
+        self.eq({'foo': 'bar'}, last_data)
         self.eq(output_text, last_output)
 
     def test_get_last_rendered(self):
-        ### DEPRECATED - REMOVE AFTER THE FUNCTION IS REMOVED
+        # DEPRECATED - REMOVE AFTER THE FUNCTION IS REMOVED
         self.app.setup()
-        output_text = self.app.render({'foo':'bar'})
+        output_text = self.app.render({'foo': 'bar'})
         last_data, last_output = self.app.get_last_rendered()
-        self.eq({'foo':'bar'}, last_data)
+        self.eq({'foo': 'bar'}, last_data)
         self.eq(output_text, last_output)
 
     def test_with_operator(self):
@@ -345,34 +359,34 @@ class FoundationTestCase(test.CementCoreTestCase):
 
     def test_handler_override_options(self):
         app = self.make_app(APP,
-                argv=['-o', 'json'],
-                extensions=['yaml', 'json'],
-                )
+                            argv=['-o', 'json'],
+                            extensions=['yaml', 'json'],
+                            )
         app.setup()
         app.run()
         self.eq(app._meta.output_handler, 'json')
 
     def test_handler_override_options_is_none(self):
         app = self.make_app(APP,
-                core_handler_override_options=None,
-                handler_override_options=None
-                )
+                            core_handler_override_options=None,
+                            handler_override_options=None
+                            )
         app.setup()
         app.run()
 
     def test_handler_override_invalid_interface(self):
         app = self.make_app(APP,
-                handler_override_options=dict(
-                    bogus_interface = (['-f'], ['--foo'], {}),
-                    )
-                )
+                            handler_override_options=dict(
+                                bogus_interface=(['-f'], ['--foo'], {}),
+                            )
+                            )
         app.setup()
         app.run()
 
     def test_handler_override_options_not_passed(self):
         app = self.make_app(APP,
-                extensions=['yaml', 'json'],
-                )
+                            extensions=['yaml', 'json'],
+                            )
         app.setup()
         app.run()
 
@@ -398,12 +412,12 @@ class FoundationTestCase(test.CementCoreTestCase):
         def my_custom_hook_func():
             raise HookTestException('OK')
 
-        app = self.make_app(APP, 
-            define_hooks=['my_custom_hook'],
-            hooks=[('my_custom_hook', my_custom_hook_func)])
+        app = self.make_app(APP,
+                            define_hooks=['my_custom_hook'],
+                            hooks=[('my_custom_hook', my_custom_hook_func)])
 
         app.setup()
-        
+
         for res in hook.run('my_custom_hook'):
             pass
 
@@ -413,10 +427,9 @@ class FoundationTestCase(test.CementCoreTestCase):
         self.ok(handler.defined('my_test_interface'))
 
     def test_register_handlers_meta(self):
-        app = self.make_app(APP, 
-                define_handlers=[MyTestInterface],
-                handlers=[MyTestHandler],
-                )
+        app = self.make_app(APP,
+                            define_handlers=[MyTestInterface],
+                            handlers=[MyTestHandler],
+                            )
         app.setup()
-        self.ok(handler.registered('my_test_interface', 'my_test_handler'))        
-
+        self.ok(handler.registered('my_test_interface', 'my_test_handler'))

@@ -3,27 +3,36 @@
 from cement.core import exc, interface, output, handler, meta
 from cement.utils import test
 
+
 class TestInterface(interface.Interface):
+
     class IMeta:
         label = 'test'
 
+
 class TestHandler(handler.CementBaseHandler):
+
     class Meta:
         interface = TestInterface
         label = 'test'
-        
+
+
 class TestHandler2(handler.CementBaseHandler):
+
     class Meta:
         interface = output.IOutput
         label = 'test2'
 
+
 class TestHandler3():
     pass
-    
+
+
 class InterfaceTestCase(test.CementCoreTestCase):
+
     def setUp(self):
         self.app = self.make_app()
-        
+
     @test.raises(exc.InterfaceError)
     def test_interface_class(self):
         try:
@@ -38,7 +47,7 @@ class InterfaceTestCase(test.CementCoreTestCase):
 
     def test_validator(self):
         interface.validate(TestInterface, TestHandler(), [])
-    
+
     @test.raises(exc.InterfaceError)
     def test_validate_bad_interface(self):
         han = TestHandler2()
@@ -47,7 +56,7 @@ class InterfaceTestCase(test.CementCoreTestCase):
         except exc.InterfaceError as e:
             self.eq(e.msg, "%s does not implement %s." % (han, TestInterface))
             raise
-        
+
     @test.raises(exc.InterfaceError)
     def test_validate_bad_interface_no_meta(self):
         han = TestHandler3()
@@ -55,7 +64,7 @@ class InterfaceTestCase(test.CementCoreTestCase):
             interface.validate(TestInterface, han, [])
         except exc.InterfaceError as e:
             self.eq(e.msg, "Invalid or missing: ['_meta'] in %s" % han)
-            raise 
+            raise
 
     @test.raises(exc.InterfaceError)
     def test_validate_bad_interface_missing_meta(self):
@@ -63,5 +72,6 @@ class InterfaceTestCase(test.CementCoreTestCase):
         try:
             interface.validate(TestInterface, han, [], ['missing_meta'])
         except exc.InterfaceError as e:
-            self.eq(e.msg, "Invalid or missing: ['_meta.missing_meta'] in %s" % han)
+            self.eq(
+                e.msg, "Invalid or missing: ['_meta.missing_meta'] in %s" % han)
             raise

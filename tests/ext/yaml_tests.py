@@ -31,8 +31,8 @@ class YamlExtTestCase(test.CementTestCase):
                 key='value'),
             key1='ok1',
             key2='ok2',
-            ),
-        )
+        ),
+    )
 
     def setUp(self):
         _, self.tmppath = mkstemp()
@@ -40,12 +40,12 @@ class YamlExtTestCase(test.CementTestCase):
         f.write(self.CONFIG)
         f.close()
         self.app = self.make_app('tests',
-            extensions=['yaml'],
-            config_handler='yaml',
-            output_handler='yaml',
-            config_files = [self.tmppath],
-            argv=['-o', 'yaml']
-            )
+                                 extensions=['yaml'],
+                                 config_handler='yaml',
+                                 output_handler='yaml',
+                                 config_files=[self.tmppath],
+                                 argv=['-o', 'yaml']
+                                 )
 
     def tearDown(self):
         if os.path.exists(self.tmppath):
@@ -80,10 +80,10 @@ class YamlExtTestCase(test.CementTestCase):
 
     def test_handler_override_options_is_none(self):
         app = self.make_app(APP,
-                extensions=['yaml'],
-                core_handler_override_options=None,
-                handler_override_options=None
-                )
+                            extensions=['yaml'],
+                            core_handler_override_options=None,
+                            handler_override_options=None
+                            )
         app.setup()
         app.run()
         app.render(dict(foo='bar'))

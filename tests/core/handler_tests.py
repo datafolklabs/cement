@@ -5,25 +5,34 @@ from cement.core import interface
 from cement.utils import test
 from cement.ext.ext_configparser import ConfigParserConfigHandler
 
+
 class BogusOutputHandler(meta.MetaMixin):
+
     class Meta:
         #interface = IBogus
         label = 'bogus_handler'
 
+
 class BogusOutputHandler2(meta.MetaMixin):
+
     class Meta:
         interface = output.IOutput
         label = 'bogus_handler'
 
+
 class BogusHandler3(meta.MetaMixin):
     pass
 
+
 class BogusHandler4(meta.MetaMixin):
+
     class Meta:
         interface = output.IOutput
         # label = 'bogus4'
 
+
 class DuplicateHandler(output.CementOutputHandler):
+
     class Meta:
         interface = output.IOutput
         label = 'dummy'
@@ -34,23 +43,32 @@ class DuplicateHandler(output.CementOutputHandler):
     def render(self, data_dict, template=None):
         pass
 
+
 class BogusInterface1(interface.Interface):
     pass
 
+
 class BogusInterface2(interface.Interface):
+
     class IMeta:
         pass
 
+
 class TestInterface(interface.Interface):
+
     class IMeta:
         label = 'test'
 
+
 class TestHandler(meta.MetaMixin):
+
     class Meta:
         interface = TestInterface
         label = 'test'
 
+
 class HandlerTestCase(test.CementCoreTestCase):
+
     def setUp(self):
         self.app = self.make_app()
 

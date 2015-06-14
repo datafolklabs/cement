@@ -11,11 +11,13 @@ if sys.version_info[0] < 3:
 else:
     INPUT = 'builtins.input'
 
+
 def add(a, b):
     return a + b
 
 
 class ShellUtilsTestCase(test.CementCoreTestCase):
+
     def test_exec_cmd(self):
         out, err, ret = shell.exec_cmd(['echo', 'KAPLA!'])
         self.eq(ret, 0)
@@ -76,9 +78,9 @@ class ShellUtilsTestCase(test.CementCoreTestCase):
         # test with a non-clear command:
         with mock.patch(INPUT, return_value='Test Input'):
             p = shell.Prompt("Test Prompt",
-                    clear=True,
-                    clear_command='true',
-                    )
+                             clear=True,
+                             clear_command='true',
+                             )
             self.eq(p.input, 'Test Input')
 
     def test_prompt_options(self):
@@ -96,28 +98,28 @@ class ShellUtilsTestCase(test.CementCoreTestCase):
         # test numbered selection (user inputs number)
         with mock.patch(INPUT, return_value='3'):
             p = shell.Prompt("Test Prompt",
-                    options=['yes', 'no', 'maybe'],
-                    numbered=True,
-                    )
+                             options=['yes', 'no', 'maybe'],
+                             numbered=True,
+                             )
             self.eq(p.input, 'maybe')
 
         # test default value
         with mock.patch(INPUT, return_value=''):
             p = shell.Prompt(
-                    "Test Prompt",
-                    options=['yes', 'no', 'maybe'],
-                    numbered=True,
-                    default='2',
-                    )
+                "Test Prompt",
+                options=['yes', 'no', 'maybe'],
+                numbered=True,
+                default='2',
+            )
             self.eq(p.input, 'no')
 
     def test_prompt_input_is_none(self):
         # test that self.input is none if no default, and no input
         with mock.patch(INPUT, return_value=''):
             p = shell.Prompt('Test Prompt',
-                    max_attempts=3,
-                    max_attempts_exception=False,
-                    )
+                             max_attempts=3,
+                             max_attempts_exception=False,
+                             )
             self.eq(p.input, None)
 
     @test.raises(FrameworkError)
@@ -126,9 +128,9 @@ class ShellUtilsTestCase(test.CementCoreTestCase):
         with mock.patch(INPUT, return_value=''):
             try:
                 p = shell.Prompt('Test Prompt',
-                        max_attempts=3,
-                        max_attempts_exception=True,
-                        )
+                                 max_attempts=3,
+                                 max_attempts_exception=True,
+                                 )
             except FrameworkError as e:
                 self.eq(e.msg,
                         "Maximum attempts exceeded getting valid user input",
@@ -138,46 +140,40 @@ class ShellUtilsTestCase(test.CementCoreTestCase):
     def test_prompt_index_and_value_errors(self):
         with mock.patch(INPUT, return_value='5'):
             p = shell.Prompt(
-                    "Test Prompt",
-                    options=['yes', 'no', 'maybe'],
-                    numbered=True,
-                    max_attempts=3,
-                    max_attempts_exception=False,
-                    )
+                "Test Prompt",
+                options=['yes', 'no', 'maybe'],
+                numbered=True,
+                max_attempts=3,
+                max_attempts_exception=False,
+            )
             self.eq(p.input, None)
 
     def test_prompt_case_insensitive(self):
         with mock.patch(INPUT, return_value='NO'):
             p = shell.Prompt(
-                    "Test Prompt",
-                    options=['yes', 'no', 'maybe'],
-                    case_insensitive=True,
-                    )
+                "Test Prompt",
+                options=['yes', 'no', 'maybe'],
+                case_insensitive=True,
+            )
             self.eq(p.input, 'NO')
 
         with mock.patch(INPUT, return_value='NOT VALID'):
             p = shell.Prompt(
-                    "Test Prompt",
-                    options=['yes', 'no', 'maybe'],
-                    case_insensitive=True,
-                    max_attempts=3,
-                    max_attempts_exception=False,
-                    )
+                "Test Prompt",
+                options=['yes', 'no', 'maybe'],
+                case_insensitive=True,
+                max_attempts=3,
+                max_attempts_exception=False,
+            )
             self.eq(p.input, None)
 
     def test_prompt_case_sensitive(self):
         with mock.patch(INPUT, return_value='NO'):
             p = shell.Prompt(
-                    "Test Prompt",
-                    options=['yes', 'no', 'maybe'],
-                    case_insensitive=False,
-                    max_attempts=3,
-                    max_attempts_exception=False,
-                    )
+                "Test Prompt",
+                options=['yes', 'no', 'maybe'],
+                case_insensitive=False,
+                max_attempts=3,
+                max_attempts_exception=False,
+            )
             self.eq(p.input, None)
-
-
-
-
-
-

@@ -41,7 +41,7 @@ class ColorLogHandler(LoggingLogHandler):
             app.log.info('This is my info message')
             app.log.warn('This is my warning message')
             app.log.error('This is my error message')
-            app.log.critical('This is my critical message')
+            app.log.fatal('This is my critical message')
 
 
     The colors can be customized by overriding the
@@ -95,9 +95,12 @@ class ColorLogHandler(LoggingLogHandler):
         max_bytes = 512000
         max_files = 4
 
-
     """
     class Meta:
+
+        """Handler meta-data."""
+
+        #: The string identifier of the handler.
         label = "colorlog"
 
         #: Color mapping for each log level
@@ -109,16 +112,42 @@ class ColorLogHandler(LoggingLogHandler):
             'CRITICAL': 'red',
         }
 
-    def __init__(self, *args, **kw):
-        super(ColorLogHandler, self).__init__(*args, **kw)
-        if sys.stdout.isatty() or 'CEMENT_TEST' in os.environ:
-            console_format = "%(log_color)s" + self._meta.console_format
-            debug_format = "%(log_color)s" + self._meta.debug_format
-            self._meta.console_format = console_format
-            self._meta.debug_format = debug_format
+        #: Whether or not to colorize log files
+        colorize_log_files = False
 
-    def _get_formatter(self, format):
-        return ColoredFormatter(format, log_colors=self._meta.colors)
+        #: Formatter class to use for non-colorized logging (non-tty, file,
+        #: etc)
+        formatter_class_without_color = logging.Formatter
+
+        #: Formatter class to use for colorized logging
+        formatter_class = ColoredFormatter
+
+    def _get_console_format(self):
+        format = super(ColorLogHandler, self)._get_console_format()
+        if sys.stdout.isatty() or 'CEMENT_TEST' in os.environ:
+            format = "%(log_color)s" + format
+        return format
+
+    def _get_file_format(self):
+        format = super(ColorLogHandler, self)._get_file_format()
+        if self._meta.colorize_log_files is True:
+            format = "%(log_color)s" + format
+        return format
+
+    def _get_console_formatter(self, format):
+        if sys.stdout.isatty() or 'CEMENT_TEST' in os.environ:
+            return self._meta.formatter_class(format,
+                                              log_colors=self._meta.colors)
+        else:
+            klass = self._meta.formatter_class_without_color  # pragma: nocover
+            return klass(format)                             # pragma: nocover
+
+    def _get_file_formatter(self, format):
+        if self._meta.colorize_log_files is True:
+            return self._meta.formatter_class(format,
+                                              log_colors=self._meta.colors)
+        else:
+            return self._meta.formatter_class_without_color(format)
 
 
 def load(app):
