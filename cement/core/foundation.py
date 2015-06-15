@@ -6,6 +6,7 @@ import sys
 import signal
 from ..core import backend, exc, handler, hook, log, config, plugin, interface
 from ..core import output, extension, arg, controller, meta, cache, mail
+from ..core.backend import __saved_stdout__
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
 
@@ -25,6 +26,9 @@ class NullOut(object):
 
     def flush(self):
         pass
+
+    def isatty(self, *args, **kw):
+        return __saved_stdout__.isatty(*args, **kw)
 
 
 def add_handler_override_options(app):
@@ -1044,7 +1048,7 @@ class CementApp(meta.MetaMixin):
         self.validate_config()
 
         # hack for --debug
-        if '--debug' in self.argv:
+        if '--debug' in self.argv or self._meta.debug is True:
             self.config.set(self._meta.config_section, 'debug', True)
 
         # override select Meta via config
