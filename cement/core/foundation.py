@@ -761,18 +761,25 @@ class CementApp(meta.MetaMixin):
         This function wraps everything together (after self._setup() is
         called) to run the application.
 
+        :returns: Returns the result of the executed controller function if
+        a base controller is set and a controller function is called,
+        otherwise ``None`` if no controller dispatched or no controller
+        function was called.
+
         """
         for res in hook.run('pre_run', self):
             pass
 
         # If controller exists, then dispatch it
         if self.controller:
-            self.controller._dispatch()
+            return self.controller._dispatch()
         else:
             self._parse_args()
 
         for res in hook.run('post_run', self):
             pass
+
+        return None
 
     def __enter__(self):
         self.setup()

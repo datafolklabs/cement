@@ -108,7 +108,8 @@ class IController(interface.Interface):
         on a controller, as it expects the controller to handle parsing
         arguments (I.e. self.app.args.parse()).
 
-        :returns: None
+        :returns: Returns the result of the executed controller function,
+        or ``None`` if no controller function is called.
 
         """
 
