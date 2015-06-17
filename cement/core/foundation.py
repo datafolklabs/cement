@@ -4,6 +4,7 @@ import re
 import os
 import sys
 import signal
+import copy
 from ..core import backend, exc, handler, hook, log, config, plugin, interface
 from ..core import output, extension, arg, controller, meta, cache, mail
 from ..core.backend import __saved_stdout__
@@ -12,23 +13,25 @@ from ..utils import fs
 
 if sys.version_info[0] >= 3:
     from imp import reload  # pragma: nocover
-    from io import StringIO  # pragma: nocover
-else:
-    from StringIO import StringIO  # pragma: nocover
+#     from io import StringIO  # pragma: nocover
+# else:
+#     from StringIO import StringIO  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
 
-class NullOut(object):
+# FIX ME: This should probably actuall subclass TextIOWrapper which is what
+# sys.stdout is.
+# class NullOut(object):
 
-    def write(self, s):
-        pass
+#     def write(self, s):
+#         pass
 
-    def flush(self):
-        pass
+#     def flush(self):
+#         pass
 
-    def isatty(self, *args, **kw):
-        return __saved_stdout__.isatty(*args, **kw)
+#     def isatty(self, *args, **kw):
+#         return __saved_stdout__.isatty(*args, **kw)
 
 
 def add_handler_override_options(app):
@@ -907,8 +910,8 @@ class CementApp(meta.MetaMixin):
         LOG.debug('suppressing all console output')
         backend.__saved_stdout__ = sys.stdout
         backend.__saved_stderr__ = sys.stderr
-        sys.stdout = NullOut()
-        sys.stderr = NullOut()
+        sys.stdout = open(os.devnull, 'w')
+        sys.stderr = open(os.devnull, 'w')
 
     def _unsuppress_output(self):
         LOG.debug('unsuppressing all console output')
