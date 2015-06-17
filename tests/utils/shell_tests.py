@@ -53,8 +53,8 @@ class ShellUtilsTestCase(test.CementCoreTestCase):
         self.eq(p.exitcode, 0)
 
     def test_spawn_thread(self):
-        t = shell.spawn_thread(time.sleep, args=(10))
-
+        t = shell.spawn_thread(time.sleep, args=(2,))
+        
         # before joining it is alive
         res = t.is_alive()
         self.eq(res, True)
@@ -65,7 +65,7 @@ class ShellUtilsTestCase(test.CementCoreTestCase):
         res = t.is_alive()
         self.eq(res, False)
 
-        t = shell.spawn_thread(time.sleep, join=True, args=(10))
+        t = shell.spawn_thread(time.sleep, join=True, args=(2,))
         res = t.is_alive()
         self.eq(res, False)
 

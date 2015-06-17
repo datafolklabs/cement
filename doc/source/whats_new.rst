@@ -3,6 +3,23 @@
 What's New
 ==========
 
+New Features in Cement 2.7
+--------------------------
+
+ArgparseController
+^^^^^^^^^^^^^^^^^^
+
+Work has finally begun, and is mostly completed on the complete refactoring of
+``CementBaseController``.  The new ``ArgparseController`` and ``expose``
+decorator from the ``argparse`` extension have the following added benefits
+over ``CementBaseController``:
+
+    * FIX ME
+
+Related:
+
+    * :issue:`205`
+
 New Features in Cement 2.6
 --------------------------
 
