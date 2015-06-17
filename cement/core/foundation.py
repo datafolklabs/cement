@@ -4,27 +4,34 @@ import re
 import os
 import sys
 import signal
+import copy
 from ..core import backend, exc, handler, hook, log, config, plugin, interface
 from ..core import output, extension, arg, controller, meta, cache, mail
+from ..core.backend import __saved_stdout__
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
 
 if sys.version_info[0] >= 3:
     from imp import reload  # pragma: nocover
-    from io import StringIO  # pragma: nocover
-else:
-    from StringIO import StringIO  # pragma: nocover
+#     from io import StringIO  # pragma: nocover
+# else:
+#     from StringIO import StringIO  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
 
-class NullOut(object):
+# FIX ME: This should probably actuall subclass TextIOWrapper which is what
+# sys.stdout is.
+# class NullOut(object):
 
-    def write(self, s):
-        pass
+#     def write(self, s):
+#         pass
 
-    def flush(self):
-        pass
+#     def flush(self):
+#         pass
+
+#     def isatty(self, *args, **kw):
+#         return __saved_stdout__.isatty(*args, **kw)
 
 
 def add_handler_override_options(app):
@@ -757,18 +764,25 @@ class CementApp(meta.MetaMixin):
         This function wraps everything together (after self._setup() is
         called) to run the application.
 
+        :returns: Returns the result of the executed controller function if
+        a base controller is set and a controller function is called,
+        otherwise ``None`` if no controller dispatched or no controller
+        function was called.
+
         """
         for res in hook.run('pre_run', self):
             pass
 
-        # If controller exists, then pass controll to it
+        # If controller exists, then dispatch it
         if self.controller:
-            self.controller._dispatch()
+            return self.controller._dispatch()
         else:
             self._parse_args()
 
         for res in hook.run('post_run', self):
             pass
+
+        return None
 
     def __enter__(self):
         self.setup()
@@ -896,8 +910,8 @@ class CementApp(meta.MetaMixin):
         LOG.debug('suppressing all console output')
         backend.__saved_stdout__ = sys.stdout
         backend.__saved_stderr__ = sys.stderr
-        sys.stdout = NullOut()
-        sys.stderr = NullOut()
+        sys.stdout = open(os.devnull, 'w')
+        sys.stderr = open(os.devnull, 'w')
 
     def _unsuppress_output(self):
         LOG.debug('unsuppressing all console output')
@@ -971,7 +985,7 @@ class CementApp(meta.MetaMixin):
             pass
 
         self._parsed_args = self.args.parse(self.argv)
-
+        
         if self._meta.arguments_override_config is True:
             for member in dir(self._parsed_args):
                 if member and member.startswith('_'):
@@ -1044,7 +1058,7 @@ class CementApp(meta.MetaMixin):
         self.validate_config()
 
         # hack for --debug
-        if '--debug' in self.argv:
+        if '--debug' in self.argv or self._meta.debug is True:
             self.config.set(self._meta.config_section, 'debug', True)
 
         # override select Meta via config
@@ -1170,6 +1184,8 @@ class CementApp(meta.MetaMixin):
         LOG.debug("setting up %s.arg handler" % self._meta.label)
         self.args = self._resolve_handler('argument',
                                           self._meta.argument_handler)
+        self.args.prog = self._meta.label
+
         self.args.add_argument('--debug', dest='debug',
                                action='store_true',
                                help='toggle debug output')

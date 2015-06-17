@@ -20,17 +20,17 @@ def controller_validator(klass, obj):
     ]
     meta = [
         'label',
-        'aliases',
+        #'aliases',
         'interface',
-        'description',
+        #'description',
         'config_section',
         'config_defaults',
-        'arguments',
-        'usage',
-        'epilog',
+        #'arguments',
+        #'usage',
+        #'epilog',
         'stacked_on',
         'stacked_type',
-        'hide',
+        #'hide',
     ]
     interface.validate(IController, obj, members, meta=meta)
 
@@ -48,6 +48,18 @@ def controller_validator(klass, obj):
                 raise exc.InterfaceError(errmsg)
             if type(item[1]) is not dict:
                 raise exc.InterfaceError(errmsg)
+
+    if not obj._meta.label == 'base' and obj._meta.stacked_on is None:
+        errmsg = "Controller `%s` is not stacked anywhere!" % \
+                 obj.__class__.__name__
+        raise exc.InterfaceError(errmsg)
+    if not obj._meta.label == 'base' and \
+        obj._meta.stacked_type not in ['nested', 'embedded']:
+        raise exc.InterfaceError( 
+            "Controller '%s' " % obj._meta.label + 
+            "has an unknown stacked type of '%s'." % 
+            obj._meta.stacked_type 
+        )
 
 
 class IController(interface.Interface):
@@ -75,11 +87,11 @@ class IController(interface.Interface):
 
         """Interface meta-data."""
 
+        #: The string identifier of the interface.
         label = 'controller'
-        """The string identifier of the interface."""
 
+        #: The interface validator function.
         validator = controller_validator
-        """The interface validator function."""
 
     # Must be provided by the implementation
     Meta = interface.Attribute('Handler meta-data')
@@ -108,10 +120,10 @@ class IController(interface.Interface):
         on a controller, as it expects the controller to handle parsing
         arguments (I.e. self.app.args.parse()).
 
-        :returns: None
+        :returns: Returns the result of the executed controller function,
+        or ``None`` if no controller function is called.
 
         """
-
 
 class expose(object):
 
@@ -185,13 +197,17 @@ class CementBaseController(handler.CementBaseHandler):
     argparse.  If using an alternative argument handler you will need to
     write your own controller base class.
 
+    NOTE: This the initial default implementation of CementBaseController.  In
+    the future it will be replaced by CementBaseController2, therefore using
+    CementBaseController2 is recommended for new development.
+
     Usage:
 
     .. code-block:: python
 
-        from cement.core import controller
+        from cement.core.controller import CementBaseController
 
-        class MyAppBaseController(controller.CementBaseController):
+        class MyAppBaseController(CementBaseController):
             class Meta:
                 label = 'base'
                 description = 'MyApp is awesome'
@@ -200,7 +216,7 @@ class CementBaseController(handler.CementBaseHandler):
                 epilog = "This is the text at the bottom of --help."
                 # ...
 
-        class MyStackedController(controller.CementBaseController):
+        class MyStackedController(CementBaseController):
             class Meta:
                 label = 'second_controller'
                 aliases = ['sec', 'secondary']
@@ -379,12 +395,7 @@ class CementBaseController(handler.CementBaseHandler):
                     metadict['aliases_only'] = contr._meta.aliases_only
                     metadict['controller'] = contr
                     commands.append(metadict)
-                else:
-                    raise exc.FrameworkError(
-                        "Controller '%s' " % contr._meta.label +
-                        "has an unknown stacked type of '%s'." %
-                        contr._meta.stacked_type
-                    )
+
         return (arguments, commands)
 
     def _process_arguments(self):
@@ -523,3 +534,4 @@ commands:
             txt = self._meta.description
 
         return textwrap.dedent(txt)
+
