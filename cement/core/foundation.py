@@ -13,25 +13,9 @@ from ..utils import fs
 
 if sys.version_info[0] >= 3:
     from imp import reload  # pragma: nocover
-#     from io import StringIO  # pragma: nocover
-# else:
-#     from StringIO import StringIO  # pragma: nocover
+
 
 LOG = minimal_logger(__name__)
-
-
-# FIX ME: This should probably actuall subclass TextIOWrapper which is what
-# sys.stdout is.
-# class NullOut(object):
-
-#     def write(self, s):
-#         pass
-
-#     def flush(self):
-#         pass
-
-#     def isatty(self, *args, **kw):
-#         return __saved_stdout__.isatty(*args, **kw)
 
 
 def add_handler_override_options(app):
@@ -202,11 +186,11 @@ class CementApp(meta.MetaMixin):
         Used internally, and should not be used by developers.  This is set
         to `True` if `--debug` is passed at command line."""
 
-        exit_on_close = True
+        exit_on_close = False
         """
         Whether or not to call ``sys.exit()`` when ``close()`` is called.
-        Generally only used for testing to avoid having to catch
-        ``SystemExit`` three thousand times.
+        The default is ``False``, however if ``True`` then the app will call
+        ``sys.exit(X)`` where ``X`` is ``self.exit_code``.
         """
 
         config_files = None
@@ -795,12 +779,14 @@ class CementApp(meta.MetaMixin):
 
     def close(self, code=None):
         """
-        Close the application.  This runs the pre_close and post_close hooks
-        allowing plugins/extensions/etc to 'cleanup' at the end of program
-        execution.
+        Close the application.  This runs the ``pre_close`` and ``post_close`` 
+        hooks allowing plugins/extensions/etc to cleanup at the end of 
+        program execution.
 
-        :param code: An exit code to exit with (`int`), if `None` is passed
-         then exit with whatever `self.exit_code` is currently set to.
+        :param code: An exit code to exit with (``int``), if ``None`` is 
+         passed then exit with whatever ``self.exit_code`` is currently set 
+         to.  Note: ``sys.exit()`` will only be called if 
+        ``CementApp.Meta.exit_on_close==True``.
 
         """
         for res in hook.run('pre_close', self):
