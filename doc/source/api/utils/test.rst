@@ -4,7 +4,8 @@
 ------------------------
 
 .. automodule:: cement.utils.test
-    :members:
+    :members:   
+    :private-members:
     :show-inheritance:
 
 .. autoclass:: cement.utils.test.raises

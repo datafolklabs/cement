@@ -5,6 +5,5 @@
 
 .. automodule:: cement.core.exc
     :members:   
-    :undoc-members:
     :private-members:
     :show-inheritance:

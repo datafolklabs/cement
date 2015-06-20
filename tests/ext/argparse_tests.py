@@ -6,7 +6,7 @@ import re
 from argparse import ArgumentError
 from cement.ext.ext_argparse import ArgparseArgumentHandler
 from cement.ext.ext_argparse import ArgparseController, expose
-from cement.ext.ext_argparse import _clean_command_label, _clean_command_func
+from cement.ext.ext_argparse import _clean_label, _clean_func
 from cement.utils import test
 from cement.utils.misc import rando, init_defaults
 from cement.core import handler
@@ -223,11 +223,11 @@ class ArgparseExtTestCase(test.CementExtTestCase):
                 ],
             )
 
-    def test_clean_command_label(self):
-        self.eq(_clean_command_label('some_cmd_name'), 'some-cmd-name')
+    def test_clean_label(self):
+        self.eq(_clean_label('some_cmd_name'), 'some-cmd-name')
 
-    def test_clean_command_func(self):
-        self.eq(_clean_command_func('some-cmd-name'), 'some_cmd_name')
+    def test_clean_func(self):
+        self.eq(_clean_func('some-cmd-name'), 'some_cmd_name')
 
     def test_base_default(self):
         if not ARGPARSE_SUPPORTS_DEFAULTS:

@@ -68,9 +68,12 @@ for mod_name in MOCK_MODULES:
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.extlinks',
+    'sphinx.ext.intersphinx'
     ]
 
-extlinks = {'issue' : ('https://github.com/datafolklabs/cement/issues/%s', 'Issue #')}
+extlinks = {'issue' : ('https://github.com/datafolklabs/cement/issues/%s', 
+                       'Issue #')}
+intersphinx_mapping = {'py': ('https://docs.python.org/3.4', None)}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

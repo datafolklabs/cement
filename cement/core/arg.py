@@ -24,7 +24,7 @@ def argument_validator(klass, obj):
 # pylint: disable=W0105,W0232,W0232,R0903,E0213,R0923
 class IArgument(interface.Interface):
 
-    """
+    """    
     This class defines the Argument Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
     below.  Implementations do *not* subclass from interfaces.

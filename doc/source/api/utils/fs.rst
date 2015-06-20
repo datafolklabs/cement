@@ -4,5 +4,6 @@
 ----------------------
 
 .. automodule:: cement.utils.fs
-    :members:
+    :members:   
+    :private-members:
     :show-inheritance:

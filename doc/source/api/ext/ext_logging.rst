@@ -4,5 +4,6 @@
 ------------------------------
 
 .. automodule:: cement.ext.ext_logging
-    :members:
+    :members:   
+    :private-members:
     :show-inheritance:

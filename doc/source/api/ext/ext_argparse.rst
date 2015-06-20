@@ -5,4 +5,5 @@
 
 .. automodule:: cement.ext.ext_argparse
     :members:
+    :private-members:
     :show-inheritance:

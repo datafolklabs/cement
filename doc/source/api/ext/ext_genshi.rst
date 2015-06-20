@@ -4,7 +4,8 @@
 ----------------------------
 
 .. automodule:: cement.ext.ext_genshi
-    :members:
+    :members:   
+    :private-members:
     :show-inheritance:
 
 

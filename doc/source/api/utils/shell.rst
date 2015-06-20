@@ -4,5 +4,6 @@
 -------------------------
 
 .. automodule:: cement.utils.shell
-    :members:
+    :members:   
+    :private-members:
     :show-inheritance:

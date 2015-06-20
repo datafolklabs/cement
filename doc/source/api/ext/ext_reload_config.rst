@@ -4,5 +4,6 @@
 -----------------------------------
 
 .. automodule:: cement.ext.ext_reload_config
-    :members:
+    :members:   
+    :private-members:
     :show-inheritance:

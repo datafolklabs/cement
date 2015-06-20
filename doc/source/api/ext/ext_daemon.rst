@@ -4,5 +4,6 @@
 ------------------------------
 
 .. automodule:: cement.ext.ext_daemon
-    :members:
+    :members:   
+    :private-members:
     :show-inheritance:

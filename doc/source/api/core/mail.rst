@@ -5,5 +5,5 @@
 
 .. automodule:: cement.core.mail
     :members:
-    :undoc-members:
+    :private-members:
     :show-inheritance:
