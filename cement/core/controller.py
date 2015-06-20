@@ -54,11 +54,11 @@ def controller_validator(klass, obj):
                  obj.__class__.__name__
         raise exc.InterfaceError(errmsg)
     if not obj._meta.label == 'base' and \
-        obj._meta.stacked_type not in ['nested', 'embedded']:
-        raise exc.InterfaceError( 
-            "Controller '%s' " % obj._meta.label + 
-            "has an unknown stacked type of '%s'." % 
-            obj._meta.stacked_type 
+            obj._meta.stacked_type not in ['nested', 'embedded']:
+        raise exc.InterfaceError(
+            "Controller '%s' " % obj._meta.label +
+            "has an unknown stacked type of '%s'." %
+            obj._meta.stacked_type
         )
 
 
@@ -124,6 +124,7 @@ class IController(interface.Interface):
         or ``None`` if no controller function is called.
 
         """
+
 
 class expose(object):
 
@@ -534,4 +535,3 @@ commands:
             txt = self._meta.description
 
         return textwrap.dedent(txt)
-

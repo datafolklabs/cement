@@ -134,6 +134,7 @@ class ArgumentConflict(controller.CementBaseController):
 
 
 class Unstacked(controller.CementBaseController):
+
     class Meta:
         label = 'unstacked'
         stacked_on = None
@@ -143,6 +144,7 @@ class Unstacked(controller.CementBaseController):
 
 
 class BadStackType(controller.CementBaseController):
+
     class Meta:
         label = 'bad_stack_type'
         stacked_on = 'base'
@@ -150,7 +152,7 @@ class BadStackType(controller.CementBaseController):
         arguments = [
             (['--foo6'], dict(dest='foo6')),
         ]
-          
+
 
 class ControllerTestCase(test.CementCoreTestCase):
 
@@ -316,11 +318,11 @@ class ControllerTestCase(test.CementCoreTestCase):
         self.reset_backend()
         try:
             self.app = self.make_app(APP,
-                handlers=[
-                    TestController,
-                    Unstacked,
-                    ],
-                )
+                                     handlers=[
+                                         TestController,
+                                         Unstacked,
+                                     ],
+                                     )
             with self.app as app:
                 res = app.run()
         except exc.InterfaceError as e:
@@ -332,11 +334,11 @@ class ControllerTestCase(test.CementCoreTestCase):
         self.reset_backend()
         try:
             self.app = self.make_app(APP,
-                handlers=[
-                    TestController,
-                    BadStackType,
-                    ],
-                )
+                                     handlers=[
+                                         TestController,
+                                         BadStackType,
+                                     ],
+                                     )
             with self.app as app:
                 res = app.run()
         except exc.InterfaceError as e:
@@ -346,24 +348,24 @@ class ControllerTestCase(test.CementCoreTestCase):
     def test_usage_text(self):
         self.reset_backend()
         self.app = self.make_app(APP,
-                handlers=[
-                    TestController,
-                    ],
-                )
+                                 handlers=[
+                                     TestController,
+                                 ],
+                                 )
         with self.app as app:
             self.app.controller._meta.usage = None
             usage = app.controller._usage_text
-            self.ok(usage.startswith('%s (sub-commands ...)' % \
-                    self.app._meta.label))
+            self.ok(usage.startswith('%s (sub-commands ...)' %
+                                     self.app._meta.label))
 
     def test_help_text(self):
         self.reset_backend()
         self.app = self.make_app(APP,
-                handlers=[
-                    TestController,
-                    AliasesOnly,
-                    ],
-                )
+                                 handlers=[
+                                     TestController,
+                                     AliasesOnly,
+                                 ],
+                                 )
         with self.app as app:
             app.run()
             help = app.controller._help_text

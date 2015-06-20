@@ -19,7 +19,9 @@ if (sys.version_info[0] > 3 and sys.version_info[1] >= 4):
 else:
     ARGPARSE_SUPPORTS_DEFAULTS = False
 
+
 class Base(ArgparseController):
+
     class Meta:
         label = 'base'
         arguments = [
@@ -38,7 +40,9 @@ class Base(ArgparseController):
     def command_with_dashes(self):
         return "Inside Base.command_with_dashes"
 
+
 class Second(ArgparseController):
+
     class Meta:
         label = 'second'
         stacked_on = 'base'
@@ -49,17 +53,19 @@ class Second(ArgparseController):
 
     @expose(
         arguments=[
-            (['--cmd2-foo'], 
+            (['--cmd2-foo'],
              dict(help='cmd2 sub-command only options', dest='cmd2_foo')),
-            ]
-        )
+        ]
+    )
     def cmd2(self):
         if self.app.pargs.cmd2_foo:
-            return "Inside Second.cmd2 : Foo > %s" % self.app.pargs.cmd2_foo 
+            return "Inside Second.cmd2 : Foo > %s" % self.app.pargs.cmd2_foo
         else:
             return "Inside Second.cmd2"
 
+
 class Third(ArgparseController):
+
     class Meta:
         label = 'third'
         stacked_on = 'base'
@@ -76,7 +82,9 @@ class Third(ArgparseController):
     def cmd3(self):
         return "Inside Third.cmd3"
 
+
 class Fourth(ArgparseController):
+
     class Meta:
         label = 'fourth'
         stacked_on = 'third'
@@ -91,7 +99,9 @@ class Fourth(ArgparseController):
     def cmd4(self):
         return "Inside Fourth.cmd4"
 
+
 class Fifth(ArgparseController):
+
     class Meta:
         label = 'fifth'
         stacked_on = 'third'
@@ -105,12 +115,14 @@ class Fifth(ArgparseController):
     @expose(hide=True)
     def default(self):
         return "Inside Fifth.default"
-        
+
     @expose()
     def cmd5(self):
         return "Inside Fifth.cmd5"
 
+
 class Sixth(ArgparseController):
+
     class Meta:
         label = 'sixth'
         stacked_on = 'fifth'
@@ -122,12 +134,14 @@ class Sixth(ArgparseController):
     @expose(hide=True)
     def default(self):
         return "Inside Sixth.default"
-        
+
     @expose()
     def cmd6(self):
         return "Inside Sixth.cmd6"
 
+
 class Seventh(ArgparseController):
+
     class Meta:
         label = 'seventh'
         stacked_on = 'fourth'
@@ -135,12 +149,14 @@ class Seventh(ArgparseController):
         arguments = [
             (['--foo7'], dict(dest='foo7')),
         ]
-        
+
     @expose()
     def cmd7(self):
         return "Inside Seventh.cmd7"
 
+
 class Unstacked(ArgparseController):
+
     class Meta:
         label = 'unstacked'
         stacked_on = None
@@ -148,7 +164,9 @@ class Unstacked(ArgparseController):
             (['--foo6'], dict(dest='foo6')),
         ]
 
+
 class BadStackType(ArgparseController):
+
     class Meta:
         label = 'bad_stack_type'
         stacked_on = 'base'
@@ -157,19 +175,23 @@ class BadStackType(ArgparseController):
             (['--foo6'], dict(dest='foo6')),
         ]
 
+
 class DuplicateArguments(ArgparseController):
+
     class Meta:
         label = 'duplicate_arguments'
         arguments = [
             (['--foo'], dict(dest='foo')),
         ]
 
+
 class ControllerCommandDuplicateArguments(ArgparseController):
+
     class Meta:
         label = 'controller_command_duplicate_arguments'
-        
+
     @expose(
-        arguments = [
+        arguments=[
             (['--foo'], dict(dest='foo')),
             (['--foo'], dict(dest='foo')),
         ]
@@ -177,7 +199,9 @@ class ControllerCommandDuplicateArguments(ArgparseController):
     def sub_command(self):
         pass
 
+
 class AlternativeDefault(ArgparseController):
+
     class Meta:
         label = 'alternative_default'
         default_func = 'alternative_default'
@@ -188,14 +212,18 @@ class AlternativeDefault(ArgparseController):
     def alternative_default(self):
         return "Inside AlternativeDefault.alternative_default"
 
+
 class BadAlternativeDefault(ArgparseController):
+
     class Meta:
         label = 'bad_alternative_default'
         default_func = 'bogus_default'
         stacked_on = 'base'
         stacked_type = 'nested'
 
+
 class Aliases(ArgparseController):
+
     class Meta:
         label = 'aliases'
         aliases = ['aliases-controller', 'ac']
@@ -206,22 +234,23 @@ class Aliases(ArgparseController):
     def aliases_cmd1(self):
         return "Inside Aliases.aliases_cmd1"
 
+
 class ArgparseExtTestCase(test.CementExtTestCase):
 
     def setUp(self):
         super(ArgparseExtTestCase, self).setUp()
         self.app = self.make_app(APP,
-            argument_handler=ArgparseArgumentHandler,
-            handlers=[
-                Sixth,
-                Base,
-                Second,
-                Third,
-                Fourth,
-                Fifth,
-                Seventh,
-                ],
-            )
+                                 argument_handler=ArgparseArgumentHandler,
+                                 handlers=[
+                                     Sixth,
+                                     Base,
+                                     Second,
+                                     Third,
+                                     Fourth,
+                                     Fifth,
+                                     Seventh,
+                                 ],
+                                 )
 
     def test_clean_label(self):
         self.eq(_clean_label('some_cmd_name'), 'some-cmd-name')
@@ -233,7 +262,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         if not ARGPARSE_SUPPORTS_DEFAULTS:
             raise test.SkipTest(
                 'Argparse does not support default commands in Python < 3.4'
-                )
+            )
 
         with self.app as app:
             res = app.run()
@@ -305,9 +334,9 @@ class ArgparseExtTestCase(test.CementExtTestCase):
     def test_third_cmd3(self):
         with self.app as app:
             app._meta.argv = [
-                '--foo=bar', '--foo2=bar2', 
+                '--foo=bar', '--foo2=bar2',
                 'third', '--foo3=bar3', '--foo4=bar4', '--foo7=bar7', 'cmd3',
-                ]
+            ]
             res = app.run()
             self.eq(res, "Inside Third.cmd3")
             self.eq(app.pargs.foo, 'bar')
@@ -319,10 +348,10 @@ class ArgparseExtTestCase(test.CementExtTestCase):
     def test_fifth_cmd5(self):
         with self.app as app:
             app._meta.argv = [
-                '--foo=bar', '--foo2=bar2', 
+                '--foo=bar', '--foo2=bar2',
                 'third', '--foo3=bar3', '--foo4=bar4',
                 'fifth', '--foo5=bar5', 'cmd5'
-                ]
+            ]
             res = app.run()
             self.eq(res, "Inside Fifth.cmd5")
             self.eq(app.pargs.foo, 'bar')
@@ -334,10 +363,10 @@ class ArgparseExtTestCase(test.CementExtTestCase):
     def test_sixth_cmd6(self):
         with self.app as app:
             app._meta.argv = [
-                '--foo=bar', '--foo2=bar2', 
+                '--foo=bar', '--foo2=bar2',
                 'third', '--foo3=bar3', '--foo4=bar4',
                 'fifth', '--foo5=bar5', 'sixth', '--foo6=bar6', 'cmd6',
-                ]
+            ]
             res = app.run()
             self.eq(res, "Inside Sixth.cmd6")
             self.eq(app.pargs.foo, 'bar')
@@ -350,9 +379,9 @@ class ArgparseExtTestCase(test.CementExtTestCase):
     def test_seventh_cmd7(self):
         with self.app as app:
             app._meta.argv = [
-                '--foo=bar', '--foo2=bar2', 
+                '--foo=bar', '--foo2=bar2',
                 'third', '--foo3=bar3', '--foo4=bar4', '--foo7=bar7', 'cmd7',
-                ]
+            ]
             res = app.run()
             self.eq(res, "Inside Seventh.cmd7")
             self.eq(app.pargs.foo, 'bar')
@@ -384,7 +413,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         if not ARGPARSE_SUPPORTS_DEFAULTS:
             raise test.SkipTest(
                 'Argparse does not support default commands in Python < 3.4'
-                )
+            )
 
         self.app._meta.argv = ['third']
         with self.app as app:
@@ -402,12 +431,12 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         with self.app as app:
             res = app.run()
             self.eq(res, "Inside Fourth.cmd4")
-            
+
     def test_controller_default_double_nested(self):
         if not ARGPARSE_SUPPORTS_DEFAULTS:
             raise test.SkipTest(
                 'Argparse does not support default commands in Python < 3.4'
-                )
+            )
         self.app._meta.argv = ['third', 'fifth']
         with self.app as app:
             res = app.run()
@@ -423,20 +452,20 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         if not ARGPARSE_SUPPORTS_DEFAULTS:
             raise test.SkipTest(
                 'Argparse does not support default commands in Python < 3.4'
-                )
+            )
 
         self.reset_backend()
         self.app = self.make_app(APP,
-            argv=['alternative_default'],
-            argument_handler=ArgparseArgumentHandler,
-            handlers=[
-                Base,
-                AlternativeDefault,
-                ],
-            )
+                                 argv=['alternative_default'],
+                                 argument_handler=ArgparseArgumentHandler,
+                                 handlers=[
+                                     Base,
+                                     AlternativeDefault,
+                                 ],
+                                 )
         with self.app as app:
             res = app.run()
-            self.eq(res, 
+            self.eq(res,
                     "Inside AlternativeDefault.alternative_default")
 
     @test.raises(FrameworkError)
@@ -444,23 +473,23 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         if not ARGPARSE_SUPPORTS_DEFAULTS:
             raise test.SkipTest(
                 'Argparse does not support default commands in Python < 3.4'
-                )
+            )
 
         self.reset_backend()
         self.app = self.make_app(APP,
-            argv=['bad_alternative_default'],
-            argument_handler=ArgparseArgumentHandler,
-            handlers=[
-                Base,
-                BadAlternativeDefault,
-                ],
-            )
+                                 argv=['bad_alternative_default'],
+                                 argument_handler=ArgparseArgumentHandler,
+                                 handlers=[
+                                     Base,
+                                     BadAlternativeDefault,
+                                 ],
+                                 )
         try:
             with self.app as app:
                 res = app.run()
 
         except FrameworkError as e:
-            res = re.match("(.*)does not exist(.*)bogus_default(.*)", 
+            res = re.match("(.*)does not exist(.*)bogus_default(.*)",
                            e.__str__())
             self.ok(res)
             raise
@@ -470,12 +499,12 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         self.reset_backend()
         try:
             self.app = self.make_app(APP,
-                argument_handler=ArgparseArgumentHandler,
-                handlers=[
-                    Base,
-                    Unstacked,
-                    ],
-                )
+                                     argument_handler=ArgparseArgumentHandler,
+                                     handlers=[
+                                         Base,
+                                         Unstacked,
+                                     ],
+                                     )
             with self.app as app:
                 res = app.run()
         except InterfaceError as e:
@@ -487,12 +516,12 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         self.reset_backend()
         try:
             self.app = self.make_app(APP,
-                argument_handler=ArgparseArgumentHandler,
-                handlers=[
-                    Base,
-                    BadStackType,
-                    ],
-                )
+                                     argument_handler=ArgparseArgumentHandler,
+                                     handlers=[
+                                         Base,
+                                         BadStackType,
+                                     ],
+                                     )
             with self.app as app:
                 res = app.run()
         except InterfaceError as e:
@@ -504,16 +533,16 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         self.reset_backend()
         try:
             self.app = self.make_app(APP,
-                argument_handler=ArgparseArgumentHandler,
-                handlers=[
-                    Base,
-                    DuplicateArguments,
-                    ],
-                )
+                                     argument_handler=ArgparseArgumentHandler,
+                                     handlers=[
+                                         Base,
+                                         DuplicateArguments,
+                                     ],
+                                     )
             with self.app as app:
                 res = app.run()
         except ArgumentError as e:
-            self.ok(re.match("(.*)conflicting option string(.*)", 
+            self.ok(re.match("(.*)conflicting option string(.*)",
                              e.__str__()))
             raise
 
@@ -522,16 +551,16 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         self.reset_backend()
         try:
             self.app = self.make_app(APP,
-                argument_handler=ArgparseArgumentHandler,
-                handlers=[
-                    Base,
-                    ControllerCommandDuplicateArguments,
-                    ],
-                )
+                                     argument_handler=ArgparseArgumentHandler,
+                                     handlers=[
+                                         Base,
+                                         ControllerCommandDuplicateArguments,
+                                     ],
+                                     )
             with self.app as app:
                 res = app.run()
         except ArgumentError as e:
-            self.ok(re.match("(.*)conflicting option string(.*)", 
+            self.ok(re.match("(.*)conflicting option string(.*)",
                              e.__str__()))
             raise
 
@@ -539,16 +568,16 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         if sys.version_info[0] < 3:
             raise test.SkipTest(
                 'Argparse does not support aliases in Python < 3'
-                )
+            )
         self.reset_backend()
 
         self.app = self.make_app(APP,
-            argument_handler=ArgparseArgumentHandler,
-            handlers=[
-                Base,
-                Aliases,
-                ],
-            )
+                                 argument_handler=ArgparseArgumentHandler,
+                                 handlers=[
+                                     Base,
+                                     Aliases,
+                                 ],
+                                 )
         with self.app as app:
             app._meta.argv = ['aliases', 'aliases-cmd1']
             res = app.run()

@@ -176,7 +176,7 @@ class FoundationTestCase(test.CementCoreTestCase):
         app = self.make_app('my-app-test', argv=[__file__],
                             config_defaults=defaults)
         app.setup()
-        self.eq(app.debug, True) 
+        self.eq(app.debug, True)
 
     def test_render(self):
         # Render with default

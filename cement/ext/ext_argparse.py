@@ -174,11 +174,14 @@ from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
+
 def _clean_label(label):
     return re.sub('_', '-', label)
 
+
 def _clean_func(func):
     return re.sub('-', '_', func)
+
 
 class ArgparseArgumentHandler(ArgumentParser, CementArgumentHandler):
 
@@ -279,7 +282,7 @@ class expose(object):
     def __init__(self, hide=False, arguments=[], **parser_options):
         self.hide = hide
 
-        ### FIX ME: Not Implemented
+        # FIX ME: Not Implemented
         self.arguments = arguments
         self.parser_options = parser_options
 
@@ -297,7 +300,10 @@ class expose(object):
 
 # FIX ME: Should be refactored into separate BaseController and Controller
 # classes in Cement 3, but that would break the interface spec in 2.x
+
+
 class ArgparseController(handler.CementBaseHandler):
+
     """
     This is an implementation of the
     :class:`cement.core.controller.IController` interface, but as a base class 
@@ -398,36 +404,35 @@ class ArgparseController(handler.CementBaseHandler):
         #: Whether or not to hide the controller entirely.
         hide = False
 
-        #: The text that is displayed at the bottom when ``--help`` is passed. 
+        #: The text that is displayed at the bottom when ``--help`` is passed.
         epilog = None
 
         #: The text that is displayed at the top when ``--help`` is passed.
         #: Defaults to Argparse standard usage.
         usage = None
 
-        #: Additional keyword arguments passed when 
-        #: ``ArgumentParser.add_subparsers()`` is called to create this 
-        #: controller namespace.  WARNING: This could break things, use at 
-        #: your own risk.  Useful if you need additional features from 
+        #: Additional keyword arguments passed when
+        #: ``ArgumentParser.add_subparsers()`` is called to create this
+        #: controller namespace.  WARNING: This could break things, use at
+        #: your own risk.  Useful if you need additional features from
         #: Argparse that is not built into the controller Meta-data.
         subparser_options = {}
 
-        #: Additional keyword arguments passed when 
-        #: ``ArgumentParser.add_parser()`` is called to create this 
-        #: controller sub-parser.  WARNING: This could break things, use at 
-        #: your own risk.  Useful if you need additional features from 
+        #: Additional keyword arguments passed when
+        #: ``ArgumentParser.add_parser()`` is called to create this
+        #: controller sub-parser.  WARNING: This could break things, use at
+        #: your own risk.  Useful if you need additional features from
         #: Argparse that is not built into the controller Meta-data.
         parser_options = {}
 
         #: Function to call if no sub-command is passed.  Note that this can
-        #: **not** start with an ``_`` due to backward compatibility 
+        #: **not** start with an ``_`` due to backward compatibility
         #: restraints in how Cement discovers and maps commands.
         #:
-        #: Note: Currently, default function/sub-command only functions on 
-        #: Python > 3.4.  Previous versions of Python/Argparse will throw the 
+        #: Note: Currently, default function/sub-command only functions on
+        #: Python > 3.4.  Previous versions of Python/Argparse will throw the
         #: exception ``error: too few arguments``.
         default_func = 'default'
-        
 
     def __init__(self, *args, **kw):
         super(ArgparseController, self).__init__(*args, **kw)
@@ -495,25 +500,25 @@ class ArgparseController(handler.CementBaseHandler):
                     else:
                         resolved_child_controllers.insert(0, contr)
                     unresolved_controllers.remove(contr)
-                    LOG.debug('resolved controller %s %s on %s' % \
-                             (contr, contr._meta.stacked_type, 
-                              current_parent))
+                    LOG.debug('resolved controller %s %s on %s' %
+                              (contr, contr._meta.stacked_type,
+                               current_parent))
 
-                # if not, fall back on whether the stacked_on parent is 
+                # if not, fall back on whether the stacked_on parent is
                 # already resolved
                 elif contr._meta.stacked_on in resolved_controllers_map.keys():
                     resolved_controllers.append(contr)
                     resolved_controllers_map[contr._meta.label] = contr
                     unresolved_controllers.remove(contr)
-                    LOG.debug('resolved controller %s %s on %s' % \
-                             (contr, contr._meta.stacked_type, 
-                              contr._meta.stacked_on))
+                    LOG.debug('resolved controller %s %s on %s' %
+                              (contr, contr._meta.stacked_type,
+                               contr._meta.stacked_on))
 
             resolved_controllers.extend(resolved_child_controllers)
             for contr in resolved_child_controllers:
                 resolved_controllers_map[contr._meta.label] = contr
 
-            # then, for all those controllers... handler all controllers 
+            # then, for all those controllers... handler all controllers
             # nested on them
             resolved_child_controllers = []
             for child_contr in current_children:
@@ -525,9 +530,9 @@ class ArgparseController(handler.CementBaseHandler):
                             resolved_child_controllers.insert(0, contr)
 
                         unresolved_controllers.remove(contr)
-                        LOG.debug('resolved controller %s %s on %s' % \
-                                 (contr, contr._meta.stacked_type,
-                                  child_contr._meta.label))
+                        LOG.debug('resolved controller %s %s on %s' %
+                                  (contr, contr._meta.stacked_type,
+                                   child_contr._meta.label))
 
             resolved_controllers.extend(resolved_child_controllers)
             for contr in resolved_child_controllers:
@@ -538,7 +543,6 @@ class ArgparseController(handler.CementBaseHandler):
             if unresolved_controllers:
                 current_parent = unresolved_controllers[0]._meta.label
 
-        
         self._controllers = resolved_controllers
         self._controllers_map = resolved_controllers_map
 
@@ -591,9 +595,9 @@ class ArgparseController(handler.CementBaseHandler):
         # only hide commands from embedded controllers if the controller is
         # hidden
         elif contr._meta.stacked_type == 'embedded' \
-            and contr._meta.hide == True:
+                and contr._meta.hide == True:
             hide_it = True
-        
+
         if hide_it == True:
             if 'help' in kwargs:
                 del kwargs['help']
@@ -603,11 +607,10 @@ class ArgparseController(handler.CementBaseHandler):
     def _setup_parsers(self):
         # this should only be run by the base controller
         from cement.utils.misc import rando
-        
+
         _rando = rando()[:12]
         self._dispatch_option = '--dispatch-%s' % _rando
         self._controller_option = '--controller-namespace-%s' % _rando
-
 
         # parents are sub-parser namespaces (that we can add subparsers to)
         # where-as parsers are the actual root parser and sub-parsers to
@@ -624,17 +627,17 @@ class ArgparseController(handler.CementBaseHandler):
         sub = self.app.args.add_subparsers(**kwargs)
         parents['base'] = sub
         base_parser_options = self._get_parser_options(self)
-        for key,val in base_parser_options.items():
+        for key, val in base_parser_options.items():
             setattr(self.app.args, key, val)
 
         # handle base controller separately
         parsers['base'].add_argument(self._controller_option,
-            action='store',
-            default='base',
-            nargs='?',
-            help=SUPPRESS,
-            dest='__controller_namespace__',
-            )
+                                     action='store',
+                                     default='base',
+                                     nargs='?',
+                                     help=SUPPRESS,
+                                     dest='__controller_namespace__',
+                                     )
         self._parser = parsers['base']
 
         # and if only base controller registered... go ahead and return
@@ -655,9 +658,9 @@ class ArgparseController(handler.CementBaseHandler):
                 # new parser
                 kwargs = self._get_parser_options(contr)
                 parsers[label] = parents[stacked_on].add_parser(
-                                    _clean_label(label),
-                                    **kwargs
-                                    )
+                    _clean_label(label),
+                    **kwargs
+                )
 
                 contr._parser = parsers[label]
 
@@ -667,14 +670,14 @@ class ArgparseController(handler.CementBaseHandler):
                 parents[label] = parsers[label].add_subparsers(**kwargs)
 
                 #parsers[label].epilog = 'go fuck yourself'
-                # add an invisible controller option so we can figure out what 
+                # add an invisible controller option so we can figure out what
                 # to call later in self._dispatch
                 parsers[label].add_argument(self._controller_option,
-                    action='store',
-                    default=contr._meta.label,
-                    help=SUPPRESS,
-                    dest='__controller_namespace__',
-                    )
+                                            action='store',
+                                            default=contr._meta.label,
+                                            help=SUPPRESS,
+                                            dest='__controller_namespace__',
+                                            )
 
             elif stacked_type == 'embedded':
                 # if it's embedded, then just set it to use the same as the
@@ -707,8 +710,8 @@ class ArgparseController(handler.CementBaseHandler):
     def _process_arguments(self, controller):
         label = controller._meta.label
 
-        LOG.debug("processing arguments for '%s' " % label + \
-                           "controller namespace")
+        LOG.debug("processing arguments for '%s' " % label +
+                  "controller namespace")
 
         parser = self._get_parser_by_controller(controller)
         arguments = controller._collect_arguments()
@@ -718,8 +721,8 @@ class ArgparseController(handler.CementBaseHandler):
 
     def _process_commands(self, controller):
         label = controller._meta.label
-        LOG.debug("processing commands for '%s' " % label + \
-                           "controller namespace")
+        LOG.debug("processing commands for '%s' " % label +
+                  "controller namespace")
         parser = self._get_parser_by_controller(controller)
 
         commands = controller._collect_commands()
@@ -727,29 +730,29 @@ class ArgparseController(handler.CementBaseHandler):
             kwargs = self._get_command_parser_options(command)
 
             func_name = command['func_name']
-            LOG.debug("adding command '%s' " % command['label'] + \
-                      "(controller=%s, func=%s)" % \
+            LOG.debug("adding command '%s' " % command['label'] +
+                      "(controller=%s, func=%s)" %
                       (controller._meta.label, func_name))
 
             cmd_parent = self._get_parser_parent_by_controller(controller)
             command_parser = cmd_parent.add_parser(command['label'], **kwargs)
 
-            # add an invisible dispatch option so we can figure out what to 
+            # add an invisible dispatch option so we can figure out what to
             # call later in self._dispatch
             command_parser.add_argument(self._dispatch_option,
-                action='store',
-                default="%s.%s" % (command['controller']._meta.label, 
-                                   command['func_name']),
-                help=SUPPRESS,
-                dest='__dispatch__',
-                )
-        
+                                        action='store',
+                                        default="%s.%s" % (command['controller']._meta.label,
+                                                           command['func_name']),
+                                        help=SUPPRESS,
+                                        dest='__dispatch__',
+                                        )
+
             # add additional arguments to the sub-command namespace
-            LOG.debug("processing arguments for '%s' " % command['label'] + \
+            LOG.debug("processing arguments for '%s' " % command['label'] +
                       "command namespace")
             for arg, kw in command['arguments']:
-                LOG.debug('adding argument (args=%s, kwargs=%s)' % \
-                                  (arg, kw))
+                LOG.debug('adding argument (args=%s, kwargs=%s)' %
+                          (arg, kw))
                 command_parser.add_argument(*arg, **kw)
 
     def _collect(self):
@@ -759,15 +762,15 @@ class ArgparseController(handler.CementBaseHandler):
 
     def _collect_arguments(self):
         LOG.debug("collecting arguments from %s " % self +
-                  "(stacked_on='%s', stacked_type='%s')" % \
+                  "(stacked_on='%s', stacked_type='%s')" %
                   (self._meta.stacked_on, self._meta.stacked_type))
         return self._meta.arguments
 
     def _collect_commands(self):
         LOG.debug("collecting commands from %s " % self +
-                  "(stacked_on='%s', stacked_type='%s')" % \
+                  "(stacked_on='%s', stacked_type='%s')" %
                   (self._meta.stacked_on, self._meta.stacked_type))
-        
+
         commands = []
         for member in dir(self.__class__):
             if member.startswith('_'):
@@ -796,7 +799,7 @@ class ArgparseController(handler.CementBaseHandler):
                     p.add_argument('-f', '--foo', 
                                    help='my foo option', 
                                    dest='foo')
-                    
+
                 def _post_argument_parsing(self):
                     if self.app.pargs.foo:
                         print('Got Foo Option Before Controller Dispatch')
@@ -834,7 +837,7 @@ class ArgparseController(handler.CementBaseHandler):
                         (['-f', '--foo'], 
                          dict(help='my foo option', dest=foo)),
                     ]
-                    
+
                 def _post_argument_parsing(self):
                     if self.app.pargs.foo:
                         print('Got Foo Option Before Controller Dispatch')
@@ -854,7 +857,7 @@ class ArgparseController(handler.CementBaseHandler):
         for contr in self._controllers:
             self._process_arguments(contr)
             self._process_commands(contr)
-        
+
         for contr in self._controllers:
             contr._pre_argument_parsing()
 
@@ -863,16 +866,16 @@ class ArgparseController(handler.CementBaseHandler):
         for contr in self._controllers:
             contr._post_argument_parsing()
             contr._process_parsed_arguments()
-        
+
         if hasattr(self.app.pargs, '__dispatch__'):
             # if __dispatch__ is set that means that we have hit a sub-command
             # of a controller.
             contr_label = self.app.pargs.__dispatch__.split('.')[0]
             func_name = self.app.pargs.__dispatch__.split('.')[1]
         else:
-            # if no __dispatch__ is set then that means we have hit a 
-            # controller with not sub-command (argparse doesn't support 
-            # default sub-command yet... so we rely on 
+            # if no __dispatch__ is set then that means we have hit a
+            # controller with not sub-command (argparse doesn't support
+            # default sub-command yet... so we rely on
             # __controller_namespace__ and it's default func
 
             # We never get here on Python < 3 as Argparse would have already
@@ -881,8 +884,8 @@ class ArgparseController(handler.CementBaseHandler):
                               .__controller_namespace__     # pragma: nocover
             contr = self._controllers_map[contr_label]      # pragma: nocover
             func_name = _clean_func(                # pragma: nocover
-                            contr._meta.default_func        # pragma: nocover
-                            )                               # pragma: nocover    
+                contr._meta.default_func        # pragma: nocover
+            )                               # pragma: nocover
 
         if contr_label == 'base':
             contr = self
@@ -900,7 +903,7 @@ class ArgparseController(handler.CementBaseHandler):
             # complained about too few arguments
             raise FrameworkError(                           # pragma: nocover
                 "Controller function does not exist %s.%s()" % \
-                (contr.__class__.__name__, func_name))      # pragma: nocover   
+                (contr.__class__.__name__, func_name))      # pragma: nocover
 
 
 def load(app):

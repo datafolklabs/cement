@@ -971,7 +971,7 @@ class CementApp(meta.MetaMixin):
             pass
 
         self._parsed_args = self.args.parse(self.argv)
-        
+
         if self._meta.arguments_override_config is True:
             for member in dir(self._parsed_args):
                 if member and member.startswith('_'):

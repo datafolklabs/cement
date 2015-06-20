@@ -54,7 +54,7 @@ class ShellUtilsTestCase(test.CementCoreTestCase):
 
     def test_spawn_thread(self):
         t = shell.spawn_thread(time.sleep, args=(2,))
-        
+
         # before joining it is alive
         res = t.is_alive()
         self.eq(res, True)
