@@ -6,11 +6,38 @@ Upgrading
 This section outlines any information and changes that might need to be made
 in order to update your application built on previous versions of Cement.
 
+Upgrading from 2.6.x to 2.8.x
+-----------------------------
+
+Cement 2.8 introduced a few incompatible changes from the previous 2.6 stable
+release, as noted in the :ref:`ChangeLog <changelog>`.
+
+CementApp.Meta.exit_on_close Defaults to False
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In 2.6, the feature to call ``sys.exit()`` when ``app.close()`` is called was
+implemented, however defaulting it to ``True`` is not the ideal behavior.  
+The default is now ``False``, making it the developers option to explicitly 
+enable it.
+
+To revert the change, and default ``exit_on_close`` to ``True``, simply set it
+in ``CementApp.Meta.exit_on_close``:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            exit_on_close = True
+
+
 Upgrading from 2.4.x to 2.6.x
 -----------------------------
 
 Cement 2.6 introduced a few incompatible changes from the previous 2.4 stable
-release, as noted in the :ref:`Changelog <changelog>`.
+release, as noted in the :ref:`ChangeLog <changelog>`.
 
 InterfaceError: Invalid handler ... missing '_meta.label'.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -32,7 +59,7 @@ Upgrading from 2.2.x to 2.4.x
 -----------------------------
 
 Cement 2.4 introduced a few incompatible changes from the previous 2.2 stable
-release, as noted in the :ref:`Changelog <changelog>`.
+release, as noted in the :ref:`ChangeLog <changelog>`.
 
 Related:
 
