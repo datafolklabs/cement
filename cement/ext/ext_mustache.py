@@ -1,12 +1,20 @@
 """Mustache extension module."""
 
 import sys
-import pystache
+from pystache.renderer import Renderer
 from ..core import output, exc, handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
+
+class PartialsLoader(object):
+    def __init__(self, handler):
+        self.handler = handler
+
+    def get(self, template):
+        stache = Renderer()
+        return self.handler.load_template(template)
 
 class MustacheOutputHandler(output.TemplateOutputHandler):
 
@@ -69,11 +77,44 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
         template_dir = /path/to/my/templates
 
 
+    Loading Partials:
+
+    Mustache supports ``partials``, or in other words template ``includes``. 
+    These are also loaded by the output handler, but require a full file name.
+    The partials will be loaded in the same way as the base templates
+
+    For example:
+
+    **templates/base.mustache**
+
+    .. code-block:: console
+
+        Inside base.mustache
+        {{> partial.mustache}}
+
+    **template/partial.mustache**
+
+    .. code-block:: console
+
+        Inside partial.mustache
+
+
+    Would output:
+
+    .. code-block:: console
+
+        Inside base.mustache
+        Inside partial.mustache
+
     """
 
     class Meta:
         interface = output.IOutput
         label = 'mustache'
+
+    def __init__(self, *args, **kw):
+        super(MustacheOutputHandler, self).__init__(*args, **kw)
+        self._partials_loader = PartialsLoader(self)
 
     def render(self, data_dict, template):
         """
@@ -88,9 +129,11 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
         :returns: str (the rendered template text)
 
         """
+
         LOG.debug("rendering output using '%s' as a template." % template)
         content = self.load_template(template)
-        return pystache.render(content, data_dict)
+        stache = Renderer(partials=self._partials_loader)
+        return stache.render(content, data_dict)
 
 
 def load(app):
