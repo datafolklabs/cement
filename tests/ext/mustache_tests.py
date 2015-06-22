@@ -22,6 +22,13 @@ class MustacheExtTestCase(test.CementExtTestCase):
         mustache_res = "foo equals %s\n" % rando
         self.eq(res, mustache_res)
 
+    def test_mustache_partials(self):
+        self.app.setup()
+        rando = random.random()
+        res = self.app.render(dict(foo=rando), 'test_base_template.mustache')
+        mustache_res = "Inside partial > foo equals %s\n" % rando
+        self.eq(res, mustache_res)
+
     @test.raises(exc.FrameworkError)
     def test_mustache_bad_template(self):
         self.app.setup()
