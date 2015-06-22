@@ -10,7 +10,8 @@ from cement.utils.misc import rando
 if sys.version_info[0] < 3:
     import configobj
 else:
-    raise test.SkipTest('ConfigObj does not support Python 3') # pragma: no cover
+    raise test.SkipTest(
+        'ConfigObj does not support Python 3')  # pragma: no cover
 
 
 APP = rando()[:12]
@@ -20,18 +21,20 @@ CONFIG = """
 my_param = my_value
 """
 
+
 class ConfigObjExtTestCase(test.CementTestCase):
+
     def setUp(self):
         _, self.tmppath = mkstemp()
         f = open(self.tmppath, 'w+')
         f.write(CONFIG)
         f.close()
         self.app = self.make_app(APP,
-            extensions=['configobj'],
-            config_handler='configobj',
-            config_files = [self.tmppath],
-            argv=[]
-            )
+                                 extensions=['configobj'],
+                                 config_handler='configobj',
+                                 config_files=[self.tmppath],
+                                 argv=[]
+                                 )
 
     def tearDown(self):
         if os.path.exists(self.tmppath):
@@ -59,5 +62,3 @@ class ConfigObjExtTestCase(test.CementTestCase):
 
         self.eq(self.app.config.get_section_dict('my_section'),
                 {'my_param': 'my_value'})
-
-

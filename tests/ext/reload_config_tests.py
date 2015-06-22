@@ -32,10 +32,13 @@ PLUGIN_CONFIG1 = """
 enable_plugin = false
 """
 
+
 def bogus_hook_func(app):
     pass
 
+
 class ReloadConfigExtTestCase(test.CementExtTestCase):
+
     def setUp(self):
         super(ReloadConfigExtTestCase, self).setUp()
 
@@ -47,11 +50,11 @@ class ReloadConfigExtTestCase(test.CementExtTestCase):
         f.write(PLUGIN_CONFIG1)
         f.close()
 
-        self.app = self.make_app(APP, 
-            extensions = ['reload_config'],
-            config_files = [self.tmp_file],
-            plugin_config_dirs = [self.tmp_dir],
-            )
+        self.app = self.make_app(APP,
+                                 extensions=['reload_config'],
+                                 config_files=[self.tmp_file],
+                                 plugin_config_dirs=[self.tmp_dir],
+                                 )
 
     def test_reload_config(self):
         self.app.setup()
@@ -67,25 +70,25 @@ class ReloadConfigExtTestCase(test.CementExtTestCase):
         sleep(1)
 
         try:
-            self.eq(self.app.config.get(APP, 'foo'), 'bar2')   
+            self.eq(self.app.config.get(APP, 'foo'), 'bar2')
         finally:
-            self.app.close() 
+            self.app.close()
 
     def test_no_plugin_dir(self):
         # coverage.. remove the plugin config dir
         shutil.rmtree(self.tmp_dir)
         self.app.setup()
         self.app.run()
-        self.app.close() 
+        self.app.close()
 
     def test_signal_handling(self):
         self.app.setup()
         hook.register('pre_reload_config', bogus_hook_func)
         hook.register('post_reload_config', bogus_hook_func)
         self.app.run()
-        
+
         sleep(1)
         try:
             ext_reload_config.signal_handler(signal.SIGINT, None)
         finally:
-            self.app.close() 
+            self.app.close()

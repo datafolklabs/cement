@@ -1,8 +1,8 @@
 """Tests for cement.ext.ext_daemon."""
 
-### NOTE: A large portion of ext_daemon is tested, but not included in
-### Coverage report because nose/coverage lose sight of things after the
-### sub-process is forked.
+# NOTE: A large portion of ext_daemon is tested, but not included in
+# Coverage report because nose/coverage lose sight of things after the
+# sub-process is forked.
 
 import os
 import tempfile
@@ -17,6 +17,7 @@ APP = rando()[:12]
 
 
 class DaemonExtTestCase(test.CementExtTestCase):
+
     def setUp(self):
         self.app = self.make_app()
 
@@ -92,7 +93,7 @@ class DaemonExtTestCase(test.CementExtTestCase):
             app.config.set('daemon', 'pid_file', tmpfile)
 
             try:
-                ### FIX ME: Can't daemonize, because nose loses sight of it
+                # FIX ME: Can't daemonize, because nose loses sight of it
                 app.daemonize()
                 app.run()
             finally:

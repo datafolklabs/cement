@@ -2,7 +2,9 @@
 
 from cement.utils import version, test
 
+
 class VersionUtilsTestCase(test.CementCoreTestCase):
+
     def test_get_version(self):
         ver = version.get_version()
         self.ok(ver.startswith('2.6'))
@@ -18,4 +20,3 @@ class VersionUtilsTestCase(test.CementCoreTestCase):
 
         ver = version.get_version((2, 2, 0, 'final', 0))
         self.eq(ver, '2.2.0')
-        

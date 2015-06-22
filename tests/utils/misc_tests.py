@@ -4,7 +4,9 @@ from cement.utils import test, misc
 
 APP = misc.rando()[:12]
 
+
 class BackendTestCase(test.CementCoreTestCase):
+
     def test_defaults(self):
         defaults = misc.init_defaults('APPp', 'section2', 'section3')
         defaults['APPp']['debug'] = True

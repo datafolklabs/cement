@@ -9,14 +9,16 @@ APP = "app-%s" % rando()[:12]
 class DummyOutputHandlerTestCase(test.CementTestCase):
     pass
 
+
 class DummyMailHandlerTestCase(test.CementTestCase):
+
     def test_dummy_mail(self):
         self.app.setup()
         self.app.run()
         res = self.app.mail.send("Test",
-            to=['me@localhost'],
-            from_addr='me@localhost',
-            )
+                                 to=['me@localhost'],
+                                 from_addr='me@localhost',
+                                 )
         self.ok(res)
 
     def test_dummy_mail_with_subject_prefix(self):
@@ -26,7 +28,7 @@ class DummyMailHandlerTestCase(test.CementTestCase):
         app.setup()
         app.run()
         res = app.mail.send("Test",
-            to=['me@localhost'],
-            from_addr='me@localhost',
-            )
+                            to=['me@localhost'],
+                            from_addr='me@localhost',
+                            )
         self.ok(res)

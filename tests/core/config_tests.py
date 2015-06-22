@@ -10,11 +10,15 @@ CONFIG = """
 my_param = my_value
 """
 
+
 class BogusConfigHandler(config.CementConfigHandler):
+
     class Meta:
         label = 'bogus'
 
+
 class ConfigTestCase(test.CementCoreTestCase):
+
     @test.raises(exc.InterfaceError)
     def test_invalid_config_handler(self):
         handler.register(BogusConfigHandler)
@@ -42,7 +46,7 @@ class ConfigTestCase(test.CementCoreTestCase):
             config_defaults=defaults,
             argv=['--foo=not_bar'],
             arguments_override_config=False
-            )
+        )
         self.app.setup()
         self.app.args.add_argument('--foo', action='store')
         self.app.run()
@@ -54,7 +58,7 @@ class ConfigTestCase(test.CementCoreTestCase):
             argv=['--foo=not_bar'],
             arguments_override_config=True,
             meta_override=['foo'],
-            )
+        )
         self.app.setup()
         self.app.args.add_argument('--foo', action='store')
         self.app.run()
@@ -65,7 +69,7 @@ class ConfigTestCase(test.CementCoreTestCase):
             config_defaults=defaults,
             argv=['--debug'],
             arguments_override_config=True
-            )
+        )
         self.app.setup()
         self.app.args.add_argument('--foo', action='store')
         self.app.run()

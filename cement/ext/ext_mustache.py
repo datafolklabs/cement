@@ -81,7 +81,7 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
 
     Loading Partials:
 
-    Mustache supports ``partials``, or in other words template ``includes``. 
+    Mustache supports ``partials``, or in other words template ``includes``.
     These are also loaded by the output handler, but require a full file name.
     The partials will be loaded in the same way as the base templates
 

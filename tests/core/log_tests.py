@@ -5,12 +5,16 @@ from cement.core import exc, backend, handler, log
 from cement.utils import test
 from cement.utils.misc import init_defaults
 
+
 class BogusHandler1(log.CementLogHandler):
+
     class Meta:
         interface = log.ILog
         label = 'bogus'
 
+
 class LogTestCase(test.CementCoreTestCase):
+
     def setUp(self):
         self.app = self.make_app()
 
@@ -26,7 +30,7 @@ class LogTestCase(test.CementCoreTestCase):
         defaults['log.logging'] = dict(
             file='/dev/null',
             to_console=True
-            )
+        )
         app = self.make_app(config_defaults=defaults)
         app.setup()
         app.log.info('Info Message')
