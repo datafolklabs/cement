@@ -9,12 +9,14 @@ LOG = minimal_logger(__name__)
 
 
 class PartialsLoader(object):
+
     def __init__(self, handler):
         self.handler = handler
 
     def get(self, template):
         stache = Renderer()
         return self.handler.load_template(template)
+
 
 class MustacheOutputHandler(output.TemplateOutputHandler):
 

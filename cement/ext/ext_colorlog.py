@@ -6,17 +6,17 @@ import logging
 from colorlog import ColoredFormatter
 from ..core import handler
 from ..ext.ext_logging import LoggingLogHandler
+from ..utils.misc import is_true
 
 
 class ColorLogHandler(LoggingLogHandler):
 
     """
-    This class implements the :ref:`ILog <cement.core.log>`
-    interface.  It is a sub-class of LoggingLogHandler based on the standard
-    logging library, and adds colorized console output using the
-    `ColorLog <https://pypi.python.org/pypi/colorlog>`_ library.  Please
-    see the developer documentation on
-    :ref:`Log Handling <dev_log_handling>`.
+    This class implements the :class:`cement.core.log.ILog`
+    interface.  It is a sub-class of 
+    :class:`cement.ext.ext_logging.LoggingLogHandler` which is based on the 
+    standard :py:class:`logging` library, and adds colorized console output using the
+    `ColorLog <https://pypi.python.org/pypi/colorlog>`_ library.
 
     **Note** This extension has an external dependency on ``colorlog``.  You
     must include ``colorlog`` in your applications dependencies as Cement
@@ -44,8 +44,29 @@ class ColorLogHandler(LoggingLogHandler):
             app.log.critical('This is my critical message')
 
 
-    The colors can be customized by overriding the
-    ``ColorLogHandler.Meta.colors`` meta-data:
+    The colors can be customized by passing in a ``colors`` dictionary mapping
+    overriding the ``ColorLogHandler.Meta.colors`` meta-data:
+
+    .. code-block:: python
+
+        from cement.core.foundation import CementApp
+        from cement.ext.ext_colorlog import ColorLogHandler
+
+        COLORS = {
+            'DEBUG':    'cyan',
+            'INFO':     'green',
+            'WARNING':  'yellow',
+            'ERROR':    'red',
+            'CRITICAL': 'red,bg_white',
+        }
+
+        class MyApp(CementApp):
+            class Meta:
+                label = 'myapp'
+                log_handler = ColorLogHandler(colors=COLORS)
+
+
+    Or by sub-classing and creating your own custom class:
 
     .. code-block:: python
 
@@ -56,12 +77,12 @@ class ColorLogHandler(LoggingLogHandler):
             class Meta:
                 label = 'my_custom_log'
                 colors = {
-                    'DEBUG':    'white',
+                    'DEBUG':    'cyan',
                     'INFO':     'green',
                     'WARNING':  'yellow',
                     'ERROR':    'red',
-                    'CRITICAL': 'red',
-                    }
+                    'CRITICAL': 'red,bg_white',
+                }
 
         class MyApp(CementApp):
             class Meta:
@@ -82,6 +103,11 @@ class ColorLogHandler(LoggingLogHandler):
         * max_bytes
         * max_files
 
+    In addition, it also supports:
+
+        * colorize_file_log
+        * colorize_console_log
+
 
     A sample config section (in any config file) might look like:
 
@@ -94,6 +120,8 @@ class ColorLogHandler(LoggingLogHandler):
         rotate = true
         max_bytes = 512000
         max_files = 4
+        colorize_file_log = false
+        colorize_console_log = true
 
     """
     class Meta:
@@ -105,15 +133,26 @@ class ColorLogHandler(LoggingLogHandler):
 
         #: Color mapping for each log level
         colors = {
-            'DEBUG':    'white',
+            'DEBUG':    'cyan',
             'INFO':     'green',
             'WARNING':  'yellow',
             'ERROR':    'red',
-            'CRITICAL': 'red',
+            'CRITICAL': 'red,bg_white',
         }
 
-        #: Whether or not to colorize log files
-        colorize_log_files = False
+        #: Default configuration settings.  Will be overridden by the same
+        #: settings in any application configuration file under a
+        #: ``[log.colorlog]`` block.
+        config_defaults = dict(
+            file=None,
+            level='INFO',
+            to_console=True,
+            rotate=False,
+            max_bytes=512000,
+            max_files=4,
+            colorize_file_log=False,
+            colorize_console_log=True,
+        )
 
         #: Formatter class to use for non-colorized logging (non-tty, file,
         #: etc)
@@ -124,30 +163,48 @@ class ColorLogHandler(LoggingLogHandler):
 
     def _get_console_format(self):
         format = super(ColorLogHandler, self)._get_console_format()
+        colorize = self.app.config.get('log.colorlog', 'colorize_console_log')
         if sys.stdout.isatty() or 'CEMENT_TEST' in os.environ:
-            format = "%(log_color)s" + format
+            if is_true(colorize):
+                format = "%(log_color)s" + format
         return format
 
     def _get_file_format(self):
         format = super(ColorLogHandler, self)._get_file_format()
-        if self._meta.colorize_log_files is True:
+        colorize = self.app.config.get('log.colorlog', 'colorize_file_log')
+        if is_true(colorize):
             format = "%(log_color)s" + format
         return format
 
     def _get_console_formatter(self, format):
+        colorize = self.app.config.get('log.colorlog', 'colorize_console_log')
         if sys.stdout.isatty() or 'CEMENT_TEST' in os.environ:
-            return self._meta.formatter_class(format,
-                                              log_colors=self._meta.colors)
+            if is_true(colorize):
+                formatter = self._meta.formatter_class(
+                    format,
+                    log_colors=self._meta.colors
+                )
+            else:
+                formatter = self._meta.formatter_class_without_color(
+                    format
+                )
         else:
             klass = self._meta.formatter_class_without_color  # pragma: nocover
-            return klass(format)                             # pragma: nocover
+            formatter = klass(format)                        # pragma: nocover
+
+        return formatter
 
     def _get_file_formatter(self, format):
-        if self._meta.colorize_log_files is True:
-            return self._meta.formatter_class(format,
-                                              log_colors=self._meta.colors)
+        colorize = self.app.config.get('log.colorlog', 'colorize_file_log')
+        if is_true(colorize):
+            formatter = self._meta.formatter_class(
+                format,
+                log_colors=self._meta.colors
+            )
         else:
-            return self._meta.formatter_class_without_color(format)
+            formatter = self._meta.formatter_class_without_color(format)
+
+        return formatter
 
 
 def load(app):
