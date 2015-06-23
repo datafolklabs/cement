@@ -7,6 +7,7 @@ autopep8
 mock
 
 # Required for optional extensions (only the ones supported on py3)
+argcomplete
 pystache
 pyYaml
 colorlog
