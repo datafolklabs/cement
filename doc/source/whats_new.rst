@@ -9,16 +9,41 @@ New Features in Cement 2.7
 ArgparseController
 ^^^^^^^^^^^^^^^^^^
 
-Work has finally begun, and is mostly completed on the complete refactoring of
-``CementBaseController``.  The new ``ArgparseController`` and ``expose``
-decorator from the ``argparse`` extension have the following added benefits
-over ``CementBaseController``:
+Work has finally begun, and is mostly complete on the refactoring of
+``CementBaseController``.  The new 
+:class:`cement.ext.ext_argparse.ArgparseController` introduces the following
+improvements:
 
-    * FIX ME
+    * Cleaner, and more direct use of ``Argparse``
+    * Does not hijack ``Argparse`` usage in any way.
+    * Provides an accessible ``sub-parser`` for every nested controller, 
+      allowing the developer direct access to perform more advanced actions
+      (argument grouping, mutually exclusive groups, etc).
+    * Provides the ability to define arguments at both the controller level,
+      as well as the sub-command level 
+      (i.e. ``myapp controller sub-command {options}``).
+    * Supports argument handling throughout the entire CLI chain
+      (i.e. ``myapp {options} controller {options} sub-command {options}``)
+
+
+The ``ArgparseController`` will become the default in Cement 3, however
+``CementBaseController`` will remain the default in Cement 2.x.  Developers
+are encouraged to begin porting to ``ArgparseController`` as soon possible,
+as ``CementBaseController`` will be removed in Cement 3 completely.
 
 Related:
 
     * :issue:`205`
+
+
+Extensions
+^^^^^^^^^^
+
+    * :ref:`Argcomplete <cement.ext.ext_argcomplete>` - Provides the 
+      ability to magically perform BASH autocompletion by simply loading the
+      ``argcomplete`` extension.  (Requires ``ArgparseArgumentHandler`` and
+      ``ArgparseController`` to function).
+
 
 New Features in Cement 2.6
 --------------------------

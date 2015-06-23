@@ -38,7 +38,8 @@ Features:
 
     * :issue:`205` - Added new ``ArgparseController`` and ``expose`` decorator
       in ``ext_argparse`` to eventually replace ``CementBaseController``.
-      
+    * :issue:`299` - Added Argcomplete Framework Extension
+
 Refactoring:
 
     * :issue:`319` - Use ``os.devnull`` instead of internal ``NullOut`` hack.
