@@ -93,7 +93,16 @@ from cement.core import hook
 
 
 def argparse_autocompletion(app):
-    argcomplete.autocomplete(app.args)
+    # Argcomplete doesn't support hidden options currently, so lets atleast
+    # exclude our special options in ArgparseController
+    exclude = []
+    if hasattr(app, 'controller') and app.controller is not None:
+        if hasattr(app.controller, '_dispatch_option'):
+            exclude.append(app.controller._dispatch_option)
+        if hasattr(app.controller, '_controller_option'):
+            exclude.append(app.controller._controller_option)
+
+    argcomplete.autocomplete(app.args, exclude=exclude)
 
 
 def load(app):

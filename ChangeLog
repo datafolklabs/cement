@@ -30,7 +30,7 @@ Bugs:
 
     * :issue:`314` - Resolved inconsistent behavor in ``colorlog`` extension.
     * :issue:`316` - Running Nose tests with ``-s`` option causes traceback
-    * :issue:`317` - CementApp.run() should return results from
+    * :issue:`317` - Calling ``CementApp.run()`` should return results from
       ``Controller._dispatch()``
     * :issue:`320` - Partials not rendering with Mustache templates
 
@@ -47,7 +47,7 @@ Refactoring:
 Incompatible:
 
     * :issue:`313` - Default ``Cement.Meta.exit_on_close`` to ``False``.
-      Calls to ``sys.exit()`` should be explicity, and not implied.
+      Calls to ``sys.exit()`` should be explicit by the app developer, and not implied by the framework.
 
 
 2.6.0 - Thu May 14, 2015
