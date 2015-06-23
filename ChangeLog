@@ -47,8 +47,7 @@ Refactoring:
 Incompatible:
 
     * :issue:`313` - Default ``Cement.Meta.exit_on_close`` to ``False``.
-      Developers now must explicitly tell ``CementApp`` to call ``sys.exit()``
-      when ``app.close()`` is called.
+      Calls to ``sys.exit()`` should be explicity, and not implied.
 
 
 2.6.0 - Thu May 14, 2015
