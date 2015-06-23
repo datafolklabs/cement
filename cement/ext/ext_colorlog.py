@@ -12,10 +12,10 @@ from ..utils.misc import is_true
 class ColorLogHandler(LoggingLogHandler):
 
     """
-    This class implements the :class:`cement.core.log.ILog`
-    interface.  It is a sub-class of 
-    :class:`cement.ext.ext_logging.LoggingLogHandler` which is based on the 
-    standard :py:class:`logging` library, and adds colorized console output using the
+    This class implements the :class:`cement.core.log.ILog` interface.  It is
+    a sub-class of :class:`cement.ext.ext_logging.LoggingLogHandler` which is
+    based on the standard :py:class:`logging` library, and adds colorized
+    console output using the
     `ColorLog <https://pypi.python.org/pypi/colorlog>`_ library.
 
     **Note** This extension has an external dependency on ``colorlog``.  You

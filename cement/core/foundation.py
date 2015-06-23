@@ -779,13 +779,13 @@ class CementApp(meta.MetaMixin):
 
     def close(self, code=None):
         """
-        Close the application.  This runs the ``pre_close`` and ``post_close`` 
-        hooks allowing plugins/extensions/etc to cleanup at the end of 
+        Close the application.  This runs the ``pre_close`` and ``post_close``
+        hooks allowing plugins/extensions/etc to cleanup at the end of
         program execution.
 
-        :param code: An exit code to exit with (``int``), if ``None`` is 
-         passed then exit with whatever ``self.exit_code`` is currently set 
-         to.  Note: ``sys.exit()`` will only be called if 
+        :param code: An exit code to exit with (``int``), if ``None`` is
+         passed then exit with whatever ``self.exit_code`` is currently set
+         to.  Note: ``sys.exit()`` will only be called if
         ``CementApp.Meta.exit_on_close==True``.
 
         """

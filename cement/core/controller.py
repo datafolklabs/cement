@@ -20,17 +20,11 @@ def controller_validator(klass, obj):
     ]
     meta = [
         'label',
-        #'aliases',
         'interface',
-        #'description',
         'config_section',
         'config_defaults',
-        #'arguments',
-        #'usage',
-        #'epilog',
         'stacked_on',
         'stacked_type',
-        #'hide',
     ]
     interface.validate(IController, obj, members, meta=meta)
 
