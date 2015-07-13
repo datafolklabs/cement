@@ -231,7 +231,7 @@ handle command dispatch and rapid development.
         class Meta:
             label = 'myapp'
             base_controller = 'base'
-            handlers = [MyBaseController, MySecondController)
+            handlers = [MyBaseController, MySecondController]
 
 
 
