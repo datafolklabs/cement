@@ -46,13 +46,25 @@ class BackendTestCase(test.CementCoreTestCase):
         parts = new_text.split('\n')
         self.eq(parts[2], '***ccccc')
 
+    def test_wrap_unicode(self):
+        text = u"aaaaa bbbbb ccccc"
+        new_text = misc.wrap(text, width=5)
+        parts = new_text.split('\n')
+        self.eq(len(parts), 3)
+        self.eq(parts[1], u'bbbbb')
+
+        new_text = misc.wrap(text, width=5, indent='***')
+        parts = new_text.split('\n')
+        self.eq(parts[2], u'***ccccc')
+
     @test.raises(TypeError)
     def test_wrap_int(self):
         text = int('1' * 80)
         try:
             new_text = misc.wrap(text, width=5)
         except TypeError as e:
-            self.eq(e.args[0], "`text` must be a string.")
+            self.eq(e.args[0], 
+                    "Argument `text` must be one of [str, unicode].")
             raise
 
     @test.raises(TypeError)
@@ -61,5 +73,6 @@ class BackendTestCase(test.CementCoreTestCase):
         try:
             new_text = misc.wrap(text, width=5)
         except TypeError as e:
-            self.eq(e.args[0], "`text` must be a string.")
+            self.eq(e.args[0], 
+                    "Argument `text` must be one of [str, unicode].")
             raise
