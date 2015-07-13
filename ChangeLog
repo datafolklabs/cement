@@ -33,6 +33,7 @@ Bugs:
     * :issue:`317` - Calling ``CementApp.run()`` should return results from
       ``Controller._dispatch()``
     * :issue:`320` - Partials not rendering with Mustache templates
+    * :issue:`325` - Wrap Utility Doesn't Support Unicode 
 
 Features:
 

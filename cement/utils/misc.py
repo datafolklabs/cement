@@ -195,8 +195,8 @@ def wrap(text, width=77, indent='', long_words=False, hyphens=False):
     :returns: str(text)
 
     """
-    if type(text) != str:
-        raise TypeError("`text` must be a string.")
+    if type(text) not in [str, unicode]:
+        raise TypeError("Argument `text` must be one of [str, unicode].")
 
     wrapper = TextWrapper(subsequent_indent=indent, width=width,
                           break_long_words=long_words,
