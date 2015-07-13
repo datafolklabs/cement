@@ -195,7 +195,13 @@ def wrap(text, width=77, indent='', long_words=False, hyphens=False):
     :returns: str(text)
 
     """
-    if type(text) not in [str, unicode]:
+
+    if sys.version_info[0] < 3:     # pragma: no cover
+        types = [str, unicode]      # pragma: no cover
+    else:                           # pragma: no cover
+        types = [str]               # pragma: no cover
+
+    if type(text) not in types:
         raise TypeError("Argument `text` must be one of [str, unicode].")
 
     wrapper = TextWrapper(subsequent_indent=indent, width=width,
