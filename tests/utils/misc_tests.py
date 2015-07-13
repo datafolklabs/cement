@@ -1,5 +1,6 @@
 """Tests for cement.utils.misc."""
 
+import sys
 from cement.utils import test, misc
 
 APP = misc.rando()[:12]
@@ -47,15 +48,19 @@ class BackendTestCase(test.CementCoreTestCase):
         self.eq(parts[2], '***ccccc')
 
     def test_wrap_unicode(self):
-        text = u"aaaaa bbbbb ccccc"
+        # str is unicode in py3
+        if sys.version_info[0] >= 3:
+            raise test.SkipTest
+
+        text = unicode('aaaaa bbbbb ccccc')
         new_text = misc.wrap(text, width=5)
         parts = new_text.split('\n')
         self.eq(len(parts), 3)
-        self.eq(parts[1], u'bbbbb')
+        self.eq(parts[1], unicode('bbbbb'))
 
         new_text = misc.wrap(text, width=5, indent='***')
         parts = new_text.split('\n')
-        self.eq(parts[2], u'***ccccc')
+        self.eq(parts[2], unicode('***ccccc'))
 
     @test.raises(TypeError)
     def test_wrap_int(self):
