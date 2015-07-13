@@ -1,4 +1,5 @@
 language: python
+sudo: false
 script: ./scripts/travis.sh
 python:
   - 2.6
