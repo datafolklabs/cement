@@ -28,6 +28,9 @@ class YamlConfigObjConfigHandler(ConfigObjConfigHandler):
     """
 
     class Meta:
+
+        """Handler meta-data."""
+        
         label = 'yaml_configobj'
 
     def __init__(self, *args, **kw):

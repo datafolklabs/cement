@@ -60,8 +60,10 @@ class LoggingLogHandler(log.CementLogHandler):
 
     """
 
-    #: Handler meta-data.
     class Meta:
+
+        """Handler meta-data."""
+
         #: The interface that this class implements.
         interface = log.ILog
 

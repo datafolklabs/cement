@@ -141,6 +141,9 @@ class DummyMailHandler(mail.CementMailHandler):
     """
 
     class Meta:
+
+        """Handler meta-data."""
+        
         #: Unique identifier for this handler
         label = 'dummy'
 

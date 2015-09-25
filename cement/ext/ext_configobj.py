@@ -23,6 +23,9 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
 
     """
     class Meta:
+
+        """Handler meta-data."""
+        
         interface = config.IConfig
         label = 'configobj'
 

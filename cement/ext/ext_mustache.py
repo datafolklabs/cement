@@ -111,6 +111,9 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
     """
 
     class Meta:
+
+        """Handler meta-data."""
+        
         interface = output.IOutput
         label = 'mustache'
 

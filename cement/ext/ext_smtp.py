@@ -116,6 +116,9 @@ class SMTPMailHandler(mail.CementMailHandler):
     """
 
     class Meta:
+
+        """Handler meta-data."""
+        
         #: Unique identifier for this handler
         label = 'smtp'
 
