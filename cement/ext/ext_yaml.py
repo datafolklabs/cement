@@ -74,7 +74,11 @@ class YamlOutputHandler(output.CementOutputHandler):
     order to unsuppress output and see what's happening.
 
     """
+
     class Meta:
+
+        """Handler meta-data."""
+        
         interface = output.IOutput
         label = 'yaml'
         overridable = True

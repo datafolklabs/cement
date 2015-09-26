@@ -72,6 +72,9 @@ class GenshiOutputHandler(output.TemplateOutputHandler):
     """
 
     class Meta:
+
+        """Handler meta-data."""
+        
         interface = output.IOutput
         label = 'genshi'
 

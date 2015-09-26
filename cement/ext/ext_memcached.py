@@ -104,7 +104,11 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
             app.cache.purge()
 
     """
+    
     class Meta:
+
+        """Handler meta-data."""
+
         interface = cache.ICache
         label = 'memcached'
         config_defaults = dict(
