@@ -1,6 +1,7 @@
 #!/bin/bash
 
 rm -f .coverage
+sed -i 's/with-coverage=1/with-coverage=0/g' setup.cfg
 
 PYCHECK=$(python -c 'import sys; print(sys.version_info < (2, 7))')
 if [ "$PYCHECK" == "True" ]; then
