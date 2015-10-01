@@ -17,7 +17,7 @@ seen several iterations in design, and has continued to grow and improve
 since it's inception.  Cement is the most stable, and complete framework for
 command line and backend application development.
 
-[![Continuous Integration Status](https://travis-ci.org/datafolklabs/cement.png)](https://travis-ci.org/datafolklabs/cement)
+[![Continuous Integration Status](https://travis-ci.org/datafolklabs/cement.svg)](https://travis-ci.org/datafolklabs/cement) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/datafolklabs/cement?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Cement core features include (but are not limited to):
 
