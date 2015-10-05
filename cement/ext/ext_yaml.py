@@ -81,6 +81,9 @@ class YamlOutputHandler(output.CementOutputHandler):
         
         interface = output.IOutput
         label = 'yaml'
+        
+        #: Whether or not to include ``yaml`` as an available to choice
+        #: to override the ``output_handler`` via command line options.
         overridable = True
 
     def __init__(self, *args, **kw):
@@ -90,14 +93,13 @@ class YamlOutputHandler(output.CementOutputHandler):
     def _setup(self, app_obj):
         self.app = app_obj
 
-    def render(self, data_dict, template=None):
+    def render(self, data_dict, **kw):
         """
         Take a data dictionary and render it as Yaml output.  Note that the
         template option is received here per the interface, however this
         handler just ignores it.
 
         :param data_dict: The data dictionary to render.
-        :param template: This option is completely ignored.
         :returns: A Yaml encoded string.
         :rtype: str
 

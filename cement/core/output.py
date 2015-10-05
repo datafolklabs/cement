@@ -66,9 +66,11 @@ class IOutput(interface.Interface):
 
         """
 
-    def render(data_dict):
+    def render(data_dict, *args, **kwargs):
         """
-        Render the data_dict into output in some fashion.
+        Render the data_dict into output in some fashion.  This function must
+        access both ``*args`` and ``**kwargs`` to allow an application to mix
+        output handlers that support different features.
 
         :param data_dict: The dictionary whose data we need to render into
             output.

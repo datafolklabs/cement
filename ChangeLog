@@ -42,6 +42,7 @@ Features:
     * :issue:`205` - Added new ``ArgparseController`` and ``expose`` decorator
       in ``ext_argparse`` to eventually replace ``CementBaseController``.
     * :issue:`299` - Added Argcomplete Framework Extension
+    * :issue:`322` - Added Tabulate Framework Extension (tabulatized output)
 
 Refactoring:
 
@@ -51,7 +52,8 @@ Incompatible:
 
     * :issue:`313` - Default ``Cement.Meta.exit_on_close`` to ``False``.
       Calls to ``sys.exit()`` should be explicit by the app developer, and not implied by the framework.
-
+    * :issue:`332` - Output Handler Interface Must Support Keyword Arguments 
+    
 
 2.6.0 - Thu May 14, 2015
 ------------------------------------------------------------------------------

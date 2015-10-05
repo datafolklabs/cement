@@ -43,6 +43,8 @@ Extensions
       ability to magically perform BASH autocompletion by simply loading the
       ``argcomplete`` extension.  (Requires ``ArgparseArgumentHandler`` and
       ``ArgparseController`` to function).
+    * :ref:`Tabulate <cement.ext.ext_tabulate>` - Provides tabulatized output
+      familiar to users of MySQL, PGSQL, Etc.
 
 
 New Features in Cement 2.6
