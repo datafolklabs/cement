@@ -754,19 +754,21 @@ class CementApp(meta.MetaMixin):
         function was called.
 
         """
+        return_val = None
+
         for res in hook.run('pre_run', self):
             pass
 
         # If controller exists, then dispatch it
         if self.controller:
-            return self.controller._dispatch()
+            return_val = self.controller._dispatch()
         else:
             self._parse_args()
 
         for res in hook.run('post_run', self):
             pass
 
-        return None
+        return return_val
 
     def __enter__(self):
         self.setup()

@@ -34,6 +34,7 @@ Bugs:
       ``Controller._dispatch()``
     * :issue:`320` - Partials not rendering with Mustache templates
     * :issue:`325` - Wrap Utility Doesn't Support Unicode 
+    * :issue:`328` - Post Run Hook Not Executing
     * :issue:`331` - KeyError: 'USER' When Running Nose Tests
 
 Features:
