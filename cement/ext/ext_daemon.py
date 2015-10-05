@@ -24,7 +24,7 @@ The daemon extension is configurable with the following settings under the
 [daemon] section.
 
     * **user** - The user name to run the process as.
-      Default: os.environ['USER']
+      Default: os.getlogin()
     * **group** - The group name to run the process as.
       Default: The primary group of the 'user'.
     * **dir** - The directory to run the process in.
@@ -199,11 +199,11 @@ class Environment(object):
             written to.  Default: None
 
         user
-            The user name to run the process as.  Default: os.environ['USER']
+            The user name to run the process as.  Default: os.getlogin()
 
         group
             The group name to run the process as.  Default: The primary group
-            of os.environ['USER'].
+            of os.getlogin().
 
         umask
             The umask to pass to os.umask().  Default: 0
@@ -217,7 +217,7 @@ class Environment(object):
         self.dir = kw.get('dir', os.curdir)
         self.pid_file = kw.get('pid_file', None)
         self.umask = kw.get('umask', 0)
-        self.user = kw.get('user', os.environ['USER'])
+        self.user = kw.get('user', os.getlogin())
 
         # clean up
         self.dir = os.path.abspath(os.path.expanduser(self.dir))
@@ -347,7 +347,7 @@ def daemonize():  # pragma: no cover
     """
     This function switches the running user/group to that configured in
     config['daemon']['user'] and config['daemon']['group'].  The default user
-    is os.environ['USER'] and the default group is that user's primary group.
+    is os.getlogin() and the default group is that user's primary group.
     A pid_file and directory to run in is also passed to the environment.
 
     It is important to note that with the daemon extension enabled, the
@@ -390,7 +390,7 @@ def extend_app(app):
                           action='store_true', help='daemonize the process')
 
     # Add default config
-    user = pwd.getpwnam(os.environ['USER'])
+    user = pwd.getpwnam(os.getlogin())
     group = grp.getgrgid(user.pw_gid)
 
     defaults = dict()
