@@ -1,6 +1,8 @@
 Cement Framework
 ================
 
+[![Join the chat at https://gitter.im/datafolklabs/cement](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/datafolklabs/cement?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 **NOTE: 2.7.x is the development version of Cement.  Please use 2.6.x in
 production until version 2.8.x is released.**
 
