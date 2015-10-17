@@ -15,3 +15,4 @@ with Cement.
    bash_auto_completion
    arbitrary_extra_arguments
    reload_config
+   tabularized_output

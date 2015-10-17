@@ -11,3 +11,4 @@ argcomplete
 pystache
 pyYaml
 colorlog
+tabulate

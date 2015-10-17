@@ -12,13 +12,47 @@ Upgrading from 2.6.x to 2.8.x
 Cement 2.8 introduced a few incompatible changes from the previous 2.6 stable
 release, as noted in the :ref:`ChangeLog <changelog>`.
 
+TypeError: render() got an unexpected keyword argument
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In Cement 2.6, output handlers were not required to access ``**kwargs``, 
+however due to a design flaw this is now required to allow applications to 
+mix different types of output handlers that support different features.  
+
+After upgrading to Cement 2.8, you might receive something similar to the 
+following exception:
+
+.. code-block:: console
+
+    TypeError: render() got an unexpected keyword argument
+
+
+This would most likely be the case becase you have created your own custom
+output handler, or are using a third-party output handler.  The fix is to 
+simply add ``**kwargs`` to the end of the `render()` method.
+
+For example:
+
+.. code-block:: python
+
+    def render(self, data):
+        pass
+
+Would need to be:
+
+.. code-block:: python
+
+    def render(self, data, **kwargs):
+        pass
+
+
 CementApp.Meta.exit_on_close Defaults to False
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In 2.6, the feature to call ``sys.exit()`` when ``app.close()`` is called was
-implemented, however defaulting it to ``True`` is not the ideal behavior.  
-The default is now ``False``, making it the developers option to explicitly 
-enable it.
+In Cement 2.6, the feature to call ``sys.exit()`` when ``app.close()`` is 
+called was implemented, however defaulting it to ``True`` is not the ideal 
+behavior.  The default is now ``False``, making it the developers option to 
+explicitly enable it.
 
 To revert the change, and default ``exit_on_close`` to ``True``, simply set it
 in ``CementApp.Meta.exit_on_close``:

@@ -59,12 +59,12 @@ that have external dependencies, as Cement explicitly does not include them.*
 Getting More Information
 ------------------------
 
- * DOCS: http://builtoncement.com/2.5/
+ * DOCS: http://builtoncement.com/2.7/
  * CODE: http://github.com/datafolklabs/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
  * SITE: http://builtoncement.com/
  * T-CI: http://travis-ci.org/datafolklabs/cement
- * HELP: cement@librelist.org - #cement
+ * HELP: cement@librelist.org - #cement - gitter.im/datafolklabs/cement
 
 
 Mailing List

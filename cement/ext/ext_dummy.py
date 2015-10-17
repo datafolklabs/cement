@@ -24,9 +24,12 @@ class DummyOutputHandler(output.CementOutputHandler):
         label = 'dummy'
         """The string identifier of this handler."""
 
-        display_override_option = False
+        #: Whether or not to include ``dummy`` as an available to choice
+        #: to override the ``output_handler`` via command line options.
+        overridable = False
 
-    def render(self, data_dict, template=None):
+
+    def render(self, data_dict, template=None, **kw):
         """
         This implementation does not actually render anything to output, but
         rather logs it to the debug facility.

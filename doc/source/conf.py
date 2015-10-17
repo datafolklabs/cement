@@ -49,9 +49,22 @@ class Mock(object):
         else:
             return Mock()
 
-MOCK_MODULES = ['pylibmc', 'pyinotify']
-for mod_name in MOCK_MODULES:
-    sys.modules[mod_name] = Mock()
+MOCK_MODULES = [
+    'nose', 
+    'pylibmc', 
+    'pyinotify', 
+    'yaml', 
+    'tabulate',
+    'configobj',
+    'pystache', 'pystache.renderer',
+    'genshi', 'genshi.template',
+    'colorlog',
+    'argcomplete',
+    ]
+# for mod_name in MOCK_MODULES:
+#     sys.modules[mod_name] = Mock()
+sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the

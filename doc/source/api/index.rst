@@ -63,5 +63,6 @@ Cement Extension Modules
    ext/ext_plugin
    ext/ext_reload_config
    ext/ext_smtp
+   ext/ext_tabulate
    ext/ext_yaml
    ext/ext_yaml_configobj

@@ -78,19 +78,21 @@ class GenshiOutputHandler(output.TemplateOutputHandler):
         interface = output.IOutput
         label = 'genshi'
 
-    def render(self, data_dict, template):
+    def render(self, data_dict, **kw):
         """
         Take a data dictionary and render it using the given template file.
 
         Required Arguments:
 
         :param data_dict: The data dictionary to render.
-        :param template: The path to the template, after the
+        :keyword template: The path to the template, after the
          ``template_module`` or ``template_dirs`` prefix as defined in the
          application.
         :returns: str (the rendered template text)
 
         """
+        template = kw.get('template', None)
+
         LOG.debug("rendering output using '%s' as a template." % template)
         content = self.load_template(template)
         tmpl = NewTextTemplate(content)

@@ -754,19 +754,21 @@ class CementApp(meta.MetaMixin):
         function was called.
 
         """
+        return_val = None
+
         for res in hook.run('pre_run', self):
             pass
 
         # If controller exists, then dispatch it
         if self.controller:
-            return self.controller._dispatch()
+            return_val = self.controller._dispatch()
         else:
             self._parse_args()
 
         for res in hook.run('post_run', self):
             pass
 
-        return None
+        return return_val
 
     def __enter__(self):
         self.setup()
@@ -805,7 +807,7 @@ class CementApp(meta.MetaMixin):
         if self._meta.exit_on_close is True:
             sys.exit(self.exit_code)
 
-    def render(self, data, template=None, out=sys.stdout):
+    def render(self, data, template=None, out=sys.stdout, **kw):
         """
         This is a simple wrapper around self.output.render() which simply
         returns an empty string if no self.output handler is defined.
@@ -824,11 +826,13 @@ class CementApp(meta.MetaMixin):
             else:
                 data = res
 
+        kw['template'] = template
+
         if self.output is None:
             LOG.debug('render() called, but no output handler defined.')
             out_text = ''
         else:
-            out_text = self.output.render(data, template)
+            out_text = self.output.render(data, **kw)
 
         for res in hook.run('post_render', self, out_text):
             if not type(res) is str:

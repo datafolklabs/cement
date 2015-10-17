@@ -83,12 +83,14 @@ class JsonOutputHandler(output.CementOutputHandler):
         label = 'json'
         """The string identifier of this handler."""
 
+        #: Whether or not to include ``json`` as an available to choice
+        #: to override the ``output_handler`` via command line options.
         overridable = True
 
     def __init__(self, *args, **kw):
         super(JsonOutputHandler, self).__init__(*args, **kw)
 
-    def render(self, data_dict, template=None):
+    def render(self, data_dict, **kw):
         """
         Take a data dictionary and render it as Json output.  Note that the
         template option is received here per the interface, however this
