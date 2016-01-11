@@ -1,6 +1,7 @@
 """Cement core hooks module."""
 
 import operator
+import types
 from ..core import backend, exc
 from ..utils.misc import minimal_logger
 
@@ -113,6 +114,9 @@ def run(name, *args, **kwargs):
                   (name, hook[2], hook[2].__module__))
         res = hook[2](*args, **kwargs)
 
-        # Results are yielded, so you must fun a for loop on it, you can not
-        # simply call run_hooks().
-        yield res
+        # Check if result is a nested generator - needed to support e.g. asyncio
+        if isinstance(res, types.GeneratorType):
+            for _res in res:
+                yield _res
+        else:
+            yield res

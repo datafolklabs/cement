@@ -28,6 +28,11 @@ def cement_hook_five(app, data):
     return data
 
 
+def cement_hook_six(*args, **kw):
+    for i in range(3):
+        yield 'generator kapla %s' % i
+
+
 class HookTestCase(test.CementCoreTestCase):
 
     def setUp(self):
@@ -55,6 +60,7 @@ class HookTestCase(test.CementCoreTestCase):
         hook.register('nosetests_hook', cement_hook_one, weight=99)
         hook.register('nosetests_hook', cement_hook_two, weight=-1)
         hook.register('nosetests_hook', cement_hook_three, weight=-99)
+        hook.register('nosetests_hook', cement_hook_six, weight=200)
 
         results = []
         for res in hook.run('nosetests_hook'):
@@ -63,6 +69,9 @@ class HookTestCase(test.CementCoreTestCase):
         self.eq(results[0], 'kapla 3')
         self.eq(results[1], 'kapla 2')
         self.eq(results[2], 'kapla 1')
+        self.eq(results[3], 'generator kapla 0')
+        self.eq(results[4], 'generator kapla 1')
+        self.eq(results[5], 'generator kapla 2')
 
     @test.raises(exc.FrameworkError)
     def test_run_bad_hook(self):
