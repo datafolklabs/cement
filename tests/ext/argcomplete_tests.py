@@ -21,6 +21,7 @@ class ArgcompleteExtTestCase(test.CementExtTestCase):
     def setUp(self):
         super(ArgcompleteExtTestCase, self).setUp()
         self.app = self.make_app(APP, 
+            argv=['default'],
             base_controller=MyBaseController,
             extensions=[
                 'argparse',
