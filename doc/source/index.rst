@@ -46,7 +46,7 @@ Core features include (but are not limited to):
  * 100% test coverage using Nose
  * 100% PEP8 compliant using `pep8` and `autopep8` tools
  * Extensive Sphinx documentation
- * Tested on Python 2.6, 2.7, 3.2, 3.3, and 3.4
+ * Tested on Python 2.6, 2.7, 3.2, 3.3, 3.4, 3.5
 
 *Note that argparse is required as an external dependency for Python < 2.7
 and < 3.2.  Additionally, some optional extensions that are shipped with

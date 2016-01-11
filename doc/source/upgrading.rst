@@ -15,9 +15,9 @@ release, as noted in the :ref:`ChangeLog <changelog>`.
 TypeError: render() got an unexpected keyword argument
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In Cement 2.6, output handlers were not required to access ``**kwargs``, 
-however due to a design flaw this is now required to allow applications to 
-mix different types of output handlers that support different features.  
+In Cement 2.6, output handlers were not required to accept ``**kwargs``, 
+however this is now required to allow applications to mix different types of 
+output handlers together that might support different features/usage.  
 
 After upgrading to Cement 2.8, you might receive something similar to the 
 following exception:
@@ -28,8 +28,9 @@ following exception:
 
 
 This would most likely be the case becase you have created your own custom
-output handler, or are using a third-party output handler.  The fix is to 
-simply add ``**kwargs`` to the end of the `render()` method.
+output handler, or are using a third-party output handler that has not been
+updated to support Cement 2.8 yet.  The fix is to simply add ``**kwargs`` to 
+the end of the `render()` method.
 
 For example:
 

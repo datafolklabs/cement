@@ -15,6 +15,12 @@ Note that, in the future, we would love to include some form of
 following is a working example that can be used as a model for adding BASH
 auto-completion to your app.
 
+Update: As of Cement 2.7.x, the 
+:ref:`Argcomplete Framework Extension<cement.ext.ext_argcomplete>` can be 
+used as an alternative to this example.  Both are viable options though
+this route is much more manual, and the Argcomplete route might not fit your 
+needs.
+
 Example Cement App
 ^^^^^^^^^^^^^^^^^^
 

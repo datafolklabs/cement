@@ -61,8 +61,7 @@ MOCK_MODULES = [
     'colorlog',
     'argcomplete',
     ]
-# for mod_name in MOCK_MODULES:
-#     sys.modules[mod_name] = Mock()
+
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 
