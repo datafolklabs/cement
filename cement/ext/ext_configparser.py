@@ -2,7 +2,7 @@
 
 import os
 import sys
-from ..core import backend, config, handler
+from ..core import backend, config
 from ..utils.misc import minimal_logger
 
 if sys.version_info[0] < 3:
@@ -132,4 +132,4 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
 
 
 def load(app):
-    handler.register(ConfigParserConfigHandler)
+    app.handler.register(ConfigParserConfigHandler)

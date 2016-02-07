@@ -2,7 +2,7 @@
 
 import os
 import sys
-from ..core import config, exc, handler
+from ..core import config, exc
 from ..utils.misc import minimal_logger
 from configobj import ConfigObj
 
@@ -157,4 +157,4 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
 
 
 def load(app):
-    handler.register(ConfigObjConfigHandler)
+    app.handler.register(ConfigObjConfigHandler)

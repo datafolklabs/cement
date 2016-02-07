@@ -4,7 +4,7 @@ import os
 import sys
 import glob
 import imp
-from ..core import backend, handler, plugin, exc
+from ..core import backend, plugin, exc
 from ..utils.misc import is_true, minimal_logger
 from ..utils.fs import abspath
 
@@ -49,7 +49,8 @@ class CementPluginHandler(plugin.CementPluginHandler):
         self.load_dirs = self.app._meta.plugin_dirs
 
         # grab a generic config handler object
-        config_handler = handler.get('config', self.app.config._meta.label)
+        config_handler = self.app.handler.get('config', 
+                                              self.app.config._meta.label)
 
         # first parse plugin config dir for enabled plugins
         for config_dir in self.config_dirs:
@@ -267,4 +268,4 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
 
 def load(app):
-    handler.register(CementPluginHandler)
+    app.handler.register(CementPluginHandler)

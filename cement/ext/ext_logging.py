@@ -2,7 +2,7 @@
 
 import os
 import logging
-from ..core import exc, log, handler
+from ..core import exc, log
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
 
@@ -333,4 +333,4 @@ class LoggingLogHandler(log.CementLogHandler):
 
 
 def load(app):
-    handler.register(LoggingLogHandler)
+    app.handler.register(LoggingLogHandler)

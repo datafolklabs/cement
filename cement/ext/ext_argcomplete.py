@@ -89,7 +89,6 @@ startup.
 """
 
 import argcomplete
-from cement.core import hook
 
 
 def argparse_autocompletion(app):
@@ -106,4 +105,4 @@ def argparse_autocompletion(app):
 
 
 def load(app):
-    hook.register('pre_argument_parsing', argparse_autocompletion, weight=99)
+    app.hook.register('pre_argument_parsing', argparse_autocompletion, weight=99)

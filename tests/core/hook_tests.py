@@ -1,5 +1,6 @@
 """Tests for cement.core.hook."""
 
+import sys
 import signal
 from cement.core import exc, backend, hook, foundation
 from cement.utils import test
@@ -104,6 +105,7 @@ class HookTestCase(test.CementCoreTestCase):
 
         # this is where cement_signal_hook is run
         try:
-            foundation.cement_signal_handler(signal.SIGTERM, 5)
+            frame = sys._getframe(0)
+            foundation.cement_signal_handler(signal.SIGTERM, frame)
         except exc.CaughtSignal as e:
             pass

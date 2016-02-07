@@ -8,6 +8,7 @@ from cement.core import log, output, handler, hook, arg, controller
 from cement.core.interface import Interface
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando, minimal_logger
+from nose.plugins.attrib import attr
 
 APP = rando()[:12]
 
@@ -264,11 +265,15 @@ class FoundationTestCase(test.CementCoreTestCase):
     @test.raises(exc.CaughtSignal)
     def test_cement_signal_handler(self):
         import signal
+        import types
+        global app
+        app = self.make_app('test')
+        frame = sys._getframe(0)
         try:
-            foundation.cement_signal_handler(signal.SIGTERM, 5)
+            foundation.cement_signal_handler(signal.SIGTERM, frame)
         except exc.CaughtSignal as e:
             self.eq(e.signum, signal.SIGTERM)
-            self.eq(e.frame, 5)
+            self.ok(isinstance(e.frame, types.FrameType))
             raise
 
     def test_cement_without_signals(self):
@@ -429,3 +434,14 @@ class FoundationTestCase(test.CementCoreTestCase):
                             )
         app.setup()
         self.ok(handler.registered('my_test_interface', 'my_test_handler'))
+
+    def test_disable_backend_globals(self):
+        app = self.make_app(APP, 
+            use_backend_globals=False,
+            define_handlers=[MyTestInterface],
+            handlers=[MyTestHandler],
+            define_hooks=['my_hook'],
+            )
+        app.setup()
+        self.ok(app.handler.registered('my_test_interface', 'my_test_handler'))
+        self.ok(app.hook.defined('my_hook'))

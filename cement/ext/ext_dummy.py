@@ -1,6 +1,6 @@
 """Dummy Framework Extension"""
 
-from ..core import backend, output, handler, mail
+from ..core import backend, output, mail
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -225,5 +225,5 @@ class DummyMailHandler(mail.CementMailHandler):
 
 
 def load(app):
-    handler.register(DummyOutputHandler)
-    handler.register(DummyMailHandler)
+    app.handler.register(DummyOutputHandler)
+    app.handler.register(DummyMailHandler)

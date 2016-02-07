@@ -113,11 +113,9 @@ rather than the entire parent application.  For example:
 
 .. code-block:: python
 
-    from cement.core import foundation, controller, handler
-
+    from cement.core import foundation, controller
     from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
-    from cement.core import handler
 
 
     class MyBaseController(CementBaseController):
@@ -165,7 +163,7 @@ import sys
 import io
 import pwd
 import grp
-from ..core import handler, hook, exc
+from ..core import exc
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -423,5 +421,5 @@ def cleanup(app):  # pragma: no cover
 
 
 def load(app):
-    hook.register('post_setup', extend_app)
-    hook.register('pre_close', cleanup)
+    app.hook.register('post_setup', extend_app)
+    app.hook.register('pre_close', cleanup)

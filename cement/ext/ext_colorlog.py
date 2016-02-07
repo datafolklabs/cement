@@ -4,7 +4,6 @@ import os
 import sys
 import logging
 from colorlog import ColoredFormatter
-from ..core import handler
 from ..ext.ext_logging import LoggingLogHandler
 from ..utils.misc import is_true
 
@@ -208,4 +207,4 @@ class ColorLogHandler(LoggingLogHandler):
 
 
 def load(app):
-    handler.register(ColorLogHandler)
+    app.handler.register(ColorLogHandler)

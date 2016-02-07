@@ -27,7 +27,6 @@ class TestApp(foundation.CementApp):
         arguments = []
         exit_on_close = False
 
-
 class CementTestCase(unittest.TestCase):
 
     """
@@ -79,9 +78,8 @@ class CementTestCase(unittest.TestCase):
         """Shorthand for 'assert a == b, "%r != %r" % (a, b)'. """
         return eq(a, b, msg)
 
+
 # The following are for internal, Cement unit testing only
-
-
 @attr('core')
 class CementCoreTestCase(CementTestCase):
     pass

@@ -184,7 +184,7 @@ or any other configuration file is modified (spaces added for clarity):
 import os
 import signal
 import pyinotify
-from ..core import backend, hook
+from ..core import backend
 from ..utils.misc import minimal_logger
 from ..utils import shell, fs
 
@@ -277,8 +277,8 @@ def signal_handler(signum, frame):
 
 
 def load(app):
-    hook.define('pre_reload_config')
-    hook.define('post_reload_config')
-    hook.register('pre_run', spawn_watcher)
-    hook.register('pre_close', kill_watcher)
-    hook.register('signal', signal_handler)
+    app.hook.define('pre_reload_config')
+    app.hook.define('post_reload_config')
+    app.hook.register('pre_run', spawn_watcher)
+    app.hook.register('pre_close', kill_watcher)
+    app.hook.register('signal', signal_handler)

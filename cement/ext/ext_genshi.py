@@ -1,7 +1,7 @@
 """Genshi extension module."""
 
 import sys
-from ..core import output, exc, handler
+from ..core import output, exc
 from ..utils.misc import minimal_logger
 from genshi.template import NewTextTemplate
 
@@ -100,4 +100,4 @@ class GenshiOutputHandler(output.TemplateOutputHandler):
 
 
 def load(app):
-    handler.register(GenshiOutputHandler)
+    app.handler.register(GenshiOutputHandler)

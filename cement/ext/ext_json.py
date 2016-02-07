@@ -2,7 +2,7 @@
 
 import sys
 import json
-from ..core import output, backend, hook, handler
+from ..core import output, backend
 from ..utils.misc import minimal_logger
 from ..ext.ext_configparser import ConfigParserConfigHandler
 
@@ -141,8 +141,8 @@ class JsonConfigHandler(ConfigParserConfigHandler):
 
 
 def load(app):
-    hook.register('post_argument_parsing', suppress_output_before_run)
-    hook.register('pre_render', unsuppress_output_before_render)
-    hook.register('post_render', suppress_output_after_render)
-    handler.register(JsonOutputHandler)
-    handler.register(JsonConfigHandler)
+    app.hook.register('post_argument_parsing', suppress_output_before_run)
+    app.hook.register('pre_render', unsuppress_output_before_render)
+    app.hook.register('post_render', suppress_output_after_render)
+    app.handler.register(JsonOutputHandler)
+    app.handler.register(JsonConfigHandler)

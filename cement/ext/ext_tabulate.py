@@ -2,7 +2,7 @@
 
 import sys
 from tabulate import tabulate
-from ..core import output, exc, handler
+from ..core import output, exc
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -139,4 +139,4 @@ class TabulateOutputHandler(output.CementOutputHandler):
 
 
 def load(app):
-    handler.register(TabulateOutputHandler)
+    app.handler.register(TabulateOutputHandler)

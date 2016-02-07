@@ -5,9 +5,10 @@ import os
 import sys
 import signal
 import copy
-from ..core import backend, exc, handler, hook, log, config, plugin, interface
+from ..core import backend, exc, log, config, plugin, interface
 from ..core import output, extension, arg, controller, meta, cache, mail
-from ..core.backend import __saved_stdout__
+from ..core.handler import HandlerManager
+from ..core.hook import HookManager
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
 
@@ -35,9 +36,9 @@ def add_handler_override_options(app):
                       " is not defined, can not override handlers")
             continue
 
-        if len(handler.list(i)) > 1:
+        if len(app.handler.list(i)) > 1:
             handlers = []
-            for h in handler.list(i):
+            for h in app.handler.list(i):
                 handlers.append(h())
 
             choices = [x._meta.label
@@ -100,9 +101,14 @@ def cement_signal_handler(signum, frame):
     """
     LOG.debug('Caught signal %s' % signum)
 
-    for res in hook.run('signal', signum, frame):
-        pass
-
+    ### FIXME: Maybe this isn't ideal... purhaps make 
+    ### CementApp.Meta.signal_handler a decorator that take the app object
+    ### and wraps/returns the actually signal handler?
+    for f_global in frame.f_globals.values():
+        if isinstance(f_global, CementApp):
+            app = f_global
+            for res in app.hook.run('signal', signum, frame):
+                pass # pragma: nocover
     raise exc.CaughtSignal(signum, frame)
 
 
@@ -576,7 +582,7 @@ class CementApp(meta.MetaMixin):
         define_hooks = []
         """
         List of hook definitions (label).  Will be passed to
-        ``hook.define(<hook_label>)``.  Must be a list of strings.
+        ``self.hook.define(<hook_label>)``.  Must be a list of strings.
 
         I.e. ``['my_custom_hook', 'some_other_hook']``
         """
@@ -584,7 +590,7 @@ class CementApp(meta.MetaMixin):
         hooks = []
         """
         List of hooks to register when the app is created.  Will be passed to
-        ``hook.register(<hook_label>, <hook_func>)``.  Must be a list of
+        ``self.hook.register(<hook_label>, <hook_func>)``.  Must be a list of
         tuples in the form of ``(<hook_label>, <hook_func>)``.
 
         I.e. ``[('post_argument_parsing', my_hook_func)]``.
@@ -607,6 +613,22 @@ class CementApp(meta.MetaMixin):
         I.e. ``[MyCustomHandler, SomeOtherHandler]``
         """
 
+        use_backend_globals = True
+        """
+        This is a backward compatibility feature.  Cement 2.x.x
+        relies on several global variables hidden in ``cement.core.backend``
+        used for things like storing hooks and handlers.  Future versions of 
+        Cement will no longer use this mechanism, however in order to maintain
+        backward compatibility this is still the default.  By disabling this
+        feature allows multiple instances of CementApp to be created
+        from within the same runtime space without clobbering eachothers
+        hooks/handers/etc.
+
+        Be warned that use of third-party extensions might break as they were
+        built using backend globals, and probably have no idea this feature 
+        has changed or exists.
+        """
+
     def __init__(self, label=None, **kw):
         super(CementApp, self).__init__(**kw)
 
@@ -624,6 +646,12 @@ class CementApp(meta.MetaMixin):
         self._loaded_bootstrap = None
         self._parsed_args = None
         self._last_rendered = None
+        self.__saved_stdout__ = None
+        self.__saved_stderr__ = None
+        self.handler = None
+        self.hook = None
+        
+
         self.exit_code = 0
 
         self.ext = None
@@ -726,7 +754,7 @@ class CementApp(meta.MetaMixin):
             else:
                 reload(self._loaded_bootstrap)
 
-        for res in hook.run('pre_setup', self):
+        for res in self.hook.run('pre_setup', self):
             pass
 
         self._setup_signals()
@@ -740,7 +768,7 @@ class CementApp(meta.MetaMixin):
         self._setup_output_handler()
         self._setup_controllers()
 
-        for res in hook.run('post_setup', self):
+        for res in self.hook.run('post_setup', self):
             pass
 
     def run(self):
@@ -756,7 +784,7 @@ class CementApp(meta.MetaMixin):
         """
         return_val = None
 
-        for res in hook.run('pre_run', self):
+        for res in self.hook.run('pre_run', self):
             pass
 
         # If controller exists, then dispatch it
@@ -765,7 +793,7 @@ class CementApp(meta.MetaMixin):
         else:
             self._parse_args()
 
-        for res in hook.run('post_run', self):
+        for res in self.hook.run('post_run', self):
             pass
 
         return return_val
@@ -791,12 +819,12 @@ class CementApp(meta.MetaMixin):
         ``CementApp.Meta.exit_on_close==True``.
 
         """
-        for res in hook.run('pre_close', self):
+        for res in self.hook.run('pre_close', self):
             pass
 
         LOG.debug("closing the application")
 
-        for res in hook.run('post_close', self):
+        for res in self.hook.run('post_close', self):
             pass
 
         if code is not None:
@@ -820,7 +848,7 @@ class CementApp(meta.MetaMixin):
          Default: sys.stdout
 
         """
-        for res in hook.run('pre_render', self, data):
+        for res in self.hook.run('pre_render', self, data):
             if not type(res) is dict:
                 LOG.debug("pre_render hook did not return a dict().")
             else:
@@ -834,7 +862,7 @@ class CementApp(meta.MetaMixin):
         else:
             out_text = self.output.render(data, **kw)
 
-        for res in hook.run('post_render', self, out_text):
+        for res in self.hook.run('post_render', self, out_text):
             if not type(res) is str:
                 LOG.debug('post_render hook did not return a str()')
             else:
@@ -898,15 +926,15 @@ class CementApp(meta.MetaMixin):
             return
 
         LOG.debug('suppressing all console output')
-        backend.__saved_stdout__ = sys.stdout
-        backend.__saved_stderr__ = sys.stderr
+        self.__saved_stdout__ = sys.stdout
+        self.__saved_stderr__ = sys.stderr
         sys.stdout = open(os.devnull, 'w')
         sys.stderr = open(os.devnull, 'w')
 
     def _unsuppress_output(self):
         LOG.debug('unsuppressing all console output')
-        sys.stdout = backend.__saved_stdout__
-        sys.stderr = backend.__saved_stderr__
+        sys.stdout = self.__saved_stdout__
+        sys.stderr = self.__saved_stderr__
 
     def _lay_cement(self):
         """Initialize the framework."""
@@ -918,60 +946,66 @@ class CementApp(meta.MetaMixin):
         elif '--quiet' in self._meta.argv:
             self._suppress_output()
 
-        # start clean
-        backend.__hooks__ = {}
-        backend.__handlers__ = {}
+        ### Forward/Backward compat, see Issue #311
+        if self._meta.use_backend_globals:
+            backend.__hooks__ = {}
+            backend.__handlers__ = {}
+            self.handler = HandlerManager(use_backend_globals=True)
+            self.hook = HookManager(use_backend_globals=True)
+        else:
+            self.handler = HandlerManager(use_backend_globals=False)
+            self.hook = HookManager(use_backend_globals=False)
 
         # define framework hooks
-        hook.define('pre_setup')
-        hook.define('post_setup')
-        hook.define('pre_run')
-        hook.define('post_run')
-        hook.define('pre_argument_parsing')
-        hook.define('post_argument_parsing')
-        hook.define('pre_close')
-        hook.define('post_close')
-        hook.define('signal')
-        hook.define('pre_render')
-        hook.define('post_render')
+        self.hook.define('pre_setup')
+        self.hook.define('post_setup')
+        self.hook.define('pre_run')
+        self.hook.define('post_run')
+        self.hook.define('pre_argument_parsing')
+        self.hook.define('post_argument_parsing')
+        self.hook.define('pre_close')
+        self.hook.define('post_close')
+        self.hook.define('signal')
+        self.hook.define('pre_render')
+        self.hook.define('post_render')
 
         # define application hooks from meta
         for label in self._meta.define_hooks:
-            hook.define(label)
+            self.hook.define(label)
 
         # register some built-in framework hooks
-        hook.register('post_setup', add_handler_override_options, weight=-99)
-        hook.register('post_argument_parsing', handler_override, weight=-99)
+        self.hook.register('post_setup', add_handler_override_options, weight=-99)
+        self.hook.register('post_argument_parsing', handler_override, weight=-99)
 
         # register application hooks from meta
         for label, func in self._meta.hooks:
-            hook.register(label, func)
+            self.hook.register(label, func)
 
         # define and register handlers
-        handler.define(extension.IExtension)
-        handler.define(log.ILog)
-        handler.define(config.IConfig)
-        handler.define(mail.IMail)
-        handler.define(plugin.IPlugin)
-        handler.define(output.IOutput)
-        handler.define(arg.IArgument)
-        handler.define(controller.IController)
-        handler.define(cache.ICache)
+        self.handler.define(extension.IExtension)
+        self.handler.define(log.ILog)
+        self.handler.define(config.IConfig)
+        self.handler.define(mail.IMail)
+        self.handler.define(plugin.IPlugin)
+        self.handler.define(output.IOutput)
+        self.handler.define(arg.IArgument)
+        self.handler.define(controller.IController)
+        self.handler.define(cache.ICache)
 
         # define application handlers
         for interface_class in self._meta.define_handlers:
-            handler.define(interface_class)
+            self.handler.define(interface_class)
 
         # extension handler is the only thing that can't be loaded... as,
         # well, an extension.  ;)
-        handler.register(extension.CementExtensionHandler)
+        self.handler.register(extension.CementExtensionHandler)
 
         # register application handlers
         for handler_class in self._meta.handlers:
-            handler.register(handler_class)
+            self.handler.register(handler_class)
 
     def _parse_args(self):
-        for res in hook.run('pre_argument_parsing', self):
+        for res in self.hook.run('pre_argument_parsing', self):
             pass
 
         self._parsed_args = self.args.parse(self.argv)
@@ -997,7 +1031,7 @@ class CementApp(meta.MetaMixin):
                     self.config.set(section, member,
                                     getattr(self._parsed_args, member))
 
-        for res in hook.run('post_argument_parsing', self):
+        for res in self.hook.run('post_argument_parsing', self):
             pass
 
     def _setup_signals(self):
@@ -1006,11 +1040,13 @@ class CementApp(meta.MetaMixin):
             return
 
         for signum in self._meta.catch_signals:
-            LOG.debug("adding signal handler for signal %s" % signum)
+            LOG.debug("adding signal handler %s for signal %s" % (
+                self._meta.signal_handler, signum)
+                )
             signal.signal(signum, self._meta.signal_handler)
 
     def _resolve_handler(self, handler_type, handler_def, raise_error=True):
-        han = handler.resolve(handler_type, handler_def, raise_error)
+        han = self.handler.resolve(handler_type, handler_def, raise_error)
         if han is not None:
             han._setup(self)
             return han
@@ -1202,7 +1238,7 @@ class CementApp(meta.MetaMixin):
             self.controller = cntr
             self._meta.base_controller = self.controller
         elif self._meta.base_controller is None:
-            if handler.registered('controller', 'base'):
+            if self.handler.registered('controller', 'base'):
                 self.controller = self._resolve_handler('controller', 'base')
                 self._meta.base_controller = self.controller
 

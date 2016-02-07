@@ -3,7 +3,7 @@
 import os
 import sys
 import yaml
-from ..core import backend, output, hook, handler, config
+from ..core import backend, output, config
 from ..utils.misc import minimal_logger
 from ..ext.ext_configparser import ConfigParserConfigHandler
 
@@ -105,8 +105,6 @@ class YamlOutputHandler(output.CementOutputHandler):
 
         """
         LOG.debug("rendering output as Yaml via %s" % self.__module__)
-        sys.stdout = backend.__saved_stdout__
-        sys.stderr = backend.__saved_stderr__
         return yaml.dump(data_dict)
 
 
@@ -148,8 +146,8 @@ class YamlConfigHandler(ConfigParserConfigHandler):
 
 
 def load(app):
-    hook.register('post_argument_parsing', suppress_output_before_run)
-    hook.register('pre_render', unsuppress_output_before_render)
-    hook.register('post_render', suppress_output_after_render)
-    handler.register(YamlOutputHandler)
-    handler.register(YamlConfigHandler)
+    app.hook.register('post_argument_parsing', suppress_output_before_run)
+    app.hook.register('pre_render', unsuppress_output_before_render)
+    app.hook.register('post_render', suppress_output_after_render)
+    app.handler.register(YamlOutputHandler)
+    app.handler.register(YamlConfigHandler)

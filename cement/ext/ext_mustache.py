@@ -2,7 +2,7 @@
 
 import sys
 from pystache.renderer import Renderer
-from ..core import output, exc, handler
+from ..core import output, exc
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -147,4 +147,4 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
 
 
 def load(app):
-    handler.register(MustacheOutputHandler)
+    app.handler.register(MustacheOutputHandler)
