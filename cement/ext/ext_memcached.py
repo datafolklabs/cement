@@ -104,7 +104,7 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
             app.cache.purge()
 
     """
-    
+
     class Meta:
 
         """Handler meta-data."""

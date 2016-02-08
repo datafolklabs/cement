@@ -2,7 +2,7 @@
 
 import os
 from tempfile import mkdtemp
-from cement.core import exc, backend, handler, output
+from cement.core import exc, backend, output
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando
 

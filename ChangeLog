@@ -46,12 +46,15 @@ Features:
 
 Refactoring:
 
+    * :issue:`311` - Refactor Hooks/Handlers into CementApp
     * :issue:`319` - Use ``os.devnull`` instead of internal ``NullOut`` hack.
-
+    
 Incompatible:
 
+    * :issue:`311` - Hook ``signal`` now requires ``app`` argument.
     * :issue:`313` - Default ``Cement.Meta.exit_on_close`` to ``False``.
-      Calls to ``sys.exit()`` should be explicit by the app developer, and not implied by the framework.
+      Calls to ``sys.exit()`` should be explicit by the app developer, and 
+      not implied by the framework.
     * :issue:`332` - Output Handler Interface Must Support Keyword Arguments 
     
 

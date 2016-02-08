@@ -34,7 +34,6 @@ handle command dispatch and rapid development.
     from cement.core import backend,
     from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
-    from cement.core import handler
 
     # define an application base controller
     class MyAppBaseController(CementBaseController):

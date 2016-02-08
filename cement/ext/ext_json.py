@@ -118,7 +118,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
     class Meta:
 
         """Handler meta-data."""
-        
+
         label = 'json'
 
     def __init__(self, *args, **kw):

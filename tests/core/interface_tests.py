@@ -1,6 +1,7 @@
 """Tests for cement.core.interface."""
 
-from cement.core import exc, interface, output, handler, meta
+from cement.core import exc, interface, output, meta
+from cement.core.handler import CementBaseHandler
 from cement.utils import test
 
 
@@ -10,14 +11,14 @@ class TestInterface(interface.Interface):
         label = 'test'
 
 
-class TestHandler(handler.CementBaseHandler):
+class TestHandler(CementBaseHandler):
 
     class Meta:
         interface = TestInterface
         label = 'test'
 
 
-class TestHandler2(handler.CementBaseHandler):
+class TestHandler2(CementBaseHandler):
 
     class Meta:
         interface = output.IOutput

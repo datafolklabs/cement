@@ -101,14 +101,14 @@ def cement_signal_handler(signum, frame):
     """
     LOG.debug('Caught signal %s' % signum)
 
-    ### FIXME: Maybe this isn't ideal... purhaps make 
-    ### CementApp.Meta.signal_handler a decorator that take the app object
-    ### and wraps/returns the actually signal handler?
+    # FIXME: Maybe this isn't ideal... purhaps make
+    # CementApp.Meta.signal_handler a decorator that take the app object
+    # and wraps/returns the actually signal handler?
     for f_global in frame.f_globals.values():
         if isinstance(f_global, CementApp):
             app = f_global
-            for res in app.hook.run('signal', signum, frame):
-                pass # pragma: nocover
+            for res in app.hook.run('signal', app, signum, frame):
+                pass  # pragma: nocover
     raise exc.CaughtSignal(signum, frame)
 
 
@@ -617,7 +617,7 @@ class CementApp(meta.MetaMixin):
         """
         This is a backward compatibility feature.  Cement 2.x.x
         relies on several global variables hidden in ``cement.core.backend``
-        used for things like storing hooks and handlers.  Future versions of 
+        used for things like storing hooks and handlers.  Future versions of
         Cement will no longer use this mechanism, however in order to maintain
         backward compatibility this is still the default.  By disabling this
         feature allows multiple instances of CementApp to be created
@@ -625,7 +625,7 @@ class CementApp(meta.MetaMixin):
         hooks/handers/etc.
 
         Be warned that use of third-party extensions might break as they were
-        built using backend globals, and probably have no idea this feature 
+        built using backend globals, and probably have no idea this feature
         has changed or exists.
         """
 
@@ -650,7 +650,6 @@ class CementApp(meta.MetaMixin):
         self.__saved_stderr__ = None
         self.handler = None
         self.hook = None
-        
 
         self.exit_code = 0
 
@@ -946,7 +945,7 @@ class CementApp(meta.MetaMixin):
         elif '--quiet' in self._meta.argv:
             self._suppress_output()
 
-        ### Forward/Backward compat, see Issue #311
+        # Forward/Backward compat, see Issue #311
         if self._meta.use_backend_globals:
             backend.__hooks__ = {}
             backend.__handlers__ = {}
@@ -974,8 +973,10 @@ class CementApp(meta.MetaMixin):
             self.hook.define(label)
 
         # register some built-in framework hooks
-        self.hook.register('post_setup', add_handler_override_options, weight=-99)
-        self.hook.register('post_argument_parsing', handler_override, weight=-99)
+        self.hook.register(
+            'post_setup', add_handler_override_options, weight=-99)
+        self.hook.register('post_argument_parsing',
+                           handler_override, weight=-99)
 
         # register application hooks from meta
         for label, func in self._meta.hooks:
@@ -1042,7 +1043,7 @@ class CementApp(meta.MetaMixin):
         for signum in self._meta.catch_signals:
             LOG.debug("adding signal handler %s for signal %s" % (
                 self._meta.signal_handler, signum)
-                )
+            )
             signal.signal(signum, self._meta.signal_handler)
 
     def _resolve_handler(self, handler_type, handler_def, raise_error=True):

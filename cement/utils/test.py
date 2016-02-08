@@ -27,6 +27,7 @@ class TestApp(foundation.CementApp):
         arguments = []
         exit_on_close = False
 
+
 class CementTestCase(unittest.TestCase):
 
     """

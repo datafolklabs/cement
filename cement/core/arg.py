@@ -3,7 +3,8 @@ Cement core argument module.
 
 """
 
-from ..core import interface, handler
+from ..core import interface
+from ..core.handler import CementBaseHandler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -104,7 +105,7 @@ class IArgument(interface.Interface):
 
 
 # pylint: disable=W0105
-class CementArgumentHandler(handler.CementBaseHandler):
+class CementArgumentHandler(CementBaseHandler):
 
     """Base class that all Argument Handlers should sub-class from."""
 

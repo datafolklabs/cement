@@ -75,25 +75,25 @@ class TabulateOutputHandler(output.CementOutputHandler):
     class Meta:
 
         """Handler meta-data."""
-        
+
         interface = output.IOutput
         label = 'tabulate'
 
         #: Whether or not to pad the output with an extra pre/post '\n'
         padding = True
 
-        #: Default template format.  See the ``tabulate`` documentation for 
+        #: Default template format.  See the ``tabulate`` documentation for
         #: all supported template formats.
         format = 'orgtbl'
 
         #: Default headers to use.
         headers = []
 
-        #: Default alignment for string columns.  See the ``tabulate`` 
+        #: Default alignment for string columns.  See the ``tabulate``
         #: documentation for all supported ``stralign`` options.
         string_alignment = 'left'
 
-        #: Default alignment for numeric columns.  See the ``tabulate`` 
+        #: Default alignment for numeric columns.  See the ``tabulate``
         #: documentation for all supported ``numalign`` options.
         numeric_alignment = 'decimal'
 
@@ -107,11 +107,9 @@ class TabulateOutputHandler(output.CementOutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-
-
     def render(self, data, **kw):
         """
-        Take a data dictionary and render it into a table.  Additional 
+        Take a data dictionary and render it into a table.  Additional
         keyword arguments are passed directly to ``tabulate.tabulate``.
 
 
@@ -124,12 +122,15 @@ class TabulateOutputHandler(output.CementOutputHandler):
         headers = kw.get('headers', self._meta.headers)
 
         out = tabulate(data, headers,
-            tablefmt=kw.get('tablefmt', self._meta.format),
-            stralign=kw.get('stralign', self._meta.string_alignment),
-            numalign=kw.get('numalign', self._meta.numeric_alignment),
-            missingval=kw.get('missingval', self._meta.missing_value),
-            floatfmt=kw.get('floatfmt', self._meta.float_format),
-            )
+                       tablefmt=kw.get('tablefmt', self._meta.format),
+                       stralign=kw.get(
+                           'stralign', self._meta.string_alignment),
+                       numalign=kw.get(
+                           'numalign', self._meta.numeric_alignment),
+                       missingval=kw.get(
+                           'missingval', self._meta.missing_value),
+                       floatfmt=kw.get('floatfmt', self._meta.float_format),
+                       )
         out = out + '\n'
 
         if self._meta.padding is True:

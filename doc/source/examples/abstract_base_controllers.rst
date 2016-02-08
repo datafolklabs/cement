@@ -14,7 +14,6 @@ still maintain the existing shared commands (or override them as necessary).
 
     from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
-    from cement.core import handler
 
 
     class AbstractBaseController(CementBaseController):

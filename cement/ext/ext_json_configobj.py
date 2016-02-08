@@ -27,7 +27,7 @@ class JsonConfigObjConfigHandler(ConfigObjConfigHandler):
     class Meta:
 
         """Handler meta-data."""
-        
+
         label = 'json_configobj'
 
     def __init__(self, *args, **kw):

@@ -4,7 +4,7 @@ import os
 import sys
 import shutil
 from tempfile import mkdtemp
-from cement.core import exc, backend, plugin, handler
+from cement.core import exc, backend, plugin
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando
 
@@ -38,7 +38,7 @@ CONF5 = ''
 
 PLUGIN = """
 
-from cement.core import handler, output
+from cement.core import output
 
 class TestOutputHandler(output.CementOutputHandler):
     class Meta:
@@ -52,7 +52,7 @@ class TestOutputHandler(output.CementOutputHandler):
         pass
 
 def load(app):
-    handler.register(TestOutputHandler)
+    app.handler.register(TestOutputHandler)
 
 """
 
@@ -81,7 +81,7 @@ class PluginTestCase(test.CementCoreTestCase):
         app.setup()
 
         try:
-            han = handler.get('output', 'test_output_handler')()
+            han = app.handler.get('output', 'test_output_handler')()
             self.eq(han._meta.label, 'test_output_handler')
         finally:
             shutil.rmtree(tmpdir)
@@ -296,7 +296,7 @@ class PluginTestCase(test.CementCoreTestCase):
         app.setup()
 
         try:
-            han = handler.get('output', 'test_output_handler')()
+            han = app.handler.get('output', 'test_output_handler')()
             self.eq(han._meta.label, 'test_output_handler')
         finally:
             shutil.rmtree(tmpdir)
@@ -336,7 +336,7 @@ class PluginTestCase(test.CementCoreTestCase):
         app.setup()
         shutil.rmtree(tmpdir)
 
-        res = 'test_output_handler' not in backend.__handlers__['output']
+        res = 'test_output_handler' not in app.handler.__handlers__['output']
         self.ok(res)
 
         res = 'myplugin2' not in app.plugin.get_enabled_plugins()

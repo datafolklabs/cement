@@ -16,8 +16,7 @@ interface must provide a function called ``_setup()``, and perform the
 expected actions when called.
 
 In Cement, we call the implementation of interfaces ``handlers`` and provide
-the ability to easily register, and retrieve them via the
-:ref:`cement.core.handler` library.
+the ability to easily register, and retrieve them via the app.
 
 API References:
 
@@ -38,7 +37,6 @@ The following defines a basic interface:
 
     from cement.core.foundation import CementApp
     from cement.core.interface import Interface, Attribute
-    from cement.core import handler
 
     class MyInterface(Interface):
         class IMeta:
@@ -81,11 +79,10 @@ way:
 .. code-block:: python
 
     from cement.core.foundation import CementApp
-    from cement.core import handler
     
     with CementApp('myapp') as app:
         # define interfaces after app is created
-        handler.define(MyInterface)
+        app.handler.define(MyInterface)
 
         app.run()
 
@@ -98,8 +95,9 @@ other than comments.
 That said, what is required is an ``IMeta`` class that is used to interact
 with the interface.  At the very least, this must include a unique ``label``
 to identify the interface.  This can also be considered the 'handler type'.
-For example, the ILog interface has a label of ``log`` and any handlers
-registered to that interface are stored in ``backend.__handlers__['log']``.
+For example, the ``ILog`` interface has a label of ``log`` and any handlers
+registered to that interface are stored in 
+``HandlerManager.__handlers__['log']``.
 
 Notice that we defined ``Meta`` and ``my_var`` as Interface Attributes.  This
 is a simple identifier that describes an attribute that an implementation is
@@ -113,7 +111,7 @@ like this:
 
 .. code-block:: python
 
-    from cement.core import interface, handler
+    from cement.core import interface
 
     def my_validator(klass, obj):
         members = [
@@ -129,10 +127,10 @@ like this:
             validator = my_validator
         ...
 
-When ``handler.register()`` is called to register a handler to an interface,
-the validator is called and the handler object is passed to the validator.  In
-the above example, we simply define what members we want to validate for and
-then call ``interface.validate()`` which will raise
+When ``CementApp.handler.register()`` is called to register a handler to an 
+interface, the validator is called and the handler object is passed to the 
+validator.  In the above example, we simply define what members we want to 
+validate for and then call ``interface.validate()`` which will raise
 ``cement.core.exc.InterfaceError`` if validation fails.  It is not
 necessary to use ``interface.validate()`` but it is useful and recommended.
 In general, the key thing to note is that a validator either raises
@@ -149,10 +147,10 @@ is a handler that implements the MyInterface above:
 .. code-block:: python
 
     from cement.core.foundation import CementApp
-    from cement.core import handler
+    from cement.core.handler import CementBaseHandler
     from myapp.interfaces import MyInterface
 
-    class MyHandler(handler.CementBaseHandler):
+    class MyHandler(CementBaseHandler):
         class Meta:
             interface = MyInterface
             label = 'my_handler'
@@ -182,19 +180,18 @@ Alternatively, if you need more control you might use this approach:
 .. code-block:: python
 
     from cement.core.foundation import CementApp
-    from cement.core import handler
 
     with CementApp('myapp') as app:
         # register handler after the app is created
-        handler.register(MyHandler)
+        app.handler.register(MyHandler)
 
         app.run()
 
 
 The above is a simple class that meets all the expectations of the interface.
-When calling ``handler.register()``, ``MyHandler`` is passed to the validator
-(if defined in the interface) and if it passes validation will be registered
-into the ``cement.core.backend.__handlers__`` dictionary.
+When calling ``CementApp.handler.register()``, ``MyHandler`` is passed to the 
+validator (if defined in the interface) and if it passes validation will be 
+registered into ``HandlerManager.__handlers__``.
 
 
 Using Handlers
@@ -204,30 +201,32 @@ The following are a few examples of working with handlers:
 
 .. code-block:: python
 
-    from cement.core import handler
+    from cement.core.foundation import CementApp
 
-    # Get a log handler called 'logging'
-    log_handler = handler.get('log', 'logging')
+    with CementApp('myapp') as app:
+        # Get a log handler called 'logging'
+        lh = app.handler.get('log', 'logging')
 
-    # Instantiate the handler class, passing any keyword arguments that the
-    # handler supports.
-    log = log_handler()
+        # Instantiate the handler class, passing any keyword arguments that 
+        # the handler supports.
+        log = log_handler()
 
-    # Setup the handler, passing it the app object.
-    log._setup(app)
+        # Setup the handler, passing it the app object.
+        log._setup(app)
 
-    # List all handlers of type 'config'
-    handler.list('config')
+        # List all handlers of type 'config'
+        app.handler.list('config')
 
-    # Check if an interface called 'output' is defined
-    handler.defined('output')
+        # Check if an interface called 'output' is defined
+        app.handler.defined('output')
 
-    # Check if the handler 'argparse' is registered to the 'argument' interface
-    handler.registered('argument', 'argparse')
+        # Check if the handler 'argparse' is registered to the 'argument' 
+        # interface
+        app.handler.registered('argument', 'argparse')
 
 
-It is important to note that handlers are stored in ``backend.__handlers__``
-as uninstantiated objects.  Meaning you must instantiate them after retrieval,
+It is important to note that handlers are stored with the app as 
+uninstantiated objects.  Meaning you must instantiate them after retrieval,
 and call ``_setup(app)`` when using handlers directly (as in the above
 example).
 
@@ -241,27 +240,30 @@ them as keyword arguments to ``CementApp``:
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
     from myapp.log import MyLogHandler
 
     # Create the application
-    app = foundation.CementApp('myapp', log_handler=MyLogHandler)
-
+    app = CementApp('myapp', log_handler=MyLogHandler)
+    app.setup()
+    app.run()
+    app.close()
 
 The second way to override a handler is by setting it directly in the
 ``CementApp`` meta data:
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
     from myapp.log import MyLogHandler
 
-    class MyApp(foundation.CementApp):
+    class MyApp(CementApp):
         class Meta:
             label = 'myapp'
             log_handler = MyLogHandler
 
-    app = MyApp()
+    with MyApp() as app:
+        app.run()
 
 
 There are times that you may want to pre-instantiate handlers before
@@ -269,17 +271,18 @@ passing them to CementApp().  The following works just the same:
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
     from myapp.log import MyLogHandler
 
     my_log = MyLogHandler(some_param='some_value')
 
-    class MyApp(foundation.CementApp):
+    class MyApp(CementApp):
         class Meta:
             label = 'myapp'
             log_handler = my_log
 
-    app = MyApp()
+    with MyApp() as app:
+        app.run()
 
 
 To see what default handlers can be overridden, see the
@@ -316,7 +319,7 @@ it to ``CementApp``:
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
     from cement.lib.ext_logging import LoggingLogHandler
 
     class MyLogHandler(LoggingLogHandler):
@@ -327,7 +330,7 @@ it to ``CementApp``:
             # do something to customize this function, here...
             super(MyLogHandler, self).info(msg)
 
-    app = foundation.CementApp('myapp', log_handler=MyLogHandler)
+    app = CementApp('myapp', log_handler=MyLogHandler)
 
 
 Hander Default Configuration Settings

@@ -12,6 +12,45 @@ Upgrading from 2.6.x to 2.8.x
 Cement 2.8 introduced a few incompatible changes from the previous 2.6 stable
 release, as noted in the :ref:`ChangeLog <changelog>`.
 
+TypeError: my_signal_hook() takes exactly 2 arguments (3 given)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In Cement 2.6, functions registered to the ``signal`` hook were only 
+expected/required to accept the ``signum`` and ``frame`` arguments, however
+``signal`` hook functions must now also accept the ``app`` object as an 
+argument as well.
+
+After upgrading to Cement 2.8, you might receive something similar to the 
+following exception:
+
+.. code-block:: console
+
+    TypeError: my_signal_hook() takes exactly 2 arguments (3 given)
+
+
+The fix is to simply prefix any ``signal`` hook functions with an ``app`` 
+argument.
+
+For example:
+
+.. code-block:: python
+
+    def my_signal_hook(self, signum, frame):
+        pass
+
+Would need to be:
+
+.. code-block:: python
+
+    def my_signal_hook(self, app, signum, frame):
+        pass
+
+
+Related:
+
+    * :issue:`311`
+
+
 TypeError: render() got an unexpected keyword argument
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

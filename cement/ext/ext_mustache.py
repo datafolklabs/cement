@@ -113,7 +113,7 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
     class Meta:
 
         """Handler meta-data."""
-        
+
         interface = output.IOutput
         label = 'mustache'
 
@@ -139,7 +139,7 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
 
         """
         template = kw.get('template', None)
-        
+
         LOG.debug("rendering output using '%s' as a template." % template)
         content = self.load_template(template)
         stache = Renderer(partials=self._partials_loader)

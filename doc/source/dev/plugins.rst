@@ -119,9 +119,9 @@ options and commands via an application controller:
 
 .. code-block:: python
 
-    from cement.core import handler, controller
+    from cement.core.controller import CementBaseController, expose
 
-    class MyPluginController(controller.CementBaseController):
+    class MyPluginController(CementBaseController):
         class Meta:
             label = 'myplugin'
             description = 'this is my controller description'
@@ -136,12 +136,12 @@ options and commands via an application controller:
                  dict(action='store', help='the infamous foo option')),
                 ]
 
-        @controller.expose(help="this is my command description")
+        @expose(help="this is my command description")
         def mycommand(self):
             print 'in MyPlugin.mycommand()'
 
     def load(app):
-        handler.register(MyPluginController)
+        app.handler.register(MyPluginController)
 
 
 As you can see, this is very similar to an application that has a base
@@ -182,15 +182,15 @@ same if not defined:
 
 .. code-block:: python
 
-    from cement.core import backend, foundation
-    from cement.core.controller import CementBaseController
+    from cement.core.foundation import CementApp
+    from cement.core.controller import CementBaseController, expose
 
     class MyBaseController(CementBaseController):
         class Meta:
             label = 'base'
             description = 'MyApp Does Amazing Things'
 
-    class MyApp(foundation.CementApp):
+    class MyApp(CementApp):
         class Meta:
             label = 'myapp'
             base_controller = MyBaseController
@@ -233,7 +233,6 @@ an application controller:
 
 .. code-block:: python
 
-    from cement.core import handler
     from cement.core.controller import CementBaseController, expose
     from cement.utils.misc import init_defaults
 
@@ -254,7 +253,7 @@ an application controller:
             print 'In MyPlugin.my_plugin_command()'
 
     def load(app):
-        handler.register(MyPluginController)
+        app.handler.register(MyPluginController)
 
 
 Running our application with the plugin disabled, we see:

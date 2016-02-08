@@ -28,7 +28,6 @@ class DummyOutputHandler(output.CementOutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-
     def render(self, data_dict, template=None, **kw):
         """
         This implementation does not actually render anything to output, but
@@ -146,7 +145,7 @@ class DummyMailHandler(mail.CementMailHandler):
     class Meta:
 
         """Handler meta-data."""
-        
+
         #: Unique identifier for this handler
         label = 'dummy'
 

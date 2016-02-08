@@ -35,34 +35,28 @@ The following outlines a basic test case using the cement.utils.test module.
         def setUp(self):
             super(MyTestCase, self).setUp()
             
-            # Clear existing hooks/handlers/etc
-            self.reset_backend()
-            
             # Create a default application for the test functions to use.
-            # Note that some tests make require you to perform this in the
-            # test function in order to alter functionality.  That perfectly
-            # fine, this is only hear for convenience
+            # Note that some tests may require you to perform this in the
+            # test function in order to alter functionality.  That's perfectly
+            # fine, this is only here for convenience.
             self.app = MyApp(argv=[], config_files=[])
             
         def test_myapp(self):
-            # Setup the application
-            self.app.setup()
+            with self.app as app:
             
-            # Perform basic assertion checks.  You can do this anywhere in the
-            # test function, depending on what the assertion is checking.
-            self.ok(self.config.has_key('myapp', 'debug))
-            self.eq(self.config.get('myapp', 'debug'), False)
-            
-            # Run the applicaion, if necessary
-            self.app.run()
-            
-            # Test the last rendered output (if app.render was used)
-            data, output = app.get_last_rendered()
-            self.eq(data, {'foo':'bar'})
-            self.eq(output, 'some rendered output text)
-            
-            # Close the application, again if necessary
-            self.app.close()
+                # Perform basic assertion checks.  You can do this anywhere 
+                # in the test function, depending on what the assertion is 
+                # checking.
+                self.ok(app.config.has_key('myapp', 'debug))
+                self.eq(app.config.get('myapp', 'debug'), False)
+                
+                # Run the applicaion, if necessary
+                app.run()
+                
+                # Test the last rendered output (if app.render was used)
+                data, output = app.get_last_rendered()
+                self.eq(data, {'foo':'bar'})
+                self.eq(output, 'some rendered output text)
             
         @test.raises(Exception)
         def test_exception(self):
@@ -75,9 +69,10 @@ The following outlines a basic test case using the cement.utils.test module.
                 self.eq(e.args[0], 'Some Exception Message')
                 
                 # Finally, call raise again which re-raises the exception that
-                # we just caught.  This completes out test (to actually 
+                # we just caught.  This completes our test (to actually 
                 # verify that the exception was raised)
                 raise
+
 
 Cement Testing Caveats
 ----------------------
@@ -88,24 +83,24 @@ keep in mind.
 
 **Command Line Arguments**
 
-Never rely on 'sys.argv' for command line arguments.  The CementApp() class 
-accepts the 'argv' keyword argument allowing you to pass the arguments that 
-you would like to test for.  Using sys.argv will cause issues with the 
-calling script (i.e. nosetests, etc) and other issues. Always pass 'argv' to 
-CementApp().
+Never rely on ``sys.argv`` for command line arguments.  The ``CementApp()`` 
+class accepts the ``argv`` keyword argument allowing you to pass the arguments 
+that you would like to test for.  Using ``sys.argv`` will cause issues with 
+the calling script (i.e. ``nosetests``, etc) and other issues. Always pass 
+``argv`` to ``CementApp()`` in tests.
 
 **Config Files**
 
-It is recommended to always set your apps 'config_files' setting to an empty 
+It is recommended to always set your apps ``config_files`` setting to an empty 
 list, or to something relative to your current working directory.  Using 
 default config files settings while testing will introduce unexpected results.  
-For example, if a '~/myapp.conf' user configuration exists it can alter the
+For example, if a ``~/myapp.conf`` user configuration exists it can alter the
 runtime of your application in a way that might cause tests to fail.
 
 **Making Things Easy**
 
-The easiest way to accomplish the above is by sub-classing your CementApp into
-a special 'testing' version.  For example:
+The easiest way to accomplish the above is by sub-classing your ``CementApp`` 
+into a special 'testing' version.  For example:
 
 .. code-block:: python
 
@@ -121,13 +116,10 @@ a special 'testing' version.  For example:
         app_class = MyTestApp
         
         def test_myapp_default(self):
-            self.app.setup()
-            self.app.run()
-            self.app.close()
+            with self.app as app:
+                app.run()
             
         def test_myapp_foo(self):
-            self.app = MyTestApp(argv=['--foo', 'bar])
-            self.app.setup()
-            self.app.run()
-            self.app.close()
+            with MyTestApp(argv=['--foo', 'bar]) as app:
+                app.run()
             

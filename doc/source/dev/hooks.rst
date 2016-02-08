@@ -24,8 +24,8 @@ Defining a Hook
 
 A hook can be defined anywhere, however it is generally recommended to define
 the hook as early as possible.  A hook definition simply gives a label to the
-hook, and allows the developer to register functions to that hook.  It's label
-is arbitrary.
+hook, and allows the developer (or third-party plugin developers) to register 
+functions to that hook.  It's label is arbitrary.
 
 The most convenient way to define a hook is via 
 ``CementApp.Meta.define_hooks``:
@@ -46,7 +46,6 @@ Alternatively, if you need more control you might do it in
 .. code-block:: python
 
     from cement.core.foundation import CementApp
-    from cement.core import hook
 
     class MyApp(CementApp):
         class Meta:
@@ -57,7 +56,7 @@ Alternatively, if you need more control you might do it in
             super(MyApp, self).setup()
 
             # define application hooks here
-            hook.define('my_example_hook')
+            self.hook.define('my_example_hook')
 
 
 Registering Functions to a Hook
@@ -76,7 +75,6 @@ The most convenient way to register a hook function is with
 .. code-block:: python
 
     from cement.core.foundation import CementApp
-    from cement.core import hook
 
     def my_hook1(app):
         pass
@@ -103,14 +101,24 @@ Alternatively, if you need more control you might use:
 .. code-block:: python
 
     from cement.core.foundation import CementApp
-    from cement.core import hook
 
     def my_hook1(app):
         pass
 
     with CementApp('myapp') as app:
-        hook.register('post_argument_parsing', my_hook1)
+        app.hook.register('post_argument_parsing', my_hook1)
         app.run()
+
+
+Or, for a third-party plugin:
+
+.. code-block:: python
+
+    def my_hook1(app):
+        pass
+
+    def load(app):
+        app.hook.register('post_argument_parsing', my_hook1)
 
 
 What you return depends on what the developer defining the hook is expecting.
@@ -137,17 +145,18 @@ That said, this is how you run a hook:
 
 .. code-block:: python
 
-    from cement.core import hook
+    from cement.core.foundation import CementApp
 
-    for res in hook.run('my_example_hook'):
-        # do something with res?
-        pass
+    with CementApp('myapp') as app:
+        for res in app.hook.run('my_example_hook'):
+            # do something with res?
+            pass
 
 
 As you can see we iterate over the hook, rather than just calling
-``hook.run()``.  This is necessary because ``hook.run()`` yields the results
-from each hook function as they are run.  Hooks can be run anywhere *after*
-the hook is defined, and hooks are registered to that hook.
+``app.hook.run()`` by itself.  This is necessary because ``app.hook.run()`` 
+yields the results from each hook function as they are run.  Hooks can be run 
+anywhere **after** the hook is defined, and hooks are registered to that hook.
 
 
 Controlling Hook Run Order
@@ -164,7 +173,6 @@ a custom application hook:
 .. code-block:: python
 
     from cement.core.foundation import CementApp
-    from cement.core import handler, hook
 
     class MyApp(CementApp):
         class Meta:
@@ -175,7 +183,7 @@ a custom application hook:
             super(MyApp, self).setup()
 
             # define hooks in setup
-            hook.define('my_hook')
+            self.hook.define('my_hook')
 
 
     # the following are the function that will run when ``my_hook`` is called
@@ -192,15 +200,15 @@ a custom application hook:
     with MyApp() as app:
         # register all hook functions *after* the hook is defined (setup) but
         # also *before* the hook is called (different for every hook)
-        hook.register('my_hook', func1, weight=0)
-        hook.register('my_hook', func2, weight=100)
-        hook.register('my_hook', func3, weight=-99)
+        app.hook.register('my_hook', func1, weight=0)
+        app.hook.register('my_hook', func2, weight=100)
+        app.hook.register('my_hook', func3, weight=-99)
 
         # run the application
         app.run()
 
         # run our custom hook
-        for res in hook.run('my_hook', app):
+        for res in self.hook.run('my_hook', app):
             pass
 
 
@@ -225,18 +233,8 @@ Cement has a number of hooks that tie into the framework.
 pre_setup
 ^^^^^^^^^
 
-Run first when CementApp.setup() is called.  The application object is
+Run first when ``CementApp.setup()`` is called.  The application object is
 passed as an argument.  Nothing is expected in return.
-
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app):
-        # do something before application setup()
-        pass
-
-    hook.register('pre_setup', my_hook)
 
 
 post_setup
@@ -245,32 +243,12 @@ post_setup
 Run last when CementApp.setup() is called.  The application object is
 passed as an argument.  Nothing is expected in return.
 
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app):
-        app.args.add_argument('-f', '--foo', dest='foo', action='store_true')
-
-    hook.register('post_setup', my_hook)
-
 
 pre_run
 ^^^^^^^
 
 Run first when CementApp.run() is called.  The application object is
 passed as an argument.  Nothing is expected in return.
-
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app):
-        # do something before application run()
-        if not app.config.has_key('base', 'foo'):
-            raise MyAppConfigError, "Required configuration 'foo' missing."
-
-    hook.register('pre_run', my_hook)
 
 
 post_run
@@ -279,16 +257,6 @@ post_run
 Run last when CementApp.run() is called.  The application object is
 passed as an argument.  Nothing is expected in return.
 
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app):
-        # Do something after application run() is called.
-        return
-
-    hook.register('post_run', my_hook)
-
 
 pre_argument_parsing
 ^^^^^^^^^^^^^^^^^^^^
@@ -296,16 +264,6 @@ pre_argument_parsing
 Run after CementApp.run() is called, just *before* argument parsing happens.
 The application object is passed as an argument to these hook
 functions.  Nothing is expected in return.
-
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app):
-        # do something before argument parsing happens
-        pass
-
-    hook.register('pre_argument_parsing', my_hook)
 
 
 post_argument_parsing
@@ -319,16 +277,6 @@ This hook is generally useful where the developer needs to perform actions
 based on the arguments that were passed at command line, but before the
 logic of `app.run()` happens.
 
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app):
-        # do something after argument parsing happens
-        pass
-
-    hook.register('post_argument_parsing', my_hook)
-
 
 pre_render
 ^^^^^^^^^^
@@ -336,16 +284,6 @@ pre_render
 Run first when CementApp.render() is called.  The application object, and
 data dictionary are passed as arguments.  Must return either the original
 data dictionary, or a modified one.
-
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app, data):
-        # Do something with data.
-        return data
-
-    hook.register('pre_render', my_hook)
 
 Note: This does not affect anything that is 'printed' to console.
 
@@ -357,16 +295,6 @@ Run last when CementApp.render() is called.  The application object, and
 rendered output text are passed as arguments.  Must return either the original
 output text, or a modified version.
 
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app, output_text):
-        # Do something with output_text.
-        return output_text
-
-    hook.register('post_render', my_hook)
-
 
 pre_close
 ^^^^^^^^^
@@ -374,18 +302,6 @@ pre_close
 Run first when app.close() is called.  This hook should be used by plugins and
 extensions to do any 'cleanup' at the end of program execution.  Nothing is
 expected in return.
-
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app):
-        # Do something before application close() is called.
-        return
-
-    hook.register('pre_close', my_hook)
-
-Note: This hook deprecates the 'cement_on_close_hook' since Cement >= 1.9.9.
 
 
 post_close
@@ -395,16 +311,6 @@ Run last when app.close() is called.  Most use cases need pre_close(),
 however this hook is available should one need to do anything after all other
 'close' operations.
 
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(app):
-        # Do something after application close() is called.
-        return
-
-    hook.register('post_close', my_hook)
-
 
 signal
 ^^^^^^
@@ -413,13 +319,3 @@ Run when signal handling is enabled, and the defined signal handler callback
 is executed.  This hook should be used by the application, plugins, and
 extensions to perform any actions when a specific signal is caught.  Nothing
 is expected in return.
-
-.. code-block:: python
-
-    from cement.core import hook
-
-    def my_hook(signum, frame):
-        # do something with signum/frame
-        return
-
-    hook.register('signal', my_hook)

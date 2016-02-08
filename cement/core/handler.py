@@ -10,12 +10,13 @@ from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
+
 class HandlerManager(object):
     """
     Manages the handler system to define, get, resolve, etc handlers with
     the Cement Framework.
-    
-    :param use_backend_globals: Whether to use backend globals (backward 
+
+    :param use_backend_globals: Whether to use backend globals (backward
         compatibility and deprecated).
     """
 
@@ -59,7 +60,6 @@ class HandlerManager(object):
             raise exc.FrameworkError("handlers['%s']['%s'] does not exist!" %
                                      (handler_type, handler_label))
 
-
     def list(self, handler_type):
         """
         Return a list of handlers for a given type.
@@ -81,11 +81,10 @@ class HandlerManager(object):
             res.append(self.__handlers__[handler_type][label])
         return res
 
-
     def define(self, interface):
         """
-        Define a handler based on the provided interface.  Defines a handler type
-        based on <interface>.IMeta.label.
+        Define a handler based on the provided interface.  Defines a handler
+        type based on <interface>.IMeta.label.
 
         :param interface: The interface class that defines the interface to be
             implemented by handlers.
@@ -114,14 +113,16 @@ class HandlerManager(object):
         if interface.IMeta.label in self.__handlers__:
             raise exc.FrameworkError("Handler type '%s' already defined!" %
                                      interface.IMeta.label)
-        self.__handlers__[interface.IMeta.label] = {'__interface__': interface}
-
+        self.__handlers__[interface.IMeta.label] = {
+            '__interface__': interface
+            }
 
     def defined(self, handler_type):
         """
         Test whether a handler type is defined.
 
-        :param handler_type: The name or 'type' of the handler (I.e. 'logging').
+        :param handler_type: The name or 'type' of the handler (I.e.
+            'logging').
         :returns: True if the handler type is defined, False otherwise.
         :rtype: boolean
 
@@ -130,7 +131,6 @@ class HandlerManager(object):
             return True
         else:
             return False
-
 
     def register(self, handler_obj):
         """
@@ -198,7 +198,6 @@ class HandlerManager(object):
 
         self.__handlers__[handler_type][obj.Meta.label] = orig_obj
 
-
     def registered(self, handler_type, handler_label):
         """
         Check if a handler is registered.
@@ -214,7 +213,6 @@ class HandlerManager(object):
             return True
 
         return False
-
 
     def resolve(self, handler_type, handler_def, raise_error=True):
         """
@@ -326,8 +324,8 @@ class CementBaseHandler(meta.MetaMixin):
 
 def get(handler_type, handler_label, *args):
     """
-    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and 
-    will be removed in future versions of Cement.  
+    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
+    will be removed in future versions of Cement.
     Use ``CementApp.handler.get()`` instead.
 
     ---
@@ -352,13 +350,13 @@ def get(handler_type, handler_label, *args):
         output.render(dict(foo='bar'))
 
     """
-    #only log debug for now as this won't be removed until Cement 3.x and 
-    #we don't have access to CementApp.Meta.ignore_deprecation_warnings here
+    # only log debug for now as this won't be removed until Cement 3.x and
+    # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `handler.get()` has been deprecated, '
         'and will be removed in future versions of Cement.  You should now '
         'use `CementApp.handler.get()` instead.'
-        )
+    )
 
     if handler_type not in backend.__handlers__:
         raise exc.FrameworkError("handler type '%s' does not exist!" %
@@ -375,8 +373,8 @@ def get(handler_type, handler_label, *args):
 
 def list(handler_type):
     """
-    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and 
-    will be removed in future versions of Cement.  
+    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
+    will be removed in future versions of Cement.
     Use ``CementApp.handler.list()`` instead.
 
     ---
@@ -389,13 +387,13 @@ def list(handler_type):
     :raises: cement.core.exc.FrameworkError
 
     """
-    # only log debug for now as this won't be removed until Cement 3.x and 
+    # only log debug for now as this won't be removed until Cement 3.x and
     # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `handler.get()` has been deprecated, '
         'and will be removed in future versions of Cement.  You should now '
         'use `CementApp.handler.get()` instead.'
-        )
+    )
 
     if handler_type not in backend.__handlers__:
         raise exc.FrameworkError("handler type '%s' does not exist!" %
@@ -411,8 +409,8 @@ def list(handler_type):
 
 def define(interface):
     """
-    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and 
-    will be removed in future versions of Cement.  
+    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
+    will be removed in future versions of Cement.
     Use ``CementApp.handler.define()`` instead.
 
     ---
@@ -434,13 +432,13 @@ def define(interface):
         handler.define(IDatabaseHandler)
 
     """
-    # only log debug for now as this won't be removed until Cement 3.x and 
+    # only log debug for now as this won't be removed until Cement 3.x and
     # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `handler.define()` has been deprecated, '
         'and will be removed in future versions of Cement.  You should now '
         'use `CementApp.handler.define()` instead.'
-        )
+    )
 
     if not hasattr(interface, 'IMeta'):
         raise exc.InterfaceError("Invalid %s, " % interface +
@@ -460,8 +458,8 @@ def define(interface):
 
 def defined(handler_type):
     """
-    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and 
-    will be removed in future versions of Cement.  
+    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
+    will be removed in future versions of Cement.
     Use ``CementApp.handler.defined()`` instead.
 
     ---
@@ -473,13 +471,13 @@ def defined(handler_type):
     :rtype: boolean
 
     """
-    # only log debug for now as this won't be removed until Cement 3.x and 
+    # only log debug for now as this won't be removed until Cement 3.x and
     # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `handler.defined()` has been deprecated, '
         'and will be removed in future versions of Cement.  You should now '
         'use `CementApp.handler.defined()` instead.'
-        )
+    )
 
     if handler_type in backend.__handlers__:
         return True
@@ -489,8 +487,8 @@ def defined(handler_type):
 
 def register(handler_obj):
     """
-    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and 
-    will be removed in future versions of Cement.  
+    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
+    will be removed in future versions of Cement.
     Use ``CementApp.handler.register()`` instead.
 
     ---
@@ -521,13 +519,13 @@ def register(handler_obj):
         handler.register(MyDatabaseHandler)
 
     """
-    # only log debug for now as this won't be removed until Cement 3.x and 
+    # only log debug for now as this won't be removed until Cement 3.x and
     # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
     LOG.debug(
-        'Cement Deprecation Warning: `handler.register()` has been deprecated, '
-        'and will be removed in future versions of Cement.  You should now '
-        'use `CementApp.handler.register()` instead.'
-        )
+        'Cement Deprecation Warning: `handler.register()` has been '
+        'deprecated, and will be removed in future versions of Cement.  You '
+        'should now use `CementApp.handler.register()` instead.'
+    )
 
     orig_obj = handler_obj
 
@@ -569,8 +567,8 @@ def register(handler_obj):
 
 def registered(handler_type, handler_label):
     """
-    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and 
-    will be removed in future versions of Cement.  
+    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
+    will be removed in future versions of Cement.
     Use ``CementApp.handler.registered()`` instead.
 
     ---
@@ -583,13 +581,13 @@ def registered(handler_type, handler_label):
     :rtype: boolean
 
     """
-    # only log debug for now as this won't be removed until Cement 3.x and 
+    # only log debug for now as this won't be removed until Cement 3.x and
     # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `handler.registered()` has been '
         'deprecated, and will be removed in future versions of Cement.  You '
         'should now use `CementApp.handler.registered()` instead.'
-        )
+    )
 
     if handler_type in backend.__handlers__ and \
        handler_label in backend.__handlers__[handler_type]:
@@ -600,8 +598,8 @@ def registered(handler_type, handler_label):
 
 def resolve(handler_type, handler_def, raise_error=True):
     """
-    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and 
-    will be removed in future versions of Cement.  
+    DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
+    will be removed in future versions of Cement.
     Use ``CementApp.handler.resolve()`` instead.
 
     ---
@@ -619,13 +617,13 @@ def resolve(handler_type, handler_def, raise_error=True):
     :returns: The instantiated handler object.
 
     """
-    # only log debug for now as this won't be removed until Cement 3.x and 
+    # only log debug for now as this won't be removed until Cement 3.x and
     # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `handler.resove()` has been '
         'deprecated, and will be removed in future versions of Cement.  You '
         'should now use `CementApp.handler.resolve()` instead.'
-        )
+    )
 
     han = None
     if type(handler_def) == str:

@@ -31,7 +31,6 @@ sub-commands, that are implemented via nested-controllers.
 
     from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
-    from cement.core import handler
 
     class BaseController(CementBaseController):
         class Meta:

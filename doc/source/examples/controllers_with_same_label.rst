@@ -28,7 +28,6 @@ and a 'hosts' controller and we want to have a 'list' sub-command under both:
 
     from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
-    from cement.core import handler
 
     # define application controllers
     class MyAppBaseController(CementBaseController):

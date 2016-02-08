@@ -4,7 +4,8 @@ import os
 import sys
 import json
 from cement.core import foundation, exc, backend, config, extension, plugin
-from cement.core import log, output, handler, hook, arg, controller
+from cement.core.handler import CementBaseHandler
+from cement.core import log, output, hook, arg, controller
 from cement.core.interface import Interface
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando, minimal_logger
@@ -34,7 +35,7 @@ class MyTestInterface(Interface):
         label = 'my_test_interface'
 
 
-class MyTestHandler(handler.CementBaseHandler):
+class MyTestHandler(CementBaseHandler):
 
     class Meta:
         label = 'my_test_handler'
@@ -425,7 +426,7 @@ class FoundationTestCase(test.CementCoreTestCase):
     def test_define_handlers_meta(self):
         app = self.make_app(APP, define_handlers=[MyTestInterface])
         app.setup()
-        self.ok(handler.defined('my_test_interface'))
+        self.ok(app.handler.defined('my_test_interface'))
 
     def test_register_handlers_meta(self):
         app = self.make_app(APP,
@@ -433,7 +434,7 @@ class FoundationTestCase(test.CementCoreTestCase):
                             handlers=[MyTestHandler],
                             )
         app.setup()
-        self.ok(handler.registered('my_test_interface', 'my_test_handler'))
+        self.ok(app.handler.registered('my_test_interface', 'my_test_handler'))
 
     def test_disable_backend_globals(self):
         app = self.make_app(APP, 

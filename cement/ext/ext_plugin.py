@@ -49,7 +49,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         self.load_dirs = self.app._meta.plugin_dirs
 
         # grab a generic config handler object
-        config_handler = self.app.handler.get('config', 
+        config_handler = self.app.handler.get('config',
                                               self.app.config._meta.label)
 
         # first parse plugin config dir for enabled plugins

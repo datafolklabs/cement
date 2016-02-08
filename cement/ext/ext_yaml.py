@@ -78,10 +78,10 @@ class YamlOutputHandler(output.CementOutputHandler):
     class Meta:
 
         """Handler meta-data."""
-        
+
         interface = output.IOutput
         label = 'yaml'
-        
+
         #: Whether or not to include ``yaml`` as an available to choice
         #: to override the ``output_handler`` via command line options.
         overridable = True

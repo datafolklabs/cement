@@ -6,13 +6,13 @@ import re
 import tempfile
 
 from cement.core.foundation import CementApp
-from cement.core.controller import CementBaseController, expose
+from cement.ext.ext_argparse import ArgparseController, expose
 from cement.utils.version import get_version
 from cement.utils import shell
 
 VERSION = get_version()
 
-class CementDevtoolsController(CementBaseController):
+class CementDevtoolsController(ArgparseController):
     class Meta:
         label = 'base'
         arguments = [
@@ -24,8 +24,6 @@ class CementDevtoolsController(CementBaseController):
                   action='store_true', dest='ignore_errors')),
             (['--loud'], dict(help='add more verbose output',
              action='store_true', dest='loud')),
-            (['modifier1'],
-             dict(help='command modifier positional argument', nargs='?')),
         ]
 
     def _do_error(self, msg):
@@ -96,6 +94,10 @@ class CementDevtoolsController(CementBaseController):
         self._do_pep8()
         self._do_tests()
         print('')
+
+    @expose(help='run pep8 tests')
+    def pep8(self):
+        self._do_pep8()
 
     def _do_sphinx(self, dest_path):
         print("Building Documentation")

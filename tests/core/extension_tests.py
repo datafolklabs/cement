@@ -1,6 +1,6 @@
 """Tests for cement.core.extension."""
 
-from cement.core import exc, backend, extension, handler, output, interface
+from cement.core import exc, backend, extension, output, interface
 from cement.utils import test
 
 
@@ -22,7 +22,7 @@ class ExtensionTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_invalid_extension_handler(self):
         # the handler type bogus doesn't exist
-        handler.register(BogusExtensionHandler)
+        self.app.handler.register(BogusExtensionHandler)
 
     def test_load_extensions(self):
         ext = extension.CementExtensionHandler()

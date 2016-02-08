@@ -82,9 +82,12 @@ is encountered.
     import signal
     from cement.core.foundation import CementApp
     from cement.core.exc import CaughtSignal
-    from cement.core import hook
 
-    def my_signal_handler(signum, frame):
+    def my_signal_handler(app, signum, frame):
+        # do something with app?
+        pass
+
+        # or do someting with signum or frame
         if signum == signal.SIGTERM:
             print("Caught SIGTERM...")
         elif signum == signal.SIGINT:
@@ -92,18 +95,23 @@ is encountered.
 
     with CementApp('myapp') as app:
         hook.register('signal', my_signal_handler)
-        app.run()
+
+        try:
+            app.run()
+        except CaughtSignal as e:
+            # do soemthing with e.signum, e.frame
+            pass
 
 
-The key thing to note here is that the main application itself handles the
-``CaughtSignal`` exception, where as using the cement ``signal`` hook is
-useful for plugins and extensions to be able to tie into the signal handling
-outside of the main application.  Both serve the same purpose however the
-application object is not available (passed to) the cement ``signal`` hook
-which limits what can be done within the callback function.  For this reason
-any extensions or plugins should use the ``pre_close`` hook as much as
-possible as it is always run when ``app.close()`` is called and receives the
-``app`` object as one of its parameters.
+The key thing to note here is that the main application itself can easily 
+handle the ``CaughtSignal`` exception without using hooks, however using the
+``signal`` hook is useful for plugins and extensions to be able to tie into 
+the signal handling outside of the main application.  Both serve the same 
+purpose. 
+
+Regardless of how signals are handled, all extensions or plugins should use 
+the ``pre_close`` hook for cleanup purposes as much as possible as it is 
+always run when ``app.close()`` is called.
 
 
 Configuring Which Signals To Catch
@@ -135,30 +143,46 @@ What If I Don't Like Your Signal Handler Callback?
 
 If you want more control over what happens when a signal is caught, you are
 more than welcome to override the default signal handler callback.  That said,
-please be kind and be sure to atleast run the cement 'signal' hook within your
-callback.
+please be kind and be sure to atleast run the cement ``signal`` hook within 
+your callback.
+
+The following is an example taken from the builtin callback handler.  Note 
+that there is a bit of hackery in how we are acquiring the ``CementApp`` from
+the frame.  This is because the signal is picked up outside of our control
+so we need to find it.
 
 .. code-block:: python
 
     import signal
     from cement.core.foundation import CementApp
-    from cement.core import hook
 
-    SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
+    def cement_signal_handler(signum, frame):
+        """
+        Catch a signal, run the ``signal`` hook, and then raise an exception
+        allowing the app to handle logic elsewhere.
 
-    def my_signal_handler(signum, frame):
-        print 'Caught signal %s' % signum
+        :param signum: The signal number
+        :param frame: The signal frame.
+        :raises: cement.core.exc.CaughtSignal
 
-        # execute the cement signal hook
-        for res in hook.run('signal', signum, frame):
+        """
+        LOG.debug('Caught signal %s' % signum)
+
+        # hackish, but we do not have direct access to the CementApp object
+        for f_global in frame.f_globals.values():
+            if isinstance(f_global, CementApp):
+                app = f_global
+                for res in app.hook.run('signal', app, signum, frame):
+                    pass
+        raise exc.CaughtSignal(signum, frame)
+
+
+    with CementApp('myapp') as app:
+        try:
+            app.run()
+        except CaughtSignal as e:
+            # do something with e.signum, or e.frame
             pass
-
-    class MyApp(CementApp):
-        class Meta:
-            label = 'myapp'
-            catch_signals = SIGNALS
-            signal_handler = my_signal_handler
-
 
 
 This Is Stupid, and UnPythonic - How Do I Disable It?

@@ -2,7 +2,7 @@
 
 import os
 from tempfile import mkstemp
-from cement.core import exc, config, handler, backend
+from cement.core import exc, config, backend
 from cement.utils import test
 
 CONFIG = """
@@ -21,7 +21,7 @@ class ConfigTestCase(test.CementCoreTestCase):
 
     @test.raises(exc.InterfaceError)
     def test_invalid_config_handler(self):
-        handler.register(BogusConfigHandler)
+            self.app.handler.register(BogusConfigHandler)
 
     @test.raises(NotImplementedError)
     def test_parse_file_not_implemented(self):
