@@ -11,7 +11,6 @@ import os
 import shutil
 import signal
 from time import sleep
-from cement.core import hook
 from cement.utils.misc import rando
 from cement.ext import ext_reload_config
 
@@ -58,8 +57,8 @@ class ReloadConfigExtTestCase(test.CementExtTestCase):
 
     def test_reload_config(self):
         self.app.setup()
-        hook.register('pre_reload_config', bogus_hook_func)
-        hook.register('post_reload_config', bogus_hook_func)
+        self.app.hook.register('pre_reload_config', bogus_hook_func)
+        self.app.hook.register('post_reload_config', bogus_hook_func)
         self.app.run()
         self.eq(self.app.config.get(APP, 'foo'), 'bar1')
 
@@ -83,12 +82,12 @@ class ReloadConfigExtTestCase(test.CementExtTestCase):
 
     def test_signal_handling(self):
         self.app.setup()
-        hook.register('pre_reload_config', bogus_hook_func)
-        hook.register('post_reload_config', bogus_hook_func)
+        self.app.hook.register('pre_reload_config', bogus_hook_func)
+        self.app.hook.register('post_reload_config', bogus_hook_func)
         self.app.run()
 
         sleep(1)
         try:
-            ext_reload_config.signal_handler(signal.SIGINT, None)
+            ext_reload_config.signal_handler(self.app, signal.SIGINT, None)
         finally:
             self.app.close()
