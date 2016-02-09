@@ -168,7 +168,8 @@ class LoggingLogHandler(log.CementLogHandler):
 
         for i in logging.getLogger("cement:app:%s" % namespace).handlers:
             logging.getLogger("cement:app:%s" % namespace).removeHandler(i)
-            self.backend = logging.getLogger("cement:app:%s" % namespace)
+
+        self.backend = logging.getLogger("cement:app:%s" % namespace)
 
     def _get_console_format(self):
         if self.get_level() == logging.getLevelName(logging.DEBUG):
@@ -194,6 +195,7 @@ class LoggingLogHandler(log.CementLogHandler):
 
     def _setup_console_log(self):
         """Add a console log handler."""
+        namespace = self._meta.namespace
         to_console = self.app.config.get(self._meta.config_section,
                                          'to_console')
         if is_true(to_console):
@@ -205,11 +207,17 @@ class LoggingLogHandler(log.CementLogHandler):
         else:
             console_handler = NullHandler()
 
+        # FIXME: self._clear_loggers() should be preventing this but its not!
+        for i in logging.getLogger("cement:app:%s" % namespace).handlers:
+            if isinstance(i, logging.StreamHandler):
+                self.backend.removeHandler(i)
+
         self.backend.addHandler(console_handler)
 
     def _setup_file_log(self):
         """Add a file log handler."""
 
+        namespace = self._meta.namespace
         file_path = self.app.config.get(self._meta.config_section, 'file')
         rotate = self.app.config.get(self._meta.config_section, 'rotate')
         max_bytes = self.app.config.get(self._meta.config_section,
@@ -239,6 +247,11 @@ class LoggingLogHandler(log.CementLogHandler):
             file_handler.setLevel(getattr(logging, self.get_level()))
         else:
             file_handler = NullHandler()
+
+        # FIXME: self._clear_loggers() should be preventing this but its not!
+        for i in logging.getLogger("cement:app:%s" % namespace).handlers:
+            if isinstance(i, file_handler.__class__):   # pragma: nocover
+                self.backend.removeHandler(i)           # pragma: nocover
 
         self.backend.addHandler(file_handler)
 
