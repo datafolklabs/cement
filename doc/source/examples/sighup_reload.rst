@@ -50,7 +50,6 @@ following example demonstrates how you might achieve that:
                 else:
                     app.exit_code = 1
                     keep_alive = False
-        app.close()
 
 
 Running the application shows the inner loop in action:

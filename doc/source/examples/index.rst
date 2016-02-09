@@ -16,3 +16,4 @@ with Cement.
    reload_config
    tabularized_output
    sighup_reload
+   managing_multiple_environments
