@@ -28,6 +28,8 @@ development will happen as 2.7.x under the git master branch.
 
 Bugs:
 
+    * :issue:`310` - Resolved issue where console/file logs had duplicate
+      entries under certain circumstances.
     * :issue:`314` - Resolved inconsistent behavor in ``colorlog`` extension.
     * :issue:`316` - Running Nose tests with ``-s`` option causes traceback
     * :issue:`317` - Calling ``CementApp.run()`` should return results from
