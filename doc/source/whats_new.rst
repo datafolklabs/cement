@@ -47,6 +47,15 @@ Extensions
       familiar to users of MySQL, PGSQL, Etc.
 
 
+Misc Enhancements
+^^^^^^^^^^^^^^^^^
+
+    * Cement now supports the ability to reload runtime within the current
+      process via ``app.reload()``.  This will enable future refactoring of
+      the ``ext_reload_config`` extension that is intended to handle 
+      reloading runtime after configuration files are modified.  This 
+      affectively adds ``SIGHUP`` support.
+
 New Features in Cement 2.6
 --------------------------
 

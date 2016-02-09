@@ -66,6 +66,9 @@ class CementTestCase(unittest.TestCase):
         Remove all registered hooks and handlers from the backend.
 
         """
+
+        # FIXME: This should not be needed anymore once we fully remove
+        # backend_globals (Cement 3)
         for _handler in backend.__handlers__.copy():
             del backend.__handlers__[_handler]
         for _hook in backend.__hooks__.copy():

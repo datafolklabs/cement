@@ -5,6 +5,7 @@ import os
 import sys
 import signal
 import copy
+from time import sleep
 from ..core import backend, exc, log, config, plugin, interface
 from ..core import output, extension, arg, controller, meta, cache, mail
 from ..core.handler import HandlerManager
@@ -394,7 +395,7 @@ class CementApp(meta.MetaMixin):
         config_defaults = None
         """Default configuration dictionary.  Must be of type 'dict'."""
 
-        catch_signals = [signal.SIGTERM, signal.SIGINT]
+        catch_signals = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
         """
         List of signals to catch, and raise exc.CaughtSignal for.
         Can be set to None to disable signal handling.
@@ -783,6 +784,7 @@ class CementApp(meta.MetaMixin):
         """
         return_val = None
 
+        LOG.debug('running pre_run hook')
         for res in self.hook.run('pre_run', self):
             pass
 
@@ -792,19 +794,55 @@ class CementApp(meta.MetaMixin):
         else:
             self._parse_args()
 
+        LOG.debug('running post_run hook')
         for res in self.hook.run('post_run', self):
             pass
 
         return return_val
 
-    def __enter__(self):
-        self.setup()
-        return self
+    def run_forever(self, interval=1, tb=True):
+        """
+        This function wraps ``run()`` with an endless while loop.  If any
+        exception is encountered it will be logged and then the application
+        will be reloaded.
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        # only close the app if there are no unhandled exceptions
-        if exc_type is None:
-            self.close()
+        :param interval: The number of seconds to sleep before reloading the
+            the appliction.
+        :param tb: Whether or not to print traceback if exception occurs.
+        :returns: It should never return.
+        """
+
+        if tb is True:
+            import traceback
+
+        while True:
+            LOG.debug('inside run_forever() eternal loop')
+            try:
+                self.run()
+            except Exception as e:
+                self.log.fatal('Caught Exception: %s' % e)
+
+                if tb is True:
+                    exc_type, exc_value, exc_traceback = sys.exc_info()
+                    traceback.print_exception(
+                        exc_type, exc_value, exc_traceback, limit=2,
+                        file=sys.stdout
+                    )
+            sleep(interval)
+            self.reload()
+
+    def reload(self):
+        """
+        This function is useful for reloading a running applications, for
+        example to reload configuration settings, etc.
+
+        :returns: None
+        """
+        LOG.debug('reloading the %s application' % self._meta.label)
+        self.handler.__handlers__ = {}
+        self.hook.__hooks__ = {}
+        self._lay_cement()
+        self.setup()
 
     def close(self, code=None):
         """
@@ -821,7 +859,7 @@ class CementApp(meta.MetaMixin):
         for res in self.hook.run('pre_close', self):
             pass
 
-        LOG.debug("closing the application")
+        LOG.debug("closing the %s application" % self._meta.label)
 
         for res in self.hook.run('post_close', self):
             pass
@@ -1275,3 +1313,12 @@ class CementApp(meta.MetaMixin):
 
         """
         pass
+
+    def __enter__(self):
+        self.setup()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        # only close the app if there are no unhandled exceptions
+        if exc_type is None:
+            self.close()

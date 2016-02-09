@@ -1,4 +1,3 @@
-
 from time import sleep
 from cement.core.exc import CaughtSignal
 from cement.core import hook

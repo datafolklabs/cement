@@ -15,3 +15,4 @@ with Cement.
    arbitrary_extra_arguments
    reload_config
    tabularized_output
+   sighup_reload

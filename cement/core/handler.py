@@ -115,7 +115,7 @@ class HandlerManager(object):
                                      interface.IMeta.label)
         self.__handlers__[interface.IMeta.label] = {
             '__interface__': interface
-            }
+        }
 
     def defined(self, handler_type):
         """

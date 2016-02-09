@@ -45,6 +45,8 @@ Features:
       in ``ext_argparse`` to eventually replace ``CementBaseController``.
     * :issue:`299` - Added Argcomplete Framework Extension
     * :issue:`322` - Added Tabulate Framework Extension (tabulatized output)
+    * :issue:`336` - Added Support for ``CementApp.reload()`` (SIGHUP)
+    * :issue:`337` - Added ``app.run_forever()`` alternative run method.
 
 Refactoring:
 
