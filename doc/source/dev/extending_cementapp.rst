@@ -47,13 +47,13 @@ arbitrary and non-functional example using dRest:
 
     def extend_api_object(app):
         # get api info from this plugins configuration
-        endpint = app.config.get('api', 'endpoint')
+        endpoint = app.config.get('api', 'endpoint')
         user = app.config.get('api', 'user')
         password = app.config.get('api', 'password')
 
         # create an api object and authenticate
-        api = drest.API(endpoint)
-        api.auth(username, password)
+        my_api_client = drest.API(endpoint)
+        my_api_client.auth(username, password)
 
         # extend the global app object with an ``api`` member
         app.extend('api', my_api_client)
