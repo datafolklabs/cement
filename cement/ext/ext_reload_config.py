@@ -4,7 +4,7 @@ WARNING: THIS EXTENSION IS EXPERIMENTAL
 Experimental extension may (and probably will) change at any time.  Please do
 not rely on these features until they are more fully vetted.
 
-The Reload Config Framework Extension enables applications built on Cement to
+The Reload Config Framework Extension enables applications Built on Cement™ to
 easily reload configuration settings any time configuration files are
 modified without stopping/restarting the process.
 

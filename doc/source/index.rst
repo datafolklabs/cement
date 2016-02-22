@@ -111,6 +111,7 @@ Documentation
    contributors
    upgrading
    whats_new
+   projects_built_on_cement
    faq
    api/index
 
