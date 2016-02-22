@@ -11,7 +11,7 @@ LOG = minimal_logger(__name__)
 class HookManager(object):
     """
     Manages the hook system to define, get, run, etc hooks within the
-    the Cement Framework and applications Built on Cement™.
+    the Cement Framework and applications Built on Cement (tm).
 
     :param use_backend_globals: Whether to use backend globals (backward
         compatibility and deprecated).
