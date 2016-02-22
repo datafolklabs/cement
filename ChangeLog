@@ -47,7 +47,8 @@ Features:
     * :issue:`322` - Added Tabulate Framework Extension (tabulatized output)
     * :issue:`336` - Added Support for ``CementApp.reload()`` (SIGHUP)
     * :issue:`337` - Added ``app.run_forever()`` alternative run method.
-
+    * :issue:`342` - Added Alarm/Timeout Support
+    
 Refactoring:
 
     * :issue:`311` - Refactor Hooks/Handlers into CementApp

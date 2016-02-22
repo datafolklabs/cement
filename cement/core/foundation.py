@@ -757,8 +757,8 @@ class CementApp(meta.MetaMixin):
         for res in self.hook.run('pre_setup', self):
             pass
 
-        self._setup_signals()
         self._setup_extension_handler()
+        self._setup_signals()
         self._setup_config_handler()
         self._setup_mail_handler()
         self._setup_cache_handler()
@@ -1073,16 +1073,26 @@ class CementApp(meta.MetaMixin):
         for res in self.hook.run('post_argument_parsing', self):
             pass
 
+    def catch_signal(self, signum):
+        """
+        Add ``signum`` to the list of signals to catch and handle by Cement.
+        
+        :param signum: The signal number to catch.  See Python ``signal``
+          library.
+        """
+
+        LOG.debug("adding signal handler %s for signal %s" % (
+            self._meta.signal_handler, signum)
+        )
+        signal.signal(signum, self._meta.signal_handler)
+
     def _setup_signals(self):
         if self._meta.catch_signals is None:
             LOG.debug("catch_signals=None... not handling any signals")
             return
 
         for signum in self._meta.catch_signals:
-            LOG.debug("adding signal handler %s for signal %s" % (
-                self._meta.signal_handler, signum)
-            )
-            signal.signal(signum, self._meta.signal_handler)
+            self.catch_signal(signum)
 
     def _resolve_handler(self, handler_type, handler_def, raise_error=True):
         han = self.handler.resolve(handler_type, handler_def, raise_error)

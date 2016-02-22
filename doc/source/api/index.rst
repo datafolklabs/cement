@@ -47,6 +47,7 @@ Cement Extension Modules
 .. toctree::
    :maxdepth: 1
 
+   ext/ext_alarm
    ext/ext_argcomplete
    ext/ext_argparse
    ext/ext_colorlog

@@ -11,6 +11,7 @@ from cement.core.controller import CementBaseController, expose
 from cement.core import log, output, hook, arg, controller
 from cement.core.interface import Interface
 from cement.utils import test
+from cement.core.exc import CaughtSignal
 from cement.utils.misc import init_defaults, rando, minimal_logger
 from nose.plugins.attrib import attr
 
@@ -491,4 +492,4 @@ class FoundationTestCase(test.CementCoreTestCase):
             self.eq(e.args[0], 'It ran forever!')
             raise
         finally:
-            signal.alarm(0)  
+            signal.alarm(0) 
