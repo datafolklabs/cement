@@ -45,6 +45,9 @@ Extensions
       ``ArgparseController`` to function).
     * :ref:`Tabulate <cement.ext.ext_tabulate>` - Provides tabularized output
       familiar to users of MySQL, PGSQL, Etc.
+    * :ref:`Alarm <cement.ext.ext_alarm>` - Provides quick access to 
+      setting an application alarm to easily handling timing out long running
+      operations.
 
 
 Misc Enhancements

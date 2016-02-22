@@ -1,6 +1,6 @@
 """
 The Alarm Extension provides easy access to setting an application alarm to
-handle timing out operations.  See the 
+handle timing out operations.  See the
 `Python Signal Library <https://docs.python.org/3.5/library/signal.html>`_.
 
 Availability: Unix
@@ -25,16 +25,16 @@ Example:
         try:
             app.run()
             app.alarm.set(3, "The operation timed out after 3 seconds!")
-            
+
             # do something that takes time to operate
             time.sleep(5)
-            
+
             app.alarm.stop()
 
         except CaughtSignal as e:
             print(e.msg)
             app.exit_code = 1
-        
+
 Looks like:
 
 .. code-block:: console
@@ -55,6 +55,7 @@ def alarm_handler(app, signum, frame):
     if signum == signal.SIGALRM:
         app.log.error(app.alarm.msg)
 
+
 class AlarmManager(object):
     """
     Lets the developer easily set and stop an alarm.  If the
@@ -68,7 +69,7 @@ class AlarmManager(object):
     def set(self, time, msg):
         """
         Set the application alarm to ``time`` seconds.  If the time is
-        exceeded ``signal.SIGALRM`` is raised.  
+        exceeded ``signal.SIGALRM`` is raised.
 
         :param time: The time in seconds to set the alarm to.
         :param msg: The message to display if the alarm is triggered.
@@ -90,4 +91,3 @@ def load(app):
     app.catch_signal(signal.SIGALRM)
     app.extend('alarm', AlarmManager())
     app.hook.register('signal', alarm_handler)
-

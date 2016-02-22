@@ -1076,7 +1076,7 @@ class CementApp(meta.MetaMixin):
     def catch_signal(self, signum):
         """
         Add ``signum`` to the list of signals to catch and handle by Cement.
-        
+
         :param signum: The signal number to catch.  See Python ``signal``
           library.
         """
