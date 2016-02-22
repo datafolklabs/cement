@@ -59,6 +59,7 @@ Misc Enhancements
       reloading runtime after configuration files are modified.  This 
       affectively adds ``SIGHUP`` support.
 
+
 New Features in Cement 2.6
 --------------------------
 

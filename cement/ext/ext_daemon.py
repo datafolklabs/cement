@@ -1,6 +1,6 @@
 """
-The Daemon Framework Extension enables applications built on Cement to easily
-perform standard 'daemon' functions.
+The Daemon Framework Extension enables applications Built on Cement™ to 
+easily perform standard 'daemon' functions.
 
 Requirements
 ------------
