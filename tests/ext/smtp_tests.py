@@ -1,6 +1,7 @@
 """Tests for cement.ext.ext_smtp."""
 
 import mock
+import sys
 import smtplib
 from cement.utils import test
 from cement.utils.misc import rando, init_defaults
@@ -39,7 +40,11 @@ class SMTPMailHandlerTestCase(test.CementTestCase):
             self.app.mail.send('TEST MESSAGE')
 
             instance = mock_smtp.return_value
-            self.eq(instance.sendmail.call_count, 1)
+
+            if int(sys.version[0]) >= 3:
+                self.eq(instance.send_message.call_count, 1)
+            else:
+                self.eq(instance.sendmail.call_count, 1)
 
     def test_smtp_ssl_tls(self):
         defaults = init_defaults(APP, 'mail.smtp')
@@ -62,7 +67,12 @@ class SMTPMailHandlerTestCase(test.CementTestCase):
                                )
 
             instance = mock_smtp.return_value
-            self.eq(instance.sendmail.call_count, 1)
+
+            if int(sys.version[0]) >= 3:
+                self.eq(instance.send_message.call_count, 1)
+            else:
+                self.eq(instance.sendmail.call_count, 1)
+
             self.eq(instance.starttls.call_count, 1)
 
     def test_smtp_auth(self):
@@ -88,4 +98,9 @@ class SMTPMailHandlerTestCase(test.CementTestCase):
 
             instance = mock_smtp.return_value
             self.eq(instance.login.call_count, 1)
-            self.eq(instance.sendmail.call_count, 1)
+            
+            if int(sys.version[0]) >= 3:
+                self.eq(instance.send_message.call_count, 1)
+            else:
+                self.eq(instance.sendmail.call_count, 1)
+

@@ -1,5 +1,5 @@
 """
-The Daemon Framework Extension enables applications Built on Cement (tm) to 
+The Daemon Framework Extension enables applications Built on Cement (tm) to
 easily perform standard 'daemon' functions.
 
 Requirements

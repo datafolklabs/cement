@@ -1,5 +1,9 @@
 
+import sys
 import smtplib
+from email.header import Header
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from ..core import mail
 from ..utils.misc import minimal_logger, is_true
 
@@ -219,6 +223,33 @@ class SMTPMailHandler(mail.CementMailHandler):
         if self.app.debug is True:
             server.set_debuglevel(9)
 
+        if int(sys.version[0]) >= 3:
+            self._send_message(server, body, **params)
+        else:                                               # pragma: nocover
+            self._send_message_py2(server, body, **params)
+
+        server.quit()
+
+    def _send_message(self, server, body, **params):
+        msg = MIMEMultipart('alternative')
+        msg.set_charset('utf-8')
+
+        msg['From'] = params['from_addr']
+        msg['To'] = ', '.join(params['to'])
+        msg['Cc'] = ', '.join(params['cc'])
+        msg['Bcc'] = ', '.join(params['bcc'])
+        if params['subject_prefix'] not in [None, '']:
+            subject = '%s %s' % (params['subject_prefix'],
+                                 params['subject'])
+        else:
+            subject = params['subject']
+        msg['Subject'] = Header(subject)
+
+        part = MIMEText(body)
+        msg.attach(part)
+        server.send_message(msg)
+
+    def _send_message_py2(self, server, body, **params):  # pragma: nocover
         msg = ""
         msg += "From: %s\r\nTo: %s\r\n" % (params['from_addr'],
                                            ', '.join(params['to']))
@@ -234,7 +265,6 @@ class SMTPMailHandler(mail.CementMailHandler):
         server.sendmail(params['from_addr'],
                         params['to'] + params['cc'] + params['bcc'],
                         msg)
-        server.quit()
 
 
 def load(app):
