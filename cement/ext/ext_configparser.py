@@ -1,4 +1,38 @@
-"""ConfigParser Framework Extension."""
+"""
+
+The ConfigParser Framework Extension provides configuration handling based on
+the standard :py:class:`ConfigParser`, and is the default configuration 
+handler used by Cement.
+
+Requirements:
+
+  * No external dependencies.
+
+
+Configuration
+-------------
+
+This extension does not honor any application configuration settings.
+
+
+Usage
+-----
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    with CementApp() as app:
+        app.run()
+
+        # get a config setting
+        app.config.get('myapp', 'foo')
+
+        # set a config setting
+        app.config.set('myapp', 'foo', 'bar2')
+
+        # etc.
+"""
 
 import os
 import sys

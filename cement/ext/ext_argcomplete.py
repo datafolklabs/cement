@@ -6,7 +6,7 @@ and perform auto-completion of command line arguments/options/sub-parsers/etc.
 Requirements
 ------------
 
- * Python Argcomplete (``pip install argcomplete``)
+ * Argcomplete (``pip install argcomplete``)
  * Argparse
 
 

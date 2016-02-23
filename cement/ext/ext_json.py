@@ -1,4 +1,73 @@
-"""JSON Framework Extension"""
+"""
+
+The JSON Framework Extension adds the :class:`JsonOutputHandler` to render
+output in pure JSON, as well as the :class:`JsonConfigHandler` that allows
+applications to JSON configuration files.
+
+Requirements
+------------
+
+ * No external dependencies.
+
+
+Configuration
+-------------
+
+This extension does not honor any application configuration settings.
+
+
+Usage
+_____
+
+**myapp.conf**
+
+.. code-block:: json
+
+    {
+        "myapp": {
+            "foo": "bar"
+        }
+    }
+
+**myapp.py**
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['json']
+            config_handler = 'json'
+
+            # you probably don't want this to be json by default.. but you can
+            # output_handler = 'json'
+
+    with MyApp() as app:
+        app.run()
+
+        # create some data
+        data = dict(foo=app.config.get('myapp', 'foo'))
+
+        app.render(data)
+
+
+In general, you likely would not set ``output_handler`` to ``json``, but rather
+another type of output handler that display readable output to the end-user
+(i.e. Mustache, Genshi, or Tabulate).  That said, by default Cement adds the 
+``-o`` command line option to allow the end user to override the output 
+handler.  For example: passing ``-o json`` will override the default output 
+handler and set it to ``JsonOutputHandler``.  
+
+See ``CementApp.Meta.handler_override_options``.
+
+.. code-block:: console
+
+    $ python myapp.py -o json
+    {"foo": "bar"}
+
+"""
 
 import sys
 import json
@@ -62,12 +131,7 @@ class JsonOutputHandler(output.CementOutputHandler):
     library.  Please see the developer documentation on
     :ref:`Output Handling <dev_output_handling>`.
 
-    Note: By default, Cement adds the ``-o`` command line option to allow the
-    end user to override the output handler.  For example: passing ``-o json``
-    will override the default output handler and set it to
-    ``JsonOutputHandler``.  See ``CementApp.Meta.handler_override_options``.
-
-    This extension forces Cement to suppress console output until
+    This handler forces Cement to suppress console output until
     ``app.render`` is called (keeping the output pure JSON).  If
     troubleshooting issues, you will need to pass the ``--debug`` option in
     order to unsuppress output and see what's happening.

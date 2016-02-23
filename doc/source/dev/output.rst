@@ -3,8 +3,8 @@
 Output Handling
 ===============
 
-Cement defines an output interface called :ref:`IOutput <cement.core.output>`,
-as well as the default :ref:`DummyOutputHandler <cement.ext.ext_dummy>`
+Cement defines an output interface called :class:`cement.core.output.IOutput`,
+as well as the default :class:`cement.ext.ext_dummy.DummyOutputHandler`
 that implements the interface.  This handler is part of Cement, and actually
 does nothing to produce output.  Therefore it can be said that by default
 a Cement application does not handle rendering output to the console, but
@@ -16,13 +16,15 @@ interface and not the full capabilities of the implementation.
 
 The following output handlers are included and maintained with Cement:
 
-    * :ref:`DummyOutputHandler <cement.ext.ext_dummy>`
-    * :ref:`JsonOutputHandler <cement.ext.ext_json>`
-    * :ref:`YamlOutputHandler <cement.ext.ext_yaml>`
-    * :ref:`GenshiOutputHandler <cement.ext.ext_genshi>`
-    * :ref:`MustacheOutputHandler <cement.ext.ext_mustache>`
+    * :class:`cement.ext.ext_dummy.DummyOutputHandler`
+    * :class:`cement.ext.ext_json.JsonOutputHandler`
+    * :class:`cement.ext.ext_yaml.YamlOutputHandler`
+    * :class:`cement.ext.ext_genshi.GenshiOutputHandler`
+    * :class:`cement.ext.ext_mustache.MustacheOutputHandler`
+    * :class:`cement.ext.ext_tabulate.TabulateOutputHandler`
 
-Please reference the :ref:`IOutput <cement.core.output>` interface
+
+Please reference the :class:`cement.core.output.IOutput` interface
 documentation for writing your own output handler.
 
 Rending Output

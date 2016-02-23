@@ -1,4 +1,50 @@
-"""ConfigObj Framework Extension."""
+"""
+The ConfigObj Framework Extension provides configuration handling based on
+`configobj <http://www.voidspace.org.uk/python/configobj.html>`_.  It is a 
+drop-in replacement for the default config handler 
+:class:`cement.ext.ext_configparser`.
+
+One of the primary features of ConfigObj is that you can access the 
+application configuration as a dictionary object.
+
+
+Requirements
+------------
+
+ * ConfigObj (``pip install configobj``)
+
+
+Configuration
+-------------
+
+This extension does not honor any application configuration settings.
+
+
+Usage
+-----
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['configobj']
+            config_handler = 'configobj'
+
+    with MyApp() as app:
+        app.run()
+
+        # get a config setting
+        app.config['myapp']['foo']
+
+        # set a config setting
+        app.config['myapp']['foo'] = 'bar2'
+
+        # etc.
+
+"""
 
 import os
 import sys

@@ -17,6 +17,7 @@ Features
    sub-command, etc).
  * Manages a pid file including cleanup on app.close()
 
+
 Configuration
 -------------
 
@@ -100,12 +101,11 @@ framework hook:
 
 .. code-block:: python
 
-    from cement.core import hook
-
     def make_daemon(app):
         app.daemonize()
 
-    hook.register('pre_run', make_daemon)
+    def load(app):
+        app.hook.register('pre_run', make_daemon)
 
 
 Finally, some applications may prefer to only daemonize certain sub-commands
@@ -113,7 +113,6 @@ rather than the entire parent application.  For example:
 
 .. code-block:: python
 
-    from cement.core import foundation, controller
     from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
 
@@ -142,6 +141,7 @@ rather than the entire parent application.  For example:
 
     with MyApp() as app:
         app.run()
+
 
 By default, even after app.daemonize() is called... the application will
 continue to run in the foreground, but will still manage the pid and

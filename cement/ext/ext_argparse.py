@@ -3,7 +3,7 @@ The Argparse Framework Extension provides argument handling based on
 :py:class:`argparse.ArgumentParser`, and is the default argument handler
 used by :class:`cement.core.foundation.CementApp`.  In addition, this
 extension also provides :class:`ArgparseController` that enables rapid
-development with application controllers.
+development with application controllers based on Argparse.
 
 Requirements
 ------------

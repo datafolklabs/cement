@@ -1,4 +1,118 @@
-"""Colorlog Framework Extension"""
+"""
+
+The ColorLog Framework Extension provides logging based on the standard
+``logging`` module and is a drop-in replacement for the default log
+handler :class:`cement.ext.ext_logging.LoggingLogHandler`.
+
+Requirements
+------------
+
+ * ColorLog (``pip install colorlog``)
+ 
+
+Configuration
+-------------
+
+This handler honors all of the same configuration settings as the
+``LoggingLogHandler`` including:
+
+    * level
+    * file
+    * to_console
+    * rotate
+    * max_bytes
+    * max_files
+
+
+In addition, it also supports:
+
+    * colorize_file_log
+    * colorize_console_log
+
+
+A sample config section (in any config file) might look like:
+
+.. code-block:: text
+
+    [log.colorlog]
+    file = /path/to/config/file
+    level = info
+    to_console = true
+    rotate = true
+    max_bytes = 512000
+    max_files = 4
+    colorize_file_log = false
+    colorize_console_log = true
+        
+
+Usage
+-----
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['colorlog']
+            log_handler = 'colorlog'
+
+    with MyApp() as app:
+        app.run()
+        app.log.debug('This is my debug message')
+        app.log.info('This is my info message')
+        app.log.warn('This is my warning message')
+        app.log.error('This is my error message')
+        app.log.fatal('This is my critical message')
+
+
+The colors can be customized by passing in a ``colors`` dictionary mapping
+overriding the ``ColorLogHandler.Meta.colors`` meta-data:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+    from cement.ext.ext_colorlog import ColorLogHandler
+
+    COLORS = {
+        'DEBUG':    'cyan',
+        'INFO':     'green',
+        'WARNING':  'yellow',
+        'ERROR':    'red',
+        'CRITICAL': 'red,bg_white',
+    }
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            log_handler = ColorLogHandler(colors=COLORS)
+
+
+Or by sub-classing and creating your own custom class:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+    from cement.ext.ext_colorlog import ColorLogHandler
+
+    class MyCustomLog(ColorLogHandler):
+        class Meta:
+            label = 'my_custom_log'
+            colors = {
+                'DEBUG':    'cyan',
+                'INFO':     'green',
+                'WARNING':  'yellow',
+                'ERROR':    'red',
+                'CRITICAL': 'red,bg_white',
+            }
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            log_handler = MyCustomLog
+
+"""
 
 import os
 import sys
@@ -21,106 +135,6 @@ class ColorLogHandler(LoggingLogHandler):
     must include ``colorlog`` in your applications dependencies as Cement
     explicitly does **not** include external dependencies for optional
     extensions.
-
-    Usage:
-
-    .. code-block:: python
-
-        from cement.core.foundation import CementApp
-
-        class MyApp(CementApp):
-            class Meta:
-                label = 'myapp'
-                extensions = ['colorlog']
-                log_handler = 'colorlog'
-
-        with MyApp() as app:
-            app.run()
-            app.log.debug('This is my debug message')
-            app.log.info('This is my info message')
-            app.log.warn('This is my warning message')
-            app.log.error('This is my error message')
-            app.log.fatal('This is my critical message')
-
-
-    The colors can be customized by passing in a ``colors`` dictionary mapping
-    overriding the ``ColorLogHandler.Meta.colors`` meta-data:
-
-    .. code-block:: python
-
-        from cement.core.foundation import CementApp
-        from cement.ext.ext_colorlog import ColorLogHandler
-
-        COLORS = {
-            'DEBUG':    'cyan',
-            'INFO':     'green',
-            'WARNING':  'yellow',
-            'ERROR':    'red',
-            'CRITICAL': 'red,bg_white',
-        }
-
-        class MyApp(CementApp):
-            class Meta:
-                label = 'myapp'
-                log_handler = ColorLogHandler(colors=COLORS)
-
-
-    Or by sub-classing and creating your own custom class:
-
-    .. code-block:: python
-
-        from cement.core.foundation import CementApp
-        from cement.ext.ext_colorlog import ColorLogHandler
-
-        class MyCustomLog(ColorLogHandler):
-            class Meta:
-                label = 'my_custom_log'
-                colors = {
-                    'DEBUG':    'cyan',
-                    'INFO':     'green',
-                    'WARNING':  'yellow',
-                    'ERROR':    'red',
-                    'CRITICAL': 'red,bg_white',
-                }
-
-        class MyApp(CementApp):
-            class Meta:
-                label = 'myapp'
-                log_handler = MyCustomLog
-
-
-
-    Configuration:
-
-    This handler honors all of the same configuration settings as the
-    ``LoggingLogHandler`` including:
-
-        * level
-        * file
-        * to_console
-        * rotate
-        * max_bytes
-        * max_files
-
-    In addition, it also supports:
-
-        * colorize_file_log
-        * colorize_console_log
-
-
-    A sample config section (in any config file) might look like:
-
-    .. code-block:: text
-
-        [log.colorlog]
-        file = /path/to/config/file
-        level = info
-        to_console = true
-        rotate = true
-        max_bytes = 512000
-        max_files = 4
-        colorize_file_log = false
-        colorize_console_log = true
 
     """
     class Meta:
