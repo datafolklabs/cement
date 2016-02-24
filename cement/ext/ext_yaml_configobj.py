@@ -1,4 +1,57 @@
-"""YAML ConfigObj Framework Extension"""
+"""
+The Yaml ConfigObj Extension is a combination of the
+:class:`YamlConfigHandler` and :class:`ConfigObjConfigHandler` which allows
+the application to read Yaml configuration files into a ConfigObj based
+configuration handler.
+
+Requirements
+------------
+
+ * ConfigObj (``pip install configobj``)
+ * pyYaml (``pip install pyYaml``)
+
+
+Configuration
+-------------
+
+This extension does not honor any application configuration settings.
+
+
+Usage
+-----
+
+**myapp.conf**
+
+.. code-block:: yaml
+
+    ---
+        myapp:
+            foo: bar
+
+**myapp.py**
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['yaml_configobj']
+            config_handler = 'yaml_configobj'
+
+    with MyApp() as app:
+        app.run()
+
+        # get config settings
+        app.config['myapp']['foo']
+
+        # set config settings
+        app.config['myapp']['foo'] = 'bar2'
+
+        # etc...
+
+"""
 
 import os
 import yaml

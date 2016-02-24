@@ -53,7 +53,7 @@ class HookManager(object):
         :param hook_name: The name of the hook.
             I.e. ``my_hook_does_awesome_things``.
         :returns: True if the hook is defined, False otherwise.
-        :rtype: boolean
+        :rtype: ``boolean``
 
         Usage:
 
@@ -83,7 +83,7 @@ class HookManager(object):
         :param func:    The function to register to the hook.  This is an
             *un-instantiated*, non-instance method, simple function.
         :param weight:  The weight in which to order the hook function.
-        :type weight: integer
+        :type weight: ``int``
 
         Usage:
 
@@ -208,7 +208,7 @@ def defined(hook_name):
     :param hook_name: The name of the hook.
         I.e. ``my_hook_does_awesome_things``.
     :returns: True if the hook is defined, False otherwise.
-    :rtype: boolean
+    :rtype: ``boolean``
 
     """
     # only log debug for now as this won't be removed until Cement 3.x and
@@ -240,7 +240,7 @@ def register(name, func, weight=0):
     :param func:    The function to register to the hook.  This is an
         *un-instantiated*, non-instance method, simple function.
     :param weight:  The weight in which to order the hook function.
-    :type weight: integer
+    :type weight: ``int``
 
     Usage:
 

@@ -13,7 +13,7 @@ def list():
     Return a list of defined interfaces (handler types).
 
     :returns: List of defined interfaces
-    :rtype: list
+    :rtype: ``list``
 
     """
     return backend.__handlers__.keys()

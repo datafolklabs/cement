@@ -1,9 +1,9 @@
 """
-The Argparse Framework Extension provides argument handling based on
+The Argparse Extension provides argument handling based on
 :py:class:`argparse.ArgumentParser`, and is the default argument handler
 used by :class:`cement.core.foundation.CementApp`.  In addition, this
 extension also provides :class:`ArgparseController` that enables rapid
-development with application controllers based on Argparse.
+development via application controllers based on Argparse.
 
 Requirements
 ------------
@@ -247,11 +247,11 @@ class expose(object):
     the argument parser.
 
     :param hide: Whether the command should be visible.
-    :type hide: boolean
+    :type hide: ``boolean``
     :param arguments: List of tuples that define arguments to add to this
      commands sub-parser.
     :keyword parser_options: Additional options to pass to Argparse.
-    :type parser_options: dict
+    :type parser_options: ``dict``
 
     Usage:
 
@@ -592,7 +592,7 @@ class ArgparseController(CementBaseHandler):
         contr = command['controller']
 
         hide_it = False
-        if command['hide'] == True:
+        if command['hide'] is True:
             hide_it = True
 
         # only hide commands from embedded controllers if the controller is

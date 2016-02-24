@@ -8,9 +8,8 @@
     :private-members:
     :show-inheritance:
 
-
 Genshi Syntax Basics
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 
 **Printing Variables**
 
@@ -19,35 +18,34 @@ Genshi Syntax Basics
     Hello ${user_name}
 
 
-Where 'user_name' is a variable returned from the controller.  Will display:
+Where ``user_name`` is a variable returned from the controller.  Will display:
 
 .. code-block:: text
 
     Hello Johnny
 
 
-**if statements**
+**Conditional Statements**
 
 .. code-block:: text
 
-    {% if foo %}\
+    {% if foo %}\\
     Label: ${example.label}
-    {% end %}\
+    {% end %}\\
 
 
-Will only output 'Label: <label>' if foo == True.
+Will only output ``Label: <label>`` if ``foo == True``.
 
-
-**for loops**
+**For Loops**
 
 .. code-block:: text
 
-    {% for item in items %}\
+    {% for item in items %}\\
       - ${item}
-    {% end %}\
+    {% end %}\\
 
 
-Where 'items' is a list returned from the controller.  Will display:
+Where ``items`` is a list returned from the controller.  Will display:
 
 .. code-block:: text
 
@@ -60,11 +58,11 @@ Where 'items' is a list returned from the controller.  Will display:
 
 .. code-block:: text
 
-    {% def greeting(name) %}\
+    {% def greeting(name) %}\\
     Hello, ${name}!
-    {% end %}\
+    {% end %}\\
 
-    ${greeting('World')}\
+    ${greeting('World')}\\
     ${greeting('Edward')}
 
 
@@ -80,11 +78,11 @@ Will output:
 
 .. code-block:: text
 
-    {# --------------------- 78 character baseline --------------------------- #}\
+    {# --------------------- 78 character baseline --------------------------- #}\\
 
     label               ver       description
     ==================  ========  ================================================
-    {% for plugin in plugins %}\
+    {% for plugin in plugins %}\\
     ${"%-18s" % plugin['label']}  ${"%-8s" % plugin['version']}  ${"%-48s" % plugin['description']}
     {% end %}
 

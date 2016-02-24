@@ -86,17 +86,17 @@ class IMail(interface.Interface):
         defaults (cc, bcc, etc).
 
         :param body: The message body to send
-        :type body: multiline string
+        :type body: ``multiline string``
         :keyword to: List of recipients (generally email addresses)
-        :type to: list
+        :type to: ``list``
         :keyword from_addr: Address (generally email) of the sender
-        :type from_addr: string
+        :type from_addr: ``str``
         :keyword cc: List of CC Recipients
-        :type cc: list
+        :type cc: ``list``
         :keyword bcc: List of BCC Recipients
-        :type bcc: list
+        :type bcc: ``list``
         :keyword subject: Message subject line
-        :type subject: string
+        :type subject: ``str``
         :returns: Boolean (``True`` if message is sent successfully, ``False``
          otherwise)
 

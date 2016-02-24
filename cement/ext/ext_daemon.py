@@ -1,21 +1,22 @@
 """
-The Daemon Framework Extension enables applications Built on Cement (tm) to
-easily perform standard 'daemon' functions.
+The Daemon Extension enables applications Built on Cement (tm) to
+easily perform standard daemonization functions.
 
 Requirements
 ------------
 
  * Python 2.6+, Python 3+
+ * Available on Unix/Linux only
 
 Features
 --------
 
  * Configurable runtime user and group
- * Adds the --daemon command line option
- * Adds app.daemonize() function to trigger daemon functionality where
-   necessary (either in a cement pre_run hook or an application controller
-   sub-command, etc).
- * Manages a pid file including cleanup on app.close()
+ * Adds the ``--daemon`` command line option
+ * Adds ``app.daemonize()`` function to trigger daemon functionality where
+   necessary (either in a cement ``pre_run`` hook or an application controller
+   sub-command, etc)
+ * Manages a pid file including cleanup on ``app.close()``
 
 
 Configuration
@@ -36,12 +37,11 @@ The daemon extension is configurable with the following settings under the
       Default: 0
 
 
-
 Configurations can be passed as defaults to a CementApp:
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement.core.foundation import CementApp
     from cement.utils.misc import init_defaults
 
     defaults = init_defaults('myapp', 'daemon')
@@ -51,13 +51,12 @@ Configurations can be passed as defaults to a CementApp:
     defaults['daemon']['pid_file'] = '/var/run/myapp/myapp.pid'
     defaults['daemon']['umask'] = 0
 
-    app = foundation.CementApp('myapp', config_defaults=defaults)
-
+    app = CementApp('myapp', config_defaults=defaults)
 
 
 Application defaults are then overridden by configurations parsed via a
-[daemon] config section in any of the applications configuration paths.  An
-example configuration block would look like:
+``[demon]`` config section in any of the applications configuration paths.
+An example configuration block would look like:
 
 .. code-block:: text
 
@@ -73,7 +72,7 @@ Usage
 -----
 
 The following example shows how to add the daemon extension, as well as
-trigger daemon functionality before app.run() is called.
+trigger daemon functionality before ``app.run()`` is called.
 
 .. code-block:: python
 
@@ -143,10 +142,10 @@ rather than the entire parent application.  For example:
         app.run()
 
 
-By default, even after app.daemonize() is called... the application will
+By default, even after ``app.daemonize()`` is called... the application will
 continue to run in the foreground, but will still manage the pid and
 user/group switching.  To detach a process and send it to the background you
-simply pass the '--daemon' option at command line.
+simply pass the ``--daemon`` option at command line.
 
 .. code-block:: text
 
@@ -180,31 +179,17 @@ class Environment(object):
 
     Optional Arguments:
 
-        stdin
-            A file to read STDIN from.  Default: /dev/null
-
-        stdout
-            A file to write STDOUT to.  Default: /dev/null
-
-        stderr
-            A file to write STDERR to.  Default: /dev/null
-
-        dir
-            The directory to run the process in.
-
-        pid_file
-            The filesystem path to where the PID (Process ID) should be
-            written to.  Default: None
-
-        user
-            The user name to run the process as.  Default: os.getlogin()
-
-        group
-            The group name to run the process as.  Default: The primary group
-            of os.getlogin().
-
-        umask
-            The umask to pass to os.umask().  Default: 0
+    :keyword stdin: A file to read STDIN from.  Default: ``/dev/null``
+    :keyword stdout: A file to write STDOUT to.  Default: ``/dev/null``
+    :keyword stderr: A file to write STDERR to.  Default: ``/dev/null``
+    :keyword dir: The directory to run the process in.
+    :keyword pid_file: The filesystem path to where the PID (Process ID)
+        should be written to.  Default: None
+    :keyword user: The user name to run the process as.
+        Default: ``os.getlogin()``
+    :keyword group: The group name to run the process as.
+        Default: The primary group of ``os.getlogin()``.
+    :keyword umask: The umask to pass to os.umask().  Default: ``0``
 
     """
 
@@ -238,7 +223,7 @@ class Environment(object):
 
     def _write_pid_file(self):
         """
-        Writes os.getpid() out to self.pid_file.
+        Writes ``os.getpid()`` out to ``self.pid_file``.
         """
         pid = str(os.getpid())
         LOG.debug('writing pid (%s) out to %s' % (pid, self.pid_file))
@@ -253,9 +238,9 @@ class Environment(object):
 
     def switch(self):
         """
-        Switch the current process's user/group to self.user, and
-        self.group.  Change directory to self.dir, and write the
-        current pid out to self.pid_file.
+        Switch the current process's user/group to ``self.user``, and
+        ``self.group``.  Change directory to ``self.dir``, and write the
+        current pid out to ``self.pid_file``.
         """
         # set the running uid/gid
         LOG.debug('setting process uid(%s) and gid(%s)' %
@@ -276,7 +261,7 @@ class Environment(object):
 
         References:
 
-        UNIX Programming FAQ
+        UNIX Programming FAQ:
             1.7 How do I get my program to act like a daemon?
             http://www.unixguide.net/unix/programming/1.7.shtml
             http://www.faqs.org/faqs/unix-faq/programmer/faq/
@@ -344,13 +329,14 @@ class Environment(object):
 def daemonize():  # pragma: no cover
     """
     This function switches the running user/group to that configured in
-    config['daemon']['user'] and config['daemon']['group'].  The default user
-    is os.getlogin() and the default group is that user's primary group.
-    A pid_file and directory to run in is also passed to the environment.
+    ``config['daemon']['user']`` and ``config['daemon']['group']``.  The
+    default user is ``os.getlogin()`` and the default group is that user's
+    primary group.  A pid_file and directory to run in is also passed to the
+    environment.
 
     It is important to note that with the daemon extension enabled, the
     environment will switch user/group/set pid/etc regardless of whether
-    the --daemon option was passed at command line or not.  However, the
+    the ``--daemon`` option was passed at command line or not.  However, the
     process will only 'daemonize' if the option is passed to do so.  This
     allows the program to run exactly the same in forground or background.
 
@@ -377,8 +363,8 @@ def daemonize():  # pragma: no cover
 
 def extend_app(app):
     """
-    Adds the '--daemon' argument to the argument object, and sets the default
-    [daemon] config section options.
+    Adds the ``--daemon`` argument to the argument object, and sets the
+    default ``[daemon]`` config section options.
 
     """
     global CEMENT_DAEMON_APP

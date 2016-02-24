@@ -1,4 +1,25 @@
-"""Plugin Framework Extension"""
+"""
+The Plugin Extension handles application plugin support, and is the default
+plugin handler used by Cement.
+
+Requirements
+------------
+
+ * No external dependencies
+
+
+Configuration
+-------------
+
+This extension does not directly honor any configuration settings.
+
+
+Usage
+-----
+
+For usage information see :ref:`application_plugins`.
+
+"""
 
 import os
 import sys
@@ -162,12 +183,12 @@ class CementPluginHandler(plugin.CementPluginHandler):
         :param plugin_name: The name of the plugin, also the name of the
             module to load from base_package.
             I.e. ``myapp.bootstrap.myplugin``
-        :type plugin_name: str
+        :type plugin_name: ``str``
         :param base_package: The base python package to load the plugin module
             from.  I.e.'myapp.bootstrap' or similar.
-        :type base_package: str
+        :type base_package: ``str``
         :returns: True is the plugin was loaded, False otherwise
-        :raises: ImportError
+        :raises: :py:class:`ImportError`
 
         """
 
@@ -205,8 +226,8 @@ class CementPluginHandler(plugin.CementPluginHandler):
         the self._loaded_plugins list.
 
         :param plugin_name: The name of the plugin to load.
-        :type plugin_name: str
-        :raises: cement.core.exc.FrameworkError
+        :type plugin_name: ``str``
+        :raises: :class:`cement.core.exc.FrameworkError`
 
         """
         LOG.debug("loading application plugin '%s'" % plugin_name)
@@ -246,7 +267,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
     def load_plugins(self, plugin_list):
         """
         Load a list of plugins.  Each plugin name is passed to
-        self.load_plugin().
+        ``self.load_plugin()``.
 
         :param plugin_list: A list of plugin names to load.
 

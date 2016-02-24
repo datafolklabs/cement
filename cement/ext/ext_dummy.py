@@ -1,4 +1,38 @@
-"""Dummy Framework Extension"""
+"""
+The Dummy Extension provides several 'placeholder' type handlers to either
+mock operations or provide local-only usage during development.  A perfect
+example is the :class:`DummyMailHandler` that can be use during development
+or staging to prevent real email messages from being sent externally.
+
+Requirements
+------------
+
+ * No external dependencies
+
+Configuration
+-------------
+
+ * See each handler's documentation regarding what configurations they
+   support.
+
+Usage
+-----
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['dummy']
+            output_handler = 'dummy'
+            mail_handler = 'dummy'
+
+    with MyApp() as app:
+        app.run()
+
+"""
 
 from ..core import backend, output, mail
 from ..utils.misc import minimal_logger
@@ -10,7 +44,7 @@ class DummyOutputHandler(output.CementOutputHandler):
 
     """
     This class is an internal implementation of the
-    :ref:`IOutput <cement.core.output>` interface. It does not take any
+    :class:`cement.core.output.IOutput` interface. It does not take any
     parameters on initialization, and does not actually output anything.
 
     """
@@ -18,11 +52,11 @@ class DummyOutputHandler(output.CementOutputHandler):
 
         """Handler meta-data"""
 
+        #: The interface this class implements.
         interface = output.IOutput
-        """The interface this class implements."""
 
+        #: The string identifier of this handler.
         label = 'dummy'
-        """The string identifier of this handler."""
 
         #: Whether or not to include ``dummy`` as an available to choice
         #: to override the ``output_handler`` via command line options.
@@ -47,7 +81,7 @@ class DummyOutputHandler(output.CementOutputHandler):
 class DummyMailHandler(mail.CementMailHandler):
 
     """
-    This class implements the :ref:`IMail <cement.core.mail>`
+    This class implements the :class:`cement.core.mail.IMail`
     interface, but is intended for use in development as no email is actually
     sent.
 
@@ -60,17 +94,14 @@ class DummyMailHandler(mail.CementMailHandler):
                 label = 'myapp'
                 mail_handler = 'dummy'
 
-        # create, setup, and run the app
-        app = MyApp()
-        app.setup()
-        app.run()
+        with MyApp() as app:
+            app.run()
 
-        # fake sending an email message
-        app.mail.send('This is my fake message',
-            subject='This is my subject',
-            to=['john@example.com', 'rita@example.com'],
-            from_addr='me@example.com',
-            )
+            app.mail.send('This is my fake message',
+                subject='This is my subject',
+                to=['john@example.com', 'rita@example.com'],
+                from_addr='me@example.com',
+                )
 
     The above will print the following to console:
 
@@ -170,17 +201,17 @@ class DummyMailHandler(mail.CementMailHandler):
         defaults (cc, bcc, etc).
 
         :param body: The message body to send
-        :type body: multiline string
+        :type body: ``multiline string``
         :keyword to: List of recipients (generally email addresses)
-        :type to: list
+        :type to: ``list``
         :keyword from_addr: Address (generally email) of the sender
-        :type from_addr: string
+        :type from_addr: ``str``
         :keyword cc: List of CC Recipients
-        :type cc: list
+        :type cc: ``list``
         :keyword bcc: List of BCC Recipients
-        :type bcc: list
+        :type bcc: ``list``
         :keyword subject: Message subject line
-        :type subject: string
+        :type subject: ``str``
         :returns: Boolean (``True`` if message is sent successfully, ``False``
          otherwise)
 

@@ -1,4 +1,90 @@
-"""Mustache extension module."""
+"""
+The Mustache Extension provides output templating based on the
+`Mustache Templating Language <http://mustache.github.com>`_.
+
+Requirements
+------------
+
+ * pystache (``pip install pystache``)
+
+
+Configuration
+-------------
+
+To **prepend** a directory to the ``template_dirs`` list defined by the
+application/developer, an end-user can add the configuration option
+``template_dir`` to their application configuration file under the main
+config section:
+
+.. code-block:: text
+
+    [myapp]
+    template_dir = /path/to/my/templates
+
+
+Usage
+-----
+
+.. code-block:: python
+
+    from cement.core import foundation
+
+    class MyApp(foundation.CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['mustache']
+            output_handler = 'mustache'
+            template_module = 'myapp.templates'
+            template_dirs = [
+                '~/.myapp/templates',
+                '/usr/lib/myapp/templates',
+                ]
+    # ...
+
+Note that the above ``template_module`` and ``template_dirs`` are the
+auto-defined defaults but are added here for clarity.  From here, you
+would then put a Mustache template file in
+``myapp/templates/my_template.mustache`` or
+``/usr/lib/myapp/templates/my_template.mustache`` and then render a data
+dictionary with it:
+
+.. code-block:: python
+
+    app.render(some_data_dict, 'my_template.mustache')
+
+
+Loading Partials
+----------------
+
+Mustache supports ``partials``, or in other words template ``includes``.
+These are also loaded by the output handler, but require a full file name.
+The partials will be loaded in the same way as the base templates
+
+For example:
+
+**templates/base.mustache**
+
+.. code-block:: console
+
+    Inside base.mustache
+    {{> partial.mustache}}
+
+
+**template/partial.mustache**
+
+.. code-block:: console
+
+    Inside partial.mustache
+
+
+Would output:
+
+.. code-block:: console
+
+    Inside base.mustache
+    Inside partial.mustache
+
+"""
 
 import sys
 from pystache.renderer import Renderer
@@ -31,83 +117,6 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
     must include ``pystache`` in your applications dependencies as Cement
     explicitly does **not** include external dependencies for optional
     extensions.
-
-    Usage:
-
-    .. code-block:: python
-
-        from cement.core import foundation
-
-        class MyApp(foundation.CementApp):
-            class Meta:
-                label = 'myapp'
-                extensions = ['mustache']
-                output_handler = 'mustache'
-                template_module = 'myapp.templates'
-                template_dirs = [
-                    '~/.myapp/templates',
-                    '/usr/lib/myapp/templates',
-                    ]
-        # ...
-
-    Note that the above ``template_module`` and ``template_dirs`` are the
-    auto-defined defaults but are added here for clarity.  From here, you
-    would then put a Mustache template file in
-    ``myapp/templates/my_template.mustache`` and then render a data dictionary
-    with it:
-
-    .. code-block:: python
-
-        # via the app object
-        myapp.render(some_data_dict, 'my_template.mustache')
-
-        # or from within a controller or handler
-        self.app.render(some_data_dict, 'my_template.mustache')
-
-
-
-    Configuration:
-
-    To **prepend** a directory to the ``template_dirs`` list defined by the
-    application/developer, an end-user can add the configuration option
-    ``template_dir`` to their application configuration file under the main
-    config section:
-
-    .. code-block:: text
-
-        [myapp]
-        template_dir = /path/to/my/templates
-
-
-    Loading Partials:
-
-    Mustache supports ``partials``, or in other words template ``includes``.
-    These are also loaded by the output handler, but require a full file name.
-    The partials will be loaded in the same way as the base templates
-
-    For example:
-
-    **templates/base.mustache**
-
-    .. code-block:: console
-
-        Inside base.mustache
-        {{> partial.mustache}}
-
-    **template/partial.mustache**
-
-    .. code-block:: console
-
-        Inside partial.mustache
-
-
-    Would output:
-
-    .. code-block:: console
-
-        Inside base.mustache
-        Inside partial.mustache
-
     """
 
     class Meta:

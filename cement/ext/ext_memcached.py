@@ -1,4 +1,100 @@
-"""Memcached Framework Extension."""
+"""
+The Memcached Extension provides application caching and key/value store
+support via Memcache.
+
+Requirements
+------------
+
+ * pylibmc (``pip install pylibmc``)
+ * Python < 3
+
+
+Configuration
+-------------
+
+This extension honors the following config settings
+under a ``[cache.memcached]`` section in any configuration file:
+
+    * **expire_time** - The default time in second to expire items in the
+      cache.  Default: 0 (does not expire).
+    * **hosts** - List of Memcached servers.
+
+
+Configurations can be passed as defaults to a CementApp:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+    from cement.utils.misc import init_defaults
+
+    defaults = init_defaults('myapp', 'cache.memcached')
+    defaults['cache.memcached']['expire_time'] = 0
+    defaults['cache.memcached']['hosts'] = ['127.0.0.1']
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            config_defaults = defaults
+            extensions = ['memcached']
+            cache_handler = 'memcached'
+
+
+Additionally, an application configuration file might have a section like
+the following:
+
+.. code-block:: text
+
+    [myapp]
+
+    # set the cache handler to use
+    cache_handler = memcached
+
+
+    [cache.memcached]
+
+    # time in seconds that an item in the cache will expire
+    expire_time = 3600
+
+    # comma seperated list of memcached servers
+    hosts = 127.0.0.1, cache.example.com
+
+
+Usage
+-----
+
+.. code-block:: python
+
+    from cement.core import foundation
+    from cement.utils.misc import init_defaults
+
+    defaults = init_defaults('myapp', 'memcached')
+    defaults['cache.memcached']['expire_time'] = 300 # seconds
+    defaults['cache.memcached']['hosts'] = ['127.0.0.1']
+
+    class MyApp(foundation.CementApp):
+        class Meta:
+            label = 'myapp'
+            config_defaults = defaults
+            extensions = ['memcached']
+            cache_handler = 'memcached'
+
+    with MyApp() as app:
+        # Run the app
+        app.run()
+
+        # Set a cached value
+        app.cache.set('my_key', 'my value')
+
+        # Get a cached value
+        app.cache.get('my_key')
+
+        # Delete a cached value
+        app.cache.delete('my_key')
+
+        # Delete the entire cache
+        app.cache.purge()
+
+"""
 
 import sys
 import pylibmc
@@ -15,94 +111,10 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
     interface.  It provides a caching interface using the
     `pylibmc <http://sendapatch.se/projects/pylibmc/>`_ library.
 
-    **Note** This extension has an external dependency on `pylibmc`.  You
-    must include `pylibmc` in your applications dependencies as Cement
+    **Note** This extension has an external dependency on ``pylibmc``.  You
+    must include ``pylibmc`` in your applications dependencies as Cement
     explicitly does *not* include external dependencies for optional
     extensions.
-
-    **Note** This extension is not supported on Python 3, due to the fact
-    that `pylibmc` does not appear to support Python 3 as of yet.
-
-    Configuration:
-
-    The Memcached extension is configurable with the following config settings
-    under a `[cache.memcached]` section of the application configuration.
-
-        * **expire_time** - The default time in second to expire items in the
-          cache.  Default: 0 (does not expire).
-        * **hosts** - List of Memcached servers.
-
-    Configurations can be passed as defaults to a CementApp:
-
-    .. code-block:: python
-
-        from cement.core import foundation, backend
-        from cement.utils.misc import init_defaults
-
-        defaults = init_defaults('myapp', 'cache.memcached')
-        defaults['cache.memcached']['expire_time'] = 0
-        defaults['cache.memcached']['hosts'] = ['127.0.0.1']
-
-        app = foundation.CementApp('myapp',
-                                   config_defaults=defaults,
-                                   cache_handler='memcached',
-                                   )
-
-
-    Additionally, an application configuration file might have a section like
-    the following:
-
-    .. code-block:: text
-
-        [myapp]
-
-        # set the cache handler to use
-        cache_handler = memcached
-
-
-        [cache.memcached]
-
-        # time in seconds that an item in the cache will expire
-        expire_time = 3600
-
-        # comma seperated list of memcached servers
-        hosts = 127.0.0.1, cache.example.com
-
-
-    Usage:
-
-    .. code-block:: python
-
-        from cement.core import foundation
-        from cement.utils.misc import init_defaults
-
-        defaults = init_defaults('myapp', 'memcached')
-        defaults['cache.memcached']['expire_time'] = 300 # seconds
-        defaults['cache.memcached']['hosts'] = ['127.0.0.1']
-
-        class MyApp(foundation.CementApp):
-            class Meta:
-                label = 'myapp'
-                config_defaults = defaults
-                extensions = ['memcached']
-                cache_handler = 'memcached'
-
-        with MyApp() as app:
-            # Run the app
-            app.run()
-
-            # Set a cached value
-            app.cache.set('my_key', 'my value')
-
-            # Get a cached value
-            app.cache.get('my_key')
-
-            # Delete a cached value
-            app.cache.delete('my_key')
-
-            # Delete the entire cache
-            app.cache.purge()
-
     """
 
     class Meta:
@@ -130,10 +142,10 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
         Useful to fix up the hosts configuration (i.e. convert a
         comma-separated string into a list).  This function does not return
         anything, however it is expected to set the `hosts` value of the
-        `[cache.memcached]` section (which is what this extension reads for
+        ``[cache.memcached]`` section (which is what this extension reads for
         it's host configution).
 
-        :returns: None
+        :returns: ``None``
 
         """
         hosts = self._config('hosts')
@@ -168,7 +180,7 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
     def _config(self, key):
         """
         This is a simple wrapper, and is equivalent to:
-        `self.app.config.get('cache.memcached', <key>)`.
+        ``self.app.config.get('cache.memcached', <key>)``.
 
         :param key: The key to get a config value from the 'cache.memcached'
          config section.
@@ -179,7 +191,7 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
 
     def set(self, key, value, time=None, **kw):
         """
-        Set a value in the cache for the given `key`.  Any additional
+        Set a value in the cache for the given ``key``.  Any additional
         keyword arguments will be passed directly to the `pylibmc` set
         function.
 
@@ -188,7 +200,7 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
         :param time: The expiration time (in seconds) to keep the item cached.
          Defaults to `expire_time` as defined in the applications
          configuration.
-        :returns: None
+        :returns: ``None``
 
         """
         if time is None:
@@ -198,12 +210,12 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
 
     def delete(self, key, **kw):
         """
-        Delete an item from the cache for the given `key`.  Any additional
+        Delete an item from the cache for the given ``key``.  Any additional
         keyword arguments will be passed directly to the `pylibmc` delete
         function.
 
         :param key: The key to delete from the cache.
-        :returns: None
+        :returns: ``None``
 
         """
         self.mc.delete(key, **kw)
@@ -212,9 +224,9 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
         """
         Purge the entire cache, all keys and values will be lost.  Any
         additional keyword arguments will be passed directly to the
-        `pylibmc` flush_all() function.
+        pylibmc ``flush_all()`` function.
 
-        :returns: None
+        :returns: ``None``
 
         """
 

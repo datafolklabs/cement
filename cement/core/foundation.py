@@ -678,8 +678,8 @@ class CementApp(meta.MetaMixin):
     @property
     def debug(self):
         """
-        Returns boolean based on whether `--debug` was passed at command line
-        or set via the application's configuration file.
+        Returns boolean based on whether ``--debug`` was passed at command
+        line or set via the application's configuration file.
 
         :returns: boolean
         """
@@ -698,7 +698,7 @@ class CementApp(meta.MetaMixin):
         application object.
 
         :param member_name: The name to attach the object to.
-        :type member_name: str
+        :type member_name: ``str``
         :param member_object: The function or class object to attach to
             CementApp().
         :raises: cement.core.exc.FrameworkError
@@ -777,9 +777,9 @@ class CementApp(meta.MetaMixin):
         called) to run the application.
 
         :returns: Returns the result of the executed controller function if
-        a base controller is set and a controller function is called,
-        otherwise ``None`` if no controller dispatched or no controller
-        function was called.
+          a base controller is set and a controller function is called,
+          otherwise ``None`` if no controller dispatched or no controller
+          function was called.
 
         """
         return_val = None
@@ -836,7 +836,7 @@ class CementApp(meta.MetaMixin):
         This function is useful for reloading a running applications, for
         example to reload configuration settings, etc.
 
-        :returns: None
+        :returns: ``None``
         """
         LOG.debug('reloading the %s application' % self._meta.label)
         self.handler.__handlers__ = {}
@@ -851,10 +851,9 @@ class CementApp(meta.MetaMixin):
         program execution.
 
         :param code: An exit code to exit with (``int``), if ``None`` is
-         passed then exit with whatever ``self.exit_code`` is currently set
-         to.  Note: ``sys.exit()`` will only be called if
-        ``CementApp.Meta.exit_on_close==True``.
-
+          passed then exit with whatever ``self.exit_code`` is currently set
+          to.  Note: ``sys.exit()`` will only be called if
+          ``CementApp.Meta.exit_on_close==True``.
         """
         for res in self.hook.run('pre_close', self):
             pass

@@ -62,7 +62,7 @@ class IArgument(interface.Interface):
         or the application to make further calls to it.
 
         :param app_obj: The application object
-        :returns: None
+        :returns: ``None``
 
         """
 
@@ -87,7 +87,7 @@ class IArgument(interface.Interface):
          option whose action is ``store``.
         :keyword const: The value stored if action == 'store_const'.
         :keyword default: The default value.
-        :returns: None
+        :returns: ``None``
 
         """
 

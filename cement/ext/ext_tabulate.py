@@ -1,4 +1,58 @@
-"""Tabulate extension module."""
+"""
+The Tabulate Extension provides output handling based on the
+`Tabulate <https://pypi.python.org/pypi/tabulate>`_ library.  It's format is
+familiar to users of MySQL, Postgres, etc.
+
+Requirements
+------------
+
+ * Tabulate (``pip install tabulate``)
+
+
+Configuration
+-------------
+
+This extension does not support any configuration settings.
+
+
+Usage
+-----
+
+.. code-block:: python
+
+    from cement.core import foundation
+
+    class MyApp(foundation.CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['tabulate']
+            output_handler = 'tabulate'
+
+    with MyApp() as app:
+        app.run()
+
+        # create a dataset
+        headers = ['NAME', 'AGE', 'ADDRESS']
+        data = [
+            ["Krystin Bartoletti", 47, "PSC 7591, Box 425, APO AP 68379"],
+            ["Cris Hegan", 54, "322 Reubin Islands, Leylabury, NC 34388"],
+            ["George Champlin", 25, "Unit 6559, Box 124, DPO AA 25518"],
+            ]
+
+        app.render(data, headers=headers)
+
+
+Looks like:
+
+.. code-block:: console
+
+    | NAME               | AGE | ADDRESS                                 |
+    |--------------------+-----+-----------------------------------------|
+    | Krystin Bartoletti |  47 | PSC 7591, Box 425, APO AP 68379         |
+    | Cris Hegan         |  54 | 322 Reubin Islands, Leylabury, NC 34388 |
+    | George Champlin    |  25 | Unit 6559, Box 124, DPO AA 25518        |
+
+"""
 
 import sys
 from tabulate import tabulate
@@ -21,55 +75,6 @@ class TabulateOutputHandler(output.CementOutputHandler):
     must include ``tabulate`` in your applications dependencies as Cement
     explicitly does **not** include external dependencies for optional
     extensions.
-
-    Usage:
-
-    .. code-block:: python
-
-        from cement.core import foundation
-
-        class MyApp(foundation.CementApp):
-            class Meta:
-                label = 'myapp'
-                extensions = ['tabulate']
-                output_handler = 'tabulate'
-        # ...
-
-    Usage:
-
-    .. code-block:: python
-
-        # create a dataset
-        headers = ['NAME', 'AGE', 'ADDRESS']
-        data = [
-            ["Krystin Bartoletti", 47, "PSC 7591, Box 425, APO AP 68379"],
-            ["Cris Hegan", 54, "322 Reubin Islands, Leylabury, NC 34388"],
-            ["George Champlin", 25, "Unit 6559, Box 124, DPO AA 25518"],
-            ]
-
-        # via the app object
-        myapp.render(data, headers=headers)
-
-        # or from within a controller or handler
-        self.app.render(data, headers=headers)
-
-
-    Looks like:
-
-    .. code-block:: console
-
-        | NAME               | AGE | ADDRESS                                 |
-        |--------------------+-----+-----------------------------------------|
-        | Krystin Bartoletti |  47 | PSC 7591, Box 425, APO AP 68379         |
-        | Cris Hegan         |  54 | 322 Reubin Islands, Leylabury, NC 34388 |
-        | George Champlin    |  25 | Unit 6559, Box 124, DPO AA 25518        |
-
-
-
-    Configuration:
-
-    This extension does not support any configuration file settings.
-
     """
 
     class Meta:

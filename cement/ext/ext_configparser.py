@@ -1,10 +1,11 @@
 """
 
-The ConfigParser Framework Extension provides configuration handling based on
-the standard :py:class:`ConfigParser`, and is the default configuration 
+The ConfigParser Extension provides configuration handling based on
+the standard :py:class:`ConfigParser`, and is the default configuration
 handler used by Cement.
 
-Requirements:
+Requirements
+------------
 
   * No external dependencies.
 
@@ -125,7 +126,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
 
         :param section: The config section (I.e. [block_section]).
         :returns: List of keys in the `section`.
-        :rtype: list
+        :rtype: ``list``
 
         """
         return self.options(section)
@@ -135,7 +136,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         Return a list of configuration sections or [blocks].
 
         :returns: List of sections.
-        :rtype: list
+        :rtype: ``list``
 
         """
         return self.sections()
@@ -147,7 +148,7 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         :param section: The section of the configuration.
          I.e. [block_section]
         :returns: Dictionary reprisentation of the config section.
-        :rtype: dict
+        :rtype: ``dict``
 
         """
         dict_obj = dict()

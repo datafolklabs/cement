@@ -17,7 +17,7 @@ This extension does not honor any application configuration settings.
 
 
 Usage
-_____
+-----
 
 .. code-block:: python
 
@@ -74,6 +74,7 @@ class AlarmManager(object):
     alarm exceeds the given time it will raise ``signal.SIGALRM``.
 
     """
+
     def __init__(self, *args, **kw):
         super(AlarmManager, self).__init__(*args, **kw)
         self.msg = None

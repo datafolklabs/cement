@@ -35,14 +35,14 @@ For example:
 
 .. code-block:: python
 
-    def my_signal_hook(self, signum, frame):
+    def my_signal_hook(signum, frame):
         pass
 
 Would need to be:
 
 .. code-block:: python
 
-    def my_signal_hook(self, app, signum, frame):
+    def my_signal_hook(app, signum, frame):
         pass
 
 
@@ -66,7 +66,7 @@ following exception:
     TypeError: render() got an unexpected keyword argument
 
 
-This would most likely be the case becase you have created your own custom
+This would most likely be the case because you have created your own custom
 output handler, or are using a third-party output handler that has not been
 updated to support Cement 2.8 yet.  The fix is to simply add ``**kwargs`` to 
 the end of the `render()` method.

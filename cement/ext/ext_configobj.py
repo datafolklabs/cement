@@ -1,10 +1,10 @@
 """
-The ConfigObj Framework Extension provides configuration handling based on
-`configobj <http://www.voidspace.org.uk/python/configobj.html>`_.  It is a 
-drop-in replacement for the default config handler 
-:class:`cement.ext.ext_configparser`.
+The ConfigObj Extension provides configuration handling based on
+`configobj <http://www.voidspace.org.uk/python/configobj.html>`_.  It is a
+drop-in replacement for the default config handler
+:class:`cement.ext.ext_configparser.ConfigParserConfigHandler`.
 
-One of the primary features of ConfigObj is that you can access the 
+One of the primary features of ConfigObj is that you can access the
 application configuration as a dictionary object.
 
 

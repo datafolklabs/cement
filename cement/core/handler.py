@@ -30,21 +30,20 @@ class HandlerManager(object):
         """
         Get a handler object.
 
-        Required Arguments:
-
-        :param handler_type: The type of handler (i.e. 'output')
-        :type handler_type: str
-        :param handler_label: The label of the handler (i.e. 'json')
-        :type handler_label: str
+        :param handler_type: The type of handler (i.e. ``output``)
+        :type handler_type: ``str``
+        :param handler_label: The label of the handler (i.e. ``json``)
+        :type handler_label: ``str``
         :param fallback:  A fallback value to return if handler_label doesn't
             exist.
         :returns: An uninstantiated handler object
-        :raises: cement.core.exc.FrameworkError
+        :raises: :class:`cement.core.exc.FrameworkError`
 
         Usage:
 
-            from cement.core import handler
-            output = handler.get('output', 'json')
+        .. code-block:: python
+
+            output = app.handler.get('output', 'json')
             output.render(dict(foo='bar'))
 
         """
@@ -62,12 +61,18 @@ class HandlerManager(object):
 
     def list(self, handler_type):
         """
-        Return a list of handlers for a given type.
+        Return a list of handlers for a given ``handler_type``.
 
-        :param handler_type: The type of handler (i.e. 'output')
-        :returns: List of handlers that match `type`.
-        :rtype: list
-        :raises: cement.core.exc.FrameworkError
+        :param handler_type: The type of handler (i.e. ``output``)
+        :returns: List of handlers that match ``hander_type``.
+        :rtype: ``list``
+        :raises: :class:`cement.core.exc.FrameworkError`
+
+        Usage:
+
+        .. code-block:: python
+
+            app.handler.list('log')
 
         """
         if handler_type not in self.__handlers__:
@@ -84,20 +89,18 @@ class HandlerManager(object):
     def define(self, interface):
         """
         Define a handler based on the provided interface.  Defines a handler
-        type based on <interface>.IMeta.label.
+        type based on ``<interface>.IMeta.label``.
 
         :param interface: The interface class that defines the interface to be
             implemented by handlers.
-        :raises: cement.core.exc.InterfaceError
-        :raises: cement.core.exc.FrameworkError
+        :raises: :class:`cement.core.exc.InterfaceError`
+        :raises: :class:`cement.core.exc.FrameworkError`
 
         Usage:
 
         .. code-block:: python
 
-            from cement.core import handler
-
-            handler.define(IDatabaseHandler)
+            app.handler.define(IDatabaseHandler)
 
         """
         if not hasattr(interface, 'IMeta'):
@@ -119,12 +122,18 @@ class HandlerManager(object):
 
     def defined(self, handler_type):
         """
-        Test whether a handler type is defined.
+        Test whether ``handler_type`` is defined.
 
-        :param handler_type: The name or 'type' of the handler (I.e.
-            'logging').
+        :param handler_type: The name or ``handler_type`` of the handler (I.e.
+            ``log``, ``config``, ``output``, etc).
         :returns: True if the handler type is defined, False otherwise.
-        :rtype: boolean
+        :rtype: ``boolean``
+
+        Usage:
+
+        .. code-block:: python
+
+            app.handler.defined('log')
 
         """
         if handler_type in self.__handlers__:
@@ -136,18 +145,16 @@ class HandlerManager(object):
         """
         Register a handler object to a handler.  If the same object is already
         registered then no exception is raised, however if a different object
-        attempts to be registered to the same name a FrameworkError is
+        attempts to be registered to the same name a ``FrameworkError`` is
         raised.
 
         :param handler_obj: The uninstantiated handler object to register.
-        :raises: cement.core.exc.InterfaceError
-        :raises: cement.core.exc.FrameworkError
+        :raises: :class:`cement.core.exc.InterfaceError`
+        :raises: :class:`cement.core.exc.FrameworkError`
 
         Usage:
 
         .. code-block:: python
-
-            from cement.core import handler
 
             class MyDatabaseHandler(object):
                 class Meta:
@@ -155,9 +162,9 @@ class HandlerManager(object):
                     label = 'mysql'
 
                 def connect(self):
-                ...
+                    # ...
 
-            handler.register(MyDatabaseHandler)
+            app.handler.register(MyDatabaseHandler)
 
         """
 
@@ -205,7 +212,13 @@ class HandlerManager(object):
         :param handler_type: The type of handler (interface label)
         :param handler_label: The label of the handler
         :returns: True if the handler is registered, False otherwise
-        :rtype: boolean
+        :rtype: ``boolean``
+
+        Usage:
+
+        .. code-block:: python
+
+            app.handler.registered('log', 'colorlog')
 
         """
         if handler_type in self.__handlers__ and \
@@ -227,6 +240,19 @@ class HandlerManager(object):
             to resolve the handler.
         :type raise_error: boolean
         :returns: The instantiated handler object.
+
+        Usage:
+
+        .. code-block:: python
+
+            # via label (str)
+            log = app.handler.resolve('log', 'colorlog')
+
+            # via uninstantiated handler class
+            log = app.handler.resolve('log', ColorLogHanddler)
+
+            # via instantiated handler instance
+            log = app.handler.resolve('log', ColorLogHandler())
 
         """
         han = None
@@ -282,7 +308,7 @@ class CementBaseHandler(meta.MetaMixin):
         config_defaults = None
         """
         A config dictionary that is merged into the applications config
-        in the [<config_section>] block.  These are defaults and do not
+        in the ``[<config_section>]`` block.  These are defaults and do not
         override any existing defaults under that section.
         """
 
@@ -301,7 +327,7 @@ class CementBaseHandler(meta.MetaMixin):
     def _setup(self, app_obj):
         """
         The _setup function is called during application initialization and
-        must 'setup' the handler object making it ready for the framework
+        must ``setup`` the handler object making it ready for the framework
         or the application to make further calls to it.
 
         :param app_obj: The application object.
@@ -383,7 +409,7 @@ def list(handler_type):
 
     :param handler_type: The type of handler (i.e. 'output')
     :returns: List of handlers that match `type`.
-    :rtype: list
+    :rtype: ``list``
     :raises: cement.core.exc.FrameworkError
 
     """
@@ -468,7 +494,7 @@ def defined(handler_type):
 
     :param handler_type: The name or 'type' of the handler (I.e. 'logging').
     :returns: True if the handler type is defined, False otherwise.
-    :rtype: boolean
+    :rtype: ``boolean``
 
     """
     # only log debug for now as this won't be removed until Cement 3.x and
@@ -578,7 +604,7 @@ def registered(handler_type, handler_label):
     :param handler_type: The type of handler (interface label)
     :param handler_label: The label of the handler
     :returns: True if the handler is registered, False otherwise
-    :rtype: boolean
+    :rtype: ``boolean``
 
     """
     # only log debug for now as this won't be removed until Cement 3.x and

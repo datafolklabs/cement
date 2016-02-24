@@ -78,7 +78,7 @@ class IExtension(interface.Interface):
         'cement.ext.ext_configobj'.
 
         :param ext_module: The name of the extension to load.
-        :type ext_module: str
+        :type ext_module: ``str``
 
         """
 
@@ -89,7 +89,7 @@ class IExtension(interface.Interface):
         :param ext_list: A list of extension modules to load.  For example:
             ``['cement.ext.ext_configobj', 'cement.ext.ext_logging']``
 
-        :type ext_list: list
+        :type ext_list: ``list``
 
         """
 
@@ -130,7 +130,7 @@ class CementExtensionHandler(handler.CementBaseHandler):
 
         :param ext_module: The extension module name.  For example:
             'cement.ext.ext_logging'.
-        :type ext_module: str
+        :type ext_module: ``str``
         :raises: cement.core.exc.FrameworkError
 
         """
@@ -162,7 +162,7 @@ class CementExtensionHandler(handler.CementBaseHandler):
         individually to self.load_extension().
 
         :param ext_list: A list of extension modules.
-        :type ext_list: list
+        :type ext_list: ``list``
 
         """
         for ext in ext_list:

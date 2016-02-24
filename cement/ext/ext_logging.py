@@ -1,4 +1,54 @@
-"""Logging Framework Extension"""
+"""
+The Logging Extension provides log handling based on
+the standard :py:class:`logging.Logger`, and is the default log
+handler used by Cement.
+
+Requirements
+------------
+
+ * No external dependencies.
+
+Configuration
+-------------
+
+This extension honors the following configuration settings from the config
+section ``log.logging``:
+
+    * level
+    * file
+    * to_console
+    * rotate
+    * max_bytes
+    * max_files
+
+
+A sample config section (in any config file) might look like:
+
+.. code-block:: text
+
+    [log.logging]
+    file = /path/to/config/file
+    level = info
+    to_console = true
+    rotate = true
+    max_bytes = 512000
+    max_files = 4
+
+Usage
+-----
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    with MyApp() as app:
+        app.log.info("This is an info message")
+        app.log.warn("This is an warning message")
+        app.log.error("This is an error message")
+        app.log.fatal("This is a fatal message")
+        app.log.debug("This is a debug message")
+
+"""
 
 import os
 import logging
@@ -32,31 +82,6 @@ class LoggingLogHandler(log.CementLogHandler):
     This class is an implementation of the :ref:`ILog <cement.core.log>`
     interface, and sets up the logging facility using the standard Python
     `logging <http://docs.python.org/library/logging.html>`_ module.
-
-    Configuration Options
-
-    The following configuration options are recognized in this class
-    (assuming that Meta.config_section is `log.logging`):
-
-        * level
-        * file
-        * to_console
-        * rotate
-        * max_bytes
-        * max_files
-
-
-    A sample config section (in any config file) might look like:
-
-    .. code-block:: text
-
-        [log.logging]
-        file = /path/to/config/file
-        level = info
-        to_console = true
-        rotate = true
-        max_bytes = 512000
-        max_files = 4
 
     """
 
@@ -164,7 +189,7 @@ class LoggingLogHandler(log.CementLogHandler):
         return logging.getLevelName(self.backend.level)
 
     def clear_loggers(self, namespace):
-        """Clear any previously configured loggers for `namespace`."""
+        """Clear any previously configured loggers for ``namespace``."""
 
         for i in logging.getLogger("cement:app:%s" % namespace).handlers:
             logging.getLogger("cement:app:%s" % namespace).removeHandler(i)

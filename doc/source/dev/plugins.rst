@@ -1,3 +1,5 @@
+.. _application_plugins:
+
 Application Plugins
 ===================
 

@@ -1,5 +1,5 @@
 """
-The Argcomplete Framework Extension provides the necessary hooks to utilize
+The Argcomplete Extension provides the necessary hooks to utilize
 the `Argcomplete Library <https://argcomplete.readthedocs.org/en/latest/>`_,
 and perform auto-completion of command line arguments/options/sub-parsers/etc.
 

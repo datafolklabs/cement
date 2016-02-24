@@ -1,6 +1,6 @@
 """
 
-The ColorLog Framework Extension provides logging based on the standard
+The ColorLog Extension provides logging based on the standard
 ``logging`` module and is a drop-in replacement for the default log
 handler :class:`cement.ext.ext_logging.LoggingLogHandler`.
 
@@ -8,7 +8,7 @@ Requirements
 ------------
 
  * ColorLog (``pip install colorlog``)
- 
+
 
 Configuration
 -------------
@@ -43,7 +43,7 @@ A sample config section (in any config file) might look like:
     max_files = 4
     colorize_file_log = false
     colorize_console_log = true
-        
+
 
 Usage
 -----

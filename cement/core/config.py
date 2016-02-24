@@ -86,7 +86,7 @@ class IConfig(interface.Interface):
 
         :param file_path: The path to the config file to parse.
         :returns: True if the file was parsed, False otherwise.
-        :rtype: boolean
+        :rtype: ``boolean``
 
         """
 
@@ -96,7 +96,7 @@ class IConfig(interface.Interface):
 
         :param section: The config [section] to pull keys from.
         :returns: A list of keys in `section`.
-        :rtype: list
+        :rtype: ``list``
 
         """
 
@@ -106,7 +106,7 @@ class IConfig(interface.Interface):
         [block] label in a config file.
 
         :returns: A list of config sections.
-        :rtype: list
+        :rtype: ``list``
 
         """
 
@@ -117,7 +117,7 @@ class IConfig(interface.Interface):
         :param section: The config [section] to generate a dict from (using
             that section keys).
         :returns: A dictionary of the config section.
-        :rtype: dict
+        :rtype: ``dict``
 
         """
 
@@ -126,7 +126,7 @@ class IConfig(interface.Interface):
         Add a new section if it doesn't exist.
 
         :param section: The [section] label to create.
-        :returns: None
+        :returns: ``None``
 
         """
 
@@ -139,7 +139,7 @@ class IConfig(interface.Interface):
             from.
         :param key: The configuration key to get the value from.
         :returns: The value of the `key` in `section`.
-        :rtype: Unknown
+        :rtype: ``Unknown``
 
         """
 
@@ -151,7 +151,7 @@ class IConfig(interface.Interface):
             from.
         :param key: The configuration key to set the value at.
         :param value: The value to set.
-        :returns: None
+        :returns: ``None``
 
         """
 
@@ -162,7 +162,7 @@ class IConfig(interface.Interface):
         :param dict_obj: The dictionary to merge into the config
         :param override: Boolean.  Whether to override existing values.
             Default: True
-        :returns: None
+        :returns: ``None``
         """
 
     def has_section(section):
@@ -170,7 +170,7 @@ class IConfig(interface.Interface):
         Returns whether or not the section exists.
 
         :param section: The section to test for.
-        :returns: boolean
+        :returns: ``boolean``
 
         """
 
@@ -204,7 +204,8 @@ class CementConfigHandler(handler.CementBaseHandler):
         this).
 
         :param file_path: The file system path to the configuration file.
-        :returns: boolean (True if file was read properly, False otherwise)
+        :returns: True if file was read properly, False otherwise
+        :rtype: ``boolean``
 
         """
         raise NotImplementedError
@@ -221,7 +222,7 @@ class CementConfigHandler(handler.CementBaseHandler):
         this function to wrap any checks/logging/etc.
 
         :param file_path: The file system path to the configuration file.
-        :returns: boolean
+        :returns: ``boolean``
 
         """
         file_path = abspath(file_path)

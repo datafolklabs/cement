@@ -62,7 +62,7 @@ class ICache(interface.Interface):
         or the application to make further calls to it.
 
         :param app_obj: The application object.
-        :returns: None
+        :returns: ``None``
 
         """
 
@@ -87,8 +87,8 @@ class ICache(interface.Interface):
         :param value: The value of that key to store in cache.
         :param time: A one-off expire time.  If no time is given, then a
             default value is used (determined by the implementation).
-        :type time: integer (seconds) or None
-        :returns: None
+        :type time: ``int`` (seconds) or ``None``
+        :returns: ``None``
 
         """
 
@@ -98,7 +98,7 @@ class ICache(interface.Interface):
 
         :param key: The key in the cache to delete.
         :returns: True if the key is successfully deleted, False otherwise.
-        :rtype: boolean
+        :rtype: ``boolean``
 
         """
 

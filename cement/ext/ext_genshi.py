@@ -1,6 +1,7 @@
 """
-The Genshi extension module provides output templating based on the
-`Genshi Text Templating Language <http://genshi.edgewall.org/wiki/Documentation/text-templates.html>`_.
+The Genshi Extension module provides output templating based on the
+`Genshi Text Templating Language \
+<http://genshi.edgewall.org/wiki/Documentation/text-templates.html>`_.
 
 
 Requirements
@@ -40,7 +41,7 @@ Usage
                 '~/.myapp/templates',
                 '/usr/lib/myapp/templates',
                 ]
-    
+
     with MyApp() as app:
         app.run()
 
@@ -54,7 +55,7 @@ Usage
 Note that the above ``template_module`` and ``template_dirs`` are the
 auto-defined defaults but are added here for clarity.  From here, you
 would then put a Genshi template file in
-``myapp/templates/my_template.genshi`` or 
+``myapp/templates/my_template.genshi`` or
 ``/usr/lib/myapp/templates/my_template.genshi``.
 
 """

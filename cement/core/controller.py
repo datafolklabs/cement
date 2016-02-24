@@ -100,7 +100,7 @@ class IController(interface.Interface):
         or the application to make further calls to it.
 
         :param app_obj: The application object.
-        :returns: None
+        :returns: ``None``
 
         """
 
@@ -136,7 +136,7 @@ class expose(object):
      which you do not want displayed.  Effecively, if there are aliases and
      `aliases_only` is True, then aliases[0] will appear as the actual
      command/function label.
-    :type aliases: list
+    :type aliases: ``list``
 
     Usage:
 
@@ -238,8 +238,8 @@ class CementBaseController(handler.CementBaseHandler):
         """
         A list of aliases for the controller.  Will be treated like
         command/function aliases for non-stacked controllers.  For example:
-        'myapp <controller_label> --help' is the same as
-        'myapp <controller_alias> --help'.
+        ``myapp <controller_label> --help`` is the same as
+        ``myapp <controller_alias> --help``.
         """
 
         aliases_only = False
@@ -482,7 +482,7 @@ class CementBaseController(handler.CementBaseHandler):
 
     @property
     def _usage_text(self):
-        """Returns the usage text displayed when '--help' is passed."""
+        """Returns the usage text displayed when ``--help`` is passed."""
 
         if self._meta.usage is not None:
             return self._meta.usage

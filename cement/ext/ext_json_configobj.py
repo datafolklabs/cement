@@ -1,4 +1,59 @@
-"""JSON ConfigObj Framework Extension"""
+"""
+The JSON ConfigObj Extension is a combination of the
+:class:`JsonConfigHandler` and :class:`ConfigObjConfigHandler` which allows
+the application to read JSON configuration files into a ConfigObj based
+configuration handler.
+
+Requirements
+------------
+
+ * ConfigObj (``pip install configobj``)
+
+
+Configuration
+-------------
+
+This extension does not honor any application configuration settings.
+
+
+Usage
+-----
+
+**myapp.conf**
+
+.. code-block:: json
+
+    {
+        "myapp": {
+            "foo": "bar"
+        }
+    }
+
+**myapp.py**
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['json_configobj']
+            config_handler = 'json_configobj'
+
+    with MyApp() as app:
+        app.run()
+
+        # get config settings
+        app.config['myapp']['foo']
+
+        # set config settings
+        app.config['myapp']['foo'] = 'bar2'
+
+        # etc...
+
+
+"""
 
 import os
 import json
@@ -17,8 +72,8 @@ class JsonConfigObjConfigHandler(ConfigObjConfigHandler):
     :ref:`ConfigObjConfigHandler <cement.ext.ext_configobj>`
     but with JSON configuration files.
 
-    **Note** This extension has an external dependency on `ConfigObj`.  You
-    must include `configobj` in your application's dependencies as Cement
+    **Note** This extension has an external dependency on ``ConfigObj``.  You
+    must include ``configobj`` in your application's dependencies as Cement
     explicitly does *not* include external dependencies for optional
     extensions.
 
@@ -28,6 +83,7 @@ class JsonConfigObjConfigHandler(ConfigObjConfigHandler):
 
         """Handler meta-data."""
 
+        #: The string identifier of this handler.
         label = 'json_configobj'
 
     def __init__(self, *args, **kw):
@@ -35,8 +91,9 @@ class JsonConfigObjConfigHandler(ConfigObjConfigHandler):
 
     def _parse_file(self, file_path):
         """
-        Parse JSON configuration file settings from file_path, overwriting
-        existing config settings.  If the file does not exist, returns False.
+        Parse JSON configuration file settings from ``file_path``, overwriting
+        existing config settings.  If the file does not exist, returns
+        ``False``.
 
         :param file_path: The file system path to the JSON configuration file.
         :returns: boolean
