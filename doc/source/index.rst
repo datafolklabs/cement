@@ -6,11 +6,6 @@
 Cement Framework
 ================
 
-.. warning:: This documentation is for the development version of Cement
-    2.7.x.  For production please use, and reference the current stable
-    version of `Cement 2.6.x <http://builtoncement.com/2.6/>`_ until this
-    version is officially released as 2.8.x stable.
-
 Cement is an advanced CLI Application Framework for Python.  Its goal is to
 introduce a standard, and feature-full platform for both simple and complex
 command line applications as well as support rapid development needs without
@@ -43,8 +38,8 @@ Core features include (but are not limited to):
  * Cache handler interface adds caching support for improved performance
  * Controller handler supports sub-commands, and nested controllers
  * Zero external dependencies* of the core library
- * 100% test coverage using Nose
- * 100% PEP8 compliant using `pep8` and `autopep8` tools
+ * 100% test coverage using ``nose``
+ * 100% PEP8 compliant using ``pep8`` and ``autopep8`` tools
  * Extensive Sphinx documentation
  * Tested on Python 2.6, 2.7, 3.2, 3.3, 3.4, 3.5
 
@@ -59,7 +54,7 @@ that have external dependencies, as Cement explicitly does not include them.*
 Getting More Information
 ------------------------
 
- * DOCS: http://builtoncement.com/2.7/
+ * DOCS: http://builtoncement.com/2.8/
  * CODE: http://github.com/datafolklabs/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
  * SITE: http://builtoncement.com/

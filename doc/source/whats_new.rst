@@ -3,7 +3,7 @@
 What's New
 ==========
 
-New Features in Cement 2.7
+New Features in Cement 2.8
 --------------------------
 
 ArgparseController
