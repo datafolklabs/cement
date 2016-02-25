@@ -1,17 +1,12 @@
 """Tests for cement.ext.ext_memcached."""
 
 import sys
+import pylibmc
 from time import sleep
 from random import random
 from cement.core import handler
 from cement.utils import test
 from cement.utils.misc import init_defaults
-
-if sys.version_info[0] < 3:
-    import pylibmc
-else:
-    raise test.SkipTest(
-        'pylibmc does not support Python 3')  # pragma: no cover
 
 
 class MemcachedExtTestCase(test.CementTestCase):

@@ -48,6 +48,7 @@ Extensions
     * :ref:`Alarm <cement.ext.ext_alarm>` - Provides quick access to 
       setting an application alarm to easily handling timing out long running
       operations.
+    * :ref:`Memcached <cement.ext.ext_memcached>` - Now supported on Python 3. 
 
 
 Misc Enhancements

@@ -12,3 +12,4 @@ pystache
 pyYaml
 colorlog
 tabulate
+pylibmc

@@ -6,7 +6,6 @@ Requirements
 ------------
 
  * pylibmc (``pip install pylibmc``)
- * Python < 3
 
 
 Configuration

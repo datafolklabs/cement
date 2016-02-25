@@ -49,6 +49,7 @@ Features:
     * :issue:`336` - Added Support for ``CementApp.reload()`` (SIGHUP)
     * :issue:`337` - Added ``app.run_forever()`` alternative run method.
     * :issue:`342` - Added Alarm/Timeout Support
+    * :issue:`343` - Memcached Extension/Pylibmc Now Supports Python 3
 
 Refactoring:
 

@@ -115,7 +115,7 @@ class IController(interface.Interface):
         arguments (I.e. self.app.args.parse()).
 
         :returns: Returns the result of the executed controller function,
-        or ``None`` if no controller function is called.
+          or ``None`` if no controller function is called.
 
         """
 
