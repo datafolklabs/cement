@@ -6,6 +6,15 @@ Upgrading
 This section outlines any information and changes that might need to be made
 in order to update your application built on previous versions of Cement.
 
+Upgrading from 2.8.x to 2.9.x
+-----------------------------
+
+Cement 2.9 introduces a few incompatible changes from the previous 2.8 stable
+release, as noted in the :ref:`ChangeLog <changelog>`.
+
+ * FIXME
+
+
 Upgrading from 2.6.x to 2.8.x
 -----------------------------
 

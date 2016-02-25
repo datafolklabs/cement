@@ -19,6 +19,30 @@ any incompatible changes, and how to update your application to fix them.
 Also check out the :ref:`whats_new` section for details on new features.
 
 
+2.9.1 - DEVELOPMENT (will be released as dev/2.9.2 or stable/2.10.0)
+------------------------------------------------------------------------------
+
+This is a branch off of the 2.8.x stable code base.  Maintenance releases for
+2.8.x will happen under the stable/2.8.x git branch, while forward feature
+development will happen as 2.9.x under the git master branch.
+
+Bugs:
+
+    * None
+
+Features:
+
+    * None
+
+Refactoring;
+
+    * None
+
+Incompatible:
+
+    * None
+
+
 2.8.0 - Wed Feb 24, 2016
 ------------------------------------------------------------------------------
 
