@@ -114,7 +114,7 @@ class CementDevtoolsController(ArgparseController):
         print("Making Release for Version %s" % VERSION)
         print('-' * 77)
         if not self.app.pargs.noprompt:
-            res = raw_input("Continue? [yN] ")
+            res = input("Continue? [yN] ")
             if res not in ['Y', 'y', '1']:
                 sys.exit(1)
 
