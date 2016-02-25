@@ -6,7 +6,10 @@ Requirements
 ------------
 
  * pylibmc (``pip install pylibmc``)
-
+    * Note: There are known issues installing ``pylibmc`` on OSX/Homebrew
+      via PIP.  This post `might be helpful \
+      <http://stackoverflow.com/questions/14803310/\
+      error-when-install-pylibmc-using-pip>`_.
 
 Configuration
 -------------
