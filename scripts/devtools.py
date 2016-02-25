@@ -46,7 +46,7 @@ class CementDevtoolsController(ArgparseController):
         # make sure we don't have any un-added files
         print('Checking for Untracked Files')
         out, err, res = shell.exec_cmd(['git', 'status'])
-        if re.match('Untracked files', str(out):
+        if re.match('Untracked files', str(out)):
             self._do_error('There are untracked files.  See `git status`.')
 
         # make sure there isn't an existing tag
