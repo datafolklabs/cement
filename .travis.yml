@@ -1,6 +1,9 @@
 language: python
 sudo: false
 script: ./scripts/travis.sh
+os:
+  - linux
+  - osx
 python:
   - 2.6
   - 2.7
