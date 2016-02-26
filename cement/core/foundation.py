@@ -5,6 +5,7 @@ import os
 import sys
 import signal
 import copy
+import platform
 from time import sleep
 from ..core import backend, exc, log, config, plugin, interface
 from ..core import output, extension, arg, controller, meta, cache, mail
@@ -18,7 +19,10 @@ if sys.version_info[0] >= 3:
 
 
 LOG = minimal_logger(__name__)
-
+if platform.system() == 'Windows':
+    SIGNALS = [signal.SIGTERM, signal.SIGINT]
+else:
+    SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
 
 def add_handler_override_options(app):
     """
@@ -395,7 +399,7 @@ class CementApp(meta.MetaMixin):
         config_defaults = None
         """Default configuration dictionary.  Must be of type 'dict'."""
 
-        catch_signals = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
+        catch_signals = SIGNALS
         """
         List of signals to catch, and raise exc.CaughtSignal for.
         Can be set to None to disable signal handling.
