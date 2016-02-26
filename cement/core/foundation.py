@@ -17,12 +17,12 @@ from ..utils import fs
 if sys.version_info[0] >= 3:
     from imp import reload  # pragma: nocover
 
-
 LOG = minimal_logger(__name__)
 if platform.system() == 'Windows':
     SIGNALS = [signal.SIGTERM, signal.SIGINT]
 else:
     SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
+
 
 def add_handler_override_options(app):
     """
