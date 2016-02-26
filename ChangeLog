@@ -19,6 +19,28 @@ any incompatible changes, and how to update your application to fix them.
 Also check out the :ref:`whats_new` section for details on new features.
 
 
+2.8.1 - DEVELOPMENT (will be released as stable/2.8.4)
+------------------------------------------------------------------------------
+
+Bugs:
+
+    * :issue:`346` - AttributeError: 'module' object has no attribute 'SIGHUP'
+      on Windows
+
+
+Features:
+
+    * None
+
+Refactoring;
+
+    * None
+
+Incompatible:
+
+    * None
+
+
 2.8.0 - Wed Feb 24, 2016
 ------------------------------------------------------------------------------
 
