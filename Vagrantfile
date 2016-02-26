@@ -20,8 +20,15 @@ Vagrant.configure("2") do |config|
     this.vm.provision "shell", inline: "/vagrant/scripts/vagrant/up.sh"
   end
 
+  config.vm.define "windows-server-2012-r2", autostart: false do |this|
+    this.vm.box = "opentable/win-2012r2-standard-amd64-nocm"
+    this.vm.hostname = "windows-server-2012-r2"
+    this.vm.box_url = "opentable/win-2012r2-standard-amd64-nocm"
+  end
+
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = 1024
+    vb.memory = 2048 
     vb.cpus = 2
+    vb.gui = true
   end
 end
