@@ -28,7 +28,9 @@ development will happen as 2.9.x under the git master branch.
 
 Bugs:
 
-    * None
+    * :issue:`346` - AttributeError: 'module' object has no attribute 'SIGHUP'
+      on Windows
+
 
 Features:
 
