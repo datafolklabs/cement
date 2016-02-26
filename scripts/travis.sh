@@ -10,10 +10,17 @@ fi
 
 PYCHECK=$(python -c 'import sys; print(sys.version_info > (3, 0))')
 if [ "$PYCHECK" == "True" ]; then
-    pip install -r requirements-dev-py3-linux.txt
+    REQ_BASE='requirements-dev-py3'
 else
-    pip install -r requirements-dev-linux.txt
+    REQ_BASE='requirements-dev'
+fi
+
+if [ "$(uname)" == 'Linux' ]; then
+    pip install -r $REQ_BASE-linux.txt
+else
+    pip install -r $REQ_BASE.txt
 fi
 
 python setup.py nosetests
 exit $?
+
