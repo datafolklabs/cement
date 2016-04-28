@@ -365,7 +365,7 @@ class CementBaseController(handler.CementBaseHandler):
                 commands.append(func)
 
         # process stacked controllers second for commands and args
-        for contr in handler.list('controller'):
+        for contr in self.app.handler.list('controller'):
             # don't include self here
             if contr == self.__class__:
                 continue
