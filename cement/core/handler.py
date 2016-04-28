@@ -234,7 +234,7 @@ class HandlerManager(object):
         instantiated or non-instantiated handler class.
 
         :param handler_type: The type of handler (aka the interface label)
-        :param hander_def: The handler as defined in CementApp.Meta.
+        :param handler_def: The handler as defined in CementApp.Meta.
         :type handler_def: str, uninstantiated object, or instantiated object
         :param raise_error: Whether or not to raise an exception if unable
             to resolve the handler.
