@@ -258,7 +258,7 @@ Lets see what this looks like:
       command2 (aliases: cmd2)
         more of nothing
 
-      some-other-command (aliases: some-cmd)
+      second-cmd1 (aliases: some-cmd)
         this is some command
 
     optional arguments:
