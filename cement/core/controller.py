@@ -171,7 +171,7 @@ class expose(object):
         metadict['func_name'] = func.__name__
         metadict['exposed'] = True
         metadict['hide'] = self.hide
-        metadict['help'] = self.help
+        metadict['help'] = self.help or func.__doc__
         metadict['aliases'] = self.aliases
         metadict['aliases_only'] = self.aliases_only
         metadict['controller'] = None  # added by the controller
