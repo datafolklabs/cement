@@ -47,7 +47,7 @@ The following outlines a basic test case using the cement.utils.test module.
                 # Perform basic assertion checks.  You can do this anywhere 
                 # in the test function, depending on what the assertion is 
                 # checking.
-                self.ok(app.config.has_key('myapp', 'debug))
+                self.ok(app.config.has_key('myapp', 'debug'))
                 self.eq(app.config.get('myapp', 'debug'), False)
                 
                 # Run the applicaion, if necessary
@@ -56,7 +56,7 @@ The following outlines a basic test case using the cement.utils.test module.
                 # Test the last rendered output (if app.render was used)
                 data, output = app.get_last_rendered()
                 self.eq(data, {'foo':'bar'})
-                self.eq(output, 'some rendered output text)
+                self.eq(output, 'some rendered output text')
             
         @test.raises(Exception)
         def test_exception(self):
@@ -120,6 +120,6 @@ into a special 'testing' version.  For example:
                 app.run()
             
         def test_myapp_foo(self):
-            with MyTestApp(argv=['--foo', 'bar]) as app:
+            with MyTestApp(argv=['--foo', 'bar']) as app:
                 app.run()
             
