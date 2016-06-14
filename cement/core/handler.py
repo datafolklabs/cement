@@ -416,9 +416,9 @@ def list(handler_type):
     # only log debug for now as this won't be removed until Cement 3.x and
     # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
     LOG.debug(
-        'Cement Deprecation Warning: `handler.get()` has been deprecated, '
+        'Cement Deprecation Warning: `handler.list()` has been deprecated, '
         'and will be removed in future versions of Cement.  You should now '
-        'use `CementApp.handler.get()` instead.'
+        'use `CementApp.handler.list()` instead.'
     )
 
     if handler_type not in backend.__handlers__:
