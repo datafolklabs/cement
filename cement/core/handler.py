@@ -192,7 +192,7 @@ class HandlerManager(object):
             raise exc.FrameworkError("Handler type '%s' doesn't exist." %
                                      handler_type)
         if obj._meta.label in self.__handlers__[handler_type] and \
-                self.__handlers__[handler_type][obj._meta.label] != obj:
+                self.__handlers__[handler_type][obj._meta.label] != orig_obj:
             raise exc.FrameworkError("handlers['%s']['%s'] already exists" %
                                      (handler_type, obj._meta.label))
 
@@ -203,7 +203,7 @@ class HandlerManager(object):
             LOG.debug("Interface '%s' does not have a validator() function!" %
                       interface)
 
-        self.__handlers__[handler_type][obj.Meta.label] = orig_obj
+        self.__handlers__[handler_type][obj._meta.label] = orig_obj
 
     def registered(self, handler_type, handler_label):
         """
