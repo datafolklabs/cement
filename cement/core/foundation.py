@@ -19,7 +19,7 @@ if sys.version_info[0] >= 3:
 
 LOG = minimal_logger(__name__)
 if platform.system() == 'Windows':
-    SIGNALS = [signal.SIGTERM, signal.SIGINT]
+    SIGNALS = [signal.SIGTERM, signal.SIGINT]   # pragma: nocover
 else:
     SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
 
