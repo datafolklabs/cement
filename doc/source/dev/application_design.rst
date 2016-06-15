@@ -70,7 +70,7 @@ Multi-File Applications
 
 Larger applications need to be properly organized to keep code clean, and to
 keep a high level of maintainability (read: to keep things from getting
-shitty). `The Boss Project <http://boss.rtfd.org>`_ provides our recommended
+shitty). `The Boss Project <https://boss.readthedocs.io>`_ provides our recommended
 application layout, and is a great starting point for anyone new to Cement.
 
 The primary detail about how to layout your code is this:  All CLI/Cement

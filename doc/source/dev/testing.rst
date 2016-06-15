@@ -12,7 +12,7 @@ performing its own Nose tests.
 For more information on testing, please see the following:
 
  * `UnitTest <http://docs.python.org/library/unittest.html>`_
- * `Nose <http://nose.readthedocs.org/en/latest/>`_
+ * `Nose <https://nose.readthedocs.io/en/latest/>`_
  * `Coverage <http://nedbatchelder.com/code/coverage/>`_
  
 API Reference:

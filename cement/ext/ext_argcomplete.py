@@ -1,6 +1,6 @@
 """
 The Argcomplete Extension provides the necessary hooks to utilize
-the `Argcomplete Library <https://argcomplete.readthedocs.org/en/latest/>`_,
+the `Argcomplete Library <https://argcomplete.readthedocs.io/en/latest/>`_,
 and perform auto-completion of command line arguments/options/sub-parsers/etc.
 
 Requirements
@@ -81,7 +81,7 @@ your actual application entry-point name (i.e. ``myapp`` if installed as
                                          default
 
 See the
-`Argcomplete Documentation <https://argcomplete.readthedocs.org/en/latest/>`_
+`Argcomplete Documentation <https://argcomplete.readthedocs.io/en/latest/>`_
 on how to properly integrate it's usage into your application deployment.
 This extension simply enables Argcomplete to do it's thing on application
 startup.
