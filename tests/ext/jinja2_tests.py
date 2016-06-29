@@ -21,14 +21,14 @@ class Jinja2ExtTestCase(test.CementExtTestCase):
         self.app.setup()
         rando = random.random()
         res = self.app.render(dict(foo=rando), 'test_template.jinja2')
-        jinja2_res = "foo equals %s\n" % rando
+        jinja2_res = "foo equals {}\n".format(rando)
         self.eq(res, jinja2_res)
 
     def test_jinja2_utf8(self):
         self.app.setup()
         rando = random.random()
         res = self.app.render(dict(foo=rando), 'test_template_utf8.jinja2')
-        jinja2_res = u"foo est égal à %s\n" % rando
+        jinja2_res = u"foo est égal à {}\n".format(rando)
         self.eq(res, jinja2_res)
 
     @test.raises(exc.FrameworkError)
