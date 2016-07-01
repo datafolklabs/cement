@@ -16,3 +16,4 @@ pylibmc
 genshi
 colorlog
 tabulate
+jinja2
