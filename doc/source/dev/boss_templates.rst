@@ -3,7 +3,7 @@
 Starting Projects from Boss Templates
 =====================================
 
-`The Boss Project <http://boss.rtfd.org>`_ provides 'Baseline Open Source
+`The Boss Project <https://boss.readthedocs.io>`_ provides 'Baseline Open Source
 Software' templates and development tools. It has similarities to PasteScript
 with regards to templating, but far easier to extend.  The official template
 repository includes a number of templates specifically for Cement, and are the
