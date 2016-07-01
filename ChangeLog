@@ -44,6 +44,10 @@ Incompatible:
 
     * None
 
+Support:
+
+    * :issue:`372` - Deprecate Python 3.2 Support
+
 
 2.8.0 - Wed Feb 24, 2016
 ------------------------------------------------------------------------------
