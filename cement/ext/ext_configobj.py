@@ -46,9 +46,7 @@ Usage
 
 """
 
-import os
-import sys
-from ..core import config, exc
+from ..core import config
 from ..utils.misc import minimal_logger
 from configobj import ConfigObj
 

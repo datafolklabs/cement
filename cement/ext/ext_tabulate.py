@@ -54,9 +54,8 @@ Looks like:
 
 """
 
-import sys
 from tabulate import tabulate
-from ..core import output, exc
+from ..core import output
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)

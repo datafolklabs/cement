@@ -52,7 +52,7 @@ Usage
 
 import os
 import logging
-from ..core import exc, log
+from ..core import log
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
 

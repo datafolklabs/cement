@@ -98,7 +98,6 @@ Usage
 
 """
 
-import sys
 import pylibmc
 from ..core import cache
 from ..utils.misc import minimal_logger

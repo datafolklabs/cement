@@ -34,7 +34,7 @@ Bugs:
 
 Features:
 
-    * None
+    * :issue:`373` - Switch over to using Flake8 for PEP8 and Style Compliance
 
 Refactoring;
 

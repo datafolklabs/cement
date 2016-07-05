@@ -3,7 +3,7 @@
 import os
 import sys
 import pkgutil
-from ..core import backend, exc, interface, handler
+from ..core import exc, interface, handler
 from ..utils.misc import minimal_logger
 from ..utils import fs
 

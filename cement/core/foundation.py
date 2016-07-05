@@ -1,10 +1,8 @@
 """Cement core foundation module."""
 
-import re
 import os
 import sys
 import signal
-import copy
 import platform
 from time import sleep
 from ..core import backend, exc, log, config, plugin, interface

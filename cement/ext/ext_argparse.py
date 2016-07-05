@@ -168,7 +168,6 @@ The above looks like:
 import re
 import sys
 from argparse import ArgumentParser, SUPPRESS
-from ..core import backend, arg
 from ..core.handler import CementBaseHandler
 from ..core.arg import CementArgumentHandler, IArgument
 from ..core.controller import IController
@@ -725,7 +724,6 @@ class ArgparseController(CementBaseHandler):
         label = controller._meta.label
         LOG.debug("processing commands for '%s' " % label +
                   "controller namespace")
-        parser = self._get_parser_by_controller(controller)
 
         commands = controller._collect_commands()
         for command in commands:

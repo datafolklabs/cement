@@ -70,9 +70,8 @@ See ``CementApp.Meta.handler_override_options``.
 
 """
 
-import sys
 import json
-from ..core import output, backend
+from ..core import output
 from ..utils.misc import minimal_logger
 from ..ext.ext_configparser import ConfigParserConfigHandler
 

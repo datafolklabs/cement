@@ -183,9 +183,8 @@ or any other configuration file is modified (spaces added for clarity):
 import os
 import signal
 import pyinotify
-from ..core import backend
 from ..utils.misc import minimal_logger
-from ..utils import shell, fs
+from ..utils import fs
 
 LOG = minimal_logger(__name__)
 MASK = pyinotify.IN_CLOSE_WRITE
@@ -234,7 +233,7 @@ def spawn_watcher(app):
             watched_dirs.append(plugin_dir)
 
         # just want the first one... looks wierd, but python 2/3 compat
-        res = os.walk(plugin_dir)
+        # res = os.walk(plugin_dir) ### ?
         for path, dirs, files in os.walk(plugin_dir):
             plugin_config_files = files
             break

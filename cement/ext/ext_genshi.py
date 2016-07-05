@@ -60,8 +60,7 @@ would then put a Genshi template file in
 
 """
 
-import sys
-from ..core import output, exc
+from ..core import output
 from ..utils.misc import minimal_logger
 from genshi.template import NewTextTemplate
 

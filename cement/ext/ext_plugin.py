@@ -25,7 +25,7 @@ import os
 import sys
 import glob
 import imp
-from ..core import backend, plugin, exc
+from ..core import plugin, exc
 from ..utils.misc import is_true, minimal_logger
 from ..utils.fs import abspath
 

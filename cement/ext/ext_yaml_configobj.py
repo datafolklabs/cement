@@ -53,10 +53,8 @@ Usage
 
 """
 
-import os
 import yaml
 from ..utils.misc import minimal_logger
-from ..utils.fs import abspath
 from ..ext.ext_configobj import ConfigObjConfigHandler
 
 LOG = minimal_logger(__name__)

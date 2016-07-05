@@ -6,10 +6,10 @@ from ..core import backend, foundation
 from ..utils.misc import rando
 
 # shortcuts
-from nose import SkipTest
+from nose import SkipTest       # noqa
+from nose.tools import raises   # noqa
 from nose.tools import ok_ as ok
 from nose.tools import eq_ as eq
-from nose.tools import raises
 from nose.plugins.attrib import attr
 
 

@@ -3,7 +3,7 @@ Cement core log module.
 
 """
 
-from ..core import exc, interface, handler
+from ..core import interface, handler
 
 
 def log_validator(klass, obj):

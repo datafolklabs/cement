@@ -60,8 +60,7 @@ would then put a Jinja2 template file in
 
 """
 
-import sys
-from ..core import output, exc
+from ..core import output
 from ..utils.misc import minimal_logger
 from jinja2 import Environment
 

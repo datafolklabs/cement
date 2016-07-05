@@ -86,9 +86,8 @@ Would output:
 
 """
 
-import sys
 from pystache.renderer import Renderer
-from ..core import output, exc
+from ..core import output
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -100,7 +99,6 @@ class PartialsLoader(object):
         self.handler = handler
 
     def get(self, template):
-        stache = Renderer()
         return self.handler.load_template(template)
 
 

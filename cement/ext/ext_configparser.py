@@ -35,9 +35,8 @@ Usage
         # etc.
 """
 
-import os
 import sys
-from ..core import backend, config
+from ..core import config
 from ..utils.misc import minimal_logger
 
 if sys.version_info[0] < 3:

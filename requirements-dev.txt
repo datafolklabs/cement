@@ -4,6 +4,7 @@ coverage
 sphinx
 pep8
 autopep8
+flake8
 mock
 sphinx_rtd_theme
 

@@ -1,6 +1,6 @@
 """Cement core plugins module."""
 
-from ..core import backend, exc, interface, handler
+from ..core import interface, handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)

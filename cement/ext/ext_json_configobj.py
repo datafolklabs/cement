@@ -55,10 +55,8 @@ Usage
 
 """
 
-import os
 import json
 from ..utils.misc import minimal_logger
-from ..utils.fs import abspath
 from ..ext.ext_configobj import ConfigObjConfigHandler
 
 LOG = minimal_logger(__name__)

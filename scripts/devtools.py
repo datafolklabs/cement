@@ -76,12 +76,12 @@ class CementDevtoolsController(ArgparseController):
             self._do_error("\n\nNose tests did not pass.\n\n" +
                            "$ %s\n%s" % (' '.join(cmd_args), err))
 
-    def _do_pep8(self):
-        print("Checking PEP8 Compliance")
-        cmd_args = ['pep8', '-r', 'cement/', '--exclude=*.pyc']
+    def _do_flake8(self):
+        print("Checking Flake8 Compliance (pep8, pycodestyle, mccabe, etc)")
+        cmd_args = ['flake8', 'cement/']
         out, err, res = shell.exec_cmd(cmd_args)
         if res > 0:
-            self._do_error("\n\nPEP8 checks did not pass.\n\n" +
+            self._do_error("\n\nFlake8 checks did not pass.\n\n" +
                            "$ %s\n%s" % (' '.join(cmd_args), str(out)))
 
     @expose(help='run all unit tests')
@@ -91,13 +91,13 @@ class CementDevtoolsController(ArgparseController):
         print('')
         print("Running Tests for Cement Version %s" % VERSION)
         print('-' * 77)
-        self._do_pep8()
+        self._do_flake8()
         self._do_tests()
         print('')
 
-    @expose(help='run pep8 tests')
-    def pep8(self):
-        self._do_pep8()
+    @expose(help='run flake8 tests')
+    def flake8(self):
+        self._do_flake8()
 
     def _do_sphinx(self, dest_path):
         print("Building Documentation")
@@ -123,7 +123,7 @@ class CementDevtoolsController(ArgparseController):
         os.makedirs(os.path.join(tmp, 'source'))
         os.makedirs(os.path.join(tmp, 'doc'))
 
-        self._do_pep8()
+        self._do_flake8()
         self._do_tests()
         self._do_git()
         self._do_sphinx(os.path.join(tmp, 'doc'))

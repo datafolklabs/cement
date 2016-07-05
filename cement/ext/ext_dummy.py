@@ -34,7 +34,7 @@ Usage
 
 """
 
-from ..core import backend, output, mail
+from ..core import output, mail
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)

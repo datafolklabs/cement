@@ -428,7 +428,6 @@ class CementBaseController(handler.CementBaseHandler):
         self._visible_commands.sort()
 
     def _get_dispatch_command(self):
-        default_func = self._meta.default_func
         default_func_key = re.sub('_', '-', self._meta.default_func)
 
         if (len(self.app.argv) <= 0) or (self.app.argv[0].startswith('-')):
