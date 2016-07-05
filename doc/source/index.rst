@@ -44,7 +44,7 @@ Core features include (but are not limited to):
  * Controller handler supports sub-commands, and nested controllers
  * Zero external dependencies* of the core library
  * 100% test coverage using ``nose`` and ``coverage``
- * 100% PEP8 compliant using ``flake8``
+ * 100% PEP8 and style compliant using ``flake8``
  * Extensive Sphinx documentation
  * Tested on Python 2.6, 2.7, 3.3, 3.4, 3.5
 
