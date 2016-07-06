@@ -457,6 +457,7 @@ class FoundationTestCase(test.CementCoreTestCase):
         with self.app as app:
             app.hook.define('bogus_hook1')
             app.handler.define(MyTestInterface)
+            app.extend('some_extra_member', dict())
             app.run()
             self.ok(app.hook.defined('bogus_hook1'))
             self.ok(app.handler.defined('my_test_interface'))

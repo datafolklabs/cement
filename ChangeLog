@@ -30,6 +30,7 @@ Bugs:
 
     * :issue:`346` - AttributeError: 'module' object has no attribute 'SIGHUP'
       on Windows
+    * :issue:`352` - ``CementApp.extend()`` Breaks on ``CementApp.reload()``
     * :issue:`366` - Output Handler Override Options Dissappear
 
 
@@ -46,7 +47,7 @@ Refactoring;
 
 Incompatible:
 
-    * :issue:`376` - Deprecate `cement.core.interface.list()`
+    * :issue:`376` - Deprecate ``cement.core.interface.list()``
 
 Support:
 

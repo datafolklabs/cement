@@ -650,6 +650,7 @@ class CementApp(meta.MetaMixin):
         self._loaded_bootstrap = None
         self._parsed_args = None
         self._last_rendered = None
+        self._extended_members = []
         self.__saved_stdout__ = None
         self.__saved_stderr__ = None
         self.handler = None
@@ -713,6 +714,8 @@ class CementApp(meta.MetaMixin):
         LOG.debug("extending appication with '.%s' (%s)" %
                   (member_name, member_object))
         setattr(self, member_name, member_object)
+        if member_name not in self._extended_members:
+            self._extended_members.append(member_name)
 
     def _validate_label(self):
         if not self._meta.label:
@@ -842,6 +845,9 @@ class CementApp(meta.MetaMixin):
         :returns: ``None``
         """
         LOG.debug('reloading the %s application' % self._meta.label)
+        for member in self._extended_members:
+            delattr(self, member)
+        self._extended_members = []
         self.handler.__handlers__ = {}
         self.hook.__hooks__ = {}
         self._lay_cement()
