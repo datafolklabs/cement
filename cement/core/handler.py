@@ -86,6 +86,23 @@ class HandlerManager(object):
             res.append(self.__handlers__[handler_type][label])
         return res
 
+    def list_types(self):
+        """
+        Return a list of handler types (interface labels).
+
+        :returns: List of handlers types (interface labels).
+        :rtype: ``list``
+        :raises: :class:`cement.core.exc.FrameworkError`
+
+        Usage:
+
+        .. code-block:: python
+
+            app.handler.list_types()
+
+        """
+        return self.__handlers__.keys()
+
     def define(self, interface):
         """
         Define a handler based on the provided interface.  Defines a handler

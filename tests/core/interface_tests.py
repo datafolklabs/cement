@@ -76,3 +76,7 @@ class InterfaceTestCase(test.CementCoreTestCase):
             self.eq(
                 e.msg, "Invalid or missing: ['_meta.missing_meta'] in %s" % han)
             raise
+
+    def test_interface_list(self):
+        res = 'output' in interface.list()
+        self.ok(res)

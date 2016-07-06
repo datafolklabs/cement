@@ -34,10 +34,11 @@ def add_handler_override_options(app):
         return
 
     for i in app._meta.handler_override_options:
-        if i not in interface.list():
+        if i not in app.handler.list_types():
             LOG.debug("interface '%s'" % i +
                       " is not defined, can not override handlers")
             continue
+
 
         if len(app.handler.list(i)) > 1:
             handlers = []
@@ -985,7 +986,7 @@ class CementApp(meta.MetaMixin):
             self._suppress_output()
 
         # Forward/Backward compat, see Issue #311
-        if self._meta.use_backend_globals:
+        if self._meta.use_backend_globals is True:
             backend.__hooks__ = {}
             backend.__handlers__ = {}
             self.handler = HandlerManager(use_backend_globals=True)

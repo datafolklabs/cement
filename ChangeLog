@@ -30,6 +30,7 @@ Bugs:
 
     * :issue:`346` - AttributeError: 'module' object has no attribute 'SIGHUP'
       on Windows
+    * :issue:`366` - Output Handler Override Options Dissappear
 
 
 Features:
@@ -45,7 +46,7 @@ Refactoring;
 
 Incompatible:
 
-    * None
+    * :issue:`376` - Deprecate `cement.core.interface.list()`
 
 Support:
 

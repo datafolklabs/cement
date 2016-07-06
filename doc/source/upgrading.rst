@@ -12,7 +12,18 @@ Upgrading from 2.8.x to 2.9.x
 Cement 2.9 introduces a few incompatible changes from the previous 2.8 stable
 release, as noted in the :ref:`ChangeLog <changelog>`.
 
- * FIXME
+Deprecated: cement.core.interface.list()
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This function should no longer be used in favor of 
+``CementApp.handler.list_types()``.  It will continue to work throughout 
+Cement 2.x, however is not compatible if 
+``CementApp.Meta.use_backend_globals == False``.
+
+Related: 
+
+ * :issue:`366`
+ * :issue:`376`
 
 
 Upgrading from 2.6.x to 2.8.x
