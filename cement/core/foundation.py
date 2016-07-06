@@ -936,11 +936,11 @@ class CementApp(meta.MetaMixin):
 
         """
         if not is_true(self._meta.ignore_deprecation_warnings):
-            self.log.warn("Cement Deprecation Warning: " +
-                          "CementApp.get_last_rendered() has been " +
-                          "deprecated, and will be removed in future " +
-                          "versions of Cement.  You should use the " +
-                          "CementApp.last_rendered property instead.")
+            self.log.warning("Cement Deprecation Warning: " +
+                             "CementApp.get_last_rendered() has been " +
+                             "deprecated, and will be removed in future " +
+                             "versions of Cement.  You should use the " +
+                             "CementApp.last_rendered property instead.")
         return self._last_rendered
 
     @property

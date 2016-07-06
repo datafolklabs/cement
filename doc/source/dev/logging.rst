@@ -43,7 +43,7 @@ The following shows logging to each of the defined log levels.
     app.log.info('This is an info message.')
 
     # Log a warning message
-    app.log.warn('This is a warning message.')
+    app.log.warning('This is a warning message.')
 
     # Log an error message
     app.log.error('This is an error message.')
@@ -58,8 +58,8 @@ The following shows logging to each of the defined log levels.
 The above is displayed in order of 'severity' you can say.  If the log level
 is set to 'INFO', you will receive all 'info' messages and above .. including
 warning, error, and fatal.  However, you will not receive DEBUG level messages.
-The same goes for a log level of 'WARN', where you will receive warning, error,
-and fatal... but you will not receive INFO, or DEBUG level messages.
+The same goes for a log level of 'WARNING', where you will receive warning, 
+error, and fatal... but you will not receive INFO, or DEBUG level messages.
 
 Changing Log Level
 ------------------
@@ -73,7 +73,7 @@ handler.  You can override this via config_defaults:
     from cement.utils.misc import init_defaults
 
     defaults = init_defaults('myapp', 'log.logging')
-    defaults['log.logging']['level'] = 'WARN'
+    defaults['log.logging']['level'] = 'WARNING'
 
     app = foundation.CementApp('myapp', config_defaults=defaults)
     app.setup()

@@ -62,7 +62,7 @@ Usage
         app.run()
         app.log.debug('This is my debug message')
         app.log.info('This is my info message')
-        app.log.warn('This is my warning message')
+        app.log.warning('This is my warning message')
         app.log.error('This is my error message')
         app.log.fatal('This is my critical message')
 

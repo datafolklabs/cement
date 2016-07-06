@@ -21,7 +21,7 @@ class BackendTestCase(test.CementCoreTestCase):
         log = misc.minimal_logger(__name__)
         log = misc.minimal_logger(__name__, debug=True)
         log.info('info test')
-        log.warn('warn test')
+        log.warning('warning test')
         log.error('error test')
         log.fatal('fatal test')
         log.debug('debug test')
@@ -34,7 +34,10 @@ class BackendTestCase(test.CementCoreTestCase):
 
         # set logging back to non-debug
         misc.minimal_logger(__name__, debug=False)
-        pass
+
+    def test_minimal_logger_deprecated_warn(self):
+        log = misc.minimal_logger(__name__)
+        log.warn('warning test')
 
     def test_wrap_str(self):
         text = "aaaaa bbbbb ccccc"

@@ -14,7 +14,8 @@ def log_validator(klass, obj):
         'set_level',
         'get_level',
         'info',
-        'warn',
+        'warn', ### DEPRECATED
+        'warning',
         'error',
         'fatal',
         'debug',
@@ -72,7 +73,7 @@ class ILog(interface.Interface):
     def set_level():
         """
         Set the log level.  Must except atleast one of:
-            ``['INFO', 'WARN', 'ERROR', 'DEBUG', or 'FATAL']``.
+            ``['INFO', 'WARNING', 'ERROR', 'DEBUG', or 'FATAL']``.
 
         """
 
@@ -87,9 +88,9 @@ class ILog(interface.Interface):
 
         """
 
-    def warn(self, msg):
+    def warning(self, msg):
         """
-        Log to the 'WARN' facility.
+        Log to the 'WARNING' facility.
 
         :param msg: The message to log.
 

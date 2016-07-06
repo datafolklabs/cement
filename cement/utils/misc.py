@@ -23,25 +23,6 @@ def rando(salt=None):
     return hashlib.md5(str(salt).encode()).hexdigest()
 
 
-# class NullLogger(object):
-#    def __init__(self, namespace, debug, *args, **kw):
-#        pass
-
-    # def info(self, *args, **kw):
-    #     pass
-
-    # def warn(self, *args, **kw):
-    #     pass
-
-    # def error(self, *args, **kw):
-    #     pass
-
-    # def fatal(self, *args, **kw):
-    #     pass
-
-    # def debug(self, *args, **kw):
-    #     pass
-
 class MinimalLogger(object):
 
     def __init__(self, namespace, debug, *args, **kw):
@@ -94,10 +75,13 @@ class MinimalLogger(object):
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.info(msg, **kwargs)
 
-    def warn(self, msg, namespace=None, **kw):
+    def warning(self, msg, namespace=None, **kw):
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
-            self.backend.warn(msg, **kwargs)
+            self.backend.warning(msg, **kwargs)
+
+    def warn(self, msg, namespace=None, **kw):
+        self.warning(msg, namespace, **kw)
 
     def error(self, msg, namespace=None, **kw):
         if self.logging_is_enabled:

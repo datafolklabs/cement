@@ -43,7 +43,7 @@ Usage
 
     with MyApp() as app:
         app.log.info("This is an info message")
-        app.log.warn("This is an warning message")
+        app.log.warning("This is an warning message")
         app.log.error("This is an error message")
         app.log.fatal("This is a fatal message")
         app.log.debug("This is a debug message")
@@ -135,7 +135,7 @@ class LoggingLogHandler(log.CementLogHandler):
             max_files=4,
         )
 
-    levels = ['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
+    levels = ['INFO', 'WARNING', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
 
     def __init__(self, *args, **kw):
         super(LoggingLogHandler, self).__init__(*args, **kw)
@@ -162,11 +162,18 @@ class LoggingLogHandler(log.CementLogHandler):
     def set_level(self, level):
         """
         Set the log level.  Must be one of the log levels configured in
-        self.levels which are ``['INFO', 'WARN', 'ERROR', 'DEBUG', 'FATAL']``.
+        self.levels which are ``['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL']``.
 
         :param level: The log level to set.
 
         """
+        if level.upper() == 'WARN':
+            level = 'WARNING'
+            LOG.warning("Cement Deprecation Warning: Use of the `WARN` " +
+                        "level is deprecated as of Cement 2.9.x, and will " +
+                        "be removed in future versions of Cement.  You " + 
+                        "should use `WARNING` instead.")
+
         self.clear_loggers(self._meta.namespace)
         for namespace in self._meta.clear_loggers:
             self.clear_loggers(namespace)
@@ -297,7 +304,7 @@ class LoggingLogHandler(log.CementLogHandler):
         """
         Log to the INFO facility.
 
-        :param msg: The message the log.
+        :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
             the log is coming from.  Will default to self._meta.namespace if
             None is passed.
@@ -308,11 +315,11 @@ class LoggingLogHandler(log.CementLogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.info(msg, **kwargs)
 
-    def warn(self, msg, namespace=None, **kw):
+    def warning(self, msg, namespace=None, **kw):
         """
-        Log to the WARN facility.
+        Log to the WARNING facility.
 
-        :param msg: The message the log.
+        :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
             the log is coming from.  Will default to self._meta.namespace if
             None is passed.
@@ -321,13 +328,30 @@ class LoggingLogHandler(log.CementLogHandler):
 
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)
-        self.backend.warn(msg, **kwargs)
+        self.backend.warning(msg, **kwargs)
+
+    def warn(self, msg, namespace=None, **kw):
+        """
+        DEPRECATION WARNING: This function is deprecated as of Cement 2.9.x
+        in favor of the ``LoggingLogHandler.warning()`` function, and will be 
+        removed in future versions of Cement.
+
+        See: :ref:LoggingLogHandler.warning():
+
+        """
+        if not is_true(self.app._meta.ignore_deprecation_warnings):
+            self.debug("Cement Deprecation Warning: " +
+                       "LoggingLogHandler.warn() has been " +
+                       "deprecated, and will be removed in future " +
+                       "versions of Cement.  You should use the " +
+                       "LoggingLogHandler.warning() function instead.")
+        self.warning(msg, namespace, **kw)
 
     def error(self, msg, namespace=None, **kw):
         """
         Log to the ERROR facility.
 
-        :param msg: The message the log.
+        :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
             the log is coming from.  Will default to self._meta.namespace if
             None is passed.
@@ -342,7 +366,7 @@ class LoggingLogHandler(log.CementLogHandler):
         """
         Log to the FATAL (aka CRITICAL) facility.
 
-        :param msg: The message the log.
+        :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
             the log is coming from.  Will default to self._meta.namespace if
             None is passed.
@@ -357,7 +381,7 @@ class LoggingLogHandler(log.CementLogHandler):
         """
         Log to the DEBUG facility.
 
-        :param msg: The message the log.
+        :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
             the log is coming from.  Will default to self._meta.namespace if
             None is passed.  For debugging, it can be useful to set this to

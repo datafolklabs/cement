@@ -34,7 +34,7 @@ class LogTestCase(test.CementCoreTestCase):
         app = self.make_app(config_defaults=defaults)
         app.setup()
         app.log.info('Info Message')
-        app.log.warn('Warn Message')
+        app.log.warning('Warning Message')
         app.log.error('Error Message')
         app.log.fatal('Fatal Message')
         app.log.debug('Debug Message')

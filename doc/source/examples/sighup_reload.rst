@@ -42,9 +42,9 @@ following example demonstrates how you might achieve that:
             try:
                 app.run()
             except CaughtSignal as e:
-                app.log.warn(e.msg)
+                app.log.warning(e.msg)
                 if e.signum in [signal.SIGHUP]:
-                    app.log.warn('Reloading MyApp')
+                    app.log.warning('Reloading MyApp')
                     app.reload()
                     keep_alive = True
                 else:

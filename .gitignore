@@ -65,3 +65,6 @@ extensions
 .env
 .vagrant
 myapp*.py
+
+# redis test artifacts
+dump.rdb
