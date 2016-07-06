@@ -9,7 +9,7 @@
     :show-inheritance:
 
 Genshi Syntax Basics
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 **Printing Variables**
 

@@ -56,12 +56,14 @@ Cement Extension Modules
    ext/ext_daemon
    ext/ext_dummy
    ext/ext_genshi
+   ext/ext_jinja2
    ext/ext_json
    ext/ext_json_configobj
    ext/ext_logging
    ext/ext_memcached
    ext/ext_mustache
    ext/ext_plugin
+   ext/ext_redis
    ext/ext_reload_config
    ext/ext_smtp
    ext/ext_tabulate

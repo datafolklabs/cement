@@ -6,7 +6,14 @@ What's New
 New Features in Cement 2.9
 --------------------------
 
- * FIXME
+Extensions
+^^^^^^^^^^
+
+    * :ref:`Jinja2 <cement.ext.ext_jinja2>` - Provides template support using 
+      the Jinja2 language.
+    * :ref:`Redis <cement.ext.ext_redis>` - Provides caching support using 
+      Redis backend.
+
 
 
 New Features in Cement 2.8
@@ -113,7 +120,8 @@ Or a more complete example:
             print('Caught Exception: %s' % e)
 
 
-When the ``with`` statement is initialized, the ``app`` object is created, and then right away ``app.setup()`` is called before entering the block.  When
+When the ``with`` statement is initialized, the ``app`` object is created, and 
+then right away ``app.setup()`` is called before entering the block.  When
 the ``with`` block is exited ``app.close()`` is also called.  This offers a
 much cleaner approach, while still ensuring that the essential pieces are run
 appropriately.  If you require more control over how/when ``app.setup()`` and

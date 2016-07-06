@@ -34,7 +34,10 @@ Bugs:
 
 Features:
 
+    * :pr:`371` - Jinja2 Templating Support
     * :issue:`373` - Switch over to using Flake8 for PEP8 and Style Compliance
+    * :pr:`375` - Redis Cache Handler Support
+    
 
 Refactoring;
 
@@ -46,7 +49,7 @@ Incompatible:
 
 Support:
 
-    * :issue:`372` - Deprecate Python 3.2 Support
+    * :issue:`372` - Deprecated Explicit Python 3.2 Support
 
 
 2.8.0 - Wed Feb 24, 2016
