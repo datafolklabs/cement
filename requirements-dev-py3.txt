@@ -13,4 +13,5 @@ pyYaml
 colorlog
 tabulate
 pylibmc
+redis
 jinja2
