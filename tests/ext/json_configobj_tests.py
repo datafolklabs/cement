@@ -2,7 +2,6 @@
 
 import json
 import sys
-from tempfile import mkstemp
 from cement.core import handler, backend, hook
 from cement.utils import test
 
@@ -37,14 +36,14 @@ class JsonConfigObjExtTestCase(test.CementExtTestCase):
     )
 
     def setUp(self):
-        _, self.tmppath = mkstemp()
-        f = open(self.tmppath, 'w+')
+        super(JsonConfigObjExtTestCase, self).setUp()
+        f = open(self.tmp_file, 'w+')
         f.write(self.CONFIG)
         f.close()
         self.app = self.make_app('tests',
                                  extensions=['json_configobj'],
                                  config_handler='json_configobj',
-                                 config_files=[self.tmppath],
+                                 config_files=[self.tmp_file],
                                  )
 
     def test_has_section(self):

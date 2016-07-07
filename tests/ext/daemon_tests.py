@@ -5,7 +5,7 @@
 # sub-process is forked.
 
 import os
-import tempfile
+#import tempfile
 from random import random
 from cement.core import handler, backend, log, hook, exc
 from cement.utils import shell
@@ -19,6 +19,7 @@ APP = rando()[:12]
 class DaemonExtTestCase(test.CementExtTestCase):
 
     def setUp(self):
+        super(DaemonExtTestCase, self).setUp()
         self.app = self.make_app()
 
     def test_switch(self):
@@ -26,32 +27,24 @@ class DaemonExtTestCase(test.CementExtTestCase):
         env.switch()
 
     def test_switch_with_pid(self):
-        (_, tmpfile) = tempfile.mkstemp()
-        os.remove(tmpfile)
-        env = ext_daemon.Environment(pid_file=tmpfile)
+        os.remove(self.tmp_file)
+        env = ext_daemon.Environment(pid_file=self.tmp_file)
         env.switch()
-
-        try:
-            self.ok(os.path.exists(tmpfile))
-        finally:
-            os.remove(tmpfile)
+        self.ok(os.path.exists(self.tmp_file))
 
     @test.raises(exc.FrameworkError)
     def test_pid_exists(self):
-        (_, tmpfile) = tempfile.mkstemp()
-
-        env = ext_daemon.Environment(pid_file=tmpfile)
+        env = ext_daemon.Environment(pid_file=self.tmp_file)
         env.switch()
 
         try:
-            self.ok(os.path.exists(tmpfile))
+            self.ok(os.path.exists(self.tmp_file))
         except exc.FrameworkError as e:
             self.ok(e.msg.startswith('Process already running'))
             raise
         finally:
             env = ext_daemon.Environment()
             env.switch()
-            os.remove(tmpfile)
 
     @test.raises(exc.FrameworkError)
     def test_bogus_user(self):
@@ -80,8 +73,7 @@ class DaemonExtTestCase(test.CementExtTestCase):
             env.switch()
 
     def test_daemon(self):
-        (_, tmpfile) = tempfile.mkstemp()
-        os.remove(tmpfile)
+        os.remove(self.tmp_file)
         from cement.utils import shell
 
         # Test in a sub-process to avoid Nose hangup
@@ -90,7 +82,7 @@ class DaemonExtTestCase(test.CementExtTestCase):
                                 extensions=['daemon'])
 
             app.setup()
-            app.config.set('daemon', 'pid_file', tmpfile)
+            app.config.set('daemon', 'pid_file', self.tmp_file)
 
             try:
                 # FIX ME: Can't daemonize, because nose loses sight of it

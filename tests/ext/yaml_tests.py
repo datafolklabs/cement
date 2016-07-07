@@ -3,7 +3,6 @@
 import os
 import sys
 import yaml
-from tempfile import mkstemp
 from cement.core import handler, hook
 from cement.utils import test
 from cement.utils.misc import rando
@@ -35,21 +34,17 @@ class YamlExtTestCase(test.CementTestCase):
     )
 
     def setUp(self):
-        _, self.tmppath = mkstemp()
-        f = open(self.tmppath, 'w+')
+        super(YamlExtTestCase, self).setUp()
+        f = open(self.tmp_file, 'w+')
         f.write(self.CONFIG)
         f.close()
         self.app = self.make_app('tests',
                                  extensions=['yaml'],
                                  config_handler='yaml',
                                  output_handler='yaml',
-                                 config_files=[self.tmppath],
+                                 config_files=[self.tmp_file],
                                  argv=['-o', 'yaml']
                                  )
-
-    def tearDown(self):
-        if os.path.exists(self.tmppath):
-            os.remove(self.tmppath)
 
     def test_yaml(self):
         self.app.setup()

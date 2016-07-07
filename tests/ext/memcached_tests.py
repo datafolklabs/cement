@@ -12,6 +12,7 @@ from cement.utils.misc import init_defaults
 class MemcachedExtTestCase(test.CementTestCase):
 
     def setUp(self):
+        super(MemcachedExtTestCase, self).setUp()
         self.key = "cement-tests-random-key-%s" % random()
         defaults = init_defaults('tests', 'cache.memcached')
         defaults['cache.memcached']['hosts'] = '127.0.0.1, localhost'
@@ -23,6 +24,7 @@ class MemcachedExtTestCase(test.CementTestCase):
         self.app.setup()
 
     def tearDown(self):
+        super(MemcachedExtTestCase, self).tearDown()
         self.app.cache.delete(self.key)
 
     def test_memcache_list_type_config(self):

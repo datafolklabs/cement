@@ -2,7 +2,6 @@
 
 import json
 import sys
-from tempfile import mkstemp
 from cement.core import handler, backend, hook
 from cement.utils import test
 from cement.utils.misc import rando
@@ -34,15 +33,15 @@ class JsonExtTestCase(test.CementExtTestCase):
     )
 
     def setUp(self):
-        _, self.tmppath = mkstemp()
-        f = open(self.tmppath, 'w+')
+        super(JsonExtTestCase, self).setUp()
+        f = open(self.tmp_file, 'w+')
         f.write(self.CONFIG)
         f.close()
         self.app = self.make_app('tests',
                                  extensions=['json'],
                                  output_handler='json',
                                  config_handler='json',
-                                 config_files=[self.tmppath],
+                                 config_files=[self.tmp_file],
                                  argv=['-o', 'json']
                                  )
 

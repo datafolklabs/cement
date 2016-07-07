@@ -70,6 +70,7 @@ class TestHandler(meta.MetaMixin):
 class HandlerTestCase(test.CementCoreTestCase):
 
     def setUp(self):
+        super(HandlerTestCase, self).setUp()
         self.app = self.make_app()
 
     @test.raises(exc.FrameworkError)
@@ -187,6 +188,7 @@ class HandlerTestCase(test.CementCoreTestCase):
 class DeprecatedHandlerTestCase(test.CementCoreTestCase):
 
     def setUp(self):
+        super(DeprecatedHandlerTestCase, self).setUp()
         self.app = self.make_app()
 
     @test.raises(exc.FrameworkError)

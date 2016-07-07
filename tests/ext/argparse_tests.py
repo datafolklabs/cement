@@ -285,37 +285,43 @@ class ArgparseExtTestCase(test.CementExtTestCase):
             app._meta.argv = ['cmd2']
             res = app.run()
             self.eq(res, "Inside Second.cmd2")
-
+        self.tearDown()
+        
         self.setUp()
         with self.app as app:
             app._meta.argv = ['third', 'cmd3']
             res = app.run()
             self.eq(res, "Inside Third.cmd3")
+        self.tearDown()
 
         self.setUp()
         with self.app as app:
             app._meta.argv = ['third', 'cmd4']
             res = app.run()
             self.eq(res, "Inside Fourth.cmd4")
+        self.tearDown()
 
         self.setUp()
         with self.app as app:
             app._meta.argv = ['third', 'fifth', 'cmd5']
             res = app.run()
             self.eq(res, "Inside Fifth.cmd5")
+        self.tearDown()
 
         self.setUp()
         with self.app as app:
             app._meta.argv = ['third', 'fifth', 'sixth', 'cmd6']
             res = app.run()
             self.eq(res, "Inside Sixth.cmd6")
+        self.tearDown()
 
         self.setUp()
         with self.app as app:
             app._meta.argv = ['third', 'cmd7']
             res = app.run()
             self.eq(res, "Inside Seventh.cmd7")
-
+        self.tearDown()
+        
     def test_base_cmd1_parsing(self):
         with self.app as app:
             app._meta.argv = ['--foo=bar', 'cmd1']

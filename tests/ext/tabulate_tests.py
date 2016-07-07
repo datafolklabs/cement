@@ -8,6 +8,7 @@ from cement.utils import test
 class TabulateExtTestCase(test.CementExtTestCase):
 
     def setUp(self):
+        super(TabulateExtTestCase, self).setUp()
         self.app = self.make_app('tests',
                                  extensions=['tabulate'],
                                  output_handler='tabulate',

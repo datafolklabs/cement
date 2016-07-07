@@ -10,6 +10,7 @@ from cement.utils import test
 class AlarmExtTestCase(test.CementExtTestCase):
 
     def setUp(self):
+        super(AlarmExtTestCase, self).setUp()
         self.app = self.make_app('tests',
                                  extensions=['alarm'],
                                  argv=[]

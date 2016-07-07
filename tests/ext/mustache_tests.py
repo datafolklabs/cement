@@ -10,6 +10,7 @@ from cement.utils import test
 class MustacheExtTestCase(test.CementExtTestCase):
 
     def setUp(self):
+        super(MustacheExtTestCase, self).setUp()
         self.app = self.make_app('tests',
                                  extensions=['mustache'],
                                  output_handler='mustache',

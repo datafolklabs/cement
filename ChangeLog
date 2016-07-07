@@ -28,6 +28,8 @@ development will happen as 2.9.x under the git master branch.
 
 Bugs:
 
+    * :issue:`363` - CementTestCase does not delete temporary 
+      files/directories
     * :issue:`346` - AttributeError: 'module' object has no attribute 'SIGHUP'
       on Windows
     * :issue:`352` - ``CementApp.extend()`` Breaks on ``CementApp.reload()``

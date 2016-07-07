@@ -1,6 +1,8 @@
 """Cement testing utilities."""
 
+import os
 import unittest
+import shutil
 from tempfile import mkstemp, mkdtemp
 from ..core import backend, foundation
 from ..utils.misc import rando
@@ -40,6 +42,8 @@ class CementTestCase(unittest.TestCase):
 
     def __init__(self, *args, **kw):
         super(CementTestCase, self).__init__(*args, **kw)
+        self.tmp_file = None
+        self.tmp_dir = None
 
     def setUp(self):
         """
@@ -49,8 +53,21 @@ class CementTestCase(unittest.TestCase):
 
         """
         self.app = self.make_app()
-        _, self.tmp_file = mkstemp()
-        self.tmp_dir = mkdtemp()
+
+        # recreate temp file and dir for each test
+        _prefix = "cement.tests.%s.tmp" % self.__class__.__name__
+        _, self.tmp_file = mkstemp(prefix=_prefix)
+        self.tmp_dir = mkdtemp(prefix=_prefix)
+
+    def tearDown(self):
+        """
+        Tears down the test environment (if necessary), removes any temporary
+        files/directories, etc.
+        """
+        if os.path.exists(self.tmp_file):
+            os.remove(self.tmp_file)
+        if os.path.exists(self.tmp_dir):
+            shutil.rmtree(self.tmp_dir)
 
     def make_app(self, *args, **kw):
         """

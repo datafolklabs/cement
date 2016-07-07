@@ -2,7 +2,6 @@
 
 import os
 import sys
-from tempfile import mkstemp
 from cement.core import handler, backend, log
 from cement.utils import test
 from cement.utils.misc import rando
@@ -25,20 +24,16 @@ my_param = my_value
 class ConfigObjExtTestCase(test.CementTestCase):
 
     def setUp(self):
-        _, self.tmppath = mkstemp()
-        f = open(self.tmppath, 'w+')
+        super(ConfigObjExtTestCase, self).setUp()
+        f = open(self.tmp_file, 'w+')
         f.write(CONFIG)
         f.close()
         self.app = self.make_app(APP,
                                  extensions=['configobj'],
                                  config_handler='configobj',
-                                 config_files=[self.tmppath],
+                                 config_files=[self.tmp_file],
                                  argv=[]
                                  )
-
-    def tearDown(self):
-        if os.path.exists(self.tmppath):
-            os.remove(self.tmppath)
 
     def test_configobj(self):
         self.app.setup()

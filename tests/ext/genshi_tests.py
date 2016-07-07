@@ -15,6 +15,7 @@ else:
 class GenshiExtTestCase(test.CementExtTestCase):
 
     def setUp(self):
+        super(GenshiExtTestCase, self).setUp()
         self.app = self.make_app('tests',
                                  extensions=['genshi'],
                                  output_handler='genshi',

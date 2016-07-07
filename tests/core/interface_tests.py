@@ -32,6 +32,7 @@ class TestHandler3():
 class InterfaceTestCase(test.CementCoreTestCase):
 
     def setUp(self):
+        super(InterfaceTestCase, self).setUp()
         self.app = self.make_app()
 
     @test.raises(exc.InterfaceError)

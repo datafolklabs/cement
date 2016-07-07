@@ -12,6 +12,7 @@ from cement.utils.misc import init_defaults
 class RedisExtTestCase(test.CementTestCase):
 
     def setUp(self):
+        super(RedisExtTestCase, self).setUp()
         self.key = "cement-tests-random-key-%s" % random()
         defaults = init_defaults('tests', 'cache.redis')
         defaults['cache.redis']['host'] = '127.0.0.1'
@@ -25,6 +26,7 @@ class RedisExtTestCase(test.CementTestCase):
         self.app.setup()
 
     def tearDown(self):
+        super(RedisExtTestCase, self).tearDown()
         self.app.cache.delete(self.key)
 
     def test_redis_set(self):

@@ -1,7 +1,6 @@
 """Tests for cement.core.output."""
 
 import os
-from tempfile import mkdtemp
 from cement.core import exc, backend, output
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando
@@ -24,11 +23,11 @@ TEST_TEMPLATE = "%(foo)s"
 class OutputTestCase(test.CementCoreTestCase):
 
     def setUp(self):
+        super(OutputTestCase, self).setUp()
         self.app = self.make_app()
 
     def test_load_template_from_file(self):
-        tmpdir = mkdtemp()
-        template = os.path.join(tmpdir, 'mytemplate.txt')
+        template = os.path.join(self.tmp_dir, 'mytemplate.txt')
 
         f = open(template, 'w')
         f.write(TEST_TEMPLATE)
@@ -36,7 +35,7 @@ class OutputTestCase(test.CementCoreTestCase):
 
         app = self.make_app(APP,
                             config_files=[],
-                            template_dir=tmpdir,
+                            template_dir=self.tmp_dir,
                             output_handler=TestOutputHandler,
                             )
         app.setup()
@@ -45,12 +44,11 @@ class OutputTestCase(test.CementCoreTestCase):
 
     @test.raises(exc.FrameworkError)
     def test_load_template_from_bad_file(self):
-        tmpdir = mkdtemp()
-        template = os.path.join(tmpdir, 'my-bogus-template.txt')
+        template = os.path.join(self.tmp_dir, 'my-bogus-template.txt')
 
         app = self.make_app(APP,
                             config_files=[],
-                            template_dir=tmpdir,
+                            template_dir=self.tmp_dir,
                             output_handler=TestOutputHandler,
                             )
         app.setup()

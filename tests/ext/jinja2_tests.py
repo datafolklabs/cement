@@ -11,6 +11,7 @@ from cement.utils import test
 class Jinja2ExtTestCase(test.CementExtTestCase):
 
     def setUp(self):
+        super(Jinja2ExtTestCase, self).setUp()
         self.app = self.make_app('tests',
                                  extensions=['jinja2'],
                                  output_handler='jinja2',

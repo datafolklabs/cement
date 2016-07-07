@@ -37,6 +37,7 @@ def cement_hook_six(*args, **kw):
 class HookTestCase(test.CementCoreTestCase):
 
     def setUp(self):
+        super(HookTestCase, self).setUp()
         self.app = self.make_app()
         self.app.hook.define('nosetests_hook')
 
@@ -113,6 +114,7 @@ class HookTestCase(test.CementCoreTestCase):
 class DeprecatedHookTestCase(test.CementCoreTestCase):
 
     def setUp(self):
+        super(DeprecatedHookTestCase, self).setUp()
         self.app = self.make_app()
         hook.define('nosetests_hook')
 

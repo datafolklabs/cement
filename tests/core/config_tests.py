@@ -1,7 +1,6 @@
 """Tests for cement.core.config."""
 
 import os
-from tempfile import mkstemp
 from cement.core import exc, config, backend
 from cement.utils import test
 
@@ -25,10 +24,9 @@ class ConfigTestCase(test.CementCoreTestCase):
 
     @test.raises(NotImplementedError)
     def test_parse_file_not_implemented(self):
-        _, tmppath = mkstemp()
         c = config.CementConfigHandler()
         c._setup(self.app)
-        c._parse_file(tmppath)
+        c._parse_file(self.tmp_file)
 
     def test_has_key(self):
         self.app.setup()
@@ -80,10 +78,9 @@ class ConfigTestCase(test.CementCoreTestCase):
         self.app.setup()
 
     def test_parse_file(self):
-        _, tmppath = mkstemp()
-        f = open(tmppath, 'w+')
+        f = open(self.tmp_file, 'w+')
         f.write(CONFIG)
         f.close()
-        self.app._meta.config_files = [tmppath]
+        self.app._meta.config_files = [self.tmp_file]
         self.app.setup()
         self.eq(self.app.config.get('my_section', 'my_param'), 'my_value')

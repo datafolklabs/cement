@@ -3,7 +3,6 @@
 import os
 import sys
 import shutil
-from tempfile import mkdtemp
 from cement.core import exc, backend, plugin
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando
@@ -60,52 +59,47 @@ def load(app):
 class PluginTestCase(test.CementCoreTestCase):
 
     def setUp(self):
+        super(PluginTestCase, self).setUp()
         self.app = self.make_app()
 
     def test_load_plugins_from_files(self):
-        tmpdir = mkdtemp()
-        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.conf'), 'w')
         f.write(CONF)
         f.close()
 
-        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
         app = self.make_app(APP,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap=None,
                             )
         app.setup()
-
-        try:
-            han = app.handler.get('output', 'test_output_handler')()
-            self.eq(han._meta.label, 'test_output_handler')
-        finally:
-            shutil.rmtree(tmpdir)
+        han = app.handler.get('output', 'test_output_handler')()
+        self.eq(han._meta.label, 'test_output_handler')
 
     def test_load_order_presedence_one(self):
         # App config defines it as enabled, even though the plugin config has
         # it disabled... app trumps
         defaults = init_defaults(APP, 'myplugin')
         defaults['myplugin']['enable_plugin'] = True
-        tmpdir = mkdtemp()
 
-        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.conf'), 'w')
         f.write(CONF2)
         f.close()
 
-        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
         app = self.make_app(APP,
                             config_defaults=defaults,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap=None,
                             )
         app.setup()
@@ -118,167 +112,142 @@ class PluginTestCase(test.CementCoreTestCase):
             self.ok(res)
 
         finally:
-            shutil.rmtree(tmpdir)
+            shutil.rmtree(self.tmp_dir)
 
     def test_load_order_presedence_two(self):
         # App config defines it as false, even though the plugin config has
         # it enabled... app trumps
         defaults = init_defaults(APP, 'myplugin')
         defaults['myplugin']['enable_plugin'] = False
-        tmpdir = mkdtemp()
 
-        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.conf'), 'w')
         f.write(CONF)
         f.close()
 
-        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
         app = self.make_app(APP,
                             config_defaults=defaults,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap=None,
                             )
         app.setup()
+        res = 'myplugin' in app.plugin._disabled_plugins
+        self.ok(res)
 
-        try:
-            res = 'myplugin' in app.plugin._disabled_plugins
-            self.ok(res)
-
-            res = 'myplugin' not in app.plugin._enabled_plugins
-            self.ok(res)
-
-        finally:
-            shutil.rmtree(tmpdir)
+        res = 'myplugin' not in app.plugin._enabled_plugins
+        self.ok(res)
 
     def test_load_order_presedence_three(self):
         # Multiple plugin configs, first plugin conf defines it as disabled,
         # but last read should make it enabled.
         defaults = init_defaults(APP, 'myplugin')
-        tmpdir = mkdtemp()
 
-        f = open(os.path.join(tmpdir, 'a.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'a.conf'), 'w')
         f.write(CONF2)  # disabled config
         f.close()
 
-        f = open(os.path.join(tmpdir, 'b.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'b.conf'), 'w')
         f.write(CONF)  # enabled config
         f.close()
 
-        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
         app = self.make_app(APP,
                             config_defaults=defaults,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap=None,
                             )
         app.setup()
+        res = 'myplugin' in app.plugin._enabled_plugins
+        self.ok(res)
 
-        try:
-            res = 'myplugin' in app.plugin._enabled_plugins
-            self.ok(res)
-
-            res = 'myplugin' not in app.plugin._disabled_plugins
-            self.ok(res)
-
-        finally:
-            shutil.rmtree(tmpdir)
+        res = 'myplugin' not in app.plugin._disabled_plugins
+        self.ok(res)
 
     def test_load_order_presedence_four(self):
         # Multiple plugin configs, first plugin conf defines it as enabled,
         # but last read should make it disabled.
         defaults = init_defaults(APP, 'myplugin')
-        tmpdir = mkdtemp()
 
-        f = open(os.path.join(tmpdir, 'a.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'a.conf'), 'w')
         f.write(CONF)  # enabled config
         f.close()
 
-        f = open(os.path.join(tmpdir, 'b.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'b.conf'), 'w')
         f.write(CONF2)  # disabled config
         f.close()
 
-        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
         app = self.make_app(APP,
                             config_defaults=defaults,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap=None,
                             )
         app.setup()
+        res = 'myplugin' in app.plugin._disabled_plugins
+        self.ok(res)
 
-        try:
-            res = 'myplugin' in app.plugin._disabled_plugins
-            self.ok(res)
-
-            res = 'myplugin' not in app.plugin._enabled_plugins
-            self.ok(res)
-
-        finally:
-            shutil.rmtree(tmpdir)
+        res = 'myplugin' not in app.plugin._enabled_plugins
+        self.ok(res)
 
     def test_load_order_presedence_five(self):
         # Multiple plugin configs, enable -> disabled -> enable
         defaults = init_defaults(APP, 'myplugin')
-        tmpdir = mkdtemp()
 
-        f = open(os.path.join(tmpdir, 'a.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'a.conf'), 'w')
         f.write(CONF)  # enabled config
         f.close()
 
-        f = open(os.path.join(tmpdir, 'b.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'b.conf'), 'w')
         f.write(CONF2)  # disabled config
         f.close()
 
-        f = open(os.path.join(tmpdir, 'c.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'c.conf'), 'w')
         f.write(CONF)  # enabled config
         f.close()
 
-        f = open(os.path.join(tmpdir, 'e.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'e.conf'), 'w')
         f.write(CONF2)  # disabled config
         f.close()
 
-        f = open(os.path.join(tmpdir, 'f.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'f.conf'), 'w')
         f.write(CONF)  # enabled config
         f.close()
 
-        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
         app = self.make_app(APP,
                             config_defaults=defaults,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap=None,
                             )
         app.setup()
+        res = 'myplugin' in app.plugin._enabled_plugins
+        self.ok(res)
 
-        try:
-            res = 'myplugin' in app.plugin._enabled_plugins
-            self.ok(res)
-
-            res = 'myplugin' not in app.plugin._disabled_plugins
-            self.ok(res)
-
-        finally:
-            shutil.rmtree(tmpdir)
+        res = 'myplugin' not in app.plugin._disabled_plugins
+        self.ok(res)
 
     def test_load_plugins_from_config(self):
-        tmpdir = mkdtemp()
-        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
@@ -289,17 +258,13 @@ class PluginTestCase(test.CementCoreTestCase):
         defaults['myplugin2']['enable_plugin'] = False
         app = self.make_app(APP, config_defaults=defaults,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap=None,
                             )
         app.setup()
-
-        try:
-            han = app.handler.get('output', 'test_output_handler')()
-            self.eq(han._meta.label, 'test_output_handler')
-        finally:
-            shutil.rmtree(tmpdir)
+        han = app.handler.get('output', 'test_output_handler')()
+        self.eq(han._meta.label, 'test_output_handler')
 
         # some more checks
         res = 'myplugin' in app.plugin.get_enabled_plugins()
@@ -318,23 +283,22 @@ class PluginTestCase(test.CementCoreTestCase):
         self.ok(res)
 
     def test_disabled_plugins_from_files(self):
-        tmpdir = mkdtemp()
-        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.conf'), 'w')
         f.write(CONF2)
         f.close()
 
-        f = open(os.path.join(tmpdir, 'myplugin.py'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.py'), 'w')
         f.write(PLUGIN)
         f.close()
 
         app = self.make_app(APP,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap=None,
                             )
         app.setup()
-        shutil.rmtree(tmpdir)
+        shutil.rmtree(self.tmp_dir)
 
         res = 'test_output_handler' not in app.handler.__handlers__['output']
         self.ok(res)
@@ -343,38 +307,36 @@ class PluginTestCase(test.CementCoreTestCase):
         self.ok(res)
 
     def test_bogus_plugin_from_files(self):
-        tmpdir = mkdtemp()
-        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.conf'), 'w')
         f.write(CONF3)
         f.close()
 
         # do this for coverage... empty config file
-        f = open(os.path.join(tmpdir, 'bogus.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'bogus.conf'), 'w')
         f.write(CONF5)
         f.close()
 
         app = self.make_app(APP,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap=None,
                             )
         app.setup()
-        shutil.rmtree(tmpdir)
+        shutil.rmtree(self.tmp_dir)
 
         res = 'bogus_plugin' not in app.plugin.get_enabled_plugins()
         self.ok(res)
 
     @test.raises(exc.FrameworkError)
     def test_bad_plugin_dir(self):
-        tmpdir = mkdtemp()
-        f = open(os.path.join(tmpdir, 'myplugin.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'myplugin.conf'), 'w')
         f.write(CONF)
         f.close()
 
         app = self.make_app(APP,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
                             plugin_dir='./some/bogus/path',
                             plugin_bootstrap=None,
                             )
@@ -384,27 +346,22 @@ class PluginTestCase(test.CementCoreTestCase):
             raise
         except exc.FrameworkError as e:
             raise
-        finally:
-            shutil.rmtree(tmpdir)
 
     def test_load_plugin_from_module(self):
         # We mock this out by loading a cement ext, but it is essentially the
         # same type of code.
-        tmpdir = mkdtemp()
         del sys.modules['cement.ext.ext_json']
-        f = open(os.path.join(tmpdir, 'ext_json.conf'), 'w')
+        f = open(os.path.join(self.tmp_dir, 'ext_json.conf'), 'w')
         f.write(CONF4)
         f.close()
 
         app = self.make_app(APP,
                             config_files=[],
-                            plugin_config_dir=tmpdir,
-                            plugin_dir=tmpdir,
+                            plugin_config_dir=self.tmp_dir,
+                            plugin_dir=self.tmp_dir,
                             plugin_bootstrap='cement.ext',
                             )
         app.setup()
 
         res = 'ext_json' in app.plugin.get_enabled_plugins()
         self.ok(res)
-
-        shutil.rmtree(tmpdir)

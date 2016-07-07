@@ -2,7 +2,7 @@
 
 import os
 import logging
-from tempfile import mkstemp
+import shutil
 from cement.core import handler, backend, log
 from cement.ext import ext_logging
 from cement.utils import test
@@ -105,13 +105,12 @@ class LoggingExtTestCase(test.CementExtTestCase):
         self.eq(os.path.exists("%s.3" % log_file), False)
 
     def test_missing_log_dir(self):
-        _, tmp_path = mkstemp()
-        if os.path.exists(tmp_path):
-            os.remove(tmp_path)
+        if os.path.exists(self.tmp_dir):
+            shutil.rmtree(self.tmp_dir)
 
         defaults = init_defaults()
         defaults['log.logging'] = dict(
-            file=os.path.join(tmp_path, '%s.log' % APP),
+            file=os.path.join(self.tmp_dir, '%s.log' % APP),
         )
         app = self.make_app(config_defaults=defaults)
         app.setup()

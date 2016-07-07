@@ -16,6 +16,7 @@ class BogusHandler1(log.CementLogHandler):
 class LogTestCase(test.CementCoreTestCase):
 
     def setUp(self):
+        super(LogTestCase, self).setUp()
         self.app = self.make_app()
 
     @test.raises(exc.InterfaceError)
