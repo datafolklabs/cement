@@ -6,12 +6,6 @@ from cement.core import handler, backend, log
 from cement.utils import test
 from cement.utils.misc import rando
 
-if sys.version_info[0] < 3:
-    import configobj
-else:
-    raise test.SkipTest(
-        'ConfigObj does not support Python 3')  # pragma: no cover
-
 
 APP = rando()[:12]
 

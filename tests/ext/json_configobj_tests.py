@@ -5,12 +5,6 @@ import sys
 from cement.core import handler, backend, hook
 from cement.utils import test
 
-if sys.version_info[0] < 3:
-    import configobj
-else:
-    raise test.SkipTest(
-        'ConfigObj does not support Python 3')  # pragma: no cover
-
 
 class JsonConfigObjExtTestCase(test.CementExtTestCase):
     CONFIG = '''{
