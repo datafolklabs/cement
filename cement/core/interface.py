@@ -4,7 +4,6 @@ Cement core interface module.
 """
 
 from ..core import exc, backend
-from ..utils.misc import is_true
 
 DEFAULT_META = ['interface', 'label', 'config_defaults', 'config_section']
 
@@ -12,7 +11,7 @@ DEFAULT_META = ['interface', 'label', 'config_defaults', 'config_section']
 def list():
     """
     DEPRECATION WARNING: This function is deprecated as of Cement 2.9
-    in favor of the `CementApp.handler.list_types()` function, and will be 
+    in favor of the `CementApp.handler.list_types()` function, and will be
     removed in future versions of Cement.
 
     Return a list of defined interfaces (handler types).
@@ -22,14 +21,8 @@ def list():
 
     """
 
-    ### FIXME: Can't print a deprecation warning here because we don't have
-    ### access to the app... and this is too deep to use minimal logger... ;\
-    # if not is_true(self._meta.ignore_deprecation_warnings):
-    #     self.log.warn("Cement Deprecation Warning: " +
-    #                   "cement.core.interface.list() has been " +
-    #                   "deprecated, and will be removed in future " +
-    #                   "versions of Cement.  You should use the " +
-    #                   "CementApp.handler.list_types() function instead.")
+    # FIXME: Can't print a deprecation warning here because we don't have
+    # access to the app... and this is too deep to use minimal logger... ;\
 
     return backend.__handlers__.keys()
 

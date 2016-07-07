@@ -55,9 +55,9 @@ Incompatible:
 
 Deprecation:
 
-    * :issue:`365` - Deprecate ``LoggingLogHandler.warn()``
+    * :issue:`365` - Deprecated ``LoggingLogHandler.warn()``
     * :issue:`372` - Deprecated Explicit Python 3.2 Support
-    * :issue:`376` - Deprecate ``cement.core.interface.list()``
+    * :issue:`376` - Deprecated ``cement.core.interface.list()``
 
 
 2.8.0 - Wed Feb 24, 2016

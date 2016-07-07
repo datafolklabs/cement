@@ -5,7 +5,7 @@ import sys
 import signal
 import platform
 from time import sleep
-from ..core import backend, exc, log, config, plugin, interface
+from ..core import backend, exc, log, config, plugin
 from ..core import output, extension, arg, controller, meta, cache, mail
 from ..core.handler import HandlerManager
 from ..core.hook import HookManager
@@ -38,7 +38,6 @@ def add_handler_override_options(app):
             LOG.debug("interface '%s'" % i +
                       " is not defined, can not override handlers")
             continue
-
 
         if len(app.handler.list(i)) > 1:
             handlers = []
@@ -227,7 +226,7 @@ class CementApp(meta.MetaMixin):
         the last configuration loaded has precedence (and overwrites settings
         loaded from previous configuration files).
 
-        Note that ``.conf`` is the default config file extension, defined by 
+        Note that ``.conf`` is the default config file extension, defined by
         ``CementApp.Meta.config_extension``.
         """
 
@@ -260,10 +259,10 @@ class CementApp(meta.MetaMixin):
 
         plugin_config_dir = None
         """
-        A directory path where plugin config files can be found.  Files must 
+        A directory path where plugin config files can be found.  Files must
         end in ``.conf`` (or the extension defined by
-        ``CementApp.Meta.config_extension``) or they will be ignored.  By 
-        default, this setting is also overridden by the 
+        ``CementApp.Meta.config_extension``) or they will be ignored.  By
+        default, this setting is also overridden by the
         ``[<app_label>] -> plugin_config_dir`` config setting parsed in
         any of the application configuration files.
 

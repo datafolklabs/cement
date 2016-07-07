@@ -84,7 +84,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
             else:
                 # sort so that we always load plugins in the same order
                 # regardless of OS (seems some don't sort reliably)
-                path = "%s/*%s" % (config_dir, 
+                path = "%s/*%s" % (config_dir,
                                    self.app._meta.config_extension)
                 plugin_config_files = glob.glob(path)
                 plugin_config_files.sort()
@@ -153,12 +153,12 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
     def _load_plugin_from_dir(self, plugin_name, plugin_dir):
         """
-        Load a plugin from a directory path rather than a python package 
-        within sys.path.  This would either be ``myplugin.py`` or 
+        Load a plugin from a directory path rather than a python package
+        within sys.path.  This would either be ``myplugin.py`` or
         ``myplugin/__init__.py`` within the given ``plugin_dir``.
 
         :param plugin_name: The name of the plugin.
-        :param plugin_dir: The filesystem directory path where the plugin 
+        :param plugin_dir: The filesystem directory path where the plugin
          exists.
 
         """
@@ -171,7 +171,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
             LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
                                                              path))
             if os.path.exists(path):
-                # We don't catch this because it would make debugging a 
+                # We don't catch this because it would make debugging a
                 # nightmare
                 f, path, desc = imp.find_module(plugin_name, [plugin_dir])
                 mod = imp.load_module(plugin_name, f, path, desc)
@@ -179,7 +179,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
                     mod.load(self.app)
                 return True
 
-        LOG.debug("plugin '%s' does not exist in '%s'." % \
+        LOG.debug("plugin '%s' does not exist in '%s'." %
                   (plugin_name, plugin_dir))
 
         return False

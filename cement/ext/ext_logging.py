@@ -162,7 +162,8 @@ class LoggingLogHandler(log.CementLogHandler):
     def set_level(self, level):
         """
         Set the log level.  Must be one of the log levels configured in
-        self.levels which are ``['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL']``.
+        self.levels which are
+        ``['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL']``.
 
         :param level: The log level to set.
 
@@ -171,7 +172,7 @@ class LoggingLogHandler(log.CementLogHandler):
             level = 'WARNING'
             LOG.warning("Cement Deprecation Warning: Use of the `WARN` " +
                         "level is deprecated as of Cement 2.9.x, and will " +
-                        "be removed in future versions of Cement.  You " + 
+                        "be removed in future versions of Cement.  You " +
                         "should use `WARNING` instead.")
 
         self.clear_loggers(self._meta.namespace)
@@ -333,7 +334,7 @@ class LoggingLogHandler(log.CementLogHandler):
     def warn(self, msg, namespace=None, **kw):
         """
         DEPRECATION WARNING: This function is deprecated as of Cement 2.9.x
-        in favor of the ``LoggingLogHandler.warning()`` function, and will be 
+        in favor of the ``LoggingLogHandler.warning()`` function, and will be
         removed in future versions of Cement.
 
         See: :ref:LoggingLogHandler.warning():
