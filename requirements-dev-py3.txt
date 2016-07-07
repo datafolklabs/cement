@@ -11,6 +11,7 @@ argcomplete
 pystache
 pyYaml
 colorlog
+configobj
 tabulate
 pylibmc
 redis
