@@ -15,8 +15,8 @@ Configuration
 
 This extension supports the following application metadata settings:
 
- * ``CementApp.Meta.alternative_module_mapping`` - By using the alternative 
-   module mapping feature, the developer can optionally replace the ``json`` 
+ * ``CementApp.Meta.alternative_module_mapping`` - By using the alternative
+   module mapping feature, the developer can optionally replace the ``json``
    module with another drop-in replacement module such as ``ujson``.
 
 

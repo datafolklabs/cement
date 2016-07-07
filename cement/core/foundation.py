@@ -645,19 +645,19 @@ class CementApp(meta.MetaMixin):
 
         alternative_module_mapping = {}
         """
-        EXPERIMENTAL FEATURE: This is an experimental feature added in Cement 
+        EXPERIMENTAL FEATURE: This is an experimental feature added in Cement
         2.9.x and may or may not be removed in future versions of Cement.
 
         Dictionary of alternative, **drop-in** replacement modules to use
         selectively throughout the application, framework, or
-        extensions.  Developers can optionally use the 
-        ``CementApp.__import__()`` method to import simple modules, and if 
+        extensions.  Developers can optionally use the
+        ``CementApp.__import__()`` method to import simple modules, and if
         that module exists in this mapping it will import the alternative
         library in it's place.
-        
+
         This is a low-level feature, and may not produce the results you are
-        expecting.  It's purpose is to allow the developer to replace specific 
-        modules at a high level.  Example: For an application wanting to use 
+        expecting.  It's purpose is to allow the developer to replace specific
+        modules at a high level.  Example: For an application wanting to use
         ``ujson`` in place of ``json``, the developer could set the following:
 
         .. code-block:: python
@@ -674,8 +674,8 @@ class CementApp(meta.MetaMixin):
             _json.dumps(data)
 
 
-        Obviously, the replacement 
-        module **must be** a drop-in replace and function the same.
+        Obviously, the replacement module **must be** a drop-in replace and
+        function the same.
         """
 
     def __init__(self, label=None, **kw):
@@ -1429,7 +1429,7 @@ class CementApp(meta.MetaMixin):
         else:
             obj = mapping.get(obj, obj)
             _loaded = __import__(obj, globals(), locals(), [], 0)
-                
+
         return _loaded
 
     def __enter__(self):
