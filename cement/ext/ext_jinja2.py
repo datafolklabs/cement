@@ -62,7 +62,7 @@ would then put a Jinja2 template file in
 
 from ..core import output
 from ..utils.misc import minimal_logger
-from jinja2 import Template
+from jinja2 import Environment, FileSystemLoader, PackageLoader
 
 LOG = minimal_logger(__name__)
 
@@ -86,6 +86,12 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
         interface = output.IOutput
         label = 'jinja2'
 
+    def __init__(self, *args, **kw):
+        super(Jinja2OutputHandler, self).__init__(*args, **kw)
+        # expose Jinja2 Environment instance so that we can manipulate it
+        # higher in application code
+        self.env = Environment(keep_trailing_newline=True)
+
     def render(self, data_dict, template=None, **kw):
         """
         Take a data dictionary and render it using the given template file.
@@ -102,9 +108,15 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
         """
 
         LOG.debug("rendering output using '%s' as a template." % template)
-        content = self.load_template(template)
+        content, location = self.load_template(template, with_location=True)
 
-        tmpl = Template(content.decode('utf-8'), keep_trailing_newline=True)
+        if location == 'dirs':
+            self.env.loader = FileSystemLoader(self.app._meta.template_dirs)
+        elif location == 'module':
+            parts = self.app._meta.template_module.rsplit('.', 1)
+            self.env.loader = PackageLoader(parts[0], package_path=parts[1])
+
+        tmpl = self.env.from_string(content.decode('utf-8'))
         return tmpl.render(**data_dict)
 
 
