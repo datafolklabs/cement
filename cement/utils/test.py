@@ -1,5 +1,7 @@
 """Cement testing utilities."""
 
+import os
+import shutil
 import unittest
 from tempfile import mkstemp, mkdtemp
 from ..core import backend, foundation
@@ -40,6 +42,8 @@ class CementTestCase(unittest.TestCase):
 
     def __init__(self, *args, **kw):
         super(CementTestCase, self).__init__(*args, **kw)
+        self.tmp_dir = None
+        self.tmp_file = None
 
     def setUp(self):
         """
@@ -49,8 +53,18 @@ class CementTestCase(unittest.TestCase):
 
         """
         self.app = self.make_app()
-        _, self.tmp_file = mkstemp()
-        self.tmp_dir = mkdtemp()
+        _, self.tmp_file = mkstemp(prefix=self.app._meta.label)
+        self.tmp_dir = mkdtemp(prefix=self.app._meta.label)
+
+    def tearDown(self):
+        """
+        Removes temporary files
+        """
+        if self.tmp_file:
+            os.unlink(self.tmp_file)
+        if self.tmp_dir:
+            shutil.rmtree(self.tmp_dir)
+
 
     def make_app(self, *args, **kw):
         """
