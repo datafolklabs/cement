@@ -132,9 +132,10 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
         super(MustacheOutputHandler, self).__init__(*args, **kw)
         self._partials_loader = PartialsLoader(self)
 
-    def render(self, data_dict, **kw):
+    def render(self, data_dict, template=None, **kw):
         """
         Take a data dictionary and render it using the given template file.
+        Additional keyword arguments passed to ``stache.render()``.
 
         Required Arguments:
 
@@ -145,12 +146,11 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
         :returns: str (the rendered template text)
 
         """
-        template = kw.get('template', None)
 
         LOG.debug("rendering output using '%s' as a template." % template)
         content = self.load_template(template)
         stache = Renderer(partials=self._partials_loader)
-        return stache.render(content, data_dict)
+        return stache.render(content, data_dict, **kw)
 
 
 def load(app):

@@ -153,19 +153,21 @@ class YamlOutputHandler(output.CementOutputHandler):
     def _setup(self, app_obj):
         self.app = app_obj
 
-    def render(self, data_dict, **kw):
+    def render(self, data_dict, template=None, **kw):
         """
         Take a data dictionary and render it as Yaml output.  Note that the
         template option is received here per the interface, however this
-        handler just ignores it.
+        handler just ignores it.  Additional keyword arguments passed to 
+        ``yaml.dump()``.
 
         :param data_dict: The data dictionary to render.
+        :keyword template: Ignored in this output handler implementation.
         :returns: A Yaml encoded string.
         :rtype: ``str``
 
         """
         LOG.debug("rendering output as yaml via %s" % self.__module__)
-        return yaml.dump(data_dict)
+        return yaml.dump(data_dict, **kw)
 
 
 class YamlConfigHandler(ConfigParserConfigHandler):

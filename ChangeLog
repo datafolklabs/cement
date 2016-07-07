@@ -34,7 +34,8 @@ Bugs:
       on Windows
     * :issue:`352` - ``CementApp.extend()`` Breaks on ``CementApp.reload()``
     * :issue:`366` - Output Handler Override Options Dissappear
-
+    * :issue:`385` - JsonOutputHandler/YamlOutputHandler/MustacheOutputHandler 
+      Do not Pass Keyword Args down to backend render functions
 
 Features:
 

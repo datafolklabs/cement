@@ -62,7 +62,7 @@ would then put a Jinja2 template file in
 
 from ..core import output
 from ..utils.misc import minimal_logger
-from jinja2 import Environment
+from jinja2 import Template
 
 LOG = minimal_logger(__name__)
 
@@ -86,7 +86,7 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
         interface = output.IOutput
         label = 'jinja2'
 
-    def render(self, data_dict, **kw):
+    def render(self, data_dict, template=None, **kw):
         """
         Take a data dictionary and render it using the given template file.
 
@@ -99,13 +99,11 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
         :returns: str (the rendered template text)
 
         """
-        template = kw.get('template', None)
 
         LOG.debug("rendering output using '%s' as a template." % template)
         content = self.load_template(template)
-        env = Environment(keep_trailing_newline=True)
-        tmpl = env.from_string(content.decode('utf-8'))
-        return tmpl.render(**data_dict)
+        tmpl = Template(content.decode('utf-8'), keep_trailing_newline=True)
+        return tmpl.render(**data_dict, **kw)
 
 
 def load(app):
