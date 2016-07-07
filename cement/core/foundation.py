@@ -203,6 +203,11 @@ class CementApp(meta.MetaMixin):
         ``sys.exit(X)`` where ``X`` is ``self.exit_code``.
         """
 
+        config_extension = '.conf'
+        """
+        Extension used to identify application and plugin configuration files.
+        """
+
         config_files = None
         """
         List of config files to parse.
@@ -221,6 +226,9 @@ class CementApp(meta.MetaMixin):
         Files are loaded in order, and have precedence in order.  Therefore,
         the last configuration loaded has precedence (and overwrites settings
         loaded from previous configuration files).
+
+        Note that ``.conf`` is the default config file extension, defined by 
+        ``CementApp.Meta.config_extension``.
         """
 
         plugins = []
@@ -233,7 +241,8 @@ class CementApp(meta.MetaMixin):
         plugin_config_dirs = None
         """
         A list of directory paths where plugin config files can be found.
-        Files must end in `.conf` or they will be ignored.
+        Files must end in ``.conf`` (or the extension defined by
+        ``CementApp.Meta.config_extension``) or they will be ignored.
 
         Note: Though ``CementApp.Meta.plugin_config_dirs`` is ``None``, Cement
         will set this to a default list based on ``CementApp.Meta.label``.
@@ -251,9 +260,11 @@ class CementApp(meta.MetaMixin):
 
         plugin_config_dir = None
         """
-        A directory path where plugin config files can be found.  Files
-        must end in `.conf`.  By default, this setting is also overridden
-        by the ``[<app_label>] -> plugin_config_dir`` config setting parsed in
+        A directory path where plugin config files can be found.  Files must 
+        end in ``.conf`` (or the extension defined by
+        ``CementApp.Meta.config_extension``) or they will be ignored.  By 
+        default, this setting is also overridden by the 
+        ``[<app_label>] -> plugin_config_dir`` config setting parsed in
         any of the application configuration files.
 
         If set, this item will be **appended** to
@@ -1128,10 +1139,11 @@ class CementApp(meta.MetaMixin):
 
         if self._meta.config_files is None:
             label = self._meta.label
+            ext = self._meta.config_extension
 
             self._meta.config_files = [
-                os.path.join('/', 'etc', label, '%s.conf' % label),
-                os.path.join(fs.HOME_DIR, '.%s.conf' % label),
+                os.path.join('/', 'etc', label, '%s%s' % (label, ext)),
+                os.path.join(fs.HOME_DIR, '.%s%s' % (label, ext)),
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'config'),
             ]
 
@@ -1243,10 +1255,14 @@ class CementApp(meta.MetaMixin):
 
         # template dirs
         if self._meta.template_dirs is None:
-            self._meta.template_dirs = [
+            self._meta.template_dirs = []
+            paths = [
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'templates'),
                 '/usr/lib/%s/templates' % label,
             ]
+            for path in paths:
+                self.add_template_dir(path)
+
         template_dir = self._meta.template_dir
         if template_dir is not None:
             if template_dir not in self._meta.template_dirs:
@@ -1331,6 +1347,42 @@ class CementApp(meta.MetaMixin):
 
         """
         pass
+
+    def add_template_dir(self, path):
+        """
+        Append a directory path to the list of template directories to parse
+        for templates.
+
+        :param path: Directory path that contains template files.
+
+        Usage:
+
+        .. code-block:: python
+
+            app.add_template_dir('/path/to/my/templates')
+
+        """
+        path = fs.abspath(path)
+        if path not in self._meta.template_dirs:
+            self._meta.template_dirs.append(path)
+
+    def remove_template_dir(self, path):
+        """
+        Remove a directory path from the list of template directories to parse
+        for templates.
+
+        :param path: Directory path that contains template files.
+
+        Usage:
+
+        .. code-block:: python
+
+            app.remove_template_dir('/path/to/my/templates')
+
+        """
+        path = fs.abspath(path)
+        if path in self._meta.template_dirs:
+            self._meta.template_dirs.remove(path)
 
     def __enter__(self):
         self.setup()

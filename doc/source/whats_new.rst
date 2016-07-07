@@ -6,6 +6,36 @@ What's New
 New Features in Cement 2.9
 --------------------------
 
+Support for Multiple File Plugin Directories
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Prior to Cement 2.9, application plugins were only supported as single files
+such as ``myplugin.py``.  Plugins can now be a single file, or full python 
+modules like ``myplugin/__init__.py``.
+
+An example plugin might look like:
+
+.. code-block:: console
+
+    myplugin/
+        __init__.py
+        controllers.py
+        templates/
+            cmd1.mustache
+            cmd2.mustache
+            cmd3.mustache
+
+The only thing required in a plugin is that is supply as ``load()`` function
+either in a ``myplugin.py`` or ``myplugin/__init__.py``.  The rest is up to 
+the developer.
+
+See :ref:`Application Plugins <application_plugins>` for more information.
+
+Related:
+
+    * :issue:`350`
+
+
 Extensions
 ^^^^^^^^^^
 

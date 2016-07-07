@@ -32,7 +32,8 @@ plugins = ``[]``
 
 plugin_config_dirs = ``None``
     A list of directory paths where plugin config files can be found.
-    Files must end in `.conf` or they will be ignored.
+    Files must end in ``.conf`` (or the extension defined by
+    ``CementApp.Meta.config_extension``), or they will be ignored.
 
     Note: Though ``CementApp.Meta.plugin_config_dirs`` is ``None``, Cement
     will set this to a default list based on ``CementApp.Meta.label``.  This
@@ -48,9 +49,11 @@ plugin_config_dirs = ``None``
     loaded from previous configuration files).
 
 plugin_config_dir = ``None``
-    A directory path where plugin config files can be found.  Files
-    must end in `.conf`.  By default, this setting is also overridden
-    by the ``[<app_label>] -> plugin_config_dir`` config setting parsed in any
+    A directory path where plugin config files can be found.  Files must end 
+    in ``.conf`` (or the extension defined by
+    ``CementApp.Meta.config_extension``), or they will be ignored.  By 
+    default, this setting is also overridden by the 
+    ``[<app_label>] -> plugin_config_dir`` config setting parsed in any
     of the application configuration files.
 
     If set, this item will be **appended** to
@@ -65,7 +68,8 @@ plugin_config_dir = ``None``
 plugin_bootstrap = ``None``
     A python package (dotted import path) where plugin code can be
     loaded from.  This is generally something like ``myapp.plugins``
-    where a plugin file would live at ``myapp/plugins/myplugin.py``.
+    where a plugin file would live at ``myapp/plugins/myplugin.py`` or 
+    ``myapp/plugins/myplugin/__init__.py``.
     This provides a facility for applications that have builtin plugins that
     ship with the applications source code and live in the same Python module.
 
@@ -351,4 +355,66 @@ above:
 The primary detail is that Cement calls the `load()` function of a plugin...
 after that, you can do anything you like.
 
+
+Single File Plugins vs. Plugin Directories
+------------------------------------------
+
+As of Cement 2.9.x, plugins can be either a single file (i.e ``myplugin.py``)
+or a python module directory (i.e. ``myplugin/__init__.py``).  Both will be
+loaded and executed the exact same way.
+
+One caveat however, is that the submodules referenced from within a plugin 
+directory must be relative path.  For example:
+
+**myplugin/__init__.py**
+
+.. code-block:: python
+
+    from .controllers import MyPluginController
+
+    def load(app):
+        app.handler.register(MyPluginController)
+
+**myplugin/controllers.py**
+
+.. code-block:: python
+
+    from cement.core.controller import CementBaseController, expose
+
+    class MyPluginController(CementBaseController):
+        class Meta:
+            label = 'myplugin'
+            stacked_on = 'base'
+            stacked_type = 'embedded'
+
+        @expose()
+        def my_command(self):
+            print('Inside MyPluginController.my_command()')
+
+
+Loading Templates From Plugin Directories
+-----------------------------------------
+
+A common use case for complex applications is to use an output handler the
+uses templates, such as Mustache, Genshi, Jinja2, etc.  In order for a plugin
+to use it's own template files it's templates directory first needs to be 
+added to the list of template directories to be parsed.  In the future, this
+will be more streamlined however currently the following is the recommeded
+way:
+
+**myplugin/__init__.py**
+
+.. code-block:: python
+
+    def add_template_dir(app):
+        path = os.path.join(os.path.basename(self.__file__, 'templates')
+        app.add_template_dir(path)
+
+    def load(app):
+        app.hook.register('post_setup', add_template_dir)
+
+
+The above will append the directory ``/path/to/myplugin/templates`` to the 
+list of template directories that the applications output handler with search
+for template files.
 

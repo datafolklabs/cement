@@ -38,9 +38,11 @@ Bugs:
 
 Features:
 
+    * :issue:`350` - Support for Plugin Directories
     * :pr:`371` - Jinja2 Templating Support
     * :issue:`373` - Switch over to using Flake8 for PEP8 and Style Compliance
     * :pr:`375` - Redis Cache Handler Support
+    * :issue:`379` - Support for Alternative Config File Extensions
     
 
 Refactoring;

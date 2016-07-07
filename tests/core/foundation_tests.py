@@ -494,3 +494,21 @@ class FoundationTestCase(test.CementCoreTestCase):
             raise
         finally:
             signal.alarm(0) 
+
+    def test_add_template_directory(self):
+        self.app.setup()
+        
+        self.app.add_template_dir(self.tmp_dir)
+        res = self.tmp_dir in self.app._meta.template_dirs
+        self.ok(res)
+
+    def test_remove_template_directory(self):
+        self.app.setup()
+
+        self.app.add_template_dir(self.tmp_dir)
+        res = self.tmp_dir in self.app._meta.template_dirs
+        self.ok(res)
+
+        self.app.remove_template_dir(self.tmp_dir)
+        res = self.tmp_dir not in self.app._meta.template_dirs
+        self.ok(res)

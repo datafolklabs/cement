@@ -84,7 +84,9 @@ class CementPluginHandler(plugin.CementPluginHandler):
             else:
                 # sort so that we always load plugins in the same order
                 # regardless of OS (seems some don't sort reliably)
-                plugin_config_files = glob.glob("%s/*.conf" % config_dir)
+                path = "%s/*%s" % (config_dir, 
+                                   self.app._meta.config_extension)
+                plugin_config_files = glob.glob(path)
                 plugin_config_files.sort()
 
                 for config in plugin_config_files:
@@ -151,29 +153,36 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
     def _load_plugin_from_dir(self, plugin_name, plugin_dir):
         """
-        Load a plugin from file within a plugin directory rather than a
-        python package within sys.path.
+        Load a plugin from a directory path rather than a python package 
+        within sys.path.  This would either be ``myplugin.py`` or 
+        ``myplugin/__init__.py`` within the given ``plugin_dir``.
 
-        :param plugin_name: The name of the plugin, also the name of the file
-            with '.py' appended to the name.
-        :param plugin_dir: The filesystem directory path where to find the
-            file.
+        :param plugin_name: The name of the plugin.
+        :param plugin_dir: The filesystem directory path where the plugin 
+         exists.
 
         """
-        full_path = os.path.join(plugin_dir, "%s.py" % plugin_name)
-        if not os.path.exists(full_path):
-            LOG.debug("plugin file '%s' does not exist." % full_path)
-            return False
+        paths = [
+            os.path.join(plugin_dir, "%s.py" % plugin_name),
+            os.path.join(plugin_dir, plugin_name, "__init__.py")
+        ]
 
-        LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
-                                                         plugin_dir))
+        for path in paths:
+            LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
+                                                             path))
+            if os.path.exists(path):
+                # We don't catch this because it would make debugging a 
+                # nightmare
+                f, path, desc = imp.find_module(plugin_name, [plugin_dir])
+                mod = imp.load_module(plugin_name, f, path, desc)
+                if mod and hasattr(mod, 'load'):
+                    mod.load(self.app)
+                return True
 
-        # We don't catch this because it would make debugging a nightmare
-        f, path, desc = imp.find_module(plugin_name, [plugin_dir])
-        mod = imp.load_module(plugin_name, f, path, desc)
-        if mod and hasattr(mod, 'load'):
-            mod.load(self.app)
-        return True
+        LOG.debug("plugin '%s' does not exist in '%s'." % \
+                  (plugin_name, plugin_dir))
+
+        return False
 
     def _load_plugin_from_bootstrap(self, plugin_name, base_package):
         """
@@ -217,13 +226,13 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
     def load_plugin(self, plugin_name):
         """
-        Load a plugin whose name is 'plugin_name'.  First attempt to load
+        Load a plugin whose name is ``plugin_name``.  First attempt to load
         from a plugin directory (plugin_dir), secondly attempt to load from a
         bootstrap module (plugin_bootstrap) determined by
-        self.app._meta.plugin_bootstrap.
+        ``CementApp.Meta.plugin_bootstrap``.
 
         Upon successful loading of a plugin, the plugin name is appended to
-        the self._loaded_plugins list.
+        the ``self._loaded_plugins list``.
 
         :param plugin_name: The name of the plugin to load.
         :type plugin_name: ``str``
