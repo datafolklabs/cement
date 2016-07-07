@@ -157,7 +157,7 @@ class YamlOutputHandler(output.CementOutputHandler):
         """
         Take a data dictionary and render it as Yaml output.  Note that the
         template option is received here per the interface, however this
-        handler just ignores it.  Additional keyword arguments passed to 
+        handler just ignores it.  Additional keyword arguments passed to
         ``yaml.dump()``.
 
         :param data_dict: The data dictionary to render.
