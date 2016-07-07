@@ -512,3 +512,11 @@ class FoundationTestCase(test.CementCoreTestCase):
         self.app.remove_template_dir(self.tmp_dir)
         res = self.tmp_dir not in self.app._meta.template_dirs
         self.ok(res)
+
+    def test_alternative_module_mapping(self):
+        # just to have something for coverage
+        app = self.make_app(alternative_module_mapping=dict(time='time'))
+        app.setup()
+
+        app.__import__('time')
+        app.__import__('sleep', from_module='time')
