@@ -89,6 +89,7 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
     def render(self, data_dict, template=None, **kw):
         """
         Take a data dictionary and render it using the given template file.
+        Additional keyword arguments are ignored.
 
         Required Arguments:
 
@@ -102,8 +103,9 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
 
         LOG.debug("rendering output using '%s' as a template." % template)
         content = self.load_template(template)
+
         tmpl = Template(content.decode('utf-8'), keep_trailing_newline=True)
-        return tmpl.render(**data_dict, **kw)
+        return tmpl.render(**data_dict)
 
 
 def load(app):
