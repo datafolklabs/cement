@@ -14,8 +14,11 @@ Requirements
 Configuration
 -------------
 
-This extension does not honor any application configuration settings.
+This extension supports the following application metadata settings:
 
+ * ``CementApp.Meta.alternative_module_mapping`` - By using the alternative 
+   module mapping feature, the developer can optionally replace the ``json`` 
+   module with another drop-in replacement module such as ``ujson``.
 
 Usage
 _____
@@ -70,7 +73,6 @@ See ``CementApp.Meta.handler_override_options``.
 
 """
 
-import json
 from ..core import output
 from ..utils.misc import minimal_logger
 from ..ext.ext_configparser import ConfigParserConfigHandler
@@ -151,8 +153,16 @@ class JsonOutputHandler(output.CementOutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = True
 
+        # Backend JSON library module to use
+        json_module = 'json'
+
     def __init__(self, *args, **kw):
         super(JsonOutputHandler, self).__init__(*args, **kw)
+        self._json = None
+
+    def _setup(self, app):
+        super(JsonOutputHandler, self)._setup(app)
+        self._json = self.app.__import__('json')
 
     def render(self, data_dict, template=None, **kw):
         """
@@ -168,7 +178,7 @@ class JsonOutputHandler(output.CementOutputHandler):
 
         """
         LOG.debug("rendering output as Json via %s" % self.__module__)
-        return json.dumps(data_dict, **kw)
+        return self._json.dumps(data_dict, **kw)
 
 
 class JsonConfigHandler(ConfigParserConfigHandler):
@@ -186,8 +196,16 @@ class JsonConfigHandler(ConfigParserConfigHandler):
 
         label = 'json'
 
+        # Backend JSON library module to use
+        json_module = 'json'
+
     def __init__(self, *args, **kw):
         super(JsonConfigHandler, self).__init__(*args, **kw)
+        self._json = None
+
+    def _setup(self, app):
+        super(JsonConfigHandler, self)._setup(app)
+        self._json = self.app.__import__('json')
 
     def _parse_file(self, file_path):
         """
@@ -198,7 +216,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
         :returns: boolean
 
         """
-        self.merge(json.load(open(file_path)))
+        self.merge(self._json.load(open(file_path)))
 
         # FIX ME: Should check that file was read properly, however if not it
         # will likely raise an exception anyhow.

@@ -643,6 +643,41 @@ class CementApp(meta.MetaMixin):
         has changed or exists.
         """
 
+        alternative_module_mapping = {}
+        """
+        EXPERIMENTAL FEATURE: This is an experimental feature added in Cement 
+        2.9.x and may or may not be removed in future versions of Cement.
+
+        Dictionary of alternative, **drop-in** replacement modules to use
+        selectively throughout the application, framework, or
+        extensions.  Developers can optionally use the 
+        ``CementApp.__import__()`` method to import simple modules, and if 
+        that module exists in this mapping it will import the alternative
+        library in it's place.
+        
+        This is a low-level feature, and may not produce the results you are
+        expecting.  It's purpose is to allow the developer to replace specific 
+        modules at a high level.  Example: For an application wanting to use 
+        ``ujson`` in place of ``json``, the developer could set the following:
+
+        .. code-block:: python
+
+            alternative_module_mapping = {
+                'json' : 'ujson',
+            }
+
+        In the app, you would then load ``json`` as:
+
+        .. code-block:: python
+
+            _json = app.__import__('json')
+            _json.dumps(data)
+
+
+        Obviously, the replacement 
+        module **must be** a drop-in replace and function the same.
+        """
+
     def __init__(self, label=None, **kw):
         super(CementApp, self).__init__(**kw)
 
@@ -1382,6 +1417,20 @@ class CementApp(meta.MetaMixin):
         path = fs.abspath(path)
         if path in self._meta.template_dirs:
             self._meta.template_dirs.remove(path)
+
+    def __import__(self, obj, from_module=None):
+        # EXPERIMENTAL == UNDOCUMENTED
+        mapping = self._meta.alternative_module_mapping
+
+        if from_module is not None:
+            _from = mapping.get(from_module, from_module)
+            _loaded = __import__(_from, globals(), locals(), [obj], 0)
+            return getattr(_loaded, obj)
+        else:
+            obj = mapping.get(obj, obj)
+            _loaded = __import__(obj, globals(), locals(), [], 0)
+                
+        return _loaded
 
     def __enter__(self):
         self.setup()
