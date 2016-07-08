@@ -156,7 +156,7 @@ class TemplateOutputHandler(CementOutputHandler):
                       (template_path, template_module))
             return None
 
-    def load_template(self, template_path):
+    def load_template(self, template_path, with_location=False):
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
@@ -165,7 +165,11 @@ class TemplateOutputHandler(CementOutputHandler):
         :param template_path: The secondary path of the template **after**
             either ``template_module`` or ``template_dirs`` prefix (set via
             ``CementApp.Meta``)
+        :param with_location: Request the location where the template was found
+            ('dirs' or 'module') to be returned along with the template content.
+            This changes the return
         :returns: The content of the template (str)
+            or a tuple (content, location) (str, str) if with_location=True
         :raises: FrameworkError if the template does not exist in either the
             ``template_module`` or ``template_dirs``.
         """
@@ -178,11 +182,17 @@ class TemplateOutputHandler(CementOutputHandler):
         if content is None:
             # second attempt to load from module
             content = self._load_template_from_module(template_path)
+            location = 'module'
+        else:
+            location = 'dirs'
 
         # if content is None, that means we didn't find a template file in
         # either and that is an exception
         if content is not None:
-            return content
+            if with_location:
+                return content, location
+            else:
+                return content
         else:
             raise exc.FrameworkError("Could not locate template: %s" %
                                      template_path)
