@@ -14,11 +14,8 @@ Requirements
 Configuration
 -------------
 
-This extension supports the following application metadata settings:
+This extension does not support any configuration settings.
 
- * ``CementApp.Meta.alternative_module_mapping`` - By using the alternative
-   module mapping feature, the developer can optionally replace the ``json``
-   module with another drop-in replacement module such as ``ujson``.
 
 Usage
 _____
@@ -70,6 +67,31 @@ See ``CementApp.Meta.handler_override_options``.
 
     $ python myapp.py -o json
     {"foo": "bar"}
+
+
+What if I Want To Use UltraJson or Something Else?
+--------------------------------------------------
+
+It is possible to override the backend ``json`` library module to use, for
+example if you wanted to use UltraJson (``ujson``) or another
+**drop-in replacement** library.  The recommended solution would be to
+override the ``JsonOutputHandler`` with you're own sub-classed version, and
+modify the ``json_module`` meta-data option.
+
+.. code-block:: python
+
+    from cement.ext.ext_json import JsonOutputHandler
+
+    class MyJsonHandler(JsonOutputHandler):
+        class Meta:
+            json_module = 'ujson'
+
+    # then, the class must be replaced via a 'post_setup' hook
+
+    def override_json(app):
+        app.handler.register(MyJsonHandler, force=True)
+
+    app.hook.register('post_setup', override_json)
 
 """
 
@@ -149,11 +171,11 @@ class JsonOutputHandler(output.CementOutputHandler):
         label = 'json'
         """The string identifier of this handler."""
 
-        #: Whether or not to include ``json`` as an available to choice
+        #: Whether or not to include ``json`` as an available choice
         #: to override the ``output_handler`` via command line options.
         overridable = True
 
-        # Backend JSON library module to use
+        #: Backend JSON library module to use (`json`, `ujson`)
         json_module = 'json'
 
     def __init__(self, *args, **kw):
@@ -162,7 +184,8 @@ class JsonOutputHandler(output.CementOutputHandler):
 
     def _setup(self, app):
         super(JsonOutputHandler, self)._setup(app)
-        self._json = self.app.__import__('json')
+        self._json = __import__(self._meta.json_module,
+                                globals(), locals(), [], 0)
 
     def render(self, data_dict, template=None, **kw):
         """
@@ -196,7 +219,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
 
         label = 'json'
 
-        # Backend JSON library module to use
+        #: Backend JSON library module to use (`json`, `ujson`).
         json_module = 'json'
 
     def __init__(self, *args, **kw):
@@ -205,7 +228,8 @@ class JsonConfigHandler(ConfigParserConfigHandler):
 
     def _setup(self, app):
         super(JsonConfigHandler, self)._setup(app)
-        self._json = self.app.__import__('json')
+        self._json = __import__(self._meta.json_module,
+                                globals(), locals(), [], 0)
 
     def _parse_file(self, file_path):
         """

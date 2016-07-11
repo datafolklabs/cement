@@ -1064,8 +1064,8 @@ class CementApp(meta.MetaMixin):
             self.hook.define(label)
 
         # register some built-in framework hooks
-        self.hook.register(
-            'post_setup', add_handler_override_options, weight=-99)
+        self.hook.register('post_setup', add_handler_override_options,
+                           weight=-99)
         self.hook.register('post_argument_parsing',
                            handler_override, weight=-99)
 

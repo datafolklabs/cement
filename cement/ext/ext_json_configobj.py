@@ -13,11 +13,7 @@ Requirements
 Configuration
 -------------
 
-This extension supports the following application metadata settings:
-
- * ``CementApp.Meta.alternative_module_mapping`` - By using the alternative
-   module mapping feature, the developer can optionally replace the ``json``
-   module with another drop-in replacement module such as ``ujson``.
+This extension does not support any configuration settings.
 
 
 Usage
@@ -87,7 +83,7 @@ class JsonConfigObjConfigHandler(ConfigObjConfigHandler):
         #: The string identifier of this handler.
         label = 'json_configobj'
 
-        #: Backend JSON module to use
+        #: Backend JSON module to use (``json``, ``ujson``, etc)
         json_module = 'json'
 
     def __init__(self, *args, **kw):
@@ -96,7 +92,8 @@ class JsonConfigObjConfigHandler(ConfigObjConfigHandler):
 
     def _setup(self, app):
         super(JsonConfigObjConfigHandler, self)._setup(app)
-        self._json = self.app.__import__('json')
+        self._json = __import__(self._meta.json_module,
+                                globals(), locals(), [], 0)
 
     def _parse_file(self, file_path):
         """
