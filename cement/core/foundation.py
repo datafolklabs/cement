@@ -15,7 +15,7 @@ from ..utils import fs
 # The `imp` module is deprecated in favor of `importlib` in 3.4, but it
 # wasn't introduced until 3.1.  Finally, reload is a builtin on Python < 3
 pyver = sys.version_info
-if pyver[0] >= 3 and pyver[1] >= 1:                # pragma: nocover  # noqa
+if pyver[0] >= 3 and pyver[1] >= 4:                # pragma: nocover  # noqa
     from importlib import reload as reload_module  # pragma: nocover  # noqa
 elif pyver[0] >= 3:                                # pragma: nocover  # noqa
     from imp import reload as reload_module        # pragma: nocover  # noqa

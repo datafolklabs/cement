@@ -44,6 +44,7 @@ Features:
     * :issue:`373` - Switch over to using Flake8 for PEP8 and style compliance
     * :pr:`375` - Redis cache handler support
     * :issue:`379` - Support for alternative config file extensions
+    * :issue:`380` - Support for Cython/Compiled Plugins
     * :issue:`389` - ConfigObj support for Python 3
 
 Refactoring;

@@ -163,33 +163,31 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
         """
 
-        paths = [
-            os.path.join(plugin_dir, "%s.py" % plugin_name),
-            os.path.join(plugin_dir, plugin_name, "__init__.py")
-        ]
+        # FIX ME: `imp` is deprecated in Python 3.4 and will be  going away
+        # so we need to update forward compatibility for ``importlib``.
+        #
+        # See: https://github.com/datafolklabs/cement/issues/386
 
-        for path in paths:
-            LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
-                                                             path))
-            if os.path.exists(path):
-                # We don't catch this because it would make debugging a
-                # nightmare
-                #
-                # FIX ME: `imp` is deprecated in Python 3.4 and will be 
-                # going away... need to update forward compatibility for 
-                # ``importlib``.  
-                #
-                # See: https://github.com/datafolklabs/cement/issues/386
-                f, path, desc = imp.find_module(plugin_name, [plugin_dir])
-                mod = imp.load_module(plugin_name, f, path, desc)
-                if mod and hasattr(mod, 'load'):
-                    mod.load(self.app)
-                return True
+        LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
+                                                         plugin_dir))
 
-        LOG.debug("plugin '%s' does not exist in '%s'." %
-                  (plugin_name, plugin_dir))
+        if not os.path.exists(plugin_dir):
+            LOG.debug("plugin directory '%s' does not exist." % plugin_dir)
+            return False
 
-        return False
+        try:
+            f, path, desc = imp.find_module(plugin_name, [plugin_dir])
+        except ImportError:
+            LOG.debug("plugin '%s' does not exist in '%s'." %
+                      (plugin_name, plugin_dir))
+            return False
+
+        # We don't catch this because it would make debugging a
+        # nightmare
+        mod = imp.load_module(plugin_name, f, path, desc)
+        if mod and hasattr(mod, 'load'):
+            mod.load(self.app)
+        return True
 
     def _load_plugin_from_bootstrap(self, plugin_name, base_package):
         """
