@@ -334,7 +334,7 @@ it to ``CementApp``:
 
 
 Handler Default Configuration Settings
--------------------------------------
+--------------------------------------
 
 All handlers can define default config file settings via their
 ``config_defaults`` meta option.  These will be merged into the ``app.config``
