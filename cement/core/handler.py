@@ -158,7 +158,7 @@ class HandlerManager(object):
         else:
             return False
 
-    def register(self, handler_obj):
+    def register(self, handler_obj, force=False):
         """
         Register a handler object to a handler.  If the same object is already
         registered then no exception is raised, however if a different object
@@ -166,6 +166,8 @@ class HandlerManager(object):
         raised.
 
         :param handler_obj: The uninstantiated handler object to register.
+        :param force: Whether to allow replacement if an existing
+         handler of the same ``label`` is already registered.
         :raises: :class:`cement.core.exc.InterfaceError`
         :raises: :class:`cement.core.exc.FrameworkError`
 
@@ -210,8 +212,18 @@ class HandlerManager(object):
                                      handler_type)
         if obj._meta.label in self.__handlers__[handler_type] and \
                 self.__handlers__[handler_type][obj._meta.label] != orig_obj:
-            raise exc.FrameworkError("handlers['%s']['%s'] already exists" %
-                                     (handler_type, obj._meta.label))
+
+            if force is True:
+                LOG.debug(
+                    "handlers['%s']['%s'] already exists" %
+                    (handler_type, obj._meta.label) +
+                    ", but `force==True`"
+                )
+            else:
+                raise exc.FrameworkError(
+                    "handlers['%s']['%s'] already exists" %
+                    (handler_type, obj._meta.label)
+                )
 
         interface = self.__handlers__[handler_type]['__interface__']
         if hasattr(interface.IMeta, 'validator'):
@@ -528,7 +540,7 @@ def defined(handler_type):
         return False
 
 
-def register(handler_obj):
+def register(handler_obj, force=False):
     """
     DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
     will be removed in future versions of Cement.
@@ -542,6 +554,8 @@ def register(handler_obj):
     raised.
 
     :param handler_obj: The uninstantiated handler object to register.
+    :param force: Whether to allow replacement if an existing
+     handler of the same ``label`` is already registered.
     :raises: cement.core.exc.InterfaceError
     :raises: cement.core.exc.FrameworkError
 
@@ -595,8 +609,17 @@ def register(handler_obj):
                                  handler_type)
     if obj._meta.label in backend.__handlers__[handler_type] and \
             backend.__handlers__[handler_type][obj._meta.label] != obj:
-        raise exc.FrameworkError("handlers['%s']['%s'] already exists" %
-                                 (handler_type, obj._meta.label))
+        if force is True:
+            LOG.debug(
+                "handlers['%s']['%s'] already exists" %
+                (handler_type, obj._meta.label) +
+                ", but `force==True`"
+            )
+        else:
+            raise exc.FrameworkError(
+                "handlers['%s']['%s'] already exists" %
+                (handler_type, obj._meta.label)
+            )
 
     interface = backend.__handlers__[handler_type]['__interface__']
     if hasattr(interface.IMeta, 'validator'):

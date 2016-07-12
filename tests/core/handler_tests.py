@@ -3,6 +3,7 @@
 from cement.core import exc, backend, handler, output, meta
 from cement.core import interface
 from cement.utils import test
+from cement.ext import ext_dummy
 from cement.ext.ext_configparser import ConfigParserConfigHandler
 
 
@@ -91,12 +92,39 @@ class HandlerTestCase(test.CementCoreTestCase):
 
     @test.raises(exc.FrameworkError)
     def test_register_duplicate_handler(self):
-        from cement.ext import ext_dummy
         self.app.handler.register(ext_dummy.DummyOutputHandler)
         try:
             self.app.handler.register(DuplicateHandler)
         except exc.FrameworkError:
             raise
+
+    def test_register_force(self):
+        class MyDummy(ext_dummy.DummyOutputHandler):
+            pass
+
+        # register once, verify
+        self.app.handler.register(ext_dummy.DummyOutputHandler)
+        res = self.app.handler.get('output', 'dummy')
+        self.eq(res, ext_dummy.DummyOutputHandler)
+
+        # register again with force, and verify we get new class back
+        self.app.handler.register(MyDummy, force=True)
+        res = self.app.handler.get('output', 'dummy')
+        self.eq(res, MyDummy)
+
+    def test_register_force_deprecated(self):
+        class MyDummy(ext_dummy.DummyOutputHandler):
+            pass
+
+        # register once, verify
+        handler.register(ext_dummy.DummyOutputHandler)
+        res = self.app.handler.get('output', 'dummy')
+        self.eq(res, ext_dummy.DummyOutputHandler)
+
+        # register again with force, and verify we get new class back
+        handler.register(MyDummy, force=True)
+        res = self.app.handler.get('output', 'dummy')
+        self.eq(res, MyDummy)
 
     @test.raises(exc.InterfaceError)
     def test_register_unproviding_handler(self):
