@@ -3,6 +3,7 @@
 import os
 import sys
 import pkgutil
+import re
 from ..core import exc, interface, handler
 from ..utils.misc import minimal_logger
 from ..utils import fs
@@ -121,17 +122,19 @@ class TemplateOutputHandler(CementOutputHandler):
                 content = open(full_path, 'r').read()
                 LOG.debug("loaded output template from file %s" %
                           full_path)
-                return content
+                return (content, full_path)
             else:
                 LOG.debug("output template file %s does not exist" %
                           full_path)
                 continue
 
-        return None
+        return (None, None)
 
     def _load_template_from_module(self, template_path):
         template_module = self.app._meta.template_module
         template_path = template_path.lstrip('/')
+        full_module_path = "%s.%s" % (template_module,
+                                      re.sub('/', '.', template_path))
 
         LOG.debug("attemping to load output template '%s' from module %s" %
                   (template_path, template_module))
@@ -143,20 +146,40 @@ class TemplateOutputHandler(CementOutputHandler):
             except ImportError as e:
                 LOG.debug("unable to import template module '%s'."
                           % template_module)
-                return None
+                return (None, None)
 
         # get the template content
         try:
             content = pkgutil.get_data(template_module, template_path)
             LOG.debug("loaded output template '%s' from module %s" %
                       (template_path, template_module))
-            return content
+            return (content, full_module_path)
         except IOError as e:
             LOG.debug("output template '%s' does not exist in module %s" %
                       (template_path, template_module))
-            return None
+            return (None, None)
 
     def load_template(self, template_path):
+        """
+        Loads a template file first from ``self.app._meta.template_dirs`` and
+        secondly from ``self.app._meta.template_module``.  The
+        ``template_dirs`` have presedence.
+        :param template_path: The secondary path of the template **after**
+            either ``template_module`` or ``template_dirs`` prefix (set via
+            ``CementApp.Meta``)
+        :returns: The content of the template (str)
+        :raises: FrameworkError if the template does not exist in either the
+            ``template_module`` or ``template_dirs``.
+        """
+        res = self.load_template_with_location(template_path)
+        content, template_type, path = res
+
+        # only return content for backward compatibility
+        return content
+
+    # FIX ME: Should eventually replace ``load_template()`` (but that breaks
+    # compatibility)
+    def load_template_with_location(self, template_path):
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
@@ -165,7 +188,9 @@ class TemplateOutputHandler(CementOutputHandler):
         :param template_path: The secondary path of the template **after**
             either ``template_module`` or ``template_dirs`` prefix (set via
             ``CementApp.Meta``)
-        :returns: The content of the template (str)
+        :returns: A tuple that includes the content of the template (str),
+            the type of template (str which is one of: ``directory``, or
+            ``module``), and the ``path`` (str) of the directory or module)
         :raises: FrameworkError if the template does not exist in either the
             ``template_module`` or ``template_dirs``.
         """
@@ -174,15 +199,18 @@ class TemplateOutputHandler(CementOutputHandler):
                                      template_path)
 
         # first attempt to load from file
-        content = self._load_template_from_file(template_path)
+        content, path = self._load_template_from_file(template_path)
         if content is None:
             # second attempt to load from module
-            content = self._load_template_from_module(template_path)
+            content, path = self._load_template_from_module(template_path)
+            template_type = 'module'
+        else:
+            template_type = 'directory'
 
         # if content is None, that means we didn't find a template file in
         # either and that is an exception
-        if content is not None:
-            return content
-        else:
+        if content is None:
             raise exc.FrameworkError("Could not locate template: %s" %
                                      template_path)
+
+        return (content, template_type, path)
