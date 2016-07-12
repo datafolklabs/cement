@@ -32,19 +32,19 @@ Bugs:
       files/directories
     * :issue:`346` - AttributeError: 'module' object has no attribute 'SIGHUP'
       on Windows
-    * :issue:`352` - ``CementApp.extend()`` Breaks on ``CementApp.reload()``
-    * :issue:`366` - Output Handler Override Options Dissappear
+    * :issue:`352` - ``CementApp.extend()`` breaks on ``CementApp.reload()``
+    * :issue:`366` - Output handler override options dissappear
     * :issue:`385` - JsonOutputHandler/YamlOutputHandler/MustacheOutputHandler 
-      Do not Pass Keyword Args down to backend render functions
+      Do not pass keyword args down to backend render functions
 
 Features:
 
-    * :issue:`350` - Support for Plugin Directories
-    * :pr:`371` - Jinja2 Templating Support
-    * :issue:`373` - Switch over to using Flake8 for PEP8 and Style Compliance
-    * :pr:`375` - Redis Cache Handler Support
-    * :issue:`379` - Support for Alternative Config File Extensions
-    * :issue:`389` - ConfigObj Support for Python 3
+    * :issue:`350` - Support for plugin directories
+    * :pr:`371` - Jinja2 templating support
+    * :issue:`373` - Switch over to using Flake8 for PEP8 and style compliance
+    * :pr:`375` - Redis cache handler support
+    * :issue:`379` - Support for alternative config file extensions
+    * :issue:`389` - ConfigObj support for Python 3
 
 Refactoring;
 
