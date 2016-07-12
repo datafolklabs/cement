@@ -60,6 +60,7 @@ would then put a Jinja2 template file in
 
 """
 
+import sys
 from ..core import output
 from ..utils.misc import minimal_logger
 from jinja2 import Environment, FileSystemLoader, PackageLoader
@@ -88,8 +89,9 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
 
     def __init__(self, *args, **kw):
         super(Jinja2OutputHandler, self).__init__(*args, **kw)
+
         # expose Jinja2 Environment instance so that we can manipulate it
-        # higher in application code
+        # higher in application code if necessary
         self.env = Environment(keep_trailing_newline=True)
 
     def render(self, data_dict, template=None, **kw):
@@ -108,15 +110,23 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
         """
 
         LOG.debug("rendering output using '%s' as a template." % template)
-        content, location = self.load_template(template, with_location=True)
+        content, _type, path = self.load_template_with_location(template)
 
-        if location == 'dirs':
+        if _type == 'directory':
             self.env.loader = FileSystemLoader(self.app._meta.template_dirs)
-        elif location == 'module':
+        elif _type == 'module':
             parts = self.app._meta.template_module.rsplit('.', 1)
             self.env.loader = PackageLoader(parts[0], package_path=parts[1])
 
-        tmpl = self.env.from_string(content.decode('utf-8'))
+        if sys.version_info[0] >= 3:
+            if not isinstance(content, str):
+                content = content.decode('utf-8')
+        else:
+            if not isinstance(content, unicode):     # pragma: nocover  # noqa
+                content = content.decode('utf-8')    # pragma: nocover
+
+        tmpl = self.env.from_string(content)
+
         return tmpl.render(**data_dict)
 
 

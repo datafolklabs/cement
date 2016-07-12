@@ -35,23 +35,33 @@ class Jinja2ExtTestCase(test.CementExtTestCase):
         self.eq(res, jinja2_res)
 
     def test_jinja2_filesystemloader(self):
-        self.app._meta.template_dirs = ['/tmp/cement_tests']
-        if os.path.isdir('/tmp/cement_tests'):
-            rmtree('/tmp/cement_tests')
-        os.makedirs('/tmp/cement_tests')
-        tests_dir = os.path.dirname(os.path.dirname(__file__))
-        copyfile(
-            '%s/templates/test_template_parent.jinja2' % tests_dir,
-            '/tmp/cement_tests/test_template_parent.jinja2')
         self.app.setup()
+        self.app._meta.template_dirs = [self.tmp_dir]
+
+        # make sure it doesn't load from the tests directory module regardless
+        self.app._meta.template_module = 'some.bogus.module.path'
+
+        tests_dir = os.path.dirname(os.path.dirname(__file__))
+
+        from_file = os.path.join(tests_dir, 'templates', 
+                                 'test_template_parent.jinja2')
+        to_file = os.path.join(self.tmp_dir, 'test_template_parent.jinja2')
+        copyfile(from_file, to_file)
+
+        from_file = os.path.join(tests_dir, 'templates', 
+                                 'test_template_child.jinja2')
+        to_file = os.path.join(self.tmp_dir, 'test_template_child.jinja2')
+        copyfile(from_file, to_file)
+
         rando = random.random()
         res = self.app.render(dict(foo=rando), 'test_template_child.jinja2')
         jinja2_res = "foo equals %s\n" % rando
         self.eq(res, jinja2_res)
 
     def test_jinja2_packageloader(self):
-        self.app._meta.template_module = 'tests.templates'
         self.app.setup()
+        self.app._meta.template_module = 'tests.templates'
+        self.app._meta.template_dirs = []
         rando = random.random()
         res = self.app.render(dict(foo=rando), 'test_template_child.jinja2')
         jinja2_res = "foo equals %s\n" % rando
