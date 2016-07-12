@@ -4,9 +4,6 @@ import sys
 from ..core import exc, interface, handler
 from ..utils.misc import minimal_logger
 
-if sys.version_info[0] >= 3:
-    from imp import reload  # pragma: no cover  # noqa
-
 LOG = minimal_logger(__name__)
 
 
