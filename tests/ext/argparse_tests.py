@@ -603,3 +603,21 @@ class ArgparseExtTestCase(test.CementExtTestCase):
             app._setup_arg_handler()
             res = app.run()
             self.eq(res, "Inside Aliases.aliases_cmd1")
+
+    def test_unknown_arguments(self):
+        self.reset_backend()
+
+        class MyArgumentHandler(ArgparseArgumentHandler):
+            class Meta:
+                label = 'my_argument_handler'
+                ignore_unknown_arguments = True
+        self.app = self.make_app(APP,
+                                 argument_handler=MyArgumentHandler,
+                                 )
+        with self.app as app:
+            app._meta.argv = ['-l', 'some-other-argument']
+            app.run()
+            res = '-l' in app.args.unknown_args
+            self.ok(res)
+            res = 'some-other-argument' in app.args.unknown_args
+            self.ok(res)
