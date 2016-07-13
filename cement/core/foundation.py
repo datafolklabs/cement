@@ -1086,6 +1086,7 @@ class CementApp(meta.MetaMixin):
         # for any hooks other than the builtin framework hooks that we just
         # defined here (above).  Anything that we couldn't register here
         # will be retried after setup
+        self.__retry_hooks__ = []
         for hook_spec in self._meta.hooks:
             if not self.hook.defined(hook_spec[0]):
                 LOG.debug('hook %s not defined, will retry after setup' %
