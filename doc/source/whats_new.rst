@@ -25,7 +25,7 @@ An example plugin might look like:
             cmd2.mustache
             cmd3.mustache
 
-The only thing required in a plugin is that is supply as ``load()`` function
+The only thing required in a plugin is that it supply a ``load()`` function
 either in a ``myplugin.py`` or ``myplugin/__init__.py``.  The rest is up to 
 the developer.
 
@@ -36,6 +36,33 @@ Related:
     * :issue:`350`
 
 
+Cross Platform Filesystem Event Monitoring via Watchdog
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Applications can now monitor, and react to, filesystem events with a very
+easy wrapper around the
+`Watchdog <https://pypi.python.org/pypi/watchdog>`_ library.  The extension
+makes it possible to add a list of directories to monitor, and link them
+with the class to handle any events while automating the proper setup, and
+teardown of the backend observer.
+
+The Watchdog Extension will make it possible in future releases to
+properly handle reloading a running application any time configuration files
+are modified (partially implemented by the `reload_config` extension that has
+limitations and does not support reloading the app).  Another common use case
+is the ability to reload a long running process any time source files are
+modified which will be useful for development when working on daemon-like apps 
+so that the developer doesn't need to stop/start everytime changes are made.
+
+See the :ref:`Watchdog Extension <cement.ext.ext_watchdog>` for more
+information.
+
+Related:
+
+    * :issue:`326`
+    * :issue:`394`
+
+
 Extensions
 ^^^^^^^^^^
 
@@ -43,6 +70,8 @@ Extensions
       the Jinja2 language.
     * :ref:`Redis <cement.ext.ext_redis>` - Provides caching support using 
       Redis backend.
+    * :ref:`Watchdog <cement.ext.ext_watchdog>` - Provides cross-platform
+      filesystem event monitoring using Watchdog library.
 
 
 

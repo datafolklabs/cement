@@ -69,3 +69,5 @@ Cement Extension Modules
    ext/ext_tabulate
    ext/ext_yaml
    ext/ext_yaml_configobj
+   ext/ext_watchdog
+

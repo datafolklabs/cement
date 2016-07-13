@@ -210,8 +210,8 @@ class ArgparseArgumentHandler(ArgumentParser, CementArgumentHandler):
         ignore_unknown_arguments = False
         """
         Whether or not to ignore any arguments passed that are not defined.
-        Default behavoir by Argparse is to raise an "unknown argument" exception by 
-        Argparse.
+        Default behavoir by Argparse is to raise an "unknown argument"
+        exception by Argparse.
 
         This affectively triggers the difference between using ``parse_args``
         and ``parse_known_args``.  Unknown arguments will be accessible as
