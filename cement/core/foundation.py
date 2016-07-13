@@ -706,6 +706,7 @@ class CementApp(meta.MetaMixin):
         self._extended_members = []
         self.__saved_stdout__ = None
         self.__saved_stderr__ = None
+        self.__retry_hooks__ = []
         self.handler = None
         self.hook = None
 
@@ -826,6 +827,9 @@ class CementApp(meta.MetaMixin):
         self._setup_arg_handler()
         self._setup_output_handler()
         self._setup_controllers()
+
+        for hook_spec in self.__retry_hooks__:
+            self.hook.register(*hook_spec)
 
         for res in self.hook.run('post_setup', self):
             pass
@@ -1077,9 +1081,18 @@ class CementApp(meta.MetaMixin):
         self.hook.register('post_argument_parsing',
                            handler_override, weight=-99)
 
-        # register application hooks from meta
-        for label, func in self._meta.hooks:
-            self.hook.register(label, func)
+        # register application hooks from meta.  the hooks listed in
+        # CementApp.Meta.hooks are registered here, so obviously can not be
+        # for any hooks other than the builtin framework hooks that we just
+        # defined here (above).  Anything that we couldn't register here
+        # will be retried after setup
+        for hook_spec in self._meta.hooks:
+            if not self.hook.defined(hook_spec[0]):
+                LOG.debug('hook %s not defined, will retry after setup' %
+                          hook_spec[0])
+                self.__retry_hooks__.append(hook_spec)
+            else:
+                self.hook.register(*hook_spec)
 
         # define and register handlers
         self.handler.define(extension.IExtension)

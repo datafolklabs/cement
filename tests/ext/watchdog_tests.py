@@ -73,3 +73,22 @@ class WatchdogExtTestCase(test.CementExtTestCase):
         self.app.watchdog.add(os.path.join(self.tmp_dir, 'bogus_sub_dir'))
         self.app.run()
         self.app.close()
+
+    def test_watchdog_hooks(self):
+        # FIX ME: this is only coverage... 
+        def test_hook(app):
+            app.counter += 1
+
+        self.app.setup()
+        self.app.counter = 0
+        self.app.hook.register('watchdog_pre_start', test_hook)
+        self.app.hook.register('watchdog_post_start', test_hook)
+        self.app.hook.register('watchdog_pre_stop', test_hook)
+        self.app.hook.register('watchdog_post_stop', test_hook)
+        self.app.hook.register('watchdog_pre_join', test_hook)
+        self.app.hook.register('watchdog_post_join', test_hook)
+        self.app.run()
+        self.app.close()
+
+        # yup, the function was run 6 times (once for each hook)
+        self.eq(self.app.counter, 6)

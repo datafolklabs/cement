@@ -427,6 +427,21 @@ class FoundationTestCase(test.CementCoreTestCase):
         for res in hook.run('my_custom_hook'):
             pass
 
+    def test_register_hooks_meta_retry(self):
+        # hooks registered this way for non-framework hooks need to be retried
+        # so we make sure it's actually being registered.
+        def my_custom_hook_func():
+            raise HookTestException('OK')
+
+        app = self.make_app(APP, 
+            extensions=['watchdog'],
+            hooks=[
+                ('watchdog_pre_start', my_custom_hook_func)
+            ]
+        )
+        app.setup()
+        self.eq(len(app.hook.__hooks__['watchdog_pre_start']), 1)
+
     def test_define_handlers_meta(self):
         app = self.make_app(APP, define_handlers=[MyTestInterface])
         app.setup()
