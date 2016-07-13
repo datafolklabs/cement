@@ -20,6 +20,7 @@ The following output handlers are included and maintained with Cement:
     * :class:`cement.ext.ext_json.JsonOutputHandler`
     * :class:`cement.ext.ext_yaml.YamlOutputHandler`
     * :class:`cement.ext.ext_genshi.GenshiOutputHandler`
+    * :class:`cement.ext.ext_genshi.HandlebarsOutputHandler`
     * :class:`cement.ext.ext_jinja2.Jinja2OutputHandler`
     * :class:`cement.ext.ext_mustache.MustacheOutputHandler`
     * :class:`cement.ext.ext_tabulate.TabulateOutputHandler`

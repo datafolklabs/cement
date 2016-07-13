@@ -42,6 +42,7 @@ Bugs:
 Features:
 
     * :issue:`350` - Support for plugin directories
+    * :issue:`370` - Handlebars templating support
     * :pr:`371` - Jinja2 templating support
     * :issue:`373` - Switch over to using Flake8 for PEP8 and style compliance
     * :pr:`375` - Redis cache handler support
