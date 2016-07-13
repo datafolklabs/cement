@@ -207,9 +207,22 @@ class ArgparseArgumentHandler(ArgumentParser, CementArgumentHandler):
         label = 'argparse'
         """The string identifier of the handler."""
 
+        ignore_unknown_arguments = False
+        """
+        Whether or not to ignore any arguments passed that are not defined.
+        Default behavoir by Argparse is to raise an "unknown argument" exception by 
+        Argparse.
+
+        This affectively triggers the difference between using ``parse_args``
+        and ``parse_known_args``.  Unknown arguments will be accessible as
+        ``unknown_args``.
+        """
+
     def __init__(self, *args, **kw):
         super(ArgparseArgumentHandler, self).__init__(*args, **kw)
         self.config = None
+        self.unknown_args = None
+        self.parsed_args = None
 
     def parse(self, arg_list):
         """
@@ -221,8 +234,14 @@ class ArgparseArgumentHandler(ArgumentParser, CementArgumentHandler):
         :returns: object whose members are the arguments parsed.
 
         """
-        args = self.parse_args(arg_list)
-        return args
+        if self._meta.ignore_unknown_arguments is True:
+            args, unknown = self.parse_known_args(arg_list)
+            self.parsed_args = args
+            self.unknown_args = unknown
+        else:
+            args = self.parse_args(arg_list)
+            self.parsed_args = args
+        return self.parsed_args
 
     def add_argument(self, *args, **kw):
         """
