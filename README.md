@@ -1,9 +1,6 @@
 Cement Framework
 ================
 
-**NOTE: 2.9.x is the development version of Cement.  Please use stable/2.8.x 
-in production until stable/2.10.x is released.**
-
 Cement is an advanced CLI Application Framework for Python.  Its goal is to
 introduce a standard, and feature-full platform for both simple and complex
 command line applications as well as support rapid development needs without
@@ -48,7 +45,7 @@ along with their application, as Cement explicitly does not include them.*
 More Information
 ----------------
 
- * DOCS: http://builtoncement.com/2.9/
+ * DOCS: http://builtoncement.com/2.10/
  * CODE: http://github.com/datafolklabs/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
  * SITE: http://builtoncement.com/
