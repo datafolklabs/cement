@@ -3,13 +3,13 @@
 What's New
 ==========
 
-New Features in Cement 2.9
---------------------------
+New Features in Cement 2.10
+---------------------------
 
 Support for Multiple File Plugin Directories
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Prior to Cement 2.9, application plugins were only supported as single files
+Prior to Cement 2.10, application plugins were only supported as single files
 such as ``myplugin.py``.  Plugins can now be a single file, or full python 
 modules like ``myplugin/__init__.py``.
 
@@ -116,7 +116,7 @@ If there were anything else in the ``JsonOutputHandler`` that the developer
 needed to subclass, this would be fine.  However the purpose of the above is
 soley to override ``JsonOutputHandler.Meta.json_module``, which is tedious.
 
-As of Cement 2.9, the above can be accomplished more-easily by the following
+As of Cement 2.10, the above can be accomplished more-easily by the following
 by way of ``CementApp.Meta.meta_defaults`` (similar to how ``config_defaults``
 are handled:
 
