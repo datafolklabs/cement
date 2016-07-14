@@ -44,6 +44,7 @@ class CementTestCase(unittest.TestCase):
         super(CementTestCase, self).__init__(*args, **kw)
         self.tmp_file = None
         self.tmp_dir = None
+        self.rando = None
 
     def setUp(self):
         """
@@ -58,6 +59,10 @@ class CementTestCase(unittest.TestCase):
         _prefix = "cement.tests.%s.tmp" % self.__class__.__name__
         _, self.tmp_file = mkstemp(prefix=_prefix)
         self.tmp_dir = mkdtemp(prefix=_prefix)
+
+        # create a random string for each test (useful to verify things
+        # uniquely so every test isn't using the same "My Test String")
+        self.rando = rando()[:12]
 
     def tearDown(self):
         """

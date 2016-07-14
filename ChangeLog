@@ -51,6 +51,8 @@ Features:
     * :issue:`389` - ConfigObj support for Python 3
     * :issue:`394` - Watchdog extension for cross-platform filesystem event 
       monitoring
+    * :issue:`395` - Ability to pass metadata keyword arguments to handlers
+      via ``CementApp.Meta.meta_defaults``.
 
 Refactoring;
 

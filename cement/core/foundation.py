@@ -416,6 +416,32 @@ class CementApp(meta.MetaMixin):
         config_defaults = None
         """Default configuration dictionary.  Must be of type 'dict'."""
 
+        meta_defaults = {}
+        """
+        Default metadata dictionary used to pass high level options from the
+        application down to handlers at the point they are registered by the
+        framework **if the handler has not already been instantiated**.
+
+        For example, if requiring the ``json`` extension, you might want to
+        override ``JsonOutputHandler.Meta.json_module`` with ``ujson`` by
+        doing the following
+
+        .. code-block:: python
+
+            from cement.core.foundation import CementApp
+            from cement.utils.misc import init_defaults
+
+            META = init_defaults('output.json')
+            META['output.json']['json_module'] = 'ujson'
+
+            class MyApp(CementApp):
+                class Meta:
+                    label = 'myapp'
+                    extensions = ['json']
+                    meta_defaults = META
+
+        """
+
         catch_signals = SIGNALS
         """
         List of signals to catch, and raise exc.CaughtSignal for.
@@ -1170,7 +1196,17 @@ class CementApp(meta.MetaMixin):
             self.catch_signal(signum)
 
     def _resolve_handler(self, handler_type, handler_def, raise_error=True):
-        han = self.handler.resolve(handler_type, handler_def, raise_error)
+        meta_defaults = {}
+        if type(handler_def) == str:
+            _meta_label = "%s.%s" % (handler_type, handler_def)
+            meta_defaults = self._meta.meta_defaults.get(_meta_label, {})
+        elif hasattr(handler_def, 'Meta'):
+            _meta_label = "%s.%s" % (handler_type, handler_def.Meta.label)
+            meta_defaults = self._meta.meta_defaults.get(_meta_label, {})
+
+        han = self.handler.resolve(handler_type, handler_def,
+                                   raise_error=raise_error,
+                                   meta_defaults=meta_defaults)
         if han is not None:
             han._setup(self)
             return han

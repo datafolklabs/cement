@@ -256,7 +256,7 @@ class HandlerManager(object):
 
         return False
 
-    def resolve(self, handler_type, handler_def, raise_error=True):
+    def resolve(self, handler_type, handler_def, **kwargs):
         """
         Resolves the actual handler, as it can be either a string identifying
         the handler to load from self.__handlers__, or it can be an
@@ -265,9 +265,12 @@ class HandlerManager(object):
         :param handler_type: The type of handler (aka the interface label)
         :param handler_def: The handler as defined in CementApp.Meta.
         :type handler_def: str, uninstantiated object, or instantiated object
-        :param raise_error: Whether or not to raise an exception if unable
+        :keyword raise_error: Whether or not to raise an exception if unable
             to resolve the handler.
         :type raise_error: boolean
+        :keywork meta_defaults: Optional meta-data dictionary used as
+         defaults to pass when instantiating uninstantiated handlers.  See
+         ``CementApp.Meta.meta_defaults``.
         :returns: The instantiated handler object.
 
         Usage:
@@ -284,15 +287,18 @@ class HandlerManager(object):
             log = app.handler.resolve('log', ColorLogHandler())
 
         """
+        raise_error = kwargs.get('raise_error', True)
+        meta_defaults = kwargs.get('meta_defaults', {})
         han = None
+
         if type(handler_def) == str:
-            han = self.get(handler_type, handler_def)()
+            han = self.get(handler_type, handler_def)(**meta_defaults)
         elif hasattr(handler_def, '_meta'):
             if not self.registered(handler_type, handler_def._meta.label):
                 self.register(handler_def.__class__)
             han = handler_def
         elif hasattr(handler_def, 'Meta'):
-            han = handler_def()
+            han = handler_def(**meta_defaults)
             if not self.registered(handler_type, han._meta.label):
                 self.register(handler_def)
 

@@ -535,3 +535,13 @@ class FoundationTestCase(test.CementCoreTestCase):
 
         app.__import__('time')
         app.__import__('sleep', from_module='time')
+
+    def test_meta_defaults(self):
+        DEBUG_FORMAT = "TEST DEBUG FORMAT - %s" % self.rando
+        META = {}
+        META['log.logging'] = {}
+        META['log.logging']['debug_format'] = DEBUG_FORMAT
+        app = self.make_app(meta_defaults=META)
+        app.setup()
+        self.eq(app.log._meta.debug_format, DEBUG_FORMAT)
+

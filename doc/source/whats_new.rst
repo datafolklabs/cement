@@ -63,15 +63,99 @@ Related:
     * :issue:`394`
 
 
-Extensions
-^^^^^^^^^^
+Ability To Pass Meta Defaults From CementApp.Meta Down To Handlers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-    * :ref:`Jinja2 <cement.ext.ext_jinja2>` - Provides template support using 
-      the Jinja2 language.
+Cement handlers are often referenced by their label, and not passed as
+pre-instantiated objects which requires the framework to instantiate them
+dynamically with no keyword arguments.
+
+For example:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['json']
+
+In the above, Cement will load the ``json`` extension, which
+registers ``JsonOutputHandler``.  When it comes time to recall that handler,
+it is looked up as ``output.json`` where ``output`` is the handler type
+(interface) and ``json`` is the handler label.  The class is then instantiated
+without any arguments or keyword arguments before use.  If a developer needed
+to override any meta options in ``JsonOutputHandler.Meta`` they would
+**previously** have had to sub-class it.  Consider the following example,
+where we sub-class ``JsonOutputHandler`` in order to override
+``JsonOutputHandler.Meta.json_module``:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+    from cement.ext.ext_json import JsonOutputHandler
+
+    class MyJsonOutputHandler(JsonOutputHandler):
+        class Meta:
+            json_module = 'ujson'
+    
+    def override_json_output_handler(app):
+        app.handler.register(MyJsonOutputHandler, force=True)
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['json']
+            hooks = [
+                ('post_setup', override_json_output_handler)
+            ]
+
+
+If there were anything else in the ``JsonOutputHandler`` that the developer
+needed to subclass, this would be fine.  However the purpose of the above is
+soley to override ``JsonOutputHandler.Meta.json_module``, which is tedious.
+
+As of Cement 2.9, the above can be accomplished more-easily by the following
+by way of ``CementApp.Meta.meta_defaults`` (similar to how ``config_defaults``
+are handled:
+
+.. code-block:: python
+
+    from cement.core.foundation import CementApp
+    from cement.utils.misc import init_defaults
+
+    META = init_defaults('output.json')
+    META['output.json']['json_module'] = 'ujson'
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'myapp'
+            extensions = ['json']
+            output_handler = 'json'
+            meta_defaults = META
+
+
+When ``JsonOutputHandler`` is instantiated, the defaults from
+``META['output.json']`` will be passed as ``**kwargs`` (overriding builtin
+meta options).
+
+Related:
+
+    * :issue:`395`
+
+
+Additional Extensions
+^^^^^^^^^^^^^^^^^^^^^
+
+    * :ref:`Jinja2 <cement.ext.ext_jinja2>` - Provides template based output
+      handling using the Jinja2 templating language
     * :ref:`Redis <cement.ext.ext_redis>` - Provides caching support using 
-      Redis backend.
+      Redis backend
     * :ref:`Watchdog <cement.ext.ext_watchdog>` - Provides cross-platform
-      filesystem event monitoring using Watchdog library.
+      filesystem event monitoring using the Watchdog library.
+    * :ref:`Handlebars <cement.ext.ext_handlebars>` - Provides template based 
+      output handling using the Handlebars templating language
 
 
 
