@@ -18,11 +18,11 @@ This extension supports the following application meta-data via
 ``CementApp.Meta``:
 
  * **handlebars_helpers** - A dictionary of helper functions to register
-   with the compiler. Will be merged in with 
+   with the compiler. Will **override**
    ``HandlebarsOutputHandler.Meta.helpers``.
- * **handlebars_partials** - A list of partials (template file names) to 
-   search for, and pre-load before rendering templates.  Will be merged in
-   with ``HandlebarsOutputHandler.Meta.partials``.
+ * **handlebars_partials** - A list of partials (template file names) to
+   search for, and pre-load before rendering templates.  Will **override**
+   ``HandlebarsOutputHandler.Meta.partials``.
 
 
 Template Directories
@@ -115,8 +115,8 @@ Partials
 
 Though partials are supported by the library, there is no good way of
 automatically loading them in the context and workflow of a typical Cement
-application.  Therefore, the extension needs a list of partial 
-template names to know what to preload, in order to make partials work.  
+application.  Therefore, the extension needs a list of partial
+template names to know what to preload, in order to make partials work.
 Future versions will hopefully automate this.
 
 Example:
@@ -149,19 +149,20 @@ more information on partials.
 """
 
 import sys
+import pybars._compiler
+from cement.core import output, handler
+from cement.utils.misc import minimal_logger
 
 # Monkey patch so we don't escape HTML (not clear how else to do this)
 # See: https://github.com/wbond/pybars3/issues/25
-import pybars._compiler
-
 original_prepare = pybars._compiler.prepare
+
+
 def my_prepare(value, escape):
     return original_prepare(value, False)
 pybars._compiler.prepare = my_prepare
 
-from pybars import Compiler
-from cement.core import output, exc, handler
-from cement.utils.misc import minimal_logger
+from pybars import Compiler  # noqa
 
 
 LOG = minimal_logger(__name__)
@@ -207,27 +208,28 @@ class HandlebarsOutputHandler(output.TemplateOutputHandler):
         super(HandlebarsOutputHandler, self)._setup(app)
         if hasattr(self.app._meta, 'handlebars_helpers'):
             self._meta.helpers = self.app._meta.handlebars_helpers
-            #self._meta.helpers.update(self.app._meta.handlebars_helpers)
         if hasattr(self.app._meta, 'handlebars_partials'):
-            #self._meta.partials = self._meta.partials + \
             self._meta.partials = self.app._meta.handlebars_partials
         for partial in self._meta.partials:
             self._raw_partials[partial] = self.load_template(partial)
 
-    def render_content(self, data, content):
-        bars = Compiler()
+    def _clean_content(self, content):
         if sys.version_info[0] >= 3:
             if not isinstance(content, str):
                 content = content.decode('utf-8')
         else:
             if not isinstance(content, unicode):     # pragma: nocover  # noqa
                 content = content.decode('utf-8')    # pragma: nocover
-        content = bars.compile(content)
+        return content
+
+    def render_content(self, data, content):
+        bars = Compiler()
+        content = bars.compile(self._clean_content(content))
 
         # need to render partials
         partials = {}
-        for key,val in self._raw_partials.items():
-            partials[key] = bars.compile(val)
+        for key, val in self._raw_partials.items():
+            partials[key] = bars.compile(self._clean_content(val))
 
         return content(data, helpers=self._meta.helpers, partials=partials)
 

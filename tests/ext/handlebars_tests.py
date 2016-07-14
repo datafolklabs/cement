@@ -2,28 +2,22 @@
 
 import sys
 import random
-
 from cement.core import exc, foundation, handler, backend, controller
 from cement.utils import test
+from nose.plugins.attrib import attr
 
 class HandlebarsTestApp(test.TestApp):
     class Meta:
         extensions = ['handlebars']
         output_handler = 'handlebars'
+        template_module = 'tests.templates'
+        template_dirs = []
         handlebars_helpers = {}
-        #handlebars_partials = ['test_partial_template.handlebars']
+        handlebars_partials = ['test_partial_template.handlebars']
         
+@attr('ext_handlebars')        
 class HandlebarsExtTestCase(test.CementExtTestCase):
     app_class = HandlebarsTestApp
-
-    # def setUp(self):
-    #     super(HandlebarsExtTestCase, self).setUp()
-    #     self.reset_backend()
-    #     self.app = self.make_app('tests',
-    #         extensions=['handlebars'],
-    #         output_handler='handlebars',
-    #         argv=[]
-    #     )
 
     def test_handlebars(self):
         self.app.setup()
