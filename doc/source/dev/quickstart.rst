@@ -36,7 +36,7 @@ Running the application looks like:
     Hello World
 
 
-Oh, I can just here you saying, "Whoa whoa... hang on a minute.  This is a joke
+Oh, I can just hear you saying, "Whoa whoa... hang on a minute.  This is a joke
 right, all you did was print 'Hello World' to STDOUT.  What kind of framework
 is this?".  Well obviously this is just an introduction to show that the
 creation of an application is dead simple.  Lets take a look further:
