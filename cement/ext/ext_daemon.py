@@ -200,7 +200,7 @@ class Environment(object):
         self.dir = kw.get('dir', os.curdir)
         self.pid_file = kw.get('pid_file', None)
         self.umask = kw.get('umask', 0)
-        self.user = kw.get('user', os.getlogin())
+        self.user = kw.get('user', pwd.getpwuid(os.getuid()).pw_name)
 
         # clean up
         self.dir = os.path.abspath(os.path.expanduser(self.dir))
@@ -374,7 +374,7 @@ def extend_app(app):
                           action='store_true', help='daemonize the process')
 
     # Add default config
-    user = pwd.getpwnam(os.getlogin())
+    user = pwd.getpwuid(os.getuid())
     group = grp.getgrgid(user.pw_gid)
 
     defaults = dict()
