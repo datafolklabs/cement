@@ -64,7 +64,7 @@ Multiple Stacked Controllers
             stacked_type = 'nested'
             description = "this controller is nested on the second-controller"
             arguments = [
-                (['--4th-opt'], dict(help="an option only under 3rd controller")),
+                (['--4th-opt'], dict(help="an option only under 4th controller")),
                 ]
 
         @expose(help="a command only under the fourth-controller namespace")
