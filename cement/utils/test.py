@@ -42,6 +42,7 @@ class CementTestCase(unittest.TestCase):
 
     def __init__(self, *args, **kw):
         super(CementTestCase, self).__init__(*args, **kw)
+        self.tmp_file_handle = None
         self.tmp_file = None
         self.tmp_dir = None
         self.rando = None
@@ -57,7 +58,7 @@ class CementTestCase(unittest.TestCase):
 
         # recreate temp file and dir for each test
         _prefix = "cement.tests.%s.tmp" % self.__class__.__name__
-        _, self.tmp_file = mkstemp(prefix=_prefix)
+        self.tmp_file_handle, self.tmp_file = mkstemp(prefix=_prefix)
         self.tmp_dir = mkdtemp(prefix=_prefix)
 
         # create a random string for each test (useful to verify things
@@ -70,6 +71,7 @@ class CementTestCase(unittest.TestCase):
         files/directories, etc.
         """
         if os.path.exists(self.tmp_file):
+            os.close(self.tmp_file_handle)
             os.remove(self.tmp_file)
         if os.path.exists(self.tmp_dir):
             shutil.rmtree(self.tmp_dir)
