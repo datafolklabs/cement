@@ -6,6 +6,7 @@ Projects Built on Cement™
 The following is an incomplete lists of notable projects that are 
 Built on Cement™:
 
+ * `Elex <http://elex.readthedocs.io/en/stable/>`_ (`GitHub <https://github.com/newsdev/elex>`_)
  * `Amazon Elastic Beanstalk CLI <http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html>`_ (`PYPI <https://pypi.python.org/pypi/awsebcli>`_)
  * `Easy Engine <https://easyengine.io/>`_ (`GitHub <https://github.com/EasyEngine/easyengine>`_)
  * `SentientHome <https://github.com/fxstein/SentientHome>`_
