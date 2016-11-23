@@ -27,7 +27,9 @@ development will happen as 2.11.x under the git master branch.
 
 Bugs:
 
-    * None
+    * :issue:`397` - Removes deprecated `warn` from ILog validator, in-favor 
+      of `warning`
+    * :issue:`401` - Can't get user in daemon extension
 
 Features:
 
