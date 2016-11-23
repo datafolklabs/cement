@@ -178,7 +178,6 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
     def _load_plugin_via_importlib(self, plugin_name, plugin_dir):
         # Python > 3.4
-        spec = importlib.util.spec_from_file_location(plugin_name, plugin_dir)
 
         paths = [
             os.path.join(plugin_dir, '%s.py' % plugin_name),
