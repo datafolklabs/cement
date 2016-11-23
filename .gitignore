@@ -47,6 +47,8 @@ develop-eggs
 # Installer logs
 pip-log.txt
 
+# Documentation
+doc/build
 # Unit test / coverage reports
 .coverage
 htmlcov
