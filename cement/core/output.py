@@ -164,12 +164,14 @@ class TemplateOutputHandler(CementOutputHandler):
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
         ``template_dirs`` have presedence.
+
         :param template_path: The secondary path of the template **after**
             either ``template_module`` or ``template_dirs`` prefix (set via
             ``CementApp.Meta``)
         :returns: The content of the template (str)
         :raises: FrameworkError if the template does not exist in either the
             ``template_module`` or ``template_dirs``.
+
         """
         res = self.load_template_with_location(template_path)
         content, template_type, path = res
