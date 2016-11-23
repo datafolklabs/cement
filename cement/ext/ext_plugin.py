@@ -24,10 +24,18 @@ For usage information see :ref:`application_plugins`.
 import os
 import sys
 import glob
-import imp
 from ..core import plugin, exc
 from ..utils.misc import is_true, minimal_logger
 from ..utils.fs import abspath
+
+# The `imp` module is deprecated in favor of `importlib` in 3.4, but it
+# wasn't introduced until 3.1.
+pyver = sys.version_info
+if (pyver[0] < 3) or (pyver[0] == 3 and pyver[1] <= 4):
+    import imp                                     # pragma: nocover  # noqa
+else:
+    import importlib                               # pragma: nocover  # noqa
+    import importlib.util                          # pragma: nocover  # noqa
 
 LOG = minimal_logger(__name__)
 
@@ -62,6 +70,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
     def _setup(self, app_obj):
         super(CementPluginHandler, self)._setup(app_obj)
+        
         self._enabled_plugins = []
         self._disabled_plugins = []
         self._plugin_configs = {}
@@ -151,6 +160,42 @@ class CementPluginHandler(plugin.CementPluginHandler):
                 if plugin in self._enabled_plugins:
                     self._enabled_plugins.remove(plugin)
 
+    def _load_plugin_via_imp(self, plugin_name, plugin_dir):
+        # necessary for Python < 3.4
+        try:
+            f, path, desc = imp.find_module(plugin_name, [plugin_dir])
+        except ImportError:
+            LOG.debug("plugin '%s' does not exist in '%s'." %
+                      (plugin_name, plugin_dir))
+            return False
+
+        # We don't catch this because it would make debugging a
+        # nightmare
+        mod = imp.load_module(plugin_name, f, path, desc)
+        if mod and hasattr(mod, 'load'):
+            mod.load(self.app)
+        return True
+
+    def _load_plugin_via_importlib(self, plugin_name, plugin_dir):
+        # Python > 3.4
+        spec = importlib.util.spec_from_file_location(plugin_name, plugin_dir)
+
+        paths = [
+            os.path.join(plugin_dir, '%s.py' % plugin_name),
+            os.path.join(plugin_dir, plugin_name, '__init__.py'),
+        ]
+
+        for path in paths:
+            if not os.path.exists(path):
+                continue
+            spec = importlib.util.spec_from_file_location(plugin_name, path)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            mod.load(self.app)
+            return True
+
+        return False
+
     def _load_plugin_from_dir(self, plugin_name, plugin_dir):
         """
         Load a plugin from a directory path rather than a python package
@@ -175,19 +220,12 @@ class CementPluginHandler(plugin.CementPluginHandler):
             LOG.debug("plugin directory '%s' does not exist." % plugin_dir)
             return False
 
-        try:
-            f, path, desc = imp.find_module(plugin_name, [plugin_dir])
-        except ImportError:
-            LOG.debug("plugin '%s' does not exist in '%s'." %
-                      (plugin_name, plugin_dir))
-            return False
-
-        # We don't catch this because it would make debugging a
-        # nightmare
-        mod = imp.load_module(plugin_name, f, path, desc)
-        if mod and hasattr(mod, 'load'):
-            mod.load(self.app)
-        return True
+        if (pyver[0] < 3) or (pyver[0] == 3 and pyver[1] <= 4):
+            import_func = self._load_plugin_via_imp
+        else:
+            import_func = self._load_plugin_via_importlib
+            
+        return import_func(plugin_name, plugin_dir)
 
     def _load_plugin_from_bootstrap(self, plugin_name, base_package):
         """
