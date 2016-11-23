@@ -39,12 +39,15 @@ exactly the same as the above example:
         app.run()
 
 
-Also note that you can optionally set an exit code to alter that status in
-which your application exits:
+Exit Status and Error Codes
+---------------------------
+
+You can optionally set the status code that your application exists with via
+the meta options :class:`cement.foundation.CementApp.Meta.exit_on_close`.
 
 .. code-block:: python
 
-    app = CementApp('helloworld')
+    app = CementApp('helloworld', exit_on_close=True)
     app.setup()
     app.run()
     app.close(27)
@@ -54,13 +57,38 @@ Or Alternatively:
 
 .. code-block:: python
 
-    with CementApp('helloworld') as app:
+    class MyApp(CementApp):
+        class Meta:
+            label = 'helloworld'
+            exit_on_close = True
+
+    with MyApp() as app:
         app.run()
         app.exit_code = 123
 
 
-The default exit code is ``0``, however any uncaught exceptions will cause the
-application to exit with a code of ``1`` (error).
+Note the use of the ``exit_on_close`` meta option.  Cement **will not** call 
+``sys.exit()`` unless ``CementApp.Meta.exit_on_close == True``.  You will find
+that calling ``sys.exit()`` in testing is very problematic, therefore you will 
+likely want to enable ``exit_on_close`` in production, but not for testing as 
+in this example:
+
+.. code-block:: python
+
+    class MyApp(CementApp):
+        class Meta:
+            label = 'helloworld'
+            exit_on_close = True
+
+    class MyAppForTesting(MyApp):
+        class Meta:
+            exit_on_close = False
+
+    # ...
+
+
+Also note that the default exit code is ``0``, however any uncaught 
+exceptions will cause the application to exit with a code of ``1`` (error).
 
 
 Running Cleanup Code
