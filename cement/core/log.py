@@ -14,7 +14,6 @@ def log_validator(klass, obj):
         'set_level',
         'get_level',
         'info',
-        'warn',  # DEPRECATED
         'warning',
         'error',
         'fatal',
