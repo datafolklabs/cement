@@ -21,7 +21,7 @@ _____
 
 **myapp.conf**
 
-.. code-block:: Yaml
+.. code-block:: yaml
 
     ---
     myapp:
@@ -36,11 +36,11 @@ _____
     class MyApp(CementApp):
         class Meta:
             label = 'myapp'
-            extensions = ['Yaml']
-            config_handler = 'Yaml'
+            extensions = ['yaml']
+            config_handler = 'yaml'
 
             # you probably don't want to do this.. but you can
-            # output_handler = 'Yaml'
+            # output_handler = 'yaml'
 
     with MyApp() as app:
         app.run()
@@ -51,18 +51,18 @@ _____
         app.render(data)
 
 
-In general, you likely would not set ``output_handler`` to ``Yaml``, but
+In general, you likely would not set ``output_handler`` to ``yaml``, but
 rather another type of output handler that displays readable output to the
 end-user (i.e. Mustache, Genshi, or Tabulate).  By default Cement
 adds the ``-o`` command line option to allow the end user to override the
-output handler.  For example: passing ``-o Yaml`` will override the default
+output handler.  For example: passing ``-o yaml`` will override the default
 output handler and set it to ``YamlOutputHandler``.
 
 See ``CementApp.Meta.handler_override_options``.
 
 .. code-block:: console
 
-    $ python myapp.py -o Yaml
+    $ python myapp.py -o yaml
     {foo: bar}
 
 """
@@ -142,7 +142,7 @@ class YamlOutputHandler(output.CementOutputHandler):
         interface = output.IOutput
         label = 'yaml'
 
-        #: Whether or not to include ``Yaml`` as an available to choice
+        #: Whether or not to include ``yaml`` as an available to choice
         #: to override the ``output_handler`` via command line options.
         overridable = True
 
