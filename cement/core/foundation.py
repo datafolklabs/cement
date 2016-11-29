@@ -928,13 +928,16 @@ class CementApp(meta.MetaMixin):
         :returns: ``None``
         """
         LOG.debug('reloading the %s application' % self._meta.label)
+        self._unlay_cement()
+        self._lay_cement()
+        self.setup()
+
+    def _unlay_cement(self):
         for member in self._extended_members:
             delattr(self, member)
         self._extended_members = []
         self.handler.__handlers__ = {}
         self.hook.__hooks__ = {}
-        self._lay_cement()
-        self.setup()
 
     def close(self, code=None):
         """
@@ -952,8 +955,12 @@ class CementApp(meta.MetaMixin):
 
         LOG.debug("closing the %s application" % self._meta.label)
 
+        # in theory, this should happen last-last... but at that point `self`
+        # would be kind of busted after _unlay_cement() is run.
         for res in self.hook.run('post_close', self):
             pass
+
+        self._unlay_cement()
 
         if code is not None:
             assert type(code) == int, \
