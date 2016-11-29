@@ -955,6 +955,9 @@ class CementApp(meta.MetaMixin):
         for res in self.hook.run('post_close', self):
             pass
 
+        for member in self._extended_members:
+            delattr(self, member)
+
         if code is not None:
             assert type(code) == int, \
                 "Invalid exit status code (must be integer)"
