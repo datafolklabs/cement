@@ -30,6 +30,7 @@ Bugs:
     * :issue:`397` - Removes deprecated `warn` from ILog validator, in-favor 
       of `warning`
     * :issue:`401` - Can't get user in daemon extension
+    * :issue:`415` - FrameworkError when reusing CementApp object
 
 Features:
 
