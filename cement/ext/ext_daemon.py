@@ -155,6 +155,23 @@ simply pass the ``--daemon`` option at command line.
     37421 ??         0:00.01 python example2.py --daemon
     37452 ttys000    0:00.00 grep example
 
+Daemizing Without Commandline Option
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Some use cases might require daemonizing the process without having to always
+pass the ``--daemon`` option, or where passing the option might be redundant.
+You can work around that programatically by simply overriding the ``daemon``
+argument value in orcer to force daemonization even if ``--daemon`` wasn't
+passed.
+
+.. code-block:: python
+
+    app.pargs.daemon = True
+    app.daemonize()
+
+Note that this would only work **after** arguments have been parsed (i.e. 
+after ``app.run()`` is called).
+
 """
 
 import os
@@ -357,7 +374,10 @@ def daemonize():  # pragma: no cover
 
     CEMENT_DAEMON_ENV.switch()
 
-    if '--daemon' in app.argv:
+    # ugly, but backward compat since this was the way it was built and some
+    # things might rely on calling app.daemonize() before app.run() is called
+    if '--daemon' in app.argv or \
+        hasattr(app, 'pargs') and app.pargs.daemon is True:
         CEMENT_DAEMON_ENV.daemonize()
 
 
