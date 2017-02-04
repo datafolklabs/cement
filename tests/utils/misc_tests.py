@@ -55,15 +55,15 @@ class BackendTestCase(test.CementCoreTestCase):
         if sys.version_info[0] >= 3:
             raise test.SkipTest
 
-        text = unicode('aaaaa bbbbb ccccc')
+        text = unicode('aaaaa bbbbb ccccc')  # noqa: F821
         new_text = misc.wrap(text, width=5)
         parts = new_text.split('\n')
         self.eq(len(parts), 3)
-        self.eq(parts[1], unicode('bbbbb'))
+        self.eq(parts[1], unicode('bbbbb'))  # noqa: F821
 
         new_text = misc.wrap(text, width=5, indent='***')
         parts = new_text.split('\n')
-        self.eq(parts[2], unicode('***ccccc'))
+        self.eq(parts[2], unicode('***ccccc'))  # noqa: F821
 
     @test.raises(TypeError)
     def test_wrap_int(self):

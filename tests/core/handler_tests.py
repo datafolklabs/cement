@@ -152,7 +152,7 @@ class HandlerTestCase(test.CementCoreTestCase):
     def test_handler_defined(self):
         for handler_type in ['config', 'log', 'argument', 'plugin',
                              'extension', 'output', 'controller']:
-            yield is_defined, handler_type
+            self.eq(self.app.handler.defined(handler_type), True)
 
         # and check for bogus one too
         self.eq(self.app.handler.defined('bogus'), False)
@@ -167,9 +167,6 @@ class HandlerTestCase(test.CementCoreTestCase):
     def test_handler_list_bogus_type(self):
         self.app.setup()
         self.app.handler.list('bogus')
-
-    def is_defined(handler_type):
-        self.eq(self.app.handler.defined(handler_type), True)
 
     @test.raises(exc.InterfaceError)
     def test_bogus_interface_no_IMeta(self):
@@ -187,9 +184,6 @@ class HandlerTestCase(test.CementCoreTestCase):
     def test_interface_with_no_validator(self):
         self.app.handler.define(TestInterface)
         self.app.handler.register(TestHandler)
-
-    def test_handler_defined(self):
-        self.app.handler.defined('output')
 
     def test_handler_not_defined(self):
         self.eq(self.app.handler.defined('bogus'), False)
@@ -272,7 +266,7 @@ class DeprecatedHandlerTestCase(test.CementCoreTestCase):
     def test_handler_defined(self):
         for handler_type in ['config', 'log', 'argument', 'plugin',
                              'extension', 'output', 'controller']:
-            yield is_defined, handler_type
+            self.eq(handler.defined(handler_type), True)
 
         # and check for bogus one too
         self.eq(handler.defined('bogus'), False)
@@ -301,9 +295,6 @@ class DeprecatedHandlerTestCase(test.CementCoreTestCase):
                 interface = BadInterface
         handler.register(BadHandler)
 
-    def is_defined(handler_type):
-        self.eq(handler.defined(handler_type), True)
-
     @test.raises(exc.InterfaceError)
     def test_bogus_interface_no_IMeta(self):
         handler.define(BogusInterface1)
@@ -320,9 +311,6 @@ class DeprecatedHandlerTestCase(test.CementCoreTestCase):
     def test_interface_with_no_validator(self):
         handler.define(TestInterface)
         handler.register(TestHandler)
-
-    def test_handler_defined(self):
-        handler.defined('output')
 
     def test_handler_not_defined(self):
         self.eq(handler.defined('bogus'), False)

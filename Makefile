@@ -1,4 +1,4 @@
-.PHONY: all init doc test clean
+.PHONY: all init doc test comply clean
 
 all: init test doc clean
 
@@ -7,6 +7,9 @@ init:
 
 test:
 	python setup.py nosetests
+
+comply:
+	flake8 cement/ tests/
 
 doc:
 	python setup.py build_sphinx

@@ -27,8 +27,8 @@ development will happen as 2.11.x under the git master branch.
 
 Bugs:
 
-    * :issue:`397` - ``[ext.logging]`` Removes deprecated `warn` from ILog 
-      validator, in-favor of `warning`
+    * :issue:`397` - ``[ext.logging]`` Removes deprecated ``warn`` from ILog 
+      validator, in-favor of ``warning``
     * :issue:`401` - ``[ext.daemon]`` Can't get user in daemon extension
     * :issue:`415` - ``[core]`` FrameworkError when reusing CementApp object
 
@@ -38,6 +38,7 @@ Features:
 
 Refactoring:
 
+    * :issue:`378` - ``[tests]`` Refactor dto comply with Flake8
     * :issue:`418` - ``[ext.daemon]`` Ability to daemonize without 
       ``--daemon``
 

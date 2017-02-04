@@ -78,7 +78,7 @@ class CementDevtoolsController(ArgparseController):
 
     def _do_flake8(self):
         print("Checking Flake8 Compliance (pep8, pycodestyle, mccabe, etc)")
-        cmd_args = ['flake8', 'cement/ tests/']
+        cmd_args = ['flake8', 'cement/', 'tests/']
         out, err, res = shell.exec_cmd(cmd_args)
         if res > 0:
             self._do_error("\n\nFlake8 checks did not pass.\n\n" +
