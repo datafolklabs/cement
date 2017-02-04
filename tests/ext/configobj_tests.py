@@ -1,8 +1,5 @@
 """Tests for cement.ext.ext_configobj."""
 
-import os
-import sys
-from cement.core import handler, backend, log
 from cement.utils import test
 from cement.utils.misc import rando
 

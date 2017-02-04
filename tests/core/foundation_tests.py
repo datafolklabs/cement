@@ -4,16 +4,13 @@ import os
 import sys
 import json
 import signal
-from time import sleep
-from cement.core import foundation, exc, backend, config, extension, plugin
+from cement.core import foundation, exc, extension
 from cement.core.handler import CementBaseHandler
 from cement.core.controller import CementBaseController, expose
-from cement.core import log, output, hook, arg, controller
+from cement.core import output, hook, controller
 from cement.core.interface import Interface
 from cement.utils import test
-from cement.core.exc import CaughtSignal
 from cement.utils.misc import init_defaults, rando, minimal_logger
-from nose.plugins.attrib import attr
 
 APP = rando()[:12]
 
@@ -153,16 +150,17 @@ class FoundationTestCase(test.CementCoreTestCase):
         # forces CementApp._resolve_handler to register the handler
         from cement.ext import ext_json
 
-        app = self.make_app('my-app-test',
-            config_handler=ext_configparser.ConfigParserConfigHandler,
-            log_handler=ext_logging.LoggingLogHandler(),
-            arg_handler=ext_argparse.ArgParseArgumentHandler(),
-            extension_handler=extension.CementExtensionHandler(),
-            plugin_handler=ext_plugin.CementPluginHandler(),
-            output_handler=ext_json.JsonOutputHandler(),
-            mail_handler=ext_dummy.DummyMailHandler(),
-            argv=[__file__, '--debug']
-            )
+        app = self.make_app(
+                'my-app-test',
+                config_handler=ext_configparser.ConfigParserConfigHandler,
+                log_handler=ext_logging.LoggingLogHandler(),
+                arg_handler=ext_argparse.ArgParseArgumentHandler(),
+                extension_handler=extension.CementExtensionHandler(),
+                plugin_handler=ext_plugin.CementPluginHandler(),
+                output_handler=ext_json.JsonOutputHandler(),
+                mail_handler=ext_dummy.DummyMailHandler(),
+                argv=[__file__, '--debug']
+                )
 
         app.setup()
 
@@ -226,7 +224,7 @@ class FoundationTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_bad_label(self):
         try:
-            app = foundation.CementApp(None)
+            foundation.CementApp(None)
         except exc.FrameworkError as e:
             # FIX ME: verify error msg
             raise
@@ -234,7 +232,7 @@ class FoundationTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_bad_label_chars(self):
         try:
-            app = foundation.CementApp('some!bogus()label')
+            foundation.CementApp('some!bogus()label')
         except exc.FrameworkError as e:
             self.ok(e.msg.find('alpha-numeric'))
             raise
@@ -254,7 +252,7 @@ class FoundationTestCase(test.CementCoreTestCase):
         app._setup_output_handler()
 
     def test_lay_cement(self):
-        app = self.make_app('test', argv=['--quiet'])
+        self.make_app('test', argv=['--quiet'])
 
     def test_none_member(self):
         class Test(object):
@@ -433,12 +431,12 @@ class FoundationTestCase(test.CementCoreTestCase):
         def my_custom_hook_func():
             raise HookTestException('OK')
 
-        app = self.make_app(APP, 
-            extensions=['watchdog'],
-            hooks=[
-                ('watchdog_pre_start', my_custom_hook_func)
-            ]
-        )
+        app = self.make_app(APP,
+                            extensions=['watchdog'],
+                            hooks=[
+                                ('watchdog_pre_start', my_custom_hook_func)
+                            ]
+                            )
         app.setup()
         self.eq(len(app.hook.__hooks__['watchdog_pre_start']), 1)
 
@@ -453,18 +451,18 @@ class FoundationTestCase(test.CementCoreTestCase):
                             handlers=[MyTestHandler],
                             )
         app.setup()
-        self.ok(app.handler.registered('my_test_interface', 
+        self.ok(app.handler.registered('my_test_interface',
                                        'my_test_handler'))
 
     def test_disable_backend_globals(self):
-        app = self.make_app(APP, 
-            use_backend_globals=False,
-            define_handlers=[MyTestInterface],
-            handlers=[MyTestHandler],
-            define_hooks=['my_hook'],
-            )
+        app = self.make_app(APP,
+                            use_backend_globals=False,
+                            define_handlers=[MyTestInterface],
+                            handlers=[MyTestHandler],
+                            define_hooks=['my_hook'],
+                            )
         app.setup()
-        self.ok(app.handler.registered('my_test_interface', 
+        self.ok(app.handler.registered('my_test_interface',
                                        'my_test_handler'))
         self.ok(app.hook.defined('my_hook'))
 
@@ -508,11 +506,11 @@ class FoundationTestCase(test.CementCoreTestCase):
             self.eq(e.args[0], 'It ran forever!')
             raise
         finally:
-            signal.alarm(0) 
+            signal.alarm(0)
 
     def test_add_template_directory(self):
         self.app.setup()
-        
+
         self.app.add_template_dir(self.tmp_dir)
         res = self.tmp_dir in self.app._meta.template_dirs
         self.ok(res)
@@ -544,4 +542,3 @@ class FoundationTestCase(test.CementCoreTestCase):
         app = self.make_app(meta_defaults=META)
         app.setup()
         self.eq(app.log._meta.debug_format, DEBUG_FORMAT)
-

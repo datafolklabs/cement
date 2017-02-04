@@ -324,7 +324,7 @@ class ControllerTestCase(test.CementCoreTestCase):
                                      ],
                                      )
             with self.app as app:
-                res = app.run()
+                app.run()
         except exc.InterfaceError as e:
             self.ok(re.match("(.*)is not stacked anywhere!(.*)", e.msg))
             raise
@@ -340,7 +340,7 @@ class ControllerTestCase(test.CementCoreTestCase):
                                      ],
                                      )
             with self.app as app:
-                res = app.run()
+                app.run()
         except exc.InterfaceError as e:
             self.ok(re.match("(.*)has an unknown stacked type(.*)", e.msg))
             raise
@@ -368,6 +368,6 @@ class ControllerTestCase(test.CementCoreTestCase):
                                  )
         with self.app as app:
             app.run()
-            help = app.controller._help_text
+            app.controller._help_text
             # self.ok(usage.startswith('%s (sub-commands ...)' % \
             #         self.app._meta.label))

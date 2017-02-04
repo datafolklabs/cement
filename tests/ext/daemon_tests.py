@@ -5,10 +5,8 @@
 # sub-process is forked.
 
 import os
-#import tempfile
 from random import random
-from cement.core import handler, backend, log, hook, exc
-from cement.utils import shell
+from cement.core import exc
 from cement.utils import test
 from cement.utils.misc import rando
 from cement.ext import ext_daemon

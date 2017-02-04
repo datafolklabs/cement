@@ -1,9 +1,8 @@
 """Tests for cement.ext.ext_mustache."""
 
-import sys
 import random
 
-from cement.core import exc, foundation, handler, backend, controller
+from cement.core import exc
 from cement.utils import test
 
 
@@ -34,18 +33,18 @@ class MustacheExtTestCase(test.CementExtTestCase):
     @test.raises(exc.FrameworkError)
     def test_mustache_bad_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'bad_template2.mustache')
+        self.app.render(dict(foo='bar'), 'bad_template2.mustache')
 
     @test.raises(exc.FrameworkError)
     def test_mustache_nonexistent_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'missing_template.mustache')
+        self.app.render(dict(foo='bar'), 'missing_template.mustache')
 
     @test.raises(exc.FrameworkError)
     def test_mustache_none_template(self):
         self.app.setup()
         try:
-            res = self.app.render(dict(foo='bar'), None)
+            self.app.render(dict(foo='bar'), None)
         except exc.FrameworkError as e:
             self.eq(e.msg, "Invalid template path 'None'.")
             raise
@@ -54,4 +53,4 @@ class MustacheExtTestCase(test.CementExtTestCase):
     def test_mustache_bad_module(self):
         self.app.setup()
         self.app._meta.template_module = 'this_is_a_bogus_module'
-        res = self.app.render(dict(foo='bar'), 'bad_template.mustache')
+        self.app.render(dict(foo='bar'), 'bad_template.mustache')

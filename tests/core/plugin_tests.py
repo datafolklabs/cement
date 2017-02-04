@@ -3,7 +3,7 @@
 import os
 import sys
 import shutil
-from cement.core import exc, backend, plugin
+from cement.core import exc
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando
 

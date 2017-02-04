@@ -169,7 +169,7 @@ passed.
     app.pargs.daemon = True
     app.daemonize()
 
-Note that this would only work **after** arguments have been parsed (i.e. 
+Note that this would only work **after** arguments have been parsed (i.e.
 after ``app.run()`` is called).
 
 """
@@ -377,7 +377,7 @@ def daemonize():  # pragma: no cover
     # ugly, but backward compat since this was the way it was built and some
     # things might rely on calling app.daemonize() before app.run() is called
     if '--daemon' in app.argv or \
-        hasattr(app, 'pargs') and app.pargs.daemon is True:
+       hasattr(app, 'pargs') and app.pargs.daemon is True:
         CEMENT_DAEMON_ENV.daemonize()
 
 

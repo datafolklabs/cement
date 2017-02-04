@@ -9,6 +9,7 @@ from cement.ext.ext_watchdog import WatchdogEventHandler
 class MyEventHandler(WatchdogEventHandler):
     pass
 
+
 class WatchdogExtTestCase(test.CementExtTestCase):
 
     def setUp(self):
@@ -47,7 +48,7 @@ class WatchdogExtTestCase(test.CementExtTestCase):
         f = open(os.path.join(self.tmp_dir, 'test.file'), 'w')
         f.write('test data')
         f.close()
-        
+
         self.app.close()
 
     @test.raises(FrameworkError)
@@ -75,7 +76,7 @@ class WatchdogExtTestCase(test.CementExtTestCase):
         self.app.close()
 
     def test_watchdog_hooks(self):
-        # FIX ME: this is only coverage... 
+        # FIX ME: this is only coverage...
         def test_hook(app):
             app.counter += 1
 

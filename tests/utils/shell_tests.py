@@ -127,10 +127,10 @@ class ShellUtilsTestCase(test.CementCoreTestCase):
         # test that self.input is none if no default, and no input
         with mock.patch(INPUT, return_value=''):
             try:
-                p = shell.Prompt('Test Prompt',
-                                 max_attempts=3,
-                                 max_attempts_exception=True,
-                                 )
+                shell.Prompt('Test Prompt',
+                             max_attempts=3,
+                             max_attempts_exception=True,
+                             )
             except FrameworkError as e:
                 self.eq(e.msg,
                         "Maximum attempts exceeded getting valid user input",

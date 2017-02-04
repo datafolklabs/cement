@@ -1,9 +1,5 @@
 """Tests for cement.ext.ext_yaml_configobj."""
 
-import os
-import sys
-import yaml
-from cement.core import handler, hook
 from cement.utils import test
 
 

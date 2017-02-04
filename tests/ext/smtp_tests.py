@@ -2,7 +2,6 @@
 
 import mock
 import sys
-import smtplib
 from cement.utils import test
 from cement.utils.misc import rando, init_defaults
 
@@ -98,9 +97,8 @@ class SMTPMailHandlerTestCase(test.CementTestCase):
 
             instance = mock_smtp.return_value
             self.eq(instance.login.call_count, 1)
-            
+
             if int(sys.version[0]) >= 3:
                 self.eq(instance.send_message.call_count, 1)
             else:
                 self.eq(instance.sendmail.call_count, 1)
-

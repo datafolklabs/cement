@@ -2,11 +2,10 @@
 """Tests for cement.ext.ext_jinja2."""
 
 import os
-import sys
 import random
-from shutil import copyfile, rmtree
+from shutil import copyfile
 
-from cement.core import exc, foundation, handler, backend, controller
+from cement.core import exc
 from cement.utils import test
 
 
@@ -43,12 +42,12 @@ class Jinja2ExtTestCase(test.CementExtTestCase):
 
         tests_dir = os.path.dirname(os.path.dirname(__file__))
 
-        from_file = os.path.join(tests_dir, 'templates', 
+        from_file = os.path.join(tests_dir, 'templates',
                                  'test_template_parent.jinja2')
         to_file = os.path.join(self.tmp_dir, 'test_template_parent.jinja2')
         copyfile(from_file, to_file)
 
-        from_file = os.path.join(tests_dir, 'templates', 
+        from_file = os.path.join(tests_dir, 'templates',
                                  'test_template_child.jinja2')
         to_file = os.path.join(self.tmp_dir, 'test_template_child.jinja2')
         copyfile(from_file, to_file)
@@ -70,18 +69,18 @@ class Jinja2ExtTestCase(test.CementExtTestCase):
     @test.raises(exc.FrameworkError)
     def test_jinja2_bad_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'bad_template2.jinja2')
+        self.app.render(dict(foo='bar'), 'bad_template2.jinja2')
 
     @test.raises(exc.FrameworkError)
     def test_jinja2_nonexistent_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'missing_template.jinja2')
+        self.app.render(dict(foo='bar'), 'missing_template.jinja2')
 
     @test.raises(exc.FrameworkError)
     def test_jinja2_none_template(self):
         self.app.setup()
         try:
-            res = self.app.render(dict(foo='bar'), None)
+            self.app.render(dict(foo='bar'), None)
         except exc.FrameworkError as e:
             self.eq(e.msg, "Invalid template path 'None'.")
             raise
@@ -90,4 +89,4 @@ class Jinja2ExtTestCase(test.CementExtTestCase):
     def test_jinja2_bad_module(self):
         self.app.setup()
         self.app._meta.template_module = 'this_is_a_bogus_module'
-        res = self.app.render(dict(foo='bar'), 'bad_template.jinja2')
+        self.app.render(dict(foo='bar'), 'bad_template.jinja2')

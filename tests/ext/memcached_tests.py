@@ -1,10 +1,7 @@
 """Tests for cement.ext.ext_memcached."""
 
-import sys
-import pylibmc
 from time import sleep
 from random import random
-from cement.core import handler
 from cement.utils import test
 from cement.utils.misc import init_defaults
 

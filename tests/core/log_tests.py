@@ -1,7 +1,6 @@
 """Tests for cement.core.log."""
 
-import logging
-from cement.core import exc, backend, log
+from cement.core import exc, log
 from cement.utils import test
 from cement.utils.misc import init_defaults
 
