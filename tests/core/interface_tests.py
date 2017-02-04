@@ -1,6 +1,6 @@
 """Tests for cement.core.interface."""
 
-from cement.core import exc, interface, output, meta
+from cement.core import exc, interface, output
 from cement.core.handler import CementBaseHandler
 from cement.utils import test
 
@@ -38,7 +38,7 @@ class InterfaceTestCase(test.CementCoreTestCase):
     @test.raises(exc.InterfaceError)
     def test_interface_class(self):
         try:
-            i = interface.Interface()
+            interface.Interface()
         except exc.InterfaceError as e:
             self.eq(e.msg, "Interfaces can not be used directly.")
             raise
@@ -75,7 +75,8 @@ class InterfaceTestCase(test.CementCoreTestCase):
             interface.validate(TestInterface, han, [], ['missing_meta'])
         except exc.InterfaceError as e:
             self.eq(
-                e.msg, "Invalid or missing: ['_meta.missing_meta'] in %s" % han)
+                e.msg,
+                "Invalid or missing: ['_meta.missing_meta'] in %s" % han)
             raise
 
     def test_interface_list(self):

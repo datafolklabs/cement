@@ -1,10 +1,10 @@
 """Tests for cement.ext.ext_handlebars."""
 
-import sys
 import random
-from cement.core import exc, foundation, handler, backend, controller
+from cement.core import exc
 from cement.utils import test
 from nose.plugins.attrib import attr
+
 
 class HandlebarsTestApp(test.TestApp):
     class Meta:
@@ -14,8 +14,9 @@ class HandlebarsTestApp(test.TestApp):
         template_dirs = []
         handlebars_helpers = {}
         handlebars_partials = ['test_partial_template.handlebars']
-        
-@attr('ext_handlebars')        
+
+
+@attr('ext_handlebars')
 class HandlebarsExtTestCase(test.CementExtTestCase):
     app_class = HandlebarsTestApp
 
@@ -38,18 +39,18 @@ class HandlebarsExtTestCase(test.CementExtTestCase):
     @test.raises(exc.FrameworkError)
     def test_handlebars_bad_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'bad_template2.handlebars')
+        self.app.render(dict(foo='bar'), 'bad_template2.handlebars')
 
     @test.raises(exc.FrameworkError)
     def test_handlebars_nonexistent_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'missing_template.handlebars')
+        self.app.render(dict(foo='bar'), 'missing_template.handlebars')
 
     @test.raises(exc.FrameworkError)
     def test_handlebars_none_template(self):
         self.app.setup()
         try:
-            res = self.app.render(dict(foo='bar'), None)
+            self.app.render(dict(foo='bar'), None)
         except exc.FrameworkError as e:
             self.eq(e.msg, "Invalid template path 'None'.")
             raise
@@ -58,4 +59,4 @@ class HandlebarsExtTestCase(test.CementExtTestCase):
     def test_handlebars_bad_module(self):
         self.app.setup()
         self.app._meta.template_module = 'this_is_a_bogus_module'
-        res = self.app.render(dict(foo='bar'), 'bad_template.handlebars')
+        self.app.render(dict(foo='bar'), 'bad_template.handlebars')

@@ -3,11 +3,11 @@
 import sys
 import random
 
-from cement.core import exc, foundation, handler, backend, controller
+from cement.core import exc
 from cement.utils import test
 
 if sys.version_info[0] < 3:
-    import configobj
+    import configobj  # NOQA
 else:
     raise test.SkipTest('Genshi does not support Python 3')  # pragma: no cover
 
@@ -32,18 +32,18 @@ class GenshiExtTestCase(test.CementExtTestCase):
     @test.raises(exc.FrameworkError)
     def test_genshi_bad_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'bad_template2.genshi')
+        self.app.render(dict(foo='bar'), 'bad_template2.genshi')
 
     @test.raises(exc.FrameworkError)
     def test_genshi_nonexistent_template(self):
         self.app.setup()
-        res = self.app.render(dict(foo='bar'), 'missing_template.genshi')
+        self.app.render(dict(foo='bar'), 'missing_template.genshi')
 
     @test.raises(exc.FrameworkError)
     def test_genshi_none_template(self):
         self.app.setup()
         try:
-            res = self.app.render(dict(foo='bar'), None)
+            self.app.render(dict(foo='bar'), None)
         except exc.FrameworkError as e:
             self.eq(e.msg, "Invalid template path 'None'.")
             raise
@@ -52,4 +52,4 @@ class GenshiExtTestCase(test.CementExtTestCase):
     def test_genshi_bad_module(self):
         self.app.setup()
         self.app._meta.template_module = 'this_is_a_bogus_module'
-        res = self.app.render(dict(foo='bar'), 'bad_template.genshi')
+        self.app.render(dict(foo='bar'), 'bad_template.genshi')

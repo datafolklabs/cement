@@ -1,6 +1,6 @@
 """Cement meta tests."""
 
-from cement.core import backend, exc, meta
+from cement.core import meta
 from cement.utils import test
 
 

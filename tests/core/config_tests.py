@@ -1,7 +1,6 @@
 """Tests for cement.core.config."""
 
-import os
-from cement.core import exc, config, backend
+from cement.core import exc, config
 from cement.utils import test
 
 CONFIG = """

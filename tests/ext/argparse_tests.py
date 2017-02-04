@@ -1,6 +1,5 @@
 """Tests for cement.ext.ext_argparse."""
 
-import os
 import sys
 import re
 from argparse import ArgumentError
@@ -8,8 +7,7 @@ from cement.ext.ext_argparse import ArgparseArgumentHandler
 from cement.ext.ext_argparse import ArgparseController, expose
 from cement.ext.ext_argparse import _clean_label, _clean_func
 from cement.utils import test
-from cement.utils.misc import rando, init_defaults
-from cement.core import handler
+from cement.utils.misc import rando
 from cement.core.exc import InterfaceError, FrameworkError
 
 APP = rando()[:12]
@@ -286,7 +284,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
             res = app.run()
             self.eq(res, "Inside Second.cmd2")
         self.tearDown()
-        
+
         self.setUp()
         with self.app as app:
             app._meta.argv = ['third', 'cmd3']
@@ -321,7 +319,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
             res = app.run()
             self.eq(res, "Inside Seventh.cmd7")
         self.tearDown()
-        
+
     def test_base_cmd1_parsing(self):
         with self.app as app:
             app._meta.argv = ['--foo=bar', 'cmd1']
@@ -398,9 +396,9 @@ class ArgparseExtTestCase(test.CementExtTestCase):
 
     def test_collect(self):
         with self.app as app:
-            args = self.app.controller._collect_arguments()
-            cmds = self.app.controller._collect_commands()
-            args2, cmds2 = self.app.controller._collect()
+            args = app.controller._collect_arguments()
+            cmds = app.controller._collect_commands()
+            args2, cmds2 = app.controller._collect()
             self.eq((args, cmds), (args2, cmds2))
 
     def test_controller_embedded_on_base(self):
@@ -512,7 +510,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
                                      ],
                                      )
             with self.app as app:
-                res = app.run()
+                app.run()
         except InterfaceError as e:
             self.ok(re.match("(.*)is not stacked anywhere!(.*)", e.msg))
             raise
@@ -529,7 +527,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
                                      ],
                                      )
             with self.app as app:
-                res = app.run()
+                app.run()
         except InterfaceError as e:
             self.ok(re.match("(.*)has an unknown stacked type(.*)", e.msg))
             raise
@@ -546,7 +544,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
                                      ],
                                      )
             with self.app as app:
-                res = app.run()
+                app.run()
         except ArgumentError as e:
             self.ok(re.match("(.*)conflicting option string(.*)",
                              e.__str__()))
@@ -564,7 +562,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
                                      ],
                                      )
             with self.app as app:
-                res = app.run()
+                app.run()
         except ArgumentError as e:
             self.ok(re.match("(.*)conflicting option string(.*)",
                              e.__str__()))

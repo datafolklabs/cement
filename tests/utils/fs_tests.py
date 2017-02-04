@@ -1,7 +1,6 @@
 """Tests for cement.utils.fs"""
 
 import os
-import shutil
 from cement.utils import fs, test
 
 
@@ -18,8 +17,8 @@ class FsUtilsTestCase(test.CementCoreTestCase):
         os.makedirs(tmp_dir)
 
         bkfile = fs.backup(tmp_file)
-        self.eq("%s.bak" % os.path.basename(tmp_file), 
-                                            os.path.basename(bkfile))
+        self.eq("%s.bak" % os.path.basename(tmp_file),
+                os.path.basename(bkfile))
         bkfile = fs.backup(tmp_file)
         self.eq("%s.bak.0" %
                 os.path.basename(tmp_file), os.path.basename(bkfile))
@@ -28,8 +27,8 @@ class FsUtilsTestCase(test.CementCoreTestCase):
                 os.path.basename(tmp_file), os.path.basename(bkfile))
 
         bkdir = fs.backup(tmp_dir)
-        self.eq("%s.bak" % os.path.basename(tmp_dir), 
-                                            os.path.basename(bkdir))
+        self.eq("%s.bak" % os.path.basename(tmp_dir),
+                os.path.basename(bkdir))
 
         res = fs.backup('someboguspath')
         self.eq(res, None)

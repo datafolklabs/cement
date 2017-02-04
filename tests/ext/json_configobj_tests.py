@@ -1,8 +1,5 @@
 """Tests for cement.ext.ext_json_configobj."""
 
-import json
-import sys
-from cement.core import handler, backend, hook
 from cement.utils import test
 
 

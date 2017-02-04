@@ -1,6 +1,6 @@
 """Tests for cement.core.extension."""
 
-from cement.core import exc, backend, extension, output, interface
+from cement.core import exc, extension, interface
 from cement.utils import test
 
 

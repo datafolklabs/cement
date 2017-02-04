@@ -1,18 +1,17 @@
 """Tests for cement.ext.ext_reload_config."""
-
 import platform
 from cement.utils import test
-
-system = platform.system()
-if not system in ['Linux']:
-    raise test.SkipTest('ext_reload_config not supported on %s' % system)
-
 import os
 import shutil
 import signal
 from time import sleep
 from cement.utils.misc import rando
-from cement.ext import ext_reload_config
+
+system = platform.system()
+if system not in ['Linux']:
+    raise test.SkipTest('ext_reload_config not supported on %s' % system)
+
+from cement.ext import ext_reload_config  # NOQA - Run only if Linux
 
 APP = rando()[:12]
 

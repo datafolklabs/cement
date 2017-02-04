@@ -1,8 +1,6 @@
 """Tests for cement.ext.ext_json."""
 
 import json
-import sys
-from cement.core import handler, backend, hook
 from cement.utils import test
 from cement.utils.misc import rando
 

@@ -1,9 +1,9 @@
 """Tests for cement.core.output."""
 
 import os
-from cement.core import exc, backend, output
+from cement.core import exc, output
 from cement.utils import test
-from cement.utils.misc import init_defaults, rando
+from cement.utils.misc import rando
 
 APP = rando()[:12]
 
@@ -16,6 +16,7 @@ class TestOutputHandler(output.TemplateOutputHandler):
     def render(self, data, template):
         content = self.load_template(template)
         return content % data
+
 
 TEST_TEMPLATE = "%(foo)s"
 
@@ -44,7 +45,7 @@ class OutputTestCase(test.CementCoreTestCase):
 
     @test.raises(exc.FrameworkError)
     def test_load_template_from_bad_file(self):
-        template = os.path.join(self.tmp_dir, 'my-bogus-template.txt')
+        os.path.join(self.tmp_dir, 'my-bogus-template.txt')
 
         app = self.make_app(APP,
                             config_files=[],

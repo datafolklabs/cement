@@ -1,9 +1,8 @@
 """Tests for cement.ext.ext_logging."""
 
 import os
-import logging
 import shutil
-from cement.core import handler, backend, log
+from cement.core import handler
 from cement.ext import ext_logging
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando
@@ -73,7 +72,6 @@ class LoggingExtTestCase(test.CementExtTestCase):
         Log = han()
         Log.clear_loggers(self.app._meta.label)
 
-        #previous_logger = logging.getLogger(name)
         MyLog = ext_logging.LoggingLogHandler(clear_loggers="%s:%s" %
                                               (self.app._meta.label,
                                                self.app._meta.label))

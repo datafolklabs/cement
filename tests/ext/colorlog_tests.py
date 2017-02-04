@@ -2,7 +2,7 @@
 
 import os
 import logging
-from cement.ext.ext_colorlog import ColorLogHandler, ColoredFormatter
+from cement.ext.ext_colorlog import ColoredFormatter
 from cement.utils import test
 from cement.utils.misc import rando, init_defaults
 

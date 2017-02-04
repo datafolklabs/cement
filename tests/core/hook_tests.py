@@ -55,7 +55,9 @@ class HookTestCase(test.CementCoreTestCase):
     def test_hooks_registered(self):
         self.app.hook.register('nosetests_hook', cement_hook_one, weight=99)
         self.app.hook.register('nosetests_hook', cement_hook_two, weight=-1)
-        self.app.hook.register('some_bogus_hook', cement_hook_three, weight=-99)
+        self.app.hook.register('some_bogus_hook',
+                               cement_hook_three,
+                               weight=-99)
         self.eq(len(self.app.hook.__hooks__['nosetests_hook']), 2)
 
     def test_run(self):
@@ -110,6 +112,7 @@ class HookTestCase(test.CementCoreTestCase):
             foundation.cement_signal_handler(signal.SIGTERM, frame)
         except exc.CaughtSignal as e:
             pass
+
 
 class DeprecatedHookTestCase(test.CementCoreTestCase):
 

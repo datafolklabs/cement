@@ -69,9 +69,9 @@ class BackendTestCase(test.CementCoreTestCase):
     def test_wrap_int(self):
         text = int('1' * 80)
         try:
-            new_text = misc.wrap(text, width=5)
+            misc.wrap(text, width=5)
         except TypeError as e:
-            self.eq(e.args[0], 
+            self.eq(e.args[0],
                     "Argument `text` must be one of [str, unicode].")
             raise
 
@@ -79,8 +79,8 @@ class BackendTestCase(test.CementCoreTestCase):
     def test_wrap_none(self):
         text = None
         try:
-            new_text = misc.wrap(text, width=5)
+            misc.wrap(text, width=5)
         except TypeError as e:
-            self.eq(e.args[0], 
+            self.eq(e.args[0],
                     "Argument `text` must be one of [str, unicode].")
             raise

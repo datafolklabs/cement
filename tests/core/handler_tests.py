@@ -10,7 +10,7 @@ from cement.ext.ext_configparser import ConfigParserConfigHandler
 class BogusOutputHandler(meta.MetaMixin):
 
     class Meta:
-        #interface = IBogus
+        # interface = IBogus
         label = 'bogus_handler'
 
 
@@ -138,7 +138,8 @@ class HandlerTestCase(test.CementCoreTestCase):
         self.app.setup()
         self.ok(self.app.handler.registered('output', 'dummy'))
         self.eq(self.app.handler.registered('output', 'bogus_handler'), False)
-        self.eq(self.app.handler.registered('bogus_type', 'bogus_handler'), False)
+        self.eq(self.app.handler.registered('bogus_type',
+                                            'bogus_handler'), False)
 
     @test.raises(exc.FrameworkError)
     def test_get_bogus_handler(self):
@@ -165,7 +166,7 @@ class HandlerTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_handler_list_bogus_type(self):
         self.app.setup()
-        handler_list = self.app.handler.list('bogus')
+        self.app.handler.list('bogus')
 
     def is_defined(handler_type):
         self.eq(self.app.handler.defined(handler_type), True)
@@ -204,9 +205,11 @@ class HandlerTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_register_invalid_handler_type(self):
         self.app.setup()
+
         class BadInterface:
             class IMeta:
                 label = 'bad_interface'
+
         class BadHandler(TestHandler):
             class Meta:
                 interface = BadInterface
@@ -283,14 +286,16 @@ class DeprecatedHandlerTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_handler_list_bogus_type(self):
         self.app.setup()
-        handler_list = handler.list('bogus')
+        handler.list('bogus')
 
     @test.raises(exc.FrameworkError)
     def test_register_invalid_handler_type(self):
         self.app.setup()
+
         class BadInterface:
             class IMeta:
                 label = 'bad_interface'
+
         class BadHandler(TestHandler):
             class Meta:
                 interface = BadInterface

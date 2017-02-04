@@ -1,6 +1,5 @@
 """Tests for cement.ext.ext_alarm."""
 
-import sys
 import time
 import signal
 from cement.core.exc import CaughtSignal
@@ -33,4 +32,3 @@ class AlarmExtTestCase(test.CementExtTestCase):
             app.alarm.set(3, "The Timer Works!")
             time.sleep(1)
             app.alarm.stop()
-        

@@ -1,6 +1,6 @@
 """Tests for cement.core.cache."""
 
-from cement.core import exc, cache
+from cement.core import cache
 from cement.utils import test
 
 
