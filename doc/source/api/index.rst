@@ -54,7 +54,6 @@ Cement Extension Modules
    ext/ext_configparser
    ext/ext_daemon
    ext/ext_dummy
-   ext/ext_genshi
    ext/ext_handlebars
    ext/ext_jinja2
    ext/ext_json

@@ -42,6 +42,7 @@ Incompatible:
     * ``[ext.configobj]`` No longer shipped with Cement.
     * ``[ext.json_configobj]`` No longer shipped with Cement.
     * ``[ext.yaml_configobj]`` No longer shipped with Cement.
+    * ``[ext.genshi]`` No longer shipped with Cement.
 
 Deprecation:
 

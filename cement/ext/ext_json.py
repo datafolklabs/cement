@@ -56,7 +56,7 @@ _____
 
 In general, you likely would not set ``output_handler`` to ``json``, but
 rather another type of output handler that display readable output to the
-end-user (i.e. Mustache, Genshi, or Tabulate).  By default Cement
+end-user (i.e. Mustache, or Tabulate).  By default Cement
 adds the ``-o`` command line option to allow the end user to override the
 output handler.  For example: passing ``-o json`` will override the default
 output handler and set it to ``JsonOutputHandler``.
