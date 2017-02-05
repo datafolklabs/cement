@@ -4,12 +4,11 @@ import os
 import sys
 import json
 import signal
-from cement import App
+from cement import App, Controller, ex
 from cement.core.foundation import cement_signal_handler
 from cement.core import exc, extension
 from cement.core.handler import CementBaseHandler
-from cement.core.controller import CementBaseController, expose
-from cement.core import output, hook, controller
+from cement.core import output, hook
 from cement.core.interface import Interface
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando, minimal_logger
@@ -59,7 +58,7 @@ class TestOutputHandler(output.CementOutputHandler):
         return None
 
 
-class BogusBaseController(controller.CementBaseController):
+class BogusBaseController(Controller):
 
     class Meta:
         label = 'bad_base_controller_label'
@@ -483,15 +482,15 @@ class FoundationTestCase(test.CementCoreTestCase):
 
     @test.raises(AssertionError)
     def test_run_forever(self):
-        class Controller(CementBaseController):
+        class MyController(Controller):
             class Meta:
                 label = 'base'
 
-            @expose()
+            @ex()
             def runit(self):
                 raise Exception("Fake some error")
 
-        app = self.make_app(base_controller=Controller, argv=['runit'])
+        app = self.make_app(base_controller=MyController, argv=['runit'])
 
         def handler(signum, frame):
             raise AssertionError('It ran forever!')

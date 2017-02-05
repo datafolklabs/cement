@@ -97,17 +97,16 @@ perform an arbitrary action any time configuration changes are detected.
 
     from time import sleep
     from cement.core.exc import CaughtSignal
-    from cement import App
-    from cement.core.controller import CementBaseController, expose
+    from cement import App, Controller, ex
 
     def print_foo(app):
         print "Foo => %s" % app.config.get('myapp', 'foo')
 
-    class Base(CementBaseController):
+    class Base(Controller):
         class Meta:
             label = 'base'
 
-        @expose(hide=True)
+        @ex(hide=True)
         def default(self):
             print('Inside Base.default()')
 

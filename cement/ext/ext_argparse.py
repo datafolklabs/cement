@@ -334,10 +334,6 @@ class ArgparseController(CementBaseHandler):
     ``argparse``.  If using an alternative argument handler you will need to
     write your own controller base class or modify this one.
 
-    NOTE: This is a re-implementation of
-    :class:`cement.core.controller.CementBaseController`.
-    In the future, this class will eventually replace it as the default.
-
     Usage:
 
     .. code-block:: python

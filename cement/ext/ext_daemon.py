@@ -112,15 +112,14 @@ rather than the entire parent application.  For example:
 
 .. code-block:: python
 
-    from cement import App
-    from cement.core.controller import CementBaseController, expose
+    from cement import App, Controller, ex
 
 
-    class MyBaseController(CementBaseController):
+    class MyBaseController(Controller):
         class Meta:
             label = 'base'
 
-        @expose(help="run the daemon command.")
+        @ex(help="run the daemon command.")
         def run_forever(self):
             from time import sleep
             self.app.daemonize()

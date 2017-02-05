@@ -11,9 +11,7 @@ Requirements
 
 
 This extension currently only works when using
-:class:`cement.ext.ext_argparse.ArgparseArgumentHandler` (default) and
-:class:`cement.ext.ext_argparse.ArgparseController` (new in Cement 2.8).  It
-will not work with :class:`cement.core.controller.CementBaseController`.
+:class:`cement.ext.ext_argparse.ArgparseArgumentHandler` (default).
 
 
 Configuration
