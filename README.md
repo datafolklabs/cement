@@ -1,8 +1,9 @@
 Cement Framework
 ================
 
-**NOTE: 2.11.x is the development version of Cement.  Please use stable/2.10.x 
-in production until stable/2.12.x is released.**
+**NOTE: Portland is a complete fork of Cement 2, and will eventually become
+Cement 3.  It is guaranteed to be broken!  Please use Cement 2 in production 
+until stable/3.0.0 is released.**
 
 Cement is an advanced CLI Application Framework for Python.  Its goal is to
 introduce a standard, and feature-full platform for both simple and complex
@@ -36,7 +37,7 @@ Cement core features include (but are not limited to):
  * 100% test coverage using `nose` and `coverage`
  * 100% PEP8 and style compliant using `flake8`
  * Extensive Sphinx documentation
- * Tested on Python 2.6, 2.7, 3.3, 3.4, and 3.5
+ * Tested on Python 3.3, 3.4, and 3.5
 
 *Note that argparse is required as an external dependency for Python < 2.7
 and < 3.2.  Additionally, some optional extensions that are shipped with the
@@ -48,7 +49,7 @@ along with their application, as Cement explicitly does not include them.*
 More Information
 ----------------
 
- * DOCS: http://builtoncement.com/2.11/
+ * DOCS: http://builtoncement.com/2.99/
  * CODE: http://github.com/datafolklabs/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
  * SITE: http://builtoncement.com/
