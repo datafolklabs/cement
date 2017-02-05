@@ -1,0 +1,39 @@
+baseurl = "http://docs.trueability.com/"
+title = "TrueAbility Internal Documentation"
+languageCode = "en-us"
+theme = "docuapi"
+
+# Code higlighting settings
+pygmentsCodefences = true
+pygmentsCodeFencesGuesSsyntax = false
+pygmentsOptions = ""
+pygmentsStyle = "monokai"
+# The monokai stylesheet is included in the base template.
+pygmentsUseClasses = true
+
+defaultContentLanguage = "en"
+
+[params]
+search = true
+  
+# Configure the language example tabs.
+[[params.language_tabs]]
+key = "code"
+name = "Code Examples / Usage"
+# [[params.language_tabs]]
+# key = "go"
+# name = "Go" 
+# [[params.language_tabs]]
+# key = "ruby"
+# name = "Ruby"
+# [[params.language_tabs]]
+# key = "bash"
+# name = "BASH" 
+
+#Languages 
+[languages]
+
+[languages.en]
+languageName = "English"
+weight = 2
+title = "Cement Framework"
