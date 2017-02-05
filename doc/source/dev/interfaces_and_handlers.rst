@@ -161,11 +161,11 @@ is a handler that implements the MyInterface above:
 
         my_var = 'This is my var'
 
-        def __init__(self):
-            self.app = None
+        def __init__(self, *args, **kw):
+            super(MyHandler, self).__init__(*args, **kw)
 
         def _setup(self, app_obj):
-            self.app = app_obj
+            super(MyHandler, self)._setup(app_obj)
 
         def do_something(self):
             print "Doing work!"
@@ -174,6 +174,9 @@ is a handler that implements the MyInterface above:
         class Meta:
             label = 'myapp'
             handlers = [MyHandler]
+
+Note that you have to invoke `super()` in ``__init__()`` and ``_setup`` to
+correctly initialize and setup your Handler.
 
 Alternatively, if you need more control you might use this approach:
 
