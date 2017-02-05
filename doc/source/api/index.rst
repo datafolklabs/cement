@@ -51,7 +51,6 @@ Cement Extension Modules
    ext/ext_argcomplete
    ext/ext_argparse
    ext/ext_colorlog
-   ext/ext_configobj
    ext/ext_configparser
    ext/ext_daemon
    ext/ext_dummy
@@ -59,7 +58,6 @@ Cement Extension Modules
    ext/ext_handlebars
    ext/ext_jinja2
    ext/ext_json
-   ext/ext_json_configobj
    ext/ext_logging
    ext/ext_memcached
    ext/ext_mustache
@@ -69,6 +67,4 @@ Cement Extension Modules
    ext/ext_smtp
    ext/ext_tabulate
    ext/ext_yaml
-   ext/ext_yaml_configobj
    ext/ext_watchdog
-

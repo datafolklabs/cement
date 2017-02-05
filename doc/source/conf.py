@@ -55,7 +55,6 @@ MOCK_MODULES = [
     'pyinotify', 
     'yaml', 
     'tabulate',
-    'configobj',
     'pystache', 'pystache.renderer',
     'genshi', 'genshi.template',
     'colorlog',

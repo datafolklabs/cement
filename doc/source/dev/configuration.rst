@@ -17,11 +17,8 @@ interface and not the full capabilities of the implementation.
 The following config handlers are included and maintained with Cement:
 
     * :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>` (default)
-    * :ref:`ConfigObjConfigHandler <cement.ext.ext_configobj>`
     * :ref:`JsonConfigHandler <cement.ext.ext_json>`
-    * :ref:`JsonConfigObjConfigHandler <cement.ext.ext_json_configobj>`
     * :ref:`YamlConfigHandler <cement.ext.ext_yaml>`
-    * :ref:`YamlConfigObjHandler <cement.ext.ext_yaml_configobj>`
 
 
 Please reference the :ref:`IConfig <cement.core.config>` interface
@@ -89,9 +86,8 @@ so:
 
 It is important to note that the default settings, which is a dict, is parsed
 by the config handler and loaded into it's own configuration mechanism.
-Meaning, though some config handlers (i.e. ``ConfigObjConfigHandler``) might
-also be accessible like a dict, not all do (i.e.
-``ConfigParserConfigHandler``).  Please see the documentation for the config
+Meaning, though some config handlers might also be accessible like a dict, not 
+all do.  Please see the documentation for the config
 handler you use for their full usage when accessing the ``app.config`` object.
 
 Built-in Defaults
