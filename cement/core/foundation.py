@@ -1224,7 +1224,7 @@ class App(meta.MetaMixin):
                 # set the new extensions value in the config
                 self.config.set(self._meta.label, 'extensions', ext_list)
 
-            # otherwise, if it's a list (ConfigObj?)
+            # otherwise, if it's a list
             elif type(exts) is list:
                 ext_list = exts
 

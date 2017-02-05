@@ -72,7 +72,7 @@ class IExtension(interface.Interface):
     def load_extension(self, ext_module):
         """
         Load an extension whose module is 'ext_module'.  For example,
-        'cement.ext.ext_configobj'.
+        'cement.ext.ext_json'.
 
         :param ext_module: The name of the extension to load.
         :type ext_module: ``str``
@@ -84,7 +84,7 @@ class IExtension(interface.Interface):
         Load all extensions from ext_list.
 
         :param ext_list: A list of extension modules to load.  For example:
-            ``['cement.ext.ext_configobj', 'cement.ext.ext_logging']``
+            ``['cement.ext.ext_json', 'cement.ext.ext_logging']``
 
         :type ext_list: ``list``
 
