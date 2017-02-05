@@ -20,13 +20,13 @@ Requirements
 Features
 --------
 
- * Application configuration files (``CementApp.Meta.config_files``) are
+ * Application configuration files (``App.Meta.config_files``) are
    reloaded if modified.
  * Application plugin configuration files (Anything found in
-   (``CementApp.Meta.plugin_config_dirs``) are reloaded if modified.
- * The framework calls ``CementApp.config.parse_file()`` on any watched files
+   (``App.Meta.plugin_config_dirs``) are reloaded if modified.
+ * The framework calls ``App.config.parse_file()`` on any watched files
    once the kernel has signaled a modification.
- * New configurations settings are accessible via ``CementApp.config`` nearly
+ * New configurations settings are accessible via ``App.config`` nearly
    immediately once the kernel (inotify) picks up the change.
  * Provides a ``pre_reload_config`` and ``post_reload_config`` hook so that
    applications can tie into the event and perform operations any time a
@@ -97,7 +97,7 @@ perform an arbitrary action any time configuration changes are detected.
 
     from time import sleep
     from cement.core.exc import CaughtSignal
-    from cement.core.foundation import CementApp
+    from cement import App
     from cement.core.controller import CementBaseController, expose
 
     def print_foo(app):
@@ -115,7 +115,7 @@ perform an arbitrary action any time configuration changes are detected.
             while True:
                 sleep(30)
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             base_controller = Base

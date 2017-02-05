@@ -110,7 +110,7 @@ def init_defaults(*sections):
 
     .. code-block:: python
 
-        from cement.core import foundation
+        from cement import App
         from cement.utils.misc import init_defaults
 
         defaults = init_defaults('myapp', 'section2', 'section3')
@@ -118,7 +118,7 @@ def init_defaults(*sections):
         defaults['section2']['foo'] = 'bar
         defaults['section3']['foo2'] = 'bar2'
 
-        app = foundation.CementApp('myapp', config_defaults=defaults)
+        app = App('myapp', config_defaults=defaults)
 
     """
     defaults = dict()

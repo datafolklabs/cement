@@ -31,9 +31,8 @@ Usage
 
     #!/usr/bin/env python
 
-    from cement.core.foundation import CementApp
-    from cement.ext.ext_argparse import ArgparseController, expose
-
+    from cement import App, 
+    from cement.ext.ext_argparse import ArgparseController, expse
 
     class BaseController(ArgparseController):
         class Meta:
@@ -51,7 +50,7 @@ Usage
             print('Inside BaseController.command1')
 
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['argcomplete']

@@ -167,7 +167,7 @@ class TemplateOutputHandler(CementOutputHandler):
 
         :param template_path: The secondary path of the template **after**
             either ``template_module`` or ``template_dirs`` prefix (set via
-            ``CementApp.Meta``)
+            ``App.Meta``)
         :returns: The content of the template (str)
         :raises: FrameworkError if the template does not exist in either the
             ``template_module`` or ``template_dirs``.
@@ -189,7 +189,7 @@ class TemplateOutputHandler(CementOutputHandler):
 
         :param template_path: The secondary path of the template **after**
             either ``template_module`` or ``template_dirs`` prefix (set via
-            ``CementApp.Meta``)
+            ``App.Meta``)
         :returns: A tuple that includes the content of the template (str),
             the type of template (str which is one of: ``directory``, or
             ``module``), and the ``path`` (str) of the directory or module)

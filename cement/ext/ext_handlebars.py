@@ -15,7 +15,7 @@ Application Meta-data
 ^^^^^^^^^^^^^^^^^^^^^
 
 This extension supports the following application meta-data via
-``CementApp.Meta``:
+``App.Meta``:
 
  * **handlebars_helpers** - A dictionary of helper functions to register
    with the compiler. Will **override**
@@ -44,7 +44,7 @@ Usage
 
 .. code-block:: python
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['handlebars']
@@ -72,7 +72,7 @@ Helpers
 ^^^^^^^
 
 Custom helper functions can easily be registered with the compiler via
-``CementApp.Meta.handlebars_helpers`` and/or
+``App.Meta.handlebars_helpers`` and/or
 ``HandlebarsOutputHandler.Meta.helpers``.
 
 .. code-block:: python
@@ -85,7 +85,7 @@ Custom helper functions can easily be registered with the compiler via
             return False
 
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['handlebars']
@@ -123,7 +123,7 @@ Example:
 
 .. code-block:: python
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['handlebars']

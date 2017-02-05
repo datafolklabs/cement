@@ -1,9 +1,8 @@
 """
 The Argparse Extension provides argument handling based on
-:py:class:`argparse.ArgumentParser`, and is the default argument handler
-used by :class:`cement.core.foundation.CementApp`.  In addition, this
-extension also provides :class:`ArgparseController` that enables rapid
-development via application controllers based on Argparse.
+:py:class:`argparse.ArgumentParser`, and is the default argument handler.  
+In addition, this extension also provides :class:`ArgparseController` that 
+enables rapid development via application controllers based on Argparse.
 
 Requirements
 ------------
@@ -26,11 +25,11 @@ Usage
 The following is an example application using both the
 :class:`ArgparseArgumentHandler` and :class:`ArgparseController`.  Note that
 the default ``arg_handler`` is already set to
-:class:`ArgparseArgumentHandler`` by :class:`CementApp`.
+:class:`ArgparseArgumentHandler`` by :class:`App`.
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
     from cement.ext.ext_argparse import ArgparseController, expose
 
 
@@ -92,7 +91,7 @@ the default ``arg_handler`` is already set to
             print('Inside NestedController.command3')
 
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             handlers = [

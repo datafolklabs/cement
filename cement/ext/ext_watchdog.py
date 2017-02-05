@@ -42,37 +42,37 @@ This extension defines the following hooks:
 watchdog_pre_start
 ^^^^^^^^^^^^^^^^^^
 
-Run first when ``CementApp.watchdog.start()`` is called.  The application
+Run first when ``App.watchdog.start()`` is called.  The application
 object is passed as an argument.  Nothing is expected in return.
 
 watchdog_post_start
 ^^^^^^^^^^^^^^^^^^^
 
-Run last when ``CementApp.watchdog.start()`` is called.  The application
+Run last when ``App.watchdog.start()`` is called.  The application
 object is passed as an argument.  Nothing is expected in return.
 
 watchdog_pre_stop
 ^^^^^^^^^^^^^^^^^
 
-Run first when ``CementApp.watchdog.stop()`` is called.  The application
+Run first when ``App.watchdog.stop()`` is called.  The application
 object is passed as an argument.  Nothing is expected in return.
 
 watchdog_post_stop
 ^^^^^^^^^^^^^^^^^^
 
-Run last when ``CementApp.watchdog.stop()`` is called.  The application
+Run last when ``App.watchdog.stop()`` is called.  The application
 object is passed as an argument.  Nothing is expected in return.
 
 watchdog_pre_join
 ^^^^^^^^^^^^^^^^^
 
-Run first when ``CementApp.watchdog.join()`` is called.  The application
+Run first when ``App.watchdog.join()`` is called.  The application
 object is passed as an argument.  Nothing is expected in return.
 
 watchdog_post_join
 ^^^^^^^^^^^^^^^^^^
 
-Run last when ``CementApp.watchdog.join()`` is called.  The application
+Run last when ``App.watchdog.join()`` is called.  The application
 object is passed as an argument.  Nothing is expected in return.
 
 
@@ -85,12 +85,12 @@ logs all events to ``debug``:
 .. code-block:: python
 
     from time import sleep
-    from cement.core.foundation import CementApp
+    from cement import App
     from cement.core.exc import CaughtSignal
     from cement.ext.ext_watchdog import WatchdogEventHandler
 
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['watchdog']
@@ -160,7 +160,7 @@ To expand on the above example, we can add our own event handlers:
             print("The modified path was: %s" % event.src_path)
 
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['watchdog']
@@ -224,7 +224,7 @@ class WatchdogEventHandler(FileSystemEventHandler):
 class WatchdogManager(MetaMixin):
     """
     The manager class that is attached to the application object via
-    ``CementApp.extend()``.
+    ``App.extend()``.
 
     Usage:
 

@@ -39,9 +39,9 @@ Usage
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
 
-    with MyApp() as app:
+    with App() as app:
         app.log.info("This is an info message")
         app.log.warning("This is an warning message")
         app.log.error("This is an error message")
@@ -98,7 +98,7 @@ class LoggingLogHandler(log.CementLogHandler):
         #: The logging namespace.
         #:
         #: Note: Although Meta.namespace defaults to None, Cement will set
-        #: this to the application label (CementApp.Meta.label) if not set
+        #: this to the application label (App.Meta.label) if not set
         #: during setup.
         namespace = None
 

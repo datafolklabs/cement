@@ -33,9 +33,9 @@ Usage
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['json_configobj']

@@ -22,11 +22,9 @@ Usage
 .. code-block:: python
 
     import time
-    from cement.core.foundation import CementApp
-    from cement.core.exc import CaughtSignal
+    from cement import App, CaughtSignal
 
-
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             exit_on_close = True

@@ -94,7 +94,9 @@ Usage
 
 .. code-block:: python
 
-    class MyApp(CementApp):
+    from cement import App
+
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             mail_handler = 'smtp'

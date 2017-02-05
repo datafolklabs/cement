@@ -12,3 +12,7 @@ python:
 services:
   - memcached
   - redis
+branches:
+  except:
+    - portland
+

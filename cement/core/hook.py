@@ -35,9 +35,9 @@ class HookManager(object):
 
         .. code-block:: python
 
-            from cement.core.foundation import CementApp
+            from cement import App
 
-            with CementApp('myapp') as app:
+            with App('myapp') as app:
                 app.hook.define('my_hook_name')
 
         """
@@ -59,9 +59,9 @@ class HookManager(object):
 
         .. code-block:: python
 
-            from cement.core.foundation import CementApp
+            from cement import App
 
-            with CementApp('myapp') as app:
+            with App('myapp') as app:
                 app.hook.defined('some_hook_name'):
                     # do something about it
                     pass
@@ -89,13 +89,13 @@ class HookManager(object):
 
         .. code-block:: python
 
-            from cement.core.foundation import CementApp
+            from cement import App
 
             def my_hook_func(app):
                 # do something with app?
                 return True
 
-            with CementApp('myapp') as app:
+            with App('myapp') as app:
                 app.hook.define('my_hook_name')
                 app.hook.register('my_hook_name', my_hook_func)
 
@@ -125,13 +125,13 @@ class HookManager(object):
 
         .. code-block:: python
 
-            from cement.core.foundation import CementApp
+            from cement import App
 
             def my_hook_func(app):
                 # do something with app?
                 return True
 
-            with CementApp('myapp') as app:
+            with App('myapp') as app:
                 app.hook.define('my_hook_name')
                 app.hook.register('my_hook_name', my_hook_func)
                 for res in app.hook.run('my_hook_name', self):
@@ -164,7 +164,7 @@ def define(name):
     """
     DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
     will be removed in future versions of Cement.
-    Use ``CementApp.hook.define()`` instead.
+    Use ``App.hook.define()`` instead.
 
     ---
 
@@ -183,11 +183,11 @@ def define(name):
 
     """
     # only log debug for now as this won't be removed until Cement 3.x and
-    # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
+    # we don't have access to App.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `hook.define()` has been deprecated, '
         'and will be removed in future versions of Cement.  You should now '
-        'use `CementApp.hook.define()` instead.'
+        'use `App.hook.define()` instead.'
     )
     LOG.debug("defining hook '%s'" % name)
     if name in backend.__hooks__:
@@ -199,7 +199,7 @@ def defined(hook_name):
     """
     DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
     will be removed in future versions of Cement.
-    Use ``CementApp.hook.defined()`` instead.
+    Use ``App.hook.defined()`` instead.
 
     ---
 
@@ -212,11 +212,11 @@ def defined(hook_name):
 
     """
     # only log debug for now as this won't be removed until Cement 3.x and
-    # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
+    # we don't have access to App.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `hook.defined()` has been deprecated, '
         'and will be removed in future versions of Cement.  You should now '
-        'use `CementApp.hook.defined()` instead.'
+        'use `App.hook.defined()` instead.'
     )
     if hook_name in backend.__hooks__:
         return True
@@ -228,7 +228,7 @@ def register(name, func, weight=0):
     """
     DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
     will be removed in future versions of Cement.
-    Use ``CementApp.hook.register()`` instead.
+    Use ``App.hook.register()`` instead.
 
     ---
 
@@ -257,11 +257,11 @@ def register(name, func, weight=0):
 
     """
     # only log debug for now as this won't be removed until Cement 3.x and
-    # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
+    # we don't have access to App.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `hook.register()` has been deprecated, '
         'and will be removed in future versions of Cement.  You should now '
-        'use `CementApp.hook.register()` instead.'
+        'use `App.hook.register()` instead.'
     )
     if name not in backend.__hooks__:
         LOG.debug("hook name '%s' is not defined! ignoring..." % name)
@@ -278,7 +278,7 @@ def run(name, *args, **kwargs):
     """
     DEPRECATION WARNING: This function is deprecated as of Cement 2.7.x and
     will be removed in future versions of Cement.
-    Use ``CementApp.hook.run()`` instead.
+    Use ``App.hook.run()`` instead.
 
     ---
 
@@ -302,11 +302,11 @@ def run(name, *args, **kwargs):
             ...
     """
     # only log debug for now as this won't be removed until Cement 3.x and
-    # we don't have access to CementApp.Meta.ignore_deprecation_warnings here
+    # we don't have access to App.Meta.ignore_deprecation_warnings here
     LOG.debug(
         'Cement Deprecation Warning: `hook.run()` has been deprecated, '
         'and will be removed in future versions of Cement.  You should now '
-        'use `CementApp.hook.run()` instead.'
+        'use `App.hook.run()` instead.'
     )
     if name not in backend.__hooks__:
         raise exc.FrameworkError("Hook name '%s' is not defined!" % name)

@@ -50,9 +50,9 @@ Usage
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['colorlog']
@@ -72,7 +72,7 @@ overriding the ``ColorLogHandler.Meta.colors`` meta-data:
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
     from cement.ext.ext_colorlog import ColorLogHandler
 
     COLORS = {
@@ -83,7 +83,7 @@ overriding the ``ColorLogHandler.Meta.colors`` meta-data:
         'CRITICAL': 'red,bg_white',
     }
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             log_handler = ColorLogHandler(colors=COLORS)
@@ -93,7 +93,7 @@ Or by sub-classing and creating your own custom class:
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
     from cement.ext.ext_colorlog import ColorLogHandler
 
     class MyCustomLog(ColorLogHandler):
@@ -107,7 +107,7 @@ Or by sub-classing and creating your own custom class:
                 'CRITICAL': 'red,bg_white',
             }
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             log_handler = MyCustomLog

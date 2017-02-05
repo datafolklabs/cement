@@ -5,23 +5,16 @@ title: ChangeLog
 
 # ChangeLog
 
-## 2.11.1 - DEVELOPMENT (will be released as dev/2.11.2 or stable/2.12.0)
+## 2.99.1 - DEVELOPMENT (will be released as dev/2.99.2 or stable/3.0.0)
 
 <aside class="warning">
-This is a branch off of the 2.10.x stable code base.  Maintenance releases for
-2.10.x will happen under the stable/2.10.x git branch, while forward feature
-development will happen as 2.11.x under the git master branch.
+This is a complete fork from Cement 2 code base.  Please continue to use
+stable version of Cement 2, until Cement 3.0.0 is released.
 </aside>
 
 Bugs:
 
-  * `[ext.logging]` Removes deprecated `warn` from ILog 
-      validator, in-favor of `warning`
-    * Issue #397
-  *  `[ext.daemon]` Can't get user in daemon extension
-    * Issue #401 
-  * `[core]` FrameworkError when reusing CementApp object
-    * Issue #415
+  * None
 
 Features:
 
@@ -29,10 +22,7 @@ Features:
 
 Refactoring:
 
-  * `[tests]` Refactor dto comply with Flake8
-    * Issue #378
-  * `[ext.daemon]` Ability to daemonize without `--daemon`
-    * Issue #418
+  * None
 
 Incompatible:
 

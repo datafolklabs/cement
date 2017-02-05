@@ -77,7 +77,7 @@ def add_handler_override_options(app):
 def handler_override(app):
     """
     This is a ``post_argument_parsing`` hook that overrides a configured
-    handler if defined in ``CementApp.Meta.handler_override_options`` and
+    handler if defined in ``App.Meta.handler_override_options`` and
     the option is passed at command line with a valid handler label.
 
     :param app: The application object.
@@ -113,77 +113,20 @@ def cement_signal_handler(signum, frame):
     LOG.debug('Caught signal %s' % signum)
 
     # FIXME: Maybe this isn't ideal... purhaps make
-    # CementApp.Meta.signal_handler a decorator that take the app object
+    # App.Meta.signal_handler a decorator that take the app object
     # and wraps/returns the actually signal handler?
     for f_global in frame.f_globals.values():
-        if isinstance(f_global, CementApp):
+        if isinstance(f_global, App):
             app = f_global
             for res in app.hook.run('signal', app, signum, frame):
                 pass  # pragma: nocover
     raise exc.CaughtSignal(signum, frame)
 
 
-class CementApp(meta.MetaMixin):
+class App(meta.MetaMixin):
 
-    """
-    The primary class to build applications from.
+    """The primary application object class."""
 
-    Usage:
-
-    The following is the simplest CementApp:
-
-    .. code-block:: python
-
-        from cement.core.foundation import CementApp
-
-        with CementApp('helloworld') as app:
-            app.run()
-
-
-    Alternatively, the above could be written as:
-
-    .. code-block:: python
-
-        from cement.core.foundation import CementApp
-
-        app = foundation.CementApp('helloworld')
-        app.setup()
-        app.run()
-        app.close()
-
-
-    A more advanced example looks like:
-
-    .. code-block:: python
-
-        from cement.core.foundation import CementApp
-        from cement.core.controller import CementBaseController, expose
-
-        class MyController(CementBaseController):
-            class Meta:
-                label = 'base'
-                arguments = [
-                    ( ['-f', '--foo'], dict(help='Notorious foo option') ),
-                    ]
-                config_defaults = dict(
-                    debug=False,
-                    some_config_param='some_value',
-                    )
-
-            @expose(help='This is the default command', hide=True)
-            def default(self):
-                print('Hello World')
-
-        class MyApp(CementApp):
-            class Meta:
-                label = 'helloworld'
-                extensions = ['daemon','json',]
-                base_controller = MyController
-
-        with MyApp() as app:
-            app.run()
-
-    """
     class Meta:
 
         """
@@ -235,7 +178,7 @@ class CementApp(meta.MetaMixin):
         loaded from previous configuration files).
 
         Note that ``.conf`` is the default config file extension, defined by
-        ``CementApp.Meta.config_extension``.
+        ``App.Meta.config_extension``.
         """
 
         plugins = []
@@ -249,10 +192,10 @@ class CementApp(meta.MetaMixin):
         """
         A list of directory paths where plugin config files can be found.
         Files must end in ``.conf`` (or the extension defined by
-        ``CementApp.Meta.config_extension``) or they will be ignored.
+        ``App.Meta.config_extension``) or they will be ignored.
 
-        Note: Though ``CementApp.Meta.plugin_config_dirs`` is ``None``, Cement
-        will set this to a default list based on ``CementApp.Meta.label``.
+        Note: Though ``App.Meta.plugin_config_dirs`` is ``None``, Cement
+        will set this to a default list based on ``App.Meta.label``.
         This will equate to:
 
         .. code-block:: python
@@ -269,13 +212,13 @@ class CementApp(meta.MetaMixin):
         """
         A directory path where plugin config files can be found.  Files must
         end in ``.conf`` (or the extension defined by
-        ``CementApp.Meta.config_extension``) or they will be ignored.  By
+        ``App.Meta.config_extension``) or they will be ignored.  By
         default, this setting is also overridden by the
         ``[<app_label>] -> plugin_config_dir`` config setting parsed in
         any of the application configuration files.
 
         If set, this item will be **appended** to
-        ``CementApp.Meta.plugin_config_dirs`` so that it's settings will have
+        ``App.Meta.plugin_config_dirs`` so that it's settings will have
         presedence over other configuration files.
 
         In general, this setting should not be defined by the developer, as it
@@ -302,8 +245,8 @@ class CementApp(meta.MetaMixin):
         A list of directory paths where plugin code (modules) can be loaded
         from.
 
-        Note: Though ``CementApp.Meta.plugin_dirs`` is None, Cement will set
-        this to a default list based on ``CementApp.Meta.label`` if not set.
+        Note: Though ``App.Meta.plugin_dirs`` is None, Cement will set
+        this to a default list based on ``App.Meta.label`` if not set.
         This will equate to:
 
         .. code-block:: python
@@ -371,9 +314,9 @@ class CementApp(meta.MetaMixin):
             output=(['-o'], dict(help='output handler')),
         )
         """
-        Similar to ``CementApp.Meta.handler_override_options`` but these are
+        Similar to ``App.Meta.handler_override_options`` but these are
         the core defaults required by Cement.  This dictionary can be
-        overridden by ``CementApp.Meta.handler_override_options`` (when they
+        overridden by ``App.Meta.handler_override_options`` (when they
         are merged together).
         """
 
@@ -386,7 +329,7 @@ class CementApp(meta.MetaMixin):
         Provider Handler (rackspace, digitalocean, amazon, etc).
 
         This dictionary will merge with
-        ``CementApp.Meta.core_handler_override_options`` but this one has
+        ``App.Meta.core_handler_override_options`` but this one has
         precedence.
 
         Dictionary Format:
@@ -396,11 +339,11 @@ class CementApp(meta.MetaMixin):
             <interface_name> = (option_arguments, help_text)
 
 
-        See ``CementApp.Meta.core_handler_override_options`` for an example
+        See ``App.Meta.core_handler_override_options`` for an example
         of what this should look like.
 
         Note, if set to ``None`` then no options will be defined, and the
-        ``CementApp.Meta.core_meta_override_options`` will be ignore (not
+        ``App.Meta.core_meta_override_options`` will be ignore (not
         recommended as some extensions rely on this feature).
         """
 
@@ -428,13 +371,13 @@ class CementApp(meta.MetaMixin):
 
         .. code-block:: python
 
-            from cement.core.foundation import CementApp
+            from cement.core.foundation import App
             from cement.utils.misc import init_defaults
 
             META = init_defaults('output.json')
             META['output.json']['json_module'] = 'ujson'
 
-            class MyApp(CementApp):
+            class MyApp(App):
                 class Meta:
                     label = 'myapp'
                     extensions = ['json']
@@ -495,7 +438,7 @@ class CementApp(meta.MetaMixin):
         """
         This is the base application controller.  If a controller is set,
         runtime operations are passed to the controller for command
-        dispatch and argument parsing when CementApp.run() is called.
+        dispatch and argument parsing when App.run() is called.
 
         Note that cement will automatically set the `base_controller` to a
         registered controller whose label is 'base' (only if `base_controller`
@@ -578,8 +521,8 @@ class CementApp(meta.MetaMixin):
         A python package (dotted import path) where template files can be
         loaded from.  This is generally something like ``myapp.templates``
         where a plugin file would live at ``myapp/templates/mytemplate.txt``.
-        Templates are first loaded from ``CementApp.Meta.template_dirs``, and
-        and secondly from ``CementApp.Meta.template_module``.  The
+        Templates are first loaded from ``App.Meta.template_dirs``, and
+        and secondly from ``App.Meta.template_module``.  The
         ``template_dirs`` setting has presedence.
         """
 
@@ -588,9 +531,9 @@ class CementApp(meta.MetaMixin):
         A list of directory paths where template files can be loaded
         from.
 
-        Note: Though ``CementApp.Meta.template_dirs`` defaults to ``None``,
+        Note: Though ``App.Meta.template_dirs`` defaults to ``None``,
         Cement will set this to a default list based on
-        ``CementApp.Meta.label``.  This will equate to:
+        ``App.Meta.label``.  This will equate to:
 
         .. code-block:: python
 
@@ -609,7 +552,7 @@ class CementApp(meta.MetaMixin):
         application configuration files .
 
         If set, this item will be **prepended** to
-        ``CementApp.Meta.template_dirs`` (giving it precedence over other
+        ``App.Meta.template_dirs`` (giving it precedence over other
         ``template_dirs``.
         """
 
@@ -668,7 +611,7 @@ class CementApp(meta.MetaMixin):
         used for things like storing hooks and handlers.  Future versions of
         Cement will no longer use this mechanism, however in order to maintain
         backward compatibility this is still the default.  By disabling this
-        feature allows multiple instances of CementApp to be created
+        feature allows multiple instances of App to be created
         from within the same runtime space without clobbering eachothers
         hooks/handers/etc.
 
@@ -685,7 +628,7 @@ class CementApp(meta.MetaMixin):
         Dictionary of alternative, **drop-in** replacement modules to use
         selectively throughout the application, framework, or
         extensions.  Developers can optionally use the
-        ``CementApp.__import__()`` method to import simple modules, and if
+        ``App.__import__()`` method to import simple modules, and if
         that module exists in this mapping it will import the alternative
         library in it's place.
 
@@ -713,7 +656,7 @@ class CementApp(meta.MetaMixin):
         """
 
     def __init__(self, label=None, **kw):
-        super(CementApp, self).__init__(**kw)
+        super(App, self).__init__(**kw)
 
         # disable framework logging?
         if 'CEMENT_FRAMEWORK_LOGGING' not in os.environ.keys():
@@ -776,7 +719,7 @@ class CementApp(meta.MetaMixin):
 
     def extend(self, member_name, member_object):
         """
-        Extend the CementApp() object with additional functions/classes such
+        Extend the App() object with additional functions/classes such
         as 'app.my_custom_function()', etc.  It provides an interface for
         extensions to provide functionality that travel along with the
         application object.
@@ -784,7 +727,7 @@ class CementApp(meta.MetaMixin):
         :param member_name: The name to attach the object to.
         :type member_name: ``str``
         :param member_object: The function or class object to attach to
-            CementApp().
+            App().
         :raises: cement.core.exc.FrameworkError
 
         """
@@ -948,7 +891,7 @@ class CementApp(meta.MetaMixin):
         :param code: An exit code to exit with (``int``), if ``None`` is
           passed then exit with whatever ``self.exit_code`` is currently set
           to.  Note: ``sys.exit()`` will only be called if
-          ``CementApp.Meta.exit_on_close==True``.
+          ``App.Meta.exit_on_close==True``.
         """
         for res in self.hook.run('pre_close', self):
             pass
@@ -1027,10 +970,10 @@ class CementApp(meta.MetaMixin):
         """
         if not is_true(self._meta.ignore_deprecation_warnings):
             self.log.warning("Cement Deprecation Warning: " +
-                             "CementApp.get_last_rendered() has been " +
+                             "App.get_last_rendered() has been " +
                              "deprecated, and will be removed in future " +
                              "versions of Cement.  You should use the " +
-                             "CementApp.last_rendered property instead.")
+                             "App.last_rendered property instead.")
         return self._last_rendered
 
     @property
@@ -1115,7 +1058,7 @@ class CementApp(meta.MetaMixin):
                            handler_override, weight=-99)
 
         # register application hooks from meta.  the hooks listed in
-        # CementApp.Meta.hooks are registered here, so obviously can not be
+        # App.Meta.hooks are registered here, so obviously can not be
         # for any hooks other than the builtin framework hooks that we just
         # defined here (above).  Anything that we couldn't register here
         # will be retried after setup
@@ -1431,7 +1374,7 @@ class CementApp(meta.MetaMixin):
             import os
             from cement.core import foundation
 
-            class MyApp(foundation.CementApp):
+            class MyApp(foundation.App):
                 class Meta:
                     label = 'myapp'
 

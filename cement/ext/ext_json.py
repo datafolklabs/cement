@@ -34,9 +34,9 @@ _____
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['json']
@@ -61,7 +61,7 @@ adds the ``-o`` command line option to allow the end user to override the
 output handler.  For example: passing ``-o json`` will override the default
 output handler and set it to ``JsonOutputHandler``.
 
-See ``CementApp.Meta.handler_override_options``.
+See ``App.Meta.handler_override_options``.
 
 .. code-block:: console
 

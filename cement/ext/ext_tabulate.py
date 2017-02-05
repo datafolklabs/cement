@@ -20,9 +20,9 @@ Usage
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement import App
 
-    class MyApp(foundation.CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['tabulate']

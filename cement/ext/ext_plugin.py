@@ -234,7 +234,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         Load a plugin whose name is ``plugin_name``.  First attempt to load
         from a plugin directory (plugin_dir), secondly attempt to load from a
         bootstrap module (plugin_bootstrap) determined by
-        ``CementApp.Meta.plugin_bootstrap``.
+        ``App.Meta.plugin_bootstrap``.
 
         Upon successful loading of a plugin, the plugin name is appended to
         the ``self._loaded_plugins list``.

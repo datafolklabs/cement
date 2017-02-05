@@ -22,18 +22,18 @@ under a ``[cache.memcached]`` section in any configuration file:
     * **hosts** - List of Memcached servers.
 
 
-Configurations can be passed as defaults to a CementApp:
+Configurations can be passed as defaults to a ``App``:
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
     from cement.utils.misc import init_defaults
 
     defaults = init_defaults('myapp', 'cache.memcached')
     defaults['cache.memcached']['expire_time'] = 0
     defaults['cache.memcached']['hosts'] = ['127.0.0.1']
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             config_defaults = defaults
@@ -66,14 +66,14 @@ Usage
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement import App
     from cement.utils.misc import init_defaults
 
     defaults = init_defaults('myapp', 'memcached')
     defaults['cache.memcached']['expire_time'] = 300 # seconds
     defaults['cache.memcached']['hosts'] = ['127.0.0.1']
 
-    class MyApp(foundation.CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             config_defaults = defaults

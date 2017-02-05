@@ -4,7 +4,9 @@ import os
 import sys
 import json
 import signal
-from cement.core import foundation, exc, extension
+from cement import App
+from cement.core.foundation import cement_signal_handler
+from cement.core import exc, extension
 from cement.core.handler import CementBaseHandler
 from cement.core.controller import CementBaseController, expose
 from cement.core import output, hook, controller
@@ -19,7 +21,7 @@ def my_extended_func():
     return 'KAPLA'
 
 
-class DeprecatedApp(foundation.CementApp):
+class DeprecatedApp(App):
 
     class Meta:
         label = 'deprecated'
@@ -147,7 +149,7 @@ class FoundationTestCase(test.CementCoreTestCase):
         from cement.ext import ext_plugin
         from cement.ext import ext_dummy
 
-        # forces CementApp._resolve_handler to register the handler
+        # forces App._resolve_handler to register the handler
         from cement.ext import ext_json
 
         app = self.make_app(
@@ -224,7 +226,7 @@ class FoundationTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_bad_label(self):
         try:
-            foundation.CementApp(None)
+            App(None)
         except exc.FrameworkError as e:
             # FIX ME: verify error msg
             raise
@@ -232,7 +234,7 @@ class FoundationTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_bad_label_chars(self):
         try:
-            foundation.CementApp('some!bogus()label')
+            App('some!bogus()label')
         except exc.FrameworkError as e:
             self.ok(e.msg.find('alpha-numeric'))
             raise
@@ -273,7 +275,7 @@ class FoundationTestCase(test.CementCoreTestCase):
         app = self.make_app('test')
         frame = sys._getframe(0)
         try:
-            foundation.cement_signal_handler(signal.SIGTERM, frame)
+            cement_signal_handler(signal.SIGTERM, frame)
         except exc.CaughtSignal as e:
             self.eq(e.signum, signal.SIGTERM)
             self.ok(isinstance(e.frame, types.FrameType))

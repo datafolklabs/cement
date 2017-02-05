@@ -20,11 +20,11 @@ under a ``[cache.redis]`` section in any configuration file:
     * **db** - Redis database number.
 
 
-Configurations can be passed as defaults to a CementApp:
+Configurations can be passed as defaults to a ``cement.App``:
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
     from cement.utils.misc import init_defaults
 
     defaults = init_defaults('myapp', 'cache.redis')
@@ -33,7 +33,7 @@ Configurations can be passed as defaults to a CementApp:
     defaults['cache.redis']['port'] = 6379
     defaults['cache.redis']['db'] = 0
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             config_defaults = defaults
@@ -72,7 +72,7 @@ Usage
 
 .. code-block:: python
 
-    from cement.core import foundation
+    from cement import App
     from cement.utils.misc import init_defaults
 
     defaults = init_defaults('myapp', 'redis')
@@ -81,7 +81,7 @@ Usage
     defaults['cache.redis']['port'] = 6379
     defaults['cache.redis']['db'] = 0
 
-    class MyApp(foundation.CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             config_defaults = defaults

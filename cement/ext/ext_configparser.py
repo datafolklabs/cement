@@ -21,9 +21,9 @@ Usage
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
 
-    with CementApp() as app:
+    with App() as app:
         app.run()
 
         # get a config setting

@@ -2,7 +2,8 @@
 
 import sys
 import signal
-from cement.core import exc, backend, hook, foundation
+from cement.core import exc, backend, hook
+from cement.core.foundation import cement_signal_handler
 from cement.utils import test
 from cement.utils.misc import rando
 
@@ -109,7 +110,7 @@ class HookTestCase(test.CementCoreTestCase):
         # this is where cement_signal_hook is run
         try:
             frame = sys._getframe(0)
-            foundation.cement_signal_handler(signal.SIGTERM, frame)
+            cement_signal_handler(signal.SIGTERM, frame)
         except exc.CaughtSignal as e:
             pass
 
@@ -187,6 +188,6 @@ class DeprecatedHookTestCase(test.CementCoreTestCase):
         # this is where cement_signal_hook is run
         try:
             frame = sys._getframe(0)
-            foundation.cement_signal_handler(signal.SIGTERM, frame)
+            cement_signal_handler(signal.SIGTERM, frame)
         except exc.CaughtSignal as e:
             pass

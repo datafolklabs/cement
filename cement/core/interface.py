@@ -11,7 +11,7 @@ DEFAULT_META = ['interface', 'label', 'config_defaults', 'config_section']
 def list():
     """
     DEPRECATION WARNING: This function is deprecated as of Cement 2.9
-    in favor of the `CementApp.handler.list_types()` function, and will be
+    in favor of the ``App.handler.list_types()`` function, and will be
     removed in future versions of Cement.
 
     Return a list of defined interfaces (handler types).

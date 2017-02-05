@@ -4,7 +4,8 @@ import os
 import unittest
 import shutil
 from tempfile import mkstemp, mkdtemp
-from ..core import backend, foundation
+from ..core.foundation import App
+from ..core import backend
 from ..utils.misc import rando
 
 # shortcuts
@@ -15,10 +16,10 @@ from nose.tools import eq_ as eq
 from nose.plugins.attrib import attr
 
 
-class TestApp(foundation.CementApp):
+class TestApp(App):
 
     """
-    Basic CementApp for generic testing.
+    Basic app for generic testing.
 
     """
     class Meta:

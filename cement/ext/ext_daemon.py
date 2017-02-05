@@ -37,11 +37,11 @@ The daemon extension is configurable with the following settings under the
       Default: 0
 
 
-Configurations can be passed as defaults to a CementApp:
+Configurations can be passed as defaults to a ``App``:
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
     from cement.utils.misc import init_defaults
 
     defaults = init_defaults('myapp', 'daemon')
@@ -51,7 +51,7 @@ Configurations can be passed as defaults to a CementApp:
     defaults['daemon']['pid_file'] = '/var/run/myapp/myapp.pid'
     defaults['daemon']['umask'] = 0
 
-    app = CementApp('myapp', config_defaults=defaults)
+    app = App('myapp', config_defaults=defaults)
 
 
 Application defaults are then overridden by configurations parsed via a
@@ -77,9 +77,9 @@ trigger daemon functionality before ``app.run()`` is called.
 .. code-block:: python
 
     from time import sleep
-    from cement.core.foundation import CementApp
+    from cement import App
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             extensions = ['daemon']
@@ -112,7 +112,7 @@ rather than the entire parent application.  For example:
 
 .. code-block:: python
 
-    from cement.core.foundation import CementApp
+    from cement import App
     from cement.core.controller import CementBaseController, expose
 
 
@@ -131,7 +131,7 @@ rather than the entire parent application.  For example:
                 print(count)
                 sleep(10)
 
-    class MyApp(CementApp):
+    class MyApp(App):
         class Meta:
             label = 'myapp'
             base_controller = MyBaseController
