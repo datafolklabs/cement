@@ -8,25 +8,6 @@ from ..core import exc, backend
 DEFAULT_META = ['interface', 'label', 'config_defaults', 'config_section']
 
 
-def list():
-    """
-    DEPRECATION WARNING: This function is deprecated as of Cement 2.9
-    in favor of the ``App.handler.list_types()`` function, and will be
-    removed in future versions of Cement.
-
-    Return a list of defined interfaces (handler types).
-
-    :returns: List of defined interfaces
-    :rtype: ``list``
-
-    """
-
-    # FIXME: Can't print a deprecation warning here because we don't have
-    # access to the app... and this is too deep to use minimal logger... ;\
-
-    return backend.__handlers__.keys()
-
-
 class Interface(object):
 
     """

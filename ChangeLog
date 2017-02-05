@@ -39,6 +39,8 @@ Refactoring:
 Incompatible:
 
     * ``[core.foundation]`` Rename ``CementApp`` to ``App``.
+    * ``[core.hook]`` Drop deprecated backend globals
+    * ``[core.handler]`` Drop deprecated backend globals
     * ``[core.controller]`` Drop ``CementBaseController``
     * ``[ext.configobj]`` No longer shipped with Cement.
     * ``[ext.json_configobj]`` No longer shipped with Cement.
