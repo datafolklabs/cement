@@ -604,22 +604,6 @@ class App(meta.MetaMixin):
         I.e. ``[MyCustomHandler, SomeOtherHandler]``
         """
 
-        use_backend_globals = True
-        """
-        This is a backward compatibility feature.  Cement 2.x.x
-        relies on several global variables hidden in ``cement.core.backend``
-        used for things like storing hooks and handlers.  Future versions of
-        Cement will no longer use this mechanism, however in order to maintain
-        backward compatibility this is still the default.  By disabling this
-        feature allows multiple instances of App to be created
-        from within the same runtime space without clobbering eachothers
-        hooks/handers/etc.
-
-        Be warned that use of third-party extensions might break as they were
-        built using backend globals, and probably have no idea this feature
-        has changed or exists.
-        """
-
         alternative_module_mapping = {}
         """
         EXPERIMENTAL FEATURE: This is an experimental feature added in Cement
@@ -1024,15 +1008,8 @@ class App(meta.MetaMixin):
         elif '--quiet' in self._meta.argv:
             self._suppress_output()
 
-        # Forward/Backward compat, see Issue #311
-        if self._meta.use_backend_globals is True:
-            backend.__hooks__ = {}
-            backend.__handlers__ = {}
-            self.handler = HandlerManager(use_backend_globals=True)
-            self.hook = HookManager(use_backend_globals=True)
-        else:
-            self.handler = HandlerManager(use_backend_globals=False)
-            self.hook = HookManager(use_backend_globals=False)
+        self.handler = HandlerManager()
+        self.hook = HookManager()
 
         # define framework hooks
         self.hook.define('pre_setup')

@@ -254,4 +254,4 @@ class HandlebarsOutputHandler(output.TemplateOutputHandler):
 
 
 def load(app):
-    handler.register(HandlebarsOutputHandler)
+    app.handler.register(HandlebarsOutputHandler)

@@ -38,7 +38,8 @@ Refactoring:
 
 Incompatible:
 
-    * ``[core]`` Rename ``CementApp`` to ``App``.
+    * ``[core.foundation]`` Rename ``CementApp`` to ``App``.
+    * ``[core.controller]`` Drop ``CementBaseController``
     * ``[ext.configobj]`` No longer shipped with Cement.
     * ``[ext.json_configobj]`` No longer shipped with Cement.
     * ``[ext.yaml_configobj]`` No longer shipped with Cement.

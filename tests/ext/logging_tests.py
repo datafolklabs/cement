@@ -68,7 +68,7 @@ class LoggingExtTestCase(test.CementExtTestCase):
     def test_clear_loggers(self):
         self.app.setup()
 
-        han = handler.get('log', 'logging')
+        han = self.app.handler.get('log', 'logging')
         Log = han()
         Log.clear_loggers(self.app._meta.label)
 

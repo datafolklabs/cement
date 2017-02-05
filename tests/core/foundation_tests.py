@@ -410,7 +410,7 @@ class FoundationTestCase(test.CementCoreTestCase):
     def test_define_hooks_meta(self):
         app = self.make_app(APP, define_hooks=['my_custom_hook'])
         app.setup()
-        self.ok(hook.defined('my_custom_hook'))
+        self.ok(app.hook.defined('my_custom_hook'))
 
     @test.raises(HookTestException)
     def test_register_hooks_meta(self):
@@ -423,7 +423,7 @@ class FoundationTestCase(test.CementCoreTestCase):
 
         app.setup()
 
-        for res in hook.run('my_custom_hook'):
+        for res in app.hook.run('my_custom_hook'):
             pass
 
     def test_register_hooks_meta_retry(self):
@@ -457,7 +457,6 @@ class FoundationTestCase(test.CementCoreTestCase):
 
     def test_disable_backend_globals(self):
         app = self.make_app(APP,
-                            use_backend_globals=False,
                             define_handlers=[MyTestInterface],
                             handlers=[MyTestHandler],
                             define_hooks=['my_hook'],
