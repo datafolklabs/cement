@@ -105,10 +105,10 @@ from ..utils.misc import minimal_logger
 LOG = minimal_logger(__name__)
 
 
-class MemcachedCacheHandler(cache.CementCacheHandler):
+class MemcachedCacheHandler(cache.CacheHandler):
 
     """
-    This class implements the :ref:`ICache <cement.core.cache>`
+    This class implements the :ref:`Cache <cement.core.cache>` Handler
     interface.  It provides a caching interface using the
     `pylibmc <http://sendapatch.se/projects/pylibmc/>`_ library.
 
@@ -122,7 +122,6 @@ class MemcachedCacheHandler(cache.CementCacheHandler):
 
         """Handler meta-data."""
 
-        interface = cache.ICache
         label = 'memcached'
         config_defaults = dict(
             hosts=['127.0.0.1'],

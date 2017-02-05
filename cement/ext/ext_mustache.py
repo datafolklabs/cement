@@ -105,7 +105,7 @@ class PartialsLoader(object):
 class MustacheOutputHandler(output.TemplateOutputHandler):
 
     """
-    This class implements the :ref:`IOutput <cement.core.output>`
+    This class implements the :ref:`Output <cement.core.output>` Handler
     interface.  It provides text output from template and uses the
     `Mustache Templating Language <http://mustache.github.com>`_.  Please
     see the developer documentation on
@@ -121,7 +121,6 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
 
         """Handler meta-data."""
 
-        interface = output.IOutput
         label = 'mustache'
 
         #: Whether or not to include ``mustache`` as an available to choice

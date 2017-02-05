@@ -61,10 +61,10 @@ from ..utils.misc import minimal_logger
 LOG = minimal_logger(__name__)
 
 
-class TabulateOutputHandler(output.CementOutputHandler):
+class TabulateOutputHandler(output.OutputHandler):
 
     """
-    This class implements the :ref:`IOutput <cement.core.output>`
+    This class implements the :ref:`Output <cement.core.output>` Handler
     interface.  It provides tabularized text output using the
     `Tabulate <https://pypi.python.org/pypi/tabulate>`_ module.  Please
     see the developer documentation on
@@ -80,7 +80,6 @@ class TabulateOutputHandler(output.CementOutputHandler):
 
         """Handler meta-data."""
 
-        interface = output.IOutput
         label = 'tabulate'
 
         #: Whether or not to pad the output with an extra pre/post '\n'

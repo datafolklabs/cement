@@ -113,10 +113,10 @@ from ..utils.misc import minimal_logger
 LOG = minimal_logger(__name__)
 
 
-class RedisCacheHandler(cache.CementCacheHandler):
+class RedisCacheHandler(cache.CacheHandler):
 
     """
-    This class implements the :ref:`ICache <cement.core.cache>`
+    This class implements the :ref:`Cache <cement.core.cache>` Handler
     interface.  It provides a caching interface using the
     `redis <http://github.com/andymccurdy/redis-py>`_ library.
 
@@ -130,7 +130,6 @@ class RedisCacheHandler(cache.CementCacheHandler):
 
         """Handler meta-data."""
 
-        interface = cache.ICache
         label = 'redis'
         config_defaults = dict(
             hosts='127.0.0.1',

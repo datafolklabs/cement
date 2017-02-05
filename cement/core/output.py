@@ -4,70 +4,44 @@ import os
 import sys
 import pkgutil
 import re
-from ..core import exc, interface, handler
+from abc import abstractmethod
+from ..core import exc
+from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 from ..utils import fs
 
 LOG = minimal_logger(__name__)
 
 
-def output_validator(klass, obj):
-    """Validates an handler implementation against the IOutput interface."""
-
-    members = [
-        '_setup',
-        'render',
-    ]
-    interface.validate(IOutput, obj, members)
-
-
-class IOutput(interface.Interface):
+class OutputHandlerBase(Handler):
 
     """
     This class defines the Output Handler Interface.  Classes that
-    implement this handler must provide the methods and attributes defined
+    implement this interface must provide the methods and attributes defined
     below.
-
-    Implementations do *not* subclass from interfaces.
 
     Usage:
 
     .. code-block:: python
 
-        from cement.core import output
+        from cement.core.output import OutputHandlerBase
 
-        class MyOutputHandler(object):
+        class MyOutputHandler(OutputHandlerBase):
             class Meta:
-                interface = output.IOutput
                 label = 'my_output_handler'
             ...
 
     """
-    # pylint: disable=W0232, C0111, R0903
-    class IMeta:
 
-        """Interface meta-data."""
+    class Meta:
 
-        label = 'output'
-        """The string identifier of the interface."""
+        """Handler meta-data."""
 
-        validator = output_validator
-        """The interface validator function."""
+        #: The string identifier of the interface
+        interface = 'output'
 
-    # Must be provided by the implementation
-    Meta = interface.Attribute('Handler meta-data')
-
-    def _setup(app_obj):
-        """
-        The _setup function is called during application initialization and
-        must 'setup' the handler object making it ready for the framework
-        or the application to make further calls to it.
-
-        :param app_obj: The application object.
-
-        """
-
-    def render(data_dict, *args, **kwargs):
+    @abstractmethod
+    def render(self, data_dict, *args, **kwargs):
         """
         Render the data_dict into output in some fashion.  This function must
         access both ``*args`` and ``**kwargs`` to allow an application to mix
@@ -78,37 +52,18 @@ class IOutput(interface.Interface):
         :returns: string or unicode string or None
 
         """
+        pass
 
 
-class CementOutputHandler(handler.CementBaseHandler):
+class OutputHandler(OutputHandlerBase):
 
-    """
-    Base class that all Output Handlers should sub-class from.
+    """Output handler implementation."""
 
-    """
-    class Meta:
+    pass
 
-        """
-        Handler meta-data (can be passed as keyword arguments to the parent
-        class).
-        """
+class TemplateOutputHandler(OutputHandler):
 
-        label = None
-        """The string identifier of this handler."""
-
-        interface = IOutput
-        """The interface that this class implements."""
-
-    def __init__(self, *args, **kw):
-        super(CementOutputHandler, self).__init__(*args, **kw)
-
-
-class TemplateOutputHandler(CementOutputHandler):
-
-    """
-    Base class for template base output handlers.
-
-    """
+    """Base class for template base output handlers."""
 
     def _load_template_from_file(self, template_path):
         for template_dir in self.app._meta.template_dirs:

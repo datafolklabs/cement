@@ -146,10 +146,10 @@ def suppress_output_after_render(app, out_text):
         app._suppress_output()
 
 
-class JsonOutputHandler(output.CementOutputHandler):
+class JsonOutputHandler(output.OutputHandler):
 
     """
-    This class implements the :ref:`IOutput <cement.core.output>`
+    This class implements the :ref:`Output <cement.core.output>` Handler
     interface.  It provides JSON output from a data dictionary using the
     `json <http://docs.python.org/library/json.html>`_ module of the standard
     library.  Please see the developer documentation on
@@ -165,9 +165,6 @@ class JsonOutputHandler(output.CementOutputHandler):
 
         """Handler meta-data"""
 
-        interface = output.IOutput
-        """The interface this class implements."""
-
         label = 'json'
         """The string identifier of this handler."""
 
@@ -179,11 +176,11 @@ class JsonOutputHandler(output.CementOutputHandler):
         json_module = 'json'
 
     def __init__(self, *args, **kw):
-        super(JsonOutputHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self._json = None
 
     def _setup(self, app):
-        super(JsonOutputHandler, self)._setup(app)
+        super()._setup(app)
         self._json = __import__(self._meta.json_module,
                                 globals(), locals(), [], 0)
 
@@ -207,7 +204,7 @@ class JsonOutputHandler(output.CementOutputHandler):
 class JsonConfigHandler(ConfigParserConfigHandler):
 
     """
-    This class implements the :ref:`IConfig <cement.core.config>`
+    This class implements the :ref:`Config <cement.core.config>` Handler
     interface, and provides the same functionality of
     :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>`
     but with JSON configuration files.
@@ -223,11 +220,11 @@ class JsonConfigHandler(ConfigParserConfigHandler):
         json_module = 'json'
 
     def __init__(self, *args, **kw):
-        super(JsonConfigHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self._json = None
 
     def _setup(self, app):
-        super(JsonConfigHandler, self)._setup(app)
+        super()._setup(app)
         self._json = __import__(self._meta.json_module,
                                 globals(), locals(), [], 0)
 

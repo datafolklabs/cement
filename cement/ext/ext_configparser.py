@@ -47,10 +47,10 @@ else:
 LOG = minimal_logger(__name__)
 
 
-class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
+class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
 
     """
-    This class is an implementation of the :ref:`IConfig <cement.core.config>`
+    This class is an implementation of the :ref:`Config <cement.core.config>`
     interface.  It handles configuration file parsing and the like by
     sub-classing from the standard `ConfigParser
     <http://docs.python.org/library/configparser.html>`_
@@ -64,18 +64,15 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
 
         """Handler meta-data."""
 
-        interface = config.IConfig
-        """The interface that this handler implements."""
-
         label = 'configparser'
         """The string identifier of this handler."""
 
-    def __init__(self, *args, **kw):
-        # ConfigParser is not a new style object, so you can't call super()
-        # super(ConfigParserConfigHandler, self).__init__(*args, **kw)
-        RawConfigParser.__init__(self, *args, **kw)
-        super(ConfigParserConfigHandler, self).__init__(*args, **kw)
-        self.app = None
+    # def __init__(self, *args, **kw):
+    #     # ConfigParser is not a new style object, so you can't call super()
+    #     # super(ConfigParserConfigHandler, self).__init__(*args, **kw)
+    #     RawConfigParser.__init__(self, *args, **kw)
+    #     super(ConfigParserConfigHandler, self).__init__(*args, **kw)
+    #     self.app = None
 
     def merge(self, dict_obj, override=True):
         """
@@ -162,8 +159,16 @@ class ConfigParserConfigHandler(config.CementConfigHandler, RawConfigParser):
         :param section: The section to add.
 
         """
-        super(ConfigParserConfigHandler, self).add_section(section)
+        return RawConfigParser.add_section(self, section)
 
+    def get(self, section, key):
+        return RawConfigParser.get(self, section, key)
+
+    def has_section(self, section):
+        return RawConfigParser.has_section(self, section)
+
+    def set(self, section, key, value):
+        return RawConfigParser.set(self, section, key, value)
 
 def load(app):
     app.handler.register(ConfigParserConfigHandler)

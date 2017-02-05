@@ -39,9 +39,8 @@ PLUGIN = """
 
 from cement.core import output
 
-class TestOutputHandler(output.CementOutputHandler):
+class TestOutputHandler(output.OutputHandler):
     class Meta:
-        interface = output.IOutput
         label = 'test_output_handler'
 
     def _setup(self, app_obj):

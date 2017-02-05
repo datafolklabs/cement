@@ -3,71 +3,41 @@ Cement core argument module.
 
 """
 
-from ..core import interface
-from ..core.handler import CementBaseHandler
+from abc import abstractmethod
+from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-# pylint: disable=w0613
-def argument_validator(klass, obj):
-    """Validates a handler implementation against the IArgument interface."""
-    members = [
-        '_setup',
-        'parse',
-        'add_argument',
-    ]
-
-    interface.validate(IArgument, obj, members)
-
-
-# pylint: disable=W0105,W0232,W0232,R0903,E0213,R0923
-class IArgument(interface.Interface):
+class ArgumentHandlerBase(Handler):
 
     """
     This class defines the Argument Handler Interface.  Classes that
-    implement this handler must provide the methods and attributes defined
-    below.  Implementations do *not* subclass from interfaces.
+    implement this interface must provide the methods and attributes defined
+    below.  
 
     Example:
 
     .. code-block:: python
 
-        from cement.core import interface, arg
+        from cement.core.arg import ArgumentHandlerBase
 
-        class MyArgumentHandler(arg.CementArgumentHandler):
+        class MyArgumentHandler(ArgumentHandlerBase):
             class Meta:
-                interface = arg.IArgument
                 label = 'my_argument_handler'
 
     """
-    class IMeta:
+    class Meta:
 
         """Interface meta-data options."""
 
-        label = 'argument'
+        #: The string identifier of the interface.
+        interface = 'argument'
         """The string identifier of the interface."""
 
-        validator = argument_validator
-        """Interface validator function."""
-
-    # Must be provided by the implementation
-    Meta = interface.Attribute('Handler Meta-data')
-
-    def _setup(app_obj):
-        """
-        The _setup function is called during application initialization and
-        must 'setup' the handler object making it ready for the framework
-        or the application to make further calls to it.
-
-        :param app_obj: The application object
-        :returns: ``None``
-
-        """
-
-    # pylint: disable=E0211
-    def add_argument(*args, **kw):
+    @abstractmethod
+    def add_argument(self, *args, **kw):
         """
         Add arguments for parsing.  This should be -o/--option or positional.
         Note that the interface defines the following parameters so that at
@@ -90,7 +60,9 @@ class IArgument(interface.Interface):
         :returns: ``None``
 
         """
+        pass
 
+    @abstractmethod
     def parse(arg_list):
         """
         Parse the argument list (i.e. sys.argv).  Can return any object as
@@ -102,25 +74,11 @@ class IArgument(interface.Interface):
         :returns: Callable object
 
         """
+        pass
 
 
-# pylint: disable=W0105
-class CementArgumentHandler(CementBaseHandler):
+class ArgumentHandler(ArgumentHandlerBase):
 
-    """Base class that all Argument Handlers should sub-class from."""
+    """Argument handler implementation"""
 
-    class Meta:
-
-        """
-        Handler meta-data (can be passed as keyword arguments to the parent
-        class).
-        """
-
-        label = None
-        """The string identifier of the handler implementation."""
-
-        interface = IArgument
-        """The interface that this class implements."""
-
-    def __init__(self, *args, **kw):
-        super(CementArgumentHandler, self).__init__(*args, **kw)
+    pass

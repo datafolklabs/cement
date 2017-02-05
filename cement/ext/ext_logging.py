@@ -76,10 +76,10 @@ except AttributeError as e:                 # pragma: no cover
             self.lock = None                # pragma: no cover
 
 
-class LoggingLogHandler(log.CementLogHandler):
+class LoggingLogHandler(log.LogHandler):
 
     """
-    This class is an implementation of the :ref:`ILog <cement.core.log>`
+    This class is an implementation of the :ref:`Log <cement.core.log>`
     interface, and sets up the logging facility using the standard Python
     `logging <http://docs.python.org/library/logging.html>`_ module.
 
@@ -88,9 +88,6 @@ class LoggingLogHandler(log.CementLogHandler):
     class Meta:
 
         """Handler meta-data."""
-
-        #: The interface that this class implements.
-        interface = log.ILog
 
         #: The string identifier of this handler.
         label = 'logging'

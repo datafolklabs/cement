@@ -38,9 +38,12 @@ Refactoring:
 
 Incompatible:
 
+    * ``[core]`` Replace Interfaces with ABC Base Classes
+       * :issue:`192`
     * ``[core.foundation]`` Rename ``CementApp`` to ``App``.
-    * ``[core.hook]`` Drop deprecated backend globals
+    * ``[core.handler]`` Rename ``CementBaseHandler`` to ``Handler``
     * ``[core.handler]`` Drop deprecated backend globals
+    * ``[core.hook]`` Drop deprecated backend globals
     * ``[core.controller]`` Drop ``CementBaseController``
     * ``[ext.configobj]`` No longer shipped with Cement.
     * ``[ext.json_configobj]`` No longer shipped with Cement.

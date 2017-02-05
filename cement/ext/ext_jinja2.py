@@ -71,7 +71,7 @@ LOG = minimal_logger(__name__)
 class Jinja2OutputHandler(output.TemplateOutputHandler):
 
     """
-    This class implements the :ref:`IOutput <cement.core.output>`
+    This class implements the :ref:`OutputHandler <cement.core.output>`
     interface.  It provides text output from template and uses the
     `Jinja2 Templating Language
     <http://jinja.pocoo.org/>`_.
@@ -84,7 +84,6 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
 
         """Handler meta-data."""
 
-        interface = output.IOutput
         label = 'jinja2'
 
     def __init__(self, *args, **kw):

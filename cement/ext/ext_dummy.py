@@ -34,13 +34,14 @@ Usage
 
 """
 
-from ..core import output, mail
+from ..core.output import OutputHandler
+from ..core.mail import MailHandler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class DummyOutputHandler(output.CementOutputHandler):
+class DummyOutputHandler(OutputHandler):
 
     """
     This class is an internal implementation of the
@@ -51,9 +52,6 @@ class DummyOutputHandler(output.CementOutputHandler):
     class Meta:
 
         """Handler meta-data"""
-
-        #: The interface this class implements.
-        interface = output.IOutput
 
         #: The string identifier of this handler.
         label = 'dummy'
@@ -78,7 +76,7 @@ class DummyOutputHandler(output.CementOutputHandler):
         return None
 
 
-class DummyMailHandler(mail.CementMailHandler):
+class DummyMailHandler(MailHandler):
 
     """
     This class implements the :class:`cement.core.mail.IMail`

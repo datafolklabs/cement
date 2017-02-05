@@ -189,7 +189,7 @@ class HandlebarsOutputHandler(output.TemplateOutputHandler):
 
         """Handler meta-data."""
 
-        interface = output.IOutput
+        #: The string identifier of the handler.
         label = 'handlebars'
 
         #: Whether or not to include ``handlebars`` as an available to choice

@@ -119,10 +119,10 @@ def suppress_output_after_render(app, out_text):
         app._suppress_output()
 
 
-class YamlOutputHandler(output.CementOutputHandler):
+class YamlOutputHandler(output.OutputHandler):
 
     """
-    This class implements the :ref:`IOutput <cement.core.output>`
+    This class implements the :ref:`Output <cement.core.output>` Handler
     interface.  It provides Yaml output from a data dictionary and uses
     `pyYaml <http://pyYaml.org/wiki/PyYamlDocumentation>`_ to dump it to
     STDOUT.  Please see the developer documentation on
@@ -139,7 +139,6 @@ class YamlOutputHandler(output.CementOutputHandler):
 
         """Handler meta-data."""
 
-        interface = output.IOutput
         label = 'yaml'
 
         #: Whether or not to include ``yaml`` as an available to choice
@@ -173,7 +172,7 @@ class YamlOutputHandler(output.CementOutputHandler):
 class YamlConfigHandler(ConfigParserConfigHandler):
 
     """
-    This class implements the :ref:`IConfig <cement.core.config>`
+    This class implements the :ref:`Config <cement.core.config>` Handler
     interface, and provides the same functionality of
     :ref:`ConfigParserConfigHandler <cement.ext.ext_configparser>`
     but with Yaml configuration files.  See

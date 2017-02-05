@@ -396,42 +396,42 @@ class App(meta.MetaMixin):
 
         config_handler = 'configparser'
         """
-        A handler class that implements the IConfig interface.
+        A handler class that implements the Config interface.
         """
 
         mail_handler = 'dummy'
         """
-        A handler class that implements the IMail interface.
+        A handler class that implements the Mail interface.
         """
 
         extension_handler = 'cement'
         """
-        A handler class that implements the IExtension interface.
+        A handler class that implements the Extension interface.
         """
 
         log_handler = 'logging'
         """
-        A handler class that implements the ILog interface.
+        A handler class that implements the Log interface.
         """
 
         plugin_handler = 'cement'
         """
-        A handler class that implements the IPlugin interface.
+        A handler class that implements the Plugin interface.
         """
 
         argument_handler = 'argparse'
         """
-        A handler class that implements the IArgument interface.
+        A handler class that implements the Argument interface.
         """
 
         output_handler = 'dummy'
         """
-        A handler class that implements the IOutput interface.
+        A handler class that implements the Output interface.
         """
 
         cache_handler = None
         """
-        A handler class that implements the ICache interface.
+        A handler class that implements the Cache interface.
         """
 
         base_controller = None
@@ -1049,23 +1049,23 @@ class App(meta.MetaMixin):
                 self.hook.register(*hook_spec)
 
         # define and register handlers
-        self.handler.define(extension.IExtension)
-        self.handler.define(log.ILog)
-        self.handler.define(config.IConfig)
-        self.handler.define(mail.IMail)
-        self.handler.define(plugin.IPlugin)
-        self.handler.define(output.IOutput)
-        self.handler.define(arg.IArgument)
-        self.handler.define(controller.IController)
-        self.handler.define(cache.ICache)
+        self.handler.define(extension.ExtensionHandlerBase)
+        self.handler.define(log.LogHandlerBase)
+        self.handler.define(config.ConfigHandlerBase)
+        self.handler.define(mail.MailHandlerBase)
+        self.handler.define(plugin.PluginHandlerBase)
+        self.handler.define(output.OutputHandlerBase)
+        self.handler.define(arg.ArgumentHandlerBase)
+        self.handler.define(controller.ControllerHandlerBase)
+        self.handler.define(cache.CacheHandlerBase)
 
         # define application handlers
-        for interface_class in self._meta.define_handlers:
-            self.handler.define(interface_class)
+        for handler_class in self._meta.define_handlers:
+            self.handler.define(handler_class)
 
         # extension handler is the only thing that can't be loaded... as,
         # well, an extension.  ;)
-        self.handler.register(extension.CementExtensionHandler)
+        self.handler.register(extension.ExtensionHandler)
 
         # register application handlers
         for handler_class in self._meta.handlers:
@@ -1151,6 +1151,7 @@ class App(meta.MetaMixin):
                                             self._meta.config_handler)
         if self._meta.config_section is None:
             self._meta.config_section = self._meta.label
+
         self.config.add_section(self._meta.config_section)
 
         if self._meta.config_defaults is not None:

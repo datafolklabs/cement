@@ -5,10 +5,9 @@ from cement.utils import test
 from cement.utils.misc import init_defaults
 
 
-class BogusHandler1(log.CementLogHandler):
+class BogusHandler1(log.LogHandler):
 
     class Meta:
-        interface = log.ILog
         label = 'bogus'
 
 
@@ -18,11 +17,11 @@ class LogTestCase(test.CementCoreTestCase):
         super(LogTestCase, self).setUp()
         self.app = self.make_app()
 
-    @test.raises(exc.InterfaceError)
+    @test.raises(TypeError)
     def test_unproviding_handler(self):
         try:
             self.app.handler.register(BogusHandler1)
-        except exc.InterfaceError:
+        except TypeError:
             raise
 
     def test_logging(self):

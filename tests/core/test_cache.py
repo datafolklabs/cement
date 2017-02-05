@@ -4,7 +4,7 @@ from cement.core import cache
 from cement.utils import test
 
 
-class MyCacheHandler(cache.CementCacheHandler):
+class MyCacheHandler(cache.CacheHandler):
 
     class Meta:
         label = 'my_cache_handler'

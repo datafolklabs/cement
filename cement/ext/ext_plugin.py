@@ -34,7 +34,7 @@ LOG = minimal_logger(__name__)
 # FIX ME: This is a redundant name... ?
 
 
-class CementPluginHandler(plugin.CementPluginHandler):
+class CementPluginHandler(plugin.PluginHandler):
 
     """
     This class is an internal implementation of the
@@ -47,21 +47,18 @@ class CementPluginHandler(plugin.CementPluginHandler):
 
         """Handler meta-data."""
 
-        interface = plugin.IPlugin
-        """The interface that this class implements."""
-
         label = 'cement'
         """The string identifier for this class."""
 
     def __init__(self):
-        super(CementPluginHandler, self).__init__()
+        super().__init__()
         self._loaded_plugins = []
         self._enabled_plugins = []
         self._disabled_plugins = []
         self._plugin_configs = {}
 
     def _setup(self, app_obj):
-        super(CementPluginHandler, self)._setup(app_obj)
+        super()._setup(app_obj)
         self._enabled_plugins = []
         self._disabled_plugins = []
         self._plugin_configs = {}

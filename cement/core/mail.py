@@ -1,36 +1,23 @@
 """Cement core mail module."""
 
-from ..core import interface, handler
+# from ..core import interface
+from abc import ABC, abstractmethod, abstractproperty
+from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-def mail_validator(klass, obj):
-    """Validates a handler implementation against the IMail interface."""
-
-    members = [
-        '_setup',
-        'send',
-    ]
-
-    # FIX ME: Validate Meta/Configuration Defaults Here
-
-    interface.validate(IMail, obj, members)
-
-
-class IMail(interface.Interface):
+class MailHandlerBase(Handler):
 
     """
     This class defines the Mail Handler Interface.  Classes that
-    implement this handler must provide the methods and attributes defined
+    implement this interface must provide the methods and attributes defined
     below.
-
-    Implementations do *not* subclass from interfaces.
 
     **Configuration**
 
-    Implementations much support the following configuration settings:
+    Implementations must support the following configuration settings:
 
      * **to** - Default ``to`` addresses (list, or comma separated depending
        on the ConfigHandler in use)
@@ -46,41 +33,24 @@ class IMail(interface.Interface):
 
     .. code-block:: python
 
-        from cement.core import mail
+        from cement.core.mail import MailHandlerBase
 
         class MyMailHandler(object):
             class Meta:
-                interface = mail.IMail
-                label = 'my_mail_handler'
+                label = 'my_mail'
             ...
 
     """
-    # pylint: disable=W0232, C0111, R0903
-    class IMeta:
 
-        """Interface meta-data."""
+    class Meta:
 
-        label = 'mail'
-        """The label (or type identifier) of the interface."""
+        """Handler meta-data."""
 
-        validator = mail_validator
-        """Interface validator function."""
+        interface = 'mail'
+        """The label identifier of the interface."""
 
-    # Must be provided by the implementation
-    Meta = interface.Attribute('Handler meta-data')
-
-    def _setup(app_obj):
-        """
-        The _setup function is called during application initialization and
-        must 'setup' the handler object making it ready for the framework
-        or the application to make further calls to it.
-
-        :param app_obj: The application object.
-        :returns: None
-
-        """
-
-    def send(body, **kwargs):
+    @abstractmethod
+    def send(self, body, **kwargs):
         """
         Send a mail message.  Keyword arguments override configuration
         defaults (cc, bcc, etc).
@@ -105,10 +75,10 @@ class IMail(interface.Interface):
         .. code-block:: python
 
             # Using all configuration defaults
-            app.send('This is my message body')
+            app.mail.send('This is my message body')
 
             # Overriding configuration defaults
-            app.send('My message body'
+            app.mail.send('My message body'
                 to=['john@example.com'],
                 from_addr='me@example.com',
                 cc=['jane@example.com', 'rita@example.com'],
@@ -116,30 +86,18 @@ class IMail(interface.Interface):
                 )
 
         """
+        pass
 
+class MailHandler(MailHandlerBase):
 
-class CementMailHandler(handler.CementBaseHandler):
+    """Mail handler implementation."""
 
-    """
-    Base class that all Mail Handlers should sub-class from.
-
-    **Configuration Options**
-
-    This handler supports the following configuration options under a
-
-    """
     class Meta:
 
         """
         Handler meta-data (can be passed as keyword arguments to the parent
         class).
         """
-
-        #: String identifier of this handler implementation.
-        label = None
-
-        #: The interface that this handler class implements.
-        interface = IMail
 
         #: Configuration default values
         config_defaults = {
@@ -151,15 +109,9 @@ class CementMailHandler(handler.CementBaseHandler):
             'subject_prefix': '',
         }
 
-    def __init__(self, *args, **kw):
-        super(CementMailHandler, self).__init__(*args, **kw)
-
     def _setup(self, app_obj):
-        super(CementMailHandler, self)._setup(app_obj)
+        super()._setup(app_obj)
         self._validate_config()
-
-    def send(self, body, **kw):
-        raise NotImplementedError   # pragma: nocover
 
     def _validate_config(self):
         # convert comma separated strings to lists (ConfigParser)

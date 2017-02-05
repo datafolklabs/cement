@@ -1,85 +1,43 @@
 """Cement core config module."""
 
 import os
-from ..core import interface, handler
+from abc import ABC, abstractmethod, abstractproperty
+from ..core.handler import Handler
 from ..utils.fs import abspath
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-def config_validator(klass, obj):
-    """Validates a handler implementation against the IConfig interface."""
-    members = [
-        '_setup',
-        'keys',
-        'get_sections',
-        'get_section_dict',
-        'get',
-        'set',
-        'parse_file',
-        'merge',
-        'add_section',
-        'has_section',
-    ]
-    interface.validate(IConfig, obj, members)
-
-
-class IConfig(interface.Interface):
+class ConfigHandlerBase(Handler):
 
     """
     This class defines the Config Handler Interface.  Classes that
-    implement this handler must provide the methods and attributes defined
+    implement this interface must provide the methods and attributes defined
     below.
-
-    All implementations must provide sane 'default' functionality when
-    instantiated with no arguments.  Meaning, it can and should accept
-    optional parameters that alter how it functions, but can not require
-    any parameters.  When the framework first initializes handlers it does
-    not pass anything too them, though a handler can be instantiated first
-    (with or without parameters) and then passed to ``App()`` already
-    instantiated.
-
-    Implementations do *not* subclass from interfaces.
 
     Usage:
 
     .. code-block:: python
 
-        from cement.core import config
+        from cement.core.config import ConfigHandlerBase
 
-        class MyConfigHandler(config.CementConfigHandler):
+        class MyConfigHandler(ConfigHandlerbase):
             class Meta:
-                interface = config.IConfig
-                label = 'my_config_handler'
+                label = 'my_config'
             ...
 
     """
-    # pylint: disable=W0232, C0111, R0903
-    class IMeta:
 
-        """Interface meta-data."""
-        label = 'config'
+    class Meta:
+
+        """Handler meta-data."""
+
+        interface = 'config'
         """The string identifier of the interface."""
 
-        validator = config_validator
-        """The validator function."""
-
-    # Must be provided by the implementation
-    Meta = interface.Attribute('Handler Meta-data')
-
-    def _setup(app_obj):
-        """
-        The _setup function is called during application initialization and
-        must 'setup' the handler object making it ready for the framework
-        or the application to make further calls to it.
-
-        :param app_obj: The application object.
-        :returns: None
-
-        """
-
-    def parse_file(file_path):
+    @abstractmethod
+    def parse_file(self, file_path):
         """
         Parse config file settings from file_path.  Returns True if the file
         existed, and was parsed successfully.  Returns False otherwise.
@@ -89,8 +47,10 @@ class IConfig(interface.Interface):
         :rtype: ``boolean``
 
         """
+        pass
 
-    def keys(section):
+    @abstractmethod
+    def keys(self, section):
         """
         Return a list of configuration keys from `section`.
 
@@ -99,8 +59,10 @@ class IConfig(interface.Interface):
         :rtype: ``list``
 
         """
+        pass
 
-    def get_sections():
+    @abstractmethod
+    def get_sections(self):
         """
         Return a list of configuration sections.  These are designated by a
         [block] label in a config file.
@@ -109,8 +71,10 @@ class IConfig(interface.Interface):
         :rtype: ``list``
 
         """
+        pass
 
-    def get_section_dict(section):
+    @abstractmethod
+    def get_section_dict(self, section):
         """
         Return a dict of configuration parameters for [section].
 
@@ -120,8 +84,10 @@ class IConfig(interface.Interface):
         :rtype: ``dict``
 
         """
+        pass
 
-    def add_section(section):
+    @abstractmethod
+    def add_section(self, section):
         """
         Add a new section if it doesn't exist.
 
@@ -129,8 +95,10 @@ class IConfig(interface.Interface):
         :returns: ``None``
 
         """
+        pass
 
-    def get(section, key):
+    @abstractmethod
+    def get(self, section, key):
         """
         Return a configuration value based on [section][key].  The return
         value type is unknown.
@@ -142,8 +110,10 @@ class IConfig(interface.Interface):
         :rtype: ``Unknown``
 
         """
+        pass
 
-    def set(section, key, value):
+    @abstractmethod
+    def set(self, section, key, value):
         """
         Set a configuration value based at [section][key].
 
@@ -154,8 +124,10 @@ class IConfig(interface.Interface):
         :returns: ``None``
 
         """
+        pass
 
-    def merge(dict_obj, override=True):
+    @abstractmethod
+    def merge(self, dict_obj, override=True):
         """
         Merges a dict object into the configuration.
 
@@ -164,8 +136,10 @@ class IConfig(interface.Interface):
             Default: True
         :returns: ``None``
         """
+        pass
 
-    def has_section(section):
+    @abstractmethod
+    def has_section(self, section):
         """
         Returns whether or not the section exists.
 
@@ -173,30 +147,17 @@ class IConfig(interface.Interface):
         :returns: ``boolean``
 
         """
+        pass
 
 
-class CementConfigHandler(handler.CementBaseHandler):
-
-    """
-    Base class that all Config Handlers should sub-class from.
+class ConfigHandler(ConfigHandlerBase):
 
     """
-    class Meta:
+    Config handler implementation.
 
-        """
-        Handler meta-data (can be passed as keyword arguments to the parent
-        class).
-        """
+    """
 
-        label = None
-        """The string identifier of the implementation."""
-
-        interface = IConfig
-        """The interface that this handler implements."""
-
-    def __init__(self, *args, **kw):
-        super(CementConfigHandler, self).__init__(*args, **kw)
-
+    @abstractmethod
     def _parse_file(self, file_path):
         """
         Parse a configuration file at `file_path` and store it.  This function
@@ -208,7 +169,7 @@ class CementConfigHandler(handler.CementBaseHandler):
         :rtype: ``boolean``
 
         """
-        raise NotImplementedError
+        pass
 
     def parse_file(self, file_path):
         """

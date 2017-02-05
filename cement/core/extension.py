@@ -1,42 +1,28 @@
 """Cement core extensions module."""
 
 import sys
-from ..core import exc, interface, handler
+from abc import ABC, abstractmethod, abstractproperty
+from ..core import exc
+from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-def extension_validator(klass, obj):
-    """
-    Validates an handler implementation against the IExtension interface.
-
-    """
-    members = [
-        '_setup',
-        'load_extension',
-        'load_extensions',
-        'get_loaded_extensions',
-    ]
-    interface.validate(IExtension, obj, members)
-
-
-class IExtension(interface.Interface):
+class ExtensionHandlerBase(Handler):
 
     """
     This class defines the Extension Handler Interface.  Classes that
     implement this handler must provide the methods and attributes defined
     below.
 
-    Implementations do *not* subclass from interfaces.
-
     Usage:
 
     .. code-block:: python
 
-        from cement.core import extension
+        from cement.core.extension import ExtensionHandlerBase
 
-        class MyExtensionHandler(object):
+        class MyExtensionHandler(ExtensionHandlerBase):
             class Meta:
                 interface = extension.IExtension
                 label = 'my_extension_handler'
@@ -44,31 +30,14 @@ class IExtension(interface.Interface):
 
     """
 
-    # pylint: disable=W0232, C0111, R0903
-    class IMeta:
+    class Meta:
 
-        """Interface meta-data."""
+        """Handler meta-data."""
 
-        label = 'extension'
-        """The string identifier of the interface."""
+        #: The string identifier of the interface.
+        interface = 'extension'
 
-        validator = extension_validator
-        """The interface validator function."""
-
-    # Must be provided by the implementation
-    Meta = interface.Attribute('Handler Meta-data class')
-
-    def _setup(app_obj):
-        """
-        The _setup function is called during application initialization and
-        must 'setup' the handler object making it ready for the framework
-        or the application to make further calls to it.
-
-        :param app_obj: The application object.
-        :returns: None
-
-        """
-
+    @abstractmethod
     def load_extension(self, ext_module):
         """
         Load an extension whose module is 'ext_module'.  For example,
@@ -78,7 +47,9 @@ class IExtension(interface.Interface):
         :type ext_module: ``str``
 
         """
+        pass
 
+    @abstractmethod
     def load_extensions(self, ext_list):
         """
         Load all extensions from ext_list.
@@ -89,9 +60,10 @@ class IExtension(interface.Interface):
         :type ext_list: ``list``
 
         """
+        pass
 
 
-class CementExtensionHandler(handler.CementBaseHandler):
+class ExtensionHandler(ExtensionHandlerBase):
 
     class Meta:
 
@@ -100,24 +72,23 @@ class CementExtensionHandler(handler.CementBaseHandler):
         class).
         """
 
-        interface = IExtension
-        """The interface that this class implements."""
-
         label = 'cement'
         """The string identifier of the handler."""
 
     def __init__(self, **kw):
         """
-        This is an implementation of the IExtentionHandler interface.  It
-        handles loading framework extensions.
+        This handler defines the Extention Interface, which handles
+        loading framework extensions.  All extension  handlers should
+        sub-class from here, or ensure that their implementation meets the
+        requirements of this base class.
 
         """
-        super(CementExtensionHandler, self).__init__(**kw)
+        super().__init__(**kw)
         self.app = None
         self._loaded_extensions = []
 
     def get_loaded_extensions(self):
-        """Returns list of loaded extensions."""
+        """Returns a list of loaded extensions."""
         return self._loaded_extensions
 
     def load_extension(self, ext_module):

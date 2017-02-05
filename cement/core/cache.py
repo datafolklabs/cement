@@ -1,72 +1,41 @@
 """Cement core cache module."""
 
-from ..core import interface, handler
+from abc import abstractmethod
+from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-def cache_validator(klass, obj):
-    """Validates a handler implementation against the ICache interface."""
-
-    members = [
-        '_setup',
-        'get',
-        'set',
-        'delete',
-        'purge',
-    ]
-    interface.validate(ICache, obj, members)
-
-
-class ICache(interface.Interface):
+class CacheHandlerBase(Handler):
 
     """
     This class defines the Cache Handler Interface.  Classes that
-    implement this handler must provide the methods and attributes defined
+    implement this interface must provide the methods and attributes defined
     below.
-
-    Implementations do *not* subclass from interfaces.
 
     Usage:
 
     .. code-block:: python
 
-        from cement.core import cache
+        from cement.core.cache import CacheHandlerBase
 
-        class MyCacheHandler(object):
+        class MyCacheHandler(CacheHandlerBase):
             class Meta:
-                interface = cache.ICache
                 label = 'my_cache_handler'
             ...
 
     """
-    # pylint: disable=W0232, C0111, R0903
-    class IMeta:
 
-        """Interface meta-data."""
+    class Meta:
 
-        label = 'cache'
-        """The label (or type identifier) of the interface."""
+        """Handler meta-data."""
 
-        validator = cache_validator
-        """Interface validator function."""
+        #: The string identifier of the interface.
+        interface = 'cache'
 
-    # Must be provided by the implementation
-    Meta = interface.Attribute('Handler meta-data')
-
-    def _setup(app_obj):
-        """
-        The _setup function is called during application initialization and
-        must 'setup' the handler object making it ready for the framework
-        or the application to make further calls to it.
-
-        :param app_obj: The application object.
-        :returns: ``None``
-
-        """
-
-    def get(key, fallback=None):
+    @abstractmethod
+    def get(self, key, fallback=None):
         """
         Get the value for a key in the cache.  If the key does not exist
         or the key/value in cache is expired, this functions must return
@@ -78,8 +47,10 @@ class ICache(interface.Interface):
         :returns: Unknown (whatever the value is in cache, or the `fallback`)
 
         """
+        pass
 
-    def set(key, value, time=None):
+    @abstractmethod
+    def set(self, key, value, time=None):
         """
         Set the key/value in the cache for a set amount of `time`.
 
@@ -91,8 +62,10 @@ class ICache(interface.Interface):
         :returns: ``None``
 
         """
+        pass
 
-    def delete(key):
+    @abstractmethod
+    def delete(self, key):
         """
         Deletes a key/value from the cache.
 
@@ -101,33 +74,21 @@ class ICache(interface.Interface):
         :rtype: ``boolean``
 
         """
+        pass
 
-    # pylint: disable=E0211
+    @abstractmethod
     def purge():
         """
         Clears all data from the cache.
 
         """
+        pass
 
 
-class CementCacheHandler(handler.CementBaseHandler):
-
-    """
-    Base class that all Cache Handlers should sub-class from.
+class CacheHandler(CacheHandlerBase):
 
     """
-    class Meta:
+    Cache handler implementation.
 
-        """
-        Handler meta-data (can be passed as keyword arguments to the parent
-        class).
-        """
-
-        label = None
-        """String identifier of this handler implementation."""
-
-        interface = ICache
-        """The interface that this handler class implements."""
-
-    def __init__(self, *args, **kw):
-        super(CementCacheHandler, self).__init__(*args, **kw)
+    """
+    pass

@@ -119,7 +119,7 @@ from ..utils.misc import minimal_logger, is_true
 LOG = minimal_logger(__name__)
 
 
-class SMTPMailHandler(mail.CementMailHandler):
+class SMTPMailHandler(mail.MailHandler):
 
     """
     This class implements the :ref:`IMail <cement.core.mail>`

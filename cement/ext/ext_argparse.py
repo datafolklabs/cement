@@ -167,9 +167,9 @@ The above looks like:
 import re
 import sys
 from argparse import ArgumentParser, SUPPRESS
-from ..core.handler import CementBaseHandler
-from ..core.arg import CementArgumentHandler, IArgument
-from ..core.controller import IController
+from ..core.handler import Handler
+from ..core.arg import ArgumentHandler
+from ..core.controller import ControllerHandler
 from ..core.exc import FrameworkError
 from ..utils.misc import minimal_logger
 
@@ -184,15 +184,15 @@ def _clean_func(func):
     return re.sub('-', '_', func)
 
 
-class ArgparseArgumentHandler(ArgumentParser, CementArgumentHandler):
+class ArgparseArgumentHandler(ArgumentParser, ArgumentHandler):
 
     """
-    This class implements the :class:`cement.core.arg.IArgument`
-    interface, and sub-classes from :py:class:`argparse.ArgumentParser`.
+    This class implements the Argument Handler interface, and sub-classes
+    from :py:class:`argparse.ArgumentParser`.
     Please reference the argparse documentation for full usage of the
     class.
 
-    Arguments and Keyword arguments are passed directly to ArgumentParser
+    Arguments and keyword arguments are passed directly to ArgumentParser
     on initialization.
     """
 
@@ -200,7 +200,7 @@ class ArgparseArgumentHandler(ArgumentParser, CementArgumentHandler):
 
         """Handler meta-data."""
 
-        interface = IArgument
+        interface = 'argument'
         """The interface that this class implements."""
 
         label = 'argparse'
@@ -218,7 +218,7 @@ class ArgparseArgumentHandler(ArgumentParser, CementArgumentHandler):
         """
 
     def __init__(self, *args, **kw):
-        super(ArgparseArgumentHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.config = None
         self.unknown_args = None
         self.parsed_args = None
@@ -248,12 +248,7 @@ class ArgparseArgumentHandler(ArgumentParser, CementArgumentHandler):
         passed directly to ``ArgumentParser.add_argument()``.
         See the :py:class:`argparse.ArgumentParser` documentation for help.
         """
-        super(ArgparseArgumentHandler, self).add_argument(*args, **kw)
-
-
-# FIXME: Backward compat name, will remove in Cement 3.x
-class ArgParseArgumentHandler(ArgparseArgumentHandler):
-    pass
+        super().add_argument(*args, **kw)
 
 
 class expose(object):
@@ -318,17 +313,13 @@ class expose(object):
         func.__cement_meta__ = metadict
         return func
 
-# FIX ME: Should be refactored into separate BaseController and Controller
-# classes in Cement 3, but that would break the interface spec in 2.x
 
-
-class ArgparseController(CementBaseHandler):
+class ArgparseController(ControllerHandler):
 
     """
-    This is an implementation of the
-    :class:`cement.core.controller.IController` interface, but as a base class
-    that application controllers should subclass from.  Registering it
-    directly as a handler is useless.
+    This is an implementation of the Controller handler interface, and is a
+    base class that application controllers should subclass from.  Registering
+    it directly as a handler is useless.
 
     NOTE: This handler **requires** that the applications ``arg_handler`` be
     ``argparse``.  If using an alternative argument handler you will need to
@@ -369,10 +360,10 @@ class ArgparseController(CementBaseHandler):
         """
 
         # The interface this class implements.
-        interface = IController
+        interface = 'controller'
 
         #: The string identifier for the controller.
-        label = 'base'
+        label = None
 
         #: A list of aliases for the controller/sub-parser.  **Only available
         #: in Python > 3**.
@@ -451,7 +442,7 @@ class ArgparseController(CementBaseHandler):
         default_func = 'default'
 
     def __init__(self, *args, **kw):
-        super(ArgparseController, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.app = None
         self._parser = None
 
@@ -464,12 +455,13 @@ class ArgparseController(CementBaseHandler):
         if self._meta.help is None:
             self._meta.help = '%s controller' % _clean_label(self._meta.label)
 
-    def _setup(self, app):
-        """
-        See `IController._setup() <#cement.core.cache.IController._setup>`_.
-        """
-        super(ArgparseController, self)._setup(app)
-        self.app = app
+    def _validate(self):
+        try:
+            assert self._meta.stacked_type in ['embedded', 'nested'], \
+                "Invalid stacked type %s.  " % self._meta.stacked_type \
+                + "Expecting one of: [embedded, nested]"
+        except AssertionError as e:
+            raise FrameworkError(e.args[0])
 
     def _setup_controllers(self):
         # need a list to maintain order

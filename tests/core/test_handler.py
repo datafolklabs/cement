@@ -1,7 +1,6 @@
 """Tests for cement.core.handler."""
 
 from cement.core import exc, handler, output, meta
-from cement.core import interface
 from cement.utils import test
 from cement.ext import ext_dummy
 from cement.ext.ext_configparser import ConfigParserConfigHandler
@@ -17,7 +16,7 @@ class BogusOutputHandler(meta.MetaMixin):
 class BogusOutputHandler2(meta.MetaMixin):
 
     class Meta:
-        interface = output.IOutput
+        interface = 'output'
         label = 'bogus_handler'
 
 
@@ -28,14 +27,14 @@ class BogusHandler3(meta.MetaMixin):
 class BogusHandler4(meta.MetaMixin):
 
     class Meta:
-        interface = output.IOutput
+        interface = 'output'
         # label = 'bogus4'
 
 
-class DuplicateHandler(output.CementOutputHandler):
+class DuplicateHandler(output.OutputHandler):
 
     class Meta:
-        interface = output.IOutput
+        interface = 'output'
         label = 'dummy'
 
     def _setup(self, config_obj):
@@ -45,26 +44,14 @@ class DuplicateHandler(output.CementOutputHandler):
         pass
 
 
-class BogusInterface1(interface.Interface):
+class BogusHandler(handler.Handler):
     pass
-
-
-class BogusInterface2(interface.Interface):
-
-    class IMeta:
-        pass
-
-
-class TestInterface(interface.Interface):
-
-    class IMeta:
-        label = 'test'
 
 
 class TestHandler(meta.MetaMixin):
 
     class Meta:
-        interface = TestInterface
+        interface = 'test_interface'
         label = 'test'
 
 
@@ -168,22 +155,10 @@ class HandlerTestCase(test.CementCoreTestCase):
         self.app.setup()
         self.app.handler.list('bogus')
 
-    @test.raises(exc.InterfaceError)
-    def test_bogus_interface_no_IMeta(self):
-        self.app.handler.define(BogusInterface1)
-
-    @test.raises(exc.InterfaceError)
-    def test_bogus_interface_no_IMeta_label(self):
-        self.app.handler.define(BogusInterface2)
-
     @test.raises(exc.FrameworkError)
     def test_define_duplicate_interface(self):
-        self.app.handler.define(output.IOutput)
-        self.app.handler.define(output.IOutput)
-
-    def test_interface_with_no_validator(self):
-        self.app.handler.define(TestInterface)
-        self.app.handler.register(TestHandler)
+        self.app.handler.define(output.OutputHandlerBase)
+        self.app.handler.define(output.OutputHandlerBase)
 
     def test_handler_not_defined(self):
         self.eq(self.app.handler.defined('bogus'), False)
@@ -199,12 +174,8 @@ class HandlerTestCase(test.CementCoreTestCase):
     @test.raises(exc.FrameworkError)
     def test_register_invalid_handler_type(self):
         self.app.setup()
-
-        class BadInterface:
-            class IMeta:
-                label = 'bad_interface'
-
+        
         class BadHandler(TestHandler):
             class Meta:
-                interface = BadInterface
+                interface = 'bad_interface_not_defined'
         self.app.handler.register(BadHandler)

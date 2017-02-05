@@ -4,10 +4,99 @@ Cement core handler module.
 """
 
 import re
+from abc import ABC, abstractproperty
 from ..core import exc, meta
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
+
+
+class Handler(ABC, meta.MetaMixin):
+
+    """Base handler class that all Cement Handlers should subclass from."""
+
+    class Meta:
+
+        """
+        Handler meta-data (can also be passed as keyword arguments to the
+        parent class).
+
+        """
+
+        """The string identifier of this handler."""
+        label = None
+        
+
+        interface = None
+        """The interface that this class implements."""
+
+        config_section = None
+        """
+        A config [section] to merge config_defaults with.
+
+        Note: Though Meta.config_section defaults to None, Cement will
+        set this to the value of ``<interface_label>.<handler_label>`` if
+        no section is set by the user/developer.
+        """
+
+        config_defaults = None
+        """
+        A config dictionary that is merged into the applications config
+        in the ``[<config_section>]`` block.  These are defaults and do not
+        override any existing defaults under that section.
+        """
+
+        overridable = False
+        """
+        Whether or not handler can be overridden by
+        ``App.Meta.handler_override_options``.  Will be listed as an
+        available choice to override the specific handler (i.e.
+        ``App.Meta.output_handler``, etc).
+        """
+
+    def __init__(self, **kw):
+        super(Handler, self).__init__(**kw)
+        try:
+            assert self._meta.label, \
+                "%s.Meta.label undefined." % self.__class__.__name__
+            assert self._meta.interface, \
+                "%s.Meta.interface undefined." % self.__class__.__name__
+        except AssertionError as e:
+            raise(exc.FrameworkError(e.args[0]))
+
+        self.app = None
+
+    def _setup(self, app):
+        """
+        The _setup function is called during application initialization and
+        must ``setup`` the handler object making it ready for the framework
+        or the application to make further calls to it.
+
+        :param app: The application object.
+        :returns: None
+
+        """
+
+        self.app = app
+
+        if self._meta.config_section is None:
+            self._meta.config_section = "%s.%s" % \
+                (self._meta.interface, self._meta.label)
+
+        if self._meta.config_defaults is not None:
+            LOG.debug("merging config defaults from '%s' " % self +
+                      "into section '%s'" % self._meta.config_section)
+            dict_obj = dict()
+            dict_obj[self._meta.config_section] = self._meta.config_defaults
+            self.app.config.merge(dict_obj, override=False)
+
+        self._validate()
+
+    def _validate(self):
+        """
+        Perform any validation to ensure proper data, meta-data, etc.
+        """
+        pass
 
 
 class HandlerManager(object):
@@ -97,13 +186,11 @@ class HandlerManager(object):
         """
         return self.__handlers__.keys()
 
-    def define(self, interface):
+    def define(self, handler):
         """
-        Define a handler based on the provided interface.  Defines a handler
-        type based on ``<interface>.IMeta.label``.
+        Define an interface based on the provided handler.
 
-        :param interface: The interface class that defines the interface to be
-            implemented by handlers.
+        :param handler: The handler that defines the interface implementation
         :raises: :class:`cement.core.exc.InterfaceError`
         :raises: :class:`cement.core.exc.FrameworkError`
 
@@ -111,24 +198,19 @@ class HandlerManager(object):
 
         .. code-block:: python
 
-            app.handler.define(IDatabaseHandler)
+            app.handler.define(DatabaseHandler)
 
         """
-        if not hasattr(interface, 'IMeta'):
-            raise exc.InterfaceError("Invalid %s, " % interface +
-                                     "missing 'IMeta' class.")
-        if not hasattr(interface.IMeta, 'label'):
-            raise exc.InterfaceError("Invalid %s, " % interface +
-                                     "missing 'IMeta.label' class.")
 
-        LOG.debug("defining handler type '%s' (%s)" %
-                  (interface.IMeta.label, interface.__name__))
+        LOG.debug("defining handler interface '%s' (%s)" %
+                  (handler.Meta.interface, handler.__name__))
 
-        if interface.IMeta.label in self.__handlers__:
-            raise exc.FrameworkError("Handler type '%s' already defined!" %
-                                     interface.IMeta.label)
-        self.__handlers__[interface.IMeta.label] = {
-            '__interface__': interface
+        if handler.Meta.interface in self.__handlers__:
+            msg = "Handler interface '%s' already defined!" % \
+                  handler.Meta.interface
+            raise exc.FrameworkError(msg)
+        self.__handlers__[handler.Meta.interface] = {
+            '__interface__': handler
         }
 
     def defined(self, handler_type):
@@ -152,14 +234,14 @@ class HandlerManager(object):
         else:
             return False
 
-    def register(self, handler_obj, force=False):
+    def register(self, handler_class, force=False):
         """
-        Register a handler object to a handler.  If the same object is already
-        registered then no exception is raised, however if a different object
-        attempts to be registered to the same name a ``FrameworkError`` is
-        raised.
+        Register a handler class to an interface.  If the same object is
+        already registered then no exception is raised, however if a different
+        object attempts to be registered to the same name a ``FrameworkError``
+        is raised.
 
-        :param handler_obj: The uninstantiated handler object to register.
+        :param handler_class: The uninstantiated handler class to register.
         :param force: Whether to allow replacement if an existing
          handler of the same ``label`` is already registered.
         :raises: :class:`cement.core.exc.InterfaceError`
@@ -181,52 +263,47 @@ class HandlerManager(object):
 
         """
 
-        orig_obj = handler_obj
-
         # for checks
-        obj = orig_obj()
+        if not issubclass(handler_class, Handler):
+            raise exc.InterfaceError("Class %s " % handler_class +
+                                     "does not implement Handler")
 
-        if not hasattr(obj._meta, 'label') or not obj._meta.label:
-            raise exc.InterfaceError("Invalid handler %s, " % orig_obj +
-                                     "missing '_meta.label'.")
-        if not hasattr(obj._meta, 'interface') or not obj._meta.interface:
-            raise exc.InterfaceError("Invalid handler %s, " % orig_obj +
-                                     "missing '_meta.interface'.")
+        obj = handler_class()
 
         # translate dashes to underscores
-        orig_obj.Meta.label = re.sub('-', '_', obj._meta.label)
+        handler_class.Meta.label = re.sub('-', '_', obj._meta.label)
         obj._meta.label = re.sub('-', '_', obj._meta.label)
 
-        handler_type = obj._meta.interface.IMeta.label
+        interface = obj._meta.interface
         LOG.debug("registering handler '%s' into handlers['%s']['%s']" %
-                  (orig_obj, handler_type, obj._meta.label))
+                  (handler_class, interface, obj._meta.label))
 
-        if handler_type not in self.__handlers__:
-            raise exc.FrameworkError("Handler type '%s' doesn't exist." %
-                                     handler_type)
-        if obj._meta.label in self.__handlers__[handler_type] and \
-                self.__handlers__[handler_type][obj._meta.label] != orig_obj:
+        if interface not in self.__handlers__:
+            raise exc.FrameworkError("Handler interface '%s' doesn't exist." %
+                                     interface)
+        if obj._meta.label in self.__handlers__[interface] and \
+            self.__handlers__[interface][obj._meta.label] != handler_class:
 
             if force is True:
                 LOG.debug(
                     "handlers['%s']['%s'] already exists" %
-                    (handler_type, obj._meta.label) +
+                    (interface, obj._meta.label) +
                     ", but `force==True`"
                 )
             else:
                 raise exc.FrameworkError(
                     "handlers['%s']['%s'] already exists" %
-                    (handler_type, obj._meta.label)
+                    (interface, obj._meta.label)
                 )
 
-        interface = self.__handlers__[handler_type]['__interface__']
-        if hasattr(interface.IMeta, 'validator'):
-            interface.IMeta().validator(obj)
-        else:
-            LOG.debug("Interface '%s' does not have a validator() function!" %
-                      interface)
+        interface_class = self.__handlers__[interface]['__interface__']
 
-        self.__handlers__[handler_type][obj._meta.label] = orig_obj
+        if not issubclass(handler_class, interface_class):
+            raise exc.InterfaceError("Handler %s " % handler_class.__name__ +
+                                     "does not sub-class %s" % \
+                                     interface_class.__name__)
+
+        self.__handlers__[interface][obj._meta.label] = handler_class
 
     def registered(self, handler_type, handler_label):
         """
@@ -305,73 +382,3 @@ class HandlerManager(object):
         elif han is None:
             LOG.debug(msg)
             return None
-
-
-class CementBaseHandler(meta.MetaMixin):
-
-    """Base handler class that all Cement Handlers should subclass from."""
-
-    class Meta:
-
-        """
-        Handler meta-data (can also be passed as keyword arguments to the
-        parent class).
-
-        """
-
-        label = None
-        """The string identifier of this handler."""
-
-        interface = None
-        """The interface that this class implements."""
-
-        config_section = None
-        """
-        A config [section] to merge config_defaults with.
-
-        Note: Though Meta.config_section defaults to None, Cement will
-        set this to the value of ``<interface_label>.<handler_label>`` if
-        no section is set by the user/developer.
-        """
-
-        config_defaults = None
-        """
-        A config dictionary that is merged into the applications config
-        in the ``[<config_section>]`` block.  These are defaults and do not
-        override any existing defaults under that section.
-        """
-
-        overridable = False
-        """
-        Whether or not handler can be overridden by
-        ``App.Meta.handler_override_options``.  Will be listed as an
-        available choice to override the specific handler (i.e.
-        ``App.Meta.output_handler``, etc).
-        """
-
-    def __init__(self, **kw):
-        super(CementBaseHandler, self).__init__(**kw)
-        self.app = None
-
-    def _setup(self, app_obj):
-        """
-        The _setup function is called during application initialization and
-        must ``setup`` the handler object making it ready for the framework
-        or the application to make further calls to it.
-
-        :param app_obj: The application object.
-        :returns: None
-
-        """
-        self.app = app_obj
-
-        if self._meta.config_section is None:
-            self._meta.config_section = "%s.%s" % \
-                (self._meta.interface.IMeta.label, self._meta.label)
-
-        if self._meta.config_defaults is not None:
-            LOG.debug("merging config defaults from '%s' " % self +
-                      "into section '%s'" % self._meta.config_section)
-            dict_obj = dict()
-            dict_obj[self._meta.config_section] = self._meta.config_defaults
-            self.app.config.merge(dict_obj, override=False)

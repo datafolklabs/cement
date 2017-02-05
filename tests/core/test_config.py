@@ -9,7 +9,7 @@ my_param = my_value
 """
 
 
-class BogusConfigHandler(config.CementConfigHandler):
+class BogusConfigHandler(config.ConfigHandler):
 
     class Meta:
         label = 'bogus'
@@ -17,13 +17,13 @@ class BogusConfigHandler(config.CementConfigHandler):
 
 class ConfigTestCase(test.CementCoreTestCase):
 
-    @test.raises(exc.InterfaceError)
+    @test.raises(TypeError)
     def test_invalid_config_handler(self):
             self.app.handler.register(BogusConfigHandler)
 
-    @test.raises(NotImplementedError)
+    @test.raises(TypeError)
     def test_parse_file_not_implemented(self):
-        c = config.CementConfigHandler()
+        c = config.ConfigHandler()
         c._setup(self.app)
         c._parse_file(self.tmp_file)
 

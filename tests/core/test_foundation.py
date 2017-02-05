@@ -7,9 +7,8 @@ import signal
 from cement import App, Controller, ex
 from cement.core.foundation import cement_signal_handler
 from cement.core import exc, extension
-from cement.core.handler import CementBaseHandler
+from cement.core.handler import Handler
 from cement.core import output, hook
-from cement.core.interface import Interface
 from cement.utils import test
 from cement.utils.misc import init_defaults, rando, minimal_logger
 
@@ -31,24 +30,17 @@ class HookTestException(Exception):
     pass
 
 
-class MyTestInterface(Interface):
-
-    class IMeta:
-        label = 'my_test_interface'
-
-
-class MyTestHandler(CementBaseHandler):
+class MyTestHandler(Handler):
 
     class Meta:
         label = 'my_test_handler'
-        interface = MyTestInterface
+        interface = 'my_test_interface'
 
 
-class TestOutputHandler(output.CementOutputHandler):
+class TestOutputHandler(output.OutputHandler):
     file_suffix = None
 
     class Meta:
-        interface = output.IOutput
         label = 'test_output_handler'
 
     def _setup(self, config_obj):
@@ -155,8 +147,8 @@ class FoundationTestCase(test.CementCoreTestCase):
                 'my-app-test',
                 config_handler=ext_configparser.ConfigParserConfigHandler,
                 log_handler=ext_logging.LoggingLogHandler(),
-                arg_handler=ext_argparse.ArgParseArgumentHandler(),
-                extension_handler=extension.CementExtensionHandler(),
+                arg_handler=ext_argparse.ArgparseArgumentHandler(),
+                extension_handler=extension.ExtensionHandler(),
                 plugin_handler=ext_plugin.CementPluginHandler(),
                 output_handler=ext_json.JsonOutputHandler(),
                 mail_handler=ext_dummy.DummyMailHandler(),
@@ -442,13 +434,13 @@ class FoundationTestCase(test.CementCoreTestCase):
         self.eq(len(app.hook.__hooks__['watchdog_pre_start']), 1)
 
     def test_define_handlers_meta(self):
-        app = self.make_app(APP, define_handlers=[MyTestInterface])
+        app = self.make_app(APP, define_handlers=[MyTestHandler])
         app.setup()
         self.ok(app.handler.defined('my_test_interface'))
 
     def test_register_handlers_meta(self):
         app = self.make_app(APP,
-                            define_handlers=[MyTestInterface],
+                            define_handlers=[MyTestHandler],
                             handlers=[MyTestHandler],
                             )
         app.setup()
@@ -457,7 +449,7 @@ class FoundationTestCase(test.CementCoreTestCase):
 
     def test_disable_backend_globals(self):
         app = self.make_app(APP,
-                            define_handlers=[MyTestInterface],
+                            define_handlers=[MyTestHandler],
                             handlers=[MyTestHandler],
                             define_hooks=['my_hook'],
                             )
@@ -469,7 +461,7 @@ class FoundationTestCase(test.CementCoreTestCase):
     def test_reload(self):
         with self.app as app:
             app.hook.define('bogus_hook1')
-            app.handler.define(MyTestInterface)
+            app.handler.define(MyTestHandler)
             app.extend('some_extra_member', dict())
             app.run()
             self.ok(app.hook.defined('bogus_hook1'))
