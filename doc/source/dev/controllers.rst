@@ -31,7 +31,7 @@ handle command dispatch and rapid development.
 
 .. code-block:: python
 
-    from cement.core import backend,
+    from cement.core import backend
     from cement.core.foundation import CementApp
     from cement.core.controller import CementBaseController, expose
 
