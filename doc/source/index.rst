@@ -6,9 +6,9 @@
 Cement Framework
 ================
 
-.. warning:: Portland is a complete fork of Cement 2, and will eventually 
-become Cement 3.  It is guaranteed to be broken!  Please use Cement 2 in 
-production until stable/3.0.0 is released.
+.. warning:: Portland is a complete fork of Cement 2, and will eventually
+   become Cement 3.  It is guaranteed to be broken!  Please use Cement 2 in
+   production until stable/3.0.0 is released.
 
 Cement is an advanced CLI Application Framework for Python.  Its goal is to
 introduce a standard, and feature-full platform for both simple and complex
