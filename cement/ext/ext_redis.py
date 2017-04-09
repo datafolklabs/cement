@@ -132,7 +132,7 @@ class RedisCacheHandler(cache.CacheHandler):
 
         label = 'redis'
         config_defaults = dict(
-            hosts='127.0.0.1',
+            host='127.0.0.1',
             port=6379,
             db=0,
             expire_time=0,

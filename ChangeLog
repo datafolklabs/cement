@@ -26,7 +26,8 @@ stable versions of Cement 2, until Cement 3.0.0 is released.
 
 Bugs:
 
-    * None
+    * ``[ext.redis]`` Unable To Set Redis Host 
+      * :issue:`440`
 
 Features:
 
@@ -49,6 +50,10 @@ Incompatible:
     * ``[ext.json_configobj]`` No longer shipped with Cement.
     * ``[ext.yaml_configobj]`` No longer shipped with Cement.
     * ``[ext.genshi]`` No longer shipped with Cement.
+    * ``[ext.argparse]`` ArgparseController.Meta.default_func is not
+      `_default`, and will print help info and exit.  Can now set this to
+      ``None`` as well to pass/exit.
+      * :issue:`426`
 
 Deprecation:
 
