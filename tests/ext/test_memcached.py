@@ -1,10 +1,15 @@
 """Tests for cement.ext.ext_memcached."""
 
+import os
 from time import sleep
 from random import random
 from cement.utils import test
 from cement.utils.misc import init_defaults
 
+if 'MEMCACHED_HOSTS' in os.environ.keys():
+    memcached_hosts = os.environ['MEMCACHED_HOSTS']
+else:
+    memcached_hosts = 'memcached'
 
 class MemcachedExtTestCase(test.CementTestCase):
 
@@ -12,7 +17,7 @@ class MemcachedExtTestCase(test.CementTestCase):
         super(MemcachedExtTestCase, self).setUp()
         self.key = "cement-tests-random-key-%s" % random()
         defaults = init_defaults('tests', 'cache.memcached')
-        defaults['cache.memcached']['hosts'] = '127.0.0.1, localhost'
+        defaults['cache.memcached']['hosts'] = 'memcached'
         self.app = self.make_app('tests',
                                  config_defaults=defaults,
                                  extensions=['memcached'],
@@ -22,11 +27,10 @@ class MemcachedExtTestCase(test.CementTestCase):
 
     def tearDown(self):
         super(MemcachedExtTestCase, self).tearDown()
-        self.app.cache.delete(self.key)
 
     def test_memcache_list_type_config(self):
         defaults = init_defaults('tests', 'cache.memcached')
-        defaults['cache.memcached']['hosts'] = ['127.0.0.1', 'localhost']
+        defaults['cache.memcached']['hosts'] = ["127.0.0.1", "localhost"]
         self.app = self.make_app('tests',
                                  config_defaults=defaults,
                                  extensions=['memcached'],
@@ -38,7 +42,7 @@ class MemcachedExtTestCase(test.CementTestCase):
 
     def test_memcache_str_type_config(self):
         defaults = init_defaults('tests', 'cache.memcached')
-        defaults['cache.memcached']['hosts'] = '127.0.0.1, localhost'
+        defaults['cache.memcached']['hosts'] = "127.0.0.1,localhost"
         self.app = self.make_app('tests',
                                  config_defaults=defaults,
                                  extensions=['memcached'],
@@ -51,6 +55,7 @@ class MemcachedExtTestCase(test.CementTestCase):
     def test_memcached_set(self):
         self.app.cache.set(self.key, 1001)
         self.eq(self.app.cache.get(self.key), 1001)
+        self.app.cache.delete(self.key)
 
     def test_memcached_get(self):
         # get empty value
