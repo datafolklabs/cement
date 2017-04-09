@@ -19,7 +19,6 @@ Cement Core Modules
    core/foundation
    core/handler
    core/hook
-   core/interface
    core/log
    core/mail
    core/meta
