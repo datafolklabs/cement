@@ -170,7 +170,7 @@ intended to be used to set defaults for multiple sections.  Therefore, the
 ``[section]`` and the nested ``dict`` are the settings for that ``[section]``.
 
 The ``CementBaseHandler.Meta.config_defaults`` only partain to a single
-``[section]`` and therefor is only a single level ``dict``, whose settings are
+``[section]`` and therefore is only a single level ``dict``, whose settings are
 applied to the ``CementBaseHandler.Meta.config_section`` of the application's
 configuration.
 
