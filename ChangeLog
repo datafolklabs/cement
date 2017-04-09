@@ -27,11 +27,12 @@ stable versions of Cement 2, until Cement 3.0.0 is released.
 Bugs:
 
     * ``[ext.redis]`` Unable To Set Redis Host 
-      * :issue:`440`
+       * :issue:`440`
 
 Features:
 
-    * None
+    * ``[core]`` Add Docker / Docker Compose Support
+       * :issue:`439`
 
 Refactoring:
 

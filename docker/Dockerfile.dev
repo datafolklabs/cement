@@ -1,0 +1,9 @@
+FROM python:3.6-onbuild
+MAINTAINER BJ Dierkes <derks@datafolklabs.com>
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libmemcached-dev \
+    && pip install --no-cache-dir -r requirements-dev.txt
+
+CMD ["/bin/bash"]

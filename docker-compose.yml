@@ -1,0 +1,19 @@
+version: "3"
+services:
+    cement:
+        image: "cement:dev"
+        build: 
+            context: .
+            dockerfile: docker/Dockerfile.dev
+        hostname: cement
+        volumes:
+            - ".:/usr/src/app"
+        links:
+            - redis:redis
+            - memcached:memcached
+    redis:
+        image: redis:latest
+        hostname: redis
+    memcached:
+        image: memcached:latest
+        hostname: memcached

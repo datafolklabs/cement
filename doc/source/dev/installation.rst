@@ -28,22 +28,42 @@ Installation
 Running Tests
 -------------
 
+Docker Compose
+^^^^^^^^^^^^^^
+
+.. code-block:: text
+
+    ### build the development image
+    $ docker-compose build
+
+    ### start all required services for optional extensions
+    $ docker-compose up
+
+    ### get a bash shell for testing from a working environment
+    $ docker-compose run cement
+    
+    ### execute tests
+    root@cement:/usr/src/app# make test
+
+
+Traditional Setup (Deprecated)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 To run tests, you will need to ensure any dependent services are running
 (for example Memcached), and then do the following from the root of the
 source:
 
 .. code-block:: text
 
-    # Start services
+    ### start services
     $ memcached &
+    $ redis-server &
 
-    # Python 2.x
+    ### install all optional/development dependencies
     $ pip install -r requirements-dev.txt
 
-    # Python 3.x
-    $ pip install -r requirements-dev-py3.txt
-
-    $ python setup.py nosetests
+    ### run tests
+    $ make test
 
 
 Building Documentation
@@ -53,4 +73,4 @@ To build this documentation, do the following from the root of the source:
 
 .. code-block:: text
 
-    $ python setup.py build_sphinx
+    $ make doc
