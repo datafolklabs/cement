@@ -181,7 +181,10 @@ def _clean_label(label):
 
 
 def _clean_func(func):
-    return re.sub('-', '_', func)
+    if func is None:
+        return None
+    else:
+        return re.sub('-', '_', func)
 
 
 class ArgparseArgumentHandler(ArgumentParser, ArgumentHandler):
@@ -313,6 +316,8 @@ class expose(object):
         func.__cement_meta__ = metadict
         return func
 
+# shortcut for cleaner controllers
+ex = expose
 
 class ArgparseController(ControllerHandler):
 
@@ -432,14 +437,18 @@ class ArgparseController(ControllerHandler):
         #: Argparse that is not built into the controller Meta-data.
         parser_options = {}
 
-        #: Function to call if no sub-command is passed.  Note that this can
-        #: **not** start with an ``_`` due to backward compatibility
-        #: restraints in how Cement discovers and maps commands.
+        #: Function to call if no sub-command is passed.  By default this is
+        #: ``_default``, which is equivelant to passing ``-h/--help``. It 
+        #: should be noted that this is the only place where having a command
+        #: function start with ``_`` is OK simply because we treat it as a
+        #: special case (different that other exposed commands).
+        #: 
+        #: If set to ``None``, Cement will simply pass and exit 0.
         #:
-        #: Note: Currently, default function/sub-command only functions on
+        #: Note: Currently, default function/sub-command only works on
         #: Python > 3.4.  Previous versions of Python/Argparse will throw the
         #: exception ``error: too few arguments``.
-        default_func = 'default'
+        default_func = '_default'
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
@@ -454,6 +463,10 @@ class ArgparseController(ControllerHandler):
 
         if self._meta.help is None:
             self._meta.help = '%s controller' % _clean_label(self._meta.label)
+
+    @ex(hide=True)
+    def _default(self):
+        self._parser.print_help()
 
     def _validate(self):
         try:
@@ -891,16 +904,18 @@ class ArgparseController(ControllerHandler):
             contr_label = self.app.pargs\
                               .__controller_namespace__     # pragma: nocover
             contr = self._controllers_map[contr_label]      # pragma: nocover
-            func_name = _clean_func(                # pragma: nocover
-                contr._meta.default_func        # pragma: nocover
-            )                               # pragma: nocover
+            func_name = _clean_func(                        # pragma: nocover
+                contr._meta.default_func                    # pragma: nocover
+            )                                               # pragma: nocover
 
         if contr_label == 'base':
             contr = self
         else:
             contr = self._controllers_map[contr_label]
 
-        if hasattr(contr, func_name):
+        if func_name is None:
+            pass
+        elif hasattr(contr, func_name):
             func = getattr(contr, func_name)
             return func()
         else:
