@@ -1,0 +1,5 @@
+{{ if .Param "search" }}
+<script src='{{ relURL "slate/javascripts/all.js" }}'></script>
+{{ else }}
+<script src='{{ relURL "slate/javascripts/all_nosearch.js" }}'></script>
+{{ end }}

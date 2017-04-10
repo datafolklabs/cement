@@ -1,0 +1,43 @@
+
+
+// The section(s) below are just pulled over from _variables.scss in Slate and adjusted.
+
+// Make the selected code language a nice blue.
+$lang-select-active-bg: $nav-active-bg; 
+
+// Make the main background color slightly lighter than the original.
+$main-bg: lighten(#eaf2f6, 2%);
+
+
+// This will be added as the last import to the original Slate screen.css.scs. TOOD(bep) Print?
+
+.content {
+  // prevent clearing of higlight divs
+  &>div.highlight {
+    clear:none;
+  }
+}
+
+.toc-footer {
+    .translations-title {
+        background-color: $nav-subitem-bg;
+        padding: 10px $nav-padding;
+        color: $nav-text;
+        font-size: 12px;
+    }
+}
+
+
+
+// Getting the paths just right for Android and iOS and friends is hard ...
+@font-face {
+    font-family:'slate';
+    src:url(/fonts/slate.eot?-syv14m);
+    src:url(../fonts/slate.eot?#iefix-syv14m) format("embedded-opentype"),
+    url(../fonts/slate.woff2?-syv14m) format("woff2"),
+    url(../fonts/slate.woff?-syv14m) format("woff"),
+    url(../fonts/slate.ttf?-syv14m) format("truetype"),
+    url(../fonts/slate.svg?-syv14m#slate) format("svg");
+    font-weight: normal;
+   font-style: normal;
+}

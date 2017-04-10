@@ -3,7 +3,7 @@ weight: 1
 title: Cement Framework
 ---
 
-# Cement Framework
+# Cement Framework v2.99.1
 
 > Installation via PyPi (Stable)
 
@@ -11,7 +11,7 @@ title: Cement Framework
 $ pip install cement
 ```
 
-> Hello World!
+> Hello World Example
 
 ```python
 from cement import App
@@ -21,7 +21,7 @@ with App('myapp') as app:
     app.log.info('Hello World!')
 ```
 
--
+> Usage
 
 ```
 $ python helloworld.py --help
@@ -38,8 +38,10 @@ INFO: Hello World!
 
 
 <aside class="warning">
-NOTE: 2.11.x is the development version of Cement.  Please use stable/2.10.x 
-in production until stable/2.12.x is released.
+This is the Portland branch of Cement, intended for future-looking and
+non-backward-compatible development.  It is a complete fork of Cement 2, and
+will eventually become Cement 3.  It is guaranteed to be broken!  Please use
+Cement 2 in production until stable/3.0.0 is released.
 </aside>
 
 Cement is an advanced CLI Application Framework for Python.  Its goal is to

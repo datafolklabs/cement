@@ -15,7 +15,7 @@ defaultContentLanguage = "en"
 
 [params]
 search = true
-  
+
 # Configure the language example tabs.
 [[params.language_tabs]]
 key = "code"
