@@ -6,7 +6,7 @@
 
 <br/>
 
-![Build Status](https://circleci.com/gh/bep/docuapi.svg?style=shield&circle-token=:circle-ci-badge-token)
+[![CircleCI](https://circleci.com/gh/bep/docuapi.svg?style=svg)](https://circleci.com/gh/bep/docuapi)
 
 ![Screenshot DocuAPI Example site](https://raw.githubusercontent.com/bep/docuapi/master/images/screenshot.png)
 
@@ -36,9 +36,9 @@ The styles and Javascript import are also put in each partial and as such can be
 
 **Note:** In most situations you will be well off just using the theme and maybe in some cases provide your own template(s). Please refer to the [Hugo Documentation](http://gohugo.io/overview/introduction/) for that.
 
-But you may find styling issues, etc., that you want to fix. Pull requests of this type is welcomed.
+But you may find styling issues, etc., that you want to fix. Those Pull Requests are warmly welcomed!
 
-**If you find issues that obviously belongs to  [Slate](https://github.com/lord/slate), then please report/fix them there, and we will pull in the latest changes here when that is done.**
+**If you find issues that obviously belongs to  [Slate](https://github.com/lord/slate), then please report/fix them there, and we will pull in the latest changes here.**
 
 This project provides a very custom asset bundler in [bundler.go](https://github.com/bep/docuapi/blob/master/bundler.go) written in Go.
 

@@ -76,19 +76,18 @@ Cement core features include (but are not limited to):
  * 100% test coverage using `nose` and `coverage`
  * 100% PEP8 and style compliant using `flake8`
  * Extensive Sphinx documentation
- * Tested on Python 2.6, 2.7, 3.3, 3.4, and 3.5
+ * Tested on Python 3.5+
 
 <aside class="notice">
-Note that argparse is required as an external dependency for Python < 2.7
-and < 3.2.  Additionally, some optional extensions that are shipped with the
-mainline Cement sources do require external dependencies.  It is the
-responsibility of the application developer to include these dependencies
-along with their application, as Cement explicitly does not include them.
+Some optional extensions that are shipped with the mainline Cement sources do
+require external dependencies.  It is the responsibility of the application
+developer to include these dependencies along with their application, as
+Cement explicitly does not include them.
 </aside>
 
 **More Information**
 
- * DOCS: http://builtoncement.com/2.11/
+ * DOCS: http://builtoncement.com/2.99/
  * CODE: http://github.com/datafolklabs/cement/
  * PYPI: http://pypi.python.org/pypi/cement/
  * SITE: http://builtoncement.com/
