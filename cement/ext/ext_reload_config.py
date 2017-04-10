@@ -223,7 +223,7 @@ def spawn_watcher(app):
     # watch all config files, and plugin config files
     watched_files = []
 
-    for plugin_dir in app._meta.plugin_config_dirs:
+    for plugin_dir in app.plugin_config_dirs:
         plugin_dir = fs.abspath(plugin_dir)
         if not os.path.exists(plugin_dir):
             continue
@@ -242,7 +242,7 @@ def spawn_watcher(app):
             if full_plugin_path not in watched_files:
                 watched_files.append(full_plugin_path)
 
-    for path in app._meta.config_files:
+    for path in app.config_files:
         if os.path.exists(path):
             if path not in watched_files:
                 watched_files.append(path)

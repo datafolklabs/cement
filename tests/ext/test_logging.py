@@ -11,10 +11,8 @@ APP = rando()[:12]
 
 
 class MyLog(ext_logging.LoggingLogHandler):
-
-    class Meta:
-        label = 'mylog'
-        level = 'INFO'
+    label = 'mylog'
+    level = 'INFO'
 
     def __init__(self, *args, **kw):
         super(MyLog, self).__init__(*args, **kw)
@@ -70,11 +68,11 @@ class LoggingExtTestCase(test.CementExtTestCase):
 
         han = self.app.handler.get('log', 'logging')
         Log = han()
-        Log.clear_loggers(self.app._meta.label)
+        Log.clear_loggers(self.app.label)
 
         MyLog = ext_logging.LoggingLogHandler(clear_loggers="%s:%s" %
-                                              (self.app._meta.label,
-                                               self.app._meta.label))
+                                              (self.app.label,
+                                               self.app.label))
         MyLog._setup(self.app)
 
     def test_rotate(self):

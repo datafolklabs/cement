@@ -28,13 +28,10 @@ class ArgumentHandlerBase(Handler):
                 label = 'my_argument_handler'
 
     """
-    class Meta:
 
-        """Interface meta-data options."""
-
-        #: The string identifier of the interface.
-        interface = 'argument'
-        """The string identifier of the interface."""
+    #: The string identifier of the interface.
+    interface = 'argument'
+    """The string identifier of the interface."""
 
     @abstractmethod
     def add_argument(self, *args, **kw):

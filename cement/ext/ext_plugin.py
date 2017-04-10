@@ -43,12 +43,8 @@ class CementPluginHandler(plugin.PluginHandler):
 
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        label = 'cement'
-        """The string identifier for this class."""
+    label = 'cement'
+    """The string identifier for this class."""
 
     def __init__(self):
         super().__init__()
@@ -62,13 +58,13 @@ class CementPluginHandler(plugin.PluginHandler):
         self._enabled_plugins = []
         self._disabled_plugins = []
         self._plugin_configs = {}
-        self.config_dirs = self.app._meta.plugin_config_dirs
-        self.bootstrap = self.app._meta.plugin_bootstrap
-        self.load_dirs = self.app._meta.plugin_dirs
+        self.config_dirs = self.app.plugin_config_dirs
+        self.bootstrap = self.app.plugin_bootstrap
+        self.load_dirs = self.app.plugin_dirs
 
         # grab a generic config handler object
         config_handler = self.app.handler.get('config',
-                                              self.app.config._meta.label)
+                                              self.app.config.label)
 
         # first parse plugin config dir for enabled plugins
         for config_dir in self.config_dirs:
@@ -82,7 +78,7 @@ class CementPluginHandler(plugin.PluginHandler):
                 # sort so that we always load plugins in the same order
                 # regardless of OS (seems some don't sort reliably)
                 path = "%s/*%s" % (config_dir,
-                                   self.app._meta.config_extension)
+                                   self.app.config_extension)
                 plugin_config_files = glob.glob(path)
                 plugin_config_files.sort()
 

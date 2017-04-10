@@ -37,7 +37,7 @@ class WatchdogExtTestCase(test.CementExtTestCase):
                                  extensions=['watchdog'],
                                  argv=[]
                                  )
-        self.app._meta.watchdog_paths = [
+        self.app.watchdog_paths = [
             (self.tmp_dir),
             (self.tmp_dir, WatchdogEventHandler)
         ]
@@ -58,7 +58,7 @@ class WatchdogExtTestCase(test.CementExtTestCase):
                                  extensions=['watchdog'],
                                  argv=[]
                                  )
-        self.app._meta.watchdog_paths = [
+        self.app.watchdog_paths = [
             [self.tmp_dir, WatchdogEventHandler]
         ]
         self.app.setup()

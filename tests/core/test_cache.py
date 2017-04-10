@@ -6,8 +6,7 @@ from cement.utils import test
 
 class MyCacheHandler(cache.CacheHandler):
 
-    class Meta:
-        label = 'my_cache_handler'
+    label = 'my_cache_handler'
 
     def get(self, key, fallback=None):
         pass
@@ -23,6 +22,7 @@ class MyCacheHandler(cache.CacheHandler):
 
 
 @test.attr('core')
+@test.attr('cache')
 class CacheTestCase(test.CementCoreTestCase):
 
     def setUp(self):
@@ -30,8 +30,8 @@ class CacheTestCase(test.CementCoreTestCase):
         self.app = self.make_app(cache_handler=MyCacheHandler)
 
     def test_base_handler(self):
-        self.app.setup()
-        self.app.cache.set('foo', 'bar')
-        self.app.cache.get('foo')
-        self.app.cache.delete('foo')
-        self.app.cache.purge()
+        with self.app:
+            self.app.cache.set('foo', 'bar')
+            self.app.cache.get('foo')
+            self.app.cache.delete('foo')
+            self.app.cache.purge()

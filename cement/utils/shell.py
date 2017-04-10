@@ -295,37 +295,37 @@ class Prompt(MetaMixin):
         super(Prompt, self).__init__(*args, **kw)
 
         self.input = None
-        if self._meta.auto:
+        if self.auto:
             self.prompt()
 
     def _prompt(self):
-        if self._meta.clear:
-            os.system(self._meta.clear_command)
+        if self.clear:
+            os.system(self.clear_command)
 
         text = ""
-        if self._meta.options is not None:
-            if self._meta.numbered is True:
-                text = text + self._meta.text + "\n\n"
+        if self.options is not None:
+            if self.numbered is True:
+                text = text + self.text + "\n\n"
                 count = 1
-                for option in self._meta.options:
+                for option in self.options:
                     text = text + "%s: %s\n" % (count, option)
                     count += 1
                 text = text + "\n"
-                text = text + self._meta.selection_text
+                text = text + self.selection_text
             else:
-                sep = self._meta.options_separator
-                text = "%s [%s]" % (self._meta.text,
-                                    sep.join(self._meta.options))
+                sep = self.options_separator
+                text = "%s [%s]" % (self.text,
+                                    sep.join(self.options))
         else:
-            text = self._meta.text
+            text = self.text
 
         if sys.version_info[0] < 3:                 # pragma: nocover  # noqa
             self.input = raw_input("%s " % text)    # pragma: nocover  # noqa
         else:                                       # pragma: nocover  # noqa
             self.input = input("%s " % text)        # pragma: nocover  # noqa
 
-        if self.input == '' and self._meta.default is not None:
-            self.input = self._meta.default
+        if self.input == '' and self.default is not None:
+            self.input = self.default
         elif self.input == '':
             self.input = None
 
@@ -336,8 +336,8 @@ class Prompt(MetaMixin):
 
         attempt = 0
         while self.input is None:
-            if attempt >= int(self._meta.max_attempts):
-                if self._meta.max_attempts_exception is True:
+            if attempt >= int(self.max_attempts):
+                if self.max_attempts_exception is True:
                     raise FrameworkError("Maximum attempts exceeded getting "
                                          "valid user input")
                 else:
@@ -348,22 +348,22 @@ class Prompt(MetaMixin):
 
             if self.input is None:
                 continue
-            elif self._meta.options is not None:
-                if self._meta.numbered:
+            elif self.options is not None:
+                if self.numbered:
                     try:
-                        self.input = self._meta.options[int(self.input) - 1]
+                        self.input = self.options[int(self.input) - 1]
                     except (IndexError, ValueError) as e:
                         self.input = None
                         continue
                 else:
-                    if self._meta.case_insensitive is True:
+                    if self.case_insensitive is True:
                         lower_options = [x.lower()
-                                         for x in self._meta.options]
+                                         for x in self.options]
                         if not self.input.lower() in lower_options:
                             self.input = None
                             continue
                     else:
-                        if self.input not in self._meta.options:
+                        if self.input not in self.options:
                             self.input = None
                             continue
 

@@ -185,22 +185,18 @@ class HandlebarsOutputHandler(output.TemplateOutputHandler):
     extensions.
     """
 
-    class Meta:
+    #: The string identifier of the handler.
+    label = 'handlebars'
 
-        """Handler meta-data."""
+    #: Whether or not to include ``handlebars`` as an available to choice
+    #: to override the ``output_handler`` via command line options.
+    overridable = False
 
-        #: The string identifier of the handler.
-        label = 'handlebars'
+    #: Custom helpers
+    helpers = {}
 
-        #: Whether or not to include ``handlebars`` as an available to choice
-        #: to override the ``output_handler`` via command line options.
-        overridable = False
-
-        #: Custom helpers
-        helpers = {}
-
-        #: List of partials to preload
-        partials = []
+    #: List of partials to preload
+    partials = []
 
     def __init__(self, *args, **kw):
         super(HandlebarsOutputHandler, self).__init__(*args, **kw)
@@ -208,11 +204,11 @@ class HandlebarsOutputHandler(output.TemplateOutputHandler):
 
     def _setup(self, app):
         super(HandlebarsOutputHandler, self)._setup(app)
-        if hasattr(self.app._meta, 'handlebars_helpers'):
-            self._meta.helpers = self.app._meta.handlebars_helpers
-        if hasattr(self.app._meta, 'handlebars_partials'):
-            self._meta.partials = self.app._meta.handlebars_partials
-        for partial in self._meta.partials:
+        if hasattr(self.app. 'handlebars_helpers'):
+            self.helpers = self.app.handlebars_helpers
+        if hasattr(self.app. 'handlebars_partials'):
+            self.partials = self.app.handlebars_partials
+        for partial in self.partials:
             self._raw_partials[partial] = self.load_template(partial)
 
     def _clean_content(self, content):
@@ -233,7 +229,7 @@ class HandlebarsOutputHandler(output.TemplateOutputHandler):
         for key, val in self._raw_partials.items():
             partials[key] = bars.compile(self._clean_content(val))
 
-        return content(data, helpers=self._meta.helpers, partials=partials)
+        return content(data, helpers=self.helpers, partials=partials)
 
     def render(self, data, template):
         """

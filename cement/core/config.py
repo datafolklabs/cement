@@ -29,12 +29,8 @@ class ConfigHandlerBase(Handler):
 
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        interface = 'config'
-        """The string identifier of the interface."""
+    interface = 'config'
+    """The string identifier of the interface."""
 
     @abstractmethod
     def parse_file(self, file_path):

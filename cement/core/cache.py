@@ -27,12 +27,8 @@ class CacheHandlerBase(Handler):
 
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        #: The string identifier of the interface.
-        interface = 'cache'
+    #: The string identifier of the interface.
+    interface = 'cache'
 
     @abstractmethod
     def get(self, key, fallback=None):

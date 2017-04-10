@@ -80,11 +80,7 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
 
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        label = 'jinja2'
+    label = 'jinja2'
 
     def __init__(self, *args, **kw):
         super(Jinja2OutputHandler, self).__init__(*args, **kw)
@@ -112,9 +108,9 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
         content, _type, path = self.load_template_with_location(template)
 
         if _type == 'directory':
-            self.env.loader = FileSystemLoader(self.app._meta.template_dirs)
+            self.env.loader = FileSystemLoader(self.app.template_dirs)
         elif _type == 'module':
-            parts = self.app._meta.template_module.rsplit('.', 1)
+            parts = self.app.template_module.rsplit('.', 1)
             self.env.loader = PackageLoader(parts[0], package_path=parts[1])
 
         if sys.version_info[0] >= 3:

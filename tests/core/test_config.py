@@ -11,8 +11,7 @@ my_param = my_value
 
 class BogusConfigHandler(config.ConfigHandler):
 
-    class Meta:
-        label = 'bogus'
+    label = 'bogus'
 
 
 class ConfigTestCase(test.CementCoreTestCase):
@@ -29,7 +28,7 @@ class ConfigTestCase(test.CementCoreTestCase):
 
     def test_has_key(self):
         self.app.setup()
-        self.ok(self.app.config.has_section(self.app._meta.config_section))
+        self.ok(self.app.config.has_section(self.app.config_section))
 
     def test_config_override(self):
         defaults = dict()
@@ -73,13 +72,13 @@ class ConfigTestCase(test.CementCoreTestCase):
         self.eq(self.app.config.get('test', 'foo'), 'bar')
 
     def test_parse_file_bad_path(self):
-        self.app._meta.config_files = ['./some_bogus_path']
+        self.app.config_files = ['./some_bogus_path']
         self.app.setup()
 
     def test_parse_file(self):
         f = open(self.tmp_file, 'w+')
         f.write(CONFIG)
         f.close()
-        self.app._meta.config_files = [self.tmp_file]
+        self.app.config_files = [self.tmp_file]
         self.app.setup()
         self.eq(self.app.config.get('my_section', 'my_param'), 'my_value')

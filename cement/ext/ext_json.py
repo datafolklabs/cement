@@ -161,19 +161,16 @@ class JsonOutputHandler(output.OutputHandler):
     order to unsuppress output and see what's happening.
 
     """
-    class Meta:
 
-        """Handler meta-data"""
+    label = 'json'
+    """The string identifier of this handler."""
 
-        label = 'json'
-        """The string identifier of this handler."""
+    #: Whether or not to include ``json`` as an available choice
+    #: to override the ``output_handler`` via command line options.
+    overridable = True
 
-        #: Whether or not to include ``json`` as an available choice
-        #: to override the ``output_handler`` via command line options.
-        overridable = True
-
-        #: Backend JSON library module to use (`json`, `ujson`)
-        json_module = 'json'
+    #: Backend JSON library module to use (`json`, `ujson`)
+    json_module = 'json'
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
@@ -181,7 +178,7 @@ class JsonOutputHandler(output.OutputHandler):
 
     def _setup(self, app):
         super()._setup(app)
-        self._json = __import__(self._meta.json_module,
+        self._json = __import__(self.json_module,
                                 globals(), locals(), [], 0)
 
     def render(self, data_dict, template=None, **kw):
@@ -210,14 +207,11 @@ class JsonConfigHandler(ConfigParserConfigHandler):
     but with JSON configuration files.
 
     """
-    class Meta:
+        
+    label = 'json'
 
-        """Handler meta-data."""
-
-        label = 'json'
-
-        #: Backend JSON library module to use (`json`, `ujson`).
-        json_module = 'json'
+    #: Backend JSON library module to use (`json`, `ujson`).
+    json_module = 'json'
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
@@ -225,7 +219,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
 
     def _setup(self, app):
         super()._setup(app)
-        self._json = __import__(self._meta.json_module,
+        self._json = __import__(self.json_module,
                                 globals(), locals(), [], 0)
 
     def _parse_file(self, file_path):

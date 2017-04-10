@@ -118,15 +118,11 @@ class MemcachedCacheHandler(cache.CacheHandler):
     extensions.
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        label = 'memcached'
-        config_defaults = dict(
-            hosts=['127.0.0.1'],
-            expire_time=0,
-        )
+    label = 'memcached'
+    config_defaults = dict(
+        hosts=['127.0.0.1'],
+        expire_time=0,
+    )
 
     def __init__(self, *args, **kw):
         super(MemcachedCacheHandler, self).__init__(*args, **kw)
@@ -157,7 +153,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
                 fixed_hosts.append(part.strip())
         elif type(hosts) == list:
             fixed_hosts = hosts
-        self.app.config.set(self._meta.config_section, 'hosts', fixed_hosts)
+        self.app.config.set(self.config_section, 'hosts', fixed_hosts)
 
     def get(self, key, fallback=None, **kw):
         """
@@ -187,7 +183,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
         :returns: The value of the given key.
 
         """
-        return self.app.config.get(self._meta.config_section, key)
+        return self.app.config.get(self.config_section, key)
 
     def set(self, key, value, time=None, **kw):
         """

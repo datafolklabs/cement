@@ -30,14 +30,14 @@ LOG = minimal_logger(__name__)
 #     ]
 #     interface.validate(IController, obj, members, meta=meta)
 
-#     # also check _meta.arguments values
+#     # also check arguments values
 #     errmsg = "Controller arguments must be a list of tuples.  I.e. " + \
 #              "[ (['-f', '--foo'], dict(action='store')), ]"
 
-#     if obj._meta.arguments is not None:
-#         if type(obj._meta.arguments) is not list:
+#     if obj.arguments is not None:
+#         if type(obj.arguments) is not list:
 #             raise exc.InterfaceError(errmsg)
-#         for item in obj._meta.arguments:
+#         for item in obj.arguments:
 #             if type(item) is not tuple:
 #                 raise exc.InterfaceError(errmsg)
 #             if type(item[0]) is not list:
@@ -45,16 +45,16 @@ LOG = minimal_logger(__name__)
 #             if type(item[1]) is not dict:
 #                 raise exc.InterfaceError(errmsg)
 
-#     if not obj._meta.label == 'base' and obj._meta.stacked_on is None:
+#     if not obj.label == 'base' and obj.stacked_on is None:
 #         errmsg = "Controller `%s` is not stacked anywhere!" % \
 #                  obj.__class__.__name__
 #         raise exc.InterfaceError(errmsg)
-#     if not obj._meta.label == 'base' and \
-#             obj._meta.stacked_type not in ['nested', 'embedded']:
+#     if not obj.label == 'base' and \
+#             obj.stacked_type not in ['nested', 'embedded']:
 #         raise exc.InterfaceError(
-#             "Controller '%s' " % obj._meta.label +
+#             "Controller '%s' " % obj.label +
 #             "has an unknown stacked type of '%s'." %
-#             obj._meta.stacked_type
+#             obj.stacked_type
 #         )
 
 
@@ -77,12 +77,8 @@ class ControllerHandlerBase(Handler):
                 ...
     """
 
-    class Meta:
-
-        """Interface meta-data."""
-
-        #: The string identifier of the interface.
-        interface = 'controller'
+    #: The string identifier of the interface.
+    interface = 'controller'
 
     @abstractmethod
     def _dispatch(self):

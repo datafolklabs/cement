@@ -4,6 +4,7 @@ import os
 import sys
 import signal
 import platform
+import inspect
 from time import sleep
 from ..core import backend, exc, log, config, plugin
 from ..core import output, extension, arg, controller, meta, cache, mail
@@ -38,10 +39,10 @@ def add_handler_override_options(app):
     :param app: The application object.
 
     """
-    if app._meta.handler_override_options is None:
+    if app.handler_override_options is None:
         return
 
-    for i in app._meta.handler_override_options:
+    for i in app.handler_override_options:
         if i not in app.handler.list_types():
             LOG.debug("interface '%s'" % i +
                       " is not defined, can not override handlers")
@@ -52,9 +53,9 @@ def add_handler_override_options(app):
             for h in app.handler.list(i):
                 handlers.append(h())
 
-            choices = [x._meta.label
+            choices = [x.label
                        for x in handlers
-                       if x._meta.overridable is True]
+                       if x.overridable is True]
 
             # don't display the option if no handlers are overridable
             if not len(choices) > 0:
@@ -63,14 +64,14 @@ def add_handler_override_options(app):
                 continue
 
             # override things that we need to control
-            argument_kw = app._meta.handler_override_options[i][1]
+            argument_kw = app.handler_override_options[i][1]
             argument_kw['dest'] = '%s_handler_override' % i
             argument_kw['action'] = 'store'
             argument_kw['choices'] = choices
 
             app.args.add_argument(
-                *app._meta.handler_override_options[i][0],
-                **app._meta.handler_override_options[i][1]
+                *app.handler_override_options[i][0],
+                **app.handler_override_options[i][1]
             )
 
 
@@ -83,10 +84,10 @@ def handler_override(app):
     :param app: The application object.
 
     """
-    if app._meta.handler_override_options is None:
+    if app.handler_override_options is None:
         return
 
-    for i in app._meta.handler_override_options.keys():
+    for i in app.handler_override_options.keys():
         if not hasattr(app.pargs, '%s_handler_override' % i):
             continue
         elif getattr(app.pargs, '%s_handler_override' % i) is None:
@@ -94,7 +95,7 @@ def handler_override(app):
         else:
             # get the argument value from command line
             argument = getattr(app.pargs, '%s_handler_override' % i)
-            setattr(app._meta, '%s_handler' % i, argument)
+            setattr(app, '%s_handler' % i, argument)
 
             # and then re-setup the handler
             getattr(app, '_setup_%s_handler' % i)()
@@ -127,531 +128,525 @@ class App(meta.MetaMixin):
 
     """The primary application object class."""
 
-    class Meta:
-
-        """
-        Application meta-data (can also be passed as keyword arguments to the
-        parent class).
-        """
-
-        label = None
-        """
-        The name of the application.  This should be the common name as you
-        would see and use at the command line.  For example 'helloworld', or
-        'my-awesome-app'.
-        """
-
-        debug = False
-        """
-        Used internally, and should not be used by developers.  This is set
-        to `True` if `--debug` is passed at command line."""
-
-        exit_on_close = False
-        """
-        Whether or not to call ``sys.exit()`` when ``close()`` is called.
-        The default is ``False``, however if ``True`` then the app will call
-        ``sys.exit(X)`` where ``X`` is ``self.exit_code``.
-        """
-
-        config_extension = '.conf'
-        """
-        Extension used to identify application and plugin configuration files.
-        """
-
-        config_files = None
-        """
-        List of config files to parse.
-
-        Note: Though Meta.config_section defaults to None, Cement will
-        set this to a default list based on Meta.label (or in other words,
-        the name of the application).  This will equate to:
-
-        .. code-block:: python
-
-            ['/etc/<app_label>/<app_label>.conf',
-             '~/.<app_label>.conf',
-             '~/.<app_label>/config']
-
-
-        Files are loaded in order, and have precedence in order.  Therefore,
-        the last configuration loaded has precedence (and overwrites settings
-        loaded from previous configuration files).
-
-        Note that ``.conf`` is the default config file extension, defined by
-        ``App.Meta.config_extension``.
-        """
-
-        plugins = []
-        """
-        A list of plugins to load.  This is generally considered bad
-        practice since plugins should be dynamically enabled/disabled
-        via a plugin config file.
-        """
-
-        plugin_config_dirs = None
-        """
-        A list of directory paths where plugin config files can be found.
-        Files must end in ``.conf`` (or the extension defined by
-        ``App.Meta.config_extension``) or they will be ignored.
-
-        Note: Though ``App.Meta.plugin_config_dirs`` is ``None``, Cement
-        will set this to a default list based on ``App.Meta.label``.
-        This will equate to:
-
-        .. code-block:: python
-
-            ['/etc/<app_label>/plugins.d', '~/.<app_label>/plugin.d']
-
-
-        Files are loaded in order, and have precedence in that order.
-        Therefore, the last configuration loaded has precedence (and
-        overwrites settings loaded from previous configuration files).
-        """
-
-        plugin_config_dir = None
-        """
-        A directory path where plugin config files can be found.  Files must
-        end in ``.conf`` (or the extension defined by
-        ``App.Meta.config_extension``) or they will be ignored.  By
-        default, this setting is also overridden by the
-        ``[<app_label>] -> plugin_config_dir`` config setting parsed in
-        any of the application configuration files.
-
-        If set, this item will be **appended** to
-        ``App.Meta.plugin_config_dirs`` so that it's settings will have
-        presedence over other configuration files.
-
-        In general, this setting should not be defined by the developer, as it
-        is primarily used to allow the end-user to define a
-        ``plugin_config_dir`` without completely trumping the hard-coded list
-        of default ``plugin_config_dirs`` defined by the app/developer.
-        """
-
-        plugin_bootstrap = None
-        """
-        A python package (dotted import path) where plugin code can be
-        loaded from.  This is generally something like ``myapp.plugins``
-        where a plugin file would live at ``myapp/plugins/myplugin.py``.
-        This provides a facility for applications that have builtin plugins
-        that ship with the applications source code and live in the same
-        Python module.
-
-        Note: Though the meta default is ``None``, Cement will set this to
-        ``<app_label>.plugins`` if not set.
-        """
-
-        plugin_dirs = None
-        """
-        A list of directory paths where plugin code (modules) can be loaded
-        from.
-
-        Note: Though ``App.Meta.plugin_dirs`` is None, Cement will set
-        this to a default list based on ``App.Meta.label`` if not set.
-        This will equate to:
-
-        .. code-block:: python
-
-            ['~/.<app_label>/plugins', '/usr/lib/<app_label>/plugins']
-
-
-        Modules are attempted to be loaded in order, and will stop loading
-        once a plugin is successfully loaded from a directory.  Therefore
-        this is the oposite of configuration file loading, in that here the
-        first has precedence.
-        """
-
-        plugin_dir = None
-        """
-        A directory path where plugin code (modules) can be loaded from.
-        By default, this setting is also overridden by the
-        ``[<app_label>] -> plugin_dir`` config setting parsed in any of the
-        application configuration files.
-
-        If set, this item will be **prepended** to ``Meta.plugin_dirs`` so
-        that a users defined ``plugin_dir`` has precedence over others.
-
-        In general, this setting should not be defined by the developer, as it
-        is primarily used to allow the end-user to define a
-        ``plugin_dir`` without completely trumping the hard-coded list
-        of default ``plugin_dirs`` defined by the app/developer.
-        """
-
-        argv = None
-        """
-        A list of arguments to use for parsing command line arguments
-        and options.
-
-        Note: Though Meta.argv defaults to None, Cement will set this to
-        ``list(sys.argv[1:])`` if no argv is set in Meta during setup().
-        """
-
-        arguments_override_config = False
-        """
-        A boolean to toggle whether command line arguments should
-        override configuration values if the argument name matches the
-        config key.  I.e. --foo=bar would override config['myapp']['foo'].
-
-        This is different from ``override_arguments`` in that if
-        ``arguments_override_config`` is ``True``, then all arguments will
-        override (you don't have to list them all).
-        """
-
-        override_arguments = ['debug']
-        """
-        List of arguments that override their configuration counter-part.
-        For example, if ``--debug`` is passed (and it's config value is
-        ``debug``) then the ``debug`` key of all configuration sections will
-        be overridden by the value of the command line option (``True`` in
-        this example).
-
-        This is different from ``arguments_override_config`` in that this is
-        a selective list of specific arguments to override the config with
-        (and not all arguments that match the config).  This list will take
-        affect whether ``arguments_override_config`` is ``True`` or ``False``.
-        """
-
-        core_handler_override_options = dict(
-            output=(['-o'], dict(help='output handler')),
-        )
-        """
-        Similar to ``App.Meta.handler_override_options`` but these are
-        the core defaults required by Cement.  This dictionary can be
-        overridden by ``App.Meta.handler_override_options`` (when they
-        are merged together).
-        """
-
-        handler_override_options = {}
-        """
-        Dictionary of handler override options that will be added to the
-        argument parser, and allow the end-user to override handlers.  Useful
-        for interfaces that have multiple uses within the same application
-        (for example: Output Handler (json, yaml, etc) or maybe a Cloud
-        Provider Handler (rackspace, digitalocean, amazon, etc).
-
-        This dictionary will merge with
-        ``App.Meta.core_handler_override_options`` but this one has
-        precedence.
-
-        Dictionary Format:
-
-        .. code-block:: text
-
-            <interface_name> = (option_arguments, help_text)
-
-
-        See ``App.Meta.core_handler_override_options`` for an example
-        of what this should look like.
-
-        Note, if set to ``None`` then no options will be defined, and the
-        ``App.Meta.core_meta_override_options`` will be ignore (not
-        recommended as some extensions rely on this feature).
-        """
-
-        config_section = None
-        """
-        The base configuration section for the application.
-
-        Note: Though Meta.config_section defaults to None, Cement will
-        set this to the value of Meta.label (or in other words, the name
-        of the application).
-        """
-
-        config_defaults = None
-        """Default configuration dictionary.  Must be of type 'dict'."""
-
-        meta_defaults = {}
-        """
-        Default metadata dictionary used to pass high level options from the
-        application down to handlers at the point they are registered by the
-        framework **if the handler has not already been instantiated**.
-
-        For example, if requiring the ``json`` extension, you might want to
-        override ``JsonOutputHandler.Meta.json_module`` with ``ujson`` by
-        doing the following
-
-        .. code-block:: python
-
-            from cement.core.foundation import App
-            from cement.utils.misc import init_defaults
-
-            META = init_defaults('output.json')
-            META['output.json']['json_module'] = 'ujson'
-
-            class MyApp(App):
-                class Meta:
-                    label = 'myapp'
-                    extensions = ['json']
-                    meta_defaults = META
-
-        """
-
-        catch_signals = SIGNALS
-        """
-        List of signals to catch, and raise exc.CaughtSignal for.
-        Can be set to None to disable signal handling.
-        """
-
-        signal_handler = cement_signal_handler
-        """A function that is called to handle any caught signals."""
-
-        config_handler = 'configparser'
-        """
-        A handler class that implements the Config interface.
-        """
-
-        mail_handler = 'dummy'
-        """
-        A handler class that implements the Mail interface.
-        """
-
-        extension_handler = 'cement'
-        """
-        A handler class that implements the Extension interface.
-        """
-
-        log_handler = 'logging'
-        """
-        A handler class that implements the Log interface.
-        """
-
-        plugin_handler = 'cement'
-        """
-        A handler class that implements the Plugin interface.
-        """
-
-        argument_handler = 'argparse'
-        """
-        A handler class that implements the Argument interface.
-        """
-
-        output_handler = 'dummy'
-        """
-        A handler class that implements the Output interface.
-        """
-
-        cache_handler = None
-        """
-        A handler class that implements the Cache interface.
-        """
-
-        base_controller = None
-        """
-        This is the base application controller.  If a controller is set,
-        runtime operations are passed to the controller for command
-        dispatch and argument parsing when App.run() is called.
-
-        Note that cement will automatically set the `base_controller` to a
-        registered controller whose label is 'base' (only if `base_controller`
-        is not currently set).
-        """
-
-        extensions = []
-        """List of additional framework extensions to load."""
-
-        bootstrap = None
-        """
-        A bootstrapping module to load after app creation, and before
-        app.setup() is called.  This is useful for larger applications
-        that need to offload their bootstrapping code such as registering
-        hooks/handlers/etc to another file.
-
-        This must be a dotted python module path.
-        I.e. 'myapp.bootstrap' (myapp/bootstrap.py).  Cement will then
-        import the module, and if the module has a 'load()' function, that
-        will also be called.  Essentially, this is the same as an
-        extension or plugin, but as a facility for the application itself
-        to bootstrap 'hardcoded' application code.  It is also called
-        before plugins are loaded.
-        """
-
-        core_extensions = [
-            'cement.ext.ext_dummy',
-            'cement.ext.ext_smtp',
-            'cement.ext.ext_plugin',
-            'cement.ext.ext_configparser',
-            'cement.ext.ext_logging',
-            'cement.ext.ext_argparse',
-        ]
-        """
-        List of Cement core extensions.  These are generally required by
-        Cement and should only be modified if you know what you're
-        doing.  Use 'extensions' to add to this list, rather than
-        overriding core extensions.  That said if you want to prune down
-        your application, you can remove core extensions if they are
-        not necessary (for example if using your own log handler
-        extension you likely don't want/need LoggingLogHandler to be
-        registered).
-        """
-
-        core_meta_override = [
-            'debug',
-            'plugin_config_dir',
-            'plugin_dir',
-            'ignore_deprecation_warnings',
-            'template_dir',
-            'mail_handler',
-            'cache_handler',
-            'log_handler',
-            'output_handler',
-        ]
-        """
-        List of meta options that can/will be overridden by config options
-        of the '[base]' config section (where [base] is the base
-        configuration section of the application which is determined by
-        Meta.config_section but defaults to Meta.label). These overrides
-        are required by the framework to function properly and should not
-        be used by end user (developers) unless you really know what
-        you're doing.  To add your own extended meta overrides please use
-        'meta_override'.
-        """
-
-        meta_override = []
-        """
-        List of meta options that can/will be overridden by config options
-        of the '[base]' config section (where [base] is the
-        base configuration section of the application which is determined
-        by Meta.config_section but defaults to Meta.label).
-        """
-
-        ignore_deprecation_warnings = False
-        """Disable deprecation warnings from being logged by Cement."""
-
-        template_module = None
-        """
-        A python package (dotted import path) where template files can be
-        loaded from.  This is generally something like ``myapp.templates``
-        where a plugin file would live at ``myapp/templates/mytemplate.txt``.
-        Templates are first loaded from ``App.Meta.template_dirs``, and
-        and secondly from ``App.Meta.template_module``.  The
-        ``template_dirs`` setting has presedence.
-        """
-
-        template_dirs = None
-        """
-        A list of directory paths where template files can be loaded
-        from.
-
-        Note: Though ``App.Meta.template_dirs`` defaults to ``None``,
-        Cement will set this to a default list based on
-        ``App.Meta.label``.  This will equate to:
-
-        .. code-block:: python
-
-            ['~/.<app_label>/templates', '/usr/lib/<app_label>/templates']
-
-
-        Templates are attempted to be loaded in order, and will stop loading
-        once a template is successfully loaded from a directory.
-        """
-
-        template_dir = None
-        """
-        A directory path where template files can be loaded from.  By default,
-        this setting is also overridden by the
-        ``[<app_label>] -> template_dir`` config setting parsed in any of the
-        application configuration files .
-
-        If set, this item will be **prepended** to
-        ``App.Meta.template_dirs`` (giving it precedence over other
-        ``template_dirs``.
-        """
-
-        framework_logging = True
-        """
-        Whether or not to enable Cement framework logging.  This is separate
-        from the application log, and is generally used for debugging issues
-        with the framework and/or extensions primarily in development.
-
-        This option is overridden by the environment variable
-        `CEMENT_FRAMEWORK_LOGGING`.  Therefore, if in production you do not
-        want the Cement framework log enabled, you can set this option to
-        ``False`` but override it in your environment by doing something like
-        ``export CEMENT_FRAMEWORK_LOGGING=1`` in your shell whenever you need
-        it enabled.
-        """
-
-        define_hooks = []
-        """
-        List of hook definitions (label).  Will be passed to
-        ``self.hook.define(<hook_label>)``.  Must be a list of strings.
-
-        I.e. ``['my_custom_hook', 'some_other_hook']``
-        """
-
-        hooks = []
-        """
-        List of hooks to register when the app is created.  Will be passed to
-        ``self.hook.register(<hook_label>, <hook_func>)``.  Must be a list of
-        tuples in the form of ``(<hook_label>, <hook_func>)``.
-
-        I.e. ``[('post_argument_parsing', my_hook_func)]``.
-        """
-
-        define_handlers = []
-        """
-        List of interfaces classes to define handlers.  Must be a list of
-        uninstantiated interface classes.
-
-        I.e. ``['MyCustomInterface', 'SomeOtherInterface']``
-        """
-
-        handlers = []
-        """
-        List of handler classes to register.  Will be passed to
-        ``handler.register(<handler_class>)``.  Must be a list of
-        uninstantiated handler classes.
-
-        I.e. ``[MyCustomHandler, SomeOtherHandler]``
-        """
-
-        alternative_module_mapping = {}
-        """
-        EXPERIMENTAL FEATURE: This is an experimental feature added in Cement
-        2.9.x and may or may not be removed in future versions of Cement.
-
-        Dictionary of alternative, **drop-in** replacement modules to use
-        selectively throughout the application, framework, or
-        extensions.  Developers can optionally use the
-        ``App.__import__()`` method to import simple modules, and if
-        that module exists in this mapping it will import the alternative
-        library in it's place.
-
-        This is a low-level feature, and may not produce the results you are
-        expecting.  It's purpose is to allow the developer to replace specific
-        modules at a high level.  Example: For an application wanting to use
-        ``ujson`` in place of ``json``, the developer could set the following:
-
-        .. code-block:: python
-
-            alternative_module_mapping = {
-                'json' : 'ujson',
-            }
-
-        In the app, you would then load ``json`` as:
-
-        .. code-block:: python
-
-            _json = app.__import__('json')
-            _json.dumps(data)
-
-
-        Obviously, the replacement module **must be** a drop-in replace and
-        function the same.
-        """
+    label = None
+    """
+    The name of the application.  This should be the common name as you
+    would see and use at the command line.  For example 'helloworld', or
+    'my-awesome-app'.
+    """
+
+    debug = False
+    """
+    Used internally, and should not be used by developers.  This is set
+    to `True` if `--debug` is passed at command line."""
+
+    exit_on_close = False
+    """
+    Whether or not to call ``sys.exit()`` when ``close()`` is called.
+    The default is ``False``, however if ``True`` then the app will call
+    ``sys.exit(X)`` where ``X`` is ``self.exit_code``.
+    """
+
+    config_extension = '.conf'
+    """
+    Extension used to identify application and plugin configuration files.
+    """
+
+    config_files = None
+    """
+    List of config files to parse.
+
+    Note: Though Meta.config_section defaults to None, Cement will
+    set this to a default list based on Meta.label (or in other words,
+    the name of the application).  This will equate to:
+
+    .. code-block:: python
+
+        ['/etc/<app_label>/<app_label>.conf',
+         '~/.<app_label>.conf',
+         '~/.<app_label>/config']
+
+
+    Files are loaded in order, and have precedence in order.  Therefore,
+    the last configuration loaded has precedence (and overwrites settings
+    loaded from previous configuration files).
+
+    Note that ``.conf`` is the default config file extension, defined by
+    ``App.Meta.config_extension``.
+    """
+
+    plugins = []
+    """
+    A list of plugins to load.  This is generally considered bad
+    practice since plugins should be dynamically enabled/disabled
+    via a plugin config file.
+    """
+
+    plugin_config_dirs = None
+    """
+    A list of directory paths where plugin config files can be found.
+    Files must end in ``.conf`` (or the extension defined by
+    ``App.Meta.config_extension``) or they will be ignored.
+
+    Note: Though ``App.Meta.plugin_config_dirs`` is ``None``, Cement
+    will set this to a default list based on ``App.Meta.label``.
+    This will equate to:
+
+    .. code-block:: python
+
+        ['/etc/<app_label>/plugins.d', '~/.<app_label>/plugin.d']
+
+
+    Files are loaded in order, and have precedence in that order.
+    Therefore, the last configuration loaded has precedence (and
+    overwrites settings loaded from previous configuration files).
+    """
+
+    plugin_config_dir = None
+    """
+    A directory path where plugin config files can be found.  Files must
+    end in ``.conf`` (or the extension defined by
+    ``App.Meta.config_extension``) or they will be ignored.  By
+    default, this setting is also overridden by the
+    ``[<app_label>] -> plugin_config_dir`` config setting parsed in
+    any of the application configuration files.
+
+    If set, this item will be **appended** to
+    ``App.Meta.plugin_config_dirs`` so that it's settings will have
+    presedence over other configuration files.
+
+    In general, this setting should not be defined by the developer, as it
+    is primarily used to allow the end-user to define a
+    ``plugin_config_dir`` without completely trumping the hard-coded list
+    of default ``plugin_config_dirs`` defined by the app/developer.
+    """
+
+    plugin_bootstrap = None
+    """
+    A python package (dotted import path) where plugin code can be
+    loaded from.  This is generally something like ``myapp.plugins``
+    where a plugin file would live at ``myapp/plugins/myplugin.py``.
+    This provides a facility for applications that have builtin plugins
+    that ship with the applications source code and live in the same
+    Python module.
+
+    Note: Though the meta default is ``None``, Cement will set this to
+    ``<app_label>.plugins`` if not set.
+    """
+
+    plugin_dirs = None
+    """
+    A list of directory paths where plugin code (modules) can be loaded
+    from.
+
+    Note: Though ``App.Meta.plugin_dirs`` is None, Cement will set
+    this to a default list based on ``App.Meta.label`` if not set.
+    This will equate to:
+
+    .. code-block:: python
+
+        ['~/.<app_label>/plugins', '/usr/lib/<app_label>/plugins']
+
+
+    Modules are attempted to be loaded in order, and will stop loading
+    once a plugin is successfully loaded from a directory.  Therefore
+    this is the oposite of configuration file loading, in that here the
+    first has precedence.
+    """
+
+    plugin_dir = None
+    """
+    A directory path where plugin code (modules) can be loaded from.
+    By default, this setting is also overridden by the
+    ``[<app_label>] -> plugin_dir`` config setting parsed in any of the
+    application configuration files.
+
+    If set, this item will be **prepended** to ``Meta.plugin_dirs`` so
+    that a users defined ``plugin_dir`` has precedence over others.
+
+    In general, this setting should not be defined by the developer, as it
+    is primarily used to allow the end-user to define a
+    ``plugin_dir`` without completely trumping the hard-coded list
+    of default ``plugin_dirs`` defined by the app/developer.
+    """
+
+    argv = None
+    """
+    A list of arguments to use for parsing command line arguments
+    and options.
+
+    Note: Though Meta.argv defaults to None, Cement will set this to
+    ``list(sys.argv[1:])`` if no argv is set in Meta during setup().
+    """
+
+    arguments_override_config = False
+    """
+    A boolean to toggle whether command line arguments should
+    override configuration values if the argument name matches the
+    config key.  I.e. --foo=bar would override config['myapp']['foo'].
+
+    This is different from ``override_arguments`` in that if
+    ``arguments_override_config`` is ``True``, then all arguments will
+    override (you don't have to list them all).
+    """
+
+    override_arguments = ['debug']
+    """
+    List of arguments that override their configuration counter-part.
+    For example, if ``--debug`` is passed (and it's config value is
+    ``debug``) then the ``debug`` key of all configuration sections will
+    be overridden by the value of the command line option (``True`` in
+    this example).
+
+    This is different from ``arguments_override_config`` in that this is
+    a selective list of specific arguments to override the config with
+    (and not all arguments that match the config).  This list will take
+    affect whether ``arguments_override_config`` is ``True`` or ``False``.
+    """
+
+    core_handler_override_options = dict(
+        output=(['-o'], dict(help='output handler')),
+    )
+    """
+    Similar to ``App.Meta.handler_override_options`` but these are
+    the core defaults required by Cement.  This dictionary can be
+    overridden by ``App.Meta.handler_override_options`` (when they
+    are merged together).
+    """
+
+    handler_override_options = {}
+    """
+    Dictionary of handler override options that will be added to the
+    argument parser, and allow the end-user to override handlers.  Useful
+    for interfaces that have multiple uses within the same application
+    (for example: Output Handler (json, yaml, etc) or maybe a Cloud
+    Provider Handler (rackspace, digitalocean, amazon, etc).
+
+    This dictionary will merge with
+    ``App.Meta.core_handler_override_options`` but this one has
+    precedence.
+
+    Dictionary Format:
+
+    .. code-block:: text
+
+        <interface_name> = (option_arguments, help_text)
+
+
+    See ``App.Meta.core_handler_override_options`` for an example
+    of what this should look like.
+
+    Note, if set to ``None`` then no options will be defined, and the
+    ``App.Meta.core_meta_override_options`` will be ignore (not
+    recommended as some extensions rely on this feature).
+    """
+
+    config_section = None
+    """
+    The base configuration section for the application.
+
+    Note: Though Meta.config_section defaults to None, Cement will
+    set this to the value of Meta.label (or in other words, the name
+    of the application).
+    """
+
+    config_defaults = None
+    """Default configuration dictionary.  Must be of type 'dict'."""
+
+    meta_defaults = {}
+    """
+    Default metadata dictionary used to pass high level options from the
+    application down to handlers at the point they are registered by the
+    framework **if the handler has not already been instantiated**.
+
+    For example, if requiring the ``json`` extension, you might want to
+    override ``JsonOutputHandler.Meta.json_module`` with ``ujson`` by
+    doing the following
+
+    .. code-block:: python
+
+        from cement.core.foundation import App
+        from cement.utils.misc import init_defaults
+
+        META = init_defaults('output.json')
+        META['output.json']['json_module'] = 'ujson'
+
+        class MyApp(App):
+            class Meta:
+                label = 'myapp'
+                extensions = ['json']
+                meta_defaults = META
+
+    """
+
+    catch_signals = SIGNALS
+    """
+    List of signals to catch, and raise exc.CaughtSignal for.
+    Can be set to None to disable signal handling.
+    """
+
+    signal_handler = cement_signal_handler
+    """A function that is called to handle any caught signals."""
+
+    config_handler = 'configparser'
+    """
+    A handler class that implements the Config interface.
+    """
+
+    mail_handler = 'dummy'
+    """
+    A handler class that implements the Mail interface.
+    """
+
+    extension_handler = 'cement'
+    """
+    A handler class that implements the Extension interface.
+    """
+
+    log_handler = 'logging'
+    """
+    A handler class that implements the Log interface.
+    """
+
+    plugin_handler = 'cement'
+    """
+    A handler class that implements the Plugin interface.
+    """
+
+    argument_handler = 'argparse'
+    """
+    A handler class that implements the Argument interface.
+    """
+
+    output_handler = 'dummy'
+    """
+    A handler class that implements the Output interface.
+    """
+
+    cache_handler = None
+    """
+    A handler class that implements the Cache interface.
+    """
+
+    base_controller = None
+    """
+    This is the base application controller.  If a controller is set,
+    runtime operations are passed to the controller for command
+    dispatch and argument parsing when App.run() is called.
+
+    Note that cement will automatically set the `base_controller` to a
+    registered controller whose label is 'base' (only if `base_controller`
+    is not currently set).
+    """
+
+    extensions = []
+    """List of additional framework extensions to load."""
+
+    bootstrap = None
+    """
+    A bootstrapping module to load after app creation, and before
+    app.setup() is called.  This is useful for larger applications
+    that need to offload their bootstrapping code such as registering
+    hooks/handlers/etc to another file.
+
+    This must be a dotted python module path.
+    I.e. 'myapp.bootstrap' (myapp/bootstrap.py).  Cement will then
+    import the module, and if the module has a 'load()' function, that
+    will also be called.  Essentially, this is the same as an
+    extension or plugin, but as a facility for the application itself
+    to bootstrap 'hardcoded' application code.  It is also called
+    before plugins are loaded.
+    """
+
+    core_extensions = [
+        'cement.ext.ext_dummy',
+        'cement.ext.ext_smtp',
+        'cement.ext.ext_plugin',
+        'cement.ext.ext_configparser',
+        'cement.ext.ext_logging',
+        'cement.ext.ext_argparse',
+    ]
+    """
+    List of Cement core extensions.  These are generally required by
+    Cement and should only be modified if you know what you're
+    doing.  Use 'extensions' to add to this list, rather than
+    overriding core extensions.  That said if you want to prune down
+    your application, you can remove core extensions if they are
+    not necessary (for example if using your own log handler
+    extension you likely don't want/need LoggingLogHandler to be
+    registered).
+    """
+
+    core_meta_override = [
+        'debug',
+        'plugin_config_dir',
+        'plugin_dir',
+        'ignore_deprecation_warnings',
+        'template_dir',
+        'mail_handler',
+        'cache_handler',
+        'log_handler',
+        'output_handler',
+    ]
+    """
+    List of meta options that can/will be overridden by config options
+    of the '[base]' config section (where [base] is the base
+    configuration section of the application which is determined by
+    Meta.config_section but defaults to Meta.label). These overrides
+    are required by the framework to function properly and should not
+    be used by end user (developers) unless you really know what
+    you're doing.  To add your own extended meta overrides please use
+    'meta_override'.
+    """
+
+    meta_override = []
+    """
+    List of meta options that can/will be overridden by config options
+    of the '[base]' config section (where [base] is the
+    base configuration section of the application which is determined
+    by Meta.config_section but defaults to Meta.label).
+    """
+
+    ignore_deprecation_warnings = False
+    """Disable deprecation warnings from being logged by Cement."""
+
+    template_module = None
+    """
+    A python package (dotted import path) where template files can be
+    loaded from.  This is generally something like ``myapp.templates``
+    where a plugin file would live at ``myapp/templates/mytemplate.txt``.
+    Templates are first loaded from ``App.Meta.template_dirs``, and
+    and secondly from ``App.Meta.template_module``.  The
+    ``template_dirs`` setting has presedence.
+    """
+
+    template_dirs = None
+    """
+    A list of directory paths where template files can be loaded
+    from.
+
+    Note: Though ``App.Meta.template_dirs`` defaults to ``None``,
+    Cement will set this to a default list based on
+    ``App.Meta.label``.  This will equate to:
+
+    .. code-block:: python
+
+        ['~/.<app_label>/templates', '/usr/lib/<app_label>/templates']
+
+
+    Templates are attempted to be loaded in order, and will stop loading
+    once a template is successfully loaded from a directory.
+    """
+
+    template_dir = None
+    """
+    A directory path where template files can be loaded from.  By default,
+    this setting is also overridden by the
+    ``[<app_label>] -> template_dir`` config setting parsed in any of the
+    application configuration files .
+
+    If set, this item will be **prepended** to
+    ``App.Meta.template_dirs`` (giving it precedence over other
+    ``template_dirs``.
+    """
+
+    framework_logging = True
+    """
+    Whether or not to enable Cement framework logging.  This is separate
+    from the application log, and is generally used for debugging issues
+    with the framework and/or extensions primarily in development.
+
+    This option is overridden by the environment variable
+    `CEMENT_FRAMEWORK_LOGGING`.  Therefore, if in production you do not
+    want the Cement framework log enabled, you can set this option to
+    ``False`` but override it in your environment by doing something like
+    ``export CEMENT_FRAMEWORK_LOGGING=1`` in your shell whenever you need
+    it enabled.
+    """
+
+    define_hooks = []
+    """
+    List of hook definitions (label).  Will be passed to
+    ``self.hook.define(<hook_label>)``.  Must be a list of strings.
+
+    I.e. ``['my_custom_hook', 'some_other_hook']``
+    """
+
+    hooks = []
+    """
+    List of hooks to register when the app is created.  Will be passed to
+    ``self.hook.register(<hook_label>, <hook_func>)``.  Must be a list of
+    tuples in the form of ``(<hook_label>, <hook_func>)``.
+
+    I.e. ``[('post_argument_parsing', my_hook_func)]``.
+    """
+
+    define_handlers = []
+    """
+    List of interfaces classes to define handlers.  Must be a list of
+    uninstantiated interface classes.
+
+    I.e. ``['MyCustomInterface', 'SomeOtherInterface']``
+    """
+
+    handlers = []
+    """
+    List of handler classes to register.  Will be passed to
+    ``handler.register(<handler_class>)``.  Must be a list of
+    uninstantiated handler classes.
+
+    I.e. ``[MyCustomHandler, SomeOtherHandler]``
+    """
+
+    alternative_module_mapping = {}
+    """
+    EXPERIMENTAL FEATURE: This is an experimental feature added in Cement
+    2.9.x and may or may not be removed in future versions of Cement.
+
+    Dictionary of alternative, **drop-in** replacement modules to use
+    selectively throughout the application, framework, or
+    extensions.  Developers can optionally use the
+    ``App.__import__()`` method to import simple modules, and if
+    that module exists in this mapping it will import the alternative
+    library in it's place.
+
+    This is a low-level feature, and may not produce the results you are
+    expecting.  It's purpose is to allow the developer to replace specific
+    modules at a high level.  Example: For an application wanting to use
+    ``ujson`` in place of ``json``, the developer could set the following:
+
+    .. code-block:: python
+
+        alternative_module_mapping = {
+            'json' : 'ujson',
+        }
+
+    In the app, you would then load ``json`` as:
+
+    .. code-block:: python
+
+        _json = app.__import__('json')
+        _json.dumps(data)
+
+
+    Obviously, the replacement module **must be** a drop-in replace and
+    function the same.
+    """
 
     def __init__(self, label=None, **kw):
         super(App, self).__init__(**kw)
 
         # disable framework logging?
         if 'CEMENT_FRAMEWORK_LOGGING' not in os.environ.keys():
-            if self._meta.framework_logging is True:
+            if self.framework_logging is True:
                 os.environ['CEMENT_FRAMEWORK_LOGGING'] = '1'
             else:
                 os.environ['CEMENT_FRAMEWORK_LOGGING'] = '0'
 
         # for convenience we translate this to _meta
         if label:
-            self._meta.label = label
+            self.label = label
+
         self._validate_label()
         self._loaded_bootstrap = None
         self._parsed_args = None
@@ -676,30 +671,30 @@ class App(meta.MetaMixin):
         self.mail = None
 
         # setup argv... this has to happen before lay_cement()
-        if self._meta.argv is None:
-            self._meta.argv = list(sys.argv[1:])
+        if self.argv is None:
+            self.argv = list(sys.argv[1:])
 
         # hack for command line --debug
         if '--debug' in self.argv:
-            self._meta.debug = True
+            self.debug = True
 
         # setup the cement framework
         self._lay_cement()
 
-    @property
-    def debug(self):
-        """
-        Returns boolean based on whether ``--debug`` was passed at command
-        line or set via the application's configuration file.
+    # @property
+    # def debug(self):
+    #     """
+    #     Returns boolean based on whether ``--debug`` was passed at command
+    #     line or set via the application's configuration file.
 
-        :returns: boolean
-        """
-        return self._meta.debug
+    #     :returns: boolean
+    #     """
+    #     return self.debug
 
-    @property
-    def argv(self):
-        """The arguments list that will be used when self.run() is called."""
-        return self._meta.argv
+    # @property
+    # def argv(self):
+    #     """The arguments list that will be used when self.run() is called."""
+    #     return self.argv
 
     def extend(self, member_name, member_object):
         """
@@ -725,12 +720,12 @@ class App(meta.MetaMixin):
             self._extended_members.append(member_name)
 
     def _validate_label(self):
-        if not self._meta.label:
+        if not self.label:
             raise exc.FrameworkError("Application name missing.")
 
         # validate the name is ok
         ok = ['_', '-']
-        for char in self._meta.label:
+        for char in self.label:
             if char in ok:
                 continue
 
@@ -751,19 +746,19 @@ class App(meta.MetaMixin):
         complete.
 
         """
-        LOG.debug("now setting up the '%s' application" % self._meta.label)
+        LOG.debug("now setting up the '%s' application" % self.label)
 
-        if self._meta.bootstrap is not None:
+        if self.bootstrap is not None:
             LOG.debug("importing bootstrap code from %s" %
-                      self._meta.bootstrap)
+                      self.bootstrap)
 
-            if self._meta.bootstrap not in sys.modules \
+            if self.bootstrap not in sys.modules \
                     or self._loaded_bootstrap is None:
-                __import__(self._meta.bootstrap, globals(), locals(), [], 0)
-                if hasattr(sys.modules[self._meta.bootstrap], 'load'):
-                    sys.modules[self._meta.bootstrap].load(self)
+                __import__(self.bootstrap, globals(), locals(), [], 0)
+                if hasattr(sys.modules[self.bootstrap], 'load'):
+                    sys.modules[self.bootstrap].load(self)
 
-                self._loaded_bootstrap = sys.modules[self._meta.bootstrap]
+                self._loaded_bootstrap = sys.modules[self.bootstrap]
             else:
                 reload_module(self._loaded_bootstrap)
 
@@ -854,7 +849,7 @@ class App(meta.MetaMixin):
 
         :returns: ``None``
         """
-        LOG.debug('reloading the %s application' % self._meta.label)
+        LOG.debug('reloading the %s application' % self.label)
         self._unlay_cement()
         self._lay_cement()
         self.setup()
@@ -880,7 +875,7 @@ class App(meta.MetaMixin):
         for res in self.hook.run('pre_close', self):
             pass
 
-        LOG.debug("closing the %s application" % self._meta.label)
+        LOG.debug("closing the %s application" % self.label)
 
         # in theory, this should happen last-last... but at that point `self`
         # would be kind of busted after _unlay_cement() is run.
@@ -894,7 +889,7 @@ class App(meta.MetaMixin):
                 "Invalid exit status code (must be integer)"
             self.exit_code = code
 
-        if self._meta.exit_on_close is True:
+        if self.exit_on_close is True:
             sys.exit(self.exit_code)
 
     def render(self, data, template=None, out=sys.stdout, **kw):
@@ -952,7 +947,7 @@ class App(meta.MetaMixin):
         :returns: tuple (data, output_text)
 
         """
-        if not is_true(self._meta.ignore_deprecation_warnings):
+        if not is_true(self.ignore_deprecation_warnings):
             self.log.warning("Cement Deprecation Warning: " +
                              "App.get_last_rendered() has been " +
                              "deprecated, and will be removed in future " +
@@ -983,7 +978,7 @@ class App(meta.MetaMixin):
         self.args.add_argument(*args, **kw)
 
     def _suppress_output(self):
-        if self._meta.debug is True:
+        if self.debug is True:
             LOG.debug('not suppressing console output because of debug mode')
             return
 
@@ -1001,11 +996,11 @@ class App(meta.MetaMixin):
     def _lay_cement(self):
         """Initialize the framework."""
         LOG.debug("laying cement for the '%s' application" %
-                  self._meta.label)
+                  self.label)
 
-        if '--debug' in self._meta.argv:
-            self._meta.debug = True
-        elif '--quiet' in self._meta.argv:
+        if '--debug' in self.argv:
+            self.debug = True
+        elif '--quiet' in self.argv:
             self._suppress_output()
 
         self.handler = HandlerManager()
@@ -1025,7 +1020,7 @@ class App(meta.MetaMixin):
         self.hook.define('post_render')
 
         # define application hooks from meta
-        for label in self._meta.define_hooks:
+        for label in self.define_hooks:
             self.hook.define(label)
 
         # register some built-in framework hooks
@@ -1040,7 +1035,7 @@ class App(meta.MetaMixin):
         # defined here (above).  Anything that we couldn't register here
         # will be retried after setup
         self.__retry_hooks__ = []
-        for hook_spec in self._meta.hooks:
+        for hook_spec in self.hooks:
             if not self.hook.defined(hook_spec[0]):
                 LOG.debug('hook %s not defined, will retry after setup' %
                           hook_spec[0])
@@ -1060,7 +1055,7 @@ class App(meta.MetaMixin):
         self.handler.define(cache.CacheHandlerBase)
 
         # define application handlers
-        for handler_class in self._meta.define_handlers:
+        for handler_class in self.define_handlers:
             self.handler.define(handler_class)
 
         # extension handler is the only thing that can't be loaded... as,
@@ -1068,7 +1063,7 @@ class App(meta.MetaMixin):
         self.handler.register(extension.ExtensionHandler)
 
         # register application handlers
-        for handler_class in self._meta.handlers:
+        for handler_class in self.handlers:
             self.handler.register(handler_class)
 
     def _parse_args(self):
@@ -1077,7 +1072,7 @@ class App(meta.MetaMixin):
 
         self._parsed_args = self.args.parse(self.argv)
 
-        if self._meta.arguments_override_config is True:
+        if self.arguments_override_config is True:
             for member in dir(self._parsed_args):
                 if member and member.startswith('_'):
                     continue
@@ -1092,7 +1087,7 @@ class App(meta.MetaMixin):
                         self.config.set(section, member,
                                         getattr(self._parsed_args, member))
 
-        for member in self._meta.override_arguments:
+        for member in self.override_arguments:
             for section in self.config.get_sections():
                 if member in self.config.keys(section):
                     self.config.set(section, member,
@@ -1110,26 +1105,26 @@ class App(meta.MetaMixin):
         """
 
         LOG.debug("adding signal handler %s for signal %s" % (
-            self._meta.signal_handler, signum)
+            self.signal_handler, signum)
         )
-        signal.signal(signum, self._meta.signal_handler)
+        signal.signal(signum, self.signal_handler)
 
     def _setup_signals(self):
-        if self._meta.catch_signals is None:
+        if self.catch_signals is None:
             LOG.debug("catch_signals=None... not handling any signals")
             return
 
-        for signum in self._meta.catch_signals:
+        for signum in self.catch_signals:
             self.catch_signal(signum)
 
     def _resolve_handler(self, handler_type, handler_def, raise_error=True):
         meta_defaults = {}
         if type(handler_def) == str:
-            _meta_label = "%s.%s" % (handler_type, handler_def)
-            meta_defaults = self._meta.meta_defaults.get(_meta_label, {})
-        elif hasattr(handler_def, 'Meta'):
-            _meta_label = "%s.%s" % (handler_type, handler_def.Meta.label)
-            meta_defaults = self._meta.meta_defaults.get(_meta_label, {})
+            label = "%s.%s" % (handler_type, handler_def)
+            meta_defaults = self.meta_defaults.get(label, {})
+        elif inspect.isclass(handler_def):
+            label = "%s.%s" % (handler_type, handler_def.label)
+            meta_defaults = self.meta_defaults.get(label, {})
 
         han = self.handler.resolve(handler_type, handler_def,
                                    raise_error=raise_error,
@@ -1139,58 +1134,57 @@ class App(meta.MetaMixin):
             return han
 
     def _setup_extension_handler(self):
-        LOG.debug("setting up %s.extension handler" % self._meta.label)
+        LOG.debug("setting up %s.extension handler" % self.label)
         self.ext = self._resolve_handler('extension',
-                                         self._meta.extension_handler)
-        self.ext.load_extensions(self._meta.core_extensions)
-        self.ext.load_extensions(self._meta.extensions)
+                                         self.extension_handler)
+        self.ext.load_extensions(self.core_extensions)
+        self.ext.load_extensions(self.extensions)
 
     def _setup_config_handler(self):
-        LOG.debug("setting up %s.config handler" % self._meta.label)
+        LOG.debug("setting up %s.config handler" % self.label)
         self.config = self._resolve_handler('config',
-                                            self._meta.config_handler)
-        if self._meta.config_section is None:
-            self._meta.config_section = self._meta.label
+                                            self.config_handler)
+        if self.config_section is None:
+            self.config_section = self.label
 
-        self.config.add_section(self._meta.config_section)
+        self.config.add_section(self.config_section)
 
-        if self._meta.config_defaults is not None:
-            self.config.merge(self._meta.config_defaults)
+        if self.config_defaults is not None:
+            self.config.merge(self.config_defaults)
 
-        if self._meta.config_files is None:
-            label = self._meta.label
-            ext = self._meta.config_extension
+        if self.config_files is None:
+            label = self.label
+            ext = self.config_extension
 
-            self._meta.config_files = [
+            self.config_files = [
                 os.path.join('/', 'etc', label, '%s%s' % (label, ext)),
                 os.path.join(fs.HOME_DIR, '.%s%s' % (label, ext)),
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'config'),
             ]
 
-        for _file in self._meta.config_files:
+        for _file in self.config_files:
             self.config.parse_file(_file)
 
         self.validate_config()
 
         # hack for --debug
-        if '--debug' in self.argv or self._meta.debug is True:
-            self.config.set(self._meta.config_section, 'debug', True)
+        if '--debug' in self.argv or self.debug is True:
+            self.config.set(self.config_section, 'debug', True)
 
         # override select Meta via config
-        base_dict = self.config.get_section_dict(self._meta.config_section)
+        base_dict = self.config.get_section_dict(self.config_section)
 
         for key in base_dict:
-            if key in self._meta.core_meta_override or \
-                    key in self._meta.meta_override:
+            if key in self.core_meta_override or key in self.meta_override:
                 # kind of a hack for core_meta_override
                 if key in ['debug']:
-                    setattr(self._meta, key, is_true(base_dict[key]))
+                    setattr(self, key, is_true(base_dict[key]))
                 else:
-                    setattr(self._meta, key, base_dict[key])
+                    setattr(self, key, base_dict[key])
 
         # load extensions from configuraton file
-        if 'extensions' in self.config.keys(self._meta.label):
-            exts = self.config.get(self._meta.label, 'extensions')
+        if 'extensions' in self.config.keys(self.label):
+            exts = self.config.get(self.label, 'extensions')
 
             # convert a comma-separated string to a list
             if type(exts) is str:
@@ -1200,7 +1194,7 @@ class App(meta.MetaMixin):
                 ext_list = [x.strip() for x in ext_list]
 
                 # set the new extensions value in the config
-                self.config.set(self._meta.label, 'extensions', ext_list)
+                self.config.set(self.label, 'extensions', ext_list)
 
             # otherwise, if it's a list
             elif type(exts) is list:
@@ -1211,71 +1205,71 @@ class App(meta.MetaMixin):
                 self.ext.load_extension(ext)
 
                 # add to meta data
-                self._meta.extensions.append(ext)
+                self.extensions.append(ext)
 
     def _setup_mail_handler(self):
-        LOG.debug("setting up %s.mail handler" % self._meta.label)
+        LOG.debug("setting up %s.mail handler" % self.label)
         self.mail = self._resolve_handler('mail',
-                                          self._meta.mail_handler)
+                                          self.mail_handler)
 
     def _setup_log_handler(self):
-        LOG.debug("setting up %s.log handler" % self._meta.label)
-        self.log = self._resolve_handler('log', self._meta.log_handler)
+        LOG.debug("setting up %s.log handler" % self.label)
+        self.log = self._resolve_handler('log', self.log_handler)
 
     def _setup_plugin_handler(self):
-        LOG.debug("setting up %s.plugin handler" % self._meta.label)
-        label = self._meta.label
+        LOG.debug("setting up %s.plugin handler" % self.label)
+        label = self.label
 
         # plugin config dirs
-        if self._meta.plugin_config_dirs is None:
-            self._meta.plugin_config_dirs = [
-                '/etc/%s/plugins.d/' % self._meta.label,
+        if self.plugin_config_dirs is None:
+            self.plugin_config_dirs = [
+                '/etc/%s/plugins.d/' % self.label,
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'plugins.d'),
             ]
-        config_dir = self._meta.plugin_config_dir
+        config_dir = self.plugin_config_dir
         if config_dir is not None:
-            if config_dir not in self._meta.plugin_config_dirs:
+            if config_dir not in self.plugin_config_dirs:
                 # append so that this config has precedence
-                self._meta.plugin_config_dirs.append(config_dir)
+                self.plugin_config_dirs.append(config_dir)
 
         # plugin dirs
-        if self._meta.plugin_dirs is None:
-            self._meta.plugin_dirs = [
+        if self.plugin_dirs is None:
+            self.plugin_dirs = [
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'plugins'),
-                '/usr/lib/%s/plugins' % self._meta.label,
+                '/usr/lib/%s/plugins' % self.label,
             ]
-        plugin_dir = self._meta.plugin_dir
+        plugin_dir = self.plugin_dir
         if plugin_dir is not None:
-            if plugin_dir not in self._meta.plugin_dirs:
+            if plugin_dir not in self.plugin_dirs:
                 # insert so that this dir has precedence
-                self._meta.plugin_dirs.insert(0, plugin_dir)
+                self.plugin_dirs.insert(0, plugin_dir)
 
         # plugin bootstrap
-        if self._meta.plugin_bootstrap is None:
-            self._meta.plugin_bootstrap = '%s.plugins' % self._meta.label
+        if self.plugin_bootstrap is None:
+            self.plugin_bootstrap = '%s.plugins' % self.label
 
         self.plugin = self._resolve_handler('plugin',
-                                            self._meta.plugin_handler)
-        self.plugin.load_plugins(self._meta.plugins)
+                                            self.plugin_handler)
+        self.plugin.load_plugins(self.plugins)
         self.plugin.load_plugins(self.plugin.get_enabled_plugins())
 
     def _setup_output_handler(self):
-        if self._meta.output_handler is None:
+        if self.output_handler is None:
             LOG.debug("no output handler defined, skipping.")
             return
 
-        label = self._meta.label
-        LOG.debug("setting up %s.output handler" % self._meta.label)
+        label = self.label
+        LOG.debug("setting up %s.output handler" % self.label)
         self.output = self._resolve_handler('output',
-                                            self._meta.output_handler,
+                                            self.output_handler,
                                             raise_error=False)
         # template module
-        if self._meta.template_module is None:
-            self._meta.template_module = '%s.templates' % label
+        if self.template_module is None:
+            self.template_module = '%s.templates' % label
 
         # template dirs
-        if self._meta.template_dirs is None:
-            self._meta.template_dirs = []
+        if self.template_dirs is None:
+            self.template_dirs = []
             paths = [
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'templates'),
                 '/usr/lib/%s/templates' % label,
@@ -1283,27 +1277,27 @@ class App(meta.MetaMixin):
             for path in paths:
                 self.add_template_dir(path)
 
-        template_dir = self._meta.template_dir
+        template_dir = self.template_dir
         if template_dir is not None:
-            if template_dir not in self._meta.template_dirs:
+            if template_dir not in self.template_dirs:
                 # insert so that this dir has precedence
-                self._meta.template_dirs.insert(0, template_dir)
+                self.template_dirs.insert(0, template_dir)
 
     def _setup_cache_handler(self):
-        if self._meta.cache_handler is None:
+        if self.cache_handler is None:
             LOG.debug("no cache handler defined, skipping.")
             return
 
-        LOG.debug("setting up %s.cache handler" % self._meta.label)
+        LOG.debug("setting up %s.cache handler" % self.label)
         self.cache = self._resolve_handler('cache',
-                                           self._meta.cache_handler,
+                                           self.cache_handler,
                                            raise_error=False)
 
     def _setup_arg_handler(self):
-        LOG.debug("setting up %s.arg handler" % self._meta.label)
+        LOG.debug("setting up %s.arg handler" % self.label)
         self.args = self._resolve_handler('argument',
-                                          self._meta.argument_handler)
-        self.args.prog = self._meta.label
+                                          self.argument_handler)
+        self.args.prog = self.label
 
         self.args.add_argument('--debug', dest='debug',
                                action='store_true',
@@ -1313,31 +1307,31 @@ class App(meta.MetaMixin):
                                help='suppress all output')
 
         # merge handler override meta data
-        if self._meta.handler_override_options is not None:
+        if self.handler_override_options is not None:
             # fucking long names... fuck.  anyway, merge the core handler
             # override options with developer defined options
-            core = self._meta.core_handler_override_options.copy()
-            dev = self._meta.handler_override_options.copy()
+            core = self.core_handler_override_options.copy()
+            dev = self.handler_override_options.copy()
             core.update(dev)
 
-            self._meta.handler_override_options = core
+            self.handler_override_options = core
 
     def _setup_controllers(self):
         LOG.debug("setting up application controllers")
 
-        if self._meta.base_controller is not None:
+        if self.base_controller is not None:
             cntr = self._resolve_handler('controller',
-                                         self._meta.base_controller)
+                                         self.base_controller)
             self.controller = cntr
-            self._meta.base_controller = self.controller
-        elif self._meta.base_controller is None:
+            self.base_controller = self.controller
+        elif self.base_controller is None:
             if self.handler.registered('controller', 'base'):
                 self.controller = self._resolve_handler('controller', 'base')
-                self._meta.base_controller = self.controller
+                self.base_controller = self.controller
 
         # This is necessary for some backend usage
-        if self._meta.base_controller is not None:
-            if self._meta.base_controller._meta.label != 'base':
+        if self.base_controller is not None:
+            if self.base_controller.label != 'base':
                 raise exc.FrameworkError("Base controllers must have " +
                                          "a label of 'base'.")
 
@@ -1383,8 +1377,8 @@ class App(meta.MetaMixin):
 
         """
         path = fs.abspath(path)
-        if path not in self._meta.template_dirs:
-            self._meta.template_dirs.append(path)
+        if path not in self.template_dirs:
+            self.template_dirs.append(path)
 
     def remove_template_dir(self, path):
         """
@@ -1401,12 +1395,12 @@ class App(meta.MetaMixin):
 
         """
         path = fs.abspath(path)
-        if path in self._meta.template_dirs:
-            self._meta.template_dirs.remove(path)
+        if path in self.template_dirs:
+            self.template_dirs.remove(path)
 
     def __import__(self, obj, from_module=None):
         # EXPERIMENTAL == UNDOCUMENTED
-        mapping = self._meta.alternative_module_mapping
+        mapping = self.alternative_module_mapping
 
         if from_module is not None:
             _from = mapping.get(from_module, from_module)

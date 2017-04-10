@@ -117,15 +117,11 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
     extensions.
     """
 
-    class Meta:
+    label = 'mustache'
 
-        """Handler meta-data."""
-
-        label = 'mustache'
-
-        #: Whether or not to include ``mustache`` as an available to choice
-        #: to override the ``output_handler`` via command line options.
-        overridable = False
+    #: Whether or not to include ``mustache`` as an available to choice
+    #: to override the ``output_handler`` via command line options.
+    overridable = False
 
     def __init__(self, *args, **kw):
         super(MustacheOutputHandler, self).__init__(*args, **kw)

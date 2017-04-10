@@ -60,12 +60,9 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
     Additional arguments and keyword arguments are passed directly to
     RawConfigParser on initialization.
     """
-    class Meta:
 
-        """Handler meta-data."""
-
-        label = 'configparser'
-        """The string identifier of this handler."""
+    label = 'configparser'
+    """The string identifier of this handler."""
 
     # def __init__(self, *args, **kw):
     #     # ConfigParser is not a new style object, so you can't call super()

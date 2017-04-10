@@ -33,12 +33,8 @@ class OutputHandlerBase(Handler):
 
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        #: The string identifier of the interface
-        interface = 'output'
+    #: The string identifier of the interface
+    interface = 'output'
 
     @abstractmethod
     def render(self, data_dict, *args, **kwargs):
@@ -66,7 +62,7 @@ class TemplateOutputHandler(OutputHandler):
     """Base class for template base output handlers."""
 
     def _load_template_from_file(self, template_path):
-        for template_dir in self.app._meta.template_dirs:
+        for template_dir in self.app.template_dirs:
             template_prefix = template_dir.rstrip('/')
             template_path = template_path.lstrip('/')
             full_path = fs.abspath(os.path.join(template_prefix,
@@ -86,7 +82,7 @@ class TemplateOutputHandler(OutputHandler):
         return (None, None)
 
     def _load_template_from_module(self, template_path):
-        template_module = self.app._meta.template_module
+        template_module = self.app.template_module
         template_path = template_path.lstrip('/')
         full_module_path = "%s.%s" % (template_module,
                                       re.sub('/', '.', template_path))
@@ -116,8 +112,8 @@ class TemplateOutputHandler(OutputHandler):
 
     def load_template(self, template_path):
         """
-        Loads a template file first from ``self.app._meta.template_dirs`` and
-        secondly from ``self.app._meta.template_module``.  The
+        Loads a template file first from ``self.app.template_dirs`` and
+        secondly from ``self.app.template_module``.  The
         ``template_dirs`` have presedence.
 
         :param template_path: The secondary path of the template **after**
@@ -138,8 +134,8 @@ class TemplateOutputHandler(OutputHandler):
     # compatibility)
     def load_template_with_location(self, template_path):
         """
-        Loads a template file first from ``self.app._meta.template_dirs`` and
-        secondly from ``self.app._meta.template_module``.  The
+        Loads a template file first from ``self.app.template_dirs`` and
+        secondly from ``self.app.template_module``.  The
         ``template_dirs`` have presedence.
 
         :param template_path: The secondary path of the template **after**

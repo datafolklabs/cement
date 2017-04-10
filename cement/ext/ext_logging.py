@@ -85,52 +85,48 @@ class LoggingLogHandler(log.LogHandler):
 
     """
 
-    class Meta:
+    #: The string identifier of this handler.
+    label = 'logging'
 
-        """Handler meta-data."""
+    #: The logging namespace.
+    #:
+    #: Note: Although Meta.namespace defaults to None, Cement will set
+    #: this to the application label (App.Meta.label) if not set
+    #: during setup.
+    namespace = None
 
-        #: The string identifier of this handler.
-        label = 'logging'
+    #: Class to use as the formatter
+    formatter_class = logging.Formatter
 
-        #: The logging namespace.
-        #:
-        #: Note: Although Meta.namespace defaults to None, Cement will set
-        #: this to the application label (App.Meta.label) if not set
-        #: during setup.
-        namespace = None
+    #: The logging format for the file logger.
+    file_format = "%(asctime)s (%(levelname)s) %(namespace)s : " + \
+                  "%(message)s"
 
-        #: Class to use as the formatter
-        formatter_class = logging.Formatter
+    #: The logging format for the consoler logger.
+    console_format = "%(levelname)s: %(message)s"
 
-        #: The logging format for the file logger.
-        file_format = "%(asctime)s (%(levelname)s) %(namespace)s : " + \
-                      "%(message)s"
+    #: The logging format for both file and console if ``debug==True``.
+    debug_format = "%(asctime)s (%(levelname)s) %(namespace)s : " + \
+                   "%(message)s"
 
-        #: The logging format for the consoler logger.
-        console_format = "%(levelname)s: %(message)s"
+    #: List of logger namespaces to clear.  Useful when imported software
+    #: also sets up logging and you end up with duplicate log entries.
+    #:
+    #: Changes in Cement 2.1.3.  Previous versions only supported
+    #: `clear_loggers` as a boolean, but did fully support clearing
+    #: non-app logging namespaces.
+    clear_logger_namespaces = []
 
-        #: The logging format for both file and console if ``debug==True``.
-        debug_format = "%(asctime)s (%(levelname)s) %(namespace)s : " + \
-                       "%(message)s"
-
-        #: List of logger namespaces to clear.  Useful when imported software
-        #: also sets up logging and you end up with duplicate log entries.
-        #:
-        #: Changes in Cement 2.1.3.  Previous versions only supported
-        #: `clear_loggers` as a boolean, but did fully support clearing
-        #: non-app logging namespaces.
-        clear_loggers = []
-
-        #: The default configuration dictionary to populate the ``log``
-        #: section.
-        config_defaults = dict(
-            file=None,
-            level='INFO',
-            to_console=True,
-            rotate=False,
-            max_bytes=512000,
-            max_files=4,
-        )
+    #: The default configuration dictionary to populate the ``log``
+    #: section.
+    config_defaults = dict(
+        file=None,
+        level='INFO',
+        to_console=True,
+        rotate=False,
+        max_bytes=512000,
+        max_files=4,
+    )
 
     levels = ['INFO', 'WARNING', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
 
@@ -140,21 +136,21 @@ class LoggingLogHandler(log.LogHandler):
 
     def _setup(self, app_obj):
         super(LoggingLogHandler, self)._setup(app_obj)
-        if self._meta.namespace is None:
-            self._meta.namespace = "%s" % self.app._meta.label
+        if self.namespace is None:
+            self.namespace = "%s" % self.app.label
 
         self.backend = logging.getLogger("cement:app:%s" %
-                                         self._meta.namespace)
+                                         self.namespace)
 
         # hack for application debugging
-        if is_true(self.app._meta.debug):
-            self.app.config.set(self._meta.config_section, 'level', 'DEBUG')
+        if is_true(self.app.debug):
+            self.app.config.set(self.config_section, 'level', 'DEBUG')
 
-        level = self.app.config.get(self._meta.config_section, 'level')
+        level = self.app.config.get(self.config_section, 'level')
         self.set_level(level)
 
         LOG.debug("logging initialized for '%s' using %s" %
-                  (self._meta.namespace, self.__class__.__name__))
+                  (self.namespace, self.__class__.__name__))
 
     def set_level(self, level):
         """
@@ -172,8 +168,8 @@ class LoggingLogHandler(log.LogHandler):
                         "be removed in future versions of Cement.  You " +
                         "should use `WARNING` instead.")
 
-        self.clear_loggers(self._meta.namespace)
-        for namespace in self._meta.clear_loggers:
+        self.clear_loggers(self.namespace)
+        for namespace in self.clear_logger_namespaces:
             self.clear_loggers(namespace)
 
         level = level.upper()
@@ -203,30 +199,30 @@ class LoggingLogHandler(log.LogHandler):
 
     def _get_console_format(self):
         if self.get_level() == logging.getLevelName(logging.DEBUG):
-            format = self._meta.debug_format
+            format = self.debug_format
         else:
-            format = self._meta.console_format
+            format = self.console_format
 
         return format
 
     def _get_file_format(self):
         if self.get_level() == logging.getLevelName(logging.DEBUG):
-            format = self._meta.debug_format
+            format = self.debug_format
         else:
-            format = self._meta.file_format
+            format = self.file_format
 
         return format
 
     def _get_file_formatter(self, format):
-        return self._meta.formatter_class(format)
+        return self.formatter_class(format)
 
     def _get_console_formatter(self, format):
-        return self._meta.formatter_class(format)
+        return self.formatter_class(format)
 
     def _setup_console_log(self):
         """Add a console log handler."""
-        namespace = self._meta.namespace
-        to_console = self.app.config.get(self._meta.config_section,
+        namespace = self.namespace
+        to_console = self.app.config.get(self.config_section,
                                          'to_console')
         if is_true(to_console):
             console_handler = logging.StreamHandler()
@@ -247,12 +243,12 @@ class LoggingLogHandler(log.LogHandler):
     def _setup_file_log(self):
         """Add a file log handler."""
 
-        namespace = self._meta.namespace
-        file_path = self.app.config.get(self._meta.config_section, 'file')
-        rotate = self.app.config.get(self._meta.config_section, 'rotate')
-        max_bytes = self.app.config.get(self._meta.config_section,
+        namespace = self.namespace
+        file_path = self.app.config.get(self.config_section, 'file')
+        rotate = self.app.config.get(self.config_section, 'rotate')
+        max_bytes = self.app.config.get(self.config_section,
                                         'max_bytes')
-        max_files = self.app.config.get(self._meta.config_section,
+        max_files = self.app.config.get(self.config_section,
                                         'max_files')
         if file_path:
             file_path = fs.abspath(file_path)
@@ -287,7 +283,7 @@ class LoggingLogHandler(log.LogHandler):
 
     def _get_logging_kwargs(self, namespace, **kw):
         if namespace is None:
-            namespace = self._meta.namespace
+            namespace = self.namespace
 
         if 'extra' in kw.keys() and 'namespace' in kw['extra'].keys():
             pass
@@ -304,7 +300,7 @@ class LoggingLogHandler(log.LogHandler):
 
         :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
+            the log is coming from.  Will default to self.namespace if
             None is passed.
         :keyword kw: Keyword arguments are passed on to the backend logging
             system.
@@ -319,7 +315,7 @@ class LoggingLogHandler(log.LogHandler):
 
         :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
+            the log is coming from.  Will default to self.namespace if
             None is passed.
         :keyword kw: Keyword arguments are passed on to the backend logging
             system.
@@ -337,7 +333,7 @@ class LoggingLogHandler(log.LogHandler):
         See: :ref:LoggingLogHandler.warning():
 
         """
-        if not is_true(self.app._meta.ignore_deprecation_warnings):
+        if not is_true(self.app.ignore_deprecation_warnings):
             self.debug("Cement Deprecation Warning: " +
                        "LoggingLogHandler.warn() has been " +
                        "deprecated, and will be removed in future " +
@@ -351,7 +347,7 @@ class LoggingLogHandler(log.LogHandler):
 
         :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
+            the log is coming from.  Will default to self.namespace if
             None is passed.
         :keyword kw: Keyword arguments are passed on to the backend logging
             system.
@@ -366,7 +362,7 @@ class LoggingLogHandler(log.LogHandler):
 
         :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
+            the log is coming from.  Will default to self.namespace if
             None is passed.
         :keyword kw: Keyword arguments are passed on to the backend logging
             system.
@@ -381,7 +377,7 @@ class LoggingLogHandler(log.LogHandler):
 
         :param msg: The message to log.
         :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
+            the log is coming from.  Will default to self.namespace if
             None is passed.  For debugging, it can be useful to set this to
             ``__file__``, though ``__name__`` is much less verbose.
         :keyword kw: Keyword arguments are passed on to the backend logging

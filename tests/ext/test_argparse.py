@@ -19,12 +19,10 @@ else:
 
 
 class Base(ArgparseController):
-
-    class Meta:
-        label = 'base'
-        arguments = [
-            (['--foo'], dict(dest='foo')),
-        ]
+    label = 'base'
+    arguments = [
+        (['--foo'], dict(dest='foo')),
+    ]
 
     @expose(hide=True, help="this help doesn't get seen")
     def default(self):
@@ -40,14 +38,12 @@ class Base(ArgparseController):
 
 
 class Second(ArgparseController):
-
-    class Meta:
-        label = 'second'
-        stacked_on = 'base'
-        stacked_type = 'embedded'
-        arguments = [
-            (['--foo2'], dict(dest='foo2')),
-        ]
+    label = 'second'
+    stacked_on = 'base'
+    stacked_type = 'embedded'
+    arguments = [
+        (['--foo2'], dict(dest='foo2')),
+    ]
 
     @expose(
         arguments=[
@@ -63,14 +59,12 @@ class Second(ArgparseController):
 
 
 class Third(ArgparseController):
-
-    class Meta:
-        label = 'third'
-        stacked_on = 'base'
-        stacked_type = 'nested'
-        arguments = [
-            (['--foo3'], dict(dest='foo3')),
-        ]
+    label = 'third'
+    stacked_on = 'base'
+    stacked_type = 'nested'
+    arguments = [
+        (['--foo3'], dict(dest='foo3')),
+    ]
 
     @expose(hide=True)
     def default(self):
@@ -82,16 +76,14 @@ class Third(ArgparseController):
 
 
 class Fourth(ArgparseController):
-
-    class Meta:
-        label = 'fourth'
-        stacked_on = 'third'
-        stacked_type = 'embedded'
-        hide = True
-        help = "this help doesn't get seen cause we're hiding"
-        arguments = [
-            (['--foo4'], dict(dest='foo4')),
-        ]
+    label = 'fourth'
+    stacked_on = 'third'
+    stacked_type = 'embedded'
+    hide = True
+    help = "this help doesn't get seen cause we're hiding"
+    arguments = [
+        (['--foo4'], dict(dest='foo4')),
+    ]
 
     @expose()
     def cmd4(self):
@@ -99,16 +91,14 @@ class Fourth(ArgparseController):
 
 
 class Fifth(ArgparseController):
-
-    class Meta:
-        label = 'fifth'
-        stacked_on = 'third'
-        stacked_type = 'nested'
-        hide = True
-        help = "this help isn't seen... i'm hiding"
-        arguments = [
-            (['--foo5'], dict(dest='foo5')),
-        ]
+    label = 'fifth'
+    stacked_on = 'third'
+    stacked_type = 'nested'
+    hide = True
+    help = "this help isn't seen... i'm hiding"
+    arguments = [
+        (['--foo5'], dict(dest='foo5')),
+    ]
 
     @expose(hide=True)
     def default(self):
@@ -120,14 +110,12 @@ class Fifth(ArgparseController):
 
 
 class Sixth(ArgparseController):
-
-    class Meta:
-        label = 'sixth'
-        stacked_on = 'fifth'
-        stacked_type = 'nested'
-        arguments = [
-            (['--foo6'], dict(dest='foo6')),
-        ]
+    label = 'sixth'
+    stacked_on = 'fifth'
+    stacked_type = 'nested'
+    arguments = [
+        (['--foo6'], dict(dest='foo6')),
+    ]
 
     @expose(hide=True)
     def default(self):
@@ -139,14 +127,12 @@ class Sixth(ArgparseController):
 
 
 class Seventh(ArgparseController):
-
-    class Meta:
-        label = 'seventh'
-        stacked_on = 'fourth'
-        stacked_type = 'embedded'
-        arguments = [
-            (['--foo7'], dict(dest='foo7')),
-        ]
+    label = 'seventh'
+    stacked_on = 'fourth'
+    stacked_type = 'embedded'
+    arguments = [
+        (['--foo7'], dict(dest='foo7')),
+    ]
 
     @expose()
     def cmd7(self):
@@ -154,39 +140,31 @@ class Seventh(ArgparseController):
 
 
 class Unstacked(ArgparseController):
-
-    class Meta:
-        label = 'unstacked'
-        stacked_on = None
-        arguments = [
-            (['--foo6'], dict(dest='foo6')),
-        ]
+    label = 'unstacked'
+    stacked_on = None
+    arguments = [
+        (['--foo6'], dict(dest='foo6')),
+    ]
 
 
 class BadStackType(ArgparseController):
-
-    class Meta:
-        label = 'bad_stack_type'
-        stacked_on = 'base'
-        stacked_type = 'bogus_stacked_type'
-        arguments = [
-            (['--foo6'], dict(dest='foo6')),
-        ]
+    label = 'bad_stack_type'
+    stacked_on = 'base'
+    stacked_type = 'bogus_stacked_type'
+    arguments = [
+        (['--foo6'], dict(dest='foo6')),
+    ]
 
 
 class DuplicateArguments(ArgparseController):
-
-    class Meta:
-        label = 'duplicate_arguments'
-        arguments = [
-            (['--foo'], dict(dest='foo')),
-        ]
+    label = 'duplicate_arguments'
+    arguments = [
+        (['--foo'], dict(dest='foo')),
+    ]
 
 
 class ControllerCommandDuplicateArguments(ArgparseController):
-
-    class Meta:
-        label = 'controller_command_duplicate_arguments'
+    label = 'controller_command_duplicate_arguments'
 
     @expose(
         arguments=[
@@ -199,12 +177,10 @@ class ControllerCommandDuplicateArguments(ArgparseController):
 
 
 class AlternativeDefault(ArgparseController):
-
-    class Meta:
-        label = 'alternative_default'
-        default_func = 'alternative_default'
-        stacked_on = 'base'
-        stacked_type = 'nested'
+    label = 'alternative_default'
+    default_func = 'alternative_default'
+    stacked_on = 'base'
+    stacked_type = 'nested'
 
     @expose(hide=True)
     def alternative_default(self):
@@ -212,21 +188,17 @@ class AlternativeDefault(ArgparseController):
 
 
 class BadAlternativeDefault(ArgparseController):
-
-    class Meta:
-        label = 'bad_alternative_default'
-        default_func = 'bogus_default'
-        stacked_on = 'base'
-        stacked_type = 'nested'
+    label = 'bad_alternative_default'
+    default_func = 'bogus_default'
+    stacked_on = 'base'
+    stacked_type = 'nested'
 
 
 class Aliases(ArgparseController):
-
-    class Meta:
-        label = 'aliases'
-        aliases = ['aliases-controller', 'ac']
-        stacked_on = 'base'
-        stacked_type = 'nested'
+    label = 'aliases'
+    aliases = ['aliases-controller', 'ac']
+    stacked_on = 'base'
+    stacked_type = 'nested'
 
     @expose(aliases=['aliases-cmd-1', 'ac1'])
     def aliases_cmd1(self):
@@ -268,68 +240,68 @@ class ArgparseExtTestCase(test.CementExtTestCase):
 
     def test_base_cmd1(self):
         with self.app as app:
-            app._meta.argv = ['cmd1']
+            app.argv = ['cmd1']
             res = app.run()
             self.eq(res, "Inside Base.cmd1")
 
     def test_base_command_with_dashes(self):
         with self.app as app:
-            app._meta.argv = ['command-with-dashes']
+            app.argv = ['command-with-dashes']
             res = app.run()
             self.eq(res, "Inside Base.command_with_dashes")
 
     def test_controller_commands(self):
         with self.app as app:
-            app._meta.argv = ['cmd2']
+            app.argv = ['cmd2']
             res = app.run()
             self.eq(res, "Inside Second.cmd2")
         self.tearDown()
 
         self.setUp()
         with self.app as app:
-            app._meta.argv = ['third', 'cmd3']
+            app.argv = ['third', 'cmd3']
             res = app.run()
             self.eq(res, "Inside Third.cmd3")
         self.tearDown()
 
         self.setUp()
         with self.app as app:
-            app._meta.argv = ['third', 'cmd4']
+            app.argv = ['third', 'cmd4']
             res = app.run()
             self.eq(res, "Inside Fourth.cmd4")
         self.tearDown()
 
         self.setUp()
         with self.app as app:
-            app._meta.argv = ['third', 'fifth', 'cmd5']
+            app.argv = ['third', 'fifth', 'cmd5']
             res = app.run()
             self.eq(res, "Inside Fifth.cmd5")
         self.tearDown()
 
         self.setUp()
         with self.app as app:
-            app._meta.argv = ['third', 'fifth', 'sixth', 'cmd6']
+            app.argv = ['third', 'fifth', 'sixth', 'cmd6']
             res = app.run()
             self.eq(res, "Inside Sixth.cmd6")
         self.tearDown()
 
         self.setUp()
         with self.app as app:
-            app._meta.argv = ['third', 'cmd7']
+            app.argv = ['third', 'cmd7']
             res = app.run()
             self.eq(res, "Inside Seventh.cmd7")
         self.tearDown()
 
     def test_base_cmd1_parsing(self):
         with self.app as app:
-            app._meta.argv = ['--foo=bar', 'cmd1']
+            app.argv = ['--foo=bar', 'cmd1']
             res = app.run()
             self.eq(res, "Inside Base.cmd1")
             self.eq(app.pargs.foo, 'bar')
 
     def test_second_cmd2(self):
         with self.app as app:
-            app._meta.argv = ['--foo=bar', '--foo2=bar2', 'cmd2']
+            app.argv = ['--foo=bar', '--foo2=bar2', 'cmd2']
             res = app.run()
             self.eq(res, "Inside Second.cmd2")
             self.eq(app.pargs.foo, 'bar')
@@ -337,7 +309,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
 
     def test_third_cmd3(self):
         with self.app as app:
-            app._meta.argv = [
+            app.argv = [
                 '--foo=bar', '--foo2=bar2',
                 'third', '--foo3=bar3', '--foo4=bar4', '--foo7=bar7', 'cmd3',
             ]
@@ -351,7 +323,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
 
     def test_fifth_cmd5(self):
         with self.app as app:
-            app._meta.argv = [
+            app.argv = [
                 '--foo=bar', '--foo2=bar2',
                 'third', '--foo3=bar3', '--foo4=bar4',
                 'fifth', '--foo5=bar5', 'cmd5'
@@ -366,7 +338,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
 
     def test_sixth_cmd6(self):
         with self.app as app:
-            app._meta.argv = [
+            app.argv = [
                 '--foo=bar', '--foo2=bar2',
                 'third', '--foo3=bar3', '--foo4=bar4',
                 'fifth', '--foo5=bar5', 'sixth', '--foo6=bar6', 'cmd6',
@@ -382,7 +354,7 @@ class ArgparseExtTestCase(test.CementExtTestCase):
 
     def test_seventh_cmd7(self):
         with self.app as app:
-            app._meta.argv = [
+            app.argv = [
                 '--foo=bar', '--foo2=bar2',
                 'third', '--foo3=bar3', '--foo4=bar4', '--foo7=bar7', 'cmd7',
             ]
@@ -402,13 +374,13 @@ class ArgparseExtTestCase(test.CementExtTestCase):
             self.eq((args, cmds), (args2, cmds2))
 
     def test_controller_embedded_on_base(self):
-        self.app._meta.argv = ['cmd2']
+        self.app.argv = ['cmd2']
         with self.app as app:
             res = app.run()
             self.eq(res, "Inside Second.cmd2")
 
     def test_controller_command_arguments(self):
-        self.app._meta.argv = ['cmd2', '--cmd2-foo=bar2']
+        self.app.argv = ['cmd2', '--cmd2-foo=bar2']
         with self.app as app:
             res = app.run()
             self.eq(res, "Inside Second.cmd2 : Foo > bar2")
@@ -419,19 +391,19 @@ class ArgparseExtTestCase(test.CementExtTestCase):
                 'Argparse does not support default commands in Python < 3.4'
             )
 
-        self.app._meta.argv = ['third']
+        self.app.argv = ['third']
         with self.app as app:
             res = app.run()
             self.eq(res, "Inside Third.default")
 
     def test_controller_command_nested_on_base(self):
-        self.app._meta.argv = ['third', 'cmd3']
+        self.app.argv = ['third', 'cmd3']
         with self.app as app:
             res = app.run()
             self.eq(res, "Inside Third.cmd3")
 
     def test_controller_doubled_embedded(self):
-        self.app._meta.argv = ['third', 'cmd4']
+        self.app.argv = ['third', 'cmd4']
         with self.app as app:
             res = app.run()
             self.eq(res, "Inside Fourth.cmd4")
@@ -441,13 +413,13 @@ class ArgparseExtTestCase(test.CementExtTestCase):
             raise test.SkipTest(
                 'Argparse does not support default commands in Python < 3.4'
             )
-        self.app._meta.argv = ['third', 'fifth']
+        self.app.argv = ['third', 'fifth']
         with self.app as app:
             res = app.run()
             self.eq(res, "Inside Fifth.default")
 
     def test_controller_command_double_nested(self):
-        self.app._meta.argv = ['third', 'fifth', 'cmd5']
+        self.app.argv = ['third', 'fifth', 'cmd5']
         with self.app as app:
             res = app.run()
             self.eq(res, "Inside Fifth.cmd5")
@@ -584,21 +556,21 @@ class ArgparseExtTestCase(test.CementExtTestCase):
                                  ],
                                  )
         with self.app as app:
-            app._meta.argv = ['aliases', 'aliases-cmd1']
+            app.argv = ['aliases', 'aliases-cmd1']
             res = app.run()
             self.eq(res, "Inside Aliases.aliases_cmd1")
 
-            app._meta.argv = ['aliases', 'aliases-cmd-1']
+            app.argv = ['aliases', 'aliases-cmd-1']
             app._setup_arg_handler()
             res = app.run()
             self.eq(res, "Inside Aliases.aliases_cmd1")
 
-            app._meta.argv = ['aliases-controller', 'aliases-cmd1']
+            app.argv = ['aliases-controller', 'aliases-cmd1']
             app._setup_arg_handler()
             res = app.run()
             self.eq(res, "Inside Aliases.aliases_cmd1")
 
-            app._meta.argv = ['ac', 'ac1']
+            app.argv = ['ac', 'ac1']
             app._setup_arg_handler()
             res = app.run()
             self.eq(res, "Inside Aliases.aliases_cmd1")
@@ -607,14 +579,13 @@ class ArgparseExtTestCase(test.CementExtTestCase):
         self.reset_backend()
 
         class MyArgumentHandler(ArgparseArgumentHandler):
-            class Meta:
-                label = 'my_argument_handler'
-                ignore_unknown_arguments = True
+            label = 'my_argument_handler'
+            ignore_unknown_arguments = True
         self.app = self.make_app(APP,
                                  argument_handler=MyArgumentHandler,
                                  )
         with self.app as app:
-            app._meta.argv = ['-l', 'some-other-argument']
+            app.argv = ['-l', 'some-other-argument']
             app.run()
             res = '-l' in app.args.unknown_args
             self.ok(res)

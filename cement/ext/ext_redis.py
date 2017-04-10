@@ -126,17 +126,13 @@ class RedisCacheHandler(cache.CacheHandler):
     extensions.
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        label = 'redis'
-        config_defaults = dict(
-            host='127.0.0.1',
-            port=6379,
-            db=0,
-            expire_time=0,
-        )
+    label = 'redis'
+    config_defaults = dict(
+        host='127.0.0.1',
+        port=6379,
+        db=0,
+        expire_time=0,
+    )
 
     def __init__(self, *args, **kw):
         super(RedisCacheHandler, self).__init__(*args, **kw)
@@ -159,7 +155,7 @@ class RedisCacheHandler(cache.CacheHandler):
         :returns: The value of the given key.
 
         """
-        return self.app.config.get(self._meta.config_section, key)
+        return self.app.config.get(self.config_section, key)
 
     def get(self, key, fallback=None, **kw):
         """

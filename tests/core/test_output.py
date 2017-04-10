@@ -9,9 +9,7 @@ APP = rando()[:12]
 
 
 class TestOutputHandler(output.TemplateOutputHandler):
-
-    class Meta:
-        label = 'test_output_handler'
+    label = 'test_output_handler'
 
     def render(self, data, template):
         content = self.load_template(template)

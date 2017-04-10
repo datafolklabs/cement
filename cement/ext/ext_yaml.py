@@ -135,15 +135,11 @@ class YamlOutputHandler(output.OutputHandler):
 
     """
 
-    class Meta:
+    label = 'yaml'
 
-        """Handler meta-data."""
-
-        label = 'yaml'
-
-        #: Whether or not to include ``yaml`` as an available to choice
-        #: to override the ``output_handler`` via command line options.
-        overridable = True
+    #: Whether or not to include ``yaml`` as an available to choice
+    #: to override the ``output_handler`` via command line options.
+    overridable = True
 
     def __init__(self, *args, **kw):
         super(YamlOutputHandler, self).__init__(*args, **kw)
@@ -184,8 +180,8 @@ class YamlConfigHandler(ConfigParserConfigHandler):
     does *not* include external dependencies for optional extensions.
 
     """
-    class Meta:
-        label = 'yaml'
+    
+    label = 'yaml'
 
     def __init__(self, *args, **kw):
         super(YamlConfigHandler, self).__init__(*args, **kw)

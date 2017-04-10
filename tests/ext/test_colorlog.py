@@ -48,7 +48,7 @@ class ColorLogExtTestCase(test.CementExtTestCase):
         with app:
             app.run()
             app.log.info('this is an info message')
-            klass = app.log._get_file_formatter(app.log._meta.file_format)
+            klass = app.log._get_file_formatter(app.log.file_format)
             self.ok(isinstance(klass, ColoredFormatter))
 
         # then test with colorize_file_log=false
@@ -62,7 +62,7 @@ class ColorLogExtTestCase(test.CementExtTestCase):
         with app:
             app.run()
             app.log.info('this is an info message')
-            klass = app.log._get_file_formatter(app.log._meta.file_format)
+            klass = app.log._get_file_formatter(app.log.file_format)
             self.ok(isinstance(klass, logging.Formatter))
 
     def test_colorize_console_log(self):
@@ -82,7 +82,7 @@ class ColorLogExtTestCase(test.CementExtTestCase):
         with app:
             app.run()
             app.log.info('this is an info message')
-            format = app.log._meta.console_format
+            format = app.log.console_format
             klass = app.log._get_console_formatter(format)
             self.ok(isinstance(klass, ColoredFormatter))
 

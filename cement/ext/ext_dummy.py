@@ -49,16 +49,13 @@ class DummyOutputHandler(OutputHandler):
     parameters on initialization, and does not actually output anything.
 
     """
-    class Meta:
 
-        """Handler meta-data"""
+    #: The string identifier of this handler.
+    label = 'dummy'
 
-        #: The string identifier of this handler.
-        label = 'dummy'
-
-        #: Whether or not to include ``dummy`` as an available to choice
-        #: to override the ``output_handler`` via command line options.
-        overridable = False
+    #: Whether or not to include ``dummy`` as an available to choice
+    #: to override the ``output_handler`` via command line options.
+    overridable = False
 
     def render(self, data_dict, template=None, **kw):
         """
@@ -171,22 +168,18 @@ class DummyMailHandler(MailHandler):
 
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        #: Unique identifier for this handler
-        label = 'dummy'
+    #: Unique identifier for this handler
+    label = 'dummy'
 
     def _get_params(self, **kw):
         params = dict()
         for item in ['to', 'from_addr', 'cc', 'bcc', 'subject']:
-            config_item = self.app.config.get(self._meta.config_section, item)
+            config_item = self.app.config.get(self.config_section, item)
             params[item] = kw.get(item, config_item)
 
         # also grab the subject_prefix
         params['subject_prefix'] = self.app.config.get(
-            self._meta.config_section,
+            self.config_section,
             'subject_prefix'
         )
 

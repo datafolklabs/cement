@@ -4,6 +4,7 @@ Cement core handler module.
 """
 
 import re
+import inspect
 from abc import ABC, abstractproperty
 from ..core import exc, meta
 from ..utils.misc import minimal_logger
@@ -15,51 +16,44 @@ class Handler(ABC, meta.MetaMixin):
 
     """Base handler class that all Cement Handlers should subclass from."""
 
-    class Meta:
 
-        """
-        Handler meta-data (can also be passed as keyword arguments to the
-        parent class).
+    """The string identifier of this handler."""
+    label = None
+    
 
-        """
+    interface = None
+    """The interface that this class implements."""
 
-        """The string identifier of this handler."""
-        label = None
-        
+    config_section = None
+    """
+    A config [section] to merge config_defaults with.
 
-        interface = None
-        """The interface that this class implements."""
+    Note: Though Meta.config_section defaults to None, Cement will
+    set this to the value of ``<interface_label>.<handler_label>`` if
+    no section is set by the user/developer.
+    """
 
-        config_section = None
-        """
-        A config [section] to merge config_defaults with.
+    config_defaults = None
+    """
+    A config dictionary that is merged into the applications config
+    in the ``[<config_section>]`` block.  These are defaults and do not
+    override any existing defaults under that section.
+    """
 
-        Note: Though Meta.config_section defaults to None, Cement will
-        set this to the value of ``<interface_label>.<handler_label>`` if
-        no section is set by the user/developer.
-        """
-
-        config_defaults = None
-        """
-        A config dictionary that is merged into the applications config
-        in the ``[<config_section>]`` block.  These are defaults and do not
-        override any existing defaults under that section.
-        """
-
-        overridable = False
-        """
-        Whether or not handler can be overridden by
-        ``App.Meta.handler_override_options``.  Will be listed as an
-        available choice to override the specific handler (i.e.
-        ``App.Meta.output_handler``, etc).
-        """
+    overridable = False
+    """
+    Whether or not handler can be overridden by
+    ``App.Meta.handler_override_options``.  Will be listed as an
+    available choice to override the specific handler (i.e.
+    ``App.Meta.output_handler``, etc).
+    """
 
     def __init__(self, **kw):
         super(Handler, self).__init__(**kw)
         try:
-            assert self._meta.label, \
+            assert self.label, \
                 "%s.Meta.label undefined." % self.__class__.__name__
-            assert self._meta.interface, \
+            assert self.interface, \
                 "%s.Meta.interface undefined." % self.__class__.__name__
         except AssertionError as e:
             raise(exc.FrameworkError(e.args[0]))
@@ -79,15 +73,15 @@ class Handler(ABC, meta.MetaMixin):
 
         self.app = app
 
-        if self._meta.config_section is None:
-            self._meta.config_section = "%s.%s" % \
-                (self._meta.interface, self._meta.label)
+        if self.config_section is None:
+            self.config_section = "%s.%s" % \
+                (self.interface, self.label)
 
-        if self._meta.config_defaults is not None:
+        if self.config_defaults is not None:
             LOG.debug("merging config defaults from '%s' " % self +
-                      "into section '%s'" % self._meta.config_section)
+                      "into section '%s'" % self.config_section)
             dict_obj = dict()
-            dict_obj[self._meta.config_section] = self._meta.config_defaults
+            dict_obj[self.config_section] = self.config_defaults
             self.app.config.merge(dict_obj, override=False)
 
         self._validate()
@@ -203,13 +197,13 @@ class HandlerManager(object):
         """
 
         LOG.debug("defining handler interface '%s' (%s)" %
-                  (handler.Meta.interface, handler.__name__))
+                  (handler.interface, handler.__name__))
 
-        if handler.Meta.interface in self.__handlers__:
+        if handler.interface in self.__handlers__:
             msg = "Handler interface '%s' already defined!" % \
-                  handler.Meta.interface
+                  handler.interface
             raise exc.FrameworkError(msg)
-        self.__handlers__[handler.Meta.interface] = {
+        self.__handlers__[handler.interface] = {
             '__interface__': handler
         }
 
@@ -271,29 +265,29 @@ class HandlerManager(object):
         obj = handler_class()
 
         # translate dashes to underscores
-        handler_class.Meta.label = re.sub('-', '_', obj._meta.label)
-        obj._meta.label = re.sub('-', '_', obj._meta.label)
+        handler_class.label = re.sub('-', '_', obj.label)
+        obj.label = re.sub('-', '_', obj.label)
 
-        interface = obj._meta.interface
+        interface = obj.interface
         LOG.debug("registering handler '%s' into handlers['%s']['%s']" %
-                  (handler_class, interface, obj._meta.label))
+                  (handler_class, interface, obj.label))
 
         if interface not in self.__handlers__:
             raise exc.FrameworkError("Handler interface '%s' doesn't exist." %
                                      interface)
-        if obj._meta.label in self.__handlers__[interface] and \
-            self.__handlers__[interface][obj._meta.label] != handler_class:
+        if obj.label in self.__handlers__[interface] and \
+            self.__handlers__[interface][obj.label] != handler_class:
 
             if force is True:
                 LOG.debug(
                     "handlers['%s']['%s'] already exists" %
-                    (interface, obj._meta.label) +
+                    (interface, obj.label) +
                     ", but `force==True`"
                 )
             else:
                 raise exc.FrameworkError(
                     "handlers['%s']['%s'] already exists" %
-                    (interface, obj._meta.label)
+                    (interface, obj.label)
                 )
 
         interface_class = self.__handlers__[interface]['__interface__']
@@ -303,7 +297,7 @@ class HandlerManager(object):
                                      "does not sub-class %s" % \
                                      interface_class.__name__)
 
-        self.__handlers__[interface][obj._meta.label] = handler_class
+        self.__handlers__[interface][obj.label] = handler_class
 
     def registered(self, handler_type, handler_label):
         """
@@ -362,16 +356,22 @@ class HandlerManager(object):
         meta_defaults = kwargs.get('meta_defaults', {})
         han = None
 
+        # string def like 'my_config_handler'
         if type(handler_def) == str:
             han = self.get(handler_type, handler_def)(**meta_defaults)
-        elif hasattr(handler_def, '_meta'):
-            if not self.registered(handler_type, handler_def._meta.label):
+
+        # class def like MyConfigHandler
+        elif inspect.isclass(handler_def):
+            han = handler_def(**meta_defaults)
+            if not self.registered(handler_type, han.label):
+                self.register(handler_def)
+
+        # FIX ME: how to check that 'handler_def' is an instantiated object?
+        # (like isclass equivelant?).  
+        else:
+            if not self.registered(handler_type, handler_def.label):
                 self.register(handler_def.__class__)
             han = handler_def
-        elif hasattr(handler_def, 'Meta'):
-            han = handler_def(**meta_defaults)
-            if not self.registered(handler_type, han._meta.label):
-                self.register(handler_def)
 
         msg = "Unable to resolve handler '%s' of type '%s'" % \
               (handler_def, handler_type)

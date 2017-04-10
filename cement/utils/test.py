@@ -22,13 +22,13 @@ class TestApp(App):
     Basic app for generic testing.
 
     """
-    class Meta:
-        label = "app-%s" % rando()[:12]
-        config_files = []
-        argv = []
-        base_controller = None
-        arguments = []
-        exit_on_close = False
+
+    label = "app-%s" % rando()[:12]
+    config_files = []
+    argv = []
+    base_controller = None
+    arguments = []
+    exit_on_close = False
 
 
 class CementTestCase(unittest.TestCase):
@@ -38,8 +38,8 @@ class CementTestCase(unittest.TestCase):
 
     """
 
+    #: The test class that is used by self.make_app to create an app.
     app_class = TestApp
-    """The test class that is used by self.make_app to create an app."""
 
     def __init__(self, *args, **kw):
         super(CementTestCase, self).__init__(*args, **kw)

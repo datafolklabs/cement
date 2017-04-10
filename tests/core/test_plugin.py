@@ -40,8 +40,7 @@ PLUGIN = """
 from cement.core import output
 
 class TestOutputHandler(output.OutputHandler):
-    class Meta:
-        label = 'test_output_handler'
+    label = 'test_output_handler'
 
     def _setup(self, app_obj):
         self.app = app_obj
@@ -78,7 +77,7 @@ class PluginTestCase(test.CementCoreTestCase):
                             )
         app.setup()
         han = app.handler.get('output', 'test_output_handler')()
-        self.eq(han._meta.label, 'test_output_handler')
+        self.eq(han.label, 'test_output_handler')
 
     def test_load_order_presedence_one(self):
         # App config defines it as enabled, even though the plugin config has
@@ -263,7 +262,7 @@ class PluginTestCase(test.CementCoreTestCase):
                             )
         app.setup()
         han = app.handler.get('output', 'test_output_handler')()
-        self.eq(han._meta.label, 'test_output_handler')
+        self.eq(han.label, 'test_output_handler')
 
         # some more checks
         res = 'myplugin' in app.plugin.get_enabled_plugins()

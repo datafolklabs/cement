@@ -6,15 +6,13 @@ from cement.utils import test
 
 class Bogus(handler.Handler):
 
-    class Meta:
-        label = 'bogus'
+    label = 'bogus'
 
 
 class BogusExtensionHandler(extension.ExtensionHandler):
 
-    class Meta:
-        interface = 'bogus'
-        label = 'bogus'
+    interface = 'bogus'
+    label = 'bogus'
 
 
 class ExtensionTestCase(test.CementCoreTestCase):

@@ -199,26 +199,22 @@ class ArgparseArgumentHandler(ArgumentParser, ArgumentHandler):
     on initialization.
     """
 
-    class Meta:
+    interface = 'argument'
+    """The interface that this class implements."""
 
-        """Handler meta-data."""
+    label = 'argparse'
+    """The string identifier of the handler."""
 
-        interface = 'argument'
-        """The interface that this class implements."""
+    ignore_unknown_arguments = False
+    """
+    Whether or not to ignore any arguments passed that are not defined.
+    Default behavoir by Argparse is to raise an "unknown argument"
+    exception by Argparse.
 
-        label = 'argparse'
-        """The string identifier of the handler."""
-
-        ignore_unknown_arguments = False
-        """
-        Whether or not to ignore any arguments passed that are not defined.
-        Default behavoir by Argparse is to raise an "unknown argument"
-        exception by Argparse.
-
-        This affectively triggers the difference between using ``parse_args``
-        and ``parse_known_args``.  Unknown arguments will be accessible as
-        ``unknown_args``.
-        """
+    This affectively triggers the difference between using ``parse_args``
+    and ``parse_known_args``.  Unknown arguments will be accessible as
+    ``unknown_args``.
+    """
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
@@ -236,7 +232,7 @@ class ArgparseArgumentHandler(ArgumentParser, ArgumentHandler):
         :returns: object whose members are the arguments parsed.
 
         """
-        if self._meta.ignore_unknown_arguments is True:
+        if self.ignore_unknown_arguments is True:
             args, unknown = self.parse_known_args(arg_list)
             self.parsed_args = args
             self.unknown_args = unknown
@@ -356,113 +352,105 @@ class ArgparseController(ControllerHandler):
 
     """
 
-    class Meta:
+    # The interface this class implements.
+    interface = 'controller'
 
-        """
-        Controller meta-data (can be passed as keyword arguments to the parent
-        class).
+    #: The string identifier for the controller.
+    label = None
 
-        """
+    #: A list of aliases for the controller/sub-parser.  **Only available
+    #: in Python > 3**.
+    aliases = []
 
-        # The interface this class implements.
-        interface = 'controller'
+    #: A config [section] to merge config_defaults into.  Cement will
+    #: default to controller.<label> if None is set.
+    config_section = None
 
-        #: The string identifier for the controller.
-        label = None
+    #: Configuration defaults (type: dict) that are merged into the
+    #: applications config object for the config_section mentioned above.
+    config_defaults = {}
 
-        #: A list of aliases for the controller/sub-parser.  **Only available
-        #: in Python > 3**.
-        aliases = []
+    #: Arguments to pass to the argument_handler.  The format is a list
+    #: of tuples whos items are a ( list, dict ).  Meaning:
+    #:
+    #: ``[ ( ['-f', '--foo'], dict(help='foo option', dest='foo') ), ]``
+    #:
+    #: This is equivelant to manually adding each argument to the argument
+    #: parser as in the following example:
+    #:
+    #: ``add_argument('-f', '--foo', help='foo option', dest='foo')``
+    arguments = []
 
-        #: A config [section] to merge config_defaults into.  Cement will
-        #: default to controller.<label> if None is set.
-        config_section = None
+    #: A label of another controller to 'stack' commands/arguments on top
+    #: of.
+    stacked_on = 'base'
 
-        #: Configuration defaults (type: dict) that are merged into the
-        #: applications config object for the config_section mentioned above.
-        config_defaults = {}
+    #: Whether to embed commands and arguments within the parent
+    #: controller's namespace, or to nest this controller under the parent
+    #: controller (making it a sub-command).  Must be one of
+    #: ``['embedded', 'nested']``.
+    stacked_type = 'embedded'
 
-        #: Arguments to pass to the argument_handler.  The format is a list
-        #: of tuples whos items are a ( list, dict ).  Meaning:
-        #:
-        #: ``[ ( ['-f', '--foo'], dict(help='foo option', dest='foo') ), ]``
-        #:
-        #: This is equivelant to manually adding each argument to the argument
-        #: parser as in the following example:
-        #:
-        #: ``add_argument('-f', '--foo', help='foo option', dest='foo')``
-        arguments = []
+    #: Description for the sub-parser group in help output.
+    description = None
 
-        #: A label of another controller to 'stack' commands/arguments on top
-        #: of.
-        stacked_on = 'base'
+    #: The title for the sub-parser group in help output.
+    title = 'sub-commands'
 
-        #: Whether to embed commands and arguments within the parent
-        #: controller's namespace, or to nest this controller under the parent
-        #: controller (making it a sub-command).  Must be one of
-        #: ``['embedded', 'nested']``.
-        stacked_type = 'embedded'
+    #: Text for the controller/sub-parser group in help output (for
+    #: nested stacked controllers only).
+    help = None
 
-        #: Description for the sub-parser group in help output.
-        description = None
+    #: Whether or not to hide the controller entirely.
+    hide = False
 
-        #: The title for the sub-parser group in help output.
-        title = 'sub-commands'
+    #: The text that is displayed at the bottom when ``--help`` is passed.
+    epilog = None
 
-        #: Text for the controller/sub-parser group in help output (for
-        #: nested stacked controllers only).
-        help = None
+    #: The text that is displayed at the top when ``--help`` is passed.
+    #: Defaults to Argparse standard usage.
+    usage = None
 
-        #: Whether or not to hide the controller entirely.
-        hide = False
+    #: Additional keyword arguments passed when
+    #: ``ArgumentParser.add_subparsers()`` is called to create this
+    #: controller namespace.  WARNING: This could break things, use at
+    #: your own risk.  Useful if you need additional features from
+    #: Argparse that is not built into the controller Meta-data.
+    subparser_options = {}
 
-        #: The text that is displayed at the bottom when ``--help`` is passed.
-        epilog = None
+    #: Additional keyword arguments passed when
+    #: ``ArgumentParser.add_parser()`` is called to create this
+    #: controller sub-parser.  WARNING: This could break things, use at
+    #: your own risk.  Useful if you need additional features from
+    #: Argparse that is not built into the controller Meta-data.
+    parser_options = {}
 
-        #: The text that is displayed at the top when ``--help`` is passed.
-        #: Defaults to Argparse standard usage.
-        usage = None
-
-        #: Additional keyword arguments passed when
-        #: ``ArgumentParser.add_subparsers()`` is called to create this
-        #: controller namespace.  WARNING: This could break things, use at
-        #: your own risk.  Useful if you need additional features from
-        #: Argparse that is not built into the controller Meta-data.
-        subparser_options = {}
-
-        #: Additional keyword arguments passed when
-        #: ``ArgumentParser.add_parser()`` is called to create this
-        #: controller sub-parser.  WARNING: This could break things, use at
-        #: your own risk.  Useful if you need additional features from
-        #: Argparse that is not built into the controller Meta-data.
-        parser_options = {}
-
-        #: Function to call if no sub-command is passed.  By default this is
-        #: ``_default``, which is equivelant to passing ``-h/--help``. It 
-        #: should be noted that this is the only place where having a command
-        #: function start with ``_`` is OK simply because we treat it as a
-        #: special case (different that other exposed commands).
-        #: 
-        #: If set to ``None``, Cement will simply pass and exit 0.
-        #:
-        #: Note: Currently, default function/sub-command only works on
-        #: Python > 3.4.  Previous versions of Python/Argparse will throw the
-        #: exception ``error: too few arguments``.
-        default_func = '_default'
+    #: Function to call if no sub-command is passed.  By default this is
+    #: ``_default``, which is equivelant to passing ``-h/--help``. It 
+    #: should be noted that this is the only place where having a command
+    #: function start with ``_`` is OK simply because we treat it as a
+    #: special case (different that other exposed commands).
+    #: 
+    #: If set to ``None``, Cement will simply pass and exit 0.
+    #:
+    #: Note: Currently, default function/sub-command only works on
+    #: Python > 3.4.  Previous versions of Python/Argparse will throw the
+    #: exception ``error: too few arguments``.
+    default_func = '_default'
 
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
         self.app = None
         self._parser = None
 
-        if self._meta.label == 'base':
+        if self.label == 'base':
             self._sub_parser_parents = dict()
             self._sub_parsers = dict()
             self._controllers = []
             self._controllers_map = {}
 
-        if self._meta.help is None:
-            self._meta.help = '%s controller' % _clean_label(self._meta.label)
+        if self.help is None:
+            self.help = '%s controller' % _clean_label(self.label)
 
     @ex(hide=True)
     def _default(self):
@@ -470,8 +458,8 @@ class ArgparseController(ControllerHandler):
 
     def _validate(self):
         try:
-            assert self._meta.stacked_type in ['embedded', 'nested'], \
-                "Invalid stacked type %s.  " % self._meta.stacked_type \
+            assert self.stacked_type in ['embedded', 'nested'], \
+                "Invalid stacked type %s.  " % self.stacked_type \
                 + "Expecting one of: [embedded, nested]"
         except AssertionError as e:
             raise FrameworkError(e.args[0])
@@ -503,7 +491,7 @@ class ArgparseController(ControllerHandler):
 
         LOG.debug('resolving controller nesting/embedding order')
 
-        current_parent = self._meta.label
+        current_parent = self.label
         while unresolved_controllers:
             LOG.debug('unresolved controllers > %s' % unresolved_controllers)
             LOG.debug('current parent > %s' % current_parent)
@@ -514,55 +502,55 @@ class ArgparseController(ControllerHandler):
             for contr in list(unresolved_controllers):
                 # if stacked_on is the current parent, we want to process
                 # its children in this run first
-                if contr._meta.stacked_on == current_parent:
+                if contr.stacked_on == current_parent:
                     current_children.append(contr)
-                    if contr._meta.stacked_type == 'embedded':
+                    if contr.stacked_type == 'embedded':
                         resolved_child_controllers.append(contr)
                     else:
                         resolved_child_controllers.insert(0, contr)
                     unresolved_controllers.remove(contr)
                     LOG.debug('resolved controller %s %s on %s' %
-                              (contr, contr._meta.stacked_type,
+                              (contr, contr.stacked_type,
                                current_parent))
 
                 # if not, fall back on whether the stacked_on parent is
                 # already resolved
-                elif contr._meta.stacked_on in resolved_controllers_map.keys():
+                elif contr.stacked_on in resolved_controllers_map.keys():
                     resolved_controllers.append(contr)
-                    resolved_controllers_map[contr._meta.label] = contr
+                    resolved_controllers_map[contr.label] = contr
                     unresolved_controllers.remove(contr)
                     LOG.debug('resolved controller %s %s on %s' %
-                              (contr, contr._meta.stacked_type,
-                               contr._meta.stacked_on))
+                              (contr, contr.stacked_type,
+                               contr.stacked_on))
 
             resolved_controllers.extend(resolved_child_controllers)
             for contr in resolved_child_controllers:
-                resolved_controllers_map[contr._meta.label] = contr
+                resolved_controllers_map[contr.label] = contr
 
             # then, for all those controllers... handler all controllers
             # nested on them
             resolved_child_controllers = []
             for child_contr in current_children:
                 for contr in list(unresolved_controllers):
-                    if contr._meta.stacked_on == child_contr._meta.label:
-                        if contr._meta.stacked_type == 'embedded':
+                    if contr.stacked_on == child_contr.label:
+                        if contr.stacked_type == 'embedded':
                             resolved_child_controllers.append(contr)
                         else:
                             resolved_child_controllers.insert(0, contr)
 
                         unresolved_controllers.remove(contr)
                         LOG.debug('resolved controller %s %s on %s' %
-                                  (contr, contr._meta.stacked_type,
-                                   child_contr._meta.label))
+                                  (contr, contr.stacked_type,
+                                   child_contr.label))
 
             resolved_controllers.extend(resolved_child_controllers)
             for contr in resolved_child_controllers:
-                resolved_controllers_map[contr._meta.label] = contr
+                resolved_controllers_map[contr.label] = contr
 
             # re-iterate with the next in line as the parent (handles multiple
             # level nesting)
             if unresolved_controllers:
-                current_parent = unresolved_controllers[0]._meta.label
+                current_parent = unresolved_controllers[0].label
 
         self._controllers = resolved_controllers
         self._controllers_map = resolved_controllers_map
@@ -571,36 +559,36 @@ class ArgparseController(ControllerHandler):
         pass
 
     def _get_subparser_options(self, contr):
-        kwargs = contr._meta.subparser_options.copy()
+        kwargs = contr.subparser_options.copy()
 
         if 'title' not in kwargs.keys():
-            kwargs['title'] = contr._meta.title
+            kwargs['title'] = contr.title
 
         kwargs['dest'] = 'command'
 
         return kwargs
 
     def _get_parser_options(self, contr):
-        kwargs = contr._meta.parser_options.copy()
+        kwargs = contr.parser_options.copy()
 
         if sys.version_info[0] >= 3:
             if 'aliases' not in kwargs.keys():              # pragma: nocover
-                kwargs['aliases'] = contr._meta.aliases     # pragma: nocover
+                kwargs['aliases'] = contr.aliases     # pragma: nocover
 
         if 'description' not in kwargs.keys():
-            kwargs['description'] = contr._meta.description
+            kwargs['description'] = contr.description
         if 'usage' not in kwargs.keys():
-            kwargs['usage'] = contr._meta.usage
+            kwargs['usage'] = contr.usage
         if 'epilog' not in kwargs.keys():
-            kwargs['epilog'] = contr._meta.epilog
+            kwargs['epilog'] = contr.epilog
         if 'help' not in kwargs.keys():
-            kwargs['help'] = contr._meta.help
+            kwargs['help'] = contr.help
 
-        if contr._meta.hide is True:
+        if contr.hide is True:
             if 'help' in kwargs.keys():
                 del kwargs['help']
         else:
-            kwargs['help'] = contr._meta.help
+            kwargs['help'] = contr.help
 
         return kwargs
 
@@ -615,8 +603,8 @@ class ArgparseController(ControllerHandler):
 
         # only hide commands from embedded controllers if the controller is
         # hidden
-        elif contr._meta.stacked_type == 'embedded' \
-                and contr._meta.hide is True:
+        elif contr.stacked_type == 'embedded' \
+                and contr.hide is True:
             hide_it = True
 
         if hide_it is True:
@@ -669,9 +657,9 @@ class ArgparseController(ControllerHandler):
         # stacking/embedding order in self._setup_controllers ... order is
         # important here otherwise argparse does wierd things
         for contr in self._controllers:
-            label = contr._meta.label
-            stacked_on = contr._meta.stacked_on
-            stacked_type = contr._meta.stacked_type
+            label = contr.label
+            stacked_on = contr.stacked_on
+            stacked_type = contr.stacked_type
 
             if stacked_type == 'nested':
                 # if the controller is nested, we need to create a new parser
@@ -694,7 +682,7 @@ class ArgparseController(ControllerHandler):
                 # to call later in self._dispatch
                 parsers[label].add_argument(self._controller_option,
                                             action='store',
-                                            default=contr._meta.label,
+                                            default=contr.label,
                                             help=SUPPRESS,
                                             dest='__controller_namespace__',
                                             )
@@ -706,18 +694,18 @@ class ArgparseController(ControllerHandler):
                 parsers[label] = parsers[stacked_on]
 
     def _get_parser_by_controller(self, controller):
-        if controller._meta.stacked_type == 'embedded':
-            parser = self._get_parser(controller._meta.stacked_on)
+        if controller.stacked_type == 'embedded':
+            parser = self._get_parser(controller.stacked_on)
         else:
-            parser = self._get_parser(controller._meta.label)
+            parser = self._get_parser(controller.label)
 
         return parser
 
     def _get_parser_parent_by_controller(self, controller):
-        if controller._meta.stacked_type == 'embedded':
-            parent = self._get_parser_parent(controller._meta.stacked_on)
+        if controller.stacked_type == 'embedded':
+            parent = self._get_parser_parent(controller.stacked_on)
         else:
-            parent = self._get_parser_parent(controller._meta.label)
+            parent = self._get_parser_parent(controller.label)
 
         return parent
 
@@ -728,7 +716,7 @@ class ArgparseController(ControllerHandler):
         return self._sub_parsers[label]
 
     def _process_arguments(self, controller):
-        label = controller._meta.label
+        label = controller.label
 
         LOG.debug("processing arguments for '%s' " % label +
                   "controller namespace")
@@ -740,7 +728,7 @@ class ArgparseController(ControllerHandler):
             parser.add_argument(*arg, **kw)
 
     def _process_commands(self, controller):
-        label = controller._meta.label
+        label = controller.label
         LOG.debug("processing commands for '%s' " % label +
                   "controller namespace")
 
@@ -751,14 +739,14 @@ class ArgparseController(ControllerHandler):
             func_name = command['func_name']
             LOG.debug("adding command '%s' " % command['label'] +
                       "(controller=%s, func=%s)" %
-                      (controller._meta.label, func_name))
+                      (controller.label, func_name))
 
             cmd_parent = self._get_parser_parent_by_controller(controller)
             command_parser = cmd_parent.add_parser(command['label'], **kwargs)
 
             # add an invisible dispatch option so we can figure out what to
             # call later in self._dispatch
-            default_contr_func = "%s.%s" % (command['controller']._meta.label,
+            default_contr_func = "%s.%s" % (command['controller'].label,
                                             command['func_name'])
             command_parser.add_argument(self._dispatch_option,
                                         action='store',
@@ -783,13 +771,13 @@ class ArgparseController(ControllerHandler):
     def _collect_arguments(self):
         LOG.debug("collecting arguments from %s " % self +
                   "(stacked_on='%s', stacked_type='%s')" %
-                  (self._meta.stacked_on, self._meta.stacked_type))
-        return self._meta.arguments
+                  (self.stacked_on, self.stacked_type))
+        return self.arguments
 
     def _collect_commands(self):
         LOG.debug("collecting commands from %s " % self +
                   "(stacked_on='%s', stacked_type='%s')" %
-                  (self._meta.stacked_on, self._meta.stacked_type))
+                  (self.stacked_on, self.stacked_type))
 
         commands = []
         for member in dir(self.__class__):
@@ -905,7 +893,7 @@ class ArgparseController(ControllerHandler):
                               .__controller_namespace__     # pragma: nocover
             contr = self._controllers_map[contr_label]      # pragma: nocover
             func_name = _clean_func(                        # pragma: nocover
-                contr._meta.default_func                    # pragma: nocover
+                contr.default_func                    # pragma: nocover
             )                                               # pragma: nocover
 
         if contr_label == 'base':

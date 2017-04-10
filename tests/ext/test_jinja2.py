@@ -35,10 +35,10 @@ class Jinja2ExtTestCase(test.CementExtTestCase):
 
     def test_jinja2_filesystemloader(self):
         self.app.setup()
-        self.app._meta.template_dirs = [self.tmp_dir]
+        self.app.template_dirs = [self.tmp_dir]
 
         # make sure it doesn't load from the tests directory module regardless
-        self.app._meta.template_module = 'some.bogus.module.path'
+        self.app.template_module = 'some.bogus.module.path'
 
         tests_dir = os.path.dirname(os.path.dirname(__file__))
 
@@ -59,8 +59,8 @@ class Jinja2ExtTestCase(test.CementExtTestCase):
 
     def test_jinja2_packageloader(self):
         self.app.setup()
-        self.app._meta.template_module = 'tests.templates'
-        self.app._meta.template_dirs = []
+        self.app.template_module = 'tests.templates'
+        self.app.template_dirs = []
         rando = random.random()
         res = self.app.render(dict(foo=rando), 'test_template_child.jinja2')
         jinja2_res = "foo equals %s\n" % rando
@@ -88,5 +88,5 @@ class Jinja2ExtTestCase(test.CementExtTestCase):
     @test.raises(exc.FrameworkError)
     def test_jinja2_bad_module(self):
         self.app.setup()
-        self.app._meta.template_module = 'this_is_a_bogus_module'
+        self.app.template_module = 'this_is_a_bogus_module'
         self.app.render(dict(foo='bar'), 'bad_template.jinja2')

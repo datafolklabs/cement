@@ -236,18 +236,18 @@ class WatchdogManager(MetaMixin):
             app.watchdog.join()
 
     """
-    class Meta:
-        #: The observer class to use on the backend
-        observer = Observer
 
-        #: The default event handler class to use if none is provided
-        default_event_handler = WatchdogEventHandler
+    #: The observer class to use on the backend
+    observer = Observer
+
+    #: The default event handler class to use if none is provided
+    default_event_handler = WatchdogEventHandler
 
     def __init__(self, app, *args, **kw):
         super(WatchdogManager, self).__init__(*args, **kw)
         self.app = app
         self.paths = []
-        self.observer = self._meta.observer()
+        self.observer = self.observer()
 
     def add(self, path, event_handler=None, recursive=True):
         """
@@ -266,7 +266,7 @@ class WatchdogManager(MetaMixin):
             return False
 
         if event_handler is None:
-            event_handler = self._meta.default_event_handler
+            event_handler = self.default_event_handler
         LOG.debug('adding path %s with event handler %s' %
                   (path, event_handler))
         self.observer.schedule(event_handler(self.app),
@@ -328,8 +328,8 @@ def watchdog_cleanup(app):
 
 
 def watchdog_add_paths(app):
-    if hasattr(app._meta, 'watchdog_paths'):
-        for path_spec in app._meta.watchdog_paths:
+    if hasattr(app, 'watchdog_paths'):
+        for path_spec in app.watchdog_paths:
             # odd... if a tuple is a single item it ends up as a str?
             if isinstance(path_spec, str):
                 app.watchdog.add(path_spec)

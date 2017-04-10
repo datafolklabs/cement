@@ -76,39 +76,35 @@ class TabulateOutputHandler(output.OutputHandler):
     extensions.
     """
 
-    class Meta:
+    label = 'tabulate'
 
-        """Handler meta-data."""
+    #: Whether or not to pad the output with an extra pre/post '\n'
+    padding = True
 
-        label = 'tabulate'
+    #: Default template format.  See the ``tabulate`` documentation for
+    #: all supported template formats.
+    format = 'orgtbl'
 
-        #: Whether or not to pad the output with an extra pre/post '\n'
-        padding = True
+    #: Default headers to use.
+    headers = []
 
-        #: Default template format.  See the ``tabulate`` documentation for
-        #: all supported template formats.
-        format = 'orgtbl'
+    #: Default alignment for string columns.  See the ``tabulate``
+    #: documentation for all supported ``stralign`` options.
+    string_alignment = 'left'
 
-        #: Default headers to use.
-        headers = []
+    #: Default alignment for numeric columns.  See the ``tabulate``
+    #: documentation for all supported ``numalign`` options.
+    numeric_alignment = 'decimal'
 
-        #: Default alignment for string columns.  See the ``tabulate``
-        #: documentation for all supported ``stralign`` options.
-        string_alignment = 'left'
+    #: String format to use for float values.
+    float_format = 'g'
 
-        #: Default alignment for numeric columns.  See the ``tabulate``
-        #: documentation for all supported ``numalign`` options.
-        numeric_alignment = 'decimal'
+    #: Default replacement for missing value.
+    missing_value = ''
 
-        #: String format to use for float values.
-        float_format = 'g'
-
-        #: Default replacement for missing value.
-        missing_value = ''
-
-        #: Whether or not to include ``tabulate`` as an available to choice
-        #: to override the ``output_handler`` via command line options.
-        overridable = False
+    #: Whether or not to include ``tabulate`` as an available to choice
+    #: to override the ``output_handler`` via command line options.
+    overridable = False
 
     def render(self, data, **kw):
         """
@@ -122,21 +118,21 @@ class TabulateOutputHandler(output.OutputHandler):
         :returns: str (the rendered template text)
 
         """
-        headers = kw.get('headers', self._meta.headers)
+        headers = kw.get('headers', self.headers)
 
         out = tabulate(data, headers,
-                       tablefmt=kw.get('tablefmt', self._meta.format),
+                       tablefmt=kw.get('tablefmt', self.format),
                        stralign=kw.get(
-                           'stralign', self._meta.string_alignment),
+                           'stralign', self.string_alignment),
                        numalign=kw.get(
-                           'numalign', self._meta.numeric_alignment),
+                           'numalign', self.numeric_alignment),
                        missingval=kw.get(
-                           'missingval', self._meta.missing_value),
-                       floatfmt=kw.get('floatfmt', self._meta.float_format),
+                           'missingval', self.missing_value),
+                       floatfmt=kw.get('floatfmt', self.float_format),
                        )
         out = out + '\n'
 
-        if self._meta.padding is True:
+        if self.padding is True:
             out = '\n' + out + '\n'
 
         return out

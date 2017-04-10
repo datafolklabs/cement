@@ -23,19 +23,14 @@ class ExtensionHandlerBase(Handler):
         from cement.core.extension import ExtensionHandlerBase
 
         class MyExtensionHandler(ExtensionHandlerBase):
-            class Meta:
-                interface = extension.IExtension
-                label = 'my_extension_handler'
+            interface = extension.IExtension
+            label = 'my_extension_handler'
             ...
 
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        #: The string identifier of the interface.
-        interface = 'extension'
+    #: The string identifier of the interface.
+    interface = 'extension'
 
     @abstractmethod
     def load_extension(self, ext_module):
@@ -65,15 +60,8 @@ class ExtensionHandlerBase(Handler):
 
 class ExtensionHandler(ExtensionHandlerBase):
 
-    class Meta:
-
-        """
-        Handler meta-data (can be passed as keyword arguments to the parent
-        class).
-        """
-
-        label = 'cement'
-        """The string identifier of the handler."""
+    label = 'cement'
+    """The string identifier of the handler."""
 
     def __init__(self, **kw):
         """

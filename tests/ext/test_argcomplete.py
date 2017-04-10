@@ -8,8 +8,7 @@ APP = rando()[:12]
 
 
 class MyBaseController(ArgparseController):
-    class Meta:
-        label = 'base'
+    label = 'base'
 
     @expose()
     def default(self):

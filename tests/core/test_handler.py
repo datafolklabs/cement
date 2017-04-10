@@ -7,17 +7,13 @@ from cement.ext.ext_configparser import ConfigParserConfigHandler
 
 
 class BogusOutputHandler(meta.MetaMixin):
-
-    class Meta:
-        # interface = IBogus
-        label = 'bogus_handler'
+    # interface = IBogus
+    label = 'bogus_handler'
 
 
 class BogusOutputHandler2(meta.MetaMixin):
-
-    class Meta:
-        interface = 'output'
-        label = 'bogus_handler'
+    interface = 'output'
+    label = 'bogus_handler'
 
 
 class BogusHandler3(meta.MetaMixin):
@@ -25,17 +21,13 @@ class BogusHandler3(meta.MetaMixin):
 
 
 class BogusHandler4(meta.MetaMixin):
-
-    class Meta:
-        interface = 'output'
-        # label = 'bogus4'
+    interface = 'output'
+    # label = 'bogus4'
 
 
 class DuplicateHandler(output.OutputHandler):
-
-    class Meta:
-        interface = 'output'
-        label = 'dummy'
+    interface = 'output'
+    label = 'dummy'
 
     def _setup(self, config_obj):
         pass
@@ -49,10 +41,8 @@ class BogusHandler(handler.Handler):
 
 
 class TestHandler(meta.MetaMixin):
-
-    class Meta:
-        interface = 'test_interface'
-        label = 'test'
+    interface = 'test_interface'
+    label = 'test'
 
 
 class HandlerTestCase(test.CementCoreTestCase):
@@ -176,6 +166,5 @@ class HandlerTestCase(test.CementCoreTestCase):
         self.app.setup()
         
         class BadHandler(TestHandler):
-            class Meta:
-                interface = 'bad_interface_not_defined'
+            interface = 'bad_interface_not_defined'
         self.app.handler.register(BadHandler)

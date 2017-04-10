@@ -27,12 +27,8 @@ class LogHandlerBase(Handler):
 
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        #: The string identifier of the interface.
-        interface = 'log'
+    #: The string identifier of the interface.
+    interface = 'log'
 
     @abstractmethod
     def set_level():

@@ -42,12 +42,8 @@ class MailHandlerBase(Handler):
 
     """
 
-    class Meta:
-
-        """Handler meta-data."""
-
-        interface = 'mail'
-        """The label identifier of the interface."""
+    interface = 'mail'
+    """The label identifier of the interface."""
 
     @abstractmethod
     def send(self, body, **kwargs):
@@ -92,22 +88,15 @@ class MailHandler(MailHandlerBase):
 
     """Mail handler implementation."""
 
-    class Meta:
-
-        """
-        Handler meta-data (can be passed as keyword arguments to the parent
-        class).
-        """
-
-        #: Configuration default values
-        config_defaults = {
-            'to': [],
-            'from_addr': 'noreply@example.com',
-            'cc': [],
-            'bcc': [],
-            'subject': 'Default Subject Line',
-            'subject_prefix': '',
-        }
+    #: Configuration default values
+    config_defaults = {
+        'to': [],
+        'from_addr': 'noreply@example.com',
+        'cc': [],
+        'bcc': [],
+        'subject': 'Default Subject Line',
+        'subject_prefix': '',
+    }
 
     def _setup(self, app_obj):
         super()._setup(app_obj)
@@ -116,8 +105,8 @@ class MailHandler(MailHandlerBase):
     def _validate_config(self):
         # convert comma separated strings to lists (ConfigParser)
         for item in ['to', 'cc', 'bcc']:
-            if item in self.app.config.keys(self._meta.config_section):
-                value = self.app.config.get(self._meta.config_section, item)
+            if item in self.app.config.keys(self.config_section):
+                value = self.app.config.get(self.config_section, item)
 
                 # convert a comma-separated string to a list
                 if type(value) is str:
@@ -127,5 +116,5 @@ class MailHandler(MailHandlerBase):
                     value_list = [x.strip() for x in value_list]
 
                     # set the new extensions value in the config
-                    self.app.config.set(self._meta.config_section, item,
+                    self.app.config.set(self.config_section, item,
                                         value_list)

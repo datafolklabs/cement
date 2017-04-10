@@ -6,9 +6,7 @@ from cement.utils.misc import init_defaults
 
 
 class BogusHandler1(log.LogHandler):
-
-    class Meta:
-        label = 'bogus'
+    label = 'bogus'
 
 
 class LogTestCase(test.CementCoreTestCase):

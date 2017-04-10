@@ -20,10 +20,8 @@ def my_extended_func():
 
 
 class DeprecatedApp(App):
-
-    class Meta:
-        label = 'deprecated'
-        defaults = None
+    label = 'deprecated'
+    defaults = None
 
 
 class HookTestException(Exception):
@@ -31,17 +29,14 @@ class HookTestException(Exception):
 
 
 class MyTestHandler(Handler):
-
-    class Meta:
-        label = 'my_test_handler'
-        interface = 'my_test_interface'
+    label = 'my_test_handler'
+    interface = 'my_test_interface'
 
 
 class TestOutputHandler(output.OutputHandler):
     file_suffix = None
 
-    class Meta:
-        label = 'test_output_handler'
+    label = 'test_output_handler'
 
     def _setup(self, config_obj):
         self.config = config_obj
@@ -51,9 +46,7 @@ class TestOutputHandler(output.OutputHandler):
 
 
 class BogusBaseController(Controller):
-
-    class Meta:
-        label = 'bad_base_controller_label'
+    label = 'bad_base_controller_label'
 
 
 def my_hook_one(app):
@@ -241,7 +234,7 @@ class FoundationTestCase(test.CementCoreTestCase):
 
         app.output = None
 
-        app._meta.output_handler = None
+        app.output_handler = None
         app._setup_output_handler()
 
     def test_lay_cement(self):
@@ -300,7 +293,7 @@ class FoundationTestCase(test.CementCoreTestCase):
             os.path.join(user_home, '.%s' % label, 'config'),
         ]
         for f in files:
-            res = f in app._meta.config_files
+            res = f in app.config_files
             self.ok(res)
 
     @test.raises(exc.FrameworkError)
@@ -361,7 +354,7 @@ class FoundationTestCase(test.CementCoreTestCase):
                             )
         app.setup()
         app.run()
-        self.eq(app._meta.output_handler, 'json')
+        self.eq(app.output_handler, 'json')
 
     def test_handler_override_options_is_none(self):
         app = self.make_app(APP,
@@ -474,8 +467,7 @@ class FoundationTestCase(test.CementCoreTestCase):
     @test.raises(AssertionError)
     def test_run_forever(self):
         class MyController(Controller):
-            class Meta:
-                label = 'base'
+            label = 'base'
 
             @ex()
             def runit(self):
@@ -504,18 +496,18 @@ class FoundationTestCase(test.CementCoreTestCase):
         self.app.setup()
 
         self.app.add_template_dir(self.tmp_dir)
-        res = self.tmp_dir in self.app._meta.template_dirs
+        res = self.tmp_dir in self.app.template_dirs
         self.ok(res)
 
     def test_remove_template_directory(self):
         self.app.setup()
 
         self.app.add_template_dir(self.tmp_dir)
-        res = self.tmp_dir in self.app._meta.template_dirs
+        res = self.tmp_dir in self.app.template_dirs
         self.ok(res)
 
         self.app.remove_template_dir(self.tmp_dir)
-        res = self.tmp_dir not in self.app._meta.template_dirs
+        res = self.tmp_dir not in self.app.template_dirs
         self.ok(res)
 
     def test_alternative_module_mapping(self):
@@ -533,4 +525,4 @@ class FoundationTestCase(test.CementCoreTestCase):
         META['log.logging']['debug_format'] = DEBUG_FORMAT
         app = self.make_app(meta_defaults=META)
         app.setup()
-        self.eq(app.log._meta.debug_format, DEBUG_FORMAT)
+        self.eq(app.log.debug_format, DEBUG_FORMAT)

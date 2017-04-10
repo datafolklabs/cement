@@ -52,5 +52,5 @@ class MustacheExtTestCase(test.CementExtTestCase):
     @test.raises(exc.FrameworkError)
     def test_mustache_bad_module(self):
         self.app.setup()
-        self.app._meta.template_module = 'this_is_a_bogus_module'
+        self.app.template_module = 'this_is_a_bogus_module'
         self.app.render(dict(foo='bar'), 'bad_template.mustache')

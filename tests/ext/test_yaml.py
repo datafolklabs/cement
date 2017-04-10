@@ -60,7 +60,7 @@ class YamlExtTestCase(test.CementTestCase):
         self.ok(res)
 
     def test_parse_file_bad_path(self):
-        self.app._meta.config_files = ['./some_bogus_path']
+        self.app.config_files = ['./some_bogus_path']
         self.app.setup()
 
     def test_parse_file(self):

@@ -128,49 +128,45 @@ class SMTPMailHandler(mail.MailHandler):
 
     """
 
-    class Meta:
+    #: Unique identifier for this handler
+    label = 'smtp'
 
-        """Handler meta-data."""
-
-        #: Unique identifier for this handler
-        label = 'smtp'
-
-        #: Configuration default values
-        config_defaults = {
-            'to': [],
-            'from_addr': 'noreply@localhost',
-            'cc': [],
-            'bcc': [],
-            'subject': None,
-            'subject_prefix': None,
-            'host': 'localhost',
-            'port': '25',
-            'timeout': 30,
-            'ssl': False,
-            'tls': False,
-            'auth': False,
-            'username': None,
-            'password': None,
-        }
+    #: Configuration default values
+    config_defaults = {
+        'to': [],
+        'from_addr': 'noreply@localhost',
+        'cc': [],
+        'bcc': [],
+        'subject': None,
+        'subject_prefix': None,
+        'host': 'localhost',
+        'port': '25',
+        'timeout': 30,
+        'ssl': False,
+        'tls': False,
+        'auth': False,
+        'username': None,
+        'password': None,
+    }
 
     def _get_params(self, **kw):
         params = dict()
 
         # some keyword args override configuration defaults
         for item in ['to', 'from_addr', 'cc', 'bcc', 'subject']:
-            config_item = self.app.config.get(self._meta.config_section, item)
+            config_item = self.app.config.get(self.config_section, item)
             params[item] = kw.get(item, config_item)
 
         # others don't
         other_params = ['ssl', 'tls', 'host', 'port', 'auth', 'username',
                         'password', 'timeout']
         for item in other_params:
-            params[item] = self.app.config.get(self._meta.config_section,
+            params[item] = self.app.config.get(self.config_section,
                                                item)
 
         # also grab the subject_prefix
         params['subject_prefix'] = self.app.config.get(
-            self._meta.config_section,
+            self.config_section,
             'subject_prefix'
         )
 
@@ -217,9 +213,9 @@ class SMTPMailHandler(mail.MailHandler):
         if is_true(params['ssl']):
             server = smtplib.SMTP_SSL(params['host'], params['port'],
                                       params['timeout'])
-            LOG.debug("%s : initiating ssl" % self._meta.label)
+            LOG.debug("%s : initiating ssl" % self.label)
             if is_true(params['tls']):
-                LOG.debug("%s : initiating tls" % self._meta.label)
+                LOG.debug("%s : initiating tls" % self.label)
                 server.starttls()
 
         else:

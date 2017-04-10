@@ -28,10 +28,8 @@ class PluginHandlerBase(Handler):
 
     """
 
-    class Meta:
-
-        #: String identifier of the interface.
-        interface = 'plugin'
+    #: String identifier of the interface.
+    interface = 'plugin'
 
     @abstractmethod
     def load_plugin(plugin_name):

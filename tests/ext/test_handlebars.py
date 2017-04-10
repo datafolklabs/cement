@@ -7,13 +7,12 @@ from nose.plugins.attrib import attr
 
 
 class HandlebarsTestApp(test.TestApp):
-    class Meta:
-        extensions = ['handlebars']
-        output_handler = 'handlebars'
-        template_module = 'tests.templates'
-        template_dirs = []
-        handlebars_helpers = {}
-        handlebars_partials = ['test_partial_template.handlebars']
+    extensions = ['handlebars']
+    output_handler = 'handlebars'
+    template_module = 'tests.templates'
+    template_dirs = []
+    handlebars_helpers = {}
+    handlebars_partials = ['test_partial_template.handlebars']
 
 
 @attr('ext_handlebars')
@@ -58,5 +57,5 @@ class HandlebarsExtTestCase(test.CementExtTestCase):
     @test.raises(exc.FrameworkError)
     def test_handlebars_bad_module(self):
         self.app.setup()
-        self.app._meta.template_module = 'this_is_a_bogus_module'
+        self.app.template_module = 'this_is_a_bogus_module'
         self.app.render(dict(foo='bar'), 'bad_template.handlebars')
