@@ -60,7 +60,6 @@ Cement Extension Modules
    ext/ext_mustache
    ext/ext_plugin
    ext/ext_redis
-   ext/ext_reload_config
    ext/ext_smtp
    ext/ext_tabulate
    ext/ext_yaml
