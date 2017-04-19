@@ -9,13 +9,11 @@ mock
 sphinx_rtd_theme
 
 # Required for optional extensions
-argcomplete
 pystache
 pyYaml
 configobj
 pylibmc
 redis
-genshi
 colorlog
 tabulate
 jinja2
