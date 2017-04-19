@@ -1,9 +1,14 @@
-FROM python:3.6-onbuild
+FROM python:3.6-alpine
 MAINTAINER BJ Dierkes <derks@datafolklabs.com>
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        libmemcached-dev \
+WORKDIR /app
+COPY requirements-dev.txt /app/
+RUN apk update \
+    && apk add libmemcached-dev \
+        gcc \
+        musl-dev \
+        cyrus-sasl-dev \
+        zlib-dev \
+        make \
     && pip install --no-cache-dir -r requirements-dev.txt
-
-CMD ["/bin/bash"]
+COPY . /app
+CMD ["/bin/ash"]

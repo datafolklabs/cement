@@ -6,6 +6,8 @@ services:
             context: .
             dockerfile: docker/Dockerfile.dev
         hostname: cement
+        stdin_open: true
+        tty: true
         volumes:
             - ".:/usr/src/app"
         links:
