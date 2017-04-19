@@ -52,13 +52,10 @@ class Mock(object):
 MOCK_MODULES = [
     'nose', 
     'pylibmc', 
-    'pyinotify', 
     'yaml', 
     'tabulate',
     'pystache', 'pystache.renderer',
-    'genshi', 'genshi.template',
     'colorlog',
-    'argcomplete',
     ]
 
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)

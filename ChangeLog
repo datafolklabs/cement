@@ -47,6 +47,7 @@ Incompatible:
     * ``[core.handler]`` Drop deprecated backend globals
     * ``[core.hook]`` Drop deprecated backend globals
     * ``[core.controller]`` Drop ``CementBaseController``
+    * ``[ext.argcomplete]`` No longer shipped with Cement.
     * ``[ext.configobj]`` No longer shipped with Cement.
     * ``[ext.json_configobj]`` No longer shipped with Cement.
     * ``[ext.yaml_configobj]`` No longer shipped with Cement.

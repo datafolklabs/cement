@@ -21,7 +21,7 @@ class MetaMixin(object):
 
     """
     Mixin that provides the Meta class support to add settings to instances
-    of slumber objects. Meta settings cannot start with a _.
+    of objects. Meta settings cannot start with a _.
 
     """
 
