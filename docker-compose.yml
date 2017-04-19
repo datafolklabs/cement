@@ -9,7 +9,7 @@ services:
         stdin_open: true
         tty: true
         volumes:
-            - ".:/usr/src/app"
+            - ".:/app"
         links:
             - redis:redis
             - memcached:memcached
