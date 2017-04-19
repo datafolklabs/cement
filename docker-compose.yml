@@ -13,6 +13,9 @@ services:
         links:
             - redis:redis
             - memcached:memcached
+        environment:
+            REDIS_HOST: redis
+            MEMCACHED_HOST: memcached
     docs:
         image: "cement-docs:dev"
         build: 

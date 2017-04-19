@@ -9,7 +9,7 @@ from cement.utils.misc import init_defaults
 if 'REDIS_HOST' in os.environ.keys():
     redis_host = os.environ['REDIS_HOST']
 else:
-    redis_host = 'redis'
+    redis_host = 'localhost'
 
 class RedisExtTestCase(test.CementTestCase):
 
