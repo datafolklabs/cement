@@ -443,7 +443,7 @@ class MyApp(App):
         template_dir = '/path/to/templates'
 
         ### internal template module (shipped with app code)
-        template_bootstrap = 'myapp.templates'
+        template_module = 'myapp.templates'
 
 
 with MyApp() as app:

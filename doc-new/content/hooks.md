@@ -228,7 +228,7 @@ class MyApp(App):
     class Meta:
         label = 'myapp'
         hooks = [
-            ('pre_run', inspect_arguments),
+            ('post_argument_parsing', inspect_arguments),
         ]
 
 
