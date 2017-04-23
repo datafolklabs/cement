@@ -464,7 +464,6 @@ class ArgparseController(ControllerHandler):
         if self._meta.help is None:
             self._meta.help = '%s controller' % _clean_label(self._meta.label)
 
-    @ex(hide=True)
     def _default(self):
         self._parser.print_help()
 

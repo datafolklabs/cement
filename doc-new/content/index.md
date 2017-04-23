@@ -62,21 +62,22 @@ command line and backend application development.
 Cement core features include (but are not limited to):
 
  * Core pieces of the framework are customizable via handlers/interfaces
+ * Handler system connects implementation classes with Interfaces
  * Extension handler interface to easily extend framework functionality
  * Config handler supports parsing multiple config files into one config
  * Argument handler parses command line arguments and merges with config
  * Log handler supports console and file logging
  * Plugin handler provides an interface to easily extend your application
- * Hook support adds a bit of magic to apps and also ties into framework
- * Handler system connects implementation classes with Interfaces
  * Output handler interface renders return dictionaries to console
  * Cache handler interface adds caching support for improved performance
  * Controller handler supports sub-commands, and nested controllers
+ * Hook support adds a bit of magic to apps and also ties into framework
  * Zero external dependencies* (not including optional extensions)
  * 100% test coverage using `nose` and `coverage`
  * 100% PEP8 and style compliant using `flake8`
  * Extensive Sphinx documentation
  * Tested on Python 3.5+
+ * Does not support Python 2.x
 
 <aside class="notice">
 Some optional extensions that are shipped with the mainline Cement sources do
