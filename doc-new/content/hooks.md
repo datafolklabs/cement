@@ -248,49 +248,49 @@ Cement has a number of hooks that tie into the framework.
 
 ### pre_setup
 
-Run first when ``CementApp.setup()`` is called.  The application object is
+Run first when `App.setup()` is called.  The application object is
 passed as an argument.  Nothing is expected in return.
 
 
 ### post_setup
 
-Run last when CementApp.setup() is called.  The application object is
+Run last when `App.setup()` is called.  The application object is
 passed as an argument.  Nothing is expected in return.
 
 
 ### pre_run
 
-Run first when CementApp.run() is called.  The application object is
+Run first when `App.run()` is called.  The application object is
 passed as an argument.  Nothing is expected in return.
 
 
 ### post_run
 
-Run last when CementApp.run() is called.  The application object is
+Run last when `App.run()` is called.  The application object is
 passed as an argument.  Nothing is expected in return.
 
 
 ### pre_argument_parsing
 
-Run after CementApp.run() is called, just *before* argument parsing happens.
+Run after `App.run()` is called, just *before* argument parsing happens.
 The application object is passed as an argument to these hook
 functions.  Nothing is expected in return.
 
 
 ### post_argument_parsing
 
-Run after CementApp.run() is called, just *after* argument parsing happens.
+Run after `App.run()` is called, just *after* argument parsing happens.
 The application object is passed as an argument to these hook
 functions.  Nothing is expected in return.
 
 This hook is generally useful where the developer needs to perform actions
 based on the arguments that were passed at command line, but before the
-logic of `app.run()` happens.
+logic of `App.run()` happens.
 
 
 ### pre_render
 
-Run first when CementApp.render() is called.  The application object, and
+Run first when  App.render()     is called.  The application object, and
 data dictionary are passed as arguments.  Must return either the original
 data dictionary, or a modified one.
 
@@ -299,21 +299,21 @@ Note: This does not affect anything that is 'printed' to console.
 
 ### post_render
 
-Run last when CementApp.render() is called.  The application object, and
+Run last when `App.render()` is called.  The application object, and
 rendered output text are passed as arguments.  Must return either the original
 output text, or a modified version.
 
 
 ### pre_close
 
-Run first when app.close() is called.  This hook should be used by plugins and
-extensions to do any 'cleanup' at the end of program execution.  Nothing is
-expected in return.
+Run first when `App.close()` is called.  This hook should be used by plugins
+and extensions to do any 'cleanup' at the end of program execution.  Nothing
+is expected in return.
 
 
 ### post_close
 
-Run last when app.close() is called.  Most use cases need pre_close(),
+Run last when `App.close()` is called.  Most use cases need `pre_close`,
 however this hook is available should one need to do anything after all other
 'close' operations.
 

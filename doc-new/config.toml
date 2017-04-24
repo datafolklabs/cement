@@ -1,11 +1,11 @@
-baseurl = "http://docs.trueability.com/"
-title = "TrueAbility Internal Documentation"
+baseurl = "http://builtoncement.com/"
+title = "Cement Framework Documentation"
 languageCode = "en-us"
 theme = "docuapi"
 
 # Code higlighting settings
 pygmentsCodefences = true
-pygmentsCodeFencesGuesSsyntax = false
+pygmentsCodeFencesGuesSyntax = false
 pygmentsOptions = ""
 pygmentsStyle = "monokai"
 # The monokai stylesheet is included in the base template.
@@ -15,6 +15,15 @@ defaultContentLanguage = "en"
 
 [params]
 search = true
+
+toc_footers = [ 
+"[![Continuous Integration Status](https://travis-ci.org/datafolklabs/cement.svg)](https://travis-ci.org/datafolklabs/cement)",
+"[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/datafolklabs/cement?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)",
+# "[DOCS](http://builtoncement.com/2.99/)",
+# "[CODE](http://github.com/datafolklabs/cement/)",
+# "[PYPI](http://pypi.python.org/pypi/cement/)",
+# "[GITTER](https://gitter.im/datafolklabs/cement)",
+]
 
 # Configure the language example tabs.
 [[params.language_tabs]]
