@@ -238,6 +238,29 @@ class CementApp(meta.MetaMixin):
         ``CementApp.Meta.config_extension``.
         """
 
+        config_dirs = None
+        """
+        List of config directories to search config files.
+
+        For each direcory cement will load all files that ends
+        with ``.conf``.
+
+        .. code-block:: python
+
+            ['/etc/<app_label>/<app_label>/conf.d',
+             '~/.<app_label>/conf.d']
+
+        Directories and files inside are loaded in order, and have precedence
+        in order.  Therefore, the last configuration loaded has precedence
+        (and overwrites settings loaded from previous configuration files).
+
+        These configuration will be overriden by configuration from
+        ``CementApp.Meta.config_files``.
+
+        Note that ``.conf`` is the default config file extension, defined by
+        ``CementApp.Meta.config_extension``.
+        """
+
         plugins = []
         """
         A list of plugins to load.  This is generally considered bad
@@ -1236,15 +1259,28 @@ class CementApp(meta.MetaMixin):
         if self._meta.config_defaults is not None:
             self.config.merge(self._meta.config_defaults)
 
-        if self._meta.config_files is None:
-            label = self._meta.label
-            ext = self._meta.config_extension
+        ext = self._meta.config_extension
+        label = self._meta.label
 
+        if self._meta.config_files is None:
             self._meta.config_files = [
                 os.path.join('/', 'etc', label, '%s%s' % (label, ext)),
                 os.path.join(fs.HOME_DIR, '.%s%s' % (label, ext)),
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'config'),
             ]
+
+        if self._meta.config_dirs is None:
+            self._meta.config_dirs = [
+                os.path.join('/', 'etc', label, 'conf.d'),
+                os.path.join(fs.HOME_DIR, '.%s' % label, 'conf.d'),
+            ]
+
+        for _dir in self._meta.config_dirs:
+            if not os.path.isdir(_dir):
+                continue
+            for f in os.listdir(_dir):
+                if f.endswith(ext):
+                    self.config.parse_file(os.path.join(_dir, f))
 
         for _file in self._meta.config_files:
             self.config.parse_file(_file)
