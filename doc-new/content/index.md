@@ -36,6 +36,8 @@ $ python helloworld.py
 INFO: Hello World!
 ```
 
+Let's hope that this long sentence doesn't get eaten up by the `slate monsters of old`.
+And this one also I want to see what this looks  `App.Meta.config_files == 'test'`.
 
 <aside class="warning">
 This is the Portland branch of Cement, intended for future-looking and
@@ -44,13 +46,14 @@ will eventually become Cement 3.  It is guaranteed to be broken!  Please use
 Cement 2 in production until stable/3.0.0 is released.
 </aside>
 
-Cement is an advanced CLI Application Framework for Python.  Its goal is to
-introduce a standard, and feature-full platform for both simple and complex
-command line applications as well as support rapid development needs without
-sacrificing quality.  Cement is flexible, and it's use cases span from the
-simplicity of a micro-framework to the complexity of a mega-framework.
-Whether it's a single file script, or a multi-tier application, Cement is the
-foundation you've been looking for.
+Cement is an advanced Application Framework for Python, with a primary focus
+on Command Line Interfaces (CLI).  Its goal is to introduce a standard, and
+feature-full platform for both simple and complex command line applications
+as well as support rapid development needs without sacrificing quality.  
+Cement is flexible, and it's use cases span from the simplicity of a
+micro-framework to the complexity of a mega-framework. Whether it's a single
+file script, or a multi-tier application, Cement is the foundation you've been
+looking for.
 
 The first commit to Git was on Dec 4, 2009.  Since then, the framework has
 seen several iterations in design, and has continued to grow and improve
@@ -59,23 +62,23 @@ command line and backend application development.
 
 Cement core features include (but are not limited to):
 
- * Core pieces of the framework are customizable via handlers/interfaces
- * Handler system connects implementation classes with Interfaces
- * Extension handler interface to easily extend framework functionality
- * Config handler supports parsing multiple config files into one config
- * Argument handler parses command line arguments and merges with config
- * Log handler supports console and file logging
- * Plugin handler provides an interface to easily extend your application
- * Output handler interface renders return dictionaries to console
- * Cache handler interface adds caching support for improved performance
- * Controller handler supports sub-commands, and nested controllers
- * Hook support adds a bit of magic to apps and also ties into framework
- * Zero external dependencies* (not including optional extensions)
- * 100% test coverage using `nose` and `coverage`
- * 100% PEP8 and style compliant using `flake8`
- * Extensive Sphinx documentation
- * Tested on Python 3.5+
- * Does not support Python 2.x
+- Core pieces of the framework are customizable via handlers/interfaces
+- Handler system connects implementation classes with Interfaces
+- Extension handler interface to easily extend framework functionality
+- Config handler supports parsing multiple config files into one config
+- Argument handler parses command line arguments and merges with config
+- Log handler supports console and file logging
+- Plugin handler provides an interface to easily extend your application
+- Output handler interface renders return dictionaries to console
+- Cache handler interface adds caching support for improved performance
+- Controller handler supports sub-commands, and nested controllers
+- Hook support adds a bit of magic to apps and also ties into framework
+- Zero external dependencies* (not including optional extensions)
+- 100% test coverage using `nose` and `coverage`
+- 100% PEP8 and style compliant using `flake8`
+- Extensive Sphinx documentation
+- Tested on Python 3.5+
+- Does not support Python 2.x
 
 <aside class="notice">
 Some optional extensions that are shipped with the mainline Cement sources do
@@ -86,17 +89,17 @@ Cement explicitly does not include them.
 
 **More Information**
 
- * DOCS: http://builtoncement.com/2.99/
- * CODE: http://github.com/datafolklabs/cement/
- * PYPI: http://pypi.python.org/pypi/cement/
- * SITE: http://builtoncement.com/
- * T-CI: https://travis-ci.org/datafolklabs/cement
- * HELP: cement@librelist.org - #cement - gitter.im/datafolklabs/cement
+- [Documentation](http://builtoncement.com/2.99/)
+- [Source Code](http://github.com/datafolklabs/cement/)
+- [PyPi](http://pypi.python.org/pypi/cement/)
+- [Travis Continuous Integration Testing](https://travis-ci.org/datafolklabs/cement/)
+- [Gitter Discussion Channel](https://gitter.im/datafolklabs/cement/)
 
 
 **License**
 
 The Cement CLI Application Framework is Open Source and is distributed under
-the BSD License (three clause).  Please see the LICENSE file included with
-this software.
+the BSD License (three clause).  Please see the
+[LICENSE](https://raw.githubusercontent.com/datafolklabs/cement/master/LICENSE)
+file included with this software.
 

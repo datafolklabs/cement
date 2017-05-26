@@ -1,6 +1,7 @@
 ---
 title: "Quick Start Overview"
 weight: 2
+slug: quickstart
 ---
 
 # Quickstart Overview
@@ -169,6 +170,31 @@ are referred to by the interfaces they implement, such as
     customization by plugins.
 </aside>
 
+### Overriding Via Configuration Files
+
+> Overriding Via Configuration File
+
+```
+[myapp]
+
+### override App.Meta.mail_handler 
+mail_handler = my_mail_handler
+
+```
+
+`MyApp` defines and/or defaults to builtin handlers for all of the above
+listed core handlers.  Whatever the application code defines is the default, 
+however you can also override via the configuration file(s) as in the example
+to the right.  
+
+For example, imagine that your default `mail_handler` is `smtp` for 
+sending email via your local SMTP server.  This is a configuration that might
+very on a per-user/environment basis.  Via the application configuration, you
+could override this with an alternative mail handler like
+ `mail_handler=some_other_mail_handler`
+
+
+
 [comment]: <> (--------------------------------------------------------------)
 
 ## Configuration
@@ -228,7 +254,8 @@ myapp:
 Cement supports loading multiple configuration files out-of-the-box.  
 Configurations loaded from files are merged in, overriding the applications
 default settings (`App.Meta.config_defaults`).  The default configuration
-handler is `ConfigParserConfigHandler`, based on `ConfigParser` in the
+handler is `ConfigParserConfigHandler`, based on
+[ConfigParser](https://docs.python.org/3/library/configparser.html) in the
 standard library, and is instantiated as `app.config`.
 
 Cement looks for configuration files in the most common places such as:
@@ -243,8 +270,11 @@ The list of configuration file paths can be customized via the meta option
 be easily modified with `App.Meta.config_extension`.
 
 The builtin configuration handler `ConfigParserConfigHandler` uses common
-unix-like config files where `blocks` or `sections` are defined with
-`[brackets]`.  Additional support for the following file formats is provided
+unix-like config files where `blocks` or `sections` are defined with brackets:
+
+I.e. `[myapp]`, `[myplugin]`, `[interface.handler]`, etc
+
+Additional support for the following file formats is provided
 via optional extensions:
 
  * Json
@@ -286,7 +316,7 @@ with App('myapp') as app:
 
 ```
 
-> Arguments Defined With Controllers
+> Arguments Defined by Controllers
 
 ```python
 
@@ -324,7 +354,6 @@ with MyApp() as app:
 
 ```
 
-
 > Usage
 
 ```
@@ -343,14 +372,17 @@ Foo Argument => bar
 
 Argument parsing is based on the standard
 [Argparse](https://docs.python.org/3/library/argparse.html) library, with the
-same usage that you're familiar with.  That said, the power of the framework
-comes into play when we start talking about application controllers that
-streamline the process of mapping arguments and sub-commands to
-actions/functions (more on that later).
+same usage that you're familiar with.  The argument handler
+`ArgparseArgumentHandler` is instantiated as `app.args`, arguments are defined
+with `app.args.add_argument()`, and parsed arguments are stored as 
+`app.args.parsed_args` (or more conveniently `app.pargs` for easy reference).
 
-The argument handler `ArgparseArgumentHandler` is instantiated as `app.args`,
-and the parsed arguments are stored as `app.pargs` for easy reference.
 
+### Arguments Defined by Controllers
+
+The power of the framework comes into play when we start talking about
+application controllers that streamline the process of mapping arguments and
+sub-commands to actions/functions as in the example (more on that later).
 
 [comment]: <> (--------------------------------------------------------------)
 
