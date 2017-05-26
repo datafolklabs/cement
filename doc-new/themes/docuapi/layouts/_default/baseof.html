@@ -17,7 +17,8 @@
       </span>
     </a>
     <div class="tocify-wrapper">
-        <img src='{{ relURL "images/logo.png" }}' />
+        {{ partial "hook_left_sidebar_start.html" . }}
+        {{ partial "hook_left_sidebar_logo.html" . }}
         {{ with .Site.Params.language_tabs }}
         <div class="lang-selector">
             {{ range . }}
@@ -46,6 +47,7 @@
             {{ end}}
         </ul>
         {{ end}}
+        {{ partial "hook_left_sidebar_end.html" . }}
     </div>
     <div class="page-wrapper">
         <div class="dark-box"></div>

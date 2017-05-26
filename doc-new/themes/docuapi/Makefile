@@ -21,3 +21,6 @@ serve:
 	@make build 
 	@fswatch -o ${WATCH_PATHS} | xargs -n1 -I{} make build
 
+release:
+	git tag -a ${version} -m "Release ${version}"
+	git push --follow-tags

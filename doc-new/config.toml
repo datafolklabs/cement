@@ -13,7 +13,6 @@ pygmentsUseClasses = true
 
 defaultContentLanguage = "en"
 
-[params]
 search = true
 
 toc_footers = [ 
