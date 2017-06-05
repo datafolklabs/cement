@@ -198,6 +198,10 @@ class ControllerCommandDuplicateArguments(ArgparseController):
         pass
 
 
+class NoDefaultFunction(ArgparseController):
+    pass
+
+
 class AlternativeDefault(ArgparseController):
 
     class Meta:
@@ -471,6 +475,19 @@ class ArgparseExtTestCase(test.CementExtTestCase):
             res = app.run()
             self.eq(res,
                     "Inside AlternativeDefault.alternative_default")
+
+    def test_default_default(self):
+        self.reset_backend()
+        self.app = self.make_app(APP,
+                                 argv=['default_default'],
+                                 argument_handler=ArgparseArgumentHandler,
+                                 handlers=[
+                                     NoDefaultFunction,
+                                 ],
+                                 )
+        with self.app as app:
+            app.run()
+            # Expectation: No exception
 
     @test.raises(FrameworkError)
     def test_bad_alternative_default_command(self):

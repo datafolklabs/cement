@@ -469,6 +469,9 @@ class ArgparseController(CementBaseHandler):
         if self._meta.help is None:
             self._meta.help = '%s controller' % _clean_label(self._meta.label)
 
+    def default(self):
+        self.app.args.print_help()
+
     def _setup(self, app):
         """
         See `IController._setup() <#cement.core.cache.IController._setup>`_.
