@@ -32,7 +32,7 @@ else:
 
 def add_handler_override_options(app):
     """
-    This is a ``post_setup`` hook that adds the handler override options to
+    This is a `post_setup` hook that adds the handler override options to
     the argument parser
 
     :param app: The application object.

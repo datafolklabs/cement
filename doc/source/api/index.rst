@@ -1,10 +1,14 @@
-API Reference
-=============
+.. note:: This documentation is strictly for API reference.  For more complete
+   developer documentation, please visit the official site
+   http://builtoncement.com.
+
+Cement Framework API Reference
+==============================
 
 .. _api-core:
 
-Cement Core Modules
--------------------
+Core Modules
+------------
 
 .. toctree::
    :maxdepth: 1
@@ -27,8 +31,8 @@ Cement Core Modules
 
 .. _api-utils:
 
-Cement Utility Modules
-----------------------
+Utility Modules
+---------------
 
 .. toctree::
    :maxdepth: 1
@@ -40,8 +44,8 @@ Cement Utility Modules
 
 .. _api-ext:
 
-Cement Extension Modules
-------------------------
+Extension Modules
+-----------------
 
 .. toctree::
    :maxdepth: 1
