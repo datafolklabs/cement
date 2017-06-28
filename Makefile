@@ -1,6 +1,6 @@
-.PHONY: all init doc test comply clean
+.PHONY: all init api-doc test comply clean
 
-all: init test doc clean
+all: init test api-doc clean
 
 init:
 	pip install --upgrade -r requirements-dev.txt
@@ -11,7 +11,7 @@ test:
 comply:
 	flake8 cement/ tests/
 
-doc:
+api-doc:
 	python setup.py build_sphinx
 	@echo
 	@echo DOC: "file://"$$(echo `pwd`/doc/build/html/index.html)
