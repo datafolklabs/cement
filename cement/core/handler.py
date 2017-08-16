@@ -380,7 +380,7 @@ class CementBaseHandler(meta.MetaMixin):
                       "into section '%s'" % self._meta.config_section)
             dict_obj = dict()
             dict_obj[self._meta.config_section] = self._meta.config_defaults
-            self.app.config.merge(dict_obj, override=False)
+            self.app.config.merge(dict_obj, override=self.app._meta.arguments_override_config)
 
 
 def get(handler_type, handler_label, *args):
