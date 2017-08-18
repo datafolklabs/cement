@@ -103,7 +103,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Cement'
-copyright = u'2009-2016, Data Folk Labs, LLC'
+copyright = u'2009-2017, Data Folk Labs, LLC'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
