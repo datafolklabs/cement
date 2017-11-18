@@ -5,14 +5,15 @@ import sys
 import re
 import tempfile
 
-from cement.core.foundation import CementApp
-from cement.ext.ext_argparse import ArgparseController, expose
+from cement import App, Controller, ex
+# from cement.core.foundation import CementApp
+# from cement.ext.ext_argparse import ArgparseController, expose
 from cement.utils.version import get_version
 from cement.utils import shell
 
 VERSION = get_version()
 
-class CementDevtoolsController(ArgparseController):
+class CementDevtoolsController(Controller):
     class Meta:
         label = 'base'
         arguments = [
@@ -32,7 +33,7 @@ class CementDevtoolsController(ArgparseController):
         else:
             raise Exception(msg)
 
-    @expose(hide=True)
+    @ex(hide=True)
     def default(self):
         raise AssertionError("A sub-command is required.  See --help.")
 
@@ -84,7 +85,7 @@ class CementDevtoolsController(ArgparseController):
             self._do_error("\n\nFlake8 checks did not pass.\n\n" +
                            "$ %s\n%s" % (' '.join(cmd_args), str(out)))
 
-    @expose(help='run all unit tests')
+    @ex(help='run all unit tests')
     def run_tests(self):
         print('')
         print('Python Version: %s' % sys.version)
@@ -95,7 +96,7 @@ class CementDevtoolsController(ArgparseController):
         self._do_tests()
         print('')
 
-    @expose(help='run flake8 tests')
+    @ex(help='run flake8 tests')
     def flake8(self):
         self._do_flake8()
 
@@ -108,7 +109,7 @@ class CementDevtoolsController(ArgparseController):
             self._do_error("\n\nFailed to build sphinx documentation\n\n" +
                            "$ %s\n%s" % (' '.join(cmd_args), str(out)))
 
-    @expose(help='create a cement release')
+    @ex(help='create a cement release')
     def make_release(self):
         print('')
         print("Making Release for Version %s" % VERSION)
@@ -145,11 +146,11 @@ class CementDevtoolsController(ArgparseController):
 
         print('')
 
-    @expose(help='get the current version of the sources')
+    @ex(help='get the current version of the sources')
     def get_version(self):
         print(VERSION)
 
-class CementDevtoolsApp(CementApp):
+class CementDevtoolsApp(App):
     class Meta:
         label = 'cement-devtools'
         base_controller = CementDevtoolsController
