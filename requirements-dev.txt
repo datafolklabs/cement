@@ -6,7 +6,9 @@ pep8
 autopep8
 flake8
 mock
-sphinx_rtd_theme
+guzzle_sphinx_theme
+recommonmark
+sphinxcontrib-napoleon
 
 # Required for optional extensions
 pystache

@@ -1,38 +1,33 @@
+
 .. note:: This documentation is strictly for API reference.  For more complete
    developer documentation, please visit the official site
    http://builtoncement.com.
 
-Cement Framework API Reference
-==============================
-
-.. _api-core:
-
 Core Modules
-------------
+============
 
 .. toctree::
-   :maxdepth: 1
+  :maxdepth: 1
 
-   core/arg
-   core/backend
-   core/cache
-   core/config
-   core/controller
-   core/exc
-   core/extension
-   core/foundation
-   core/handler
-   core/hook
-   core/log
-   core/mail
-   core/meta
-   core/output
-   core/plugin
+  core/arg
+  core/backend
+  core/cache
+  core/config
+  core/controller
+  core/exc
+  core/extension
+  core/foundation
+  core/handler
+  core/hook
+  core/log
+  core/mail
+  core/meta
+  core/output
+  core/plugin
 
-.. _api-utils:
 
 Utility Modules
----------------
+===============
 
 .. toctree::
    :maxdepth: 1
@@ -42,10 +37,9 @@ Utility Modules
    utils/misc
    utils/test
 
-.. _api-ext:
 
 Extension Modules
------------------
+=================
 
 .. toctree::
    :maxdepth: 1

@@ -1,8 +1,0 @@
-- id: translations
-  translation: 
-    one: "Omsetjing"
-    other: "Omsetjingar"
-
-# Search label
-- id: search
-  translation: "Søk"

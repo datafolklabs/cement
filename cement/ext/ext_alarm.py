@@ -3,56 +3,52 @@ The Alarm Extension provides easy access to setting an application alarm to
 handle timing out operations.  See the
 `Python Signal Library <https://docs.python.org/3.5/library/signal.html>`_.
 
-Requirements
-------------
+**Requirements**
 
  * No external dependencies.
  * Only available on Unix/Linux
 
 
-Configuration
--------------
+**Configuration**
 
 This extension does not honor any application configuration settings.
 
 
-Usage
------
+**Usage**
 
-.. code-block:: python
+```python
+import time
+from cement import App, CaughtSignal
 
-    import time
-    from cement import App, CaughtSignal
-
-    class MyApp(App):
-        class Meta:
-            label = 'myapp'
-            exit_on_close = True
-            extensions = ['alarm']
+class MyApp(App):
+    class Meta:
+        label = 'myapp'
+        exit_on_close = True
+        extensions = ['alarm']
 
 
-    with MyApp() as app:
-        try:
-            app.run()
-            app.alarm.set(3, "The operation timed out after 3 seconds!")
+with MyApp() as app:
+    try:
+        app.run()
+        app.alarm.set(3, "The operation timed out after 3 seconds!")
 
-            # do something that takes time to operate
-            time.sleep(5)
+        # do something that takes time to operate
+        time.sleep(5)
 
-            app.alarm.stop()
+        app.alarm.stop()
 
-        except CaughtSignal as e:
-            print(e.msg)
-            app.exit_code = 1
+    except CaughtSignal as e:
+        print(e.msg)
+        app.exit_code = 1
+```
 
 Looks like:
 
-.. code-block:: console
-
-    $ python myapp.py
-    ERROR: The operation timed out after 3 seconds!
-    Caught signal 14
-
+```
+$ python myapp.py
+ERROR: The operation timed out after 3 seconds!
+Caught signal 14
+```
 """
 
 import signal

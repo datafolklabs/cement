@@ -13,14 +13,66 @@
 
 import os
 import sys
+import guzzle_sphinx_theme
+import pypandoc
+import recommonmark
+from recommonmark.transform import AutoStructify
+
+def pandoc_process(app, what, name, obj, options, lines):
+    if not lines:
+        return
+    input_format = app.config.pandoc_use_parser
+    data = '\n'.join(lines)
+    data = data.encode('utf-8')
+    # data = str(pypandoc.convert(data, 'rst', format=input_format),
+    #                encoding='utf-8')
+    data = pypandoc.convert(data, 'rst', format=input_format)
+    # Sphinx expects `lines` to be edited in place, so we have to replace it
+    # like this.
+    new_lines = data.split('\n')
+    del lines[:]
+    lines.extend(new_lines)
+
+html_theme_path = guzzle_sphinx_theme.html_theme_path()
+html_theme = 'guzzle_sphinx_theme'
+
+# Guzzle theme options (see theme.conf for more information)
+html_theme_options = {
+
+    # Set the path to a special layout to include for the homepage
+    # "index_template": "special_index.html",
+
+    # Set the name of the project to appear in the left sidebar.
+    # "project_nav_name": "Cement",
+
+    # Set your Disqus short name to enable comments
+    # "disqus_comments_shortname": "my_disqus_comments_short_name",
+
+    # Set you GA account ID to enable tracking
+    # "google_analytics_account": "my_ga_account",
+
+    # Path to a touch icon
+    # "touch_icon": "",
+
+    # Specify a base_url used to generate sitemap.xml links. If not
+    # specified, then no sitemap will be built.
+    # "base_url": ""
+
+    # Allow a separate homepage from the master_doc
+    "homepage": "index",
+
+    # Allow the project link to be overriden to a custom URL.
+    "projectlink": "http://builtoncement.com",
+}
+
 sys.path.insert(0, os.path.abspath('../cement/'))
 
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+#on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+#if not on_rtd:  # only import and set the theme if we're building docs locally
+#    import sphinx_rtd_theme
+#    html_theme = 'sphinx_rtd_theme'
+#    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # If we dont' prep an app, then we'll get runtime errors
 from cement.utils import test, version
@@ -50,9 +102,9 @@ class Mock(object):
             return Mock()
 
 MOCK_MODULES = [
-    'nose', 
-    'pylibmc', 
-    'yaml', 
+    'nose',
+    'pylibmc',
+    'yaml',
     'tabulate',
     'pystache', 'pystache.renderer',
     'colorlog',
@@ -76,8 +128,13 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.extlinks',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.napoleon',
     ]
+
+source_parsers = {
+   '.md': 'recommonmark.parser.CommonMarkParser',
+}
 
 extlinks = {
     'issue' : ('https://github.com/datafolklabs/cement/issues/%s', 'Issue #'),
@@ -98,7 +155,7 @@ source_suffix = ['.rst', '.md']
 master_doc = 'index'
 
 # General information about the project.
-project = u'Cement Framework'
+project = u'Cement API Reference'
 copyright = u'2009-2017, Data Folk Labs, LLC'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -273,3 +330,16 @@ man_pages = [
     ('index', 'cement', u'Cement Framework',
      [u'Data Folk Labs, LLC'], 1)
 ]
+
+
+# At the bottom of conf.py
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            # 'url_resolver': lambda url: github_doc_root + url,
+            'auto_toc_tree_section': 'Contents',
+            'enable_auto_toc_tree': True,
+            'enable_auto_doc_ref': True,
+            }, True)
+    app.add_transform(AutoStructify)
+    app.add_config_value('pandoc_use_parser', 'markdown', True)
+    app.connect('autodoc-process-docstring', pandoc_process)
