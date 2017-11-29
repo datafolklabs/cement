@@ -23,19 +23,18 @@ class Handler(ABC, meta.MetaMixin):
 
         """
 
-        """The string identifier of this handler."""
         label = None
-        
+        """The string identifier of this handler."""
 
         interface = None
         """The interface that this class implements."""
 
         config_section = None
         """
-        A config [section] to merge config_defaults with.
+        A config section to merge config_defaults with.
 
-        Note: Though Meta.config_section defaults to None, Cement will
-        set this to the value of ``<interface_label>.<handler_label>`` if
+        Note: Though ``App.Meta.config_section`` defaults to ``None``, Cement
+        will set this to the value of ``<interface_label>.<handler_label>`` if
         no section is set by the user/developer.
         """
 
@@ -68,12 +67,12 @@ class Handler(ABC, meta.MetaMixin):
 
     def _setup(self, app):
         """
-        The _setup function is called during application initialization and
-        must ``setup`` the handler object making it ready for the framework
-        or the application to make further calls to it.
+        Called during application initialization and must ``setup`` the handler
+        object making it ready for the framework or the application to make
+        further calls to it.
 
-        :param app: The application object.
-        :returns: None
+        Args:
+            app (instance): The application object.
 
         """
 
@@ -113,21 +112,29 @@ class HandlerManager(object):
         """
         Get a handler object.
 
-        :param handler_type: The type of handler (i.e. ``output``)
-        :type handler_type: ``str``
-        :param handler_label: The label of the handler (i.e. ``json``)
-        :type handler_label: ``str``
-        :param fallback:  A fallback value to return if handler_label doesn't
-            exist.
-        :returns: An uninstantiated handler object
-        :raises: :class:`cement.core.exc.FrameworkError`
+        Args:
+            handler_type (str): The type of handler (i.e. ``output``)
+            handler_label (str): The label of the handler (i.e. ``json``)
 
-        Usage:
+        Keyword Args:
+            fallback (Handler):  A fallback value to return if handler_label doesn't
+                exist.
 
-        .. code-block:: python
+        Returns:
+            Handler: An uninstantiated handler object
 
-            output = app.handler.get('output', 'json')
-            output.render(dict(foo='bar'))
+        Raises:
+            cement.core.exc.FrameworkError: If the ``handler_type`` does not
+                exist, or if the handler itself does not exist.
+
+        Example:
+
+            .. code-block:: python
+
+                _handler = app.handler.get('output', 'json')
+                output = _handler()
+                output._setup(app)
+                output.render(dict(foo='bar'))
 
         """
         if handler_type not in self.__handlers__:
@@ -146,16 +153,21 @@ class HandlerManager(object):
         """
         Return a list of handlers for a given ``handler_type``.
 
-        :param handler_type: The type of handler (i.e. ``output``)
-        :returns: List of handlers that match ``hander_type``.
-        :rtype: ``list``
-        :raises: :class:`cement.core.exc.FrameworkError`
+        Args:
+            handler_type (str): The type of handler (i.e. ``output``)
 
-        Usage:
+        Returns:
+            list: Handler labels (str) that match ``hander_type``.
 
-        .. code-block:: python
+        Raises:
+            cement.core.exc.FrameworkError: If the ``handler_type`` does not
+                exist.
 
-            app.handler.list('log')
+        Example:
+
+            .. code-block:: python
+
+                app.handler.list('log')
 
         """
         if handler_type not in self.__handlers__:
@@ -173,15 +185,14 @@ class HandlerManager(object):
         """
         Return a list of handler types (interface labels).
 
-        :returns: List of handlers types (interface labels).
-        :rtype: ``list``
-        :raises: :class:`cement.core.exc.FrameworkError`
+        Returns:
+            list: Handler types (interface labels).
 
-        Usage:
+        Example:
 
-        .. code-block:: python
+            .. code-block:: python
 
-            app.handler.list_types()
+                app.handler.list_types()
 
         """
         return self.__handlers__.keys()
@@ -190,15 +201,19 @@ class HandlerManager(object):
         """
         Define an interface based on the provided handler.
 
-        :param handler: The handler that defines the interface implementation
-        :raises: :class:`cement.core.exc.InterfaceError`
-        :raises: :class:`cement.core.exc.FrameworkError`
+        Args:
+            handler (Handler): The handler that defines the interface
+                implementation
 
-        Usage:
+        Raises:
+            cement.core.exc.FrameworkError: If the handler type/interface is
+                already defined
 
-        .. code-block:: python
+        Example:
 
-            app.handler.define(DatabaseHandler)
+            .. code-block:: python
+
+                app.handler.define(DatabaseHandler)
 
         """
 
@@ -217,16 +232,18 @@ class HandlerManager(object):
         """
         Test whether ``handler_type`` is defined.
 
-        :param handler_type: The name or ``handler_type`` of the handler (I.e.
-            ``log``, ``config``, ``output``, etc).
-        :returns: True if the handler type is defined, False otherwise.
-        :rtype: ``boolean``
+        Args:
+            handler_type (str): The label of the interface (I.e.
+                ``log``, ``config``, ``output``, etc).
 
-        Usage:
+        Returns:
+            bool: ``True`` if the handler type is defined, ``False`` otherwise
 
-        .. code-block:: python
+        Example:
 
-            app.handler.defined('log')
+            .. code-block:: python
+
+                app.handler.defined('log')
 
         """
         if handler_type in self.__handlers__:
@@ -241,11 +258,20 @@ class HandlerManager(object):
         object attempts to be registered to the same name a ``FrameworkError``
         is raised.
 
-        :param handler_class: The uninstantiated handler class to register.
-        :param force: Whether to allow replacement if an existing
-         handler of the same ``label`` is already registered.
-        :raises: :class:`cement.core.exc.InterfaceError`
-        :raises: :class:`cement.core.exc.FrameworkError`
+        Args:
+            handler_class (Handler): The uninstantiated handler class to
+                register.
+
+        Keyword Arguments:
+            force (bool): Whether to allow replacement if an existing
+            handler of the same ``label`` is already registered.
+
+        Raises:
+            cement.core.exc.InterfaceError: If the ``handler_class`` does not
+                implement :class:`Handler`, or if ``handler_class`` does not
+                properly sub-class it's interface.
+            cement.core.exc.FrameworkError: If the
+                ``handler_class.Meta.interface`` does not exist
 
         Usage:
 
@@ -309,16 +335,18 @@ class HandlerManager(object):
         """
         Check if a handler is registered.
 
-        :param handler_type: The type of handler (interface label)
-        :param handler_label: The label of the handler
-        :returns: True if the handler is registered, False otherwise
-        :rtype: ``boolean``
+        Args:
+            handler_type (str): The type of handler (interface label)
+            handler_label (str): The label of the handler
 
-        Usage:
+        Returns:
+            bool: ``True`` if the handler is registered, ``False`` otherwise
 
-        .. code-block:: python
+        Example:
 
-            app.handler.registered('log', 'colorlog')
+            .. code-block:: python
+
+                app.handler.registered('log', 'colorlog')
 
         """
         if handler_type in self.__handlers__ and \
@@ -330,32 +358,37 @@ class HandlerManager(object):
     def resolve(self, handler_type, handler_def, **kwargs):
         """
         Resolves the actual handler, as it can be either a string identifying
-        the handler to load from self.__handlers__, or it can be an
+        the handler to load from ``self.__handlers__``, or it can be an
         instantiated or non-instantiated handler class.
 
-        :param handler_type: The type of handler (aka the interface label)
-        :param handler_def: The handler as defined in ``App.Meta``.
-        :type handler_def: str, uninstantiated object, or instantiated object
-        :keyword raise_error: Whether or not to raise an exception if unable
-            to resolve the handler.
-        :type raise_error: boolean
-        :keywork meta_defaults: Optional meta-data dictionary used as
-         defaults to pass when instantiating uninstantiated handlers.  See
-         ``App.Meta.meta_defaults``.
-        :returns: The instantiated handler object.
+        Args:
+            handler_type (str): The type of handler (aka the interface label)
+            handler_def(str,instance,Handler): The loose references of the
+                handler, by label, instantiated object, or non-instantiated
+                class.
 
-        Usage:
+        Keyword args:
+            raise_error (bool): Whether or not to raise an exception if unable
+                to resolve the handler.
+            meta_defaults (dict): Optional meta-data dictionary used as
+                defaults to pass when instantiating uninstantiated handlers.
+                See ``App.Meta.meta_defaults``.
 
-        .. code-block:: python
+        Returns:
+            instance: The instantiated handler object.
 
-            # via label (str)
-            log = app.handler.resolve('log', 'colorlog')
+        Example:
 
-            # via uninstantiated handler class
-            log = app.handler.resolve('log', ColorLogHanddler)
+            .. code-block:: python
 
-            # via instantiated handler instance
-            log = app.handler.resolve('log', ColorLogHandler())
+                # via label (str)
+                log = app.handler.resolve('log', 'colorlog')
+
+                # via uninstantiated handler class
+                log = app.handler.resolve('log', ColorLogHanddler)
+
+                # via instantiated handler instance
+                log = app.handler.resolve('log', ColorLogHandler())
 
         """
         raise_error = kwargs.get('raise_error', True)

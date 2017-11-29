@@ -1,7 +1,7 @@
 """
 The Argparse Extension provides argument handling based on
-:py:class:`argparse.ArgumentParser`, and is the default argument handler.  
-In addition, this extension also provides :class:`ArgparseController` that 
+:py:class:`argparse.ArgumentParser`, and is the default argument handler.
+In addition, this extension also provides :class:`ArgparseController` that
 enables rapid development via application controllers based on Argparse.
 
 Requirements
@@ -29,18 +29,17 @@ the default ``arg_handler`` is already set to
 
 .. code-block:: python
 
-    from cement import App
-    from cement.ext.ext_argparse import ArgparseController, expose
+    from cement import App, Controller, ex
 
 
-    class BaseController(ArgparseController):
+    class BaseController(Controller):
         class Meta:
             label = 'base'
             arguments = [
                 (['--base-foo'], dict(help='base foo option')),
             ]
 
-        @expose(hide=True)
+        @ex(hide=True)
         def default(self):
             # Note: Default commands are only available in Python 3.4+
             print('Inside BaseController.default')
@@ -49,7 +48,7 @@ the default ``arg_handler`` is already set to
                 # do something with self.app.pargs.base_foo
                 print('Base Foo > %s' % self.app.pargs.base_foo)
 
-        @expose(
+        @ex(
             arguments=[
                 (['--command1-opt'],
                  dict(help='option under command1', action='store_true'))
@@ -65,7 +64,7 @@ the default ``arg_handler`` is already set to
                 pass
 
 
-    class EmbeddedController(ArgparseController):
+    class EmbeddedController(Controller):
         class Meta:
             label = 'embedded_controller'
             stacked_on = 'base'
@@ -76,7 +75,7 @@ the default ``arg_handler`` is already set to
             print('Inside EmbeddedController.command2')
 
 
-    class NestedController(ArgparseController):
+    class NestedController(Controller):
         class Meta:
             label = 'nested_controller'
             stacked_on = 'base'
@@ -231,9 +230,12 @@ class ArgparseArgumentHandler(ArgumentParser, ArgumentHandler):
         Parse a list of arguments, and return them as an object.  Meaning an
         argument name of 'foo' will be stored as parsed_args.foo.
 
-        :param arg_list: A list of arguments (generally sys.argv) to be
-         parsed.
-        :returns: object whose members are the arguments parsed.
+        Args:
+            arg_list (list): A list of arguments (generally sys.argv) to be
+                parsed.
+
+        Returns:
+            object: Instance object whose members are the arguments parsed.
 
         """
         if self._meta.ignore_unknown_arguments is True:
@@ -261,38 +263,35 @@ class expose(object):
     controller namespace.  It also decorates the function with meta-data for
     the argument parser.
 
-    :param hide: Whether the command should be visible.
-    :type hide: ``boolean``
-    :param arguments: List of tuples that define arguments to add to this
-     commands sub-parser.
-    :keyword parser_options: Additional options to pass to Argparse.
-    :type parser_options: ``dict``
+    Keyword Args:
+        hide (bool): Whether the command should be visible.
+        arguments (list): List of tuples that define arguments to add to this
+            commands sub-parser.
+        parser_options (dict): Additional options to pass to Argparse.
 
-    Usage:
+    Example:
 
-    .. code-block:: python
+        .. code-block:: python
 
-        from cement.ext.ext_argparse import ArgparseController, expose
+            class Base(ArgparseController):
+                class Meta:
+                    label = 'base'
 
-        class Base(ArgparseController):
-            class Meta:
-                label = 'base'
+                # Note: Default functions only work in Python > 3.4
+                @expose(hide=True)
+                def default(self):
+                    print("In Base.default()")
 
-            # Note: Default functions only work in Python > 3.4
-            @expose(hide=True)
-            def default(self):
-                print("In Base.default()")
-
-            @expose(
-                help='this is the help message for my_command',
-                aliases=['my_cmd'], # only available in Python 3+
-                arguments=[
-                    (['-f', '--foo'],
-                     dict(help='foo option', action='store', dest='foo')),
-                ]
-            )
-            def my_command(self):
-                print("In Base.my_command()")
+                @expose(
+                    help='this is the help message for my_command',
+                    aliases=['my_cmd'], # only available in Python 3+
+                    arguments=[
+                        (['-f', '--foo'],
+                         dict(help='foo option', action='store', dest='foo')),
+                    ]
+                )
+                def my_command(self):
+                    print("In Base.my_command()")
 
     """
     # pylint: disable=W0622
@@ -330,29 +329,29 @@ class ArgparseController(ControllerHandler):
     ``argparse``.  If using an alternative argument handler you will need to
     write your own controller base class or modify this one.
 
-    Usage:
+    Example:
 
-    .. code-block:: python
+        .. code-block:: python
 
-        from cement.ext.ext_argparse import ArgparseController
+            from cement.ext.ext_argparse import ArgparseController
 
-        class Base(ArgparseController):
-            class Meta:
-                label = 'base'
-                description = 'description at the top of --help'
-                epilog = "the text at the bottom of --help."
-                arguments = [
-                    (['-f', '--foo'], dict(help='my foo option', dest='foo')),
-                ]
+            class Base(ArgparseController):
+                class Meta:
+                    label = 'base'
+                    description = 'description at the top of --help'
+                    epilog = "the text at the bottom of --help."
+                    arguments = [
+                        (['-f', '--foo'], dict(help='my foo option', dest='foo')),
+                    ]
 
-        class Second(ArgparseController):
-            class Meta:
-                label = 'second'
-                stacked_on = 'base'
-                stacked_type = 'embedded'
-                arguments = [
-                    (['--foo2'], dict(help='my foo2 option', dest='foo2')),
-                ]
+            class Second(ArgparseController):
+                class Meta:
+                    label = 'second'
+                    stacked_on = 'base'
+                    stacked_type = 'embedded'
+                    arguments = [
+                        (['--foo2'], dict(help='my foo2 option', dest='foo2')),
+                    ]
 
     """
 
@@ -438,11 +437,11 @@ class ArgparseController(ControllerHandler):
         parser_options = {}
 
         #: Function to call if no sub-command is passed.  By default this is
-        #: ``_default``, which is equivelant to passing ``-h/--help``. It 
+        #: ``_default``, which is equivelant to passing ``-h/--help``. It
         #: should be noted that this is the only place where having a command
         #: function start with ``_`` is OK simply because we treat it as a
         #: special case (different that other exposed commands).
-        #: 
+        #:
         #: If set to ``None``, Cement will simply pass and exit 0.
         #:
         #: Note: Currently, default function/sub-command only works on
@@ -807,21 +806,23 @@ class ArgparseController(ControllerHandler):
         Provides an alternative means of adding arguments to the controller,
         giving more control than using ``Meta.arguments``.
 
-        .. code-block:: python
+        Example:
 
-            class Base(ArgparseController):
-                class Meta:
-                    label = 'base'
+            .. code-block:: python
 
-                def _pre_argument_parsing(self):
-                    p = self._parser
-                    p.add_argument('-f', '--foo',
-                                   help='my foo option',
-                                   dest='foo')
+                class Base(ArgparseController):
+                    class Meta:
+                        label = 'base'
 
-                def _post_argument_parsing(self):
-                    if self.app.pargs.foo:
-                        print('Got Foo Option Before Controller Dispatch')
+                    def _pre_argument_parsing(self):
+                        p = self._parser
+                        p.add_argument('-f', '--foo',
+                                       help='my foo option',
+                                       dest='foo')
+
+                    def _post_argument_parsing(self):
+                        if self.app.pargs.foo:
+                            print('Got Foo Option Before Controller Dispatch')
 
         """
         pass

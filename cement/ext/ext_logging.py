@@ -302,12 +302,17 @@ class LoggingLogHandler(log.LogHandler):
         """
         Log to the INFO facility.
 
-        :param msg: The message to log.
-        :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
-            None is passed.
-        :keyword kw: Keyword arguments are passed on to the backend logging
-            system.
+        Args:
+            msg (str): The message to log.
+
+        Keyword Args:
+            namespace (str): A log prefix, generally the module ``__name__``
+                that the log is coming from.  Will default to
+                ``self._meta.namespace`` if none is passed.
+
+        Other Parameters:
+            kwargs: Keyword arguments are passed on to the backend logging
+                system.
 
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)
@@ -317,12 +322,17 @@ class LoggingLogHandler(log.LogHandler):
         """
         Log to the WARNING facility.
 
-        :param msg: The message to log.
-        :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
-            None is passed.
-        :keyword kw: Keyword arguments are passed on to the backend logging
-            system.
+        Args:
+            msg (str): The message to log.
+
+        Keyword Args:
+            namespace (str): A log prefix, generally the module ``__name__``
+                that the log is coming from.  Will default to
+                ``self._meta.namespace`` if none is passed.
+
+        Other Parameters:
+            kwargs: Keyword arguments are passed on to the backend logging
+                system.
 
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)
@@ -349,12 +359,17 @@ class LoggingLogHandler(log.LogHandler):
         """
         Log to the ERROR facility.
 
-        :param msg: The message to log.
-        :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
-            None is passed.
-        :keyword kw: Keyword arguments are passed on to the backend logging
-            system.
+        :Args:
+            msg (str): The message to log.
+
+        Keyword Args:
+            namespace (str): A log prefix, generally the module ``__name__``
+                that the log is coming from.  Will default to
+                ``self._meta.namespace`` if none is passed.
+
+        Other Parameters:
+            kwargs: Keyword arguments are passed on to the backend logging
+                system.
 
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)
@@ -364,12 +379,17 @@ class LoggingLogHandler(log.LogHandler):
         """
         Log to the FATAL (aka CRITICAL) facility.
 
-        :param msg: The message to log.
-        :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
-            None is passed.
-        :keyword kw: Keyword arguments are passed on to the backend logging
-            system.
+        Args:
+            msg (str): The message to log.
+
+        Keyword Args:
+            namespace (str): A log prefix, generally the module ``__name__``
+                that the log is coming from.  Will default to
+                ``self._meta.namespace`` if none is passed.
+
+        Other Parameters:
+            kwargs: Keyword arguments are passed on to the backend logging
+                system.
 
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)
@@ -379,13 +399,17 @@ class LoggingLogHandler(log.LogHandler):
         """
         Log to the DEBUG facility.
 
-        :param msg: The message to log.
-        :param namespace: A log prefix, generally the module ``__name__`` that
-            the log is coming from.  Will default to self._meta.namespace if
-            None is passed.  For debugging, it can be useful to set this to
-            ``__file__``, though ``__name__`` is much less verbose.
-        :keyword kw: Keyword arguments are passed on to the backend logging
-            system.
+        Args:
+            msg (str): The message to log.
+
+        Keyword Args:
+            namespace (str): A log prefix, generally the module ``__name__``
+                that the log is coming from.  Will default to
+                ``self._meta.namespace`` if none is passed.
+
+        Other Parameters:
+            kwargs: Keyword arguments are passed on to the backend logging
+                system.
 
         """
         kwargs = self._get_logging_kwargs(namespace, **kw)

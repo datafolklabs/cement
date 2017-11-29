@@ -154,9 +154,10 @@ class CementPluginHandler(plugin.PluginHandler):
         within sys.path.  This would either be ``myplugin.py`` or
         ``myplugin/__init__.py`` within the given ``plugin_dir``.
 
-        :param plugin_name: The name of the plugin.
-        :param plugin_dir: The filesystem directory path where the plugin
-         exists.
+        Args:
+            plugin_name (str): The name of the plugin.
+            plugin_dir (str): The filesystem directory path where the plugin
+                exists.
 
         """
 
@@ -191,15 +192,18 @@ class CementPluginHandler(plugin.PluginHandler):
         Load a plugin from a python package.  Returns True if no ImportError
         is encountered.
 
-        :param plugin_name: The name of the plugin, also the name of the
-            module to load from base_package.
-            I.e. ``myapp.bootstrap.myplugin``
-        :type plugin_name: ``str``
-        :param base_package: The base python package to load the plugin module
-            from.  I.e.'myapp.bootstrap' or similar.
-        :type base_package: ``str``
-        :returns: True is the plugin was loaded, False otherwise
-        :raises: :py:class:`ImportError`
+        Args:
+            plugin_name (str): The name of the plugin, also the name of the
+                module to load from base_package. I.e.
+                ``myapp.bootstrap.myplugin``
+            base_package: The base python package to load the plugin module
+                from.  I.e. ``myapp.bootstrap`` or similar.
+
+        Returns:
+            bool: ``True`` is the plugin was loaded, ``False`` otherwise
+
+        Raises:
+            :py:class:`ImportError`: If the plugin can not be imported
 
         """
 
@@ -236,9 +240,11 @@ class CementPluginHandler(plugin.PluginHandler):
         Upon successful loading of a plugin, the plugin name is appended to
         the ``self._loaded_plugins list``.
 
-        :param plugin_name: The name of the plugin to load.
-        :type plugin_name: ``str``
-        :raises: :class:`cement.core.exc.FrameworkError`
+        Args:
+            plugin_name (str): The name of the plugin to load.
+
+        Raises:
+            cement.core.exc.FrameworkError: If the plugin can not be loaded
 
         """
         LOG.debug("loading application plugin '%s'" % plugin_name)
@@ -280,7 +286,8 @@ class CementPluginHandler(plugin.PluginHandler):
         Load a list of plugins.  Each plugin name is passed to
         ``self.load_plugin()``.
 
-        :param plugin_list: A list of plugin names to load.
+        Args:
+            plugin_list (list): A list of plugin names to load.
 
         """
         for plugin_name in plugin_list:

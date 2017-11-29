@@ -13,8 +13,21 @@ def rando(salt=None):
     Generate a random MD5 hash for whatever purpose.  Useful for testing
     or any other time that something random is required.
 
-    :param salt: Optional 'salt', if None then random() is used.
-    :returns: Random MD5 hash (str).
+    Args:
+        salt (str): Optional ``salt``, if ``None`` then ``random.random()``
+            is used.
+
+    Returns:
+        str: Random MD5 hash
+
+    Example:
+
+        .. code-block:: python
+
+            from cement.utils.misc import rando
+
+            rando('dAhn49amvnah3m')
+
     """
 
     if salt is None:
@@ -104,21 +117,25 @@ def init_defaults(*sections):
     Returns a standard dictionary object to use for application defaults.
     If sections are given, it will create a nested dict for each section name.
 
-    :arg sections: Section keys to create nested dictionaries for.
-    :returns: Dictionary of nested dictionaries (sections)
-    :rtype: dict
+    Args:
+        sections: Section keys to create nested dictionaries for.
 
-    .. code-block:: python
+    Returns:
+        dict: Dictionary of nested dictionaries (sections)
 
-        from cement import App
-        from cement.utils.misc import init_defaults
+    Example:
 
-        defaults = init_defaults('myapp', 'section2', 'section3')
-        defaults['myapp']['debug'] = False
-        defaults['section2']['foo'] = 'bar
-        defaults['section3']['foo2'] = 'bar2'
+        .. code-block:: python
 
-        app = App('myapp', config_defaults=defaults)
+            from cement import App
+            from cement.utils.misc import init_defaults
+
+            defaults = init_defaults('myapp', 'section2', 'section3')
+            defaults['myapp']['debug'] = False
+            defaults['section2']['foo'] = 'bar
+            defaults['section3']['foo2'] = 'bar2'
+
+            app = App('myapp', config_defaults=defaults)
 
     """
     defaults = dict()
@@ -134,17 +151,23 @@ def minimal_logger(namespace, debug=False):
     the application is functional (and more importantly before the
     applications log handler is usable).
 
-    :param namespace: The logging namespace.  This is generally '__name__' or
-        anything you want.
-    :param debug: Toggle debug output. Default: False
-    :type debug: boolean
-    :returns: Logger object
+    Args:
+        namespace (str): The logging namespace.  This is generally
+            ``__name__`` or anything you want.
 
-    .. code-block:: python
+    Keyword Args:
+        debug (bool): Toggle debug output.
 
-        from cement.utils.misc import minimal_logger
-        LOG = minimal_logger('cement')
-        LOG.debug('This is a debug message')
+    Returns:
+        object: A Logger object
+
+    Example:
+
+        .. code-block:: python
+
+            from cement.utils.misc import minimal_logger
+            LOG = minimal_logger('cement')
+            LOG.debug('This is a debug message')
 
     """
     return MinimalLogger(namespace, debug)
@@ -152,12 +175,13 @@ def minimal_logger(namespace, debug=False):
 
 def is_true(item):
     """
-    Given a value, determine if it is one of [True, 'True', 'true', 1, '1'].
+    Given a value, determine if it is one of ``[True, 'True', 'true', 1, '1']``.
 
-    :param item: The item to convert to a boolean.
-    :returns: True if `item` is in ``[True, 'True', 'true', 1, '1']``, False
-        otherwise.
-    :rtype: boolean
+    Args:
+        item: The item to convert to a boolean.
+
+    Returns:
+        bool: ``True`` if ``item`` equates to ``True``, ``False`` otherwise
 
     """
     if item in [True, 'True', 'true', 1, '1']:
@@ -169,14 +193,19 @@ def is_true(item):
 def wrap(text, width=77, indent='', long_words=False, hyphens=False):
     """
     Wrap text for cleaner output (this is a simple wrapper around
-    `textwrap.TextWrapper` in the standard library).
+    ``textwrap.TextWrapper`` in the standard library).
 
-    :param text: The text to wrap
-    :param width: The max width of a line before breaking
-    :param indent: String to prefix subsequent lines after breaking
-    :param long_words: Break on long words
-    :param hyphens: Break on hyphens
-    :returns: str(text)
+    Args:
+        text (str): The text to wrap
+
+    Keyword Arguments:
+        width (int): The max width of a line before breaking
+        indent (str): String to prefix subsequent lines after breaking
+        long_words (bool): Whether or not to break on long words
+        hyphens (bool): Whether or not to break on hyphens
+
+    Returns:
+        str: The wrapped string
 
     """
 

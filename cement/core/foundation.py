@@ -32,10 +32,11 @@ else:
 
 def add_handler_override_options(app):
     """
-    This is a `post_setup` hook that adds the handler override options to
+    This is a ``post_setup`` hook that adds the handler override options to
     the argument parser
 
-    :param app: The application object.
+    Args:
+        app (instance): The application object
 
     """
     if app._meta.handler_override_options is None:
@@ -80,7 +81,8 @@ def handler_override(app):
     handler if defined in ``App.Meta.handler_override_options`` and
     the option is passed at command line with a valid handler label.
 
-    :param app: The application object.
+    Args:
+        app (instance): The application object.
 
     """
     if app._meta.handler_override_options is None:
@@ -102,12 +104,15 @@ def handler_override(app):
 
 def cement_signal_handler(signum, frame):
     """
-    Catch a signal, run the 'signal' hook, and then raise an exception
+    Catch a signal, run the ``signal`` hook, and then raise an exception
     allowing the app to handle logic elsewhere.
 
-    :param signum: The signal number
-    :param frame: The signal frame.
-    :raises: cement.core.exc.CaughtSignal
+    Args:
+        signum (int): The signal number
+        frame: The signal frame
+
+    Raises:
+        cement.core.exc.CaughtSignal: Raised, passing ``signum``, and ``frame``
 
     """
     LOG.debug('Caught signal %s' % signum)
@@ -137,14 +142,14 @@ class App(meta.MetaMixin):
         label = None
         """
         The name of the application.  This should be the common name as you
-        would see and use at the command line.  For example 'helloworld', or
-        'my-awesome-app'.
+        would see and use at the command line.  For example ``helloworld``, or
+        ``my-awesome-app``.
         """
 
         debug = False
         """
         Used internally, and should not be used by developers.  This is set
-        to `True` if `--debug` is passed at command line."""
+        to ``True`` if ``--debug`` is passed at command line."""
 
         exit_on_close = False
         """
@@ -162,15 +167,17 @@ class App(meta.MetaMixin):
         """
         List of config files to parse.
 
-        Note: Though Meta.config_section defaults to None, Cement will
-        set this to a default list based on Meta.label (or in other words,
-        the name of the application).  This will equate to:
+        Note: Though ``App.Meta.config_section`` defaults to ``None``, Cement
+        will set this to a default list based on ``App.Meta.label`` (or in
+        other words, the name of the application).  This will equate to:
 
         .. code-block:: python
 
-            ['/etc/<app_label>/<app_label>.conf',
-             '~/.<app_label>.conf',
-             '~/.<app_label>/config']
+            [
+                '/etc/<app_label>/<app_label>.conf',
+                '~/.<app_label>.conf',
+                '~/.<app_label>/config'
+            ]
 
 
         Files are loaded in order, and have precedence in order.  Therefore,
@@ -212,10 +219,9 @@ class App(meta.MetaMixin):
         """
         A directory path where plugin config files can be found.  Files must
         end in ``.conf`` (or the extension defined by
-        ``App.Meta.config_extension``) or they will be ignored.  By
-        default, this setting is also overridden by the
-        ``[<app_label>] -> plugin_config_dir`` config setting parsed in
-        any of the application configuration files.
+        ``App.Meta.config_extension``) or they will be ignored.  By default,
+        this setting is also overridden by the ``app_label.plugin_config_dir``
+        config setting parsed in any of the application configuration files.
 
         If set, this item will be **appended** to
         ``App.Meta.plugin_config_dirs`` so that it's settings will have
@@ -237,7 +243,7 @@ class App(meta.MetaMixin):
         Python module.
 
         Note: Though the meta default is ``None``, Cement will set this to
-        ``<app_label>.plugins`` if not set.
+        ``app_label.plugins`` if not set.
         """
 
         plugin_dirs = None
@@ -245,7 +251,7 @@ class App(meta.MetaMixin):
         A list of directory paths where plugin code (modules) can be loaded
         from.
 
-        Note: Though ``App.Meta.plugin_dirs`` is None, Cement will set
+        Note: Though ``App.Meta.plugin_dirs`` is ``None``, Cement will set
         this to a default list based on ``App.Meta.label`` if not set.
         This will equate to:
 
@@ -264,7 +270,7 @@ class App(meta.MetaMixin):
         """
         A directory path where plugin code (modules) can be loaded from.
         By default, this setting is also overridden by the
-        ``[<app_label>] -> plugin_dir`` config setting parsed in any of the
+        ``<app_label>.plugin_dir`` config setting parsed in any of the
         application configuration files.
 
         If set, this item will be **prepended** to ``Meta.plugin_dirs`` so
@@ -281,15 +287,17 @@ class App(meta.MetaMixin):
         A list of arguments to use for parsing command line arguments
         and options.
 
-        Note: Though Meta.argv defaults to None, Cement will set this to
-        ``list(sys.argv[1:])`` if no argv is set in Meta during setup().
+        Note: Though ``App.Meta.argv`` defaults to ``None``, Cement will set
+        this to ``list(sys.argv[1:])`` if no argv is set in Meta during
+        ``setup()``.
         """
 
         arguments_override_config = False
         """
         A boolean to toggle whether command line arguments should
         override configuration values if the argument name matches the
-        config key.  I.e. --foo=bar would override config['myapp']['foo'].
+        config key.  I.e. ``--foo=bar`` would override
+        ``config['myapp']['foo']``.
 
         This is different from ``override_arguments`` in that if
         ``arguments_override_config`` is ``True``, then all arguments will
@@ -351,28 +359,27 @@ class App(meta.MetaMixin):
         """
         The base configuration section for the application.
 
-        Note: Though Meta.config_section defaults to None, Cement will
-        set this to the value of Meta.label (or in other words, the name
-        of the application).
+        Note: Though ``App.Meta.config_section`` defaults to ``None``, Cement
+        will set this to the value of ``App.Meta.label`` (or in other words,
+        the name of the application).
         """
 
         config_defaults = None
-        """Default configuration dictionary.  Must be of type 'dict'."""
+        """Default configuration dictionary.  Must be of type ``dict``."""
 
         meta_defaults = {}
         """
-        Default metadata dictionary used to pass high level options from the
+        Default meta-data dictionary used to pass high level options from the
         application down to handlers at the point they are registered by the
         framework **if the handler has not already been instantiated**.
 
         For example, if requiring the ``json`` extension, you might want to
         override ``JsonOutputHandler.Meta.json_module`` with ``ujson`` by
-        doing the following
+        doing the following:
 
         .. code-block:: python
 
-            from cement.core.foundation import App
-            from cement.utils.misc import init_defaults
+            from cement import App, init_defaults
 
             META = init_defaults('output.json')
             META['output.json']['json_module'] = 'ujson'
@@ -387,8 +394,8 @@ class App(meta.MetaMixin):
 
         catch_signals = SIGNALS
         """
-        List of signals to catch, and raise exc.CaughtSignal for.
-        Can be set to None to disable signal handling.
+        List of signals to catch, and raise ``cement.core.exc.CaughtSignal``
+        for.  Can be set to ``None`` to disable signal handling.
         """
 
         signal_handler = cement_signal_handler
@@ -438,11 +445,11 @@ class App(meta.MetaMixin):
         """
         This is the base application controller.  If a controller is set,
         runtime operations are passed to the controller for command
-        dispatch and argument parsing when App.run() is called.
+        dispatch and argument parsing when ``App.run()`` is called.
 
-        Note that cement will automatically set the `base_controller` to a
-        registered controller whose label is 'base' (only if `base_controller`
-        is not currently set).
+        Note that Cement will automatically set the ``base_controller`` to a
+        registered controller whose label is ``base`` (only if
+        ``base_controller`` is not currently set).
         """
 
         extensions = []
@@ -451,16 +458,16 @@ class App(meta.MetaMixin):
         bootstrap = None
         """
         A bootstrapping module to load after app creation, and before
-        app.setup() is called.  This is useful for larger applications
+        ``app.setup()`` is called.  This is useful for larger applications
         that need to offload their bootstrapping code such as registering
         hooks/handlers/etc to another file.
 
         This must be a dotted python module path.
-        I.e. 'myapp.bootstrap' (myapp/bootstrap.py).  Cement will then
-        import the module, and if the module has a 'load()' function, that
+        I.e. ``myapp.bootstrap`` (``myapp/bootstrap.py``).  Cement will then
+        import the module, and if the module has a ``load()`` function, that
         will also be called.  Essentially, this is the same as an
         extension or plugin, but as a facility for the application itself
-        to bootstrap 'hardcoded' application code.  It is also called
+        to bootstrap hard-coded application code.  It is also called
         before plugins are loaded.
         """
 
@@ -475,11 +482,11 @@ class App(meta.MetaMixin):
         """
         List of Cement core extensions.  These are generally required by
         Cement and should only be modified if you know what you're
-        doing.  Use 'extensions' to add to this list, rather than
+        doing.  Use ``App.Meta.extensions`` to add to this list, rather than
         overriding core extensions.  That said if you want to prune down
         your application, you can remove core extensions if they are
         not necessary (for example if using your own log handler
-        extension you likely don't want/need LoggingLogHandler to be
+        extension you might not need/want ``LoggingLogHandler`` to be
         registered).
         """
 
@@ -496,21 +503,21 @@ class App(meta.MetaMixin):
         ]
         """
         List of meta options that can/will be overridden by config options
-        of the '[base]' config section (where [base] is the base
+        of the ``base`` config section (where ``base`` is the base
         configuration section of the application which is determined by
-        Meta.config_section but defaults to Meta.label). These overrides
-        are required by the framework to function properly and should not
-        be used by end user (developers) unless you really know what
-        you're doing.  To add your own extended meta overrides please use
-        'meta_override'.
+        ``App.Meta.config_section`` but defaults to ``App.Meta.label``). These
+        overrides are required by the framework to function properly and should
+        not be used by end-user (developers) unless you really know what
+        you're doing.  To add your own extended meta overrides you should use
+        ``App.Meta.meta_override``.
         """
 
         meta_override = []
         """
         List of meta options that can/will be overridden by config options
-        of the '[base]' config section (where [base] is the
+        of the ``base`` config section (where ``base`` is the
         base configuration section of the application which is determined
-        by Meta.config_section but defaults to Meta.label).
+        by ``App.Meta.config_section`` but defaults to ``App.Meta.label``).
         """
 
         ignore_deprecation_warnings = False
@@ -548,7 +555,7 @@ class App(meta.MetaMixin):
         """
         A directory path where template files can be loaded from.  By default,
         this setting is also overridden by the
-        ``[<app_label>] -> template_dir`` config setting parsed in any of the
+        ``<app_label>.template_dir`` config setting parsed in any of the
         application configuration files .
 
         If set, this item will be **prepended** to
@@ -572,7 +579,7 @@ class App(meta.MetaMixin):
 
         define_hooks = []
         """
-        List of hook definitions (label).  Will be passed to
+        List of hook definitions (labels).  Will be passed to
         ``self.hook.define(<hook_label>)``.  Must be a list of strings.
 
         I.e. ``['my_custom_hook', 'some_other_hook']``
@@ -652,6 +659,7 @@ class App(meta.MetaMixin):
         # for convenience we translate this to _meta
         if label:
             self._meta.label = label
+
         self._validate_label()
         self._loaded_bootstrap = None
         self._parsed_args = None
@@ -662,9 +670,7 @@ class App(meta.MetaMixin):
         self.__retry_hooks__ = []
         self.handler = None
         self.hook = None
-
         self.exit_code = 0
-
         self.ext = None
         self.config = None
         self.log = None
@@ -703,16 +709,19 @@ class App(meta.MetaMixin):
 
     def extend(self, member_name, member_object):
         """
-        Extend the App() object with additional functions/classes such
-        as 'app.my_custom_function()', etc.  It provides an interface for
+        Extend the ``App()`` object with additional functions/classes such
+        as ``app.my_custom_function()``, etc.  It provides an interface for
         extensions to provide functionality that travel along with the
         application object.
 
-        :param member_name: The name to attach the object to.
-        :type member_name: ``str``
-        :param member_object: The function or class object to attach to
-            App().
-        :raises: cement.core.exc.FrameworkError
+        Args:
+            member_name (str): The name to attach the object to.
+            member_object: The function or class object to attach to
+            ``App()``.
+
+        Raises:
+            cement.core.exc.FrameworkError: If ``App().member_name`` already
+                exists.
 
         """
         if hasattr(self, member_name):
@@ -742,10 +751,10 @@ class App(meta.MetaMixin):
 
     def setup(self):
         """
-        This function wraps all '_setup' actons in one call.  It is called
-        before self.run(), allowing the application to be _setup but not
+        This function wraps all ``_setup`` actons in one call.  It is called
+        before ``self.run()``, allowing the application to be setup but not
         executed (possibly letting the developer perform other actions
-        before full execution.).
+        before full execution).
 
         All handlers should be instantiated and callable after setup is
         complete.
@@ -789,13 +798,14 @@ class App(meta.MetaMixin):
 
     def run(self):
         """
-        This function wraps everything together (after self._setup() is
+        This function wraps everything together (after ``self._setup()`` is
         called) to run the application.
 
-        :returns: Returns the result of the executed controller function if
-          a base controller is set and a controller function is called,
-          otherwise ``None`` if no controller dispatched or no controller
-          function was called.
+        Returns:
+            unknown: The result of the executed controller function if
+            a base controller is set and a controller function is called,
+            otherwise ``None`` if no controller dispatched or no controller
+            function was called.
 
         """
         return_val = None
@@ -818,14 +828,15 @@ class App(meta.MetaMixin):
 
     def run_forever(self, interval=1, tb=True):
         """
-        This function wraps ``run()`` with an endless while loop.  If any
+        This function wraps ``self.run()`` with an endless while loop.  If any
         exception is encountered it will be logged and then the application
         will be reloaded.
 
-        :param interval: The number of seconds to sleep before reloading the
-            the appliction.
-        :param tb: Whether or not to print traceback if exception occurs.
-        :returns: It should never return.
+        Args:
+            interval (int): The number of seconds to sleep before reloading the
+                the appliction.
+            tb (bool): Whether or not to print traceback if exception occurs.
+
         """
 
         if tb is True:
@@ -851,8 +862,6 @@ class App(meta.MetaMixin):
         """
         This function is useful for reloading a running applications, for
         example to reload configuration settings, etc.
-
-        :returns: ``None``
         """
         LOG.debug('reloading the %s application' % self._meta.label)
         self._unlay_cement()
@@ -872,10 +881,11 @@ class App(meta.MetaMixin):
         hooks allowing plugins/extensions/etc to cleanup at the end of
         program execution.
 
-        :param code: An exit code to exit with (``int``), if ``None`` is
-          passed then exit with whatever ``self.exit_code`` is currently set
-          to.  Note: ``sys.exit()`` will only be called if
-          ``App.Meta.exit_on_close==True``.
+        Args:
+            code: An exit code to exit with (``int``), if ``None`` is
+            passed then exit with whatever ``self.exit_code`` is currently set
+            to.  Note: ``sys.exit()`` will only be called if
+            ``App.Meta.exit_on_close==True``.
         """
         for res in self.hook.run('pre_close', self):
             pass
@@ -899,15 +909,22 @@ class App(meta.MetaMixin):
 
     def render(self, data, template=None, out=sys.stdout, **kw):
         """
-        This is a simple wrapper around self.output.render() which simply
-        returns an empty string if no self.output handler is defined.
+        This is a simple wrapper around ``self.output.render()`` which simply
+        returns an empty string if no output handler is defined.
 
-        :param data: The data dictionary to render.
-        :param template: The template to render to.  Default: None (some
-            output handlers do not use templates).
-        :param out: A file like object (sys.stdout, or actual file).  Set to
-         ``None`` is no output is desired (just render and return).
-         Default: sys.stdout
+        Args:
+            data (dict): The data dictionary to render.
+
+        Keyword Args:
+            template (str): The template to render to (note that some
+                output handlers do not use templates).
+            out: A file like object (i.e. ``sys.stdout``, or actual file).
+                Set to ``None`` if no output is desired (just render and
+                return).
+
+        Other Parameters:
+            kw (dict): Additional keyword arguments will be passed to the
+                output handler when calling ``self.output.render()``.
 
         """
         for res in self.hook.run('pre_render', self, data):
@@ -942,14 +959,16 @@ class App(meta.MetaMixin):
 
     def get_last_rendered(self):
         """
-        DEPRECATION WARNING: This function is deprecated as of Cement 2.1.3
-        in favor of the `self.last_rendered` property, and will be removed in
-        future versions of Cement.
-
         Return the (data, output_text) tuple of the last time self.render()
         was called.
 
-        :returns: tuple (data, output_text)
+        Returns:
+            tuple: ``(data, output_text)``
+
+        Warnings:
+            DEPRECATION WARNING: This function is deprecated as of Cement 2.1.3
+            in favor of the :func:`App.last_rendered` property, and will be
+            removed in future versions of Cement.
 
         """
         if not is_true(self._meta.ignore_deprecation_warnings):
@@ -963,10 +982,11 @@ class App(meta.MetaMixin):
     @property
     def last_rendered(self):
         """
-        Return the (data, output_text) tuple of the last time self.render() was
-        called.
+        Return the ``(data, output_text)`` tuple of the last time
+        ``self.render()`` was called.
 
-        :returns: tuple (data, output_text)
+        Returns:
+            tuple: ``(data, output_text)``
 
         """
         return self._last_rendered
@@ -974,12 +994,12 @@ class App(meta.MetaMixin):
     @property
     def pargs(self):
         """
-        Returns the `parsed_args` object as returned by self.args.parse().
+        Returns the ``parsed_args`` object as returned by ``self.args.parse()``.
         """
         return self._parsed_args
 
     def add_arg(self, *args, **kw):
-        """A shortcut for self.args.add_argument."""
+        """A shortcut for ``self.args.add_argument``."""
         self.args.add_argument(*args, **kw)
 
     def _suppress_output(self):
@@ -1105,8 +1125,9 @@ class App(meta.MetaMixin):
         """
         Add ``signum`` to the list of signals to catch and handle by Cement.
 
-        :param signum: The signal number to catch.  See Python ``signal``
-          library.
+        Args:
+            signum (int): The signal number to catch.  See Python
+                :ref:`signal library <py:signal>`.
         """
 
         LOG.debug("adding signal handler %s for signal %s" % (
@@ -1345,41 +1366,42 @@ class App(meta.MetaMixin):
         """
         Validate application config settings.
 
-        Usage:
+        Example:
 
-        .. code-block:: python
+            .. code-block:: python
 
-            import os
-            from cement.core import foundation
+                import os
+                from cement import App
 
-            class MyApp(foundation.App):
-                class Meta:
-                    label = 'myapp'
+                class MyApp(App):
+                    class Meta:
+                        label = 'myapp'
 
-                def validate_config(self):
-                    super(MyApp, self).validate_config()
+                    def validate_config(self):
+                        super(MyApp, self).validate_config()
 
-                    # test that the log file directory exist, if not create it
-                    logdir = os.path.dirname(self.config.get('log', 'file'))
+                        # test that the log file directory exist, if not create it
+                        logdir = os.path.dirname(self.config.get('log', 'file'))
 
-                    if not os.path.exists(logdir):
-                        os.makedirs(logdir)
+                        if not os.path.exists(logdir):
+                            os.makedirs(logdir)
 
         """
         pass
 
     def add_template_dir(self, path):
         """
-        Append a directory path to the list of template directories to parse
-        for templates.
+        Append a directory ``path`` to the list of template directories to
+        parse for templates.
 
-        :param path: Directory path that contains template files.
+        Args:
+            path (str): Directory path that contains template files.
 
-        Usage:
+        Example:
 
-        .. code-block:: python
+            .. code-block:: python
 
-            app.add_template_dir('/path/to/my/templates')
+                app.add_template_dir('/path/to/my/templates')
 
         """
         path = fs.abspath(path)
@@ -1388,16 +1410,17 @@ class App(meta.MetaMixin):
 
     def remove_template_dir(self, path):
         """
-        Remove a directory path from the list of template directories to parse
-        for templates.
+        Remove a directory ``path`` from the list of template directories to
+        parse for templates.
 
-        :param path: Directory path that contains template files.
+        Args:
+            path (str): Directory path that contains template files.
 
-        Usage:
+        Example:
 
-        .. code-block:: python
+            .. code-block:: python
 
-            app.remove_template_dir('/path/to/my/templates')
+                app.remove_template_dir('/path/to/my/templates')
 
         """
         path = fs.abspath(path)

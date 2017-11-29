@@ -6,7 +6,8 @@ class FrameworkError(Exception):
     """
     General framework (non-application) related errors.
 
-    :param msg: The error message.
+    Args:
+        msg (str): The error message
 
     """
 
@@ -31,8 +32,9 @@ class CaughtSignal(FrameworkError):
     signals, reference the
     `signal <http://docs.python.org/library/signal.html>`_ library.
 
-    :param signum: The signal number.
-    :param frame: The signal frame.
+    Args:
+        signum (int): The signal number
+        frame: The signal frame object
 
     """
 

@@ -50,7 +50,7 @@ class CementTestCase(unittest.TestCase):
 
     def setUp(self):
         """
-        Sets up self.app with a generic TestApp().  Also resets the backend
+        Sets up self.app with a generic ``TestApp()``.  Also resets the backend
         hooks and handlers so that everytime an app is created it is setup
         clean each time.
 

@@ -191,10 +191,14 @@ class JsonOutputHandler(output.OutputHandler):
         handler just ignores it.  Additional keyword arguments passed to
         ``json.dumps()``.
 
-        :param data_dict: The data dictionary to render.
-        :keyword template: This option is completely ignored.
-        :returns: A JSON encoded string.
-        :rtype: ``str``
+        Args:
+            data_dict (dict): The data dictionary to render.
+
+        Keyword Args:
+            template: This option is completely ignored.
+
+        Returns:
+            str: A JSON encoded string.
 
         """
         LOG.debug("rendering output as Json via %s" % self.__module__)
@@ -233,8 +237,12 @@ class JsonConfigHandler(ConfigParserConfigHandler):
         Parse JSON configuration file settings from file_path, overwriting
         existing config settings.  If the file does not exist, returns False.
 
-        :param file_path: The file system path to the JSON configuration file.
-        :returns: boolean
+        Args:
+            file_path (str): The file system path to the JSON configuration
+            file.
+
+        Returns:
+            bool
 
         """
         self.merge(self._json.load(open(file_path)))

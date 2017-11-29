@@ -6,11 +6,23 @@ import shutil
 
 def abspath(path):
     """
-    Return an absolute path, while also expanding the '~' user directory
+    Return an absolute path, while also expanding the ``~`` user directory
     shortcut.
 
-    :param path: The original path to expand.
-    :rtype: str
+    Args:
+        path (str): The original path to expand.
+
+    Returns:
+        str: The fully expanded, absolute path to the given ``path``
+
+    Example:
+
+        .. code-block:: python
+
+            from cement.utils import fs
+
+            fs.abspath('~/some/path')
+            fs.abspath('./some.file')
 
     """
     return os.path.abspath(os.path.expanduser(path))
@@ -21,10 +33,20 @@ def backup(path, suffix='.bak'):
     Rename a file or directory safely without overwriting an existing
     backup of the same name.
 
-    :param path: The path to the file or directory to make a backup of.
-    :param suffix: The suffix to rename files with.
-    :returns: The new path of backed up file/directory
-    :rtype: str
+    Args:
+        path (str): The path to the file or directory to make a backup of.
+        suffix (str): The suffix to rename files with.
+
+    Returns:
+        str: The new path of backed up file/directory
+
+    Example:
+
+        .. code-block:: python
+
+            from cement.core.utils import fs
+
+            fs.backup('/path/to/original/file')
 
     """
     count = -1

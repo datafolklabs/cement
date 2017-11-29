@@ -67,7 +67,7 @@ class ArgumentHandlerBase(Handler):
         pass
 
     @abstractmethod
-    def parse(arg_list):
+    def parse(self, *args):
         """
         Parse the argument list (i.e. ``sys.argv``).  Can return any object as
         long as its' members contain those of the added arguments.  For

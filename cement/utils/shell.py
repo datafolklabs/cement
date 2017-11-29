@@ -11,25 +11,29 @@ from ..core.exc import FrameworkError
 
 def exec_cmd(cmd_args, *args, **kw):
     """
-    Execute a shell call using Subprocess.  All additional `*args` and
-    `**kwargs` are passed directly to subprocess.Popen.  See `Subprocess
+    Execute a shell call using Subprocess.  All additional ``*args`` and
+    ``**kwargs`` are passed directly to ``subprocess.Popen``.  See
+    `Subprocess
     <http://docs.python.org/library/subprocess.html>`_ for more information
-    on the features of `Popen()`.
+    on the features of ``Popen()``.
 
-    :param cmd_args: List of command line arguments.
-    :type cmd_args: list.
-    :param args: Additional arguments are passed to Popen().
-    :param kwargs: Additional keyword arguments are passed to Popen().
-    :returns: The (stdout, stderror, return_code) of the command.
-    :rtype: tuple
+    Args:
+        cmd_args (list): List of command line arguments.
 
-    Usage:
+    Other Parameters:
+        args: Additional arguments are passed to ``Popen()``.
+        kwargs: Additional keyword arguments are passed to ``Popen()``.
 
-    .. code-block:: python
+    Returns:
+        tuple: The ``(stdout, stderror, return_code)`` of the command.
 
-        from cement.utils import shell
+    Example:
 
-        stdout, stderr, exitcode = shell.exec_cmd(['echo', 'helloworld'])
+        .. code-block:: python
+
+            from cement.utils import shell
+
+            stdout, stderr, exitcode = shell.exec_cmd(['echo', 'helloworld'])
 
     """
     if 'stdout' not in kw.keys():
@@ -45,26 +49,29 @@ def exec_cmd(cmd_args, *args, **kw):
 
 def exec_cmd2(cmd_args, *args, **kw):
     """
-    Similar to exec_cmd, however does not capture stdout, stderr (therefore
-    allowing it to print to console).  All additional `*args` and
-    `**kwargs` are passed directly to subprocess.Popen.  See `Subprocess
+    Similar to ``exec_cmd``, however does not capture stdout, stderr (therefore
+    allowing it to print to console).  All additional ``*args`` and
+    ``**kwargs`` are passed directly to ``subprocess.Popen``.  See `Subprocess
     <http://docs.python.org/library/subprocess.html>`_ for more information
-    on the features of `Popen()`.
+    on the features of ``Popen()``.
 
-    :param cmd_args: List of command line arguments.
-    :type cmd_args: list.
-    :param args: Additional arguments are passed to Popen().
-    :param kwargs: Additional keyword arguments are passed to Popen().
-    :returns: The integer return code of the command.
-    :rtype: int
+    Args:
+        cmd_args (list): List of command line arguments
 
-    Usage:
+    Other Parameters:
+        args: Additional arguments are passed to ``Popen()``
+        kwargs: Additional keyword arguments are passed to ``Popen()``
 
-    .. code-block:: python
+    Returns:
+        int: The integer return code of the command.
 
-        from cement.utils import shell
+    Example:
 
-        exitcode = shell.exec_cmd2(['echo', 'helloworld'])
+        .. code-block:: python
+
+            from cement.utils import shell
+
+            exitcode = shell.exec_cmd2(['echo', 'helloworld'])
 
     """
     proc = Popen(cmd_args, *args, **kw)
@@ -74,32 +81,39 @@ def exec_cmd2(cmd_args, *args, **kw):
 
 def spawn_process(target, start=True, join=False, *args, **kwargs):
     """
-    A quick wrapper around multiprocessing.Process().  By default the start()
-    function will be called before the spawned process object is returned.
-    See `MultiProcessing
-    <https://docs.python.org/2/library/multiprocessing.html>`_ for more
-    information on the features of `Process()`.
+    A quick wrapper around ``multiprocessing.Process()``.  By default the
+    ``start()`` function will be called before the spawned process object is
+    returned. See `MultiProcessing
+    <https://docs.python.org/3/library/multiprocessing.html>`_ for more
+    information on the features of ``Process()``.
 
-    :param target: The target function to execute in the sub-process.
-    :param start: Call start() on the process before returning the process
-        object.
-    :param join: Call join() on the process before returning the process
-        object.  Only called if start=True.
-    :param args: Additional arguments are passed to Process().
-    :param kwargs: Additional keyword arguments are passed to Process().
-    :returns: The process object returned by Process().
+    Args:
+        target (function): The target function to execute in the sub-process.
 
-    Usage:
+    Keyword Args:
+        start (bool): Call ``start()`` on the process before returning the
+            process object.
+        join (bool): Call ``join()`` on the process before returning the
+            process object.  Only called if ``start == True``.
 
-    .. code-block:: python
+    Other Parameters:
+        args: Additional arguments are passed to ``Process()``
+        kwargs: Additional keyword arguments are passed to ``Process()``.
 
-        from cement.utils import shell
+    Returns:
+        object: The process object returned by Process().
 
-        def add(a, b):
-            print(a + b)
+    Example:
 
-        p = shell.spawn_process(add, args=(12, 27))
-        p.join()
+        .. code-block:: python
+
+            from cement.utils import shell
+
+            def add(a, b):
+                print(a + b)
+
+            p = shell.spawn_process(add, args=(12, 27))
+            p.join()
 
     """
     proc = Process(target=target, *args, **kwargs)
@@ -114,32 +128,39 @@ def spawn_process(target, start=True, join=False, *args, **kwargs):
 
 def spawn_thread(target, start=True, join=False, *args, **kwargs):
     """
-    A quick wrapper around threading.Thread().  By default the start()
+    A quick wrapper around ``threading.Thread()``.  By default the ``start()``
     function will be called before the spawned thread object is returned
     See `Threading
-    <https://docs.python.org/2/library/threading.html>`_ for more
-    information on the features of `Thread()`.
+    <https://docs.python.org/3/library/threading.html>`_ for more
+    information on the features of ``Thread()``.
 
-    :param target: The target function to execute in the thread.
-    :param start: Call start() on the thread before returning the thread
-        object.
-    :param join: Call join() on the thread before returning the thread
-        object.  Only called if start=True.
-    :param args: Additional arguments are passed to Thread().
-    :param kwargs: Additional keyword arguments are passed to Thread().
-    :returns: The thread object returned by Thread().
+    Args:
+        target (function): The target function to execute in the thread.
 
-    Usage:
+    Keyword Args:
+        start (bool): Call ``start()`` on the thread before returning the
+            thread object.
+        join (bool): Call ``join()`` on the thread before returning the thread
+            object. Only called if ``start == True``.
 
-    .. code-block:: python
+    Other Parameters:
+        args: Additional arguments are passed to ``Thread()``.
+        kwargs: Additional keyword arguments are passed to ``Thread()``.
 
-        from cement.utils import shell
+    Returns:
+        object: The thread object returned by ``Thread()``.
 
-        def add(a, b):
-            print(a + b)
+    Example:
 
-        t = shell.spawn_thread(add, args=(12, 27))
-        t.join()
+        .. code-block:: python
+
+            from cement.utils import shell
+
+            def add(a, b):
+                print(a + b)
+
+            t = shell.spawn_thread(add, args=(12, 27))
+            t.join()
 
     """
     thr = Thread(target=target, *args, **kwargs)
@@ -155,90 +176,90 @@ def spawn_thread(target, start=True, join=False, *args, **kwargs):
 class Prompt(MetaMixin):
 
     """
-    A wrapper around `raw_input` or `input` (py3) whose purpose is to limit
-    the redundent tasks of gather usr input.  Can be used in several ways
-    depending on the use case (simple input, options, and numbered
-    selection).
+    A wrapper around ``input`` whose purpose is to limit the redundent tasks of
+    gather usr input.  Can be used in several ways depending on the use case
+    (simple input, options, and numbered selection).
 
-    :param text: The text displayed at the input prompt.
+    Args:
+        text (str): The text displayed at the input prompt.
 
-    Usage:
+    Example:
 
-    Simple prompt to halt operations and wait for user to hit enter:
+        Simple prompt to halt operations and wait for user to hit enter:
 
-    .. code-block:: python
+        .. code-block:: python
 
-        p = shell.Prompt("Press Enter To Continue", default='ENTER')
+            p = shell.Prompt("Press Enter To Continue", default='ENTER')
 
-    .. code-block:: text
+        .. code-block:: text
 
-        $ python myapp.py
-        Press Enter To Continue
+            $ python myapp.py
+            Press Enter To Continue
 
-        $
-
-
-    Provide a numbered list for longer selections:
-
-    .. code-block:: python
-
-        p = Prompt("Where do you live?",
-                options=[
-                    'San Antonio, TX',
-                    'Austin, TX',
-                    'Dallas, TX',
-                    'Houston, TX',
-                    ],
-                numbered = True,
-                )
-
-    .. code-block:: text
-
-        Where do you live?
-
-        1: San Antonio, TX
-        2: Austin, TX
-        3: Dallas, TX
-        4: Houston, TX
-
-        Enter the number for your selection:
+            $
 
 
-    Create a more complex prompt, and process the input from the user:
+        Provide a numbered list for longer selections:
 
-    .. code-block:: python
+        .. code-block:: python
 
-        class MyPrompt(Prompt):
-            class Meta:
-                text = "Do you agree to the terms?"
-                options = ['Yes', 'no', 'maybe-so']
-                options_separator = '|'
-                default = 'no'
-                clear = True
-                max_attempts = 99
+            p = Prompt("Where do you live?",
+                    options=[
+                        'San Antonio, TX',
+                        'Austin, TX',
+                        'Dallas, TX',
+                        'Houston, TX',
+                        ],
+                    numbered = True,
+                    )
 
-            def process_input(self):
-                if self.input.lower() == 'yes':
-                    # do something crazy
-                    pass
-                else:
-                    # don't do anything... maybe exit?
-                    print("User doesn't agree! I'm outa here")
-                    sys.exit(1)
+        .. code-block:: text
 
-        MyPrompt()
+            Where do you live?
 
-    .. code-block:: text
+            1: San Antonio, TX
+            2: Austin, TX
+            3: Dallas, TX
+            4: Houston, TX
 
-        $ python myapp.py
-        [TERMINAL CLEAR]
+            Enter the number for your selection:
 
-        Do you agree to the terms? [Yes|no|maybe-so] no
-        User doesn't agree! I'm outa here
 
-        $ echo $?
+        Create a more complex prompt, and process the input from the user:
 
-        $ 1
+        .. code-block:: python
+
+            class MyPrompt(Prompt):
+                class Meta:
+                    text = "Do you agree to the terms?"
+                    options = ['Yes', 'no', 'maybe-so']
+                    options_separator = '|'
+                    default = 'no'
+                    clear = True
+                    max_attempts = 99
+
+                def process_input(self):
+                    if self.input.lower() == 'yes':
+                        # do something crazy
+                        pass
+                    else:
+                        # don't do anything... maybe exit?
+                        print("User doesn't agree! I'm outa here")
+                        sys.exit(1)
+
+            MyPrompt()
+
+        .. code-block:: text
+
+            $ python myapp.py
+            [TERMINAL CLEAR]
+
+            Do you agree to the terms? [Yes|no|maybe-so] no
+            User doesn't agree! I'm outa here
+
+            $ echo $?
+
+            $ 1
 
     """
     class Meta:
@@ -247,7 +268,7 @@ class Prompt(MetaMixin):
         Optional meta-data (can also be passed as keyword arguments to the
         parent class).
         """
-        # The text that is displayed to prompt the user
+        #: The text that is displayed to prompt the user
         text = "Tell me someting interesting:"
 
         #: A default value to use if the user doesn't provide any input
@@ -331,7 +352,7 @@ class Prompt(MetaMixin):
 
     def prompt(self):
         """
-        Prompt the user, and store their input as `self.input`.
+        Prompt the user, and store their input as ``self.input``.
         """
 
         attempt = 0

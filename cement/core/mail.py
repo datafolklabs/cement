@@ -55,35 +55,34 @@ class MailHandlerBase(Handler):
         Send a mail message.  Keyword arguments override configuration
         defaults (cc, bcc, etc).
 
-        :param body: The message body to send
-        :type body: ``multiline string``
-        :keyword to: List of recipients (generally email addresses)
-        :type to: ``list``
-        :keyword from_addr: Address (generally email) of the sender
-        :type from_addr: ``str``
-        :keyword cc: List of CC Recipients
-        :type cc: ``list``
-        :keyword bcc: List of BCC Recipients
-        :type bcc: ``list``
-        :keyword subject: Message subject line
-        :type subject: ``str``
-        :returns: Boolean (``True`` if message is sent successfully, ``False``
-         otherwise)
+        Args:
+            body (str): The message body to send
 
-        **Usage**
+        Keyword Args:
+            to (list): List of recipients (generally email addresses)
+            from_addr (str): Address (generally email) of the sender
+            cc (list): List of CC Recipients
+            bcc (list): List of BCC Recipients
+            subject (str): Message subject line
 
-        .. code-block:: python
+        Returns:
+            bool: ``True`` if message was sent successfully, ``False``
+            otherwise
 
-            # Using all configuration defaults
-            app.mail.send('This is my message body')
+        Example:
 
-            # Overriding configuration defaults
-            app.mail.send('My message body'
-                to=['john@example.com'],
-                from_addr='me@example.com',
-                cc=['jane@example.com', 'rita@example.com'],
-                subject='This is my subject',
-                )
+            .. code-block:: python
+
+                # Using all configuration defaults
+                app.mail.send('This is my message body')
+
+                # Overriding configuration defaults
+                app.mail.send('My message body'
+                    to=['john@example.com'],
+                    from_addr='me@example.com',
+                    cc=['jane@example.com', 'rita@example.com'],
+                    subject='This is my subject',
+                    )
 
         """
         pass

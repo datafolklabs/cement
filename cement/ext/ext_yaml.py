@@ -159,10 +159,14 @@ class YamlOutputHandler(output.OutputHandler):
         handler just ignores it.  Additional keyword arguments passed to
         ``yaml.dump()``.
 
-        :param data_dict: The data dictionary to render.
-        :keyword template: Ignored in this output handler implementation.
-        :returns: A Yaml encoded string.
-        :rtype: ``str``
+        Args:
+            data_dict (dict): The data dictionary to render.
+
+        Keyword Args:
+            template (str): Ignored in this output handler implementation.
+
+        Returns:
+            str: A Yaml encoded string.
 
         """
         LOG.debug("rendering output as yaml via %s" % self.__module__)
@@ -195,8 +199,8 @@ class YamlConfigHandler(ConfigParserConfigHandler):
         Parse Yaml configuration file settings from file_path, overwriting
         existing config settings.  If the file does not exist, returns False.
 
-        :param file_path: The file system path to the Yaml configuration file.
-        :returns: boolean
+        Args:
+            file_path (str): The file system path to the Yaml configuration file.
 
         """
         self.merge(yaml.load(open(file_path)))

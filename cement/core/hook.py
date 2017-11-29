@@ -23,17 +23,21 @@ class HookManager(object):
         Define a hook namespace that the application and plugins can register
         hooks in.
 
-        :param name: The name of the hook, stored as hooks['name']
-        :raises: cement.core.exc.FrameworkError
+        Args:
+            name (str): The name of the hook, stored as hooks['name']
 
-        Usage:
+        Raises:
+            cement.core.exc.FrameworkError: If the hook name is already
+                defined
 
-        .. code-block:: python
+        Example:
 
-            from cement import App
+            .. code-block:: python
 
-            with App('myapp') as app:
-                app.hook.define('my_hook_name')
+                from cement import App
+
+                with App('myapp') as app:
+                    app.hook.define('my_hook_name')
 
         """
         LOG.debug("defining hook '%s'" % name)
@@ -45,22 +49,23 @@ class HookManager(object):
         """
         Test whether a hook name is defined.
 
-        :param hook_name: The name of the hook.
-            I.e. ``my_hook_does_awesome_things``.
-        :returns: True if the hook is defined, False otherwise.
-        :rtype: ``boolean``
+        Args:
+            hook_name (str): The name of the hook.
+                I.e. ``my_hook_does_awesome_things``.
 
-        Usage:
+        Returns:
+            bool: ``True`` if the hook is defined, ``False`` otherwise.
 
-        .. code-block:: python
+        Example:
 
-            from cement import App
+            .. code-block:: python
 
-            with App('myapp') as app:
-                app.hook.defined('some_hook_name'):
-                    # do something about it
-                    pass
+                from cement import App
 
+                with App('myapp') as app:
+                    app.hook.defined('some_hook_name'):
+                        # do something about it
+                        pass
 
         """
         if hook_name in self.__hooks__:
@@ -73,26 +78,28 @@ class HookManager(object):
         Register a function to a hook.  The function will be called, in order
         of weight, when the hook is run.
 
-        :param name: The name of the hook to register too.
-            I.e. ``pre_setup``, ``post_run``, etc.
-        :param func:    The function to register to the hook.  This is an
+        Args:
+            name (str): The name of the hook to register too.
+                I.e. ``pre_setup``, ``post_run``, etc.
+            func (function): The function to register to the hook.  This is an
             *un-instantiated*, non-instance method, simple function.
-        :param weight:  The weight in which to order the hook function.
-        :type weight: ``int``
 
-        Usage:
+        Keywork Args:
+            weight (int):  The weight in which to order the hook function.
 
-        .. code-block:: python
+        Example:
 
-            from cement import App
+            .. code-block:: python
 
-            def my_hook_func(app):
-                # do something with app?
-                return True
+                from cement import App
 
-            with App('myapp') as app:
-                app.hook.define('my_hook_name')
-                app.hook.register('my_hook_name', my_hook_func)
+                def my_hook_func(app):
+                    # do something with app?
+                    return True
+
+                with App('myapp') as app:
+                    app.hook.define('my_hook_name')
+                    app.hook.register('my_hook_name', my_hook_func)
 
         """
         if name not in self.__hooks__:
@@ -107,31 +114,38 @@ class HookManager(object):
 
     def run(self, name, *args, **kwargs):
         """
-        Run all defined hooks in the namespace.  Yields the result of each
-        hook function run.
+        Run all defined hooks in the namespace.
 
-        :param name: The name of the hook function.
-        :param args: Additional arguments to be passed to the hook functions.
-        :param kwargs: Additional keyword arguments to be passed to the hook
-            functions.
-        :raises: FrameworkError
+        Args:
+            name (str): The name of the hook function.
+            args (tuple): Additional arguments to be passed to the hook
+                functions.
+            kwargs (dict): Additional keyword arguments to be passed to the
+                hook functions.
 
-        Usage:
+        Yields:
+            The result of each hook function executed.
 
-        .. code-block:: python
+        Raises:
+            cement.core.exc.FrameworkError: If the hook ``name`` is not
+                defined
 
-            from cement import App
+        Example:
 
-            def my_hook_func(app):
-                # do something with app?
-                return True
+            .. code-block:: python
 
-            with App('myapp') as app:
-                app.hook.define('my_hook_name')
-                app.hook.register('my_hook_name', my_hook_func)
-                for res in app.hook.run('my_hook_name', self):
-                    # do something with the result?
-                    pass
+                from cement import App
+
+                def my_hook_func(app):
+                    # do something with app?
+                    return True
+
+                with App('myapp') as app:
+                    app.hook.define('my_hook_name')
+                    app.hook.register('my_hook_name', my_hook_func)
+                    for res in app.hook.run('my_hook_name', app):
+                        # do something with the result?
+                        pass
 
         """
         if name not in self.__hooks__:

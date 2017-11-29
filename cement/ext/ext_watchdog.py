@@ -109,7 +109,7 @@ logs all events to ``debug``:
             print(e)
 
 
-In the above example, nothing is printed to console however you will see 
+In the above example, nothing is printed to console however you will see
 something like the following via debug logging:
 
 .. # noqa
@@ -188,7 +188,7 @@ application object:
             self.app = app
 
 
-For full usage of Watchdog event handlers, refer to the 
+For full usage of Watchdog event handlers, refer to the
 `Watchdog API Documentation <http://pythonhosted.org/watchdog/index.html>`_.
 """
 
@@ -253,12 +253,17 @@ class WatchdogManager(MetaMixin):
         """
         Add a directory path and event handler to the observer.
 
-        :param path: A directory path to monitor (str)
-        :param event_handler: An event handler class used to handle events for
-         ``path`` (class)
-        :param recursive: Whether to monitor the ``path`` recursively (bool)
-        :return: Returns ``True`` if the path is added, ``False`` otherwise.
-         (bool)
+        Args:
+            path (str): A directory path to monitor (str)
+
+        Keyword Args:
+            event_handler (class): An event handler class used to handle events
+                for ``path`` (class)
+            recursive (bool): Whether to monitor the ``path`` recursively
+
+        Returns:
+            bool: ``True`` if the path is added, ``False`` otherwise.
+
         """
         path = fs.abspath(path)
         if not os.path.exists(path):

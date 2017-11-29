@@ -4,10 +4,8 @@
 class Meta(object):
 
     """
-    # Testing
-    
-    Model that acts as a container class for a meta attributes for a larger
-    class. It stuffs any kwarg it gets in it's init as an attribute of itself.
+    Container class for meta attributes of a larger class. Keyword arguments
+    are set as attributes of ``self``.
 
     """
 
@@ -18,25 +16,11 @@ class Meta(object):
         for key in dict_obj.keys():
             setattr(self, key, dict_obj[key])
 
-
-    def johnny(self):
-        """
-        Testing...
-
-        # Arguments
-
-        spam (Spam): 200g of spam
-        eggs (Egg): 3 eggs
-        ham (Ham): As much ham as you like.
-
-        """
-        pass
-
 class MetaMixin(object):
 
     """
-    Mixin that provides the Meta class support to add settings to instances
-    of objects. Meta settings cannot start with a _.
+    Mixin that provides the meta class support to add settings to instances
+    of objects. Meta keys cannot start with a ``_``.
 
     """
 

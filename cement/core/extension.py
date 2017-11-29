@@ -12,9 +12,8 @@ LOG = minimal_logger(__name__)
 class ExtensionHandlerBase(Handler):
 
     """
-    This class defines the Extension Handler Interface.  Classes that
-    implement this handler must provide the methods and attributes defined
-    below.
+    This class defines the Extension Handler Interface.  Classes that implement
+    this handler must provide the methods and attributes defined below.
 
     Usage:
 
@@ -40,11 +39,11 @@ class ExtensionHandlerBase(Handler):
     @abstractmethod
     def load_extension(self, ext_module):
         """
-        Load an extension whose module is 'ext_module'.  For example,
-        'cement.ext.ext_json'.
+        Load an extension whose module is ``ext_module``.  For example,
+        ``cement.ext.ext_json``.
 
-        :param ext_module: The name of the extension to load.
-        :type ext_module: ``str``
+        Args:
+            ext_module (str): The name of the extension to load
 
         """
         pass
@@ -52,18 +51,25 @@ class ExtensionHandlerBase(Handler):
     @abstractmethod
     def load_extensions(self, ext_list):
         """
-        Load all extensions from ext_list.
+        Load all extensions from ``ext_list``.
 
-        :param ext_list: A list of extension modules to load.  For example:
-            ``['cement.ext.ext_json', 'cement.ext.ext_logging']``
-
-        :type ext_list: ``list``
+        Args:
+            ext_list (list): A list of extension modules to load.  For example:
+                ``['cement.ext.ext_json', 'cement.ext.ext_logging']``
 
         """
         pass
 
 
 class ExtensionHandler(ExtensionHandlerBase):
+
+    """
+    This handler defines the Extention Interface, which handles loading
+    framework extensions.  All extension  handlers should sub-class from
+    here, or ensure that their implementation meets the requirements of this
+    base class.
+
+    """
 
     class Meta:
 
@@ -72,34 +78,36 @@ class ExtensionHandler(ExtensionHandlerBase):
         class).
         """
 
+        #: The string identifier of the handler.
         label = 'cement'
-        """The string identifier of the handler."""
 
     def __init__(self, **kw):
-        """
-        This handler defines the Extention Interface, which handles
-        loading framework extensions.  All extension  handlers should
-        sub-class from here, or ensure that their implementation meets the
-        requirements of this base class.
-
-        """
         super().__init__(**kw)
         self.app = None
         self._loaded_extensions = []
 
     def get_loaded_extensions(self):
-        """Returns a list of loaded extensions."""
+        """
+        Get all loaded extensions.
+
+        Returns:
+            list: A list of loaded extensions.
+
+        """
         return self._loaded_extensions
 
     def load_extension(self, ext_module):
         """
-        Given an extension module name, load or in other-words 'import' the
+        Given an extension module name, load or in other-words ``import`` the
         extension.
 
-        :param ext_module: The extension module name.  For example:
-            'cement.ext.ext_logging'.
-        :type ext_module: ``str``
-        :raises: cement.core.exc.FrameworkError
+        Args:
+            ext_module (str): The extension module name.  For example:
+                ``cement.ext.ext_logging``.
+
+        Raises:
+            cement.core.exc.FrameworkError: Raised if ``ext_module`` can not be
+                loaded.
 
         """
         # If its not a full module path then preppend our default path
@@ -127,10 +135,10 @@ class ExtensionHandler(ExtensionHandlerBase):
     def load_extensions(self, ext_list):
         """
         Given a list of extension modules, iterate over the list and pass
-        individually to self.load_extension().
+        individually to ``self.load_extension()``.
 
-        :param ext_list: A list of extension modules.
-        :type ext_list: ``list``
+        Args:
+            ext_list (list): A list of extension module names (str).
 
         """
         for ext in ext_list:

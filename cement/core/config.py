@@ -12,9 +12,8 @@ LOG = minimal_logger(__name__)
 class ConfigHandlerBase(Handler):
 
     """
-    This class defines the Config Handler Interface.  Classes that
-    implement this interface must provide the methods and attributes defined
-    below.
+    This class defines the Config Handler Interface.  Classes that implement
+    this interface must provide the methods and attributes defined below.
 
     Usage:
 
@@ -33,18 +32,20 @@ class ConfigHandlerBase(Handler):
 
         """Handler meta-data."""
 
+        #: The string identifier of the interface.
         interface = 'config'
-        """The string identifier of the interface."""
 
     @abstractmethod
     def parse_file(self, file_path):
         """
-        Parse config file settings from file_path.  Returns True if the file
+        Parse config file settings from ``file_path``.  Returns True if the file
         existed, and was parsed successfully.  Returns False otherwise.
 
-        :param file_path: The path to the config file to parse.
-        :returns: True if the file was parsed, False otherwise.
-        :rtype: ``boolean``
+        Args:
+            file_path (str): The path to the config file to parse.
+
+        Returns:
+            bool: ``True`` if the file was parsed, ``False`` otherwise.
 
         """
         pass
@@ -52,11 +53,13 @@ class ConfigHandlerBase(Handler):
     @abstractmethod
     def keys(self, section):
         """
-        Return a list of configuration keys from `section`.
+        Return a list of configuration keys from ``section``.
 
-        :param section: The config [section] to pull keys from.
-        :returns: A list of keys in `section`.
-        :rtype: ``list``
+        Args:
+            section (list): The config section to pull keys from.
+
+        Returns:
+            list: A list of keys in ``section``.
 
         """
         pass
@@ -64,11 +67,10 @@ class ConfigHandlerBase(Handler):
     @abstractmethod
     def get_sections(self):
         """
-        Return a list of configuration sections.  These are designated by a
-        [block] label in a config file.
+        Return a list of configuration sections.
 
-        :returns: A list of config sections.
-        :rtype: ``list``
+        Returns:
+            list: A list of config sections.
 
         """
         pass
@@ -76,12 +78,14 @@ class ConfigHandlerBase(Handler):
     @abstractmethod
     def get_section_dict(self, section):
         """
-        Return a dict of configuration parameters for [section].
+        Return a dict of configuration parameters for ``section``.
 
-        :param section: The config [section] to generate a dict from (using
-            that section keys).
-        :returns: A dictionary of the config section.
-        :rtype: ``dict``
+        Args:
+            section (str): The config section to generate a dict from (using
+                that sections' keys).
+
+        Returns:
+            dict: A dictionary of the config section.
 
         """
         pass
@@ -89,10 +93,13 @@ class ConfigHandlerBase(Handler):
     @abstractmethod
     def add_section(self, section):
         """
-        Add a new section if it doesn't exist.
+        Add a new section if it doesn't already exist.
 
-        :param section: The [section] label to create.
-        :returns: ``None``
+        Args:
+            section: The section label to create.
+
+        Returns:
+            None
 
         """
         pass
@@ -100,14 +107,15 @@ class ConfigHandlerBase(Handler):
     @abstractmethod
     def get(self, section, key):
         """
-        Return a configuration value based on [section][key].  The return
-        value type is unknown.
+        Return a configuration value based on ``section.key``.
 
-        :param section: The [section] of the configuration to pull key value
-            from.
-        :param key: The configuration key to get the value from.
-        :returns: The value of the `key` in `section`.
-        :rtype: ``Unknown``
+        Args:
+            section (str): The section of the configuration to pull key values
+                from.
+            key (str): The configuration key to get the value for.
+
+        Returns:
+            unknown: The value of the ``key`` in ``section``.
 
         """
         pass
@@ -115,13 +123,16 @@ class ConfigHandlerBase(Handler):
     @abstractmethod
     def set(self, section, key, value):
         """
-        Set a configuration value based at [section][key].
+        Set a configuration value based at ``section.key``.
 
-        :param section: The [section] of the configuration to pull key value
-            from.
-        :param key: The configuration key to set the value at.
-        :param value: The value to set.
-        :returns: ``None``
+        Args:
+            section (str): The ``section`` of the configuration to pull key
+                value from.
+            key (str): The configuration key to set the value at.
+            value: The value to set.
+
+        Returns:
+            None
 
         """
         pass
@@ -131,10 +142,13 @@ class ConfigHandlerBase(Handler):
         """
         Merges a dict object into the configuration.
 
-        :param dict_obj: The dictionary to merge into the config
-        :param override: Boolean.  Whether to override existing values.
-            Default: True
-        :returns: ``None``
+        Args:
+            dict_obj (dict): The dictionary to merge into the config
+            override (bool): Whether to override existing values or not.
+
+        Returns:
+            None
+
         """
         pass
 
@@ -143,8 +157,12 @@ class ConfigHandlerBase(Handler):
         """
         Returns whether or not the section exists.
 
-        :param section: The section to test for.
-        :returns: ``boolean``
+        Args:
+            section (str): The section to test for.
+
+        Returns:
+            bool: ``True`` if the configuration section exists, ``False``
+                otherwise.
 
         """
         pass
@@ -160,30 +178,35 @@ class ConfigHandler(ConfigHandlerBase):
     @abstractmethod
     def _parse_file(self, file_path):
         """
-        Parse a configuration file at `file_path` and store it.  This function
-        must be provided by the handler implementation (that is sub-classing
-        this).
+        Parse a configuration file at ``file_path`` and store it.  This
+        function must be provided by the handler implementation (that is
+        sub-classing this).
 
-        :param file_path: The file system path to the configuration file.
-        :returns: True if file was read properly, False otherwise
-        :rtype: ``boolean``
+        Args:
+            file_path (str): The file system path to the configuration file.
+
+        Returns:
+            bool: ``True`` if file was read properly, ``False`` otherwise
 
         """
         pass
 
     def parse_file(self, file_path):
         """
-        Ensure we are using the absolute/expanded path to `file_path`, and
-        then call `_parse_file` to parse config file settings from it,
-        overwriting existing config settings.  If the file does not exist,
-        returns False.
+        Ensure we are using the absolute/expanded path to ``file_path``, and
+        then call ``self._parse_file`` to parse config file settings from it,
+        overwriting existing config settings.
 
         Developers sub-classing from here should generally override
-        `_parse_file` which handles just the parsing of the file and leaving
+        ``_parse_file`` which handles just the parsing of the file and leaving
         this function to wrap any checks/logging/etc.
 
-        :param file_path: The file system path to the configuration file.
-        :returns: ``boolean``
+        Args:
+            file_path (str): The file system path to the configuration file.
+
+        Returns:
+            bool: ``True`` if the given ``file_path`` was parsed, and ``False``
+                otherwise.
 
         """
         file_path = abspath(file_path)

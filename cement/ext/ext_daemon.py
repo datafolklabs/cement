@@ -160,7 +160,7 @@ Daemizing Without Commandline Option
 Some use cases might require daemonizing the process without having to always
 pass the ``--daemon`` option, or where passing the option might be redundant.
 You can work around that programatically by simply overriding the ``daemon``
-argument value in orcer to force daemonization even if ``--daemon`` wasn't
+argument value in order to force daemonization even if ``--daemon`` wasn't
 passed.
 
 .. code-block:: python

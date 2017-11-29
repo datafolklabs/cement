@@ -67,23 +67,19 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         label = 'configparser'
         """The string identifier of this handler."""
 
-    # def __init__(self, *args, **kw):
-    #     # ConfigParser is not a new style object, so you can't call super()
-    #     # super(ConfigParserConfigHandler, self).__init__(*args, **kw)
-    #     RawConfigParser.__init__(self, *args, **kw)
-    #     super(ConfigParserConfigHandler, self).__init__(*args, **kw)
-    #     self.app = None
 
     def merge(self, dict_obj, override=True):
         """
         Merge a dictionary into our config.  If override is True then
         existing config values are overridden by those passed in.
 
-        :param dict_obj: A dictionary of configuration keys/values to merge
-            into our existing config (self).
+        Args:
+            dict_obj (dict): A dictionary of configuration keys/values to merge
+                into our existing config (self).
 
-        :param override:  Whether or not to override existing values in the
-            config.
+        Keyword Args:
+            override (bool):  Whether or not to override existing values in the
+                config.
 
         """
         for section in list(dict_obj.keys()):
@@ -104,10 +100,13 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
 
     def _parse_file(self, file_path):
         """
-        Parse a configuration file at `file_path` and store it.
+        Parse a configuration file at ``file_path`` and store it.
 
-        :param file_path: The file system path to the configuration file.
-        :returns: boolean (True if file was read properly, False otherwise)
+        Args:
+            file_path (str): The file system path to the configuration file.
+
+        Returns:
+            bool: ``True`` if file was read properly, ``False`` otherwise
 
         """
         self.read(file_path)
@@ -118,21 +117,23 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
 
     def keys(self, section):
         """
-        Return a list of keys within 'section'.
+        Return a list of keys within ``section``.
 
-        :param section: The config section (I.e. [block_section]).
-        :returns: List of keys in the `section`.
-        :rtype: ``list``
+        Args:
+            section (str): The config section
+
+        Returns:
+            list: List of keys in the ``section``.
 
         """
         return self.options(section)
 
     def get_sections(self):
         """
-        Return a list of configuration sections or [blocks].
+        Return a list of configuration sections.
 
-        :returns: List of sections.
-        :rtype: ``list``
+        Returns:
+            list: List of sections
 
         """
         return self.sections()
@@ -141,10 +142,11 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         """
         Return a dict representation of a section.
 
-        :param section: The section of the configuration.
-         I.e. [block_section]
-        :returns: Dictionary reprisentation of the config section.
-        :rtype: ``dict``
+        Args:
+            section: The section of the configuration.
+
+        Returns:
+            dict: Dictionary reprisentation of the config section.
 
         """
         dict_obj = dict()
@@ -156,7 +158,8 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         """
         Adds a block section to the config.
 
-        :param section: The section to add.
+        Args:
+            section (str): The section to add.
 
         """
         return RawConfigParser.add_section(self, section)

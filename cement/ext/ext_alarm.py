@@ -14,41 +14,43 @@ handle timing out operations.  See the
 This extension does not honor any application configuration settings.
 
 
-**Usage**
+**Example**
 
-```python
-import time
-from cement import App, CaughtSignal
+.. code-block:: python
 
-class MyApp(App):
-    class Meta:
-        label = 'myapp'
-        exit_on_close = True
-        extensions = ['alarm']
+    import time
+    from cement import App, CaughtSignal
+
+    class MyApp(App):
+        class Meta:
+            label = 'myapp'
+            exit_on_close = True
+            extensions = ['alarm']
 
 
-with MyApp() as app:
-    try:
-        app.run()
-        app.alarm.set(3, "The operation timed out after 3 seconds!")
+    with MyApp() as app:
+        try:
+            app.run()
+            app.alarm.set(3, "The operation timed out after 3 seconds!")
 
-        # do something that takes time to operate
-        time.sleep(5)
+            # do something that takes time to operate
+            time.sleep(5)
 
-        app.alarm.stop()
+            app.alarm.stop()
 
-    except CaughtSignal as e:
-        print(e.msg)
-        app.exit_code = 1
-```
+        except CaughtSignal as e:
+            print(e.msg)
+            app.exit_code = 1
+
 
 Looks like:
 
-```
-$ python myapp.py
-ERROR: The operation timed out after 3 seconds!
-Caught signal 14
-```
+.. code-block:: console
+
+    $ python myapp.py
+    ERROR: The operation timed out after 3 seconds!
+    Caught signal 14
+
 """
 
 import signal
@@ -78,8 +80,9 @@ class AlarmManager(object):
         Set the application alarm to ``time`` seconds.  If the time is
         exceeded ``signal.SIGALRM`` is raised.
 
-        :param time: The time in seconds to set the alarm to.
-        :param msg: The message to display if the alarm is triggered.
+        Args:
+            time (int): The time in seconds to set the alarm to.
+            msg (str): The message to display if the alarm is triggered.
         """
 
         LOG.debug('setting application alarm for %s seconds' % time)

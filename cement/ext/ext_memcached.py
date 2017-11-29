@@ -164,10 +164,16 @@ class MemcachedCacheHandler(cache.CacheHandler):
         Get a value from the cache.  Any additional keyword arguments will be
         passed directly to `pylibmc` get function.
 
-        :param key: The key of the item in the cache to get.
-        :param fallback: The value to return if the item is not found in the
-         cache.
-        :returns: The value of the item in the cache, or the `fallback` value.
+        Args:
+            key (str): The key of the item in the cache to get.
+
+        Keyword Args:
+            fallback: The value to return if the item is not found in the
+                cache.
+
+        Returns:
+            unknown: The value of the item in the cache, or the ``fallback``
+            value.
 
         """
         LOG.debug("getting cache value using key '%s'" % key)
@@ -182,9 +188,12 @@ class MemcachedCacheHandler(cache.CacheHandler):
         This is a simple wrapper, and is equivalent to:
         ``self.app.config.get('cache.memcached', <key>)``.
 
-        :param key: The key to get a config value from the 'cache.memcached'
-         config section.
-        :returns: The value of the given key.
+        Args:
+            key (str): The key to get a config value from the 'cache.memcached'
+                config section.
+
+        Returns:
+            unknown: The value of the given key.
 
         """
         return self.app.config.get(self._meta.config_section, key)
@@ -195,12 +204,14 @@ class MemcachedCacheHandler(cache.CacheHandler):
         keyword arguments will be passed directly to the `pylibmc` set
         function.
 
-        :param key: The key of the item in the cache to set.
-        :param value: The value of the item to set.
-        :param time: The expiration time (in seconds) to keep the item cached.
-         Defaults to `expire_time` as defined in the applications
-         configuration.
-        :returns: ``None``
+        Args:
+            key (str): The key of the item in the cache to set.
+            value: The value of the item to set.
+
+        Keyword Arguments:
+            time (int): The expiration time (in seconds) to keep the item
+                cached.  Defaults to `expire_time` as defined in the
+                applications configuration.
 
         """
         if time is None:
@@ -214,8 +225,8 @@ class MemcachedCacheHandler(cache.CacheHandler):
         keyword arguments will be passed directly to the `pylibmc` delete
         function.
 
-        :param key: The key to delete from the cache.
-        :returns: ``None``
+        Args:
+            key (str): The key to delete from the cache.
 
         """
         self.mc.delete(key, **kw)
@@ -225,8 +236,6 @@ class MemcachedCacheHandler(cache.CacheHandler):
         Purge the entire cache, all keys and values will be lost.  Any
         additional keyword arguments will be passed directly to the
         pylibmc ``flush_all()`` function.
-
-        :returns: ``None``
 
         """
 

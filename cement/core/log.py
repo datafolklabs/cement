@@ -35,7 +35,7 @@ class LogHandlerBase(Handler):
         interface = 'log'
 
     @abstractmethod
-    def set_level():
+    def set_level(self):
         """
         Set the log level.  Must except atleast one of:
             ``['INFO', 'WARNING', 'ERROR', 'DEBUG', or 'FATAL']``.
@@ -44,16 +44,17 @@ class LogHandlerBase(Handler):
         pass
 
     @abstractmethod
-    def get_level():
+    def get_level(self):
         """Return a string representation of the log level."""
         pass
 
     @abstractmethod
-    def info(msg):
+    def info(self, msg):
         """
-        Log to the 'INFO' facility.
+        Log to the ``INFO`` facility.
 
-        :param msg: The message to log.
+        Args:
+            msg (str): The message to log.
 
         """
         pass
@@ -61,9 +62,10 @@ class LogHandlerBase(Handler):
     @abstractmethod
     def warning(self, msg):
         """
-        Log to the 'WARNING' facility.
+        Log to the ``WARNING`` facility.
 
-        :param msg: The message to log.
+        Args:
+            msg (str): The message to log.
 
         """
         pass
@@ -71,9 +73,10 @@ class LogHandlerBase(Handler):
     @abstractmethod
     def error(self, msg):
         """
-        Log to the 'ERROR' facility.
+        Log to the ``ERROR`` facility.
 
-        :param msg: The message to log.
+        Args:
+            msg (str): The message to log.
 
         """
         pass
@@ -81,9 +84,10 @@ class LogHandlerBase(Handler):
     @abstractmethod
     def fatal(self, msg):
         """
-        Log to the 'FATAL' facility.
+        Log to the ``FATAL`` facility.
 
-        :param msg: The message to log.
+        Args:
+            msg (str): The message to log.
 
         """
         pass
@@ -91,9 +95,10 @@ class LogHandlerBase(Handler):
     @abstractmethod
     def debug(self, msg):
         """
-        Log to the 'DEBUG' facility.
+        Log to the ``DEBUG`` facility.
 
-        :param msg: The message to log.
+        Args:
+            msg (str): The message to log.
 
         """
         pass

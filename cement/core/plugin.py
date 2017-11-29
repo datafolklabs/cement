@@ -15,16 +15,16 @@ class PluginHandlerBase(Handler):
     implement this interface must provide the methods and attributes defined
     below.
 
-    Usage:
+    Example:
 
-    .. code-block:: python
+        .. code-block:: python
 
-        from cement.core.plugin import PluginHandlerBase
+            from cement.core.plugin import PluginHandlerBase
 
-        class MyPluginHandler(PluginHandlerBase):
-            class Meta:
-                label = 'my_plugin_handler'
-            ...
+            class MyPluginHandler(PluginHandlerBase):
+                class Meta:
+                    label = 'my_plugin_handler'
+                ...
 
     """
 
@@ -36,19 +36,21 @@ class PluginHandlerBase(Handler):
     @abstractmethod
     def load_plugin(plugin_name):
         """
-        Load a plugin whose name is 'plugin_name'.
+        Load a plugin whose name is ``plugin_name``.
 
-        :param plugin_name: The name of the plugin to load.
+        Args:
+            plugin_name (str): The name of the plugin to load.
 
         """
         pass
 
     @abstractmethod
-    def load_plugins(self, plugin_list):
+    def load_plugins(self, plugins):
         """
-        Load all plugins from plugin_list.
+        Load all plugins from ``plugins``.
 
-        :param plugin_list: A list of plugin names to load.
+        Args:
+            plugins (list): A list of plugin names to load.
 
         """
         pass

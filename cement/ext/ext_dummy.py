@@ -60,19 +60,21 @@ class DummyOutputHandler(OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-    def render(self, data_dict, template=None, **kw):
+    def render(self, data, template=None, **kw):
         """
         This implementation does not actually render anything to output, but
         rather logs it to the debug facility.
 
-        :param data_dict: The data dictionary to render.
-        :param template: The template parameter is not used by this
-            implementation at all.
-        :returns: None
+        Args:
+            data (dict): The data dictionary to render.
+
+        Keyword Args:
+            template (str): The template parameter is not used by this
+                implementation at all.
 
         """
         LOG.debug("not rendering any output to console")
-        LOG.debug("DATA: %s" % data_dict)
+        LOG.debug("DATA: %s" % data)
         return None
 
 
@@ -83,7 +85,7 @@ class DummyMailHandler(MailHandler):
     interface, but is intended for use in development as no email is actually
     sent.
 
-    **Usage**
+    Example:
 
     .. code-block:: python
 
@@ -198,35 +200,33 @@ class DummyMailHandler(MailHandler):
         sent to console.  Keyword arguments override configuration
         defaults (cc, bcc, etc).
 
-        :param body: The message body to send
-        :type body: ``multiline string``
-        :keyword to: List of recipients (generally email addresses)
-        :type to: ``list``
-        :keyword from_addr: Address (generally email) of the sender
-        :type from_addr: ``str``
-        :keyword cc: List of CC Recipients
-        :type cc: ``list``
-        :keyword bcc: List of BCC Recipients
-        :type bcc: ``list``
-        :keyword subject: Message subject line
-        :type subject: ``str``
-        :returns: Boolean (``True`` if message is sent successfully, ``False``
-         otherwise)
+        Args:
+            body: The message body to send
 
-        **Usage**
+        Keyword Args:
+            to (list): List of recipients (generally email addresses)
+            from_addr (str): Address (generally email) of the sender
+            cc (list): List of CC Recipients
+            bcc (list): List of BCC Recipients
+            subject (str): Message subject line
 
-        .. code-block:: python
+        Returns:
+            bool:``True`` if message is sent successfully, ``False`` otherwise
 
-            # Using all configuration defaults
-            app.mail.send('This is my message body')
+        Example:
 
-            # Overriding configuration defaults
-            app.mail.send('My message body'
-                to=['john@example.com'],
-                from_addr='me@example.com',
-                cc=['jane@example.com', 'rita@example.com'],
-                subject='This is my subject',
-                )
+            .. code-block:: python
+
+                # Using all configuration defaults
+                app.mail.send('This is my message body')
+
+                # Overriding configuration defaults
+                app.mail.send('My message body'
+                    to=['john@example.com'],
+                    from_addr='me@example.com',
+                    cc=['jane@example.com', 'rita@example.com'],
+                    subject='This is my subject',
+                    )
 
         """
         # shorted config values

@@ -98,13 +98,16 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
         Take a data dictionary and render it using the given template file.
         Additional keyword arguments are ignored.
 
-        Required Arguments:
+        Args:
+            data_dict (dict): The data dictionary to render.
 
-        :param data_dict: The data dictionary to render.
-        :keyword template: The path to the template, after the
-         ``template_module`` or ``template_dirs`` prefix as defined in the
-         application.
-        :returns: str (the rendered template text)
+        Keyword Args:
+            template (str): The path to the template, after the
+                ``template_module`` or ``template_dirs`` prefix as defined in
+                the application.
+
+        Returns:
+            str: The rendered template text
 
         """
 

@@ -115,11 +115,11 @@ class TabulateOutputHandler(output.OutputHandler):
         Take a data dictionary and render it into a table.  Additional
         keyword arguments are passed directly to ``tabulate.tabulate``.
 
+        Args:
+            data_dict (dict): The data dictionary to render.
 
-        Required Arguments:
-
-        :param data_dict: The data dictionary to render.
-        :returns: str (the rendered template text)
+        Returns:
+            str: The rendered template text
 
         """
         headers = kw.get('headers', self._meta.headers)

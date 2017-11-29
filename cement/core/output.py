@@ -22,14 +22,14 @@ class OutputHandlerBase(Handler):
 
     Usage:
 
-    .. code-block:: python
+        .. code-block:: python
 
-        from cement.core.output import OutputHandlerBase
+            from cement.core.output import OutputHandlerBase
 
-        class MyOutputHandler(OutputHandlerBase):
-            class Meta:
-                label = 'my_output_handler'
-            ...
+            class MyOutputHandler(OutputHandlerBase):
+                class Meta:
+                    label = 'my_output_handler'
+                ...
 
     """
 
@@ -41,15 +41,19 @@ class OutputHandlerBase(Handler):
         interface = 'output'
 
     @abstractmethod
-    def render(self, data_dict, *args, **kwargs):
+    def render(self, data, *args, **kwargs):
         """
-        Render the data_dict into output in some fashion.  This function must
-        access both ``*args`` and ``**kwargs`` to allow an application to mix
-        output handlers that support different features.
+        Render the ``data`` dict into output in some fashion.  This function
+        must accept both ``*args`` and ``**kwargs`` to allow an application to
+        mix output handlers that support different features.
 
-        :param data_dict: The dictionary whose data we need to render into
-            output.
-        :returns: string or unicode string or None
+        Args:
+            data (dict): The dictionary whose data we need to render into
+                output.
+
+        Returns:
+            str, None: The rendered output string, or ``None`` if no output is
+            rendered
 
         """
         pass
@@ -120,12 +124,17 @@ class TemplateOutputHandler(OutputHandler):
         secondly from ``self.app._meta.template_module``.  The
         ``template_dirs`` have presedence.
 
-        :param template_path: The secondary path of the template **after**
-            either ``template_module`` or ``template_dirs`` prefix (set via
-            ``App.Meta``)
-        :returns: The content of the template (str)
-        :raises: FrameworkError if the template does not exist in either the
-            ``template_module`` or ``template_dirs``.
+        Args:
+            template_path (str): The secondary path of the template **after**
+                either ``template_module`` or ``template_dirs`` prefix (set via
+                ``App.Meta``)
+
+        Returns:
+            str: The content of the template
+
+        Raises:
+            cement.core.exc.FrameworkError: If the template does not exist in
+                either the ``template_module`` or ``template_dirs``
 
         """
         res = self.load_template_with_location(template_path)
@@ -142,14 +151,19 @@ class TemplateOutputHandler(OutputHandler):
         secondly from ``self.app._meta.template_module``.  The
         ``template_dirs`` have presedence.
 
-        :param template_path: The secondary path of the template **after**
-            either ``template_module`` or ``template_dirs`` prefix (set via
-            ``App.Meta``)
-        :returns: A tuple that includes the content of the template (str),
-            the type of template (str which is one of: ``directory``, or
-            ``module``), and the ``path`` (str) of the directory or module)
-        :raises: FrameworkError if the template does not exist in either the
-            ``template_module`` or ``template_dirs``.
+        Args:
+            template_path (str): The secondary path of the template **after**
+                either ``template_module`` or ``template_dirs`` prefix (set via
+                ``App.Meta``)
+
+        Returns:
+            tuple: The content of the template (``str``), the type of template
+            (``str``: ``directory``, or ``module``), and the path (``str``) of
+            the directory or module)
+
+        Raises:
+            cement.core.exc.FrameworkError: If the template does not exist in
+                either the ``template_module`` or ``template_dirs``.
         """
         if not template_path:
             raise exc.FrameworkError("Invalid template path '%s'." %
