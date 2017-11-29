@@ -1,4 +1,7 @@
 
+API Reference
+=============
+
 .. note:: This documentation is strictly for API reference.  For more complete
    developer documentation, please visit the official site
    http://builtoncement.com.
@@ -7,10 +10,7 @@
    become Cement 3.  It is guaranteed to be broken!  Please use Cement 2 in
    production until stable/3.0.0 is released.
 
-API Reference
-=============
-
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    api/index

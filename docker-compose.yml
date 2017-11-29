@@ -2,7 +2,7 @@ version: "3"
 services:
     cement:
         image: "cement:dev"
-        build: 
+        build:
             context: .
             dockerfile: docker/Dockerfile.dev
         hostname: cement
@@ -16,17 +16,17 @@ services:
         environment:
             REDIS_HOST: redis
             MEMCACHED_HOST: memcached
-    docs:
-        image: "cement-docs:dev"
-        build: 
-            context: .
-            dockerfile: docker/Dockerfile.docs
-        ports:
-            - "8000:8000"
-        volumes:
-            - "./doc-new:/app"
-        environment:
-            BASE_URL: http://localhost:8000
+    # docs:
+    #     image: "cement-docs:dev"
+    #     build:
+    #         context: .
+    #         dockerfile: docker/Dockerfile.docs
+    #     ports:
+    #         - "8000:8000"
+    #     volumes:
+    #         - "./doc-new:/app"
+    #     environment:
+    #         BASE_URL: http://localhost:8000
     redis:
         image: redis:latest
         hostname: redis

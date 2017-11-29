@@ -59,7 +59,7 @@ html_theme_options = {
     # "base_url": ""
 
     # Allow a separate homepage from the master_doc
-    "homepage": "index",
+    "homepage": "api/index",
 
     # Allow the project link to be overriden to a custom URL.
     "projectlink": "http://builtoncement.com",
@@ -130,6 +130,7 @@ extensions = [
     'sphinx.ext.extlinks',
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
+    'sphinx.ext.viewcode',
     ]
 
 source_parsers = {
@@ -333,13 +334,13 @@ man_pages = [
 
 
 # At the bottom of conf.py
-def setup(app):
-    app.add_config_value('recommonmark_config', {
-            # 'url_resolver': lambda url: github_doc_root + url,
-            'auto_toc_tree_section': 'Contents',
-            'enable_auto_toc_tree': True,
-            'enable_auto_doc_ref': True,
-            }, True)
-    app.add_transform(AutoStructify)
-    app.add_config_value('pandoc_use_parser', 'markdown', True)
-    app.connect('autodoc-process-docstring', pandoc_process)
+# def setup(app):
+#     app.add_config_value('recommonmark_config', {
+#             # 'url_resolver': lambda url: github_doc_root + url,
+#             'auto_toc_tree_section': 'Contents',
+#             'enable_auto_toc_tree': True,
+#             'enable_auto_doc_ref': True,
+#             }, True)
+#     app.add_transform(AutoStructify)
+#     app.add_config_value('pandoc_use_parser', 'markdown', True)
+#     app.connect('autodoc-process-docstring', pandoc_process)

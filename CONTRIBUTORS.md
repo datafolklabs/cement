@@ -1,11 +1,11 @@
 # Contributors
 
 The following people have contributed to Cement, either by way of source code,
-documentation, or testing.
+documentation, or testing:
 
-    * BJ Dierkes (derks) - Creator, Primary Maintainer
-    * Kyle Rockman (rocktavious)
-    * Tomasz Czyż (spinus)
-    * Ildar Akhmetgaleev (akhilman)
-    * Nicolas Brisac (zacbri)
-    * Subhash Bhushan (subhashb)
+- BJ Dierkes (derks) - Creator, Primary Maintainer
+- Kyle Rockman (rocktavious)
+- Tomasz Czyż (spinus)
+- Ildar Akhmetgaleev (akhilman)
+- Nicolas Brisac (zacbri)
+- Subhash Bhushan (subhashb)
