@@ -238,8 +238,10 @@ class ArgparseArgumentHandler(ArgumentParser, ArgumentHandler):
             object: Instance object whose members are the arguments parsed.
 
         """
+
         if self._meta.ignore_unknown_arguments is True:
             args, unknown = self.parse_known_args(arg_list)
+            print('KAPLA!')
             self.parsed_args = args
             self.unknown_args = unknown
         else:

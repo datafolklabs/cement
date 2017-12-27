@@ -1,63 +1,97 @@
-"""Tests for cement.core.log."""
-
-from cement.core import exc, log
-from cement.utils import test
-from cement.utils.misc import init_defaults
 
 
-class BogusHandler1(log.LogHandler):
+from pytest import raises
 
-    class Meta:
-        label = 'bogus'
+from cement import init_defaults
+from cement.core.foundation import TestApp
+from cement.core.log import LogHandlerBase, LogHandler
 
 
-class LogTestCase(test.CementCoreTestCase):
+### module tests
 
-    def setUp(self):
-        super(LogTestCase, self).setUp()
-        self.app = self.make_app()
+class TestLogHandlerBase(object):
+    def test_interface(self):
+        assert LogHandlerBase.Meta.interface == 'log'
 
-    @test.raises(TypeError)
-    def test_unproviding_handler(self):
-        try:
-            self.app.handler.register(BogusHandler1)
-        except TypeError:
-            raise
 
-    def test_logging(self):
-        defaults = init_defaults()
-        defaults['log.logging'] = dict(
-            file='/dev/null',
-            to_console=True
-        )
-        app = self.make_app(config_defaults=defaults)
-        app.setup()
+class TestLogHandler(object):
+
+    def test_subclassing(self):
+
+        class MyLogHandler(LogHandler):
+
+            class Meta:
+                label = 'my_log_handler'
+
+
+            def set_level(self):
+                pass
+
+
+            def get_level(self):
+                pass
+
+
+            def info(self, msg):
+                pass
+
+
+            def warning(self, msg):
+                pass
+
+
+            def error(self, msg):
+                pass
+
+
+            def fatal(self, msg):
+                pass
+
+
+            def debug(self, msg):
+                pass
+
+        h = MyLogHandler()
+        assert h._meta.interface == 'log'
+        assert h._meta.label == 'my_log_handler'
+
+
+### app functionality and coverage tests
+
+
+def test_unproviding_handler():
+
+    class BogusHandler(LogHandler):
+
+        class Meta:
+            label = 'bogus'
+
+    with TestApp() as app:
+        msg = "Can't instantiate abstract class .* with abstract methods"
+        with raises(TypeError, match=msg):
+            app.handler.register(BogusHandler)
+
+
+def test_logging():
+    defaults = init_defaults()
+    defaults['log.logging'] = dict(
+        file='/dev/null',
+        to_console=True
+    )
+    with TestApp(config_defaults=defaults) as app:
         app.log.info('Info Message')
         app.log.warning('Warning Message')
         app.log.error('Error Message')
         app.log.fatal('Fatal Message')
         app.log.debug('Debug Message')
 
-    def test_bogus_log_level(self):
-        app = self.make_app('test')
-        app.setup()
-        app.config.set('log.logging', 'file', '/dev/null')
-        app.config.set('log.logging', 'to_console', True)
+        # get level
+        assert app.log.get_level() == 'INFO'
 
-        # setup logging again
-        app.log._setup(app)
+        # set level
+        app.log.set_level('WARNING')
+        assert app.log.get_level() == 'WARNING'
+
+        # set a bad level should default to INFO
         app.log.set_level('BOGUS')
-
-    def test_get_level(self):
-        self.app.setup()
-        self.eq('INFO', self.app.log.get_level())
-
-    def test_console_log(self):
-        app = self.make_app('test', debug=True)
-        app.setup()
-
-        app.config.set('log.logging', 'file', '/dev/null')
-        app.config.set('log.logging', 'to_console', True)
-
-        app.log._setup(app)
-        app.log.info('Tested.')
+        assert app.log.get_level() == 'INFO'

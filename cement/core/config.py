@@ -48,7 +48,7 @@ class ConfigHandlerBase(Handler):
             bool: ``True`` if the file was parsed, ``False`` otherwise.
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def keys(self, section):
@@ -62,7 +62,7 @@ class ConfigHandlerBase(Handler):
             list: A list of keys in ``section``.
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def get_sections(self):
@@ -73,7 +73,7 @@ class ConfigHandlerBase(Handler):
             list: A list of config sections.
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def get_section_dict(self, section):
@@ -88,7 +88,7 @@ class ConfigHandlerBase(Handler):
             dict: A dictionary of the config section.
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def add_section(self, section):
@@ -102,7 +102,7 @@ class ConfigHandlerBase(Handler):
             None
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def get(self, section, key):
@@ -118,7 +118,7 @@ class ConfigHandlerBase(Handler):
             unknown: The value of the ``key`` in ``section``.
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def set(self, section, key, value):
@@ -135,7 +135,7 @@ class ConfigHandlerBase(Handler):
             None
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def merge(self, dict_obj, override=True):
@@ -150,7 +150,7 @@ class ConfigHandlerBase(Handler):
             None
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def has_section(self, section):
@@ -165,7 +165,7 @@ class ConfigHandlerBase(Handler):
                 otherwise.
 
         """
-        pass
+        pass    # pragma: nocover
 
 
 class ConfigHandler(ConfigHandlerBase):
@@ -189,7 +189,7 @@ class ConfigHandler(ConfigHandlerBase):
             bool: ``True`` if file was read properly, ``False`` otherwise
 
         """
-        pass
+        pass    # pragma: nocover
 
     def parse_file(self, file_path):
         """

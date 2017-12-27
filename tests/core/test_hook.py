@@ -1,115 +1,87 @@
 """Tests for cement.core.hook."""
 
-import sys
-import signal
-from cement.core import exc, hook
-from cement.core.foundation import cement_signal_handler
-from cement.utils import test
-from cement.utils.misc import rando
+from pytest import raises
 
-APP = rando()[:12]
+from cement.core.hook import HookManager
+from cement.core.exc import FrameworkError
+from cement.core.foundation import TestApp
 
 
-def cement_hook_one(*args, **kw):
-    return 'kapla 1'
+### module tests
+
+class TestHookManager(object):
+    pass
 
 
-def cement_hook_two(*args, **kw):
-    return 'kapla 2'
+### app functionality and coverage tests
+
+def test_define():
+    with TestApp() as app:
+        app.hook.define('test_hook')
+
+        # is it defined?
+        assert app.hook.defined('test_hook')
+
+        # registering again should throw exception
+        with raises(FrameworkError, match='Hook name .* already defined!'):
+            app.hook.define('test_hook')
 
 
-def cement_hook_three(*args, **kw):
-    return 'kapla 3'
+def test_register_and_run():
+    def hook_one():
+        return 'kapla 1'
 
+    def hook_two():
+        return 'kapla 2'
 
-def nosetests_hook(*args, **kw):
-    return 'kapla 4'
+    def hook_three():
+        return 'kapla 3'
 
+    with TestApp() as app:
+        app.hook.define('test_hook')
+        app.hook.register('test_hook', hook_one, weight=99)
+        app.hook.register('test_hook', hook_two, weight=-1)
+        app.hook.register('test_hook', hook_three, weight=-99)
 
-def cement_hook_five(app, data):
-    return data
+        assert len(app.hook.__hooks__['test_hook']) == 3
 
-
-def cement_hook_six(*args, **kw):
-    for i in range(3):
-        yield 'generator kapla %s' % i
-
-
-class HookTestCase(test.CementCoreTestCase):
-
-    def setUp(self):
-        super(HookTestCase, self).setUp()
-        self.app = self.make_app()
-        self.app.hook.define('nosetests_hook')
-
-    def test_define(self):
-        self.ok('nosetests_hook' in self.app.hook.__hooks__)
-
-    @test.raises(exc.FrameworkError)
-    def test_define_again(self):
-        try:
-            self.app.hook.define('nosetests_hook')
-        except exc.FrameworkError as e:
-            self.eq(e.msg, "Hook name 'nosetests_hook' already defined!")
-            raise
-
-    def test_hooks_registered(self):
-        self.app.hook.register('nosetests_hook', cement_hook_one, weight=99)
-        self.app.hook.register('nosetests_hook', cement_hook_two, weight=-1)
-        self.app.hook.register('some_bogus_hook',
-                               cement_hook_three,
-                               weight=-99)
-        self.eq(len(self.app.hook.__hooks__['nosetests_hook']), 2)
-
-    def test_run(self):
-        self.app.hook.register('nosetests_hook', cement_hook_one, weight=99)
-        self.app.hook.register('nosetests_hook', cement_hook_two, weight=-1)
-        self.app.hook.register('nosetests_hook', cement_hook_three, weight=-99)
-        self.app.hook.register('nosetests_hook', cement_hook_six, weight=200)
+        # and run it... track results to verify weight run order
 
         results = []
-        for res in self.app.hook.run('nosetests_hook'):
+        for res in app.hook.run('test_hook'):
             results.append(res)
 
-        self.eq(results[0], 'kapla 3')
-        self.eq(results[1], 'kapla 2')
-        self.eq(results[2], 'kapla 1')
-        self.eq(results[3], 'generator kapla 0')
-        self.eq(results[4], 'generator kapla 1')
-        self.eq(results[5], 'generator kapla 2')
+        assert results == ['kapla 3', 'kapla 2', 'kapla 1']
 
-    @test.raises(exc.FrameworkError)
-    def test_run_bad_hook(self):
-        for res in self.app.hook.run('some_bogus_hook'):
-            pass
 
-    def test_hook_is_defined(self):
-        self.ok(self.app.hook.defined('nosetests_hook'))
-        self.eq(self.app.hook.defined('some_bogus_hook'), False)
+def test_run_bad_hook():
+    with TestApp() as app:
+        with raises(FrameworkError, match='Hook name .* is not defined!'):
+            for res in app.hook.run('some_bogus_hook'):
+                pass
 
-    def test_framework_hooks(self):
-        app = self.make_app(APP, argv=['--quiet'])
-        app.hook.register('pre_setup', cement_hook_one)
-        app.hook.register('post_setup', cement_hook_one)
-        app.hook.register('pre_run', cement_hook_one)
-        app.hook.register('post_run', cement_hook_one)
-        app.hook.register('pre_argument_parsing', cement_hook_one)
-        app.hook.register('post_argument_parsing', cement_hook_one)
-        app.hook.register('pre_close', cement_hook_one)
-        app.hook.register('post_close', cement_hook_one)
-        app.hook.register('signal', cement_hook_one)
-        app.hook.register('pre_render', cement_hook_one)
-        app.hook.register('pre_render', cement_hook_five)
-        app.hook.register('post_render', cement_hook_one)
-        app.hook.register('post_render', cement_hook_five)
-        app.setup()
+
+def test_framework_hooks():
+    def test_hook(*args, **kw):
+        pass
+
+    class MyApp(TestApp):
+        class Meta:
+            hooks = [
+                ('pre_setup', test_hook),
+                ('post_setup', test_hook),
+                ('pre_run', test_hook),
+                ('post_run', test_hook),
+                ('pre_argument_parsing', test_hook),
+                ('post_argument_parsing', test_hook),
+                ('pre_close', test_hook),
+                ('post_close', test_hook),
+                ('signal', test_hook),
+                ('pre_render', test_hook),
+                ('pre_render', test_hook),
+                ('post_render', test_hook),
+                ('post_render', test_hook),
+            ]
+
+    with MyApp() as app:
         app.run()
-        app.render(dict(foo='bar'))
-        app.close()
-
-        # this is where cement_signal_hook is run
-        try:
-            frame = sys._getframe(0)
-            cement_signal_handler(signal.SIGTERM, frame)
-        except exc.CaughtSignal as e:
-            pass

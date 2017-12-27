@@ -1,57 +1,80 @@
-"""Tests for cement.core.output."""
 
 import os
-from cement.core import exc, output
-from cement.utils import test
-from cement.utils.misc import rando
+from pytest import raises
 
-APP = rando()[:12]
+from cement.core.foundation import TestApp
+from cement.core.exc import FrameworkError
+from cement.core.output import OutputHandlerBase, OutputHandler, TemplateOutputHandler
 
 
-class TestOutputHandler(output.TemplateOutputHandler):
+### module tests
+
+class TestOutputHandlerBase(object):
+    def test_interface(self):
+        assert OutputHandlerBase.Meta.interface == 'output'
+
+
+class TestOutputHandler(object):
+    def test_subclassing(self):
+        class MyOutputHandler(OutputHandler):
+            class Meta:
+                label = 'my_output_handler'
+
+            def render(self, *args, **kw):
+                pass
+
+
+        h = MyOutputHandler()
+        assert h._meta.interface == 'output'
+        assert h._meta.label == 'my_output_handler'
+
+
+class TestTemplateOutputHandler(object):
+    def test_subclassing(self):
+        class MyTemplateOutputHandler(TemplateOutputHandler):
+            class Meta:
+                label = 'my_template_output_handler'
+
+            def render(self, *args, **kw):
+                pass
+
+
+        h = MyTemplateOutputHandler()
+        assert h._meta.interface == 'output'
+        assert h._meta.label == 'my_template_output_handler'
+
+
+### app functionality and coverage tests
+
+TEST_TEMPLATE = "%(foo)s"
+
+
+class MyOutputHandler(TemplateOutputHandler):
 
     class Meta:
-        label = 'test_output_handler'
+        label = 'my_output_handler'
 
     def render(self, data, template):
         content = self.load_template(template)
         return content % data
 
 
-TEST_TEMPLATE = "%(foo)s"
+def test_load_template_from_file(tmp):
+    template = os.path.join(tmp.dir, 'mytemplate.txt')
 
+    f = open(template, 'w')
+    f.write(TEST_TEMPLATE)
+    f.close()
 
-class OutputTestCase(test.CementCoreTestCase):
+    class MyApp(TestApp):
+        class Meta:
+            template_dir = tmp.dir
+            output_handler = MyOutputHandler
 
-    def setUp(self):
-        super(OutputTestCase, self).setUp()
-        self.app = self.make_app()
-
-    def test_load_template_from_file(self):
-        template = os.path.join(self.tmp_dir, 'mytemplate.txt')
-
-        f = open(template, 'w')
-        f.write(TEST_TEMPLATE)
-        f.close()
-
-        app = self.make_app(APP,
-                            config_files=[],
-                            template_dir=self.tmp_dir,
-                            output_handler=TestOutputHandler,
-                            )
-        app.setup()
+    with MyApp() as app:
         app.run()
-        self.ok(app.render(dict(foo='bar'), 'mytemplate.txt'))
+        assert app.render({'foo' : 'bar'}, 'mytemplate.txt') == 'bar'
 
-    @test.raises(exc.FrameworkError)
-    def test_load_template_from_bad_file(self):
-        os.path.join(self.tmp_dir, 'my-bogus-template.txt')
-
-        app = self.make_app(APP,
-                            config_files=[],
-                            template_dir=self.tmp_dir,
-                            output_handler=TestOutputHandler,
-                            )
-        app.setup()
-        app.run()
-        app.render(dict(foo='bar'), 'my-bogus-template.txt')
+        # try and render a missing template
+        with raises(FrameworkError, match='Could not locate template: .*'):
+            app.render({'foo' : 'bar'}, 'missing-template.txt')

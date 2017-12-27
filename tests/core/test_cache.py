@@ -1,37 +1,34 @@
-"""Tests for cement.core.cache."""
 
-from cement.core import cache
-from cement.utils import test
+from cement.core.cache import CacheHandlerBase, CacheHandler
 
 
-class MyCacheHandler(cache.CacheHandler):
+### module tests
 
-    class Meta:
-        label = 'my_cache_handler'
-
-    def get(self, key, fallback=None):
-        pass
-
-    def set(self, key, value):
-        pass
-
-    def delete(self, key):
-        pass
-
-    def purge(self):
-        pass
+class TestCacheHandlerBase(object):
+    def test_interface(self):
+        assert CacheHandlerBase.Meta.interface == 'cache'
 
 
-@test.attr('core')
-class CacheTestCase(test.CementCoreTestCase):
+class TestCacheHandler(object):
+    def test_subclassing(self):
+        class MyCacheHandler(CacheHandler):
+            class Meta:
+                label = 'my_cache_handler'
 
-    def setUp(self):
-        super(CacheTestCase, self).setUp()
-        self.app = self.make_app(cache_handler=MyCacheHandler)
+            def get(self, *args, **kw):
+                pass
 
-    def test_base_handler(self):
-        self.app.setup()
-        self.app.cache.set('foo', 'bar')
-        self.app.cache.get('foo')
-        self.app.cache.delete('foo')
-        self.app.cache.purge()
+            def set(self, *args, **kw):
+                pass
+
+            def delete(self, *args, **kw):
+                pass
+
+            def purge(self, *args, **kw):
+                pass
+
+        h = MyCacheHandler()
+        assert h._meta.interface == 'cache'
+        assert h._meta.label == 'my_cache_handler'
+
+### app functionality and coverage tests

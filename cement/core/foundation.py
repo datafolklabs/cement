@@ -10,7 +10,7 @@ from ..core import output, extension, arg, controller, meta, cache, mail
 from ..core.handler import HandlerManager
 from ..core.hook import HookManager
 from ..utils.misc import is_true, minimal_logger
-from ..utils import fs
+from ..utils import fs, misc
 
 # The `imp` module is deprecated in favor of `importlib` in 3.4, but it
 # wasn't introduced until 3.1.  Finally, reload is a builtin on Python < 3
@@ -691,6 +691,12 @@ class App(meta.MetaMixin):
 
         # setup the cement framework
         self._lay_cement()
+
+
+    @property
+    def label(self):
+        return self._meta.label
+
 
     @property
     def debug(self):
@@ -1449,3 +1455,22 @@ class App(meta.MetaMixin):
         # only close the app if there are no unhandled exceptions
         if exc_type is None:
             self.close()
+
+
+class TestApp(App):
+
+    """
+    App subclass useful for testing.
+
+    """
+
+    # tells pytest to not consider this a class for testing
+    __test__ = False
+
+    class Meta:
+        label = "app-%s" % misc.rando()[:12]
+        config_files = []
+        argv = []
+        base_controller = None
+        arguments = []
+        exit_on_close = False

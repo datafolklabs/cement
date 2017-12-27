@@ -46,7 +46,7 @@ class ExtensionHandlerBase(Handler):
             ext_module (str): The name of the extension to load
 
         """
-        pass
+        pass    # pragma: no cover
 
     @abstractmethod
     def load_extensions(self, ext_list):
@@ -58,7 +58,7 @@ class ExtensionHandlerBase(Handler):
                 ``['cement.ext.ext_json', 'cement.ext.ext_logging']``
 
         """
-        pass
+        pass    # pragma: no cover
 
 
 class ExtensionHandler(ExtensionHandlerBase):
@@ -74,7 +74,7 @@ class ExtensionHandler(ExtensionHandlerBase):
     class Meta:
 
         """
-        Handler meta-data (can be passed as keyword arguments to the parent
+        Handler meta-data (can be pass    # pragma: no covered as keyword arguments to the parent
         class).
         """
 
@@ -134,7 +134,7 @@ class ExtensionHandler(ExtensionHandlerBase):
 
     def load_extensions(self, ext_list):
         """
-        Given a list of extension modules, iterate over the list and pass
+        Given a list of extension modules, iterate over the list and pass    # pragma: no cover
         individually to ``self.load_extension()``.
 
         Args:
