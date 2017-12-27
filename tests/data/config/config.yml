@@ -1,0 +1,11 @@
+---
+section:
+    subsection:
+        list:
+            - item1
+            - item2
+            - item3
+            - item4
+        key: value
+    key1: ok1
+    key2: ok2

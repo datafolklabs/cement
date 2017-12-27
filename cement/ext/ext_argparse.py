@@ -238,6 +238,7 @@ class ArgparseArgumentHandler(ArgumentParser, ArgumentHandler):
             object: Instance object whose members are the arguments parsed.
 
         """
+
         if self._meta.ignore_unknown_arguments is True:
             args, unknown = self.parse_known_args(arg_list)
             self.parsed_args = args
@@ -914,7 +915,7 @@ class ArgparseController(ControllerHandler):
             contr = self._controllers_map[contr_label]
 
         if func_name is None:
-            pass
+            pass    # pragma: nocover
         elif hasattr(contr, func_name):
             func = getattr(contr, func_name)
             return func()

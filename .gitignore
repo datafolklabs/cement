@@ -5,6 +5,7 @@ log/
 tmp/
 dist
 __pycache__/
+.cache/
 
 # Gitignores from https://github.com/github/gitignore
 
@@ -52,7 +53,7 @@ doc/build
 # Unit test / coverage reports
 .coverage
 htmlcov
-coverage_report
+coverage-report
 .tox
 
 # TextMate

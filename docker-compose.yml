@@ -16,20 +16,11 @@ services:
         environment:
             REDIS_HOST: redis
             MEMCACHED_HOST: memcached
-    # docs:
-    #     image: "cement-docs:dev"
-    #     build:
-    #         context: .
-    #         dockerfile: docker/Dockerfile.docs
-    #     ports:
-    #         - "8000:8000"
-    #     volumes:
-    #         - "./doc-new:/app"
-    #     environment:
-    #         BASE_URL: http://localhost:8000
+
     redis:
         image: redis:latest
         hostname: redis
+
     memcached:
         image: memcached:latest
         hostname: memcached

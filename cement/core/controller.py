@@ -42,7 +42,7 @@ class ControllerHandlerBase(Handler):
         """
         Reads the application object's data to dispatch a command from this
         controller.  For example, reading ``self.app.pargs`` to determine what
-        command was passed, and then executing that command function.
+        command was pass    # pragma: nocovered, and then executing that command function.
 
         Note that Cement does *not* parse arguments when calling ``_dispatch()``
         on a controller, as it expects the controller to handle parsing
@@ -53,9 +53,9 @@ class ControllerHandlerBase(Handler):
             if no controller function is called.
 
         """
-        pass
+        pass    # pragma: nocover
 
 
 class ControllerHandler(ControllerHandlerBase):
     """Controller handler implementation."""
-    pass
+    pass    # pragma: nocover

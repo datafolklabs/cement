@@ -64,7 +64,7 @@ class ArgumentHandlerBase(Handler):
             None
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def parse(self, *args):
@@ -82,11 +82,11 @@ class ArgumentHandlerBase(Handler):
             arguments
 
         """
-        pass
+        pass    # pragma: nocover
 
 
 class ArgumentHandler(ArgumentHandlerBase):
 
     """Argument handler implementation"""
 
-    pass
+    pass    # pragma: nocover

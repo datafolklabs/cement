@@ -28,6 +28,31 @@ def abspath(path):
     return os.path.abspath(os.path.expanduser(path))
 
 
+def join(*args, **kwargs):
+    """
+    Return a complete, joined path, by first calling ``abspath()`` on the first
+    item to ensure the final path is complete.
+
+    Args:
+        paths (list): A list of paths to join together.
+
+    Returns:
+        list: The complete and absolute joined path.
+
+    Example:
+
+        .. code-block:: python
+
+            from cement.utils import fs
+
+            fs.join('~/some/path', 'some/other/relevant/paht')
+
+    """
+    paths = list(args)
+    first_path = abspath(paths.pop(0))
+    return os.path.join(first_path, *paths, **kwargs)
+
+
 def backup(path, suffix='.bak'):
     """
     Rename a file or directory safely without overwriting an existing

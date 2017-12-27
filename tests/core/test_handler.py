@@ -1,181 +1,185 @@
-"""Tests for cement.core.handler."""
 
-from cement.core import exc, handler, output, meta
+from pytest import raises
+
+from cement.core.foundation import TestApp
+from cement.core.handler import Handler, HandlerManager
+from cement.core.meta import MetaMixin
+from cement.core.exc import FrameworkError, InterfaceError
+from cement.core.output import OutputHandler
 from cement.utils import test
-from cement.ext import ext_dummy
 from cement.ext.ext_configparser import ConfigParserConfigHandler
+from cement.ext.ext_dummy import DummyOutputHandler
 
 
-class BogusOutputHandler(meta.MetaMixin):
+### module tests
 
-    class Meta:
-        # interface = IBogus
-        label = 'bogus_handler'
+class TestHandler(object):
+    def test_subclassing(self):
+        class MyHandler(Handler):
+            class Meta:
+                label = 'my_handler'
+                interface = 'test'
+
+        h = MyHandler()
+        assert h._meta.interface == 'test'
+        assert h._meta.label == 'my_handler'
 
 
-class BogusOutputHandler2(meta.MetaMixin):
-
-    class Meta:
-        interface = 'output'
-        label = 'bogus_handler'
-
-
-class BogusHandler3(meta.MetaMixin):
+class TestHandlerManager(object):
     pass
 
 
-class BogusHandler4(meta.MetaMixin):
 
-    class Meta:
-        interface = 'output'
-        # label = 'bogus4'
+### app functionality and coverage tests
 
 
-class DuplicateHandler(output.OutputHandler):
+def test_get_invalid_handler():
+    with raises(FrameworkError, match='.*bogus_handler.* does not exist'):
+        with TestApp() as app:
+            app.handler.get('output', 'bogus_handler')
 
-    class Meta:
-        interface = 'output'
-        label = 'dummy'
 
-    def _setup(self, config_obj):
+def test_register_invalid_handlers():
+    class BogusHandlerNoMeta(MetaMixin):
         pass
 
-    def render(self, data_dict, template=None):
+    class BogusHandlerNoMetaInterface(MetaMixin):
+        class Meta:
+            # interface = Bogus
+            label = 'bogus_handler'
+
+    class BogusHandlerNoMetaLabel(MetaMixin):
+        class Meta:
+            interface = 'output'
+            # label = 'bogus4'
+
+
+    with TestApp() as app:
+        msg = 'Class .*BogusHandlerNoMeta.* does not implement Handler'
+        with raises(InterfaceError, match=msg):
+            app.handler.register(BogusHandlerNoMeta)
+
+        msg = 'Class .*BogusHandlerNoMetaInterface.* does not implement Handler'
+        with raises(InterfaceError, match=msg):
+            app.handler.register(BogusHandlerNoMetaInterface)
+
+        msg = 'Class .*BogusHandlerNoMetaLabel.* does not implement Handler'
+        with raises(InterfaceError, match=msg):
+            app.handler.register(BogusHandlerNoMetaLabel)
+
+
+def test_register_duplicate_handler():
+    class DuplicateHandler(DummyOutputHandler):
         pass
 
+    with TestApp() as app:
+        app.handler.register(DummyOutputHandler)
 
-class BogusHandler(handler.Handler):
-    pass
-
-
-class TestHandler(meta.MetaMixin):
-
-    class Meta:
-        interface = 'test_interface'
-        label = 'test'
+        with raises(FrameworkError, match='.*dummy.* already exists'):
+            app.handler.register(DuplicateHandler)
 
 
-class HandlerTestCase(test.CementCoreTestCase):
+def test_register_force():
+    class DuplicateHandler(DummyOutputHandler):
+        pass
 
-    def setUp(self):
-        super(HandlerTestCase, self).setUp()
-        self.app = self.make_app()
-
-    @test.raises(exc.FrameworkError)
-    def test_get_invalid_handler(self):
-        self.app.handler.get('output', 'bogus_handler')
-
-    @test.raises(exc.InterfaceError)
-    def test_register_invalid_handler(self):
-        self.app.handler.register(BogusOutputHandler)
-
-    @test.raises(exc.InterfaceError)
-    def test_register_invalid_handler_no_meta(self):
-        self.app.handler.register(BogusHandler3)
-
-    @test.raises(exc.InterfaceError)
-    def test_register_invalid_handler_no_Meta_label(self):
-        self.app.handler.register(BogusHandler4)
-
-    @test.raises(exc.FrameworkError)
-    def test_register_duplicate_handler(self):
-        self.app.handler.register(ext_dummy.DummyOutputHandler)
-        try:
-            self.app.handler.register(DuplicateHandler)
-        except exc.FrameworkError:
-            raise
-
-    def test_register_force(self):
-        class MyDummy(ext_dummy.DummyOutputHandler):
-            pass
-
+    with TestApp() as app:
         # register once, verify
-        self.app.handler.register(ext_dummy.DummyOutputHandler)
-        res = self.app.handler.get('output', 'dummy')
-        self.eq(res, ext_dummy.DummyOutputHandler)
+        app.handler.register(DummyOutputHandler)
+        assert app.handler.get('output', 'dummy')
 
         # register again with force, and verify we get new class back
-        self.app.handler.register(MyDummy, force=True)
-        res = self.app.handler.get('output', 'dummy')
-        self.eq(res, MyDummy)
+        app.handler.register(DuplicateHandler, force=True)
+        assert app.handler.get('output', 'dummy') == DuplicateHandler
 
-    def test_register_force_deprecated(self):
-        class MyDummy(ext_dummy.DummyOutputHandler):
-            pass
 
-        # register once, verify
-        self.app.handler.register(ext_dummy.DummyOutputHandler)
-        res = self.app.handler.get('output', 'dummy')
-        self.eq(res, ext_dummy.DummyOutputHandler)
+def test_register_unproviding_handler():
+    class BogusHandler(MetaMixin):
+        class Meta:
+            interface = 'output'
+            label = 'bogus_handler'
 
-        # register again with force, and verify we get new class back
-        self.app.handler.register(MyDummy, force=True)
-        res = self.app.handler.get('output', 'dummy')
-        self.eq(res, MyDummy)
+    with TestApp() as app:
+        msg = '.*BogusHandler.* does not implement Handler'
+        with raises(InterfaceError, match=msg):
+            app.handler.register(BogusHandler)
 
-    @test.raises(exc.InterfaceError)
-    def test_register_unproviding_handler(self):
-        try:
-            self.app.handler.register(BogusOutputHandler2)
-        except exc.InterfaceError:
-            del self.app.handler.__handlers__['output']
-            raise
 
-    def test_verify_handler(self):
-        self.app.setup()
-        self.ok(self.app.handler.registered('output', 'dummy'))
-        self.eq(self.app.handler.registered('output', 'bogus_handler'), False)
-        self.eq(self.app.handler.registered('bogus_type',
-                                            'bogus_handler'), False)
+def test_verify_handler():
+    with TestApp() as app:
+        assert app.handler.registered('output', 'dummy') is True
+        assert app.handler.registered('output', 'bogus_handler') is False
+        assert app.handler.registered('bogus_type', 'bogus_handler') is False
 
-    @test.raises(exc.FrameworkError)
-    def test_get_bogus_handler(self):
-        self.app.handler.get('log', 'bogus')
 
-    @test.raises(exc.FrameworkError)
-    def test_get_bogus_handler_type(self):
-        self.app.handler.get('bogus', 'bogus')
+def test_get_bogus_handler():
+    with TestApp() as app:
+        with raises(FrameworkError, match='.*log.*bogus.* does not exist!'):
+            app.handler.get('log', 'bogus')
 
-    def test_handler_defined(self):
-        for handler_type in ['config', 'log', 'argument', 'plugin',
-                             'extension', 'output', 'controller']:
-            self.eq(self.app.handler.defined(handler_type), True)
+
+def test_get_bogus_handler_type():
+    with TestApp() as app:
+        with raises(FrameworkError, match='handler type .* does not exist!'):
+            app.handler.get('bogus', 'bogus')
+
+
+def test_handler_defined():
+    with TestApp() as app:
+        types = [
+            'config',
+            'log',
+            'argument',
+            'plugin',
+            'extension',
+            'output',
+            'controller'
+        ]
+        for handler_type in types:
+            assert app.handler.defined(handler_type) is True
 
         # and check for bogus one too
-        self.eq(self.app.handler.defined('bogus'), False)
+        assert app.handler.defined('bogus') is False
 
-    def test_handler_list(self):
-        self.app.setup()
-        handler_list = self.app.handler.list('config')
-        res = ConfigParserConfigHandler in handler_list
-        self.ok(res)
 
-    @test.raises(exc.FrameworkError)
-    def test_handler_list_bogus_type(self):
-        self.app.setup()
-        self.app.handler.list('bogus')
+def test_handler_list():
+    with TestApp() as app:
+        assert ConfigParserConfigHandler in app.handler.list('config')
 
-    @test.raises(exc.FrameworkError)
-    def test_define_duplicate_interface(self):
-        self.app.handler.define(output.OutputHandlerBase)
-        self.app.handler.define(output.OutputHandlerBase)
 
-    def test_handler_not_defined(self):
-        self.eq(self.app.handler.defined('bogus'), False)
+def test_handler_list_bogus_type():
+    with TestApp() as app:
+        with raises(FrameworkError, match='handler type .* does not exist!'):
+            app.handler.list('bogus')
 
-    def test_handler_registered(self):
-        self.app.setup()
-        self.eq(self.app.handler.registered('output', 'dummy'), True)
 
-    def test_handler_get_fallback(self):
-        self.app.setup()
-        self.eq(self.app.handler.get('log', 'foo', 'bar'), 'bar')
+def test_define_duplicate_interface():
+    with TestApp() as app:
+        with raises(FrameworkError, match='interface .* already defined'):
+            app.handler.define(OutputHandler)
 
-    @test.raises(exc.FrameworkError)
-    def test_register_invalid_handler_type(self):
-        self.app.setup()
-        
-        class BadHandler(TestHandler):
-            class Meta:
-                interface = 'bad_interface_not_defined'
-        self.app.handler.register(BadHandler)
+
+def test_handler_not_defined():
+    with TestApp() as app:
+        assert app.handler.defined('bogus') is False
+
+
+def test_handler_registered():
+    with TestApp() as app:
+        assert app.handler.registered('output', 'dummy') is True
+
+
+def test_handler_get_fallback():
+    with TestApp() as app:
+        assert app.handler.get('log', 'foo', 'bar') == 'bar'
+
+
+def test_register_invalid_handler_type():
+    class BadHandler(Handler):
+        class Meta:
+            label = 'bad'
+            interface = 'bad_interface_not_defined'
+
+    with TestApp() as app:
+        with raises(FrameworkError, match='interface .* doesn\'t exist.'):
+            app.handler.register(BadHandler)

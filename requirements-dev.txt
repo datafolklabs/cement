@@ -1,11 +1,11 @@
 # The following are only required for Cement development
-nose
+pytest
+pytest-cov
 coverage
 sphinx
 pep8
 autopep8
 flake8
-mock
 guzzle_sphinx_theme
 recommonmark
 sphinxcontrib-napoleon

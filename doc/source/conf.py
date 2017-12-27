@@ -75,8 +75,9 @@ sys.path.insert(0, os.path.abspath('../cement/'))
 #    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # If we dont' prep an app, then we'll get runtime errors
-from cement.utils import test, version
-app = test.TestApp()
+from cement.utils import version
+from cement.core.foundation import TestApp
+app = TestApp()
 
 RELEASE = version.get_version()
 VERSION = '.'.join(RELEASE.split('.')[:2])

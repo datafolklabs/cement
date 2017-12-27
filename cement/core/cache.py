@@ -54,7 +54,7 @@ class CacheHandlerBase(Handler):
             Unknown: Whatever the value is in the cache, or the ``fallback``
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def set(self, key, value, time=None):
@@ -73,7 +73,7 @@ class CacheHandlerBase(Handler):
         Returns: None
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def delete(self, key):
@@ -88,7 +88,7 @@ class CacheHandlerBase(Handler):
             otherwise
 
         """
-        pass
+        pass    # pragma: nocover
 
     @abstractmethod
     def purge(self):
@@ -96,7 +96,7 @@ class CacheHandlerBase(Handler):
         Clears all data from the cache.
 
         """
-        pass
+        pass    # pragma: nocover
 
 
 class CacheHandler(CacheHandlerBase):
@@ -105,4 +105,4 @@ class CacheHandler(CacheHandlerBase):
     Cache handler implementation.
 
     """
-    pass
+    pass    # pragma: nocover

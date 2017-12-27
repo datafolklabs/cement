@@ -1,25 +1,21 @@
-"""Cement meta tests."""
 
-from cement.core import meta
-from cement.utils import test
+from cement.core.meta import Meta, MetaMixin
 
-
-class TestMeta(meta.MetaMixin):
-
-    class Meta:
-        option_one = 'value one'
-        option_two = 'value two'
-
-    def __init__(self, **kw):
-        super(TestMeta, self).__init__(**kw)
-        self.option_three = kw.get('option_three', None)
+class TestMeta(object):
+    def test_meta(self):
+        m = Meta(key='value')
+        assert hasattr(m, 'key')
+        assert m.key == 'value'
 
 
-class MetaTestCase(test.CementCoreTestCase):
+class TestMetaMixin(object):
+    def test_metamixin(self):
+        class SomeClass(MetaMixin):
+            class Meta:
+                k1 = 'v1'
+                k2 = 'v2'
 
-    def test_passed_kwargs(self):
-        t = TestMeta(option_two='some other value', option_three='value three')
-        self.eq(t._meta.option_one, 'value one')
-        self.eq(t._meta.option_two, 'some other value')
-        self.eq(hasattr(t._meta, 'option_three'), False)
-        self.eq(t.option_three, 'value three')
+        sc = SomeClass(k2='not-v2')
+        assert hasattr(sc, '_meta')
+        assert sc._meta.k1 == 'v1'
+        assert sc._meta.k2 == 'not-v2'
