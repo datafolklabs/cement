@@ -1398,7 +1398,7 @@ class CementApp(meta.MetaMixin):
         if self._meta.template_dirs is None:
             self._meta.template_dirs = []
             paths = [
-                os.path.join(fs.HOME_DIR, '.config', label, 'templates')
+                os.path.join(fs.HOME_DIR, '.config', label, 'templates'),
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'templates'),
                 '/usr/lib/%s/templates' % label,
             ]
