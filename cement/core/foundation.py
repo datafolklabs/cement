@@ -1265,6 +1265,9 @@ class CementApp(meta.MetaMixin):
         if self._meta.config_files is None:
             self._meta.config_files = [
                 os.path.join('/', 'etc', label, '%s%s' % (label, ext)),
+                os.path.join(fs.HOME_DIR, '.config', label, '%s%s' % (label, ext)),
+                os.path.join(fs.HOME_DIR, '.config', label, 'config'),
+                os.path.join(fs.HOME_DIR, '.config', '%s%s' % (label, ext)),
                 os.path.join(fs.HOME_DIR, '.%s%s' % (label, ext)),
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'config'),
             ]
@@ -1272,6 +1275,7 @@ class CementApp(meta.MetaMixin):
         if self._meta.config_dirs is None:
             self._meta.config_dirs = [
                 os.path.join('/', 'etc', label, 'conf.d'),
+                os.path.join(fs.HOME_DIR, '.config', label, 'conf.d'),
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'conf.d'),
             ]
 
@@ -1345,6 +1349,7 @@ class CementApp(meta.MetaMixin):
         if self._meta.plugin_config_dirs is None:
             self._meta.plugin_config_dirs = [
                 '/etc/%s/plugins.d/' % self._meta.label,
+                os.path.join(fs.HOME_DIR, '.config', label, 'plugins.d'),
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'plugins.d'),
             ]
         config_dir = self._meta.plugin_config_dir
@@ -1356,6 +1361,7 @@ class CementApp(meta.MetaMixin):
         # plugin dirs
         if self._meta.plugin_dirs is None:
             self._meta.plugin_dirs = [
+                os.path.join(fs.HOME_DIR, '.config', label, 'plugins'),
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'plugins'),
                 '/usr/lib/%s/plugins' % self._meta.label,
             ]
@@ -1392,6 +1398,7 @@ class CementApp(meta.MetaMixin):
         if self._meta.template_dirs is None:
             self._meta.template_dirs = []
             paths = [
+                os.path.join(fs.HOME_DIR, '.config', label, 'templates')
                 os.path.join(fs.HOME_DIR, '.%s' % label, 'templates'),
                 '/usr/lib/%s/templates' % label,
             ]
