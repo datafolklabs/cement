@@ -32,7 +32,7 @@ class UsersListController(CementBaseController):
 
     @expose(hide=True)
     def default(self):
-        print "Inside UsersListController.default()"
+        print("Inside UsersListController.default()")
 
 class HostsListController(CementBaseController):
     class Meta:
@@ -45,7 +45,7 @@ class HostsListController(CementBaseController):
 
     @expose(hide=True)
     def default(self):
-        print "Inside HostsListController.default()"
+        print("Inside HostsListController.default()")
 
 def main():
     try:
