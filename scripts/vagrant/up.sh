@@ -8,38 +8,28 @@ export DEBIAN_FRONTEND=noninteractive
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get dist-upgrade -y
-sudo apt-get install -y apt-transport-https ca-certificates
-sudo apt-key adv \
-    --keyserver hkp://p80.pool.sks-keyservers.net:80 \
-    --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-sudo add-apt-repository \
-    -y "deb https://apt.dockerproject.org/repo ubuntu-trusty main"
+
+sudo apt-get install -y apt-transport-https ca-certificates software-properties-common
+
 sudo apt-get update
-sudo apt-cache policy docker-engine
 
 sudo apt-get install -y \
     python \
-    python-pip \
-    python-dev \
-    python-virtualenv \
     python3 \
+    python-dev \
     python3-dev \
+    python-pip \
     python3-pip \
+    python-virtualenv \
     memcached \
     libmemcached-dev \
-    zlib1g-dev \
-    docker-engine
+    zlib1g-dev
 
-sudo apt-get autoremove -y 
+sudo apt-get autoremove -y
 sudo pip3 install virtualenv
 
-# for docker stuff
-sudo usermod -aG docker vagrant
-
-### fix me - install docker-compose here
-
-python /usr/bin/virtualenv /vagrant/.env/cement-py2
-python3 /usr/bin/virtualenv /vagrant/.env/cement
+virtualenv --python=$(which python2) /vagrant/.env/cement-py2
+virtualenv --python=$(which python3) /vagrant/.env/cement
 
 # for tests
 sudo /etc/init.d/memcached stop
@@ -47,13 +37,13 @@ sudo /etc/init.d/memcached start
 
 deactivate ||:
 
-source /vagrant/.env/cement-py2/bin/activate 
-pip install -r requirements-dev-linux.txt
+source /vagrant/.env/cement-py2/bin/activate
+pip install -r requirements-dev.txt
 python setup.py develop
 deactivate
 
 source /vagrant/.env/cement/bin/activate
-pip install -r requirements-dev-py3-linux.txt
+pip install -r requirements-dev.txt
 python setup.py develop
 deactivate
 
@@ -63,4 +53,3 @@ cd /vagrant
 EOF
 
 exit 0
-
