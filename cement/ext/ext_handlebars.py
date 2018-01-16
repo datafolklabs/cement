@@ -1,6 +1,6 @@
 """
-The Handlebars Extension provides output templating based on the
-`Handlebars Templating Language <https://github.com/wbond/pybars3>`_.
+The Handlebars Extension provides output templating using the
+`pybars3 <https://github.com/wbond/pybars3>`_ package.
 
 Requirements
 ------------
@@ -177,7 +177,7 @@ class HandlebarsOutputHandler(output.TemplateOutputHandler):
     interface.  It provides text output from template and uses the
     `Handlebars Templating Language <http://handlebarsjs.com/>`_ for Python
     via the ``pybars`` library.  Please see the developer documentation on
-    :ref:`Output Handling <dev_output_handling>`.
+    :cement:`Output Handling <2.10/dev/output>`.
 
     **Note** This extension has an external dependency on ``pybars3``.  You
     must include ``pybars3`` in your applications dependencies as Cement

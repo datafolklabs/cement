@@ -1,9 +1,9 @@
 .. _cement.core.foundation:
-    
+
 :mod:`cement.core.foundation`
-------------------------------
+==============================================================================
 
 .. automodule:: cement.core.foundation
-    :members:   
+    :members:
     :private-members:
     :show-inheritance:

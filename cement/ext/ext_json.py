@@ -153,7 +153,7 @@ class JsonOutputHandler(output.OutputHandler):
     interface.  It provides JSON output from a data dictionary using the
     `json <http://docs.python.org/library/json.html>`_ module of the standard
     library.  Please see the developer documentation on
-    :ref:`Output Handling <dev_output_handling>`.
+    :cement:`Output Handling <2.10/dev/output>`.
 
     This handler forces Cement to suppress console output until
     ``app.render`` is called (keeping the output pure JSON).  If

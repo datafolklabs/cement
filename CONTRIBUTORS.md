@@ -1,4 +1,5 @@
-# Contributors
+Contributors
+==============================================================================
 
 The following people have contributed to Cement, either by way of source code,
 documentation, or testing:
@@ -9,3 +10,4 @@ documentation, or testing:
 - Ildar Akhmetgaleev (akhilman)
 - Nicolas Brisac (zacbri)
 - Subhash Bhushan (subhashb)
+- Sam Likins (samlikins)

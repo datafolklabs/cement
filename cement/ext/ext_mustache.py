@@ -109,7 +109,7 @@ class MustacheOutputHandler(output.TemplateOutputHandler):
     interface.  It provides text output from template and uses the
     `Mustache Templating Language <http://mustache.github.com>`_.  Please
     see the developer documentation on
-    :ref:`Output Handling <dev_output_handling>`.
+    :cement:`Output Handling <2.10/dev/output>`.
 
     **Note** This extension has an external dependency on ``pystache``.  You
     must include ``pystache`` in your applications dependencies as Cement
