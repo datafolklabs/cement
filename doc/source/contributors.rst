@@ -1,1 +1,1 @@
-../../CONTRIBUTORS
+../../CONTRIBUTORS.md
