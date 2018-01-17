@@ -12,6 +12,7 @@ Built on Cement™:
  * `SentientHome <https://github.com/fxstein/SentientHome>`_
  * `Pubkey <https://github.com/fxstein/pubkey>`_
  * `HCE Project <http://hce-project.com/>`_
+ * `QLDS Manager <https://qlds-manager.readthedocs.io/en/stable/index.html>`_ (`GitHub <https://github.com/rzeka/QLDS-Manager>`_)
  
 
  If you are building a project on the Cement Framework and would like to see
