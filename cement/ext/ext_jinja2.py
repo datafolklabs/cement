@@ -76,7 +76,7 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
     `Jinja2 Templating Language
     <http://jinja.pocoo.org/>`_.
     Please see the developer documentation on
-    :ref:`Output Handling <dev_output_handling>`.
+    :cement:`Output Handling <dev/output>`.
 
     """
 

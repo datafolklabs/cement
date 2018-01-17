@@ -14,24 +14,7 @@
 import os
 import sys
 import guzzle_sphinx_theme
-import pypandoc
-import recommonmark
-from recommonmark.transform import AutoStructify
 
-def pandoc_process(app, what, name, obj, options, lines):
-    if not lines:
-        return
-    input_format = app.config.pandoc_use_parser
-    data = '\n'.join(lines)
-    data = data.encode('utf-8')
-    # data = str(pypandoc.convert(data, 'rst', format=input_format),
-    #                encoding='utf-8')
-    data = pypandoc.convert(data, 'rst', format=input_format)
-    # Sphinx expects `lines` to be edited in place, so we have to replace it
-    # like this.
-    new_lines = data.split('\n')
-    del lines[:]
-    lines.extend(new_lines)
 
 html_theme_path = guzzle_sphinx_theme.html_theme_path()
 html_theme = 'guzzle_sphinx_theme'
@@ -66,13 +49,6 @@ html_theme_options = {
 }
 
 sys.path.insert(0, os.path.abspath('../cement/'))
-
-#on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-
-#if not on_rtd:  # only import and set the theme if we're building docs locally
-#    import sphinx_rtd_theme
-#    html_theme = 'sphinx_rtd_theme'
-#    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # If we dont' prep an app, then we'll get runtime errors
 from cement.utils import version
@@ -134,21 +110,20 @@ extensions = [
     'sphinx.ext.viewcode',
     ]
 
-source_parsers = {
-   '.md': 'recommonmark.parser.CommonMarkParser',
-}
-
 extlinks = {
     'issue' : ('https://github.com/datafolklabs/cement/issues/%s', 'Issue #'),
     'pr' : ('https://github.com/datafolklabs/cement/pull/%s', 'PR #'),
+    'cement' : ('http://builtoncement.com/%s/%s.html' % (VERSION, '%s'), 'Cement Doc: '),
 }
-intersphinx_mapping = {'python': ('https://docs.python.org/3.6', None)}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3.6', None)
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-source_suffix = ['.rst', '.md']
+source_suffix = ['.rst']
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
@@ -158,7 +133,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Cement API Reference'
-copyright = u'2009-2017, Data Folk Labs, LLC'
+copyright = u'2009-2018, Data Folk Labs, LLC'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -332,16 +307,3 @@ man_pages = [
     ('index', 'cement', u'Cement Framework',
      [u'Data Folk Labs, LLC'], 1)
 ]
-
-
-# At the bottom of conf.py
-# def setup(app):
-#     app.add_config_value('recommonmark_config', {
-#             # 'url_resolver': lambda url: github_doc_root + url,
-#             'auto_toc_tree_section': 'Contents',
-#             'enable_auto_toc_tree': True,
-#             'enable_auto_doc_ref': True,
-#             }, True)
-#     app.add_transform(AutoStructify)
-#     app.add_config_value('pandoc_use_parser', 'markdown', True)
-#     app.connect('autodoc-process-docstring', pandoc_process)

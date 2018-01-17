@@ -1,6 +1,8 @@
-# ChangeLog
+ChangeLog
+==============================================================================
 
-## 2.99.1 - DEVELOPMENT (will be released as dev/2.99.2 or stable/3.0.0)
+2.99.1 - DEVELOPMENT (will be released as dev/2.99.2 or stable/3.0.0)
+------------------------------------------------------------------------------
 
 This is a complete fork from Cement 2 code base.  Please continue to use
 stable versions of Cement 2, until Cement 3.0.0 is released.
@@ -8,7 +10,7 @@ stable versions of Cement 2, until Cement 3.0.0 is released.
 
 Bugs:
 
-- `[ext.redis]` Unable To Set Redis Host 
+- `[ext.redis]` Unable To Set Redis Host
   - [Issue #440](https://github.com/datafolklabs/cement/issues/440)
 
 

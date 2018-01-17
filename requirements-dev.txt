@@ -7,8 +7,8 @@ pep8
 autopep8
 flake8
 guzzle_sphinx_theme
-recommonmark
 sphinxcontrib-napoleon
+pypandoc
 
 # Required for optional extensions
 pystache

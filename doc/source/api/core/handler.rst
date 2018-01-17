@@ -1,9 +1,9 @@
 .. _cement.core.handler:
-    
+
 :mod:`cement.core.handler`
----------------------------
+==============================================================================
 
 .. automodule:: cement.core.handler
-    :members:    
+    :members:
     :private-members:
     :show-inheritance:

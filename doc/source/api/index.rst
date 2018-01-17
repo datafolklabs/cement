@@ -1,6 +1,6 @@
 
 API Reference
-=============
+==============================================================================
 
 .. note:: This documentation is strictly for API reference.  For more complete
    developer documentation, please visit the official site
@@ -11,7 +11,7 @@ API Reference
   production until stable/3.0.0 is released.
 
 Core Modules
-------------
+------------------------------------------------------------------------------
 
 .. toctree::
   :maxdepth: 1
@@ -34,7 +34,7 @@ Core Modules
 
 
 Utility Modules
----------------
+------------------------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 1
@@ -46,7 +46,7 @@ Utility Modules
 
 
 Extension Modules
------------------
+------------------------------------------------------------------------------
 
 .. toctree::
    :maxdepth: 1
