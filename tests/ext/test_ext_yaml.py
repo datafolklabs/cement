@@ -77,3 +77,8 @@ def test_handler_override_options_is_none():
     with MyApp() as app:
         app.run()
         app.render(dict(foo='bar'))
+
+def test_get_dict():
+    with YamlApp() as app:
+        _config = app.config.get_dict()
+        assert _config['log.logging']['level'] == 'INFO'

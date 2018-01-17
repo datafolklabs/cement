@@ -18,6 +18,9 @@ class MyConfigHandler(ConfigHandler):
     def keys(self, *args, **kw):
         pass
 
+    def get_dict(self, *args, **kw):
+        pass
+        
     def get_sections(self, *args, **kw):
         pass
 

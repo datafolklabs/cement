@@ -128,6 +128,18 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         """
         return self.options(section)
 
+    def get_dict(self):
+        """
+        Return a dict of the entire configuration.
+
+        Returns:
+            dict: A dictionary of the entire config.
+        """
+        _config = {}
+        for section in self.get_sections():
+            _config[section] = self.get_section_dict(section)
+        return _config
+
     def get_sections(self):
         """
         Return a list of configuration sections.

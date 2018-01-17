@@ -9,3 +9,6 @@ documentation, or testing:
 - Ildar Akhmetgaleev (akhilman)
 - Nicolas Brisac (zacbri)
 - Subhash Bhushan (subhashb)
+- Sam Likins (samlikins)
+- Dakota Blair (dakotablair)
+

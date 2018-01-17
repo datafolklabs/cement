@@ -76,6 +76,16 @@ class ConfigHandlerBase(Handler):
         pass    # pragma: nocover
 
     @abstractmethod
+    def get_dict(self):
+        """
+        Return a dict of the entire configuration.
+
+        Returns:
+            dict: A dictionary of the entire config.
+
+        """
+
+    @abstractmethod
     def get_section_dict(self, section):
         """
         Return a dict of configuration parameters for ``section``.

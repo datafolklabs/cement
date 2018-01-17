@@ -21,3 +21,9 @@ class TestConfigParserConfigHandler(object):
 
 
 ### app functionality and coverage tests
+
+def test_get_dict():
+    with TestApp() as app:
+        assert isinstance(app.config.get_dict(), dict)
+        _config = app.config.get_dict()
+        assert _config['log.logging']['level'] == 'INFO'
