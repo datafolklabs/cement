@@ -1216,7 +1216,7 @@ class App(meta.MetaMixin):
                     setattr(self._meta, key, base_dict[key])
 
         # load extensions from configuraton file
-        if 'extensions' in self.config.keys(self._meta.label):
+        if 'extensions' in self.config.keys(self._meta.config_section):
             exts = self.config.get(self._meta.label, 'extensions')
 
             # convert a comma-separated string to a list
