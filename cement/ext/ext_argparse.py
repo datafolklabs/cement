@@ -167,7 +167,7 @@ The above looks like:
 
 import re
 import sys
-from argparse import ArgumentParser, SUPPRESS
+from argparse import ArgumentParser, RawDescriptionHelpFormatter, SUPPRESS
 from ..core.handler import CementBaseHandler
 from ..core.arg import CementArgumentHandler, IArgument
 from ..core.controller import IController
@@ -431,6 +431,11 @@ class ArgparseController(CementBaseHandler):
         #: The text that is displayed at the top when ``--help`` is passed.
         #: Defaults to Argparse standard usage.
         usage = None
+
+        argument_formatter = RawDescriptionHelpFormatter
+        """
+        The argument formatter class to use to display --help output.
+        """
 
         #: Additional keyword arguments passed when
         #: ``ArgumentParser.add_subparsers()`` is called to create this
@@ -882,6 +887,7 @@ class ArgparseController(CementBaseHandler):
         for contr in self._controllers:
             contr._pre_argument_parsing()
 
+        self.app.args.formatter_class = self._meta.argument_formatter
         self.app._parse_args()
 
         for contr in self._controllers:
