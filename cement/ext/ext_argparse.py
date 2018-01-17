@@ -432,10 +432,8 @@ class ArgparseController(CementBaseHandler):
         #: Defaults to Argparse standard usage.
         usage = None
 
+        #: The argument formatter class to use to display ``--help`` output.
         argument_formatter = RawDescriptionHelpFormatter
-        """
-        The argument formatter class to use to display --help output.
-        """
 
         #: Additional keyword arguments passed when
         #: ``ArgumentParser.add_subparsers()`` is called to create this
@@ -665,6 +663,7 @@ class ArgparseController(CementBaseHandler):
                                      dest='__controller_namespace__',
                                      )
         self._parser = parsers['base']
+        self._parser.formatter_class = self._meta.argument_formatter
 
         # and if only base controller registered... go ahead and return
         if len(self.app.handler.list('controller')) <= 1:
@@ -703,6 +702,7 @@ class ArgparseController(CementBaseHandler):
                                             help=SUPPRESS,
                                             dest='__controller_namespace__',
                                             )
+                parsers[label].formatter_class = contr._meta.argument_formatter
 
             elif stacked_type == 'embedded':
                 # if it's embedded, then just set it to use the same as the
@@ -887,7 +887,6 @@ class ArgparseController(CementBaseHandler):
         for contr in self._controllers:
             contr._pre_argument_parsing()
 
-        self.app.args.formatter_class = self._meta.argument_formatter
         self.app._parse_args()
 
         for contr in self._controllers:
