@@ -165,7 +165,7 @@ The above looks like:
 
 import re
 import sys
-from argparse import ArgumentParser, SUPPRESS
+from argparse import ArgumentParser, RawDescriptionHelpFormatter, SUPPRESS
 from ..core.handler import Handler
 from ..core.arg import ArgumentHandler
 from ..core.controller import ControllerHandler
@@ -423,6 +423,9 @@ class ArgparseController(ControllerHandler):
         #: Defaults to Argparse standard usage.
         usage = None
 
+        #: The argument formatter class to use to display ``--help`` output.
+        argument_formatter = RawDescriptionHelpFormatter
+
         #: Additional keyword arguments passed when
         #: ``ArgumentParser.add_subparsers()`` is called to create this
         #: controller namespace.  WARNING: This could break things, use at
@@ -645,6 +648,7 @@ class ArgparseController(ControllerHandler):
 
         kwargs = self._get_subparser_options(self)
         sub = self.app.args.add_subparsers(**kwargs)
+
         parents['base'] = sub
         base_parser_options = self._get_parser_options(self)
         for key, val in base_parser_options.items():
@@ -659,6 +663,7 @@ class ArgparseController(ControllerHandler):
                                      dest='__controller_namespace__',
                                      )
         self._parser = parsers['base']
+        self._parser.formatter_class = self._meta.argument_formatter
 
         # and if only base controller registered... go ahead and return
         if len(self.app.handler.list('controller')) <= 1:
@@ -697,6 +702,7 @@ class ArgparseController(ControllerHandler):
                                             help=SUPPRESS,
                                             dest='__controller_namespace__',
                                             )
+                parsers[label].formatter_class = contr._meta.argument_formatter
 
             elif stacked_type == 'embedded':
                 # if it's embedded, then just set it to use the same as the
