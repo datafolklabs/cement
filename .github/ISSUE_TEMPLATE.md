@@ -1,17 +1,27 @@
-**Cement Version:**
+# Cement Issue Reporting and Feature Requests
 
-**Python Version:**
+Please include any of the following in bug/issue reports where it is relevant:
 
-**OS and Version:**
+**System Information**
 
----
-**Remember:** Someone else is required to understand this issue to correct it.
+- Cement Version:
+- Python Version:
+- Operating System and Version:
 
-To communicate effectively please provide an [MCVE] (*Minimal Complete
-Verifiable Example*); as minimal as possible whilst still effectively
-representing the issue.
----
+**Steps to Reproduce (Bugs Only)**
 
-**Example:**
+- Step 1...
+- Step 2...
+- Step 3...
+- Etc
+
+**Example**
+
+The following is an [MCVE] (*Minimal Complete
+Verifiable Example*) that reproduces the issue:
+
+```python
+# INSERT EXAMPLE CODE HERE
+```
 
 [MCVE]: https://stackoverflow.com/help/mcve

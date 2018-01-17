@@ -1,11 +1,12 @@
+
 **NOTICE:** Prior to submitting a pull request, please ensure you abide by the
 [Guidelines for Code Contributions], including but not limited to:
 
-* PR is associated with at least one issue
-* Submit from a **topic** branch, not an preexisting branch
-* Make every effort to comply with [PEP8]
-* All tests pass successfully
-* Coverage reports 100% code coverage
+- PR is associated with at least one issue
+- Submit from a **topic** branch, not a pre-existing Cement branch
+- Make every effort to comply with [PEP8]
+- All tests pass successfully
+- Coverage reports 100% code coverage
 
 ---
 

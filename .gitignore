@@ -70,3 +70,5 @@ myapp*.py
 
 # redis test artifacts
 dump.rdb
+.cache
+coverage-report/
