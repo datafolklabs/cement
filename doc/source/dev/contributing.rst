@@ -49,6 +49,10 @@ The ideal feature request would include:
 Guidelines for Code Contributions
 ---------------------------------
 
+If you are new to Cement, looking for something quick to fix, or just want an
+opportunity to contribute to the project, review the ``low-hanging-fruit``
+`labels in the issue tracker <https://github.com/datafolklabs/cement/labels/low-hanging-fruit>`_.
+
 All contributors should attempt to abide by the following:
 
     * Contributors fork the project on GitHub onto their own account
@@ -170,6 +174,3 @@ and a new git branch of ``stable/2.2.x`` will be created.
 The ``portland`` branch is always very forward looking, and will contain
 significant (and likely broken) code changes.  It should never be used for
 anything other than development and testing.
-
-
-
