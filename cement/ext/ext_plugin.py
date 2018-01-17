@@ -17,7 +17,7 @@ This extension does not directly honor any configuration settings.
 Usage
 -----
 
-For usage information see :ref:`application_plugins`.
+For usage information see :cement:`Application Plugins <dev/plugins>`.
 
 """
 

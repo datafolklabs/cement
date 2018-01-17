@@ -126,7 +126,7 @@ class YamlOutputHandler(output.OutputHandler):
     interface.  It provides Yaml output from a data dictionary and uses
     `pyYaml <http://pyYaml.org/wiki/PyYamlDocumentation>`_ to dump it to
     STDOUT.  Please see the developer documentation on
-    :ref:`Output Handling <dev_output_handling>`.
+    :cement:`Output Handling <dev/output>`.
 
     This handler forces Cement to suppress console output until
     ``app.render`` is called (keeping the output pure Yaml).  If

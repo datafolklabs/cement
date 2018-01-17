@@ -68,7 +68,7 @@ class TabulateOutputHandler(output.OutputHandler):
     interface.  It provides tabularized text output using the
     `Tabulate <https://pypi.python.org/pypi/tabulate>`_ module.  Please
     see the developer documentation on
-    :ref:`Output Handling <dev_output_handling>`.
+    :cement:`Output Handling <dev/output>`.
 
     **Note** This extension has an external dependency on ``tabulate``.  You
     must include ``tabulate`` in your applications dependencies as Cement

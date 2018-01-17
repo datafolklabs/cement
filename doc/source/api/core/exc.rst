@@ -1,9 +1,9 @@
 .. _cement.core.exc:
-    
+
 :mod:`cement.core.exc`
------------------------
+==============================================================================
 
 .. automodule:: cement.core.exc
-    :members:   
+    :members:
     :private-members:
     :show-inheritance:

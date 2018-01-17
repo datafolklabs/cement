@@ -1,9 +1,9 @@
 .. _cement.core.cache:
 
 :mod:`cement.core.cache`
---------------------------
+==============================================================================
 
 .. automodule:: cement.core.cache
-    :members: 
+    :members:
     :private-members:
     :show-inheritance:

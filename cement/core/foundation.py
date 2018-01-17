@@ -1133,7 +1133,7 @@ class App(meta.MetaMixin):
 
         Args:
             signum (int): The signal number to catch.  See Python
-                :ref:`signal library <py:signal>`.
+                :py:mod:`signal library <python:signal>`.
         """
 
         LOG.debug("adding signal handler %s for signal %s" % (
