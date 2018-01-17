@@ -29,6 +29,18 @@ class ConfigObjExtTestCase(test.CementTestCase):
     def test_configobj(self):
         self.app.setup()
 
+    def test_get_dict(self):
+        self.app.setup()
+        self.ok(isinstance(self.app.config.get_dict(), dict))
+
+    def test_get_dict_deep(self):
+        self.app.setup()
+        self.ok(isinstance(self.app.config.get_dict(), dict))
+        self.eq(
+            self.app.config.get_dict()["my_section"],
+            dict(my_param="my_value"),
+        )
+
     def test_has_section(self):
         self.app.setup()
         self.ok(self.app.config.has_section('my_section'))

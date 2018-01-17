@@ -13,6 +13,7 @@ def config_validator(klass, obj):
     members = [
         '_setup',
         'keys',
+        'get_dict',
         'get_sections',
         'get_section_dict',
         'get',
@@ -97,6 +98,16 @@ class IConfig(interface.Interface):
         :param section: The config [section] to pull keys from.
         :returns: A list of keys in `section`.
         :rtype: ``list``
+
+        """
+
+    def get_dict():
+        """
+        Return a dict of the entire configuration.
+        [block] label in a config file.
+
+        :returns: A dictionary of the entire config.
+        :rtype: ``dict``
 
         """
 

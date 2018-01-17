@@ -27,6 +27,10 @@ class ConfigTestCase(test.CementCoreTestCase):
         c._setup(self.app)
         c._parse_file(self.tmp_file)
 
+    def test_get_dict(self):
+        self.app.setup()
+        self.ok(isinstance(self.app.config.get_dict(), dict))
+
     def test_has_key(self):
         self.app.setup()
         self.ok(self.app.config.has_section(self.app._meta.config_section))

@@ -80,6 +80,21 @@ class ConfigObjConfigHandler(config.CementConfigHandler, ConfigObj):
     def _setup(self, app_obj):
         self.app = app_obj
 
+    def get_dict(self):
+        """
+        Return a dict of the entire configuration.
+        [block] label in a config file.
+
+        :returns: A dictionary of the entire config.
+        :rtype: ``dict``
+
+        """
+
+        config = dict()
+        for section in self.get_sections():
+            config[section] = self.get_section_dict(section)
+        return config
+
     def get_sections(self):
         """
         Return a list of [section] that exist in the configuration.
