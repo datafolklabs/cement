@@ -22,11 +22,11 @@ class MySecondController(CementBaseController):
 
     @expose()
     def cmd1(self):
-        print "Inside MySecondController.cmd1()"
+        print("Inside MySecondController.cmd1()")
 
         if self.app.pargs.extra_arguments:
-            print "Extra Argument 0: %s" % self.app.pargs.extra_arguments[0]
-            print "Extra Argument 1: %s" % self.app.pargs.extra_arguments[1]
+            print("Extra Argument 0: %s" % self.app.pargs.extra_arguments[0])
+            print("Extra Argument 1: %s" % self.app.pargs.extra_arguments[1])
 
 
 class MyApp(CementApp):

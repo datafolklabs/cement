@@ -13,11 +13,11 @@ class MyAppBaseController(CementBaseController):
 
     @expose(help="base controller default command", hide=True)
     def default(self):
-        print "Inside MyAppBaseController.default()"
+        print("Inside MyAppBaseController.default()")
 
     @expose(help="another base controller command")
     def command1(self):
-        print "Inside MyAppBaseController.command1()"
+        print("Inside MyAppBaseController.command1()")
 
 class SecondController(CementBaseController):
     class Meta:
@@ -31,11 +31,11 @@ class SecondController(CementBaseController):
 
     @expose(help="second-controller default command", hide=True)
     def default(self):
-        print "Inside SecondController.default()"
+        print("Inside SecondController.default()")
 
     @expose(help="this is a command under the second-controller namespace")
     def command2(self):
-        print "Inside SecondController.command2()"
+        print("Inside SecondController.command2()")
 
 class ThirdController(CementBaseController):
     class Meta:
@@ -49,7 +49,7 @@ class ThirdController(CementBaseController):
 
     @expose(help="another command under the second-controller namespace")
     def command3(self):
-        print "Inside ThirdController.command3()"
+        print("Inside ThirdController.command3()")
 
 class FourthController(CementBaseController):
     class Meta:
@@ -63,7 +63,7 @@ class FourthController(CementBaseController):
 
     @expose(help="a command only under the fourth-controller namespace")
     def command4(self):
-        print "Inside FourthController.command4()"
+        print("Inside FourthController.command4()")
 
 def main():
     try:

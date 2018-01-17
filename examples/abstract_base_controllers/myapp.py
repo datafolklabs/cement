@@ -37,7 +37,7 @@ class AbstractBaseController(CementBaseController):
 
         # or do something with parsed args?
         if self.app.pargs.foo:
-            print "Foo option was passed with value: %s" % self.app.pargs.foo
+            print("Foo option was passed with value: %s" % self.app.pargs.foo)
 
         # or maybe do something dynamically
         print("Inside %s.default()" % self.__class__.__name__)
