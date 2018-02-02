@@ -9,7 +9,7 @@ function Do-IEESC {
 }
 
 function Do-WinRM {
-    # Not sure if this can be improved? It's taken from 
+    # Not sure if this can be improved? It's taken from
     # https://learn.chef.io/manage-a-node/windows/bootstrap-your-node/
 
     winrm quickconfig -q
@@ -17,7 +17,7 @@ function Do-WinRM {
     winrm set winrm/config '@{MaxTimeoutms="1800000"}'
     winrm set winrm/config/service '@{AllowUnencrypted="true"}'
     winrm set winrm/config/service/auth '@{Basic="true"}'
-     
+
     netsh advfirewall firewall add rule `
         name="WinRM 5985" `
         protocol=TCP `
@@ -30,7 +30,7 @@ function Do-WinRM {
         dir=in `
         localport=5986 `
         action=allow
-     
+
     net stop winrm
     sc.exe config winrm start= auto
     net start winrm
@@ -38,20 +38,20 @@ function Do-WinRM {
     Write-Host "WinRM setup complete" -ForegroundColor Green
 }
 
-function Do-Python2 {
-    Invoke-WebRequest `
-        -Uri https://www.python.org/ftp/python/2.7.11/python-2.7.11.amd64.msi `
-        -OutFile python2-installer.msi
-
-    msiexec /i python2-installer.msi /passive ALLUSERS=1 TARGETDIR=C:\Python27
-
-    Start-Sleep -s 10
-
-    C:\Python27\Scripts\pip.exe install virtualenv
-
-    Write-Host "Python2 setup complete" -ForegroundColor Green
-
-}
+# function Do-Python2 {
+#     Invoke-WebRequest `
+#         -Uri https://www.python.org/ftp/python/2.7.11/python-2.7.11.amd64.msi `
+#         -OutFile python2-installer.msi
+#
+#     msiexec /i python2-installer.msi /passive ALLUSERS=1 TARGETDIR=C:\Python27
+#
+#     Start-Sleep -s 10
+#
+#     C:\Python27\Scripts\pip.exe install virtualenv
+#
+#     Write-Host "Python2 setup complete" -ForegroundColor Green
+#
+# }
 
 function Do-Python3 {
     Invoke-WebRequest `
@@ -70,6 +70,6 @@ function Do-Python3 {
 
 Do-IEESC
 Do-WinRM
-Do-Python2
+# Do-Python2
 Do-Python3
 Clear-History

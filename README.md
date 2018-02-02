@@ -52,12 +52,19 @@ The Cement CLI Application Framework is Open Source and is distributed under the
 
 This project includes a `docker-compose` configuration that sets up all required services, and dependencies for development.  This is the recommended path for local development, and is the only fully supported option.
 
+The following creates all required docker containers, and launches an ASH shell within the `cement` dev container for development.
+```
+$ make dev
+
+|> cement <| app #
+```
+
+The above is the equivalent of running:
+
 ```
 $ docker-compose up -d
 
 $ docker-compose exec cement /bin/ash
-
-|> cement >| app #
 ```
 
 ### Vagrant

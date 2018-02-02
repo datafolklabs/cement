@@ -13,20 +13,20 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: false
 
   config.vm.define "linux" do |this|
-    this.vm.box = "addle/ubuntu-16.04"
+    this.vm.box = "trueability/ubuntu-16.04"
     this.vm.hostname = "linux"
     this.vm.provision "shell", path: "scripts/vagrant/bootstrap.sh"
   end
 
   config.vm.define "windows" do |this|
-    this.vm.box = "addle/windows-server-2012-r2"
+    this.vm.box = "trueability/windows-server-2012-r2"
     this.vm.hostname = "windows"
     this.vm.provision "shell", path: "scripts/vagrant/bootstrap.ps1"
   end
 
   targets.each do |name|
     config.vm.define name do |this|
-      this.vm.box = "addle/#{name}"
+      this.vm.box = "trueability/#{name}"
       this.vm.hostname = name
 
       if name.start_with?('windows')

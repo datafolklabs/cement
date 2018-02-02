@@ -6,10 +6,10 @@ init:
 	pip install --upgrade -r requirements-dev.txt
 
 test:
-	python -m pytest -v tests/	
+	python -m pytest -v tests/
 
 test-coverage:
-	python -m pytest -v --cov=cement --cov-report=term --cov-report=html:coverage-report tests/	
+	python -m pytest -v --cov=cement --cov-report=term --cov-report=html:coverage-report tests/
 
 comply:
 	flake8 cement/ tests/
@@ -24,3 +24,6 @@ clean:
 	find . -name '*.py[co]' -delete
 	rm -rf doc/build
 
+dev:
+	docker-compose up -d
+	docker-compose exec cement /bin/ash
