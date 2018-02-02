@@ -24,9 +24,9 @@ Cement core features include (but are not limited to):
 - Controller handler supports sub-commands, and nested controllers
 - Hook support adds a bit of magic to apps and also ties into framework
 - Zero external dependencies* (not including optional extensions)
-- 100% test coverage using `nose` and `coverage`
-- 100% PEP8 and style compliant using `flake8`
-- Extensive Sphinx documentation
+- 100% test coverage (`pytest`)
+- 100% PEP8 compliant (`flake8`)
+- Extensive API Reference (`sphinx`)
 - Tested on Python 3.5+
 - Does not support Python 2.x
 
@@ -45,3 +45,44 @@ Cement core features include (but are not limited to):
 ## License
 
 The Cement CLI Application Framework is Open Source and is distributed under the BSD License (three clause).  Please see the LICENSE file included with this software.
+
+## Development
+
+### Docker
+
+This project includes a `docker-compose` configuration that sets up all required services, and dependencies for development.  This is the recommended path for local development, and is the only fully supported option.
+
+```
+$ docker-compose up -d
+
+$ docker-compose exec cement /bin/ash
+
+|> cement >| app #
+```
+
+### Vagrant
+
+An alternative option is included to run Vagrant for development.  This is partially supported, primarily for the purpose of developing/testing on Windows as well as testing specific issues on target operating systems.
+
+```
+$ vagrant up linux
+
+$ vagrant ssh linux
+
+vagrant@linux $ cd /vagrant
+
+vagrant@linux $ source env/bin/activate
+
+|> cement >| $
+```
+
+
+### Running Tests and Compliance
+
+```
+$ make test
+
+$ make comply
+```
+
+See `Makefile` for all other common development actions.

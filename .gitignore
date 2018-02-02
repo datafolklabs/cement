@@ -71,3 +71,7 @@ myapp*.py
 
 # redis test artifacts
 dump.rdb
+
+# testing
+.pytest_cache
+
