@@ -16,7 +16,15 @@ Features:
 
 - `[core]` Add Docker / Docker Compose Support
     - [Issue #439](https://github.com/datafolklabs/cement/issues/439)
-
+- `[core]` Add ability to override the output handler used when `app.render()`
+  is called.
+    - [Issue #471](https://github.com/datafolklabs/cement/issues/471)
+- `[ext.print]` Added the Print Extension to be used as a drop in replacement
+  for the standard ``print()``, but allowing the developer to honor framework
+  features like `pre_render` and `post_render` hooks.
+- `[ext.scrub]` Added Scrub Extension to easily obfuscate sensitive data from
+  rendered output.
+    - [Issue #469](https://github.com/datafolklabs/cement/issues/469)
 
 Refactoring:
 

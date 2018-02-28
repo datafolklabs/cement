@@ -64,7 +64,9 @@ Extension Modules
    ext/ext_memcached
    ext/ext_mustache
    ext/ext_plugin
+   ext/ext_print
    ext/ext_redis
+   ext/ext_scrub
    ext/ext_smtp
    ext/ext_tabulate
    ext/ext_yaml
