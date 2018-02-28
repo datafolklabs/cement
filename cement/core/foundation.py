@@ -913,7 +913,7 @@ class App(meta.MetaMixin):
         if self._meta.exit_on_close is True:
             sys.exit(self.exit_code)
 
-    def render(self, data, template=None, out=sys.stdout, **kw):
+    def render(self, data, template=None, out=sys.stdout, handler=None, **kw):
         """
         This is a simple wrapper around ``self.output.render()`` which simply
         returns an empty string if no output handler is defined.
@@ -927,6 +927,8 @@ class App(meta.MetaMixin):
             out: A file like object (i.e. ``sys.stdout``, or actual file).
                 Set to ``None`` if no output is desired (just render and
                 return).
+            handler: The output handler to use to render.  Defaults to
+                ``App.Meta.output_handler``.
 
         Other Parameters:
             kw (dict): Additional keyword arguments will be passed to the
@@ -941,11 +943,17 @@ class App(meta.MetaMixin):
 
         kw['template'] = template
 
-        if self.output is None:
+        if handler is not None:
+            oh = self.handler.resolve('output', handler)
+            oh._setup(self)
+        else:
+            oh = self.output
+
+        if oh is None:
             LOG.debug('render() called, but no output handler defined.')
             out_text = ''
         else:
-            out_text = self.output.render(data, **kw)
+            out_text = oh.render(data, **kw)
 
         for res in self.hook.run('post_render', self, out_text):
             if not type(res) is str:
