@@ -1,4 +1,5 @@
 
+import os
 from pytest import raises
 
 from cement.core.foundation import TestApp
@@ -27,3 +28,33 @@ def test_get_dict():
         assert isinstance(app.config.get_dict(), dict)
         _config = app.config.get_dict()
         assert _config['log.logging']['level'] == 'INFO'
+
+
+def test_env_var_override():
+    with TestApp(config_section='testapp') as app:
+        app.config.set('testapp', 'foo', 'bar')
+
+        env_var = "TESTAPP_FOO"
+        assert app.config.get('testapp', 'foo') == 'bar'
+        section_dict = app.config.get_section_dict('testapp')
+        assert section_dict['foo'] == 'bar'
+
+        os.environ[env_var] = 'not-bar'
+        assert app.config.get('testapp', 'foo') == 'not-bar'
+        section_dict = app.config.get_section_dict('testapp')
+        assert section_dict['foo'] == 'not-bar'
+
+        ### do again but in another config namespace
+
+        app.config.add_section('dummy')
+        app.config.set('dummy', 'foo', 'bar')
+
+        env_var = "TESTAPP_DUMMY_FOO"
+        assert app.config.get('dummy', 'foo') == 'bar'
+        section_dict = app.config.get_section_dict('dummy')
+        assert section_dict['foo'] == 'bar'
+
+        os.environ[env_var] = 'dummy-not-bar'
+        assert app.config.get('dummy', 'foo') == 'dummy-not-bar'
+        section_dict = app.config.get_section_dict('dummy')
+        assert section_dict['foo'] == 'dummy-not-bar'

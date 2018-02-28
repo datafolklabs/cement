@@ -33,9 +33,66 @@ Usage
         app.config.set('myapp', 'foo', 'bar2')
 
         # etc.
+
+
+Environment Variable Override
+-----------------------------
+
+Cement support overriding configuration settings via environment variables that
+match the config setting.  For example ``config['myapp']['foo']`` is
+overridable by ``MYAPP_FOO``.
+
+**myapp.py**:
+
+.. code-block:: python
+
+    import os
+    from cement import App, init_defaults
+
+    defaults = init_defaults('myapp', 'other')
+    defaults['myapp']['foo1'] = 'bar1'
+    defaults['other']['foo2'] = 'bar2'
+
+    class MyApp(App):
+        class Meta:
+            label = 'myapp'
+            config_defaults = defaults
+
+    with MyApp() as app:
+        app.run()
+        print('Foo1: %s' % app.config.get('myapp', 'foo1'))
+        print('Other Foo2: %s' % app.config.get('other', 'foo2'))
+
+
+Example:
+
+.. code-block:: text
+
+    ### using config settings
+
+    $ python myapp.py
+    Foo1: bar1
+    Other Foo2: bar2
+
+
+    ### overriding app level configuration
+
+    $ MYAPP_FOO1=not-bar python myapp.py
+    Foo1: not-bar
+    Other Foo2: bar2
+
+
+    ### overriding secondary namespace (always prefix with MYAPP_)
+
+    $ MYAPP_OTHER_FOO2=not-bar python myapp.py
+    Foo1: bar1
+    Other Foo2: not-bar
+
 """
 
+import os
 import sys
+import re
 from ..core import config
 from ..utils.misc import minimal_logger
 
@@ -98,6 +155,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
                 # we don't support nested config blocks, so no need to go
                 # further down to more nested dicts.
 
+
     def _parse_file(self, file_path):
         """
         Parse a configuration file at ``file_path`` and store it.
@@ -115,6 +173,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         # will likely raise an exception anyhow.
         return True
 
+
     def keys(self, section):
         """
         Return a list of keys within ``section``.
@@ -128,6 +187,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         """
         return self.options(section)
 
+
     def get_dict(self):
         """
         Return a dict of the entire configuration.
@@ -140,6 +200,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
             _config[section] = self.get_section_dict(section)
         return _config
 
+
     def get_sections(self):
         """
         Return a list of configuration sections.
@@ -149,6 +210,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
 
         """
         return self.sections()
+
 
     def get_section_dict(self, section):
         """
@@ -166,6 +228,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
             dict_obj[key] = self.get(section, key)
         return dict_obj
 
+
     def add_section(self, section):
         """
         Adds a block section to the config.
@@ -176,14 +239,33 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         """
         return RawConfigParser.add_section(self, section)
 
+
+    def _get_env_var(self, section, key):
+        if section == self.app._meta.config_section:
+            env_var = "%s_%s" % (self.app._meta.config_section, key)
+        else:
+            env_var = "%s_%s_%s" % (self.app._meta.config_section, section, key)
+
+        env_var = env_var.upper()
+        env_var = re.sub('[^0-9a-zA-Z]+', '_', env_var)
+        return env_var
+
+
     def get(self, section, key):
-        return RawConfigParser.get(self, section, key)
+        env_var = self._get_env_var(section, key)
+        if env_var in os.environ.keys():
+            return os.environ[env_var]
+        else:
+            return RawConfigParser.get(self, section, key)
+
 
     def has_section(self, section):
         return RawConfigParser.has_section(self, section)
 
+
     def set(self, section, key, value):
         return RawConfigParser.set(self, section, key, value)
+
 
 def load(app):
     app.handler.register(ConfigParserConfigHandler)

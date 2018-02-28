@@ -25,6 +25,9 @@ Features:
 - `[ext.scrub]` Added Scrub Extension to easily obfuscate sensitive data from
   rendered output.
     - [Issue #469](https://github.com/datafolklabs/cement/issues/469)
+- `[core]` Add ability to override config settings via envirionment variables.
+    - [Issue #437](https://github.com/datafolklabs/cement/issues/437)
+
 
 Refactoring:
 

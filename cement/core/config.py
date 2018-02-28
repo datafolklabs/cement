@@ -117,7 +117,14 @@ class ConfigHandlerBase(Handler):
     @abstractmethod
     def get(self, section, key):
         """
-        Return a configuration value based on ``section.key``.
+        Return a configuration value based on ``section.key``.  Must honor
+        environment variables if they exist to override the config... for
+        example ``config['myapp']['foo']['bar']`` must be overridable by the
+        environment variable ``MYAPP_FOO_BAR``.... Note that ``MYAPP_`` must
+        prefix all vars, therefore ``config['redis']['foo']`` would be
+        overridable by ``MYAPP_REDIS_FOO`` ... but
+        ``config['myapp']['foo']['bar']`` would not have a double prefix of
+        ``MYAPP_MYAPP_FOO_BAR``.
 
         Args:
             section (str): The section of the configuration to pull key values
