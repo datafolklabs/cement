@@ -2,10 +2,10 @@
 env/
 var/
 log/
-tmp/
 dist
 __pycache__/
 .cache/
+tmp/
 
 # Gitignores from https://github.com/github/gitignore
 
