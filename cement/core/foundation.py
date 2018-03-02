@@ -174,9 +174,12 @@ class App(meta.MetaMixin):
         .. code-block:: python
 
             [
-                '/etc/<app_label>/<app_label>.conf',
-                '~/.<app_label>.conf',
-                '~/.<app_label>/config'
+                '/etc/myapp/myapp.conf',
+                '~/.config/myapp/myapp.conf',
+                '~/.config/myapp/config',
+                '~/.config/myapp.conf',
+                '~/.myapp.conf',
+                '~/.myapp/config',
             ]
 
 
@@ -186,6 +189,28 @@ class App(meta.MetaMixin):
 
         Note that ``.conf`` is the default config file extension, defined by
         ``App.Meta.config_extension``.
+        """
+
+        config_dirs = None
+        """
+        List of config directories to search config files. For each direcory
+        cement will load all files that ends with ``.conf``.
+
+        .. code-block:: python
+            [
+                '/etc/myapp/conf.d',
+                '~/.config/myapp/conf.d',
+                '~/.myapp/conf.d',
+            ]
+
+        Directories and files inside are loaded in order, and have precedence
+        in order.  Therefore, the last configuration loaded has precedence
+        (and overwrites settings loaded from previous configuration files).
+        These configuration will be overriden by configuration from
+        ``CementApp.Meta.config_files``.
+
+        Note that ``.conf`` is the default config file extension, defined by
+        ``CementApp.Meta.config_extension``.
         """
 
         plugins = []
@@ -207,7 +232,11 @@ class App(meta.MetaMixin):
 
         .. code-block:: python
 
-            ['/etc/<app_label>/plugins.d', '~/.<app_label>/plugin.d']
+            [
+                '/etc/myapp/plugins.d',
+                '~/.config/myapp/plugins.d',
+                '~/.myapp/plugin.d',
+            ]
 
 
         Files are loaded in order, and have precedence in that order.
@@ -257,7 +286,11 @@ class App(meta.MetaMixin):
 
         .. code-block:: python
 
-            ['~/.<app_label>/plugins', '/usr/lib/<app_label>/plugins']
+            [
+                '~/.myapp/plugins',
+                '~/.config/myapp/plugins',
+                '/usr/lib/myapp/plugins',
+            ]
 
 
         Modules are attempted to be loaded in order, and will stop loading
@@ -270,7 +303,7 @@ class App(meta.MetaMixin):
         """
         A directory path where plugin code (modules) can be loaded from.
         By default, this setting is also overridden by the
-        ``<app_label>.plugin_dir`` config setting parsed in any of the
+        ``myapp.plugin_dir`` config setting parsed in any of the
         application configuration files.
 
         If set, this item will be **prepended** to ``Meta.plugin_dirs`` so
@@ -544,7 +577,11 @@ class App(meta.MetaMixin):
 
         .. code-block:: python
 
-            ['~/.<app_label>/templates', '/usr/lib/<app_label>/templates']
+            [
+                '~/.myapp/templates',
+                '~/.config/myapp/templates',
+                '/usr/lib/myapp/templates',
+            ]
 
 
         Templates are attempted to be loaded in order, and will stop loading
@@ -555,7 +592,7 @@ class App(meta.MetaMixin):
         """
         A directory path where template files can be loaded from.  By default,
         this setting is also overridden by the
-        ``<app_label>.template_dir`` config setting parsed in any of the
+        ``myapp.template_dir`` config setting parsed in any of the
         application configuration files .
 
         If set, this item will be **prepended** to
@@ -692,11 +729,9 @@ class App(meta.MetaMixin):
         # setup the cement framework
         self._lay_cement()
 
-
     @property
     def label(self):
         return self._meta.label
-
 
     @property
     def debug(self):
@@ -1182,10 +1217,11 @@ class App(meta.MetaMixin):
 
     def _setup_config_handler(self):
         LOG.debug("setting up %s.config handler" % self._meta.label)
+        label = self._meta.label
         self.config = self._resolve_handler('config',
                                             self._meta.config_handler)
         if self._meta.config_section is None:
-            self._meta.config_section = self._meta.label
+            self._meta.config_section = label
 
         self.config.add_section(self._meta.config_section)
 
@@ -1193,14 +1229,30 @@ class App(meta.MetaMixin):
             self.config.merge(self._meta.config_defaults)
 
         if self._meta.config_files is None:
-            label = self._meta.label
             ext = self._meta.config_extension
 
             self._meta.config_files = [
-                os.path.join('/', 'etc', label, '%s%s' % (label, ext)),
-                os.path.join(fs.HOME_DIR, '.%s%s' % (label, ext)),
-                os.path.join(fs.HOME_DIR, '.%s' % label, 'config'),
+                fs.join('/', 'etc', label, '%s%s' % (label, ext)),
+                fs.join(fs.HOME_DIR, '.config', label, '%s%s' % (label, ext)),
+                fs.join(fs.HOME_DIR, '.config', label, 'config'),
+                fs.join(fs.HOME_DIR, '.config', '%s%s' % (label, ext)),
+                fs.join(fs.HOME_DIR, '.%s%s' % (label, ext)),
+                fs.join(fs.HOME_DIR, '.%s' % label, 'config'),
             ]
+
+        if self._meta.config_dirs is None:
+            self._meta.config_dirs = [
+                fs.join('/', 'etc', label, 'conf.d'),
+                fs.join(fs.HOME_DIR, '.config', label, 'conf.d'),
+                fs.join(fs.HOME_DIR, '.%s' % label, 'conf.d'),
+            ]
+
+        for _dir in self._meta.config_dirs:
+            if not os.path.isdir(_dir):
+                continue
+            for f in os.listdir(_dir):
+                if f.endswith(ext):
+                    self.config.parse_file(fs.join(_dir, f))
 
         for _file in self._meta.config_files:
             self.config.parse_file(_file)
@@ -1225,7 +1277,7 @@ class App(meta.MetaMixin):
 
         # load extensions from configuraton file
         if 'extensions' in self.config.keys(self._meta.config_section):
-            exts = self.config.get(self._meta.label, 'extensions')
+            exts = self.config.get(label, 'extensions')
 
             # convert a comma-separated string to a list
             if type(exts) is str:
@@ -1235,7 +1287,7 @@ class App(meta.MetaMixin):
                 ext_list = [x.strip() for x in ext_list]
 
                 # set the new extensions value in the config
-                self.config.set(self._meta.label, 'extensions', ext_list)
+                self.config.set(label, 'extensions', ext_list)
 
             # otherwise, if it's a list
             elif type(exts) is list:
@@ -1265,7 +1317,8 @@ class App(meta.MetaMixin):
         if self._meta.plugin_config_dirs is None:
             self._meta.plugin_config_dirs = [
                 '/etc/%s/plugins.d/' % self._meta.label,
-                os.path.join(fs.HOME_DIR, '.%s' % label, 'plugins.d'),
+                fs.join(fs.HOME_DIR, '.config', label, 'plugins.d'),
+                fs.join(fs.HOME_DIR, '.%s' % label, 'plugins.d'),
             ]
         config_dir = self._meta.plugin_config_dir
         if config_dir is not None:
@@ -1276,7 +1329,8 @@ class App(meta.MetaMixin):
         # plugin dirs
         if self._meta.plugin_dirs is None:
             self._meta.plugin_dirs = [
-                os.path.join(fs.HOME_DIR, '.%s' % label, 'plugins'),
+                fs.join(fs.HOME_DIR, '.%s' % label, 'plugins'),
+                fs.join(fs.HOME_DIR, '.config', label, 'plugins'),
                 '/usr/lib/%s/plugins' % self._meta.label,
             ]
         plugin_dir = self._meta.plugin_dir
@@ -1312,7 +1366,8 @@ class App(meta.MetaMixin):
         if self._meta.template_dirs is None:
             self._meta.template_dirs = []
             paths = [
-                os.path.join(fs.HOME_DIR, '.%s' % label, 'templates'),
+                fs.join(fs.HOME_DIR, '.%s' % label, 'templates'),
+                fs.join(fs.HOME_DIR, '.config', label, 'templates'),
                 '/usr/lib/%s/templates' % label,
             ]
             for path in paths:
