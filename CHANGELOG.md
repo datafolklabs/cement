@@ -53,7 +53,8 @@ Incompatible:
   will print help info and exit.  Can now set this to `None` as well to
   pass/exit.
     - [Issue #426](https://github.com/datafolklabs/cement/issues/426)
-
+- `[ext.plugin]` All plugin configuration sections must start with `plugin.`.
+    For example, `[plugin.myplugin]`.
 
 Deprecation:
 

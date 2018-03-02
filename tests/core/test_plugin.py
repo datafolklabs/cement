@@ -47,26 +47,26 @@ class TestPluginHandler(object):
 # app functionality and coverage tests
 
 CONF1 = """
-[myplugin]
-enable_plugin = true
+[plugin.myplugin]
+enable = true
 foo = bar
 
 """
 
 CONF2 = """
-[myplugin]
-enable_plugin = false
+[plugin.myplugin]
+enable = false
 foo = bar
 """
 
 CONF3 = """
-[bogus_plugin]
+[plugin.bogus_plugin]
 foo = bar
 """
 
 CONF4 = """
-[ext_json]
-enable_plugin = true
+[plugin.ext_json]
+enable = true
 foo = bar
 """
 
@@ -113,8 +113,8 @@ def test_load_plugins_from_files(tmp):
 def test_load_order_presedence_one(tmp):
     # app config defines it as enabled, but the plugin config has it
     # disabled... app trumps the config
-    defaults = init_defaults('myplugin')
-    defaults['myplugin']['enable_plugin'] = True
+    defaults = init_defaults('plugin.myplugin')
+    defaults['plugin.myplugin']['enable'] = True
 
     f = open(os.path.join(tmp.dir, 'myplugin.conf'), 'w')
     f.write(CONF2)
@@ -139,8 +139,8 @@ def test_load_order_presedence_one(tmp):
 def test_load_order_presedence_two(tmp):
     # opposite of previous test... the app config defines it as disabled, even
     # though the plugin config has it enabled... app trumps the config
-    defaults = init_defaults('myplugin')
-    defaults['myplugin']['enable_plugin'] = False
+    defaults = init_defaults('plugin.myplugin')
+    defaults['plugin.myplugin']['enable'] = False
 
     f = open(os.path.join(tmp.dir, 'myplugin.conf'), 'w')
     f.write(CONF1)
@@ -165,7 +165,7 @@ def test_load_order_presedence_two(tmp):
 def test_load_order_presedence_three(tmp):
     # multiple plugin configs, first plugin conf defines it as disabled,
     # but last read should make it enabled.
-    defaults = init_defaults('myplugin')
+    defaults = init_defaults('plugin.myplugin')
 
     f = open(os.path.join(tmp.dir, 'a.conf'), 'w')
     f.write(CONF2)  # disabled config
@@ -194,7 +194,7 @@ def test_load_order_presedence_three(tmp):
 def test_load_order_presedence_four(tmp):
     # multiple plugin configs, first plugin conf defines it as enabled,
     # but last read should make it disabled.
-    defaults = init_defaults('myplugin')
+    defaults = init_defaults('plugin.myplugin')
 
     f = open(os.path.join(tmp.dir, 'a.conf'), 'w')
     f.write(CONF1)  # enabled config
@@ -222,7 +222,7 @@ def test_load_order_presedence_four(tmp):
 
 def test_load_order_presedence_five(tmp):
     # Multiple plugin configs, enable -> disabled -> enable
-    defaults = init_defaults('myplugin')
+    defaults = init_defaults('plugin.myplugin')
 
     f = open(os.path.join(tmp.dir, 'a.conf'), 'w')
     f.write(CONF1)  # enabled config
@@ -265,9 +265,9 @@ def test_load_plugins_from_config(tmp):
     f.write(PLUGIN)
     f.close()
 
-    defaults = init_defaults('myplugin', 'myplugin2')
-    defaults['myplugin']['enable_plugin'] = True
-    defaults['myplugin2']['enable_plugin'] = False
+    defaults = init_defaults('plugin.myplugin', 'plugin.myplugin2')
+    defaults['plugin.myplugin']['enable'] = True
+    defaults['plugin.myplugin2']['enable'] = False
 
     class MyApp(TestApp):
         class Meta:

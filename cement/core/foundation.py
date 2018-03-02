@@ -225,7 +225,9 @@ class App(meta.MetaMixin):
         """
         A list of directory paths where plugin config files can be found.
         Files must end in ``.conf`` (or the extension defined by
-        ``App.Meta.config_extension``) or they will be ignored.
+        ``App.Meta.config_extension``) or they will be ignored.  Additionally,
+        plugin configuration sections must start with ``plugin.`` (ex:
+        ``[plugin.myplugin]``).
 
         Note: Though ``App.Meta.plugin_config_dirs`` is ``None``, Cement
         will set this to a default list based on ``App.Meta.label``.
