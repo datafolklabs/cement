@@ -1,13 +1,12 @@
 
 import sys
-import re
 from pytest import raises, skip
 from argparse import ArgumentError
 from cement.core.foundation import TestApp
 from cement.ext.ext_argparse import ArgparseArgumentHandler
 from cement.ext.ext_argparse import ArgparseController, expose
 from cement.ext.ext_argparse import _clean_label, _clean_func
-from cement.core.exc import InterfaceError, FrameworkError
+from cement.core.exc import FrameworkError
 
 
 if (sys.version_info[0] >= 3 and sys.version_info[1] >= 4):
@@ -234,7 +233,7 @@ class Aliases(ArgparseController):
 class ArgparseApp(TestApp):
     class Meta:
         argument_handler = ArgparseArgumentHandler
-        handlers=[
+        handlers = [
             Sixth,
             Base,
             Second,
@@ -242,7 +241,7 @@ class ArgparseApp(TestApp):
             Fourth,
             Fifth,
             Seventh,
-         ]
+        ]
 
 
 def test_clean_label():
@@ -286,7 +285,7 @@ def test_controller_commands():
 
     with ArgparseApp(argv=['third', 'cmd4']) as app:
         res = app.run()
-        assert res =="Inside Fourth.cmd4"
+        assert res == "Inside Fourth.cmd4"
 
     with ArgparseApp(argv=['third', 'fifth', 'cmd5']) as app:
         res = app.run()
@@ -446,7 +445,7 @@ def test_alternative_default():
     class MyApp(ArgparseApp):
         class Meta:
             argv = ['alternative-default']
-            handlers=[
+            handlers = [
                 Base,
                 AlternativeDefault,
             ]
@@ -463,11 +462,10 @@ def test_bad_alternative_default_command():
     class MyApp(ArgparseApp):
         class Meta:
             argv = ['bad-alternative-default']
-            handlers=[
+            handlers = [
                 Base,
                 BadAlternativeDefault,
             ]
-
 
     with MyApp() as app:
         msg = "(.*)does not exist(.*)bogus_default(.*)"
@@ -479,11 +477,10 @@ def test_invalid_stacked_type():
     class MyApp(ArgparseApp):
         class Meta:
             argv = ['bad-alternative-default']
-            handlers=[
+            handlers = [
                 Base,
                 BadStackType,
             ]
-
 
     with MyApp() as app:
         with raises(FrameworkError, match="(.*)Invalid stacked type(.*)"):
@@ -494,11 +491,10 @@ def test_duplicate_arguments():
     class MyApp(ArgparseApp):
         class Meta:
             argv = ['bad-alternative-default']
-            handlers=[
+            handlers = [
                 Base,
                 DuplicateArguments,
             ]
-
 
     with MyApp() as app:
         with raises(ArgumentError, match="(.*)conflicting option string(.*)"):
@@ -509,11 +505,10 @@ def test_controller_command_duplicate_arguments():
     class MyApp(ArgparseApp):
         class Meta:
             argv = ['bad-alternative-default']
-            handlers=[
+            handlers = [
                 Base,
                 ControllerCommandDuplicateArguments,
             ]
-
 
     with MyApp() as app:
         with raises(ArgumentError, match="(.*)conflicting option string(.*)"):
@@ -527,11 +522,10 @@ def test_aliases():
     class MyApp(ArgparseApp):
         class Meta:
             argv = ['bad-alternative-default']
-            handlers=[
+            handlers = [
                 Base,
                 Aliases,
             ]
-
 
     with MyApp() as app:
         app._meta.argv = ['aliases', 'aliases-cmd1']

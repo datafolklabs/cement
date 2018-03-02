@@ -2,7 +2,6 @@
 import time
 import signal
 from pytest import raises
-from mock import Mock
 from cement.core.exc import CaughtSignal
 from cement.core.foundation import TestApp
 

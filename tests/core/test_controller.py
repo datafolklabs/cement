@@ -2,7 +2,7 @@
 from cement.core.controller import ControllerHandlerBase, ControllerHandler
 
 
-### module tests
+# module tests
 
 class TestControllerHandlerBase(object):
     def test_interface(self):
@@ -22,4 +22,4 @@ class TestControllerHandler(object):
         assert h._meta.interface == 'controller'
         assert h._meta.label == 'my_controller_handler'
 
-### app functionality and coverage tests
+# app functionality and coverage tests

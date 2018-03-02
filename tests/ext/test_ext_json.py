@@ -1,8 +1,8 @@
 
+import os
 import json
-from tempfile import mkstemp
-from cement.utils.test import *
-
+from cement.utils.test import TestApp
+from cement.utils import fs
 
 CONFIG_PARSED = dict(
     section=dict(
@@ -15,7 +15,9 @@ CONFIG_PARSED = dict(
 )
 
 
-CONFIG = fs.join(os.path.dirname(__file__), '..', 'data', 'config', 'config.json')
+CONFIG = fs.join(os.path.dirname(__file__), '..',
+                 'data', 'config', 'config.json')
+
 
 class JsonApp(TestApp):
     class Meta:
@@ -46,7 +48,7 @@ def test_keys():
 
 def test_parse_file_bad_path():
     # coverage...
-    with JsonApp(config_files=['./some_bogus_path']) as app:
+    with JsonApp(config_files=['./some_bogus_path']):
         pass
 
 
@@ -54,7 +56,7 @@ def test_parse_file():
     with JsonApp() as app:
         assert app.config.get('section', 'key1') == 'ok1'
         assert app.config.get_section_dict('section') == \
-               CONFIG_PARSED['section']
+            CONFIG_PARSED['section']
 
 
 def test_handler_override_options_is_none():
@@ -67,6 +69,7 @@ def test_handler_override_options_is_none():
     with MyApp() as app:
         app.run()
         app.render(dict(foo='bar'))
+
 
 def test_get_dict():
     with JsonApp() as app:

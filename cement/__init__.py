@@ -1,4 +1,6 @@
 
+# flake8: noqa
+
 from .core.foundation import App
 from .ext.ext_argparse import ArgparseController as Controller
 from .ext.ext_argparse import expose as ex

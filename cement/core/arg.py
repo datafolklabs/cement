@@ -52,9 +52,10 @@ class ArgumentHandlerBase(Handler):
 
         Keyword Args:
             dest (str): The destination name (variable).  Default: `args[0]`
-            help (str): The help text for ``--help`` output (for that argument).
-            action (str): Must support: ``['store', 'store_true', 'store_false',
-                'store_const']``
+            help (str): The help text for ``--help`` output (for that
+                argument).
+            action (str): Must support: ``['store', 'store_true',
+                'store_false', 'store_const']``
             choices (list): A list of valid values that can be passed to an
                 option whose action is ``store``.
             const (str): The value stored if ``action == 'store_const'``.

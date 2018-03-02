@@ -166,7 +166,6 @@ The above looks like:
 import re
 import sys
 from argparse import ArgumentParser, RawDescriptionHelpFormatter, SUPPRESS
-from ..core.handler import Handler
 from ..core.arg import ArgumentHandler
 from ..core.controller import ControllerHandler
 from ..core.exc import FrameworkError
@@ -316,8 +315,10 @@ class expose(object):
         func.__cement_meta__ = metadict
         return func
 
+
 # shortcut for cleaner controllers
 ex = expose
+
 
 class ArgparseController(ControllerHandler):
 
@@ -342,7 +343,11 @@ class ArgparseController(ControllerHandler):
                     description = 'description at the top of --help'
                     epilog = "the text at the bottom of --help."
                     arguments = [
-                        (['-f', '--foo'], dict(help='my foo option', dest='foo')),
+                        (
+                            ['-f', '--foo'],
+                            { 'help' : 'my foo option',
+                              'dest' : 'foo' }
+                        ),
                     ]
 
             class Second(ArgparseController):
@@ -351,7 +356,11 @@ class ArgparseController(ControllerHandler):
                     stacked_on = 'base'
                     stacked_type = 'embedded'
                     arguments = [
-                        (['--foo2'], dict(help='my foo2 option', dest='foo2')),
+                        (
+                            ['--foo2'],
+                            { 'help' : 'my foo2 option',
+                              'dest' : 'foo2' }
+                        ),
                     ]
 
     """

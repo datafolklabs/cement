@@ -1,7 +1,6 @@
 
 import os
 import sys
-import shutil
 from pytest import raises
 
 from cement import init_defaults
@@ -10,7 +9,7 @@ from cement.core.exc import FrameworkError
 from cement.core.plugin import PluginHandlerBase, PluginHandler
 
 
-### module tests
+# module tests
 
 class TestPluginHandlerBase(object):
     def test_interface(self):
@@ -25,22 +24,17 @@ class TestPluginHandler(object):
             class Meta:
                 label = 'my_plugin_handler'
 
-
             def load_plugin(plugin_name):
                 pass
-
 
             def load_plugins(self, plugins):
                 pass
 
-
             def get_loaded_plugins(self):
                 pass
 
-
             def get_enabled_plugins(self):
                 pass
-
 
             def get_disabled_plugins(self):
                 pass
@@ -50,7 +44,7 @@ class TestPluginHandler(object):
         assert h._meta.label == 'my_plugin_handler'
 
 
-### app functionality and coverage tests
+# app functionality and coverage tests
 
 CONF1 = """
 [myplugin]
@@ -117,8 +111,8 @@ def test_load_plugins_from_files(tmp):
 
 
 def test_load_order_presedence_one(tmp):
-    # app config defines it as enabled, but the plugin config has it disabled...
-    # app trumps the config
+    # app config defines it as enabled, but the plugin config has it
+    # disabled... app trumps the config
     defaults = init_defaults('myplugin')
     defaults['myplugin']['enable_plugin'] = True
 
@@ -347,8 +341,9 @@ def test_bad_plugin_dir(tmp):
             plugin_bootstrap = None
 
     with raises(FrameworkError, match="Unable to load plugin 'myplugin'."):
-        with MyApp() as app:
+        with MyApp():
             pass
+
 
 def test_load_plugin_from_module(tmp):
     # We mock this out by loading a cement ext, but it is essentially the

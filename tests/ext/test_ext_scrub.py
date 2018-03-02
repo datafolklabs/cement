@@ -1,5 +1,5 @@
 
-from cement.utils.test import *
+from cement.utils.test import TestApp
 
 
 class ScrubApp(TestApp):
@@ -8,7 +8,8 @@ class ScrubApp(TestApp):
         scrub = [
             ('foo', '$$$'),
             ('bar', '***'),
-            ]
+        ]
+
 
 def test_scrub():
     with ScrubApp(argv=['--scrub']) as app:
@@ -17,4 +18,4 @@ def test_scrub():
         assert app.last_rendered[1] == '$$$*** $$$ ***\n'
 
         # coverage
-        assert app.scrub(None) == None
+        assert app.scrub(None) is None

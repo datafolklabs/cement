@@ -1,5 +1,5 @@
 
-from cement.utils.test import *
+from cement.utils.test import TestApp
 
 
 class PrintApp(TestApp):

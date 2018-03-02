@@ -1,7 +1,9 @@
 
 import os
-from cement.utils.test import *
+from cement.utils.test import TestApp, raises
 from cement.ext.ext_watchdog import WatchdogEventHandler
+from cement.core.exc import FrameworkError
+from cement.utils import fs
 
 
 class MyEventHandler(WatchdogEventHandler):
@@ -51,7 +53,7 @@ def test_watchdog_app_paths_bad_spec(tmp):
             ]
 
     with raises(FrameworkError, match="Watchdog path spec must be a tuple"):
-        with MyApp() as app:
+        with MyApp():
             pass
 
 

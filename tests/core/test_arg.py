@@ -1,12 +1,8 @@
 
-from pytest import raises
-
-from cement.core.foundation import TestApp
-from cement.core.exc import FrameworkError
 from cement.core.arg import ArgumentHandlerBase, ArgumentHandler
 
 
-### module tests
+# module tests
 
 class TestArgumentHandlerBase(object):
     def test_interface(self):
@@ -30,4 +26,4 @@ class TestArgumentHandler(object):
         assert h._meta.label == 'my_argument_handler'
 
 
-### app functionality and coverage tests
+# app functionality and coverage tests

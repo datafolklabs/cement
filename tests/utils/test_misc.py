@@ -1,6 +1,5 @@
 
 import os
-import sys
 from pytest import raises
 
 from cement.core.foundation import TestApp
@@ -13,7 +12,7 @@ def test_defaults():
     defaults['section2']['foo'] = 'bar'
     with TestApp(config_defaults=defaults) as app:
         assert app.config.get('section1', 'debug') is True
-        assert app.config.get_section_dict('section2') == {'foo' : 'bar'}
+        assert app.config.get_section_dict('section2') == {'foo': 'bar'}
 
 
 def test_minimal_logger():
@@ -34,7 +33,7 @@ def test_minimal_logger():
 
     # coverage ...
     kw = {}
-    kw['extra'] = {'namespace' : __name__}
+    kw['extra'] = {'namespace': __name__}
     log._get_logging_kwargs(__name__, **kw)
 
     kw['extra'] = {}

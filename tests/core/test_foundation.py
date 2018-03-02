@@ -17,6 +17,7 @@ from cement.core.foundation import cement_signal_handler
 from cement.utils.misc import minimal_logger, init_defaults
 from cement.utils import test, fs, misc
 
+
 def test_add_handler_override_options():
     class MyApp(TestApp):
         class Meta:
@@ -29,7 +30,7 @@ def test_add_handler_override_options():
 
         # coverage for case where the interface doesn't exist
         app._meta.handler_override_options = {
-            'bogus' : ( ['--bogus'], { 'help' : 'bogus handler' } ),
+            'bogus': (['--bogus'], {'help': 'bogus handler'}),
         }
         add_handler_override_options(app)
 
@@ -68,12 +69,10 @@ def test_cement_signal_handler():
 
 class TestFoundation(object):
 
-
     def test_basic(self):
         with TestApp() as app:
             assert re.match('app-.*', app._meta.label)
             app.run()
-
 
     def test_loaded(self):
         class MyApp(TestApp):
@@ -98,7 +97,6 @@ class TestFoundation(object):
         with MyApp() as app:
             app.run()
 
-
     def test_argv(self):
         with TestApp(argv=None) as app:
             assert app.argv == list(sys.argv[1:])
@@ -106,40 +104,37 @@ class TestFoundation(object):
         with TestApp(argv=['bogus', 'args']) as app:
             assert app.argv == ['bogus', 'args']
 
-
     def test_framework_logging(self):
-        ### is true
+        # is true
 
         del os.environ['CEMENT_FRAMEWORK_LOGGING']
 
-        with TestApp(framework_logging=True) as app:
+        with TestApp(framework_logging=True):
             assert os.environ['CEMENT_FRAMEWORK_LOGGING'] == '1'
 
         ml = minimal_logger(__name__)
         assert ml.logging_is_enabled is True
 
-        ### is false
+        # is false
 
         del os.environ['CEMENT_FRAMEWORK_LOGGING']
 
-        with TestApp(framework_logging=False) as app:
+        with TestApp(framework_logging=False):
             assert os.environ['CEMENT_FRAMEWORK_LOGGING'] == '0'
 
         ml = minimal_logger(__name__)
         assert ml.logging_is_enabled is False
 
-
     def test_bootstrap(self):
         with TestApp(bootstrap='tests.bootstrap') as app:
             assert app._loaded_bootstrap.__name__ == 'tests.bootstrap'
 
-        ### reload
+        # reload
 
         app = TestApp(bootstrap='cement.utils.test')
         app._loaded_bootstrap = test
         app.setup()
         assert app._loaded_bootstrap.__name__ == 'cement.utils.test'
-
 
     def test_resolve_bad_handler(self):
         class Bogus(object):
@@ -148,7 +143,6 @@ class TestFoundation(object):
         with pytest.raises(FrameworkError, match="Unable to resolve handler"):
             with TestApp() as app:
                 app._resolve_handler('output', Bogus)
-
 
     def test_passed_handlers(self):
         # forces App._resolve_handler to register the handler by class
@@ -169,11 +163,10 @@ class TestFoundation(object):
                 plugin_handler = CementPluginHandler()
                 output_handler = JsonOutputHandler()
                 mail_handler = DummyMailHandler()
-                argv = [ __file__, '--debug' ]
+                argv = [__file__, '--debug']
 
-        with MyApp() as app:
+        with MyApp():
             pass
-
 
     def test_debug(self):
         # default
@@ -189,7 +182,6 @@ class TestFoundation(object):
         defaults['my-app-test']['debug'] = True
         with TestApp('my-app-test', config_defaults=defaults) as app:
             assert app.debug is True
-
 
     def test_render(self, tmp):
         # defaults
@@ -223,7 +215,6 @@ class TestFoundation(object):
                 app.run()
                 app.render(dict(foo='bar'), out='bogus type')
 
-
     def test_label(self):
         # bad label
         with pytest.raises(FrameworkError):
@@ -233,26 +224,25 @@ class TestFoundation(object):
         with pytest.raises(FrameworkError, match="alpha-numeric"):
             App('some!bogus()label')
 
-
-
     def test_add_arg_shortcut(self):
         with TestApp() as app:
             app.add_arg('--foo', action='store')
 
-
     def test_reset_output_handler(self):
+        class ThisApp(TestApp):
+            class Meta:
+                extensions = ['mustache']
+                output_handler = 'mustache'
 
-        with TestApp(extensions=['mustache'], output_handler='mustache') as app:
+        with ThisApp() as app:
             app.run()
             app.output = None
             app._meta.output_handler = None
             app._setup_output_handler()
 
-
     def test_without_signals(self):
         with TestApp(catch_signals=None) as app:
             assert app._meta.catch_signals is None
-
 
     def test_extend(self):
         def my_extended_func():
@@ -266,12 +256,10 @@ class TestFoundation(object):
             with pytest.raises(FrameworkError, match=".* already exists!"):
                 app.extend('kapla', my_extended_func)
 
-
     def test_no_handler(self):
         # coverage
         with TestApp() as app:
             app._resolve_handler('cache', None, raise_error=False)
-
 
     def test_config_files_is_none(self):
         # verify the autogenerated config files list
@@ -285,35 +273,31 @@ class TestFoundation(object):
             for f in files:
                 assert f in app._meta.config_files
 
-
     def test_base_controller_label(self):
         class BogusBaseController(Controller):
             class Meta:
                 label = 'bad_base_controller_label'
 
-        with pytest.raises(FrameworkError, match="must have a label of 'base'"):
-            with TestApp(base_controller=BogusBaseController) as app:
+        msg = "must have a label of 'base'"
+        with pytest.raises(FrameworkError, match=msg):
+            with TestApp(base_controller=BogusBaseController):
                 pass
-
 
     def test_pargs(self):
         with TestApp(argv=['--debug']) as app:
             app.run()
             assert app.pargs.debug is True
 
-
     def test_last_rendered(self):
         with TestApp() as app:
             output_text = app.render({'foo': 'bar'})
-            assert app.last_rendered == ( {'foo': 'bar'}, output_text )
-
+            assert app.last_rendered == ({'foo': 'bar'}, output_text)
 
     def test_get_last_rendered(self):
         # DEPRECATED - REMOVE AFTER THE FUNCTION IS REMOVED
         with TestApp() as app:
             output_text = app.render({'foo': 'bar'})
-            assert app.get_last_rendered() == ( {'foo': 'bar'}, output_text )
-
+            assert app.get_last_rendered() == ({'foo': 'bar'}, output_text)
 
     def test_close_with_code(self):
         with pytest.raises(SystemExit) as e:
@@ -322,12 +306,11 @@ class TestFoundation(object):
                 app.close(114)
         assert e.value.code == 114
 
-        ### test bad code
+        # test bad code
         with pytest.raises(AssertionError, match='Invalid exit status code'):
             with TestApp() as app:
                 app.run()
                 app.close('Not An Int')
-
 
     # def test_suppress_output_while_debug(self):
     #     # coverage?
@@ -342,11 +325,9 @@ class TestFoundation(object):
     #     with TestApp(config_defaults=defaults) as app:
     #         app.run()
 
-
     def test_define_hooks_via_meta(self):
         with TestApp(define_hooks=['my_custom_hook']) as app:
             assert app.hook.defined('my_custom_hook') is True
-
 
     def test_register_hooks_via_meta(self):
         def my_custom_hook_func():
@@ -357,7 +338,6 @@ class TestFoundation(object):
         with app:
             for res in app.hook.run('my_custom_hook'):
                 assert res == "OK"
-
 
     def test_register_hooks_via_meta_retry(self):
         # hooks registered this way for non-framework hooks need to be retried
@@ -370,7 +350,6 @@ class TestFoundation(object):
         with app:
             assert len(app.hook.__hooks__['watchdog_pre_start']) == 1
 
-
     def test_define_handlers_via_meta(self):
         class MyTestHandler(Handler):
             class Meta:
@@ -379,7 +358,6 @@ class TestFoundation(object):
 
         with TestApp(define_handlers=[MyTestHandler]) as app:
             assert app.handler.defined('my_test_interface')
-
 
     def test_register_handlers_via_meta(self):
         class MyTestHandler(Handler):
@@ -390,8 +368,8 @@ class TestFoundation(object):
         app = TestApp(define_handlers=[MyTestHandler],
                       handlers=[MyTestHandler])
         with app:
-            assert app.handler.registered('my_test_interface', 'my_test_handler')
-
+            assert app.handler.registered(
+                'my_test_interface', 'my_test_handler')
 
     def test_reload(self):
         class MyTestHandler(Handler):
@@ -414,7 +392,6 @@ class TestFoundation(object):
             assert app.handler.defined('my_test_interface') is False
 
             app.run()
-
 
     def test_run_forever(self):
         class MyController(Controller):
@@ -440,7 +417,6 @@ class TestFoundation(object):
 
         signal.alarm(0)
 
-
     def test_add_remove_template_directory(self, tmp):
         with TestApp() as app:
             app.add_template_dir(tmp.dir)
@@ -449,13 +425,11 @@ class TestFoundation(object):
             app.remove_template_dir(tmp.dir)
             assert tmp.dir not in app._meta.template_dirs
 
-
     def test_alternative_module_mapping(self):
         # coverage
         with TestApp(alternative_module_mapping=dict(time='time')) as app:
             app.__import__('time')
             app.__import__('sleep', from_module='time')
-
 
     def test_meta_defaults(self):
         DEBUG_FORMAT = "TEST DEBUG FORMAT - %s" % misc.rando

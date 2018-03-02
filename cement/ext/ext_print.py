@@ -97,7 +97,7 @@ LOG = minimal_logger(__name__)
 
 def extend_print(app):
     def _print(text):
-        app.render({'out' : text}, handler='print')
+        app.render({'out': text}, handler='print')
     app.extend('print', _print)
 
 
@@ -123,7 +123,6 @@ class PrintOutputHandler(output.OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-
     def render(self, data_dict, template=None, **kw):
         """
         Take a data dictionary and render only the ``out`` key as text output.
@@ -144,7 +143,8 @@ class PrintOutputHandler(output.OutputHandler):
             LOG.debug("rendering output as text via %s" % self.__module__)
             return data_dict['out'] + '\n'
         else:
-            LOG.debug("no 'out' key found in data dict. not rendering output via %s" % self.__module__)
+            LOG.debug("no 'out' key found in data dict. "
+                      "not rendering output via %s" % self.__module__)
             return None
 
 
@@ -168,7 +168,6 @@ class PrintDictOutputHandler(output.OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-
     def render(self, data_dict, template=None, **kw):
         """
         Take a data dictionary and render it as text output.  Note that the
@@ -187,7 +186,7 @@ class PrintDictOutputHandler(output.OutputHandler):
         """
         LOG.debug("rendering output as text via %s" % self.__module__)
         out = ''
-        for key,val in data_dict.items():
+        for key, val in data_dict.items():
             out = out + '%s: %s\n' % (key, val)
 
         return out

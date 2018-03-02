@@ -7,7 +7,7 @@ from cement.core.exc import FrameworkError
 from cement.core.extension import ExtensionHandlerBase, ExtensionHandler
 
 
-### module tests
+# module tests
 
 class TestExtensionHandlerBase(object):
     def test_interface(self):
@@ -31,7 +31,7 @@ class TestExtensionHandler(object):
         assert h._meta.label == 'my_extension_handler'
 
 
-### app functionality and coverage tests
+# app functionality and coverage tests
 
 
 class Bogus(Handler):
@@ -75,6 +75,7 @@ def test_load_bogus_extension():
             ext = ExtensionHandler()
             ext._setup(app)
             ext.load_extensions(['bogus'])
+
 
 def test_get_loaded_extensions():
     with TestApp() as app:

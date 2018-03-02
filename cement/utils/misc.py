@@ -175,7 +175,8 @@ def minimal_logger(namespace, debug=False):
 
 def is_true(item):
     """
-    Given a value, determine if it is one of ``[True, 'True', 'true', 1, '1']``.
+    Given a value, determine if it is one of
+    ``[True, 'True', 'true', 1, '1']``.
 
     Args:
         item: The item to convert to a boolean.

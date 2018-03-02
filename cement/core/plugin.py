@@ -7,7 +7,6 @@ from ..utils.misc import minimal_logger
 LOG = minimal_logger(__name__)
 
 
-
 class PluginHandlerBase(Handler):
 
     """
@@ -69,6 +68,7 @@ class PluginHandlerBase(Handler):
     def get_disabled_plugins(self):
         """Returns a list of plugins that are disabled in the config."""
         pass
+
 
 class PluginHandler(PluginHandlerBase):
 

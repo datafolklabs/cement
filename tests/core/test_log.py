@@ -7,7 +7,7 @@ from cement.core.foundation import TestApp
 from cement.core.log import LogHandlerBase, LogHandler
 
 
-### module tests
+# module tests
 
 class TestLogHandlerBase(object):
     def test_interface(self):
@@ -23,30 +23,23 @@ class TestLogHandler(object):
             class Meta:
                 label = 'my_log_handler'
 
-
             def set_level(self):
                 pass
-
 
             def get_level(self):
                 pass
 
-
             def info(self, msg):
                 pass
-
 
             def warning(self, msg):
                 pass
 
-
             def error(self, msg):
                 pass
 
-
             def fatal(self, msg):
                 pass
-
 
             def debug(self, msg):
                 pass
@@ -56,7 +49,7 @@ class TestLogHandler(object):
         assert h._meta.label == 'my_log_handler'
 
 
-### app functionality and coverage tests
+# app functionality and coverage tests
 
 
 def test_unproviding_handler():

@@ -1,19 +1,17 @@
 """Tests for cement.core.hook."""
 
 from pytest import raises
-
-from cement.core.hook import HookManager
 from cement.core.exc import FrameworkError
 from cement.core.foundation import TestApp
 
 
-### module tests
+# module tests
 
 class TestHookManager(object):
     pass
 
 
-### app functionality and coverage tests
+# app functionality and coverage tests
 
 def test_define():
     with TestApp() as app:

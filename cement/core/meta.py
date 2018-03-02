@@ -16,6 +16,7 @@ class Meta(object):
         for key in dict_obj.keys():
             setattr(self, key, dict_obj[key])
 
+
 class MetaMixin(object):
 
     """

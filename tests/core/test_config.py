@@ -1,9 +1,8 @@
 
-from pytest import raises
 from cement.core.config import ConfigHandlerBase, ConfigHandler
 
 
-### module tests
+# module tests
 
 class MyConfigHandler(ConfigHandler):
     class Meta:
@@ -20,7 +19,7 @@ class MyConfigHandler(ConfigHandler):
 
     def get_dict(self, *args, **kw):
         pass
-        
+
     def get_sections(self, *args, **kw):
         pass
 
@@ -59,4 +58,4 @@ class TestConfigHandler(object):
         assert h.parse_file(tmp.file)
         assert not h.parse_file('/path/to/some/bogus/file')
 
-### app functionality and coverage tests
+# app functionality and coverage tests

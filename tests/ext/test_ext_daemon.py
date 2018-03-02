@@ -45,6 +45,8 @@ def test_bogus_user(rando):
     env.switch()
 
 # @test.raises(exc.FrameworkError)
+
+
 def test_bogus_group(rando):
     with raises(FrameworkError, match='Daemon group'):
         env = ext_daemon.Environment(group='cement_test_group%s' % rando)

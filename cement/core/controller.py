@@ -1,10 +1,6 @@
 """Cement core controller module."""
 
-import re
-import textwrap
-import argparse
 from abc import abstractmethod
-from ..core import exc
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
@@ -42,15 +38,16 @@ class ControllerHandlerBase(Handler):
         """
         Reads the application object's data to dispatch a command from this
         controller.  For example, reading ``self.app.pargs`` to determine what
-        command was pass    # pragma: nocovered, and then executing that command function.
+        command was pass    # pragma: nocovered, and then executing that
+        command function.
 
-        Note that Cement does *not* parse arguments when calling ``_dispatch()``
-        on a controller, as it expects the controller to handle parsing
-        arguments (I.e. ``self.app.args.parse()``).
+        Note that Cement does *not* parse arguments when calling
+        ``_dispatch()`` on a controller, as it expects the controller to
+        handle parsing arguments (I.e. ``self.app.args.parse()``).
 
         Returns:
-            unknown: The result of the executed controller function, or ``None``
-            if no controller function is called.
+            unknown: The result of the executed controller function, or
+            ``None`` if no controller function is called.
 
         """
         pass    # pragma: nocover

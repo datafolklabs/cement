@@ -12,6 +12,9 @@ test:
 comply:
 	flake8 cement/ tests/
 
+comply-fix:
+	autopep8 -ri cement/ tests/
+
 docs:
 	python setup.py build_sphinx
 	@echo

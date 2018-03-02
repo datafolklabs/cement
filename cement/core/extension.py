@@ -1,7 +1,7 @@
 """Cement core extensions module."""
 
 import sys
-from abc import ABC, abstractmethod, abstractproperty
+from abc import abstractmethod
 from ..core import exc
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
@@ -74,7 +74,7 @@ class ExtensionHandler(ExtensionHandlerBase):
     class Meta:
 
         """
-        Handler meta-data (can be pass    # pragma: no covered as keyword arguments to the parent
+        Handler meta-data (can be passed as keyword arguments to the parent
         class).
         """
 
@@ -134,7 +134,7 @@ class ExtensionHandler(ExtensionHandlerBase):
 
     def load_extensions(self, ext_list):
         """
-        Given a list of extension modules, iterate over the list and pass    # pragma: no cover
+        Given a list of extension modules, iterate over the list and pass
         individually to ``self.load_extension()``.
 
         Args:

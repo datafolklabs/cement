@@ -1,6 +1,7 @@
 
 from cement.core.meta import Meta, MetaMixin
 
+
 class TestMeta(object):
     def test_meta(self):
         m = Meta(key='value')

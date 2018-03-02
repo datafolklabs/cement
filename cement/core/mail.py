@@ -1,7 +1,6 @@
 """Cement core mail module."""
 
-# from ..core import interface
-from abc import ABC, abstractmethod, abstractproperty
+from abc import abstractmethod
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
@@ -86,6 +85,7 @@ class MailHandlerBase(Handler):
 
         """
         pass
+
 
 class MailHandler(MailHandlerBase):
 

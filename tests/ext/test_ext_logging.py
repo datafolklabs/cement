@@ -1,9 +1,8 @@
 
 import os
 import shutil
-from cement.core import handler
+from cement.core.foundation import TestApp
 from cement.ext.ext_logging import LoggingLogHandler
-from cement.utils.test import *
 from cement.utils.misc import init_defaults
 
 
@@ -108,5 +107,5 @@ def test_missing_log_dir(tmp):
         file=os.path.join(tmp.dir, 'test.log'),
     )
 
-    with TestApp(config_defaults=defaults) as app:
+    with TestApp(config_defaults=defaults):
         pass

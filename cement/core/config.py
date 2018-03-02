@@ -1,7 +1,7 @@
 """Cement core config module."""
 
 import os
-from abc import ABC, abstractmethod, abstractproperty
+from abc import abstractmethod
 from ..core.handler import Handler
 from ..utils.fs import abspath
 from ..utils.misc import minimal_logger
@@ -38,8 +38,8 @@ class ConfigHandlerBase(Handler):
     @abstractmethod
     def parse_file(self, file_path):
         """
-        Parse config file settings from ``file_path``.  Returns True if the file
-        existed, and was parsed successfully.  Returns False otherwise.
+        Parse config file settings from ``file_path``.  Returns True if the
+        file existed, and was parsed successfully.  Returns False otherwise.
 
         Args:
             file_path (str): The path to the config file to parse.

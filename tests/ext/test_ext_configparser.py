@@ -1,13 +1,10 @@
 
 import os
-from pytest import raises
-
 from cement.core.foundation import TestApp
-from cement.core.exc import FrameworkError
 from cement.ext.ext_configparser import ConfigParserConfigHandler
 
 
-### module tests
+# module tests
 
 class TestConfigParserConfigHandler(object):
     def test_subclassing(self):
@@ -15,13 +12,12 @@ class TestConfigParserConfigHandler(object):
             class Meta:
                 label = 'my_config_handler'
 
-
         h = MyConfigHandler()
         assert h._meta.interface == 'config'
         assert h._meta.label == 'my_config_handler'
 
 
-### app functionality and coverage tests
+# app functionality and coverage tests
 
 def test_get_dict():
     with TestApp() as app:
@@ -44,7 +40,7 @@ def test_env_var_override():
         section_dict = app.config.get_section_dict('testapp')
         assert section_dict['foo'] == 'not-bar'
 
-        ### do again but in another config namespace
+        # do again but in another config namespace
 
         app.config.add_section('dummy')
         app.config.set('dummy', 'foo', 'bar')

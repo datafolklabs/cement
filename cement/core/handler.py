@@ -4,7 +4,7 @@ Cement core handler module.
 """
 
 import re
-from abc import ABC, abstractproperty
+from abc import ABC
 from ..core import exc, meta
 from ..utils.misc import minimal_logger
 
@@ -117,8 +117,8 @@ class HandlerManager(object):
             handler_label (str): The label of the handler (i.e. ``json``)
 
         Keyword Args:
-            fallback (Handler):  A fallback value to return if handler_label doesn't
-                exist.
+            fallback (Handler):  A fallback value to return if handler_label
+                doesn't exist.
 
         Returns:
             Handler: An uninstantiated handler object
@@ -308,7 +308,7 @@ class HandlerManager(object):
             raise exc.FrameworkError("Handler interface '%s' doesn't exist." %
                                      interface)
         if obj._meta.label in self.__handlers__[interface] and \
-            self.__handlers__[interface][obj._meta.label] != handler_class:
+                self.__handlers__[interface][obj._meta.label] != handler_class:
 
             if force is True:
                 LOG.debug(
@@ -326,7 +326,7 @@ class HandlerManager(object):
 
         if not issubclass(handler_class, interface_class):
             raise exc.InterfaceError("Handler %s " % handler_class.__name__ +
-                                     "does not sub-class %s" % \
+                                     "does not sub-class %s" %
                                      interface_class.__name__)
 
         self.__handlers__[interface][obj._meta.label] = handler_class

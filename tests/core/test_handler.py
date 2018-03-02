@@ -2,16 +2,15 @@
 from pytest import raises
 
 from cement.core.foundation import TestApp
-from cement.core.handler import Handler, HandlerManager
+from cement.core.handler import Handler
 from cement.core.meta import MetaMixin
 from cement.core.exc import FrameworkError, InterfaceError
 from cement.core.output import OutputHandler
-from cement.utils import test
 from cement.ext.ext_configparser import ConfigParserConfigHandler
 from cement.ext.ext_dummy import DummyOutputHandler
 
 
-### module tests
+# module tests
 
 class TestHandler(object):
     def test_subclassing(self):
@@ -29,8 +28,7 @@ class TestHandlerManager(object):
     pass
 
 
-
-### app functionality and coverage tests
+# app functionality and coverage tests
 
 
 def test_get_invalid_handler():
@@ -53,13 +51,13 @@ def test_register_invalid_handlers():
             interface = 'output'
             # label = 'bogus4'
 
-
     with TestApp() as app:
         msg = 'Class .*BogusHandlerNoMeta.* does not implement Handler'
         with raises(InterfaceError, match=msg):
             app.handler.register(BogusHandlerNoMeta)
 
-        msg = 'Class .*BogusHandlerNoMetaInterface.* does not implement Handler'
+        msg = 'Class .*BogusHandlerNoMetaInterface.* does not implement ' + \
+              'Handler'
         with raises(InterfaceError, match=msg):
             app.handler.register(BogusHandlerNoMetaInterface)
 

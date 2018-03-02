@@ -200,7 +200,8 @@ class YamlConfigHandler(ConfigParserConfigHandler):
         existing config settings.  If the file does not exist, returns False.
 
         Args:
-            file_path (str): The file system path to the Yaml configuration file.
+            file_path (str): The file system path to the Yaml configuration
+                             file.
 
         """
         self.merge(yaml.load(open(file_path)))

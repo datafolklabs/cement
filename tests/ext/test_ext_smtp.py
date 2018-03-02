@@ -1,7 +1,7 @@
 
 import mock
 import sys
-from cement.utils.test import *
+from cement.utils.test import TestApp
 from cement.utils.misc import init_defaults
 
 
@@ -31,6 +31,7 @@ def test_smtp_defaults():
                 assert instance.send_message.call_count == 1
             else:
                 assert instance.sendmail.call_count == 1
+
 
 def test_smtp_ssl_tls():
     defaults = init_defaults('mail.smtp')

@@ -1,7 +1,7 @@
 
 import os
 from time import sleep
-from cement.utils.test import *
+from cement.utils.test import TestApp
 from cement.utils.misc import init_defaults
 
 if 'MEMCACHED_HOST' in os.environ.keys():
@@ -16,6 +16,7 @@ defaults['cache.memcached']['hosts'] = [
     memcached_host
 ]
 
+
 class MemcachedApp(TestApp):
     class Meta:
         extensions = ['memcached']
@@ -26,7 +27,7 @@ class MemcachedApp(TestApp):
 def test_memcache_list_type_config():
     with MemcachedApp() as app:
         assert app.config.get('cache.memcached', 'hosts') == \
-               [memcached_host, memcached_host]
+            [memcached_host, memcached_host]
 
 
 def test_memcache_str_type_config():
@@ -35,7 +36,7 @@ def test_memcache_str_type_config():
                                                       memcached_host)
     with MemcachedApp(config_defaults=defaults) as app:
         assert app.config.get('cache.memcached', 'hosts') == \
-                [memcached_host, memcached_host]
+            [memcached_host, memcached_host]
 
 
 def test_memcached_set(key):

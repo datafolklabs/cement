@@ -1,7 +1,7 @@
 
 import os
 from time import sleep
-from cement.utils.test import *
+from cement.utils.test import TestApp
 from cement.utils.misc import init_defaults
 
 
@@ -15,6 +15,7 @@ defaults = init_defaults('cache.redis')
 defaults['cache.redis']['host'] = redis_host
 defaults['cache.redis']['port'] = 6379
 defaults['cache.redis']['db'] = 0
+
 
 class RedisApp(TestApp):
     class Meta:

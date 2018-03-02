@@ -2,7 +2,7 @@
 from cement.core.cache import CacheHandlerBase, CacheHandler
 
 
-### module tests
+# module tests
 
 class TestCacheHandlerBase(object):
     def test_interface(self):
@@ -31,4 +31,4 @@ class TestCacheHandler(object):
         assert h._meta.interface == 'cache'
         assert h._meta.label == 'my_cache_handler'
 
-### app functionality and coverage tests
+# app functionality and coverage tests

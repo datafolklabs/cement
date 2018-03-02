@@ -5,7 +5,7 @@ import sys
 import signal
 import platform
 from time import sleep
-from ..core import backend, exc, log, config, plugin
+from ..core import exc, log, config, plugin
 from ..core import output, extension, arg, controller, meta, cache, mail
 from ..core.handler import HandlerManager
 from ..core.hook import HookManager
@@ -197,10 +197,11 @@ class App(meta.MetaMixin):
         cement will load all files that ends with ``.conf``.
 
         .. code-block:: python
+
             [
                 '/etc/myapp/conf.d',
                 '~/.config/myapp/conf.d',
-                '~/.myapp/conf.d',
+                '~/.myapp/conf.d'
             ]
 
         Directories and files inside are loaded in order, and have precedence
@@ -215,9 +216,9 @@ class App(meta.MetaMixin):
 
         plugins = []
         """
-        A list of plugins to load.  This is generally considered bad
-        practice since plugins should be dynamically enabled/disabled
-        via a plugin config file.
+        A list of plugins to load.  This is generally considered bad practice
+        since plugins should be dynamically enabled/disabled via a plugin
+        config file.
         """
 
         plugin_config_dirs = None
@@ -1043,7 +1044,8 @@ class App(meta.MetaMixin):
     @property
     def pargs(self):
         """
-        Returns the ``parsed_args`` object as returned by ``self.args.parse()``.
+        Returns the ``parsed_args`` object as returned by
+        ``self.args.parse()``.
         """
         return self._parsed_args
 
@@ -1437,23 +1439,23 @@ class App(meta.MetaMixin):
 
         Example:
 
-            .. code-block:: python
+        .. code-block:: python
 
-                import os
-                from cement import App
+            import os
+            from cement import App
 
-                class MyApp(App):
-                    class Meta:
-                        label = 'myapp'
+            class MyApp(App):
+                class Meta:
+                    label = 'myapp'
 
-                    def validate_config(self):
-                        super(MyApp, self).validate_config()
+                def validate_config(self):
+                    super(MyApp, self).validate_config()
 
-                        # test that the log file directory exist, if not create it
-                        logdir = os.path.dirname(self.config.get('log', 'file'))
+                    # test that the log file directory exist, if not create it
+                    logdir = os.path.dirname(self.config.get('log', 'file'))
 
-                        if not os.path.exists(logdir):
-                            os.makedirs(logdir)
+                    if not os.path.exists(logdir):
+                        os.makedirs(logdir)
 
         """
         pass
@@ -1468,9 +1470,9 @@ class App(meta.MetaMixin):
 
         Example:
 
-            .. code-block:: python
+        .. code-block:: python
 
-                app.add_template_dir('/path/to/my/templates')
+            app.add_template_dir('/path/to/my/templates')
 
         """
         path = fs.abspath(path)

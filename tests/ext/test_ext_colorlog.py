@@ -4,7 +4,6 @@ import logging
 from tempfile import mkstemp
 from cement.core.foundation import TestApp
 from cement.ext.ext_colorlog import ColoredFormatter
-from cement.utils import test
 from cement.utils.misc import init_defaults
 
 
@@ -76,7 +75,6 @@ def test_colorize_console_log(tmp):
         _format = app.log._meta.console_format
         klass = app.log._get_console_formatter(_format)
         assert isinstance(klass, ColoredFormatter)
-
 
     # then test with colorize_file_log=false
     defaults['log.colorlog']['colorize_console_log'] = False

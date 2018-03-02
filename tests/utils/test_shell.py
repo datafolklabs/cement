@@ -1,5 +1,4 @@
 
-import sys
 import time
 import mock
 from pytest import raises

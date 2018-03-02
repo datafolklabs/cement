@@ -1,6 +1,8 @@
 
+import os
 import yaml
-from cement.utils.test import *
+from cement.utils.test import TestApp
+from cement.utils import fs
 
 
 # CONFIG = '''
@@ -26,7 +28,9 @@ CONFIG_PARSED = dict(
     ),
 )
 
-CONFIG = fs.join(os.path.dirname(__file__), '..', 'data', 'config', 'config.yml')
+CONFIG = fs.join(os.path.dirname(__file__), '..',
+                 'data', 'config', 'config.yml')
+
 
 class YamlApp(TestApp):
     class Meta:
@@ -56,7 +60,7 @@ def test_keys():
 
 
 def test_parse_file_bad_path():
-    with YamlApp(config_files=['./some_bogus_path']) as app:
+    with YamlApp(config_files=['./some_bogus_path']):
         pass
 
 
@@ -64,7 +68,7 @@ def test_parse_file():
     with YamlApp() as app:
         assert app.config.get('section', 'key1') == 'ok1'
         assert app.config.get_section_dict('section') == \
-               CONFIG_PARSED['section']
+            CONFIG_PARSED['section']
 
 
 def test_handler_override_options_is_none():
@@ -77,6 +81,7 @@ def test_handler_override_options_is_none():
     with MyApp() as app:
         app.run()
         app.render(dict(foo='bar'))
+
 
 def test_get_dict():
     with YamlApp() as app:

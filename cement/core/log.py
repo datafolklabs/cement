@@ -4,7 +4,7 @@ Cement core log module.
 """
 
 # from ..core import interface
-from abc import ABC, abstractmethod, abstractproperty
+from abc import abstractmethod
 from ..core.handler import Handler
 
 
@@ -102,6 +102,7 @@ class LogHandlerBase(Handler):
 
         """
         pass
+
 
 class LogHandler(LogHandlerBase):
 

@@ -1,12 +1,8 @@
 
-from pytest import raises
-
-from cement.core.foundation import TestApp
-from cement.core.exc import FrameworkError
 from cement.core.mail import MailHandlerBase, MailHandler
 
 
-### module tests
+# module tests
 
 class TestMailHandlerBase(object):
     def test_interface(self):
@@ -27,4 +23,4 @@ class TestMailHandler(object):
         assert h._meta.label == 'my_mail_handler'
 
 
-### app functionality and coverage tests
+# app functionality and coverage tests

@@ -1,12 +1,12 @@
 
 import os
-import shutil
 from cement.utils import fs
 
 
 def test_abspath():
     path = fs.abspath('.')
     assert path.startswith('/')
+
 
 def test_backup(tmp):
     bkfile = fs.backup(tmp.file)

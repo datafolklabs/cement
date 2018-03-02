@@ -1,12 +1,12 @@
 
 
-from cement.utils.test import *
+from cement.utils.test import TestApp
 
 
 class TabulateApp(TestApp):
     class Meta:
-         extensions = ['tabulate']
-         output_handler = 'tabulate'
+        extensions = ['tabulate']
+        output_handler = 'tabulate'
 
 
 def test_tabulate():

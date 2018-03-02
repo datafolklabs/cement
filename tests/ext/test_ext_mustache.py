@@ -1,7 +1,7 @@
 
-import random
-
-from cement.utils.test import *
+from cement.core.foundation import TestApp
+from cement.utils.test import raises
+from cement.core.exc import FrameworkError
 
 
 class MustacheApp(TestApp):
@@ -10,7 +10,6 @@ class MustacheApp(TestApp):
         output_handler = 'mustache'
         template_module = 'tests.data.templates'
         # template_dirs = []
-
 
 
 def test_mustache(rando):
@@ -26,11 +25,12 @@ def test_mustache_partials(rando):
         mustache_res = "Inside partial > foo equals %s\n" % rando
         assert res == mustache_res
 
-### derks@20180116: FIXME > Mustache is no longer raising a SyntaxError?
+# derks@20180116: FIXME > Mustache is no longer raising a SyntaxError?
 
 # def test_mustache_bad_template():
 #     with MustacheApp() as app:
 #         app.render(dict(foo='bar'), 'bad_template.mustache')
+
 
 def test_mustache_nonexistent_template():
     with MustacheApp() as app:

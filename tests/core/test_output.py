@@ -4,10 +4,11 @@ from pytest import raises
 
 from cement.core.foundation import TestApp
 from cement.core.exc import FrameworkError
-from cement.core.output import OutputHandlerBase, OutputHandler, TemplateOutputHandler
+from cement.core.output import OutputHandlerBase, OutputHandler
+from cement.core.output import TemplateOutputHandler
 
 
-### module tests
+# module tests
 
 class TestOutputHandlerBase(object):
     def test_interface(self):
@@ -23,7 +24,6 @@ class TestOutputHandler(object):
             def render(self, *args, **kw):
                 pass
 
-
         h = MyOutputHandler()
         assert h._meta.interface == 'output'
         assert h._meta.label == 'my_output_handler'
@@ -38,13 +38,12 @@ class TestTemplateOutputHandler(object):
             def render(self, *args, **kw):
                 pass
 
-
         h = MyTemplateOutputHandler()
         assert h._meta.interface == 'output'
         assert h._meta.label == 'my_template_output_handler'
 
 
-### app functionality and coverage tests
+# app functionality and coverage tests
 
 TEST_TEMPLATE = "%(foo)s"
 
@@ -73,8 +72,8 @@ def test_load_template_from_file(tmp):
 
     with MyApp() as app:
         app.run()
-        assert app.render({'foo' : 'bar'}, 'mytemplate.txt') == 'bar'
+        assert app.render({'foo': 'bar'}, 'mytemplate.txt') == 'bar'
 
         # try and render a missing template
         with raises(FrameworkError, match='Could not locate template: .*'):
-            app.render({'foo' : 'bar'}, 'missing-template.txt')
+            app.render({'foo': 'bar'}, 'missing-template.txt')

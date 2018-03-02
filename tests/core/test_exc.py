@@ -2,13 +2,14 @@
 from pytest import raises
 from cement.core.exc import FrameworkError, InterfaceError, CaughtSignal
 
+
 class TestExceptions(object):
     def test_frameworkerror(self):
-        with raises(FrameworkError, match=".*framework exception.*") as e:
+        with raises(FrameworkError, match=".*framework exception.*"):
             raise FrameworkError("test framework exception message")
 
     def test_interfaceerror(self):
-        with raises(InterfaceError, match=".*interface exception.*") as e:
+        with raises(InterfaceError, match=".*interface exception.*"):
             raise InterfaceError("test interface exception message")
 
     def test_caughtsignal(self):

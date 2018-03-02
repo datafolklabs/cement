@@ -1,7 +1,10 @@
 
+import os
 import jinja2
 from shutil import copyfile
-from cement.utils.test import *
+from cement.utils.test import TestApp, raises
+from cement.core.exc import FrameworkError
+from cement.utils import fs
 
 
 class Jinja2App(TestApp):
@@ -11,6 +14,7 @@ class Jinja2App(TestApp):
         template_module = 'tests.data.templates'
         template_dirs = []
         handlebars_helpers = {}
+
 
 def test_jinja2(rando):
     with Jinja2App() as app:

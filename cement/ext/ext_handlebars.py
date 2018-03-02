@@ -150,7 +150,7 @@ more information on partials.
 
 import sys
 import pybars._compiler
-from cement.core import output, handler
+from cement.core import output
 from cement.utils.misc import minimal_logger
 
 # Monkey patch so we don't escape HTML (not clear how else to do this)

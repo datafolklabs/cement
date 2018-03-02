@@ -65,6 +65,7 @@ class OutputHandler(OutputHandlerBase):
 
     pass
 
+
 class TemplateOutputHandler(OutputHandler):
 
     """Base class for template base output handlers."""
