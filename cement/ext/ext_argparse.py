@@ -656,9 +656,18 @@ class ArgparseController(ControllerHandler):
         # parsers['base'].parse_args()
 
         kwargs = self._get_subparser_options(self)
-        sub = self.app.args.add_subparsers(**kwargs)
 
-        parents['base'] = sub
+        # only create a subparser if there are commands or nested
+        # controllers
+        cmds = self._collect_commands()
+        contrs = [x for x in self._controllers
+                  if x._meta.label != self._meta.label and
+                  x._meta.stacked_on == self._meta.label]
+
+        if len(cmds) > 0 or len(contrs) > 0:
+            sub = self.app.args.add_subparsers(**kwargs)
+            parents['base'] = sub
+
         base_parser_options = self._get_parser_options(self)
         for key, val in base_parser_options.items():
             setattr(self.app.args, key, val)
@@ -701,7 +710,16 @@ class ArgparseController(ControllerHandler):
                 # we need to add subparsers to this parser so we can
                 # attach commands and other nested controllers to it
                 kwargs = self._get_subparser_options(contr)
-                parents[label] = parsers[label].add_subparsers(**kwargs)
+
+                # only create a subparser if there are commands or nested
+                # controllers
+                cmds = contr._collect_commands()
+                contrs = [x for x in self._controllers
+                          if x._meta.label != label and
+                          x._meta.stacked_on == label]
+
+                if len(cmds) > 0 or len(contrs) > 0:
+                    parents[label] = parsers[label].add_subparsers(**kwargs)
 
                 # add an invisible controller option so we can figure out what
                 # to call later in self._dispatch

@@ -6,7 +6,7 @@ dev:
 	docker-compose up -d
 	docker-compose exec cement /bin/ash
 
-test:
+test: comply
 	python -m pytest -v --cov=cement --cov-report=term --cov-report=html:coverage-report tests/
 
 comply:

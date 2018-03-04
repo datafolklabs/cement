@@ -13,4 +13,5 @@ RUN apk update \
         make \
     && pip install --no-cache-dir -r requirements-dev.txt
 COPY . /app
+RUN python setup.py develop
 CMD ["/bin/ash"]

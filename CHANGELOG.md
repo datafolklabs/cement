@@ -10,6 +10,8 @@ Bugs:
 
 - `[ext.redis]` Unable To Set Redis Host
     - [Issue #440](https://github.com/datafolklabs/cement/issues/440)
+- `[ext.argparse]` Empty Sub-Commands List
+    - [Issue #444](https://github.com/datafolklabs/cement/issues/444)
 
 
 Features:
