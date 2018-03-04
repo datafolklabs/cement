@@ -57,6 +57,10 @@ Incompatible:
     - [Issue #426](https://github.com/datafolklabs/cement/issues/426)
 - `[ext.plugin]` All plugin configuration sections must start with `plugin.`.
     For example, `[plugin.myplugin]`.
+- `[core.foundation]` Renamed `App.Meta.config_extension` to
+    `App.Meta.config_file_suffix`
+    - [Issue #445](https://github.com/datafolklabs/cement/issues/445)
+
 
 Deprecation:
 

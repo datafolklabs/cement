@@ -158,7 +158,7 @@ class App(meta.MetaMixin):
         ``sys.exit(X)`` where ``X`` is ``self.exit_code``.
         """
 
-        config_extension = '.conf'
+        config_file_suffix = '.conf'
         """
         Extension used to identify application and plugin configuration files.
         """
@@ -188,7 +188,7 @@ class App(meta.MetaMixin):
         loaded from previous configuration files).
 
         Note that ``.conf`` is the default config file extension, defined by
-        ``App.Meta.config_extension``.
+        ``App.Meta.config_file_suffix``.
         """
 
         config_dirs = None
@@ -211,7 +211,7 @@ class App(meta.MetaMixin):
         ``CementApp.Meta.config_files``.
 
         Note that ``.conf`` is the default config file extension, defined by
-        ``CementApp.Meta.config_extension``.
+        ``CementApp.Meta.config_file_suffix``.
         """
 
         plugins = []
@@ -225,7 +225,7 @@ class App(meta.MetaMixin):
         """
         A list of directory paths where plugin config files can be found.
         Files must end in ``.conf`` (or the extension defined by
-        ``App.Meta.config_extension``) or they will be ignored.  Additionally,
+        ``App.Meta.config_file_suffix``) or they will be ignored. Additionally,
         plugin configuration sections must start with ``plugin.`` (ex:
         ``[plugin.myplugin]``).
 
@@ -251,7 +251,7 @@ class App(meta.MetaMixin):
         """
         A directory path where plugin config files can be found.  Files must
         end in ``.conf`` (or the extension defined by
-        ``App.Meta.config_extension``) or they will be ignored.  By default,
+        ``App.Meta.config_file_suffix``) or they will be ignored.  By default,
         this setting is also overridden by the ``app_label.plugin_config_dir``
         config setting parsed in any of the application configuration files.
 
@@ -1233,7 +1233,7 @@ class App(meta.MetaMixin):
             self.config.merge(self._meta.config_defaults)
 
         if self._meta.config_files is None:
-            ext = self._meta.config_extension
+            ext = self._meta.config_file_suffix
 
             self._meta.config_files = [
                 fs.join('/', 'etc', label, '%s%s' % (label, ext)),

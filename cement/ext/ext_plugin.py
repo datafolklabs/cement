@@ -83,7 +83,7 @@ class CementPluginHandler(plugin.PluginHandler):
                 # sort so that we always load plugins in the same order
                 # regardless of OS (seems some don't sort reliably)
                 path = "%s/*%s" % (config_dir,
-                                   self.app._meta.config_extension)
+                                   self.app._meta.config_file_suffix)
                 plugin_config_files = glob.glob(path)
                 plugin_config_files.sort()
 
