@@ -564,6 +564,26 @@ def test_unknown_arguments():
         assert 'some-other-argument' in app.args.unknown_args
 
 
+def test_get_exposed_commands():
+    # coverage
+    class MyController(ArgparseController):
+        class Meta:
+            label = 'base'
+
+        @expose()
+        def cmd1(self):
+            pass
+
+        @expose()
+        def cmd2_two(self):
+            pass
+
+    with TestApp(base_controller=MyController) as app:
+        app.run()
+        assert 'cmd1' in app.controller._get_exposed_commands()
+        assert 'cmd2-two' in app.controller._get_exposed_commands()
+
+
 def test_coverage():
     # coverage
     class MyController(ArgparseController):

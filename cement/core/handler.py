@@ -355,6 +355,27 @@ class HandlerManager(object):
 
         return False
 
+    def setup(self, handler_class):
+        """
+        Setup a handler class so that it can be used.
+
+        Args:
+            handler_class (class): An uninstantiated handler class.
+
+        Returns: None
+
+        Example:
+
+            .. code-block:: python
+
+                for controller in app.handler.list('controller'):
+                    ch = app.handler.setup(controller)
+
+        """
+        h = handler_class()
+        h._setup(self._app)
+        return h
+
     def resolve(self, handler_type, handler_def, **kwargs):
         """
         Resolves the actual handler, as it can be either a string identifying

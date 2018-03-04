@@ -834,6 +834,22 @@ class ArgparseController(ControllerHandler):
 
         return commands
 
+    def _get_exposed_commands(self):
+        """
+        Get a list of exposed commands for this controller
+
+        Returns:
+
+            exposed_commands (list): List of exposed commands (labels)
+        """
+        # get exposed commands
+        exposed = []
+        for member_key in dir(self):
+            member = getattr(self, member_key)
+            if hasattr(member, '__cement_meta__'):
+                exposed.append(_clean_label(member_key))
+        return exposed
+
     def _pre_argument_parsing(self):
         """
         Called on every controller just before arguments are parsed.
