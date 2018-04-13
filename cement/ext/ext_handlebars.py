@@ -160,7 +160,10 @@ original_prepare = pybars._compiler.prepare
 
 def my_prepare(value, escape):
     return original_prepare(value, False)
+
+
 pybars._compiler.prepare = my_prepare
+
 
 from pybars import Compiler  # noqa
 
