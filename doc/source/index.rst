@@ -11,9 +11,8 @@ API Reference
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-.. toctree::
-   :maxdepth: 3
-
-   api/index
+   api/core/index
+   api/utils/index
+   api/ext/index

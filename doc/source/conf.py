@@ -13,40 +13,76 @@
 
 import os
 import sys
-import guzzle_sphinx_theme
 
+html_theme = "sphinx_rtd_theme"
 
-html_theme_path = guzzle_sphinx_theme.html_theme_path()
-html_theme = 'guzzle_sphinx_theme'
+html_theme_options = {
+    'canonical_url': '',
+    'analytics_id': '',
+    'logo_only': False,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+    'vcs_pageview_mode': '',
+    # Toc options
+    'collapse_navigation': False,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': True
+}
+
+# import alabaster
+
+# html_theme_path = [alabaster.get_path()]
+# extensions = ['alabaster']
+# html_theme = 'alabaster'
+#
+# html_sidebars = {
+#     '**': [
+#         'about.html',
+#         'navigation.html',
+#         'relations.html',
+#         'searchbox.html',
+#         'donate.html',
+#     ]
+# }
+#
+html_theme_options = {
+    'logo': 'logo-text.png',
+}
+
+# html_theme_path = guzzle_sphinx_theme.html_theme_path()
+# html_theme = 'alabaster'
 
 # Guzzle theme options (see theme.conf for more information)
-html_theme_options = {
-
-    # Set the path to a special layout to include for the homepage
-    # "index_template": "special_index.html",
-
-    # Set the name of the project to appear in the left sidebar.
-    # "project_nav_name": "Cement",
-
-    # Set your Disqus short name to enable comments
-    # "disqus_comments_shortname": "my_disqus_comments_short_name",
-
-    # Set you GA account ID to enable tracking
-    # "google_analytics_account": "my_ga_account",
-
-    # Path to a touch icon
-    # "touch_icon": "",
-
-    # Specify a base_url used to generate sitemap.xml links. If not
-    # specified, then no sitemap will be built.
-    # "base_url": ""
-
-    # Allow a separate homepage from the master_doc
-    "homepage": "api/index",
-
-    # Allow the project link to be overriden to a custom URL.
-    "projectlink": "http://builtoncement.com",
-}
+# html_theme_options = {
+#
+#     # Set the path to a special layout to include for the homepage
+#     # "index_template": "special_index.html",
+#
+#     # Set the name of the project to appear in the left sidebar.
+#     # "project_nav_name": "Cement",
+#
+#     # Set your Disqus short name to enable comments
+#     # "disqus_comments_shortname": "my_disqus_comments_short_name",
+#
+#     # Set you GA account ID to enable tracking
+#     # "google_analytics_account": "my_ga_account",
+#
+#     # Path to a touch icon
+#     # "touch_icon": "",
+#
+#     # Specify a base_url used to generate sitemap.xml links. If not
+#     # specified, then no sitemap will be built.
+#     # "base_url": ""
+#
+#     # Allow a separate homepage from the master_doc
+#     "homepage": "api/index",
+#
+#     # Allow the project link to be overriden to a custom URL.
+#     "projectlink": "http://builtoncement.com",
+# }
 
 sys.path.insert(0, os.path.abspath('../cement/'))
 

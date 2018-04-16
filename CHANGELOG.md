@@ -27,10 +27,16 @@ Features:
 - `[ext.scrub]` Add Scrub Extension to easily obfuscate sensitive data from
   rendered output.
     - [Issue #469](https://github.com/datafolklabs/cement/issues/469)
-- `[core]` Add ability to override config settings via envirionment variables.
+- `[core]` Add ability to override config settings via environment variables.
     - [Issue #437](https://github.com/datafolklabs/cement/issues/437)
 - `[ext.argparse]` Add ability to get list of exposed commands
     - [Issue #455](https://github.com/datafolklabs/cement/issues/455)
+- `[core]` Add Template Interface
+    - [Issue #464](https://github.com/datafolklabs/cement/issues/464)
+- `[ext.mustache]` Add MustacheTemplateHandler
+- `[ext.handlebars]` Add HandlebarsTemplateHandler
+- `[ext.jinja2]` Add Jinja2TemplateHandler
+
 
 Refactoring:
 

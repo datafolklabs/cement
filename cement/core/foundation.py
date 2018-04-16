@@ -7,6 +7,7 @@ import platform
 from time import sleep
 from ..core import exc, log, config, plugin
 from ..core import output, extension, arg, controller, meta, cache, mail
+from ..core import template
 from ..core.handler import HandlerManager
 from ..core.hook import HookManager
 from ..utils.misc import is_true, minimal_logger
@@ -472,6 +473,11 @@ class App(meta.MetaMixin):
         A handler class that implements the Output interface.
         """
 
+        template_handler = 'dummy'
+        """
+        A handler class that implements the Template interface.
+        """
+
         cache_handler = None
         """
         A handler class that implements the Cache interface.
@@ -536,6 +542,7 @@ class App(meta.MetaMixin):
             'cache_handler',
             'log_handler',
             'output_handler',
+            'template_handler',
         ]
         """
         List of meta options that can/will be overridden by config options
@@ -832,6 +839,7 @@ class App(meta.MetaMixin):
         self._setup_plugin_handler()
         self._setup_arg_handler()
         self._setup_output_handler()
+        self._setup_template_handler()
         self._setup_controllers()
 
         for hook_spec in self.__retry_hooks__:
@@ -1081,8 +1089,8 @@ class App(meta.MetaMixin):
         elif '--quiet' in self._meta.argv:
             self._suppress_output()
 
-        self.handler = HandlerManager()
-        self.hook = HookManager()
+        self.handler = HandlerManager(self)
+        self.hook = HookManager(self)
 
         # define framework hooks
         self.hook.define('pre_setup')
@@ -1128,6 +1136,7 @@ class App(meta.MetaMixin):
         self.handler.define(mail.MailHandlerBase)
         self.handler.define(plugin.PluginHandlerBase)
         self.handler.define(output.OutputHandlerBase)
+        self.handler.define(template.TemplateHandlerBase)
         self.handler.define(arg.ArgumentHandlerBase)
         self.handler.define(controller.ControllerHandlerBase)
         self.handler.define(cache.CacheHandlerBase)
@@ -1357,11 +1366,41 @@ class App(meta.MetaMixin):
             LOG.debug("no output handler defined, skipping.")
             return
 
-        label = self._meta.label
         LOG.debug("setting up %s.output handler" % self._meta.label)
         self.output = self._resolve_handler('output',
                                             self._meta.output_handler,
                                             raise_error=False)
+        # # template module
+        # if self._meta.template_module is None:
+        #     self._meta.template_module = '%s.templates' % label
+        #
+        # # template dirs
+        # if self._meta.template_dirs is None:
+        #     self._meta.template_dirs = []
+        #     paths = [
+        #         fs.join(fs.HOME_DIR, '.%s' % label, 'templates'),
+        #         fs.join(fs.HOME_DIR, '.config', label, 'templates'),
+        #         '/usr/lib/%s/templates' % label,
+        #     ]
+        #     for path in paths:
+        #         self.add_template_dir(path)
+        #
+        # template_dir = self._meta.template_dir
+        # if template_dir is not None:
+        #     if template_dir not in self._meta.template_dirs:
+        #         # insert so that this dir has precedence
+        #         self._meta.template_dirs.insert(0, template_dir)
+
+    def _setup_template_handler(self):
+        if self._meta.template_handler is None:
+            LOG.debug("no template handler defined, skipping.")
+            return
+
+        label = self._meta.label
+        LOG.debug("setting up %s.template handler" % self._meta.label)
+        self.template = self._resolve_handler('template',
+                                              self._meta.template_handler,
+                                              raise_error=False)
         # template module
         if self._meta.template_module is None:
             self._meta.template_module = '%s.templates' % label
