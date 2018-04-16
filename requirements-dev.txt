@@ -5,6 +5,8 @@ coverage
 sphinx
 pep8
 autopep8
+# version cap due to bug: https://gitlab.com/pycqa/flake8/issues/406
+pycodestyle<2.4
 flake8
 guzzle_sphinx_theme
 sphinxcontrib-napoleon
