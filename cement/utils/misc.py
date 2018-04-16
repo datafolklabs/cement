@@ -210,11 +210,7 @@ def wrap(text, width=77, indent='', long_words=False, hyphens=False):
 
     """
 
-    if sys.version_info[0] < 3:     # pragma: no cover  # noqa
-        types = [str, unicode]      # pragma: no cover  # noqa
-    else:                           # pragma: no cover  # noqa
-        types = [str]               # pragma: no cover  # noqa
-
+    types = [str]
     if type(text) not in types:
         raise TypeError("Argument `text` must be one of [str, unicode].")
 

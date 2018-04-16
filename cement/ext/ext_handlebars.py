@@ -148,7 +148,6 @@ more information on partials.
 
 """
 
-import sys
 import pybars._compiler
 from cement.core import output
 from cement.utils.misc import minimal_logger
@@ -216,12 +215,9 @@ class HandlebarsOutputHandler(output.TemplateOutputHandler):
             self._raw_partials[partial] = self.load_template(partial)
 
     def _clean_content(self, content):
-        if sys.version_info[0] >= 3:
-            if not isinstance(content, str):
-                content = content.decode('utf-8')
-        else:
-            if not isinstance(content, unicode):     # pragma: nocover  # noqa
-                content = content.decode('utf-8')    # pragma: nocover
+        if not isinstance(content, str):
+            content = content.decode('utf-8')
+
         return content
 
     def render_content(self, data, content):

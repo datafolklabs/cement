@@ -1,7 +1,6 @@
 """Common Shell Utilities."""
 
 import os
-import sys
 from subprocess import Popen, PIPE
 from multiprocessing import Process
 from threading import Thread
@@ -340,11 +339,7 @@ class Prompt(MetaMixin):
         else:
             text = self._meta.text
 
-        if sys.version_info[0] < 3:                 # pragma: nocover  # noqa
-            self.input = raw_input("%s " % text)    # pragma: nocover  # noqa
-        else:                                       # pragma: nocover  # noqa
-            self.input = input("%s " % text)        # pragma: nocover  # noqa
-
+        self.input = input("%s " % text)
         if self.input == '' and self._meta.default is not None:
             self.input = self._meta.default
         elif self.input == '':

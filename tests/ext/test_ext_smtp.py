@@ -1,6 +1,5 @@
 
 import mock
-import sys
 from cement.utils.test import TestApp
 from cement.utils.misc import init_defaults
 
@@ -26,11 +25,7 @@ def test_smtp_defaults():
             app.mail.send('TEST MESSAGE')
 
             instance = mock_smtp.return_value
-
-            if int(sys.version[0]) >= 3:
-                assert instance.send_message.call_count == 1
-            else:
-                assert instance.sendmail.call_count == 1
+            assert instance.send_message.call_count == 1
 
 
 def test_smtp_ssl_tls():
@@ -47,12 +42,7 @@ def test_smtp_ssl_tls():
                           from_addr='noreply@localhost')
 
             instance = mock_smtp.return_value
-
-            if int(sys.version[0]) >= 3:
-                assert instance.send_message.call_count == 1
-            else:
-                assert instance.sendmail.call_count == 1
-
+            assert instance.send_message.call_count == 1
             assert instance.starttls.call_count == 1
 
 
@@ -72,8 +62,4 @@ def test_smtp_auth(rando):
 
             instance = mock_smtp.return_value
             assert instance.login.call_count == 1
-
-            if int(sys.version[0]) >= 3:
-                assert instance.send_message.call_count == 1
-            else:
-                assert instance.sendmail.call_count == 1
+            assert instance.send_message.call_count == 1

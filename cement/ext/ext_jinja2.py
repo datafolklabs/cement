@@ -60,7 +60,6 @@ would then put a Jinja2 template file in
 
 """
 
-import sys
 from ..core import output
 from ..utils.misc import minimal_logger
 from jinja2 import Environment, FileSystemLoader, PackageLoader
@@ -120,15 +119,10 @@ class Jinja2OutputHandler(output.TemplateOutputHandler):
             parts = self.app._meta.template_module.rsplit('.', 1)
             self.env.loader = PackageLoader(parts[0], package_path=parts[1])
 
-        if sys.version_info[0] >= 3:
-            if not isinstance(content, str):
-                content = content.decode('utf-8')
-        else:
-            if not isinstance(content, unicode):     # pragma: nocover  # noqa
-                content = content.decode('utf-8')    # pragma: nocover
+        if not isinstance(content, str):
+            content = content.decode('utf-8')
 
         tmpl = self.env.from_string(content)
-
         return tmpl.render(**data_dict)
 
 

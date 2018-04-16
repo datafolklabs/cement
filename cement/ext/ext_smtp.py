@@ -108,7 +108,7 @@ Usage
             from_addr='me@example.com',
             )
 """
-import sys
+
 import smtplib
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
@@ -230,11 +230,7 @@ class SMTPMailHandler(mail.MailHandler):
         if self.app.debug is True:
             server.set_debuglevel(9)
 
-        if int(sys.version[0]) >= 3:
-            self._send_message(server, body, **params)
-        else:                                               # pragma: nocover
-            self._send_message_py2(server, body, **params)
-
+        self._send_message(server, body, **params)
         server.quit()
 
     def _send_message(self, server, body, **params):
@@ -255,23 +251,6 @@ class SMTPMailHandler(mail.MailHandler):
         part = MIMEText(body)
         msg.attach(part)
         server.send_message(msg)
-
-    def _send_message_py2(self, server, body, **params):  # pragma: nocover
-        msg = ""
-        msg += "From: %s\r\nTo: %s\r\n" % (params['from_addr'],
-                                           ', '.join(params['to']))
-        msg += "Cc: %s\r\n" % ', '.join(params['cc'])
-        msg += "Bcc: %s\r\n" % ', '.join(params['bcc'])
-        if params['subject_prefix'] not in [None, '']:
-            msg += "Subject: %s %s\r\n\r\n" % (params['subject_prefix'],
-                                               params['subject'])
-        else:
-            msg += "Subject: %s\r\n\r\n" % params['subject']
-        msg += body + "\n"
-
-        server.sendmail(params['from_addr'],
-                        params['to'] + params['cc'] + params['bcc'],
-                        msg)
 
 
 def load(app):

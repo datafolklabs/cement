@@ -91,15 +91,10 @@ Example:
 """
 
 import os
-import sys
 import re
 from ..core import config
 from ..utils.misc import minimal_logger
-
-if sys.version_info[0] < 3:
-    from ConfigParser import RawConfigParser  # pragma: no cover
-else:
-    from configparser import RawConfigParser  # pragma: no cover
+from configparser import RawConfigParser
 
 LOG = minimal_logger(__name__)
 

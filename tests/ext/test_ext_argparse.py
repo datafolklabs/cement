@@ -516,9 +516,6 @@ def test_controller_command_duplicate_arguments():
 
 
 def test_aliases():
-    if sys.version_info[0] < 3:
-        skip('Argparse does not support aliases in Python < 3')
-
     class MyApp(ArgparseApp):
         class Meta:
             argv = ['bad-alternative-default']

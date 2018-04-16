@@ -164,7 +164,6 @@ The above looks like:
 """
 
 import re
-import sys
 from argparse import ArgumentParser, RawDescriptionHelpFormatter, SUPPRESS
 from ..core.arg import ArgumentHandler
 from ..core.controller import ControllerHandler
@@ -594,9 +593,8 @@ class ArgparseController(ControllerHandler):
     def _get_parser_options(self, contr):
         kwargs = contr._meta.parser_options.copy()
 
-        if sys.version_info[0] >= 3:
-            if 'aliases' not in kwargs.keys():              # pragma: nocover
-                kwargs['aliases'] = contr._meta.aliases     # pragma: nocover
+        if 'aliases' not in kwargs.keys():
+            kwargs['aliases'] = contr._meta.aliases
 
         if 'description' not in kwargs.keys():
             kwargs['description'] = contr._meta.description
