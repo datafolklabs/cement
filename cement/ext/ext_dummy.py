@@ -35,6 +35,7 @@ Usage
 """
 
 from ..core.output import OutputHandler
+from ..core.template import TemplateHandler
 from ..core.mail import MailHandler
 from ..utils.misc import minimal_logger
 
@@ -45,8 +46,8 @@ class DummyOutputHandler(OutputHandler):
 
     """
     This class is an internal implementation of the
-    :class:`cement.core.output.IOutput` interface. It does not take any
-    parameters on initialization, and does not actually output anything.
+    :class:`cement.core.output.OutputHandlerBase` interface. It does not take
+    any parameters on initialization, and does not actually output anything.
 
     """
     class Meta:
@@ -76,6 +77,49 @@ class DummyOutputHandler(OutputHandler):
         LOG.debug("not rendering any output to console")
         LOG.debug("DATA: %s" % data)
         return None
+
+
+class DummyTemplateHandler(TemplateHandler):
+
+    """
+    This class is an internal implementation of the
+    :class:`cement.core.template.TemplateHandlerBase` interface. It does not
+    take any parameters on initialization, and does not actually render
+    anything.
+
+    """
+    class Meta:
+
+        """Handler meta-data"""
+
+        #: The string identifier of this handler.
+        label = 'dummy'
+
+    def render(self, content, data, *args, **kw):
+        """
+        This implementation does not actually render anything, but
+        rather logs it to the debug facility.
+
+        Args:
+            content (str): The content to render as dictionary
+            data (dict): The data dictionary to render.
+
+        """
+        LOG.debug("CONTENT: %s" % content)
+        LOG.debug("DATA: %s" % data)
+        return None
+
+    def copy(self, src, dest, data):
+        """
+        This implementation does not actually copy anything, but rather logs it
+        to the debug facility.
+
+        Args:
+            src (str): The source template directory.
+            dest (str): The destination directory.
+            data (dict): The data dictionary to render with templates.
+        """
+        LOG.debug("COPY: %s -> %s" % (src, dest))
 
 
 class DummyMailHandler(MailHandler):
@@ -254,4 +298,5 @@ class DummyMailHandler(MailHandler):
 
 def load(app):
     app.handler.register(DummyOutputHandler)
+    app.handler.register(DummyTemplateHandler)
     app.handler.register(DummyMailHandler)

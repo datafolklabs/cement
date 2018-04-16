@@ -105,7 +105,8 @@ class HandlerManager(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, app):
+        self.app = app
         self.__handlers__ = {}
 
     def get(self, handler_type, handler_label, *args):
@@ -373,7 +374,7 @@ class HandlerManager(object):
 
         """
         h = handler_class()
-        h._setup(self._app)
+        h._setup(self.app)
         return h
 
     def resolve(self, handler_type, handler_def, **kwargs):
@@ -394,6 +395,8 @@ class HandlerManager(object):
             meta_defaults (dict): Optional meta-data dictionary used as
                 defaults to pass when instantiating uninstantiated handlers.
                 See ``App.Meta.meta_defaults``.
+            setup (bool): Whether or not to call ``.setup()`` before return.
+                Default: ``False``
 
         Returns:
             instance: The instantiated handler object.
@@ -414,6 +417,7 @@ class HandlerManager(object):
         """
         raise_error = kwargs.get('raise_error', True)
         meta_defaults = kwargs.get('meta_defaults', {})
+        setup = kwargs.get('setup', False)
         han = None
 
         if type(handler_def) == str:
@@ -430,6 +434,8 @@ class HandlerManager(object):
         msg = "Unable to resolve handler '%s' of type '%s'" % \
               (handler_def, handler_type)
         if han is not None:
+            if setup is True:
+                han._setup(self.app)
             return han
         elif han is None and raise_error:
             raise exc.FrameworkError(msg)

@@ -15,7 +15,8 @@ class HookManager(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, app):
+        self.app = app
         self.__hooks__ = {}
 
     def define(self, name):
