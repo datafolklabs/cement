@@ -39,7 +39,7 @@ Cement core features include (but are not limited to):
 - [PyPi Packages](http://pypi.python.org/pypi/cement/)
 - [Github Source Code / Issue Tracking](http://github.com/datafolklabs/cement/)
 - [Travis CI](https://travis-ci.org/datafolklabs/cement/)
-- [Gitter Help / Discussion](gitter.im/datafolklabs/cement/)
+- [Slack Channel](https://join.slack.com/t/cementframework/shared_invite/enQtMzUzOTIzMDQwNjEwLThkY2FiYWU5ZmQ5ZmEzNGMzMTkyMDgzNTk2MWI0MGU1YWNmNTVmODgxYWNlZjJkZDBmODc0ZjM2MDg5ZmYyOTA)
 
 
 ## License

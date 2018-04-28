@@ -1,4 +1,4 @@
-.PHONY: all dev test comply docs clean
+.PHONY: all dev test comply docs clean dist dist-upload
 
 all: test comply comply-test api-docs clean
 
@@ -24,3 +24,11 @@ docs:
 clean:
 	find . -name '*.py[co]' -delete
 	rm -rf doc/build
+
+dist: clean
+	rm -rf dist/*
+	python setup.py sdist
+	python setup.py bdist_wheel
+
+dist-upload:
+	twine upload dist/*
