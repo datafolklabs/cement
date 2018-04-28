@@ -43,7 +43,7 @@ along with their application, as Cement explicitly does not include them.*
 
 ## More Information
 
-- [Developer & API Documentation]](http://builtoncement.com/2.10/)
+- [Developer & API Documentation](http://builtoncement.com/2.10/)
 - [Source Code / Issue Tracking](http://github.com/datafolklabs/cement/)
 - [Installation Packages on PyPi](http://pypi.python.org/pypi/cement/)
 - [Website](http://builtoncement.com/)
