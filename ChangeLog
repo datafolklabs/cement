@@ -19,13 +19,19 @@ any incompatible changes, and how to update your application to fix them.
 Also check out the :ref:`whats_new` section for details on new features.
 
 
-2.10.4 - Fri Apr 13, 2018 
+2.10.6 - Sat Apr 28, 2018
+------------------------------------------------------------------------------
+
+- Bumping version to update PyPi Description
+
+
+2.10.4 - Fri Apr 13, 2018
 ------------------------------------------------------------------------------
 
 Bugs:
 
     * :issue:`401` - Can't get user in daemon extension
-    * :issue:`397` - Removes deprecated `warn` from ILog validator, in-favor 
+    * :issue:`397` - Removes deprecated `warn` from ILog validator, in-favor
       of `warning`
     * :issue:`401` - Can't get user in daemon extension
     * :issue:`415` - FrameworkError when reusing CementApp object
@@ -58,15 +64,15 @@ Bumping version due to issue with uploading to PyPi.
 
 Bugs:
 
-    * :issue:`363` - CementTestCase does not delete temporary 
+    * :issue:`363` - CementTestCase does not delete temporary
       files/directories
     * :issue:`346` - AttributeError: 'module' object has no attribute 'SIGHUP'
       on Windows
     * :issue:`352` - ``CementApp.extend()`` breaks on ``CementApp.reload()``
     * :issue:`366` - Output handler override options dissappear
-    * :issue:`385` - JsonOutputHandler/YamlOutputHandler/MustacheOutputHandler 
+    * :issue:`385` - JsonOutputHandler/YamlOutputHandler/MustacheOutputHandler
       Do not pass keyword args down to backend render functions
-    * :issue:`393` - ``CementApp.Meta.hooks`` ignored for hooks defined by 
+    * :issue:`393` - ``CementApp.Meta.hooks`` ignored for hooks defined by
       extensions
 
 Features:
@@ -79,14 +85,14 @@ Features:
     * :issue:`379` - Support for alternative config file extensions
     * :issue:`380` - Support for Cython/Compiled Plugins
     * :issue:`389` - ConfigObj support for Python 3
-    * :issue:`394` - Watchdog extension for cross-platform filesystem event 
+    * :issue:`394` - Watchdog extension for cross-platform filesystem event
       monitoring
     * :issue:`395` - Ability to pass metadata keyword arguments to handlers
       via ``CementApp.Meta.meta_defaults``.
 
 Refactoring;
 
-    * :issue:`386` - Partially deprecated use of ``imp`` in favor of 
+    * :issue:`386` - Partially deprecated use of ``imp`` in favor of
       ``importlib`` on Python >= 3.1
     * :issue:`390` - ArgparseArgumentHandler should store unknown arguments
 
@@ -113,7 +119,7 @@ Bugs:
     * :issue:`317` - Calling ``CementApp.run()`` should return results from
       ``Controller._dispatch()``
     * :issue:`320` - Partials not rendering with Mustache templates
-    * :issue:`325` - Wrap Utility Doesn't Support Unicode 
+    * :issue:`325` - Wrap Utility Doesn't Support Unicode
     * :issue:`328` - Post Run Hook Not Executing
     * :issue:`331` - KeyError: 'USER' When Running Nose Tests
     * :issue:`338` - Support non-ascii encoding for email subject and body
@@ -133,23 +139,23 @@ Refactoring:
 
     * :issue:`311` - Refactor Hooks/Handlers into CementApp
     * :issue:`319` - Use ``os.devnull`` instead of internal ``NullOut`` hack.
-    
+
 Incompatible:
 
     * :issue:`311` - Hook ``signal`` now requires ``app`` argument.
     * :issue:`313` - Default ``Cement.Meta.exit_on_close`` to ``False``.
-      Calls to ``sys.exit()`` should be explicit by the app developer, and 
+      Calls to ``sys.exit()`` should be explicit by the app developer, and
       not implied by the framework.
-    * :issue:`332` - Output Handler Interface Must Support Keyword Arguments 
-    
+    * :issue:`332` - Output Handler Interface Must Support Keyword Arguments
+
 
 2.6.0 - Thu May 14, 2015
 ------------------------------------------------------------------------------
 
 Bugs:
 
-    * :issue:`294` - Added work-around for scenario where an app wants to 
-      support arbitrary positional argument with a value of ``default``.  
+    * :issue:`294` - Added work-around for scenario where an app wants to
+      support arbitrary positional argument with a value of ``default``.
       By default, this will attempt to explicitly call the ``default`` command
       rather than using ``default`` as the argument.  This fix adds
       ``CementBaseController.Meta.default_func`` allowing the developer to
@@ -164,18 +170,18 @@ Features:
       ``CementApp.Meta``.
     * :issue:`290` - Added ability to disable Cement framework logging via
       ``CementApp.Meta.framework_logging = False``.
-    * :issue:`297` - Added **experimental** support for reloading 
+    * :issue:`297` - Added **experimental** support for reloading
       configurations anytime config files and/or plugin config files are
       modified.  Optional extension `ext_reload_config`.
 
 Incompatible:
 
-    * :issue:`308` - No longer require explicit 
-      ``CementApp.Meta.base_controller`` if a controller with the label of 
+    * :issue:`308` - No longer require explicit
+      ``CementApp.Meta.base_controller`` if a controller with the label of
       ``base`` is registered.  This is potentially backward in-compatible in
-      that previously ``CementBaseController.Meta.label`` defaulted to 
+      that previously ``CementBaseController.Meta.label`` defaulted to
       ``base``.  It now defaults to ``None``, which makes more sense but will
-      break for any controllers that have not explicitly set a ``label`` of 
+      break for any controllers that have not explicitly set a ``label`` of
       ``base``.
 
 

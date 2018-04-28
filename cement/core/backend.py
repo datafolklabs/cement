@@ -1,6 +1,6 @@
 """Cement core backend module."""
 
-VERSION = (2, 10, 4, 'final', 0)  # pragma: nocover
+VERSION = (2, 10, 6, 'final', 0)  # pragma: nocover
 
 # global hooks/handlers (DEPRECATED)
 __handlers__ = {}   # pragma: nocover
