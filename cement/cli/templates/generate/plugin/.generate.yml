@@ -1,0 +1,15 @@
+---
+
+exclude:
+    - '^(.*)[\/\\\\]plugin[\/\\\\]{{ label }}[\/\\\\]templates[\/\\\\](.*)$'
+
+variables:
+    -   name: label
+        prompt: "Plugin Label"
+        case: "lower"
+        default: "myplugin"
+
+    -   name: class_name
+        prompt: "Plugin Class Name"
+        validate: "^[a-zA-Z0-9]+$"
+        default: "MyPlugin"

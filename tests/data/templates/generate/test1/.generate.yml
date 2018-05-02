@@ -1,0 +1,42 @@
+---
+
+ignore:
+- '.*ignore-me.*'
+
+exclude:
+- '.*exclude-me.*'
+
+variables:
+
+-   name: foo1
+    prompt: Variable One
+    default: bar1
+
+-   name: foo2
+    prompt: Variable Two
+    default: bar2
+
+-   name: foo3
+    prompt: Variable Three
+    case: upper
+    default: bar3
+
+-   name: foo4
+    prompt: Variable Four
+    case: title
+    default: bar4
+
+-   name: foo5
+    prompt: Variable Five
+    case: lower
+    default: BAR5
+
+-   name: foo6
+    prompt: Variable Six
+    default: bar6
+    validate: '.*bar6.*'
+
+-   name: foo7
+    prompt: Variable Seven
+    default: bar7
+    case: invalid_case

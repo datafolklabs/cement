@@ -1,0 +1,7 @@
+---
+
+variables:
+    -   name: label
+        prompt: "Script Name"
+        default: "myscript"
+        validate: "^[a-zA-Z0-9]+$"

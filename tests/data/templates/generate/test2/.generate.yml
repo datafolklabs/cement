@@ -1,0 +1,8 @@
+---
+
+variables:
+    
+-   name: foo1
+    prompt: Variable One
+    default: bar1
+    validate: '.*not-bar1.*'
