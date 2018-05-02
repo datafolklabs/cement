@@ -39,13 +39,13 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provider "virtualbox" do |v|
-    v.memory = "1024"
+    v.memory = "2048"
     v.cpus = "1"
     v.gui = true
   end
 
   config.vm.provider "vmware_desktop" do |v|
-    v.vmx["memsize"] = "1024"
+    v.vmx["memsize"] = "2048"
     v.vmx["numvcpus"] = "1"
     v.gui = true
   end
