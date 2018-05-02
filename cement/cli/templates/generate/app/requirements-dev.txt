@@ -1,0 +1,15 @@
+-r requirements.txt
+
+pytest
+pytest-cov
+mock
+coverage
+sphinx
+pep8
+autopep8
+# version cap due to bug: https://gitlab.com/pycqa/flake8/issues/406
+pycodestyle<2.4
+flake8
+twine>=1.11.0
+setuptools>=38.6.0
+wheel>=0.31.0

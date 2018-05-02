@@ -1,0 +1,12 @@
+version: "3"
+services:
+    {{ label }}:
+        image: "{{ label }}:dev"
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.dev
+        hostname: cement
+        stdin_open: true
+        tty: true
+        volumes:
+            - ".:/app"

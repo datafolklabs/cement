@@ -217,6 +217,7 @@ class Jinja2TemplateHandler(TemplateHandler):
             str: The rendered template text
 
         """
+        LOG.debug("rendering output as text via %s" % self.__module__)
 
         if not isinstance(content, str):
             content = content.decode('utf-8')

@@ -36,6 +36,11 @@ Features:
 - `[ext.mustache]` Add MustacheTemplateHandler
 - `[ext.handlebars]` Add HandlebarsTemplateHandler
 - `[ext.jinja2]` Add Jinja2TemplateHandler
+- `[ext.generate]` Add Generate Extension
+    - [Issue #487](https://github.com/datafolklabs/cement/issues/487)
+- `[cli]` Add Cement CLI (includes ability to generate apps, plugins,
+    extensions, and scripts using the Generate Extension)
+    - [Issue #490](https://github.com/datafolklabs/cement/issues/490)
 
 
 Refactoring:
@@ -52,13 +57,13 @@ Incompatible:
 - `[core.handler]` Drop deprecated backend globals
 - `[core.hook]` Drop deprecated backend globals
 - `[core.controller]` Drop `CementBaseController`
-- `[ext.argcomplete]` No longer shipped with Cement.
-- `[ext.reload_config]` No longer shipped with Cement.
-- `[ext.configobj]` No longer shipped with Cement.
-- `[ext.json_configobj]` No longer shipped with Cement.
-- `[ext.yaml_configobj]` No longer shipped with Cement.
-- `[ext.genshi]` No longer shipped with Cement.
-- `[ext.argparse]` ArgparseController.Meta.default_func is not `_default`, and
+- `[ext.argcomplete]` Drop ArgComplete Extension
+- `[ext.reload_config]` Drop Reload Config Extension
+- `[ext.configobj]` Drop ConfigObj Extension
+- `[ext.json_configobj]` Drop JSON ConfigObj Extension
+- `[ext.yaml_configobj]` Drop YAML ConfigObj Extension
+- `[ext.genshi]` Drop Genshi Extension
+- `[ext.argparse]` `ArgparseController.Meta.default_func` is now `_default`, and
   will print help info and exit.  Can now set this to `None` as well to
   pass/exit.
     - [Issue #426](https://github.com/datafolklabs/cement/issues/426)

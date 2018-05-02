@@ -102,13 +102,13 @@ class TemplateHandler(TemplateHandlerBase):
     """
 
     class Meta:
-        # Unique identifier (str), used internally.
+        #: Unique identifier (str), used internally.
         label = None
 
-        # The interface that this handler implements.
+        #: The interface that this handler implements.
         interface = 'template'
 
-        # List of file patterns to exclude
+        #: List of file patterns to exclude (copy but not render as template)
         exclude = [
             '^(.*)\.png$',
             '^(.*)\.jpg$',
@@ -125,20 +125,68 @@ class TemplateHandler(TemplateHandlerBase):
             '^(.*)\.pyc$',
         ]
 
+        #: List of file patterns to ignore completely (not copy at all)
+        ignore = None
+
+    def __init__(self, *args, **kwargs):
+        super(TemplateHandler, self).__init__(*args, **kwargs)
+        if self._meta.ignore is None:
+            self._meta.ignore = []
+        if self._meta.exclude is None:
+            self._meta.exclude = []
+
     def render(self, content, data):
+        """
+        Render ``content`` as template using using the ``data`` dictionary.
+
+        Args:
+            content (str): The content to render.
+            data (dict): The data dictionary to interpolate in the template.
+
+        Returns:
+            str: The rendered content.
+        """
+
         # must be provided by a subclass
         raise NotImplemented
 
-    def copy(self, src, dest, data):
+    def copy(self, src, dest, data, force=False, exclude=None, ignore=None):
+        """
+        Render ``src`` directory as template, including directory and file
+        names, and copy to ``dest`` directory.
+
+        Args:
+            src (str): The source directory path.
+            dest (str): The destination directory path.
+            data (dict): The data dictionary to interpolate in the template.
+            force (bool): Whether to overwrite existing files.
+            exclude (list): List of regular expressions to match files that
+                should only be copied, and not rendered as template.
+            ignore (list): List of regular expressions to match files that
+                should be completely ignored and not copied at all.
+
+        Returns:
+            bool: Returns ``True`` if the copy completed successfully.
+
+        Raises:
+            AssertionError: If the ``src`` template directory path does not
+                exists, and when a ``dest`` file already exists and
+                ``force is not True``.
+        """
+
         dest = fs.abspath(dest)
         src = fs.abspath(src)
+        if exclude is None:
+            exclude = []
+        if ignore is None:
+            ignore = []
 
         assert os.path.exists(src), "Source path %s does not exist!" % src
 
         if not os.path.exists(dest):
             os.makedirs(dest)
 
-        self.app.log.info('Copying source template %s -> %s' % (src, dest))
+        self.app.log.debug('Copying source template %s -> %s' % (src, dest))
 
         # here's the fun
         for cur_dir, sub_dirs, files in os.walk(src):
@@ -174,25 +222,41 @@ class TemplateHandler(TemplateHandlerBase):
 
             for _file in files:
                 self.app.log.debug('rendering template %s' % _file)
-                new_file = re.sub(src,
-                                  '',
-                                  self.render(_file, data))
-                _file_dest = os.path.join(cur_dir_dest, new_file)
+                new_file = re.sub(src, '', self.render(_file, data))
+                _file = fs.abspath(os.path.join(cur_dir, _file))
+                _file_dest = fs.abspath(os.path.join(cur_dir_dest, new_file))
 
-                assert not os.path.exists(_file_dest), \
-                    'Destination file already exists: %s ' % _file_dest
+                if force is True:
+                    LOG.debug('Overwriting existing file: %s ' % _file_dest)
+                else:
+                    assert not os.path.exists(_file_dest), \
+                        'Destination file already exists: %s ' % _file_dest
 
-                exclude = False
-                for pattern in self._meta.exclude:
+                ignore_it = False
+                all_patterns = self._meta.ignore + ignore
+                for pattern in all_patterns:
                     if re.match(pattern, _file):
-                        exclude = True
+                        ignore_it = True
                         break
 
-                if exclude is True:
-                    self.app.log.warn(
+                if ignore_it is True:
+                    self.app.log.debug(
+                        'Not copying ignored file: ' +
+                        '%s' % _file)
+                    continue
+
+                exclude_it = False
+                all_patterns = self._meta.exclude + exclude
+                for pattern in all_patterns:
+                    if re.match(pattern, _file):
+                        exclude_it = True
+                        break
+
+                if exclude_it is True:
+                    self.app.log.debug(
                         'Not rendering excluded file as template: ' +
-                        '%s' % os.path.join(cur_dir, _file))
-                    shutil.copy(os.path.join(cur_dir, _file), _file_dest)
+                        '%s' % _file)
+                    shutil.copy(_file, _file_dest)
                 else:
                     f = open(os.path.join(cur_dir, _file), 'r')
                     content = f.read()

@@ -11,6 +11,7 @@ Extension Modules
    ext_configparser
    ext_daemon
    ext_dummy
+   ext_generate
    ext_handlebars
    ext_jinja2
    ext_json

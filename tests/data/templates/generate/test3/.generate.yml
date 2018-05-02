@@ -1,0 +1,8 @@
+---
+
+variables:
+
+-   name: foo1
+    prompt: Variable One
+    default: bar1
+    case: invalid_case
