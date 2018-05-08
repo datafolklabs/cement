@@ -336,10 +336,11 @@ def watchdog_add_paths(app):
     if hasattr(app._meta, 'watchdog_paths'):
         for path_spec in app._meta.watchdog_paths:
             # odd... if a tuple is a single item it ends up as a str?
+            # FIXME: coverage gets lots in testing
             if isinstance(path_spec, str):
-                app.watchdog.add(path_spec)
+                app.watchdog.add(path_spec)  # pragma: nocover
             elif isinstance(path_spec, tuple):
-                app.watchdog.add(*path_spec)
+                app.watchdog.add(*path_spec)  # pragma: nocover
             else:
                 raise FrameworkError(
                     "Watchdog path spec must be a tuple, not '%s' in: %s" %

@@ -79,7 +79,7 @@ class MinimalLogger(object):
             else:
                 res = False
         else:
-            res = True
+            res = True  # pragma: nocover
 
         return res
 

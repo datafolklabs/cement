@@ -230,8 +230,10 @@ class CementPluginHandler(plugin.PluginHandler):
         LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
                                                          base_package))
         # We don't catch this because it would make debugging a nightmare
+        # FIXME: not sure how to test/cover this
         if full_module not in sys.modules:
-            __import__(full_module, globals(), locals(), [], 0)
+            __import__(full_module,
+                       globals(), locals(), [], 0)  # pragma: nocover
 
         if hasattr(sys.modules[full_module], 'load'):
             sys.modules[full_module].load(self.app)

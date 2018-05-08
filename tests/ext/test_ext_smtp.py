@@ -35,7 +35,7 @@ def test_smtp_ssl_tls():
     defaults['mail.smtp']['port'] = 25
 
     with mock.patch('smtplib.SMTP_SSL') as mock_smtp:
-        with SMTPApp(config_defaults=defaults) as app:
+        with SMTPApp(config_defaults=defaults, debug=True) as app:
             app.run()
             app.mail.send('TEST MESSAGE',
                           to=['me@localhost'],

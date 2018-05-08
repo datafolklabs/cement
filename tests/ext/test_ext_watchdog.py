@@ -9,7 +9,7 @@ from cement.utils import fs
 class MyEventHandler(WatchdogEventHandler):
     def on_any_event(self, event):
         # do something with the ``event`` object
-        print("The modified path was: %s" % event.src_path)
+        raise Exception("The modified path was: %s" % event.src_path)
 
 
 class WatchdogApp(TestApp):

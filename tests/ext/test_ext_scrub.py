@@ -19,3 +19,16 @@ def test_scrub():
 
         # coverage
         assert app.scrub(None) is None
+
+
+def test_argument():
+
+    class MyScrubApp(ScrubApp):
+        class Meta:
+            scrub_argument = ['--not-scrub']
+            scrub_argument_help = 'not scrub'
+
+    with MyScrubApp(argv=['--not-scrub']) as app:
+        app.run()
+        app.print('foobar foo bar')
+        assert app.last_rendered[1] == '$$$*** $$$ ***\n'

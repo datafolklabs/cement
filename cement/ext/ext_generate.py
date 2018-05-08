@@ -176,7 +176,7 @@ class GenerateTemplateAbstractBase(Controller):
                 default_text = ' [%s]' % var['default']
 
             else:
-                default_text = ''
+                default_text = ''   # pragma: nocover
 
             if val is None:
                 class MyPrompt(shell.Prompt):
@@ -185,7 +185,7 @@ class GenerateTemplateAbstractBase(Controller):
                         default = var.get('default', None)
 
                 p = MyPrompt()
-                val = p.prompt()
+                val = p.prompt()    # pragma: nocover
 
             if var['case'] in ['lower', 'upper', 'title']:
                 val = getattr(val, var['case'])()
@@ -211,7 +211,7 @@ class GenerateTemplateAbstractBase(Controller):
             if re.match('(.*)already exists(.*)', e.args[0]):
                 raise AssertionError(e.args[0] + ' (try: --force)')
             else:
-                raise
+                raise  # pragma: nocover
 
 
 def setup_template_items(app):
@@ -228,9 +228,9 @@ def setup_template_items(app):
 
     # look in app template dirs
     for path in app._meta.template_dirs:
-        subdir_path = os.path.join(path, 'generate')
-        if os.path.exists(subdir_path):
-            template_dirs.append(subdir_path)
+        subpath = os.path.join(path, 'generate')
+        if os.path.exists(subpath) and subpath not in template_dirs:
+            template_dirs.append(subpath)
 
     # use app template module, find it's path on filesystem
     if app._meta.template_module is not None:
@@ -239,13 +239,16 @@ def setup_template_items(app):
         try:
             mod = app.__import__(mod, from_module='.'.join(mod_parts))
             mod_path = os.path.dirname(inspect.getfile(mod))
-            subdir_path = os.path.join(mod_path, 'generate')
-            if os.path.exists(subdir_path):
-                template_dirs.append(subdir_path)
-        except AttributeError as e:
+            subpath = os.path.join(mod_path, 'generate')
+
+            if os.path.exists(subpath) and subpath not in template_dirs:
+                template_dirs.append(subpath)
+
+        # FIXME: not exactly sure how to test for this so not covering
+        except AttributeError as e:                           # pragma: nocover
             msg = 'unable to load template module' + \
-                  '%s from %s' % (mod, '.'.join(mod_parts))
-            app.log.debug(msg)
+                  '%s from %s' % (mod, '.'.join(mod_parts))   # pragma: nocover
+            app.log.debug(msg)                                # pragma: nocover
 
     for path in template_dirs:
         for item in os.listdir(path):

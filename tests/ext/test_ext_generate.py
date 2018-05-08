@@ -1,7 +1,7 @@
 
 import os
 import re
-from cement import TestApp, Controller
+from cement import TestApp, Controller, FrameworkError
 from cement.utils.test import raises
 
 
@@ -46,6 +46,20 @@ def test_generate(tmp):
         # should not have been copied
         assert not exists_join(tmp.dir, 'ignore-me')
 
+    # test generate again to trigger already exists
+
+    with GenerateApp(argv=argv) as app:
+        with raises(AssertionError, match='Destination file already exists'):
+            app.run()
+
+
+def test_missing_base_controller(tmp):
+    argv = ['generate', 'test1', tmp.dir, '--defaults']
+    with TestApp(argv=argv, extensions=['jinja2', 'generate']) as app:
+        msg = 'ext.generate extension requires an application base controller'
+        with raises(FrameworkError, match=msg):
+            app.run()
+
 
 def test_prompt(tmp):
     argv = ['generate', 'test1', tmp.dir]
@@ -72,12 +86,25 @@ def test_invalid_variable_value(tmp):
             app.run()
 
 
-# additional tests for coverage
-
 def test_no_default(tmp):
     argv = ['generate', 'test3', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
         # msg = "Invalid Response (must match: '.*not-bar1.*')"
         # with raises(AssertionError, message=msg):
+        app.run()
+
+
+# coverage
+
+def test_generate_from_template_dir(tmp):
+    # argv = ['generate', 'test1', tmp.dir, '--defaults']
+    os.makedirs(os.path.join(tmp.dir, 'generate'))
+    with GenerateApp(template_dir=tmp.dir) as app:
+        app.run()
+
+
+def test_generate_default_command(tmp):
+    argv = ['generate']
+    with GenerateApp(argv=argv) as app:
         app.run()

@@ -81,7 +81,7 @@ def scrub_output(app, text):
 def extend_scrub(app):
     def scrub(text):
         if not hasattr(app._meta, 'scrub') or app._meta.scrub is None:
-            return text
+            return text  # pragma: nocover
         elif isinstance(text, str):
             for regex, replace in app._meta.scrub:
                 text = re.sub(regex, replace, text)
@@ -103,7 +103,8 @@ def extend_scrub(app):
 
     app.args.add_argument(*arg,
                           help=arg_help,
-                          action='store_true')
+                          action='store_true',
+                          dest='scrub')
 
 
 def load(app):
