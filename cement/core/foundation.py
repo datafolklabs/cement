@@ -329,18 +329,6 @@ class App(meta.MetaMixin):
         ``setup()``.
         """
 
-        arguments_override_config = False
-        """
-        A boolean to toggle whether command line arguments should
-        override configuration values if the argument name matches the
-        config key.  I.e. ``--foo=bar`` would override
-        ``config['myapp']['foo']``.
-
-        This is different from ``override_arguments`` in that if
-        ``arguments_override_config`` is ``True``, then all arguments will
-        override (you don't have to list them all).
-        """
-
         override_arguments = ['debug']
         """
         List of arguments that override their configuration counter-part.
@@ -348,11 +336,6 @@ class App(meta.MetaMixin):
         ``debug``) then the ``debug`` key of all configuration sections will
         be overridden by the value of the command line option (``True`` in
         this example).
-
-        This is different from ``arguments_override_config`` in that this is
-        a selective list of specific arguments to override the config with
-        (and not all arguments that match the config).  This list will take
-        affect whether ``arguments_override_config`` is ``True`` or ``False``.
         """
 
         core_handler_override_options = dict(
@@ -1158,21 +1141,6 @@ class App(meta.MetaMixin):
             pass
 
         self._parsed_args = self.args.parse(self.argv)
-
-        if self._meta.arguments_override_config is True:
-            for member in dir(self._parsed_args):
-                if member and member.startswith('_'):
-                    continue
-
-                # don't override config values for options that weren't passed
-                # or in otherwords are None
-                elif getattr(self._parsed_args, member) is None:
-                    continue
-
-                for section in self.config.get_sections():
-                    if member in self.config.keys(section):
-                        self.config.set(section, member,
-                                        getattr(self._parsed_args, member))
 
         for member in self._meta.override_arguments:
             for section in self.config.get_sections():

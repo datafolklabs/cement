@@ -72,7 +72,8 @@ Incompatible:
 - `[core.foundation]` Renamed `App.Meta.config_extension` to
     `App.Meta.config_file_suffix`
     - [Issue #445](https://github.com/datafolklabs/cement/issues/445)
-
+- `[core.foundation]` Drop `App.Meta.arguments_override_config`
+    - [Issue #493](https://github.com/datafolklabs/cement/issues/493)
 
 Deprecation:
 
