@@ -334,18 +334,39 @@ def test_close_with_code():
             app.run()
             app.close('Not An Int')
 
-# def test_suppress_output_while_debug(self):
-#     # coverage?
-#     with TestApp(debug=True) as app:
-#         app._suppress_output()
-#
-#
-# def test_core_meta_override(self):
-#     # coverage?
-#     defaults = init_defaults('test-app')
-#     defaults['test-app']['mail_handler'] = 'dummy'
-#     with TestApp(config_defaults=defaults) as app:
-#         app.run()
+
+def test_core_meta_override():
+    defaults = init_defaults('test-app')
+    defaults['test-app']['mail_handler'] = 'smtp'
+    defaults['test-app']['extensions'] = 'smtp'
+    with TestApp(label='test-app', config_defaults=defaults) as app:
+        app.run()
+        assert app._meta.mail_handler == 'smtp'
+
+
+def test_load_extensions_via_config(rando):
+    label = "app-%s" % rando
+    defaults = init_defaults(label)
+
+    # singular item
+    defaults[label]['extensions'] = 'json'
+    with TestApp(label=label, config_defaults=defaults) as app:
+        app.run()
+        assert 'json' in app._meta.extensions
+
+    # comma separated str list
+    defaults[label]['extensions'] = 'json,yaml'
+    with TestApp(label=label, config_defaults=defaults) as app:
+        app.run()
+        assert 'json' in app._meta.extensions
+        assert 'yaml' in app._meta.extensions
+
+    # list
+    defaults[label]['extensions'] = ['jinja2', 'tabulate']
+    with TestApp(label=label, config_defaults=defaults) as app:
+        app.run()
+        assert 'jinja2' in app._meta.extensions
+        assert 'tabulate' in app._meta.extensions
 
 
 def test_define_hooks_via_meta():
@@ -473,6 +494,12 @@ def test_meta_defaults():
         assert app.log._meta.debug_format == DEBUG_FORMAT
 
 
+def test_template_dir_in_template_dirs(tmp):
+    with TestApp(template_dir=tmp.dir) as app:
+        app.run()
+        assert tmp.dir in app._meta.template_dirs
+
+
 # coverage
 
 def test_pre_render_hook():
@@ -488,4 +515,17 @@ def test_quiet():
     with TestApp(argv=['--quiet', '--debug']) as app:
         app.run()
     with TestApp(argv=['--quiet'], debug=True) as app:
+        app.run()
+
+
+def test_config_dirs(tmp):
+    with open(os.path.join(tmp.dir, 'dummy.conf'), 'w') as f:
+        f.write("")
+
+    with TestApp(config_dirs=[tmp.dir]) as app:
+        app.run()
+
+
+def test_none_template_handler():
+    with TestApp(template_handler=None) as app:
         app.run()

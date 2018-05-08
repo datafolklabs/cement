@@ -1199,6 +1199,7 @@ class App(meta.MetaMixin):
     def _setup_config_handler(self):
         LOG.debug("setting up %s.config handler" % self._meta.label)
         label = self._meta.label
+        ext = self._meta.config_file_suffix
         self.config = self._resolve_handler('config',
                                             self._meta.config_handler)
         if self._meta.config_section is None:
@@ -1210,8 +1211,6 @@ class App(meta.MetaMixin):
             self.config.merge(self._meta.config_defaults)
 
         if self._meta.config_files is None:
-            ext = self._meta.config_file_suffix
-
             self._meta.config_files = [
                 fs.join('/', 'etc', label, '%s%s' % (label, ext)),
                 fs.join(fs.HOME_DIR, '.config', label, '%s%s' % (label, ext)),

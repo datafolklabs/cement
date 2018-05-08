@@ -50,11 +50,11 @@ class OutputHandlerBase(Handler):
             rendered
 
         """
-        pass
+        pass  # pragma: nocover
 
 
 class OutputHandler(OutputHandlerBase):
 
     """Output handler implementation."""
 
-    pass
+    pass  # pragma: nocover

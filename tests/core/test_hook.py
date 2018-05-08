@@ -52,6 +52,12 @@ def test_register_and_run():
         assert results == ['kapla 3', 'kapla 2', 'kapla 1']
 
 
+def test_register_hook_name_not_defined():
+    with TestApp() as app:
+        # with raises(FrameworkError, match='Hook name .* is not defined!'):
+        app.hook.register('bogus_hook', print)
+
+
 def test_run_bad_hook():
     with TestApp() as app:
         with raises(FrameworkError, match='Hook name .* is not defined!'):
@@ -83,3 +89,16 @@ def test_framework_hooks():
 
     with MyApp() as app:
         app.run()
+
+
+def test_generate_type_hook():
+    def my_generator():
+        for i in [1, 1, 1]:
+            yield i
+
+    with TestApp() as app:
+        app.hook.define('test_hook')
+        app.hook.register('test_hook', my_generator)
+        app.run()
+        for res in app.hook.run('test_hook'):
+            assert res == 1

@@ -54,7 +54,7 @@ class TemplateHandlerBase(Handler):
             str: The rendered template string.
 
         """
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def copy(self, src, dest, data):
@@ -69,7 +69,7 @@ class TemplateHandlerBase(Handler):
             data (dict): The data dictionary to render with template.
         Returns: None
         """
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def load(self, path):
@@ -92,7 +92,7 @@ class TemplateHandlerBase(Handler):
             cement.core.exc.FrameworkError: If the template does not exist in
                 either the ``template_module`` or ``template_dirs``.
         """
-        pass
+        pass  # pragma: nocover
 
 
 class TemplateHandler(TemplateHandlerBase):
@@ -109,21 +109,7 @@ class TemplateHandler(TemplateHandlerBase):
         interface = 'template'
 
         #: List of file patterns to exclude (copy but not render as template)
-        exclude = [
-            '^(.*)\.png$',
-            '^(.*)\.jpg$',
-            '^(.*)\.jpeg$',
-            '^(.*)\.gif$',
-            '^(.*)\.exe$',
-            '^(.*)\.bin$',
-            '^(.*)\.zip$',
-            '^(.*)\.tar$',
-            '^(.*)\.tar.gz$',
-            '^(.*)\.tgz$',
-            '^(.*)\.gz$',
-            '^(.*)\.pyo$',
-            '^(.*)\.pyc$',
-        ]
+        exclude = None
 
         #: List of file patterns to ignore completely (not copy at all)
         ignore = None
@@ -148,7 +134,7 @@ class TemplateHandler(TemplateHandlerBase):
         """
 
         # must be provided by a subclass
-        raise NotImplemented
+        raise NotImplemented  # pragma: nocover
 
     def copy(self, src, dest, data, force=False, exclude=None, ignore=None):
         """
@@ -191,7 +177,7 @@ class TemplateHandler(TemplateHandlerBase):
         # here's the fun
         for cur_dir, sub_dirs, files in os.walk(src):
             if cur_dir == '.':
-                continue
+                continue    # pragma: nocover
 
             # don't render the source base dir (because we are telling it
             # where to go as `dest`)

@@ -65,6 +65,28 @@ def test_register_invalid_handlers():
         with raises(InterfaceError, match=msg):
             app.handler.register(BogusHandlerNoMetaLabel)
 
+    # coverage
+
+    class MyHandler(DummyOutputHandler):
+        class Meta:
+            label = None
+
+    msg = 'MyHandler.Meta.label undefined.'
+    with raises(FrameworkError, match=msg):
+        MyHandler()
+
+
+def test_handler_does_not_subclass():
+    class MyHandler(DummyOutputHandler):
+        class Meta:
+            label = 'does-not-subclass-argument-handler'
+            interface = 'argument'
+
+    with TestApp() as app:
+        msg = 'Handler MyHandler does not sub-class ArgumentHandlerBase'
+        with raises(InterfaceError, match=msg):
+            app.handler.register(MyHandler)
+
 
 def test_register_duplicate_handler():
     class DuplicateHandler(DummyOutputHandler):
@@ -181,3 +203,12 @@ def test_register_invalid_handler_type():
     with TestApp() as app:
         with raises(FrameworkError, match='interface .* doesn\'t exist.'):
             app.handler.register(BadHandler)
+
+
+def test_setup():
+    with TestApp() as app:
+        han = app.handler.get('output', 'dummy')
+        assert not hasattr(han, '_meta')
+
+        han = app.handler.get('output', 'dummy', setup=True)
+        assert hasattr(han, '_meta')

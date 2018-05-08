@@ -84,7 +84,7 @@ class MailHandlerBase(Handler):
                     )
 
         """
-        pass
+        pass  # pragma: nocover
 
 
 class MailHandler(MailHandlerBase):

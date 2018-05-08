@@ -109,17 +109,20 @@ class HandlerManager(object):
         self.app = app
         self.__handlers__ = {}
 
-    def get(self, handler_type, handler_label, *args):
+    def get(self, handler_type, handler_label, fallback=None, **kwargs):
         """
         Get a handler object.
 
         Args:
             handler_type (str): The type of handler (i.e. ``output``)
             handler_label (str): The label of the handler (i.e. ``json``)
-
-        Keyword Args:
             fallback (Handler):  A fallback value to return if handler_label
                 doesn't exist.
+
+        Keyword Args:
+            setup (bool): Whether or not to call ``setup()`` on the handler
+                before returning.  This will not be called on the ``fallback``
+                if no the handler given does not exist.
 
         Returns:
             Handler: An uninstantiated handler object
@@ -138,14 +141,20 @@ class HandlerManager(object):
                 output.render(dict(foo='bar'))
 
         """
+        setup = kwargs.get('setup', False)
+
         if handler_type not in self.__handlers__:
             raise exc.FrameworkError("handler type '%s' does not exist!" %
                                      handler_type)
 
         if handler_label in self.__handlers__[handler_type]:
-            return self.__handlers__[handler_type][handler_label]
-        elif len(args) > 0:
-            return args[0]
+            if setup is True:
+                han = self.__handlers__[handler_type][handler_label]
+                return self.setup(han)
+            else:
+                return self.__handlers__[handler_type][handler_label]
+        elif fallback is not None:
+            return fallback
         else:
             raise exc.FrameworkError("handlers['%s']['%s'] does not exist!" %
                                      (handler_type, handler_label))

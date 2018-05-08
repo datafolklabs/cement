@@ -41,12 +41,12 @@ class LogHandlerBase(Handler):
             ``['INFO', 'WARNING', 'ERROR', 'DEBUG', or 'FATAL']``.
 
         """
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def get_level(self):
         """Return a string representation of the log level."""
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def info(self, msg):
@@ -57,7 +57,7 @@ class LogHandlerBase(Handler):
             msg (str): The message to log.
 
         """
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def warning(self, msg):
@@ -68,7 +68,7 @@ class LogHandlerBase(Handler):
             msg (str): The message to log.
 
         """
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def error(self, msg):
@@ -79,7 +79,7 @@ class LogHandlerBase(Handler):
             msg (str): The message to log.
 
         """
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def fatal(self, msg):
@@ -90,7 +90,7 @@ class LogHandlerBase(Handler):
             msg (str): The message to log.
 
         """
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def debug(self, msg):
@@ -101,7 +101,7 @@ class LogHandlerBase(Handler):
             msg (str): The message to log.
 
         """
-        pass
+        pass  # pragma: nocover
 
 
 class LogHandler(LogHandlerBase):
@@ -111,4 +111,4 @@ class LogHandler(LogHandlerBase):
 
     """
 
-    pass
+    pass  # pragma: nocover

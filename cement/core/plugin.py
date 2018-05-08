@@ -41,7 +41,7 @@ class PluginHandlerBase(Handler):
             plugin_name (str): The name of the plugin to load.
 
         """
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def load_plugins(self, plugins):
@@ -52,22 +52,22 @@ class PluginHandlerBase(Handler):
             plugins (list): A list of plugin names to load.
 
         """
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def get_loaded_plugins(self):
         """Returns a list of plugins that have been loaded."""
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def get_enabled_plugins(self):
         """Returns a list of plugins that are enabled in the config."""
-        pass
+        pass  # pragma: nocover
 
     @abstractmethod
     def get_disabled_plugins(self):
         """Returns a list of plugins that are disabled in the config."""
-        pass
+        pass  # pragma: nocover
 
 
 class PluginHandler(PluginHandlerBase):
@@ -77,4 +77,4 @@ class PluginHandler(PluginHandlerBase):
 
     """
 
-    pass
+    pass  # pragma: nocover
