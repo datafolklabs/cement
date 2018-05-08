@@ -88,10 +88,10 @@ vagrant@linux $ source env/bin/activate
 
 Cement has a strict policy that all code and tests meet PEP8 guidelines, therefore `flake8` is called before any unit tests run.  All code submissions require 100% test coverage and PEP8 compliance:
 
+Then:
+
 ```
 $ make test
-
-$ make comply
 ```
 
 See `Makefile` for all other common development actions.
