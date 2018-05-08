@@ -86,6 +86,8 @@ vagrant@linux $ source env/bin/activate
 
 ### Running Tests and Compliance
 
+Cement has a strict policy that all code and tests meet PEP8 guidelines, therefore `flake8` is called before any unit tests run.  All code submissions require 100% test coverage and PEP8 compliance:
+
 ```
 $ make test
 
