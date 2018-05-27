@@ -60,6 +60,8 @@ def test_load_extensions():
         ext._setup(app)
         ext.load_extensions(['cement.ext.ext_configparser'])
 
+        assert 'cement.ext.ext_configparser' in ext.get_loaded_extensions()
+
 
 def test_load_extensions_again():
     with TestApp() as app:
@@ -67,6 +69,8 @@ def test_load_extensions_again():
         ext._setup(app)
         ext.load_extensions(['cement.ext.ext_configparser'])
         ext.load_extensions(['cement.ext.ext_configparser'])
+
+        assert len(ext.get_loaded_extensions()) == 1
 
 
 def test_load_bogus_extension():

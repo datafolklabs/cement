@@ -14,7 +14,8 @@ def test_app():
     argv = []
 
     with App(argv=argv) as app:
-        app.run()
+        no_base_controller_retval = app.run()
+        assert no_base_controller_retval is None
 
 
 def test_generate(tmp):
