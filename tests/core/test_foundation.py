@@ -5,7 +5,7 @@ import re
 import pytest
 import json
 import signal
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock, patch
 
 from cement import App, Controller, ex
 from cement.core.handler import Handler
@@ -14,6 +14,7 @@ from cement.core.foundation import TestApp
 from cement.core.foundation import add_handler_override_options
 from cement.core.foundation import handler_override
 from cement.core.foundation import cement_signal_handler
+from cement.core.foundation import LOG
 from cement.utils.misc import minimal_logger, init_defaults
 from cement.utils import test, fs, misc
 
@@ -22,30 +23,39 @@ def pre_render_hook(app, data):
     return data
 
 
+log_stub = Mock()
+
+@patch('cement.core.foundation.LOG.debug', log_stub)
 def test_add_handler_override_options():
     class MyApp(TestApp):
         class Meta:
             extensions = ['json', 'yaml', 'mustache', 'tabulate']
 
     with MyApp() as app:
+        app.args.add_argument = Mock()
         # coverage for explicitly disabling handler_override_options
         app._meta.handler_override_options = None
         add_handler_override_options(app)
+        assert not app.args.add_argument.called
 
         # coverage for case where the interface doesn't exist
         app._meta.handler_override_options = {
             'bogus': (['--bogus'], {'help': 'bogus handler'}),
         }
         add_handler_override_options(app)
+        log_stub.assert_any_call("interface 'bogus' is not defined, " +
+                                 "can not override handlers")
 
-    # coverage for case where there is an output handler, but it's not
-    # overridable (so no options to display in --help)
-    class MyApp2(TestApp):
-        class Meta:
-            extensions = ['mustache']
 
-    with MyApp2() as app:
-        app.run()
+# def test_add_handler_override_options_cannot_override():
+#     """Coverage for case where there is an output handler, but it's not
+#     overridable (so no options to display in --help)"""
+#     class MyApp(TestApp):
+#         class Meta:
+#             extension = ['mustache']
+
+#     with MyApp() as app:
+#         app.run()
 
 
 def test_handler_override():
