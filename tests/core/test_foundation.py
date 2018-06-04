@@ -14,7 +14,6 @@ from cement.core.foundation import TestApp
 from cement.core.foundation import add_handler_override_options
 from cement.core.foundation import handler_override
 from cement.core.foundation import cement_signal_handler
-from cement.core.foundation import LOG
 from cement.utils.misc import minimal_logger, init_defaults
 from cement.utils import test, fs, misc
 
@@ -24,6 +23,7 @@ def pre_render_hook(app, data):
 
 
 log_stub = Mock()
+
 
 @patch('cement.core.foundation.LOG.debug', log_stub)
 def test_add_handler_override_options():
@@ -47,15 +47,15 @@ def test_add_handler_override_options():
                                  "can not override handlers")
 
 
-# def test_add_handler_override_options_cannot_override():
-#     """Coverage for case where there is an output handler, but it's not
-#     overridable (so no options to display in --help)"""
-#     class MyApp(TestApp):
-#         class Meta:
-#             extension = ['mustache']
+def test_add_handler_override_options_cannot_override():
+    """Coverage for case where there is an output handler, but it's not
+    overridable (so no options to display in --help)"""
+    class MyApp(TestApp):
+        class Meta:
+            extension = ['mustache']
 
-#     with MyApp() as app:
-#         app.run()
+    with MyApp() as app:
+        app.run()
 
 
 def test_handler_override():
@@ -248,7 +248,9 @@ def test_label():
 
 def test_add_arg_shortcut():
     with TestApp() as app:
+        app.args.add_argument = Mock()
         app.add_arg('--foo', action='store')
+        assert app.args.add_argument.called
 
 
 def test_reset_output_handler():
@@ -262,6 +264,7 @@ def test_reset_output_handler():
         app.output = None
         app._meta.output_handler = None
         app._setup_output_handler()
+        assert app.output is None
 
 
 def test_without_signals():
