@@ -5,7 +5,7 @@ import re
 import pytest
 import json
 import signal
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import Mock, MagicMock
 
 from cement import App, Controller, ex
 from cement.core.handler import Handler
@@ -22,39 +22,29 @@ def pre_render_hook(app, data):
     return data
 
 
-log_stub = Mock()
-
-
-@patch('cement.core.foundation.LOG.debug', log_stub)
 def test_add_handler_override_options():
     class MyApp(TestApp):
         class Meta:
             extensions = ['json', 'yaml', 'mustache', 'tabulate']
 
     with MyApp() as app:
-        app.args.add_argument = Mock()
         # coverage for explicitly disabling handler_override_options
         app._meta.handler_override_options = None
         add_handler_override_options(app)
-        assert not app.args.add_argument.called
 
         # coverage for case where the interface doesn't exist
         app._meta.handler_override_options = {
             'bogus': (['--bogus'], {'help': 'bogus handler'}),
         }
         add_handler_override_options(app)
-        log_stub.assert_any_call("interface 'bogus' is not defined, " +
-                                 "can not override handlers")
 
-
-def test_add_handler_override_options_cannot_override():
-    """Coverage for case where there is an output handler, but it's not
-    overridable (so no options to display in --help)"""
-    class MyApp(TestApp):
+    # coverage for case where there is an output handler, but it's not
+    # overridable (so no options to display in --help)
+    class MyApp2(TestApp):
         class Meta:
-            extension = ['mustache']
+            extensions = ['mustache']
 
-    with MyApp() as app:
+    with MyApp2() as app:
         app.run()
 
 
@@ -88,9 +78,7 @@ def test_basic():
 
 
 def test_loaded():
-    class MyApp(TestApp):
-        class Meta:
-            extensions = [
+    ext_list = [
                 'alarm',
                 'colorlog',
                 'daemon',
@@ -107,8 +95,13 @@ def test_loaded():
                 'yaml',
             ]
 
+    class MyApp(TestApp):
+        class Meta:
+            extensions = ext_list
+
     with MyApp() as app:
-        app.run()
+        for ext in ext_list:
+            assert 'cement.ext.ext_%s' % ext in app.ext._loaded_extensions
 
 
 def test_argv():
@@ -183,8 +176,14 @@ def test_passed_handlers():
             mail_handler = DummyMailHandler()
             argv = [__file__, '--debug']
 
-    with MyApp():
-        pass
+    with MyApp() as app:
+        assert isinstance(app.log, LoggingLogHandler)
+        assert isinstance(app.plugin, CementPluginHandler)
+        assert isinstance(app.args, ArgparseArgumentHandler)
+        assert isinstance(app.config, ConfigParserConfigHandler)
+        assert isinstance(app.ext, ExtensionHandler)
+        assert isinstance(app.mail, DummyMailHandler)
+        assert isinstance(app.output, JsonOutputHandler)
 
 
 def test_debug():
@@ -248,9 +247,9 @@ def test_label():
 
 def test_add_arg_shortcut():
     with TestApp() as app:
-        app.args.add_argument = Mock()
         app.add_arg('--foo', action='store')
-        assert app.args.add_argument.called
+        app.run()
+        assert 'foo' in app.pargs
 
 
 def test_reset_output_handler():
@@ -288,7 +287,8 @@ def test_extend():
 def test_no_handler():
     # coverage
     with TestApp() as app:
-        app._resolve_handler('cache', None, raise_error=False)
+        retval = app._resolve_handler('cache', None, raise_error=False)
+        assert retval is None
 
 
 def test_config_files_is_none():
@@ -523,12 +523,22 @@ def test_pre_render_hook():
 
 
 def test_quiet():
+    stdout_ref = sys.stdout
     with TestApp(argv=['--quiet']) as app:
         app.run()
+        assert stdout_ref is not sys.stdout
+
+    sys.stdout = stdout_ref
     with TestApp(argv=['--quiet', '--debug']) as app:
         app.run()
+        assert stdout_ref is sys.stdout
+
+    sys.stdout = stdout_ref
     with TestApp(argv=['--quiet'], debug=True) as app:
         app.run()
+        assert stdout_ref is sys.stdout
+
+    sys.stdout = stdout_ref
 
 
 def test_config_dirs(tmp):
