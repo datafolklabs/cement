@@ -491,10 +491,12 @@ def test_add_remove_template_directory(tmp):
 
 
 def test_alternative_module_mapping():
-    # coverage
-    with TestApp(alternative_module_mapping=dict(time='time')) as app:
+    with TestApp(alternative_module_mapping=dict(time='math')) as app:
         app.__import__('time')
-        app.__import__('sleep', from_module='time')
+        app.__import__('sqrt', from_module='time')
+
+        with pytest.raises(AttributeError):
+            app.__import__('sleep', from_module='time')
 
 
 def test_meta_defaults():
@@ -516,10 +518,15 @@ def test_template_dir_in_template_dirs(tmp):
 # coverage
 
 def test_pre_render_hook():
+    bogus_hook = Mock(wraps=pre_render_hook)
+    bogus_hook.__name__ = 'bogus_hook'
+    bogus_hook.__module__ = 'bogus_hooks'
+
     with TestApp() as app:
-        app.hook.register('pre_render', pre_render_hook)
+        app.hook.register('pre_render', bogus_hook)
         app.run()
         app.render({})
+        assert bogus_hook.called
 
 
 def test_quiet():
