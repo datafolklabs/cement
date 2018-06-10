@@ -543,10 +543,12 @@ def test_quiet():
 
 def test_config_dirs(tmp):
     with open(os.path.join(tmp.dir, 'dummy.conf'), 'w') as f:
-        f.write("")
+        f.write("[bogus_section]\nbogus: bogus")
 
     with TestApp(config_dirs=[tmp.dir]) as app:
         app.run()
+        assert app.config.has_section('bogus_section')
+        assert 'bogus' in app.config.keys('bogus_section')
 
 
 def test_none_template_handler():
