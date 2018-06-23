@@ -78,9 +78,7 @@ def test_basic():
 
 
 def test_loaded():
-    class MyApp(TestApp):
-        class Meta:
-            extensions = [
+    ext_list = [
                 'alarm',
                 'colorlog',
                 'daemon',
@@ -97,8 +95,13 @@ def test_loaded():
                 'yaml',
             ]
 
+    class MyApp(TestApp):
+        class Meta:
+            extensions = ext_list
+
     with MyApp() as app:
-        app.run()
+        for ext in ext_list:
+            assert 'cement.ext.ext_%s' % ext in app.ext._loaded_extensions
 
 
 def test_argv():
@@ -173,8 +176,14 @@ def test_passed_handlers():
             mail_handler = DummyMailHandler()
             argv = [__file__, '--debug']
 
-    with MyApp():
-        pass
+    with MyApp() as app:
+        assert isinstance(app.log, LoggingLogHandler)
+        assert isinstance(app.plugin, CementPluginHandler)
+        assert isinstance(app.args, ArgparseArgumentHandler)
+        assert isinstance(app.config, ConfigParserConfigHandler)
+        assert isinstance(app.ext, ExtensionHandler)
+        assert isinstance(app.mail, DummyMailHandler)
+        assert isinstance(app.output, JsonOutputHandler)
 
 
 def test_debug():
@@ -239,6 +248,8 @@ def test_label():
 def test_add_arg_shortcut():
     with TestApp() as app:
         app.add_arg('--foo', action='store')
+        app.run()
+        assert 'foo' in app.pargs
 
 
 def test_reset_output_handler():
@@ -252,6 +263,7 @@ def test_reset_output_handler():
         app.output = None
         app._meta.output_handler = None
         app._setup_output_handler()
+        assert app.output is None
 
 
 def test_without_signals():
@@ -275,7 +287,8 @@ def test_extend():
 def test_no_handler():
     # coverage
     with TestApp() as app:
-        app._resolve_handler('cache', None, raise_error=False)
+        retval = app._resolve_handler('cache', None, raise_error=False)
+        assert retval is None
 
 
 def test_config_files_is_none():
@@ -478,10 +491,12 @@ def test_add_remove_template_directory(tmp):
 
 
 def test_alternative_module_mapping():
-    # coverage
-    with TestApp(alternative_module_mapping=dict(time='time')) as app:
+    with TestApp(alternative_module_mapping=dict(time='math')) as app:
         app.__import__('time')
-        app.__import__('sleep', from_module='time')
+        app.__import__('sqrt', from_module='time')
+
+        with pytest.raises(AttributeError):
+            app.__import__('sleep', from_module='time')
 
 
 def test_meta_defaults():
@@ -503,27 +518,44 @@ def test_template_dir_in_template_dirs(tmp):
 # coverage
 
 def test_pre_render_hook():
+    bogus_hook = Mock(wraps=pre_render_hook)
+    bogus_hook.__name__ = 'bogus_hook'
+    bogus_hook.__module__ = 'bogus_hooks'
+
     with TestApp() as app:
-        app.hook.register('pre_render', pre_render_hook)
+        app.hook.register('pre_render', bogus_hook)
         app.run()
         app.render({})
+        assert bogus_hook.called
 
 
 def test_quiet():
+    stdout_ref = sys.stdout
     with TestApp(argv=['--quiet']) as app:
         app.run()
+        assert stdout_ref is not sys.stdout
+
+    sys.stdout = stdout_ref
     with TestApp(argv=['--quiet', '--debug']) as app:
         app.run()
+        assert stdout_ref is sys.stdout
+
+    sys.stdout = stdout_ref
     with TestApp(argv=['--quiet'], debug=True) as app:
         app.run()
+        assert stdout_ref is sys.stdout
+
+    sys.stdout = stdout_ref
 
 
 def test_config_dirs(tmp):
     with open(os.path.join(tmp.dir, 'dummy.conf'), 'w') as f:
-        f.write("")
+        f.write("[bogus_section]\nbogus: bogus")
 
     with TestApp(config_dirs=[tmp.dir]) as app:
         app.run()
+        assert app.config.has_section('bogus_section')
+        assert 'bogus' in app.config.keys('bogus_section')
 
 
 def test_none_template_handler():
