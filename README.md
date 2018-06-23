@@ -39,7 +39,7 @@ Cement core features include (but are not limited to):
 - [PyPi Packages](http://pypi.python.org/pypi/cement/)
 - [Github Source Code / Issue Tracking](http://github.com/datafolklabs/cement/)
 - [Travis CI](https://travis-ci.org/datafolklabs/cement/)
-- [Slack Channel](https://join.slack.com/t/cementframework/shared_invite/enQtMzUzOTIzMDQwNjEwLThkY2FiYWU5ZmQ5ZmEzNGMzMTkyMDgzNTk2MWI0MGU1YWNmNTVmODgxYWNlZjJkZDBmODc0ZjM2MDg5ZmYyOTA)
+- [Slack Channel](https://join.slack.com/t/cementframework/shared_invite/enQtMzU0OTc5MDQ4NDA0LWMwMzZiOTczZjM4ZjFiZDE3MDk4MzA5ZmYxNmZjNTk4NzUwMzcyN2VlMDc5NzIxYjQ1NzlmNzgyNDFjMWJmMWY)
 
 
 ## License
@@ -97,7 +97,7 @@ vagrant@linux $ source env/bin/activate
 
 #### Windows
 
-*Note that Windows development and support is not 100% complete.  Cement is known to run and work on Windows, however it is not a primary target for development and as such the setup is not as streamlined and currently has several known errors.*
+*Windows development and support is not 100% complete.  Cement is known to run and work on Windows, however it is not a primary target for development and as such the setup is not as streamlined and currently has several known errors.*
 
 The following assumes you're running these two initial commands from a unix based system:
 
