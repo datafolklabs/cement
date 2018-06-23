@@ -1,12 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-targets = [
-  'centos-7',
-  'ubuntu-16.04',
-  'windows-server-2012-r2'
-]
-
 vagrantDir = File.expand_path("scripts/vagrant", File.dirname(__FILE__)) + "/"
 
 Vagrant.configure("2") do |config|
@@ -15,27 +9,37 @@ Vagrant.configure("2") do |config|
   config.vm.define "linux" do |this|
     this.vm.box = "trueability/ubuntu-16.04"
     this.vm.hostname = "linux"
-    this.vm.provision "shell", path: "scripts/vagrant/bootstrap.sh"
+    # this.vm.provision "shell", path: "scripts/vagrant/bootstrap.sh"
+  end
+
+  config.vm.define "ubuntu-16.04" do |this|
+    this.vm.box = "trueability/ubuntu-16.04"
+    this.vm.hostname = "ubuntu-1604"
+    # this.vm.provision "shell", path: "scripts/vagrant/bootstrap.sh"
+  end
+
+  config.vm.define "centos-7" do |this|
+    this.vm.box = "trueability/centos-7"
+    this.vm.hostname = "centos-7"
+    # this.vm.provision "shell", path: "scripts/vagrant/bootstrap.sh"
   end
 
   config.vm.define "windows" do |this|
-    this.vm.box = "trueability/windows-server-2012-r2"
+    this.vm.box = "senglin/win-10-enterprise-vs2015community"
     this.vm.hostname = "windows"
-    this.vm.provision "shell", path: "scripts/vagrant/bootstrap.ps1"
+    # this.vm.provision "shell", path: "scripts/vagrant/bootstrap.ps1"
   end
 
-  targets.each do |name|
-    config.vm.define name do |this|
-      this.vm.box = "trueability/#{name}"
-      this.vm.hostname = name
+  config.vm.define "windows-10-enterprise" do |this|
+    this.vm.box = "senglin/win-10-enterprise-vs2015community"
+    this.vm.hostname = "windows"
+    # this.vm.provision "shell", path: "scripts/vagrant/bootstrap.ps1"
+  end
 
-      if name.start_with?('windows')
-          this.vm.provision "shell", path: "scripts/vagrant/bootstrap.ps1"
-      else
-          this.vm.provision "shell", path: "scripts/vagrant/bootstrap.sh"
-      end
-
-    end
+  config.vm.define "windows-server-2012-r2" do |this|
+    this.vm.box = "opentable/win-2012r2-standard-amd64-nocm"
+    this.vm.hostname = "windows"
+    # this.vm.provision "shell", path: "scripts/vagrant/bootstrap.ps1"
   end
 
   config.vm.provider "virtualbox" do |v|

@@ -9,6 +9,9 @@ dev:
 test: comply
 	python -m pytest -v --cov=cement --cov-report=term --cov-report=html:coverage-report tests/
 
+test-core: comply
+	python -m pytest -v --cov=cement.core --cov-report=term --cov-report=html:coverage-report tests/core
+
 comply:
 	flake8 cement/ tests/
 

@@ -71,6 +71,14 @@ $ docker-compose exec cement /bin/ash
 
 An alternative option is included to run Vagrant for development.  This is partially supported, primarily for the purpose of developing/testing on Windows as well as testing specific issues on target operating systems.
 
+To see a list of configured systems:
+
+```
+$ vagrant status
+```
+
+#### Linux
+
 ```
 $ vagrant up linux
 
@@ -78,9 +86,39 @@ $ vagrant ssh linux
 
 vagrant@linux $ cd /vagrant
 
+vagrant@linux $ bash scripts/vagrant/bootstrap.sh
+
 vagrant@linux $ source env/bin/activate
 
-|> cement >| $
+|> cement >| $ pip install -r requirements-dev.txt
+
+|> cement >| $ python setup.py develop
+```
+
+#### Windows
+
+*Note that Windows development and support is not 100% complete.  Cement is known to run and work on Windows, however it is not a primary target for development and as such the setup is not as streamlined and currently has several known errors.*
+
+The following assumes you're running these two initial commands from a unix based system:
+
+```
+$ make clean
+
+$ vagrant up windows
+```
+
+RDP or Login to Desktop/Console, and open a PowerShell terminal:
+
+```
+C:\> cd C:\Vagrant
+
+C:\Vagrant> powershell.exe scripts\vagrant\bootstrap.ps1
+
+C:\Vagrant> .\env-windows\Scripts\activate.ps1
+
+C:\Vagrant> pip install -r requirements-dev.txt
+
+C:\Vagrant> python setup.py develop
 ```
 
 
