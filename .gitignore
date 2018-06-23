@@ -76,3 +76,5 @@ dump.rdb
 # testing
 .pytest_cache
 
+# VS Code
+.vscode/
