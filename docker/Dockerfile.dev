@@ -11,7 +11,10 @@ RUN apk update \
         cyrus-sasl-dev \
         zlib-dev \
         make \
+        vim \
+    && ln -sf /usr/bin/vim /usr/bin/vi \
     && pip install --no-cache-dir -r requirements-dev.txt
 COPY . /app
+COPY docker/vimrc /root/.vimrc
 RUN python setup.py develop
 CMD ["/bin/ash"]
