@@ -1,7 +1,10 @@
 """Tests for cement.core.hook."""
 
+import signal
+import time
+from unittest.mock import Mock
 from pytest import raises
-from cement.core.exc import FrameworkError
+from cement.core.exc import FrameworkError, CaughtSignal
 from cement.core.foundation import TestApp
 
 
@@ -54,8 +57,8 @@ def test_register_and_run():
 
 def test_register_hook_name_not_defined():
     with TestApp() as app:
-        # with raises(FrameworkError, match='Hook name .* is not defined!'):
-        app.hook.register('bogus_hook', print)
+        ret = app.hook.register('bogus_hook', print)
+        assert ret is False
 
 
 def test_run_bad_hook():
@@ -66,8 +69,10 @@ def test_run_bad_hook():
 
 
 def test_framework_hooks():
-    def test_hook(*args, **kw):
-        pass
+    test_hook = Mock(return_value='bogus')
+    test_hook.__name__ = 'bogusname'
+    test_hook_again = Mock(return_value='fake')
+    test_hook_again.__name__ = 'bogusname'
 
     class MyApp(TestApp):
         class Meta:
@@ -82,13 +87,34 @@ def test_framework_hooks():
                 ('post_close', test_hook),
                 ('signal', test_hook),
                 ('pre_render', test_hook),
-                ('pre_render', test_hook),
+                ('pre_render', test_hook_again),
                 ('post_render', test_hook),
                 ('post_render', test_hook),
             ]
 
     with MyApp() as app:
+        # Pre- and post- setup
+        assert test_hook.call_count == 2
+        test_hook.reset_mock()
+
+        # Pre/post run (+ pre/post argparse)
+        # App has no controller, so it also parses args here
         app.run()
+        assert test_hook.call_count == 4
+        test_hook.reset_mock()
+
+        # pre/post render
+        # two hooks each, one is test_hook_again
+        app.render({1: 'bogus'})
+        assert test_hook.call_count == 3
+        assert test_hook_again.call_count == 1
+        test_hook.reset_mock()
+        test_hook_again.reset_mock()
+
+        # TODO: Test that signal hook gets called properly
+
+    # pre/post close
+    assert test_hook.call_count == 2
 
 
 def test_generate_type_hook():
