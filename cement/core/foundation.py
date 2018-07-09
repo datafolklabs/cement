@@ -1407,7 +1407,7 @@ class App(meta.MetaMixin):
 
         self.args.add_argument('--debug', dest='debug',
                                action='store_true',
-                               help='toggle debug output')
+                               help='full application debug mode')
         self.args.add_argument('--quiet', dest='suppress_output',
                                action='store_true',
                                help='suppress all output')

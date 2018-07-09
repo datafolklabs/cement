@@ -38,6 +38,8 @@ Features:
 - `[ext.jinja2]` Add Jinja2TemplateHandler
 - `[ext.generate]` Add Generate Extension
     - [Issue #487](https://github.com/datafolklabs/cement/issues/487)
+- `[ext.logging]` Add `-l LEVEL` command line option to override log level
+    - [Issue #497](https://github.com/datafolklabs/cement/issues/497)
 - `[cli]` Add Cement CLI (includes ability to generate apps, plugins,
     extensions, and scripts using the Generate Extension)
     - [Issue #490](https://github.com/datafolklabs/cement/issues/490)
@@ -57,6 +59,7 @@ Incompatible:
 - `[core.handler]` Drop deprecated backend globals
 - `[core.hook]` Drop deprecated backend globals
 - `[core.controller]` Drop `CementBaseController`
+- `[ext.logging]` Drop deprecated `warn` facility (use `warning`)
 - `[ext.argcomplete]` Drop ArgComplete Extension
 - `[ext.reload_config]` Drop Reload Config Extension
 - `[ext.configobj]` Drop ConfigObj Extension

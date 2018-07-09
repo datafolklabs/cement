@@ -109,12 +109,11 @@ The above looks like:
 .. code-block:: console
 
     $ python myapp.py --help
-    usage: myapp.py [-h] [--debug] [--quiet] [--base-foo BASE_FOO]
+    usage: myapp.py [-h] [--quiet] [--base-foo BASE_FOO]
                     {nested-controller,command1,cmd1,default,command2} ...
 
     optional arguments:
       -h, --help            show this help message and exit
-      --debug               toggle debug output
       --quiet               suppress all output
       --base-foo BASE_FOO   base foo option
 
