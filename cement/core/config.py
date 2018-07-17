@@ -2,6 +2,7 @@
 
 import os
 from abc import abstractmethod
+from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.fs import abspath
 from ..utils.misc import minimal_logger
@@ -9,23 +10,13 @@ from ..utils.misc import minimal_logger
 LOG = minimal_logger(__name__)
 
 
-class ConfigHandlerBase(Handler):
+class ConfigInterface(Interface):
 
     """
-    This class defines the Config Handler Interface.  Classes that implement
-    this interface must provide the methods and attributes defined below.
-
-    Usage:
-
-    .. code-block:: python
-
-        from cement.core.config import ConfigHandlerBase
-
-        class MyConfigHandler(ConfigHandlerbase):
-            class Meta:
-                label = 'my_config'
-            ...
-
+    This class defines the Config Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`ConfigHandler` base class as a starting point.
     """
 
     class Meta:
@@ -185,7 +176,7 @@ class ConfigHandlerBase(Handler):
         pass    # pragma: nocover
 
 
-class ConfigHandler(ConfigHandlerBase):
+class ConfigHandler(ConfigInterface, Handler):
 
     """
     Config handler implementation.

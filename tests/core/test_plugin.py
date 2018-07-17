@@ -6,14 +6,14 @@ from pytest import raises
 from cement import init_defaults
 from cement.core.foundation import TestApp
 from cement.core.exc import FrameworkError
-from cement.core.plugin import PluginHandlerBase, PluginHandler
+from cement.core.plugin import PluginInterface, PluginHandler
 
 
 # module tests
 
-class TestPluginHandlerBase(object):
+class TestPluginInterface(object):
     def test_interface(self):
-        assert PluginHandlerBase.Meta.interface == 'plugin'
+        assert PluginInterface.Meta.interface == 'plugin'
 
 
 class TestPluginHandler(object):

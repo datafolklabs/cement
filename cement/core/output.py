@@ -1,30 +1,20 @@
 """Cement core output module."""
 
 from abc import abstractmethod
+from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class OutputHandlerBase(Handler):
+class OutputInterface(Interface):
 
     """
-    This class defines the Output Handler Interface.  Classes that
-    implement this interface must provide the methods and attributes defined
-    below.
-
-    Usage:
-
-        .. code-block:: python
-
-            from cement.core.output import OutputHandlerBase
-
-            class MyOutputHandler(OutputHandlerBase):
-                class Meta:
-                    label = 'my_output_handler'
-                ...
-
+    This class defines the Output Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`OutputHandler` base class as a starting point.
     """
 
     class Meta:
@@ -53,7 +43,7 @@ class OutputHandlerBase(Handler):
         pass  # pragma: nocover
 
 
-class OutputHandler(OutputHandlerBase):
+class OutputHandler(OutputInterface, Handler):
 
     """Output handler implementation."""
 

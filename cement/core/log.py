@@ -5,26 +5,17 @@ Cement core log module.
 
 # from ..core import interface
 from abc import abstractmethod
+from ..core.interface import Interface
 from ..core.handler import Handler
 
 
-class LogHandlerBase(Handler):
+class LogInterface(Interface):
 
     """
-    This class defines the Log Handler Interface.  Classes that
-    implement this handler must provide the methods and attributes defined
-    below.
-
-    Usage:
-
-    .. code-block:: python
-
-        from cement.core.log import LogHandlerBase
-
-        class MyLogHandler(LogHandlerBase):
-            class Meta:
-                label = 'my_log'
-
+    This class defines the Log Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`LogHandler` base class as a starting point.
     """
 
     class Meta:
@@ -104,7 +95,7 @@ class LogHandlerBase(Handler):
         pass  # pragma: nocover
 
 
-class LogHandler(LogHandlerBase):
+class LogHandler(LogInterface, Handler):
 
     """
     Log handler implementation.

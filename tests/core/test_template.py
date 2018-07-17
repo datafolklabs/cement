@@ -1,14 +1,14 @@
 
 import os
 from cement.utils.test import TestApp, raises
-from cement.core.template import TemplateHandlerBase, TemplateHandler
+from cement.core.template import TemplateInterface, TemplateHandler
 
 
 # module tests
 
-class TestTemplateHandlerBase(object):
+class TestTemplateInterface(object):
     def test_interface(self):
-        assert TemplateHandlerBase.Meta.interface == 'template'
+        assert TemplateInterface.Meta.interface == 'template'
 
 
 class TestTemplateHandler(object):

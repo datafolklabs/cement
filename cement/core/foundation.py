@@ -8,6 +8,7 @@ from time import sleep
 from ..core import exc, log, config, plugin
 from ..core import output, extension, arg, controller, meta, cache, mail
 from ..core import template
+from ..core.interface import InterfaceManager
 from ..core.handler import HandlerManager
 from ..core.hook import HookManager
 from ..utils.misc import is_true, minimal_logger
@@ -44,7 +45,7 @@ def add_handler_override_options(app):
         return
 
     for i in app._meta.handler_override_options:
-        if i not in app.handler.list_types():
+        if i not in app.interface.list():
             LOG.debug("interface '%s'" % i +
                       " is not defined, can not override handlers")
             continue
@@ -624,12 +625,31 @@ class App(meta.MetaMixin):
         I.e. ``[('post_argument_parsing', my_hook_func)]``.
         """
 
-        define_handlers = []
+        core_interfaces = [
+            extension.ExtensionInterface,
+            log.LogInterface,
+            config.ConfigInterface,
+            mail.MailInterface,
+            plugin.PluginInterface,
+            output.OutputInterface,
+            template.TemplateInterface,
+            arg.ArgumentInterface,
+            controller.ControllerInterface,
+            cache.CacheInterface,
+        ]
         """
-        List of interfaces classes to define handlers.  Must be a list of
-        uninstantiated interface classes.
+        List of core interfaces to be defined (by the framework).  You should
+        not modify this unless you really know what you're doing... instead,
+        you probably want to add your own interfaces to
+        ``App.Meta.interfaces``.
+        """
 
-        I.e. ``['MyCustomInterface', 'SomeOtherInterface']``
+        interfaces = []
+        """
+        List of interfaces to be defined.  Must be a list of
+        uninstantiated interface base classes.
+
+        I.e. ``[MyCustomInterface, SomeOtherInterface]``
         """
 
         handlers = []
@@ -699,6 +719,7 @@ class App(meta.MetaMixin):
         self.__saved_stderr__ = None
         self.__retry_hooks__ = []
         self.handler = None
+        self.interface = None
         self.hook = None
         self.exit_code = 0
         self.ext = None
@@ -1072,6 +1093,7 @@ class App(meta.MetaMixin):
         elif '--quiet' in self._meta.argv:
             self._suppress_output()
 
+        self.interface = InterfaceManager(self)
         self.handler = HandlerManager(self)
         self.hook = HookManager(self)
 
@@ -1112,21 +1134,12 @@ class App(meta.MetaMixin):
             else:
                 self.hook.register(*hook_spec)
 
-        # define and register handlers
-        self.handler.define(extension.ExtensionHandlerBase)
-        self.handler.define(log.LogHandlerBase)
-        self.handler.define(config.ConfigHandlerBase)
-        self.handler.define(mail.MailHandlerBase)
-        self.handler.define(plugin.PluginHandlerBase)
-        self.handler.define(output.OutputHandlerBase)
-        self.handler.define(template.TemplateHandlerBase)
-        self.handler.define(arg.ArgumentHandlerBase)
-        self.handler.define(controller.ControllerHandlerBase)
-        self.handler.define(cache.CacheHandlerBase)
+        # define interfaces
+        for i in self._meta.core_interfaces:
+            self.interface.define(i)
 
-        # define application handlers
-        for handler_class in self._meta.define_handlers:
-            self.handler.define(handler_class)
+        for i in self._meta.interfaces:
+            self.interface.define(i)
 
         # extension handler is the only thing that can't be loaded... as,
         # well, an extension.  ;)

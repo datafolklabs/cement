@@ -7,6 +7,7 @@ import re
 import shutil
 from abc import abstractmethod
 from ..core import exc
+from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 from ..utils import fs
@@ -14,24 +15,13 @@ from ..utils import fs
 LOG = minimal_logger(__name__)
 
 
-class TemplateHandlerBase(Handler):
+class TemplateInterface(Interface):
 
     """
-    This class defines the Template Handler Interface.  Classes that
-    implement this interface must provide the methods and attributes defined
-    below.
-
-    Usage:
-
-        .. code-block:: python
-
-            from cement.core.template import TemplateHandlerBase
-
-            class MyTemplateHandler(TemplateHandlerBase):
-                class Meta:
-                    label = 'my_template_handler'
-                ...
-
+    This class defines the Template Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`TemplateHandler` base class as a starting point.
     """
 
     class Meta:
@@ -95,7 +85,7 @@ class TemplateHandlerBase(Handler):
         pass  # pragma: nocover
 
 
-class TemplateHandler(TemplateHandlerBase):
+class TemplateHandler(TemplateInterface, Handler):
     """
     Base class that all template implementations should sub-class from.
     Keyword arguments passed to this class will override meta-data options.

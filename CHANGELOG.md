@@ -43,7 +43,8 @@ Features:
 - `[cli]` Add Cement CLI (includes ability to generate apps, plugins,
     extensions, and scripts using the Generate Extension)
     - [Issue #490](https://github.com/datafolklabs/cement/issues/490)
-
+- `[core]` Added clear separation between Interfaces and Handlers
+    - [Issue #506](https://github.com/datafolklabs/cement/issues/506)
 
 Refactoring:
 

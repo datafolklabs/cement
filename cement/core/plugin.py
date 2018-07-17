@@ -1,30 +1,20 @@
 """Cement core plugins module."""
 
 from abc import abstractmethod
+from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class PluginHandlerBase(Handler):
+class PluginInterface(Interface):
 
     """
-    This class defines the Plugin Handler Interface.  Classes that
-    implement this interface must provide the methods and attributes defined
-    below.
-
-    Example:
-
-        .. code-block:: python
-
-            from cement.core.plugin import PluginHandlerBase
-
-            class MyPluginHandler(PluginHandlerBase):
-                class Meta:
-                    label = 'my_plugin_handler'
-                ...
-
+    This class defines the Plugin Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`PluginHandler` base class as a starting point.
     """
 
     class Meta:
@@ -70,7 +60,7 @@ class PluginHandlerBase(Handler):
         pass  # pragma: nocover
 
 
-class PluginHandler(PluginHandlerBase):
+class PluginHandler(PluginInterface, Handler):
 
     """
     Plugin handler implementation.
