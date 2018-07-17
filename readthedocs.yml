@@ -1,6 +1,6 @@
 
 build:
-  image: portland
+  image: latest
 
 python:
   version: 3.6
@@ -8,4 +8,3 @@ python:
   pip_install: true
 
 requirements_file: requirements-dev.txt
-
