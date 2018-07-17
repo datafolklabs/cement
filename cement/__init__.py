@@ -2,6 +2,7 @@
 # flake8: noqa
 
 from .core.foundation import App, TestApp
+from .core.handler import Handler
 from .core.exc import FrameworkError, InterfaceError, CaughtSignal
 from .ext.ext_argparse import ArgparseController as Controller
 from .ext.ext_argparse import expose as ex
