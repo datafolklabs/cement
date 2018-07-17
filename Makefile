@@ -21,7 +21,7 @@ comply-fix:
 docs:
 	python setup.py build_sphinx
 	@echo
-	@echo DOC: "file://"$$(echo `pwd`/doc/build/html/index.html)
+	@echo DOC: "file://"$$(echo `pwd`/docs/build/html/index.html)
 	@echo
 
 clean:
