@@ -1,0 +1,9 @@
+build:
+  image: latest
+
+python:
+  version: 2.7
+  setup_py_install: true
+  pip_install: true
+
+requirements_file: requirements-rtd.txt
