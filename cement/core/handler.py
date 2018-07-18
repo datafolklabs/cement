@@ -23,10 +23,10 @@ class Handler(ABC, meta.MetaMixin):
 
         """
 
-        label = None
+        label = NotImplemented
         """The string identifier of this handler."""
 
-        interface = None
+        interface = NotImplemented
         """The interface that this class implements."""
 
         config_section = None

@@ -22,7 +22,7 @@ class Interface(ABC, meta.MetaMixin):
 
         """
 
-        interface = None
+        interface = NotImplemented
         """The string identifier of this interface."""
 
     def __init__(self, **kw):
@@ -97,7 +97,8 @@ class InterfaceManager(object):
                 app.interface.list()
 
         """
-        return self.__interfaces__.keys()
+        return list(self.__interfaces__.keys())
+
 
     def define(self, ibc):
         """
