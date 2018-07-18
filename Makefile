@@ -4,6 +4,8 @@ all: test comply comply-test api-docs clean
 
 dev:
 	docker-compose up -d
+	docker-compose exec cement pip install -r requirements-dev.txt
+	docker-compose exec cement python setup.py develop
 	docker-compose exec cement /bin/ash
 
 test: comply
