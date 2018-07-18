@@ -14,6 +14,7 @@ Python %s
 Platform %s
 """ % (VERSION, PYTHON_VERSION, PLATFORM)
 
+
 class Base(Controller):
     class Meta:
         label = 'base'
