@@ -6,7 +6,7 @@ dev:
 	docker-compose up -d
 	docker-compose exec cement pip install -r requirements-dev.txt
 	docker-compose exec cement python setup.py develop
-	docker-compose exec cement /bin/ash
+	docker-compose exec cement /bin/bash
 
 test: comply
 	python -m pytest -v --cov=cement --cov-report=term --cov-report=html:coverage-report tests/

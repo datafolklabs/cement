@@ -99,7 +99,6 @@ class InterfaceManager(object):
         """
         return list(self.__interfaces__.keys())
 
-
     def define(self, ibc):
         """
         Define an ``ibc`` (interface base class).
