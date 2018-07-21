@@ -22,22 +22,35 @@ def pre_render_hook(app, data):
     return data
 
 
-def test_add_handler_override_options():
+def test_add_handler_override_options_none():
+    # coverage for explicitly disabling handler_override_options
     class MyApp(TestApp):
         class Meta:
             extensions = ['json', 'yaml', 'mustache', 'tabulate']
 
     with MyApp() as app:
-        # coverage for explicitly disabling handler_override_options
+        app.args.add_argument = Mock()
         app._meta.handler_override_options = None
         add_handler_override_options(app)
+        assert not app.args.add_argument.called
 
-        # coverage for case where the interface doesn't exist
+
+def test_add_handler_override_options_no_interface():
+    # coverage for case where the interface doesn't exist
+    class MyApp(TestApp):
+        class Meta:
+            extensions = ['json', 'yaml', 'mustache', 'tabulate']
+
+    with MyApp() as app:
         app._meta.handler_override_options = {
             'bogus': (['--bogus'], {'help': 'bogus handler'}),
         }
         add_handler_override_options(app)
+        app.run()
+        assert 'bogus_handler_override' not in app.pargs
 
+
+def test_add_handler_override_options_no_override():
     # coverage for case where there is an output handler, but it's not
     # overridable (so no options to display in --help)
     class MyApp2(TestApp):
@@ -45,7 +58,12 @@ def test_add_handler_override_options():
             extensions = ['mustache']
 
     with MyApp2() as app:
+        app._meta.handler_override_options = {
+            'output': (['--bogus'], {'help': 'bogus handler'}),
+        }
+        add_handler_override_options(app)
         app.run()
+        assert 'output_handler_override' not in app.pargs
 
 
 def test_handler_override():
@@ -558,6 +576,7 @@ def test_config_dirs(tmp):
         assert 'bogus' in app.config.keys('bogus_section')
 
 
-def test_none_template_handler():
+def test_none_template_handler(mocklogger):
     with TestApp(template_handler=None) as app:
         app.run()
+        assert not hasattr(app, 'template')
