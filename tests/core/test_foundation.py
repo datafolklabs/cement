@@ -578,7 +578,7 @@ def test_config_dirs(tmp):
         assert 'bogus' in app.config.keys('bogus_section')
 
 
-def test_none_template_handler(mocklogger):
+def test_none_template_handler():
     with TestApp(template_handler=None) as app:
         app.run()
         assert not hasattr(app, 'template')

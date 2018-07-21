@@ -1,10 +1,8 @@
 """Tests for cement.core.hook."""
 
-import signal
-import time
 from unittest.mock import Mock
 from pytest import raises
-from cement.core.exc import FrameworkError, CaughtSignal
+from cement.core.exc import FrameworkError
 from cement.core.foundation import TestApp
 
 
