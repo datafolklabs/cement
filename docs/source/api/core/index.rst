@@ -15,6 +15,7 @@ Core Modules
   foundation
   handler
   hook
+  interface
   log
   mail
   meta

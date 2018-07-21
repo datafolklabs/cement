@@ -6,7 +6,9 @@ clean:
 
 dev:
 	docker-compose up -d
-	docker-compose exec {{ label }} /bin/ash
+	docker-compose exec {{ label }} pip install -r requirements-dev.txt
+	docker-compose exec {{ label }} python setup.py develop
+	docker-compose exec {{ label }} /bin/bash
 
 test:
 	python -m pytest \

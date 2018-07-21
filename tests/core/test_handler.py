@@ -5,7 +5,6 @@ from cement.core.foundation import TestApp
 from cement.core.handler import Handler
 from cement.core.meta import MetaMixin
 from cement.core.exc import FrameworkError, InterfaceError
-from cement.core.output import OutputHandler
 from cement.ext.ext_configparser import ConfigParserConfigHandler
 from cement.ext.ext_dummy import DummyOutputHandler
 
@@ -83,7 +82,7 @@ def test_handler_does_not_subclass():
             interface = 'argument'
 
     with TestApp() as app:
-        msg = 'Handler MyHandler does not sub-class ArgumentHandlerBase'
+        msg = 'Handler MyHandler does not sub-class ArgumentInterface'
         with raises(InterfaceError, match=msg):
             app.handler.register(MyHandler)
 
@@ -129,7 +128,8 @@ def test_verify_handler():
     with TestApp() as app:
         assert app.handler.registered('output', 'dummy') is True
         assert app.handler.registered('output', 'bogus_handler') is False
-        assert app.handler.registered('bogus_type', 'bogus_handler') is False
+        assert app.handler.registered('bogus_interface', 'bogus_handler') \
+            is False
 
 
 def test_get_bogus_handler():
@@ -138,50 +138,34 @@ def test_get_bogus_handler():
             app.handler.get('log', 'bogus')
 
 
-def test_get_bogus_handler_type():
+def test_get_bogus_handler_interface():
     with TestApp() as app:
-        with raises(FrameworkError, match='handler type .* does not exist!'):
+        with raises(FrameworkError, match='Interface .* does not exist!'):
             app.handler.get('bogus', 'bogus')
 
 
 def test_handler_defined():
     with TestApp() as app:
-        types = [
+        interfaces = [
             'config',
             'log',
             'argument',
             'plugin',
             'extension',
             'output',
+            'template',
             'controller'
         ]
-        for handler_type in types:
-            assert app.handler.defined(handler_type) is True
+        for handler_interface in interfaces:
+            assert app.interface.defined(handler_interface) is True
 
         # and check for bogus one too
-        assert app.handler.defined('bogus') is False
+        assert app.interface.defined('bogus') is False
 
 
 def test_handler_list():
     with TestApp() as app:
         assert ConfigParserConfigHandler in app.handler.list('config')
-
-
-def test_handler_list_bogus_type():
-    with TestApp() as app:
-        with raises(FrameworkError, match='handler type .* does not exist!'):
-            app.handler.list('bogus')
-
-
-def test_define_duplicate_interface():
-    with TestApp() as app:
-        with raises(FrameworkError, match='interface .* already defined'):
-            app.handler.define(OutputHandler)
-
-
-def test_handler_not_defined():
-    with TestApp() as app:
-        assert app.handler.defined('bogus') is False
 
 
 def test_handler_registered():
@@ -194,14 +178,14 @@ def test_handler_get_fallback():
         assert app.handler.get('log', 'foo', 'bar') == 'bar'
 
 
-def test_register_invalid_handler_type():
+def test_register_invalid_handler_interfaces():
     class BadHandler(Handler):
         class Meta:
             label = 'bad'
             interface = 'bad_interface_not_defined'
 
     with TestApp() as app:
-        with raises(FrameworkError, match='interface .* doesn\'t exist.'):
+        with raises(InterfaceError, match='interface .* doesn\'t exist.'):
             app.handler.register(BadHandler)
 
 
@@ -212,3 +196,22 @@ def test_setup():
 
         han = app.handler.get('output', 'dummy', setup=True)
         assert hasattr(han, '_meta')
+
+
+def test_validate():
+    class MyHandler(DummyOutputHandler):
+        class Meta:
+            label = 'my_handler'
+
+        def _validate(self):
+            raise Exception('it validated')
+
+    with raises(Exception, match='it validated'):
+        with TestApp(handlers=[MyHandler], output_handler='my_handler') as app:
+            app.run()
+
+
+def test_list_bogus_interface():
+    with raises(InterfaceError, match='Interface .* does not exist.'):
+        with TestApp() as app:
+            app.handler.list('bogus')

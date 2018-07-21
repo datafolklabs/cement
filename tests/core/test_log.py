@@ -4,14 +4,14 @@ from pytest import raises
 
 from cement import init_defaults
 from cement.core.foundation import TestApp
-from cement.core.log import LogHandlerBase, LogHandler
+from cement.core.log import LogInterface, LogHandler
 
 
 # module tests
 
-class TestLogHandlerBase(object):
+class TestLogInterface(object):
     def test_interface(self):
-        assert LogHandlerBase.Meta.interface == 'log'
+        assert LogInterface.Meta.interface == 'log'
 
 
 class TestLogHandler(object):

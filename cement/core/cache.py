@@ -1,30 +1,20 @@
 """Cement core cache module."""
 
 from abc import abstractmethod
+from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class CacheHandlerBase(Handler):
+class CacheInterface(Interface):
 
     """
-    This class defines the Cache Handler Interface.  Classes that
-    implement this interface must provide the methods and attributes defined
-    below.
-
-    Usage:
-
-    .. code-block:: python
-
-        from cement.core.cache import CacheHandlerBase
-
-        class MyCacheHandler(CacheHandlerBase):
-            class Meta:
-                label = 'my_cache_handler'
-            ...
-
+    This class defines the Cache Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`CacheHandler` base class as a starting point.
     """
 
     class Meta:
@@ -99,7 +89,7 @@ class CacheHandlerBase(Handler):
         pass    # pragma: nocover
 
 
-class CacheHandler(CacheHandlerBase):
+class CacheHandler(CacheInterface, Handler):
 
     """
     Cache handler implementation.

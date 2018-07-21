@@ -1,6 +1,7 @@
 
 import os
 import shutil
+from pytest import raises
 from cement.core.foundation import TestApp
 from cement.ext.ext_logging import LoggingLogHandler
 from cement.utils.misc import init_defaults
@@ -40,14 +41,6 @@ def test_alternate_namespaces():
         app.log.error('TEST', __name__)
         app.log.fatal('TEST', __name__)
         app.log.debug('TEST', __name__)
-
-
-def test_deprecated_warn():
-    defaults = init_defaults('log.logging')
-    defaults['log.logging']['level'] = 'warn'
-
-    with TestApp(config_defaults=defaults) as app:
-        app.log.warn('Warn Message')
 
 
 def test_bad_level():
@@ -109,3 +102,17 @@ def test_missing_log_dir(tmp):
 
     with TestApp(config_defaults=defaults):
         pass
+
+
+def test_log_level_argument():
+    with TestApp(argv=['-l', 'debug']) as app:
+        app.run()
+        assert app.debug is True
+        assert app.log.get_level() == 'DEBUG'
+
+    meta = init_defaults('log.logging')
+    meta['log.logging']['log_level_argument'] = None
+
+    with raises(SystemExit):
+        with TestApp(meta_defaults=meta, argv=['-l', 'debug']) as app:
+            app.run()

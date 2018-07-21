@@ -4,30 +4,22 @@ Cement core argument module.
 """
 
 from abc import abstractmethod
+from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class ArgumentHandlerBase(Handler):
+class ArgumentInterface(Interface):
 
     """
-    This class defines the Argument Handler Interface.  Classes that
-    implement this interface must provide the methods and attributes defined
-    below.
-
-    Example:
-
-    .. code-block:: python
-
-        from cement.core.arg import ArgumentHandlerBase
-
-        class MyArgumentHandler(ArgumentHandlerBase):
-            class Meta:
-                label = 'my_argument_handler'
-
+    This class defines the Argument Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`ArgumentHandler` base class as a starting point.
     """
+
     class Meta:
 
         """Interface meta-data options."""
@@ -86,7 +78,7 @@ class ArgumentHandlerBase(Handler):
         pass    # pragma: nocover
 
 
-class ArgumentHandler(ArgumentHandlerBase):
+class ArgumentHandler(ArgumentInterface, Handler):
 
     """Argument handler implementation"""
 

@@ -8,6 +8,7 @@ import signal
 from unittest.mock import Mock, MagicMock
 
 from cement import App, Controller, ex
+from cement.core.interface import Interface
 from cement.core.handler import Handler
 from cement.core.exc import CaughtSignal, FrameworkError
 from cement.core.foundation import TestApp
@@ -428,23 +429,25 @@ def test_register_hooks_via_meta_retry():
         assert len(app.hook.__hooks__['watchdog_pre_start']) == 1
 
 
-def test_define_handlers_via_meta():
-    class MyTestHandler(Handler):
+def test_interfaces_via_meta():
+    class MyTestInterface(Interface):
         class Meta:
-            label = 'my_test_handler'
             interface = 'my_test_interface'
 
-    with TestApp(define_handlers=[MyTestHandler]) as app:
-        assert app.handler.defined('my_test_interface')
+    with TestApp(interfaces=[MyTestInterface]) as app:
+        assert app.interface.defined('my_test_interface')
 
 
 def test_register_handlers_via_meta():
-    class MyTestHandler(Handler):
+    class MyTestInterface(Interface):
         class Meta:
-            label = 'my_test_handler'
             interface = 'my_test_interface'
 
-    app = TestApp(define_handlers=[MyTestHandler],
+    class MyTestHandler(MyTestInterface, Handler):
+        class Meta:
+            label = 'my_test_handler'
+
+    app = TestApp(interfaces=[MyTestInterface],
                   handlers=[MyTestHandler])
     with app:
         assert app.handler.registered(
@@ -452,24 +455,23 @@ def test_register_handlers_via_meta():
 
 
 def test_reload():
-    class MyTestHandler(Handler):
+    class MyTestInterface(Interface):
         class Meta:
-            label = 'my_test_handler'
             interface = 'my_test_interface'
 
     with TestApp() as app:
         app.hook.define('bogus_hook1')
-        app.handler.define(MyTestHandler)
+        app.interface.define(MyTestInterface)
         app.extend('some_extra_member', dict())
         app.run()
 
         assert app.hook.defined('bogus_hook1') is True
-        assert app.handler.defined('my_test_interface') is True
+        assert app.interface.defined('my_test_interface') is True
 
         app.reload()
 
         assert app.hook.defined('bogus_hook1') is False
-        assert app.handler.defined('my_test_interface') is False
+        assert app.interface.defined('my_test_interface') is False
 
         app.run()
 

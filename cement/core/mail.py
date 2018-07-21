@@ -1,44 +1,20 @@
 """Cement core mail module."""
 
 from abc import abstractmethod
+from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class MailHandlerBase(Handler):
+class MailInterface(Interface):
 
     """
-    This class defines the Mail Handler Interface.  Classes that
-    implement this interface must provide the methods and attributes defined
-    below.
-
-    **Configuration**
-
-    Implementations must support the following configuration settings:
-
-     * **to** - Default ``to`` addresses (list, or comma separated depending
-       on the ConfigHandler in use)
-     * **from_addr** - Default ``from_addr`` address
-     * **cc** - Default ``cc`` addresses (list, or comma separated depending
-       on the ConfigHandler in use)
-     * **bcc** - Default ``bcc`` addresses (list, or comma separated depending
-       on the ConfigHandler in use)
-     * **subject** - Default ``subject``
-     * **subject_prefix** - Additional string to prepend to the ``subject``
-
-    **Usage**
-
-    .. code-block:: python
-
-        from cement.core.mail import MailHandlerBase
-
-        class MyMailHandler(object):
-            class Meta:
-                label = 'my_mail'
-            ...
-
+    This class defines the Mail Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`MailHandler` base class as a starting point.
     """
 
     class Meta:
@@ -87,9 +63,26 @@ class MailHandlerBase(Handler):
         pass  # pragma: nocover
 
 
-class MailHandler(MailHandlerBase):
+class MailHandler(MailInterface, Handler):
 
-    """Mail handler implementation."""
+    """
+    Mail handler implementation.
+
+    **Configuration**
+
+    This handler supports the following configuration settings:
+
+     * **to** - Default ``to`` addresses (list, or comma separated depending
+       on the ConfigHandler in use)
+     * **from_addr** - Default ``from_addr`` address
+     * **cc** - Default ``cc`` addresses (list, or comma separated depending
+       on the ConfigHandler in use)
+     * **bcc** - Default ``bcc`` addresses (list, or comma separated depending
+       on the ConfigHandler in use)
+     * **subject** - Default ``subject``
+     * **subject_prefix** - Additional string to prepend to the ``subject``
+
+    """
 
     class Meta:
 

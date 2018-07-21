@@ -1,5 +1,5 @@
 
-from cement.core.config import ConfigHandlerBase, ConfigHandler
+from cement.core.config import ConfigInterface, ConfigHandler
 
 
 # module tests
@@ -42,9 +42,9 @@ class MyConfigHandler(ConfigHandler):
         pass
 
 
-class TestConfigHandlerBase(object):
+class TestConfigInterface(object):
     def test_interface(self):
-        assert ConfigHandlerBase.Meta.interface == 'config'
+        assert ConfigInterface.Meta.interface == 'config'
 
 
 class TestConfigHandler(object):

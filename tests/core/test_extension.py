@@ -4,14 +4,14 @@ import pytest
 from cement.core.foundation import TestApp
 from cement.core.handler import Handler
 from cement.core.exc import FrameworkError
-from cement.core.extension import ExtensionHandlerBase, ExtensionHandler
+from cement.core.extension import ExtensionInterface, ExtensionHandler
 
 
 # module tests
 
-class TestExtensionHandlerBase(object):
+class TestExtensionInterface(object):
     def test_interface(self):
-        assert ExtensionHandlerBase.Meta.interface == 'extension'
+        assert ExtensionInterface.Meta.interface == 'extension'
 
 
 class TestExtensionHandler(object):

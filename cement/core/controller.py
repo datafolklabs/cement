@@ -1,29 +1,20 @@
 """Cement core controller module."""
 
 from abc import abstractmethod
+from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class ControllerHandlerBase(Handler):
+class ControllerInterface(Interface):
 
     """
-    This class defines the Controller Handler Interface.  Classes that
-    implement this interface must provide the methods and attributes defined
-    below.
-
-    Usage:
-
-    .. code-block:: python
-
-        from cement.core.controller import ControllerHandlerBase
-
-        class MyController(ControllerHandlerBase):
-            class Meta:
-                label = 'my_controller'
-                ...
+    This class defines the Controller Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`ControllerHandler` base class as a starting point.
     """
 
     class Meta:
@@ -38,8 +29,7 @@ class ControllerHandlerBase(Handler):
         """
         Reads the application object's data to dispatch a command from this
         controller.  For example, reading ``self.app.pargs`` to determine what
-        command was pass    # pragma: nocovered, and then executing that
-        command function.
+        command was passed, and then executing that command function.
 
         Note that Cement does *not* parse arguments when calling
         ``_dispatch()`` on a controller, as it expects the controller to
@@ -53,6 +43,6 @@ class ControllerHandlerBase(Handler):
         pass    # pragma: nocover
 
 
-class ControllerHandler(ControllerHandlerBase):
+class ControllerHandler(ControllerInterface, Handler):
     """Controller handler implementation."""
     pass    # pragma: nocover

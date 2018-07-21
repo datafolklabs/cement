@@ -4,7 +4,9 @@ all: test comply comply-test api-docs clean
 
 dev:
 	docker-compose up -d
-	docker-compose exec cement /bin/ash
+	docker-compose exec cement pip install -r requirements-dev.txt
+	docker-compose exec cement python setup.py develop
+	docker-compose exec cement /bin/bash
 
 test: comply
 	python -m pytest -v --cov=cement --cov-report=term --cov-report=html:coverage-report tests/
@@ -21,7 +23,7 @@ comply-fix:
 docs:
 	python setup.py build_sphinx
 	@echo
-	@echo DOC: "file://"$$(echo `pwd`/doc/build/html/index.html)
+	@echo DOC: "file://"$$(echo `pwd`/docs/build/html/index.html)
 	@echo
 
 clean:

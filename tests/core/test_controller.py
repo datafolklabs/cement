@@ -1,12 +1,12 @@
 
-from cement.core.controller import ControllerHandlerBase, ControllerHandler
+from cement.core.controller import ControllerInterface, ControllerHandler
 
 
 # module tests
 
-class TestControllerHandlerBase(object):
+class TestControllerInterface(object):
     def test_interface(self):
-        assert ControllerHandlerBase.Meta.interface == 'controller'
+        assert ControllerInterface.Meta.interface == 'controller'
 
 
 class TestControllerHandler(object):

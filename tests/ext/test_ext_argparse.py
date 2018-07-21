@@ -555,9 +555,9 @@ def test_unknown_arguments():
         class Meta:
             argument_handler = MyArgumentHandler
 
-    with MyApp(argv=['-l', 'some-other-argument']) as app:
+    with MyApp(argv=['-T', 'some-other-argument']) as app:
         app.run()
-        assert '-l' in app.args.unknown_args
+        assert '-T' in app.args.unknown_args
         assert 'some-other-argument' in app.args.unknown_args
 
 

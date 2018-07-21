@@ -1,7 +1,7 @@
 ---
 
 exclude:
-    - '^(.*)[\/\\\\]app[\/\\\\]{{ label }}[\/\\\\]templates[\/\\\\](.*)$'
+    - '^(.*)[\/\\\\]project[\/\\\\]{{ label }}[\/\\\\]templates[\/\\\\](.*)$'
 
 variables:
     -   name: label

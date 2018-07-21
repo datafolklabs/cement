@@ -4,14 +4,14 @@
 #
 # from cement.core.foundation import TestApp
 # from cement.core.exc import FrameworkError
-from cement.core.output import OutputHandlerBase, OutputHandler
+from cement.core.output import OutputInterface, OutputHandler
 
 
 # module tests
 
-class TestOutputHandlerBase(object):
+class TestOutputInterface(object):
     def test_interface(self):
-        assert OutputHandlerBase.Meta.interface == 'output'
+        assert OutputInterface.Meta.interface == 'output'
 
 
 class TestOutputHandler(object):

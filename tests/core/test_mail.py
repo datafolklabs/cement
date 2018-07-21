@@ -1,12 +1,12 @@
 
-from cement.core.mail import MailHandlerBase, MailHandler
+from cement.core.mail import MailInterface, MailHandler
 
 
 # module tests
 
-class TestMailHandlerBase(object):
+class TestMailInterface(object):
     def test_interface(self):
-        assert MailHandlerBase.Meta.interface == 'mail'
+        assert MailInterface.Meta.interface == 'mail'
 
 
 class TestMailHandler(object):

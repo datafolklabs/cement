@@ -41,12 +41,59 @@ Usage
 
     from cement import App
 
-    with App() as app:
+    with App('myapp') as app:
         app.log.info("This is an info message")
         app.log.warning("This is an warning message")
         app.log.error("This is an error message")
         app.log.fatal("This is a fatal message")
         app.log.debug("This is a debug message")
+
+
+Toggle Log Level Via Commandline Argument
+-----------------------------------------
+
+This extension adds a commandline argument to toggle the log level on the fly:
+
+.. code-block:: text
+
+    $ python myapp.py --help
+    usage: myapp [-h] [--debug] [--quiet] [-l {info,warning,error,debug,fatal}]
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --debug               full application debug mode
+      --quiet               suppress all output
+      -l {info,warning,error,debug,fatal}
+                            logging level
+
+
+    $ python myapp.py
+    INFO: This is an info message
+    WARNING: This is an warning message
+    ERROR: This is an error message
+    CRITICAL: This is a fatal message
+
+    $ python myapp.py -l error
+    ERROR: This is an error message
+    CRITICAL: This is a fatal message
+
+
+**Disabling The Commandline Argument**
+
+If no command line argument is desired, you can disable it by setting the
+``App.Meta.meta_defaults`` for the ``log.logging`` handler:
+
+.. code-block:: python
+
+    from cement import App, init_defaults
+
+    meta = init_defaults('log.logging')
+    meta['log.logging']['log_level_argument'] = None
+
+    class MyApp(App):
+        class Meta:
+            label = 'myapp'
+            meta_defaults = meta
 
 """
 
@@ -132,7 +179,14 @@ class LoggingLogHandler(log.LogHandler):
             max_files=4,
         )
 
-    levels = ['INFO', 'WARNING', 'WARN', 'ERROR', 'DEBUG', 'FATAL']
+        #: The arguments to use for the cli options.  If a log-level argument
+        #: is not wanted, set to `None`
+        log_level_argument = ['-l']
+
+        #: The help description for the log level argument
+        log_level_argument_help = 'logging level'
+
+    levels = ['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL']
 
     def __init__(self, *args, **kw):
         super(LoggingLogHandler, self).__init__(*args, **kw)
@@ -165,13 +219,6 @@ class LoggingLogHandler(log.LogHandler):
         :param level: The log level to set.
 
         """
-        if level.upper() == 'WARN':
-            level = 'WARNING'
-            LOG.warning("Cement Deprecation Warning: Use of the `WARN` " +
-                        "level is deprecated as of Cement 2.9.x, and will " +
-                        "be removed in future versions of Cement.  You " +
-                        "should use `WARNING` instead.")
-
         self.clear_loggers(self._meta.namespace)
         for namespace in self._meta.clear_loggers:
             self.clear_loggers(namespace)
@@ -338,23 +385,6 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.warning(msg, **kwargs)
 
-    def warn(self, msg, namespace=None, **kw):
-        """
-        DEPRECATION WARNING: This function is deprecated as of Cement 2.9.x
-        in favor of the ``LoggingLogHandler.warning()`` function, and will be
-        removed in future versions of Cement.
-
-        See: :ref:LoggingLogHandler.warning():
-
-        """
-        if not is_true(self.app._meta.ignore_deprecation_warnings):
-            self.debug("Cement Deprecation Warning: " +
-                       "LoggingLogHandler.warn() has been " +
-                       "deprecated, and will be removed in future " +
-                       "versions of Cement.  You should use the " +
-                       "LoggingLogHandler.warning() function instead.")
-        self.warning(msg, namespace, **kw)
-
     def error(self, msg, namespace=None, **kw):
         """
         Log to the ERROR facility.
@@ -416,5 +446,23 @@ class LoggingLogHandler(log.LogHandler):
         self.backend.debug(msg, **kwargs)
 
 
+def add_logging_arguments(app):
+    if app.log._meta.log_level_argument is not None:
+        app.args.add_argument(*app.log._meta.log_level_argument,
+                              dest='log_logging_level',
+                              help=app.log._meta.log_level_argument_help,
+                              choices=[x.lower() for x in app.log.levels])
+
+
+def handle_logging_arguments(app):
+    if hasattr(app.pargs, 'log_logging_level'):
+        if app.pargs.log_logging_level is not None:
+            app.log.set_level(app.pargs.log_logging_level)
+        if app.pargs.log_logging_level in ['debug', 'DEBUG']:
+            app._meta.debug = True
+
+
 def load(app):
     app.handler.register(LoggingLogHandler)
+    app.hook.register('pre_argument_parsing', add_logging_arguments)
+    app.hook.register('post_argument_parsing', handle_logging_arguments)

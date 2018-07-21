@@ -19,7 +19,6 @@ wheel>=0.31.0
 # Required for optional extensions
 pystache
 pyYaml
-pylibmc
 redis
 colorlog
 tabulate

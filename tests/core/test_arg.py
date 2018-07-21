@@ -1,12 +1,12 @@
 
-from cement.core.arg import ArgumentHandlerBase, ArgumentHandler
+from cement.core.arg import ArgumentInterface, ArgumentHandler
 
 
 # module tests
 
-class TestArgumentHandlerBase(object):
+class TestArgumentInterface(object):
     def test_interface(self):
-        assert ArgumentHandlerBase.Meta.interface == 'argument'
+        assert ArgumentInterface.Meta.interface == 'argument'
 
 
 class TestArgumentHandler(object):

@@ -3,30 +3,20 @@
 import sys
 from abc import abstractmethod
 from ..core import exc
+from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class ExtensionHandlerBase(Handler):
+class ExtensionInterface(Interface):
 
     """
-    This class defines the Extension Handler Interface.  Classes that implement
-    this handler must provide the methods and attributes defined below.
-
-    Usage:
-
-    .. code-block:: python
-
-        from cement.core.extension import ExtensionHandlerBase
-
-        class MyExtensionHandler(ExtensionHandlerBase):
-            class Meta:
-                interface = extension.IExtension
-                label = 'my_extension_handler'
-            ...
-
+    This class defines the Extension Interface.  Handlers that implement this
+    interface must provide the methods and attributes defined below. In
+    general, most implementations should sub-class from the provided
+    :class:`ExtensionHandler` base class as a starting point.
     """
 
     class Meta:
@@ -61,7 +51,7 @@ class ExtensionHandlerBase(Handler):
         pass    # pragma: no cover
 
 
-class ExtensionHandler(ExtensionHandlerBase):
+class ExtensionHandler(ExtensionInterface, Handler):
 
     """
     This handler defines the Extention Interface, which handles loading

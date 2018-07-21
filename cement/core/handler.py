@@ -23,10 +23,10 @@ class Handler(ABC, meta.MetaMixin):
 
         """
 
-        label = None
+        label = NotImplemented
         """The string identifier of this handler."""
 
-        interface = None
+        interface = NotImplemented
         """The interface that this class implements."""
 
         config_section = None
@@ -95,7 +95,7 @@ class Handler(ABC, meta.MetaMixin):
         """
         Perform any validation to ensure proper data, meta-data, etc.
         """
-        pass
+        pass    # pragma: nocover
 
 
 class HandlerManager(object):
@@ -109,12 +109,12 @@ class HandlerManager(object):
         self.app = app
         self.__handlers__ = {}
 
-    def get(self, handler_type, handler_label, fallback=None, **kwargs):
+    def get(self, interface, handler_label, fallback=None, **kwargs):
         """
         Get a handler object.
 
         Args:
-            handler_type (str): The type of handler (i.e. ``output``)
+            interface (str): The interface of the handler (i.e. ``output``)
             handler_label (str): The label of the handler (i.e. ``json``)
             fallback (Handler):  A fallback value to return if handler_label
                 doesn't exist.
@@ -128,7 +128,7 @@ class HandlerManager(object):
             Handler: An uninstantiated handler object
 
         Raises:
-            cement.core.exc.FrameworkError: If the ``handler_type`` does not
+            cement.core.exc.InterfaceError: If the ``interface`` does not
                 exist, or if the handler itself does not exist.
 
         Example:
@@ -143,34 +143,34 @@ class HandlerManager(object):
         """
         setup = kwargs.get('setup', False)
 
-        if handler_type not in self.__handlers__:
-            raise exc.FrameworkError("handler type '%s' does not exist!" %
-                                     handler_type)
+        if interface not in self.app.interface.list():
+            raise exc.InterfaceError("Interface '%s' does not exist!" %
+                                     interface)
 
-        if handler_label in self.__handlers__[handler_type]:
+        if handler_label in self.__handlers__[interface]:
             if setup is True:
-                han = self.__handlers__[handler_type][handler_label]
+                han = self.__handlers__[interface][handler_label]
                 return self.setup(han)
             else:
-                return self.__handlers__[handler_type][handler_label]
+                return self.__handlers__[interface][handler_label]
         elif fallback is not None:
             return fallback
         else:
-            raise exc.FrameworkError("handlers['%s']['%s'] does not exist!" %
-                                     (handler_type, handler_label))
+            raise exc.InterfaceError("handlers['%s']['%s'] does not exist!" %
+                                     (interface, handler_label))
 
-    def list(self, handler_type):
+    def list(self, interface):
         """
-        Return a list of handlers for a given ``handler_type``.
+        Return a list of handlers for a given ``interface``.
 
         Args:
-            handler_type (str): The type of handler (i.e. ``output``)
+            interface (str): The interface of the handler (i.e. ``output``)
 
         Returns:
-            list: Handler labels (str) that match ``hander_type``.
+            list: Handler labels (str) that match ``interface``.
 
         Raises:
-            cement.core.exc.FrameworkError: If the ``handler_type`` does not
+            cement.core.exc.InterfaceError: If the ``interface`` does not
                 exist.
 
         Example:
@@ -180,92 +180,20 @@ class HandlerManager(object):
                 app.handler.list('log')
 
         """
-        if handler_type not in self.__handlers__:
-            raise exc.FrameworkError("handler type '%s' does not exist!" %
-                                     handler_type)
+        if not self.app.interface.defined(interface):
+            raise exc.InterfaceError("Interface '%s' does not exist!" %
+                                     interface)
 
         res = []
-        for label in self.__handlers__[handler_type]:
-            if label == '__interface__':
-                continue
-            res.append(self.__handlers__[handler_type][label])
+        for label in self.__handlers__[interface]:
+            res.append(self.__handlers__[interface][label])
         return res
-
-    def list_types(self):
-        """
-        Return a list of handler types (interface labels).
-
-        Returns:
-            list: Handler types (interface labels).
-
-        Example:
-
-            .. code-block:: python
-
-                app.handler.list_types()
-
-        """
-        return self.__handlers__.keys()
-
-    def define(self, handler):
-        """
-        Define an interface based on the provided handler.
-
-        Args:
-            handler (Handler): The handler that defines the interface
-                implementation
-
-        Raises:
-            cement.core.exc.FrameworkError: If the handler type/interface is
-                already defined
-
-        Example:
-
-            .. code-block:: python
-
-                app.handler.define(DatabaseHandler)
-
-        """
-
-        LOG.debug("defining handler interface '%s' (%s)" %
-                  (handler.Meta.interface, handler.__name__))
-
-        if handler.Meta.interface in self.__handlers__:
-            msg = "Handler interface '%s' already defined!" % \
-                  handler.Meta.interface
-            raise exc.FrameworkError(msg)
-        self.__handlers__[handler.Meta.interface] = {
-            '__interface__': handler
-        }
-
-    def defined(self, handler_type):
-        """
-        Test whether ``handler_type`` is defined.
-
-        Args:
-            handler_type (str): The label of the interface (I.e.
-                ``log``, ``config``, ``output``, etc).
-
-        Returns:
-            bool: ``True`` if the handler type is defined, ``False`` otherwise
-
-        Example:
-
-            .. code-block:: python
-
-                app.handler.defined('log')
-
-        """
-        if handler_type in self.__handlers__:
-            return True
-        else:
-            return False
 
     def register(self, handler_class, force=False):
         """
         Register a handler class to an interface.  If the same object is
         already registered then no exception is raised, however if a different
-        object attempts to be registered to the same name a ``FrameworkError``
+        object attempts to be registered to the same name a ``InterfaceError``
         is raised.
 
         Args:
@@ -280,7 +208,7 @@ class HandlerManager(object):
             cement.core.exc.InterfaceError: If the ``handler_class`` does not
                 implement :class:`Handler`, or if ``handler_class`` does not
                 properly sub-class it's interface.
-            cement.core.exc.FrameworkError: If the
+            cement.core.exc.InterfaceError: If the
                 ``handler_class.Meta.interface`` does not exist
 
         Usage:
@@ -314,9 +242,12 @@ class HandlerManager(object):
         LOG.debug("registering handler '%s' into handlers['%s']['%s']" %
                   (handler_class, interface, obj._meta.label))
 
-        if interface not in self.__handlers__:
-            raise exc.FrameworkError("Handler interface '%s' doesn't exist." %
+        if interface not in self.app.interface.list():
+            raise exc.InterfaceError("Handler interface '%s' doesn't exist." %
                                      interface)
+        elif interface not in self.__handlers__.keys():
+            self.__handlers__[interface] = {}
+
         if obj._meta.label in self.__handlers__[interface] and \
                 self.__handlers__[interface][obj._meta.label] != handler_class:
 
@@ -327,12 +258,12 @@ class HandlerManager(object):
                     ", but `force==True`"
                 )
             else:
-                raise exc.FrameworkError(
+                raise exc.InterfaceError(
                     "handlers['%s']['%s'] already exists" %
                     (interface, obj._meta.label)
                 )
 
-        interface_class = self.__handlers__[interface]['__interface__']
+        interface_class = self.app.interface.get(interface)
 
         if not issubclass(handler_class, interface_class):
             raise exc.InterfaceError("Handler %s " % handler_class.__name__ +
@@ -341,12 +272,12 @@ class HandlerManager(object):
 
         self.__handlers__[interface][obj._meta.label] = handler_class
 
-    def registered(self, handler_type, handler_label):
+    def registered(self, interface, handler_label):
         """
         Check if a handler is registered.
 
         Args:
-            handler_type (str): The type of handler (interface label)
+            interface (str): The interface of the handler (interface label)
             handler_label (str): The label of the handler
 
         Returns:
@@ -359,9 +290,10 @@ class HandlerManager(object):
                 app.handler.registered('log', 'colorlog')
 
         """
-        if handler_type in self.__handlers__ and \
-           handler_label in self.__handlers__[handler_type]:
-            return True
+        if interface in self.app.interface.list():
+            if interface in self.__handlers__.keys() and \
+               handler_label in self.__handlers__[interface]:
+                return True
 
         return False
 
@@ -386,14 +318,14 @@ class HandlerManager(object):
         h._setup(self.app)
         return h
 
-    def resolve(self, handler_type, handler_def, **kwargs):
+    def resolve(self, interface, handler_def, **kwargs):
         """
         Resolves the actual handler, as it can be either a string identifying
         the handler to load from ``self.__handlers__``, or it can be an
         instantiated or non-instantiated handler class.
 
         Args:
-            handler_type (str): The type of handler (aka the interface label)
+            interface (str): The interface of the handler (ex: ``output``)
             handler_def(str,instance,Handler): The loose references of the
                 handler, by label, instantiated object, or non-instantiated
                 class.
@@ -430,18 +362,18 @@ class HandlerManager(object):
         han = None
 
         if type(handler_def) == str:
-            han = self.get(handler_type, handler_def)(**meta_defaults)
+            han = self.get(interface, handler_def)(**meta_defaults)
         elif hasattr(handler_def, '_meta'):
-            if not self.registered(handler_type, handler_def._meta.label):
+            if not self.registered(interface, handler_def._meta.label):
                 self.register(handler_def.__class__)
             han = handler_def
         elif hasattr(handler_def, 'Meta'):
             han = handler_def(**meta_defaults)
-            if not self.registered(handler_type, han._meta.label):
+            if not self.registered(interface, han._meta.label):
                 self.register(handler_def)
 
-        msg = "Unable to resolve handler '%s' of type '%s'" % \
-              (handler_def, handler_type)
+        msg = "Unable to resolve handler '%s' of interface '%s'" % \
+              (handler_def, interface)
         if han is not None:
             if setup is True:
                 han._setup(self.app)
