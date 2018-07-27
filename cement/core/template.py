@@ -126,6 +126,12 @@ class TemplateHandler(TemplateInterface, Handler):
         # must be provided by a subclass
         raise NotImplemented  # pragma: nocover
 
+    def _match_patterns(self, item, patterns):
+        for pattern in patterns:
+            if re.match(pattern, item):
+                return True
+        return False
+
     def copy(self, src, dest, data, force=False, exclude=None, ignore=None):
         """
         Render ``src`` directory as template, including directory and file
@@ -152,89 +158,109 @@ class TemplateHandler(TemplateInterface, Handler):
 
         dest = fs.abspath(dest)
         src = fs.abspath(src)
+
         if exclude is None:
             exclude = []
         if ignore is None:
             ignore = []
+        ignore_patterns = self._meta.ignore + ignore
+        exclude_patterns = self._meta.exclude + exclude
 
         assert os.path.exists(src), "Source path %s does not exist!" % src
 
         if not os.path.exists(dest):
             os.makedirs(dest)
 
-        self.app.log.debug('Copying source template %s -> %s' % (src, dest))
+        LOG.debug('copying source template %s -> %s' % (src, dest))
 
         # here's the fun
         for cur_dir, sub_dirs, files in os.walk(src):
             if cur_dir == '.':
                 continue    # pragma: nocover
-
-            # don't render the source base dir (because we are telling it
-            # where to go as `dest`)
-            if cur_dir == src:
+            elif cur_dir == src:
+                # don't render the source base dir (because we are telling it
+                # where to go as `dest`)
                 cur_dir_dest = dest
+            elif self._match_patterns(cur_dir, ignore_patterns):
+                LOG.debug(
+                    'not copying ignored directory: %s' % cur_dir)
+                continue
+            elif self._match_patterns(cur_dir, exclude_patterns):
+                LOG.debug(
+                    'not rendering excluded directory as template: ' +
+                    '%s' % cur_dir)
+                cur_dir_stub = re.sub(src, '', cur_dir)
+                cur_dir_stub = cur_dir_stub.lstrip('/')
+                cur_dir_stub = cur_dir_stub.lstrip('\\')
+                cur_dir_dest = os.path.join(dest, cur_dir_stub)
             else:
                 # render the cur dir
-                self.app.log.debug('rendering template %s' % cur_dir)
+                LOG.debug(
+                    'rendering directory as template: %s' % cur_dir)
                 cur_dir_stub = re.sub(src,
                                       '',
                                       self.render(cur_dir, data))
+
                 cur_dir_stub = cur_dir_stub.lstrip('/')
                 cur_dir_stub = cur_dir_stub.lstrip('\\')
                 cur_dir_dest = os.path.join(dest, cur_dir_stub)
 
             # render sub-dirs
             for sub_dir in sub_dirs:
-                self.app.log.debug('rendering template %s' % sub_dir)
-                new_sub_dir = re.sub(src,
-                                     '',
-                                     self.render(sub_dir, data))
-                sub_dir_dest = os.path.join(cur_dir_dest, new_sub_dir)
+                full_path = os.path.join(cur_dir, sub_dir)
+
+                if self._match_patterns(full_path, ignore_patterns):
+                    LOG.debug(
+                        'not copying ignored sub-directory: ' +
+                        '%s' % full_path)
+                    continue
+                elif self._match_patterns(full_path, exclude_patterns):
+                    LOG.debug(
+                        'not rendering excluded sub-directory as template: ' +
+                        '%s' % full_path)
+                    sub_dir_dest = os.path.join(cur_dir_dest, sub_dir)
+                else:
+                    LOG.debug(
+                        'rendering sub-directory as template: %s' % full_path)
+                    new_sub_dir = re.sub(src,
+                                         '',
+                                         self.render(sub_dir, data))
+                    sub_dir_dest = os.path.join(cur_dir_dest, new_sub_dir)
 
                 if not os.path.exists(sub_dir_dest):
-                    self.app.log.debug('Creating sub-directory %s' %
-                                       sub_dir_dest)
+                    LOG.debug('creating sub-directory %s' % sub_dir_dest)
                     os.makedirs(sub_dir_dest)
 
             for _file in files:
-                self.app.log.debug('rendering template %s' % _file)
                 new_file = re.sub(src, '', self.render(_file, data))
                 _file = fs.abspath(os.path.join(cur_dir, _file))
                 _file_dest = fs.abspath(os.path.join(cur_dir_dest, new_file))
 
-                if force is True:
-                    LOG.debug('Overwriting existing file: %s ' % _file_dest)
-                else:
-                    assert not os.path.exists(_file_dest), \
-                        'Destination file already exists: %s ' % _file_dest
+                # handle if destination path already exists
 
-                ignore_it = False
-                all_patterns = self._meta.ignore + ignore
-                for pattern in all_patterns:
-                    if re.match(pattern, _file):
-                        ignore_it = True
-                        break
+                if os.path.exists(_file_dest):
+                    if force is True:
+                        LOG.debug(
+                            'overwriting existing file: %s ' % _file_dest)
+                    else:
+                        assert False, \
+                            'Destination file already exists: %s ' % _file_dest
 
-                if ignore_it is True:
-                    self.app.log.debug(
-                        'Not copying ignored file: ' +
+                if self._match_patterns(_file, ignore_patterns):
+                    LOG.debug(
+                        'not copying ignored file: ' +
                         '%s' % _file)
                     continue
 
-                exclude_it = False
-                all_patterns = self._meta.exclude + exclude
-                for pattern in all_patterns:
-                    if re.match(pattern, _file):
-                        exclude_it = True
-                        break
-
-                if exclude_it is True:
-                    self.app.log.debug(
-                        'Not rendering excluded file as template: ' +
+                elif self._match_patterns(_file, exclude_patterns):
+                    LOG.debug(
+                        'not rendering excluded file: ' +
                         '%s' % _file)
                     shutil.copy(_file, _file_dest)
+
                 else:
-                    f = open(os.path.join(cur_dir, _file), 'r')
+                    LOG.debug('rendering file as template: %s' % _file)
+                    f = open(_file, 'r')
                     content = f.read()
                     f.close()
 
@@ -251,8 +277,8 @@ class TemplateHandler(TemplateInterface, Handler):
             template_path = template_path.lstrip('/')
             full_path = fs.abspath(os.path.join(template_prefix,
                                                 template_path))
-            LOG.debug("attemping to load output template from file %s" %
-                      full_path)
+            LOG.debug(
+                "attemping to load output template from file %s" % full_path)
             if os.path.exists(full_path):
                 content = open(full_path, 'r').read()
                 LOG.debug("loaded output template from file %s" %

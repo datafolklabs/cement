@@ -4,9 +4,11 @@ services:
         image: "{{ label }}:dev"
         build:
             context: .
-            dockerfile: docker/Dockerfile.dev
-        hostname: cement
+            dockerfile: Dockerfile
+        hostname: {{ label }}
         stdin_open: true
         tty: true
+        working_dir: '/{{ label }}'
+        entrypoint: '/bin/ash'
         volumes:
-            - ".:/app"
+            - ".:/{{ label }}"

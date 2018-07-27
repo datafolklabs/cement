@@ -123,6 +123,7 @@ import os
 import inspect
 import yaml
 from .. import Controller, minimal_logger, shell, FrameworkError
+from ..utils.version import VERSION, get_version
 
 LOG = minimal_logger(__name__)
 
@@ -139,6 +140,14 @@ class GenerateTemplateAbstractBase(Controller):
                )
         self.app.log.info(msg)
         data = {}
+
+        # builtin vars
+        maj_min = float('%s.%s' % (VERSION[0], VERSION[1]))
+        data['cement'] = {}
+        data['cement']['version'] = get_version()
+        data['cement']['major_version'] = VERSION[0]
+        data['cement']['minor_version'] = VERSION[1]
+        data['cement']['major_minor_version'] = maj_min
 
         f = open(os.path.join(source, '.generate.yml'))
         g_config = yaml.load(f)

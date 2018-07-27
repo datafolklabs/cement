@@ -1,8 +1,0 @@
-FROM alpine:3.5
-MAINTAINER BJ Dierkes <derks@datafolklabs.com>
-EXPOSE 8000
-WORKDIR /app
-RUN apk update && apk add hugo py-pygments
-COPY doc-new/ /app/
-COPY docker/bin/run-docs.sh /usr/bin/run-docs.sh
-CMD ["/usr/bin/run-docs.sh"]

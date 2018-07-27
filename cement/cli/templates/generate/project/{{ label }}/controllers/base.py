@@ -1,13 +1,12 @@
 
 from cement import Controller, ex
+from cement.utils.version import get_version_banner
 from ..core.version import get_version
 
 VERSION_BANNER = """
-{{ description }}
-Version: %s
-Created by: {{ creator }}
-URL: {{ url }}
-""" % get_version()
+{{ description }} %s
+%s
+""" % (get_version(), get_version_banner())
 
 
 class Base(Controller):
@@ -54,8 +53,8 @@ class Base(Controller):
             'foo' : 'bar',
         }
 
+        self.app.log.info('Inside Base.command1()')
+
         ### do something with arguments
         if self.app.pargs.foo is not None:
-            data['foo'] = self.app.pargs.foo
-
-        self.app.render(data, 'command1.jinja2')
+            print('Foo => %s' % self.app.pargs.foo)

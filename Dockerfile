@@ -4,3 +4,5 @@ WORKDIR /app
 COPY . /app
 RUN python setup.py install \
     && rm -rf /app
+WORKDIR /
+ENTRYPOINT ["/usr/local/bin/cement"]

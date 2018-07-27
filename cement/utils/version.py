@@ -38,8 +38,9 @@
 
 import datetime  # pragma: nocover
 import os  # pragma: nocover
+import sys  # pragma: nocover
 import subprocess  # pragma: nocover
-
+import platform  # pragma: nocover
 from ..core.backend import VERSION  # pragma: nocover
 
 
@@ -69,6 +70,18 @@ def get_version(version=VERSION):  # pragma: nocover
         sub = mapping[version[3]] + str(version[4])
 
     return main + sub
+
+
+def get_version_banner():
+    cement_ver = get_version()
+    python_ver = '.'.join([str(x) for x in sys.version_info[0:3]])
+    plat = platform.platform()
+
+    banner = 'Cement Framework %s\n' % cement_ver + \
+             'Python %s\n' % python_ver + \
+             'Platform %s' % plat
+
+    return banner
 
 
 def get_git_changeset():  # pragma: nocover

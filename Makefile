@@ -1,6 +1,4 @@
-.PHONY: all dev test comply docs clean dist dist-upload
-
-all: test comply comply-test api-docs clean
+.PHONY: dev test test-core comply-fix docs clean dist dist-upload
 
 dev:
 	docker-compose up -d

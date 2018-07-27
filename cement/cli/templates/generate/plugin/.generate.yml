@@ -3,6 +3,11 @@
 exclude:
     - '^(.*)[\/\\\\]plugin[\/\\\\]{{ label }}[\/\\\\]templates[\/\\\\](.*)$'
 
+ignore:
+    - '^(.*)pyc(.*)$'
+    - '^(.*)pyo(.*)$'
+    - '^(.*)__pycache__(.*)$'
+
 variables:
     -   name: label
         prompt: "Plugin Label"

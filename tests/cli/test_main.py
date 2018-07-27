@@ -19,7 +19,7 @@ def test_app():
 
 
 def test_generate(tmp):
-    argv = ['generate', 'app', tmp.dir, '--defaults']
+    argv = ['generate', 'project', tmp.dir, '--defaults']
 
     with App(argv=argv) as app:
         app.run()

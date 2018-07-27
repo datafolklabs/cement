@@ -13,6 +13,7 @@ RUN apk update \
         make \
         vim \
         bash \
+        git \
     && ln -sf /usr/bin/vim /usr/bin/vi \
     && pip install --no-cache-dir -r requirements-dev.txt
 COPY . /app

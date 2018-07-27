@@ -2,7 +2,7 @@
 from cement import App, init_defaults
 from cement.core.exc import CaughtSignal
 from .core.exc import {{ class_name }}Error
-
+from .controllers.base import Base
 
 # configuration defaults
 DEFAULTS = init_defaults('{{ label }}')
@@ -15,38 +15,20 @@ class {{ class_name }}(App):
     class Meta:
         label = '{{ label }}'
 
-        # offload handler/hook registration to a separate module
-        bootstrap = '{{ label }}.bootstrap'
-
         # configuration defaults
         config_defaults = DEFAULTS
-
-        # load additional framework extensions
-        extensions = [
-            'json',
-            'yaml',
-            'colorlog',
-            'jinja2',
-        ]
-
-        # configuration handler
-        config_handler = 'yaml'
-
-        # configuration file suffix
-        config_file_suffix = '.yml'
-
-        # set the log handler
-        log_handler = 'colorlog'
-
-        # set the output handler
-        output_handler = 'jinja2'
 
         # call sys.exit() on close
         close_on_exit = True
 
+        # register handlers
+        handlers = [
+            Base
+        ]
+
 
 class {{ class_name }}Test({{ class_name}}):
-    """A test app that is better suited for testing."""
+    """A sub-class of {{ class_name}} that is better suited for testing."""
 
     class Meta:
         # default argv to empty (don't use sys.argv)

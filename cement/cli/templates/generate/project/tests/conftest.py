@@ -16,6 +16,8 @@ def tmp(request):
     """
 
     class Tmp(object):
+        cleanup = True
+
         def __init__(self):
             self.dir = mkdtemp()
             _, self.file = mkstemp(dir=self.dir)
@@ -23,5 +25,5 @@ def tmp(request):
     yield t
 
     # cleanup
-    if os.path.exists(t.dir):
+    if os.path.exists(t.dir) and cleanup is True:
         shutil.rmtree(t.dir)

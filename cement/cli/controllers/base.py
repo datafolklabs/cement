@@ -1,18 +1,8 @@
 
-import sys
-import platform
 from cement import Controller
-from cement.utils.version import get_version
+from cement.utils.version import get_version_banner
 
-VERSION = get_version()
-PYTHON_VERSION = '.'.join([str(x) for x in sys.version_info[0:3]])
-PLATFORM = platform.platform()
-
-BANNER = """
-Cement Framework %s
-Python %s
-Platform %s
-""" % (VERSION, PYTHON_VERSION, PLATFORM)
+BANNER = get_version_banner()
 
 
 class Base(Controller):
