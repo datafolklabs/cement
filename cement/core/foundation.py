@@ -92,9 +92,9 @@ def handler_override(app):
 
     for i in app._meta.handler_override_options.keys():
         if not hasattr(app.pargs, '%s_handler_override' % i):
-            continue
+            continue  # pragma: nocover
         elif getattr(app.pargs, '%s_handler_override' % i) is None:
-            continue
+            continue  # pragma: nocover
         else:
             # get the argument value from command line
             argument = getattr(app.pargs, '%s_handler_override' % i)
@@ -1023,28 +1023,6 @@ class App(meta.MetaMixin):
 
         self._last_rendered = (data, out_text)
         return out_text
-
-    def get_last_rendered(self):
-        """
-        Return the (data, output_text) tuple of the last time self.render()
-        was called.
-
-        Returns:
-            tuple: ``(data, output_text)``
-
-        Warnings:
-            DEPRECATION WARNING: This function is deprecated as of Cement 2.1.3
-            in favor of the :func:`App.last_rendered` property, and will be
-            removed in future versions of Cement.
-
-        """
-        if not is_true(self._meta.ignore_deprecation_warnings):
-            self.log.warning("Cement Deprecation Warning: " +
-                             "App.get_last_rendered() has been " +
-                             "deprecated, and will be removed in future " +
-                             "versions of Cement.  You should use the " +
-                             "App.last_rendered property instead.")
-        return self._last_rendered
 
     @property
     def last_rendered(self):
