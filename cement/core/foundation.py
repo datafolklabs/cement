@@ -151,7 +151,32 @@ class App(meta.MetaMixin):
         debug = False
         """
         Used internally, and should not be used by developers.  This is set
-        to ``True`` if ``--debug`` is passed at command line."""
+        to ``True`` if the ``debug`` option is passed at command line."""
+
+        debug_argument_options = ['-d', '--debug']
+        """
+        The argument option(s) to toggle debug mode via cli.
+        """
+
+        debug_argument_help = 'full application debug mode'
+        """
+        The debug argument help text that is displayed in ``--help``.
+        """
+
+        quiet = False
+        """
+        Used internally, and should not be used by developers.  This is set
+        to ``True`` if the ``quiet`` option is passed at command line."""
+
+        quiet_argument_options = ['-q', '--quiet']
+        """
+        The argument option(s) to toggle quiet mode via cli.
+        """
+
+        quiet_argument_help = 'suppress all console output'
+        """
+        The quiet argument help text that is displayed in ``--help``.
+        """
 
         exit_on_close = False
         """
@@ -730,11 +755,16 @@ class App(meta.MetaMixin):
         if self._meta.argv is None:
             self._meta.argv = list(sys.argv[1:])
 
-        # hack for command line --debug
-        if '--debug' in self.argv:
-            self._meta.debug = True
+        # hack for command line debug/quiet options
+        if self._meta.debug_argument_options is not None:
+            if any(x in self.argv for x in self._meta.debug_argument_options):
+                self._meta.debug = True
 
-        # setup the cement framework
+        if self._meta.quiet_argument_options is not None:
+            if any(x in self.argv for x in self._meta.quiet_argument_options):
+                self._meta.quiet = True
+                self._suppress_output()
+
         self._lay_cement()
 
     @property
@@ -744,8 +774,8 @@ class App(meta.MetaMixin):
     @property
     def debug(self):
         """
-        Returns boolean based on whether ``--debug`` was passed at command
-        line or set via the application's configuration file.
+        Returns boolean based on whether the ``debug`` option was passed at
+        command line or set via the application's configuration file.
 
         :returns: boolean
         """
@@ -1060,11 +1090,6 @@ class App(meta.MetaMixin):
         LOG.debug("laying cement for the '%s' application" %
                   self._meta.label)
 
-        if '--debug' in self._meta.argv:
-            self._meta.debug = True
-        elif '--quiet' in self._meta.argv:
-            self._suppress_output()
-
         self.interface = InterfaceManager(self)
         self.handler = HandlerManager(self)
         self.hook = HookManager(self)
@@ -1230,8 +1255,8 @@ class App(meta.MetaMixin):
 
         self.validate_config()
 
-        # hack for --debug
-        if '--debug' in self.argv or self._meta.debug is True:
+        # hack for debug command line option
+        if self._meta.debug is True:
             self.config.set(self._meta.config_section, 'debug', True)
 
         # override select Meta via config
@@ -1389,12 +1414,16 @@ class App(meta.MetaMixin):
                                           self._meta.argument_handler)
         self.args.prog = self._meta.label
 
-        self.args.add_argument('--debug', dest='debug',
-                               action='store_true',
-                               help='full application debug mode')
-        self.args.add_argument('--quiet', dest='suppress_output',
-                               action='store_true',
-                               help='suppress all output')
+        if self._meta.debug_argument_options is not None:
+            self.args.add_argument(*self._meta.debug_argument_options,
+                                   dest='debug',
+                                   action='store_true',
+                                   help=self._meta.debug_argument_help)
+        if self._meta.quiet_argument_options is not None:
+            self.args.add_argument(*self._meta.quiet_argument_options,
+                                   dest='suppress_output',
+                                   action='store_true',
+                                   help=self._meta.quiet_argument_help)
 
         # merge handler override meta data
         if self._meta.handler_override_options is not None:
