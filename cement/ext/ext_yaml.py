@@ -141,9 +141,9 @@ class YamlOutputHandler(output.OutputHandler):
 
         label = 'yaml'
 
-        #: Whether or not to include ``yaml`` as an available to choice
+        #: Whether or not to include ``yaml`` as an available choice
         #: to override the ``output_handler`` via command line options.
-        overridable = True
+        overridable = False
 
     def __init__(self, *args, **kw):
         super(YamlOutputHandler, self).__init__(*args, **kw)

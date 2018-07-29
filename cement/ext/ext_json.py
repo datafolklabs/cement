@@ -170,7 +170,7 @@ class JsonOutputHandler(output.OutputHandler):
 
         #: Whether or not to include ``json`` as an available choice
         #: to override the ``output_handler`` via command line options.
-        overridable = True
+        overridable = False
 
         #: Backend JSON library module to use (`json`, `ujson`)
         json_module = 'json'
