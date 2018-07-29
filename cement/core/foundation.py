@@ -53,7 +53,7 @@ def add_handler_override_options(app):
         if len(app.handler.list(i)) > 1:
             handlers = []
             for h in app.handler.list(i):
-                handlers.append(h())
+                handlers.append(app._resolve_handler(i, h))
 
             choices = [x._meta.label
                        for x in handlers

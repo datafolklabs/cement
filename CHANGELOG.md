@@ -12,7 +12,8 @@ Bugs:
     - [Issue #440](https://github.com/datafolklabs/cement/issues/440)
 - `[ext.argparse]` Empty Sub-Commands List
     - [Issue #444](https://github.com/datafolklabs/cement/issues/444)
-
+- `[core.foundation]` Handler Override Options Do Not Honor Meta Defaults
+    - [Issue #513)(https://github.com/datafolklabs/cement/issues/513)
 
 Features:
 
@@ -64,6 +65,8 @@ Incompatible:
 - `[ext.argcomplete]` Drop ArgComplete Extension
 - `[ext.reload_config]` Drop Reload Config Extension
 - `[ext.configobj]` Drop ConfigObj Extension
+- `[ext.json]` Disable `overridable` option by default
+- `[ext.yaml]` Disable `overridable` option by default
 - `[ext.json_configobj]` Drop JSON ConfigObj Extension
 - `[ext.yaml_configobj]` Drop YAML ConfigObj Extension
 - `[ext.genshi]` Drop Genshi Extension

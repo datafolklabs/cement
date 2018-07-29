@@ -72,6 +72,7 @@ def test_handler_override():
         class Meta:
             argv = ['-o', 'json']
             extensions = ['json', 'yaml', 'mustache', 'tabulate']
+            meta_defaults = {'output.json': {'overridable': True}}
 
     with MyApp() as app:
         app.run()
