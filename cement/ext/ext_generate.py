@@ -122,6 +122,7 @@ import re
 import os
 import inspect
 import yaml
+import shutil
 from .. import Controller, minimal_logger, shell, FrameworkError
 from ..utils.version import VERSION, get_version
 
@@ -132,9 +133,7 @@ class GenerateTemplateAbstractBase(Controller):
     class Meta:
         pass
 
-    def _default(self):
-        source = self._meta.source_path
-        dest = self.app.pargs.dest
+    def _generate(self, source, dest):
         msg = 'Generating %s %s in %s' % (
                    self.app._meta.label, self._meta.label, dest
                )
@@ -222,6 +221,30 @@ class GenerateTemplateAbstractBase(Controller):
             else:
                 raise  # pragma: nocover
 
+    def _clone(self, source, dest):
+        msg = 'Cloning %s %s template to %s' % (
+                   self.app._meta.label, self._meta.label, dest
+               )
+        self.app.log.info(msg)
+
+        if os.path.exists(dest) and self.app.pargs.force is True:
+            shutil.rmtree(dest)
+        elif os.path.exists(dest):
+            msg = "Destination path already exists: %s (try: --force)" % dest
+            raise AssertionError(msg)
+
+        shutil.copytree(source, dest)
+
+    def _default(self):
+        source = self._meta.source_path
+        dest = self.app.pargs.dest
+
+        if self.app.pargs.clone is True:
+            self._clone(source, dest)
+        else:
+            self._generate(source, dest)
+
+
 
 def setup_template_items(app):
     template_dirs = []
@@ -283,6 +306,11 @@ def setup_template_items(app):
                         (['-D', '--defaults'],
                          {'help': 'use all default variable values',
                           'dest': 'defaults',
+                          'action': 'store_true'}),
+                        # ------------------------------------------------------
+                        (['--clone'],
+                         {'help': 'clone this template to destination path',
+                          'dest': 'clone',
                           'action': 'store_true'}),
                     ]
                     source_path = os.path.join(path, item)
