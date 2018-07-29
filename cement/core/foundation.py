@@ -167,7 +167,8 @@ class App(meta.MetaMixin):
 
         config_files = None
         """
-        List of config files to parse.
+        List of config files to parse (appended to the builtin list of config
+        files defined by Cement).
 
         Note: Though ``App.Meta.config_section`` defaults to ``None``, Cement
         will set this to a default list based on ``App.Meta.label`` (or in
@@ -195,7 +196,8 @@ class App(meta.MetaMixin):
 
         config_dirs = None
         """
-        List of config directories to search config files. For each direcory
+        List of config directories to search config files (appended to the
+        builtin list of directories defined by Cement). For each direcory
         cement will load all files that ends with ``.conf``.
 
         .. code-block:: python
@@ -225,15 +227,16 @@ class App(meta.MetaMixin):
 
         plugin_config_dirs = None
         """
-        A list of directory paths where plugin config files can be found.
+        A list of directory paths where plugin config files can be found
+        (appended to the builtin list of directories defined by Cement).
         Files must end in ``.conf`` (or the extension defined by
         ``App.Meta.config_file_suffix``) or they will be ignored. Additionally,
         plugin configuration sections must start with ``plugin.`` (ex:
         ``[plugin.myplugin]``).
 
-        Note: Though ``App.Meta.plugin_config_dirs`` is ``None``, Cement
-        will set this to a default list based on ``App.Meta.label``.
-        This will equate to:
+        Note: Though ``App.Meta.plugin_config_dirs`` defaults to ``None``,
+        Cement will populate this with a default list based on
+        ``App.Meta.label``. This will equate to:
 
         .. code-block:: python
 
@@ -283,10 +286,10 @@ class App(meta.MetaMixin):
         plugin_dirs = None
         """
         A list of directory paths where plugin code (modules) can be loaded
-        from.
+        from (appended to the builtin list of directories defined by Cement).
 
-        Note: Though ``App.Meta.plugin_dirs`` is ``None``, Cement will set
-        this to a default list based on ``App.Meta.label`` if not set.
+        Note: Though ``App.Meta.plugin_dirs`` defaults to ``None``, Cement will
+        populate this with a default list based on ``App.Meta.label``.
         This will equate to:
 
         .. code-block:: python
@@ -563,10 +566,10 @@ class App(meta.MetaMixin):
         template_dirs = None
         """
         A list of directory paths where template files can be loaded
-        from.
+        from (appended to the builtin list of directories defined by Cement).
 
         Note: Though ``App.Meta.template_dirs`` defaults to ``None``,
-        Cement will set this to a default list based on
+        Cement will populate this with a default list based on
         ``App.Meta.label``.  This will equate to:
 
         .. code-block:: python
@@ -1224,21 +1227,33 @@ class App(meta.MetaMixin):
             self.config.merge(self._meta.config_defaults)
 
         if self._meta.config_files is None:
-            self._meta.config_files = [
-                fs.join('/', 'etc', label, '%s%s' % (label, ext)),
-                fs.join(fs.HOME_DIR, '.config', label, '%s%s' % (label, ext)),
-                fs.join(fs.HOME_DIR, '.config', label, 'config'),
-                fs.join(fs.HOME_DIR, '.config', '%s%s' % (label, ext)),
-                fs.join(fs.HOME_DIR, '.%s%s' % (label, ext)),
-                fs.join(fs.HOME_DIR, '.%s' % label, 'config'),
-            ]
+            self._meta.config_files = []
 
+        # add builtin config file paths (inserted to take presedence)
+        builtin_paths = [
+            fs.join(fs.HOME_DIR, '.%s' % label, 'config'),
+            fs.join(fs.HOME_DIR, '.%s%s' % (label, ext)),
+            fs.join(fs.HOME_DIR, '.config', '%s%s' % (label, ext)),
+            fs.join(fs.HOME_DIR, '.config', label, 'config'),
+            fs.join(fs.HOME_DIR, '.config', label, '%s%s' % (label, ext)),
+            fs.join('/', 'etc', label, '%s%s' % (label, ext)),
+        ]
+        for path in builtin_paths:
+            if path not in self._meta.config_files:
+                self._meta.config_files.insert(0, path)
+
+        # add builtin config dir paths (inserted to take presedence)
         if self._meta.config_dirs is None:
-            self._meta.config_dirs = [
-                fs.join('/', 'etc', label, 'conf.d'),
-                fs.join(fs.HOME_DIR, '.config', label, 'conf.d'),
-                fs.join(fs.HOME_DIR, '.%s' % label, 'conf.d'),
-            ]
+            self._meta.config_dirs = []
+
+        builtin_paths = [
+            fs.join(fs.HOME_DIR, '.%s' % label, 'conf.d'),
+            fs.join(fs.HOME_DIR, '.config', label, 'conf.d'),
+            fs.join('/', 'etc', label, 'conf.d'),
+        ]
+        for path in builtin_paths:
+            if path not in self._meta.config_dirs:
+                self._meta.config_dirs.insert(0, path)
 
         for _dir in self._meta.config_dirs:
             if not os.path.isdir(_dir):
@@ -1308,11 +1323,17 @@ class App(meta.MetaMixin):
 
         # plugin config dirs
         if self._meta.plugin_config_dirs is None:
-            self._meta.plugin_config_dirs = [
-                '/etc/%s/plugins.d/' % self._meta.label,
-                fs.join(fs.HOME_DIR, '.config', label, 'plugins.d'),
-                fs.join(fs.HOME_DIR, '.%s' % label, 'plugins.d'),
-            ]
+            self._meta.plugin_config_dirs = []
+
+        builtin_paths = [
+            fs.join(fs.HOME_DIR, '.%s' % label, 'plugins.d'),
+            fs.join(fs.HOME_DIR, '.config', label, 'plugins.d'),
+            '/etc/%s/plugins.d/' % self._meta.label,
+        ]
+        for path in builtin_paths:
+            if path not in self._meta.plugin_config_dirs:
+                self._meta.plugin_config_dirs.insert(0, path)
+
         config_dir = self._meta.plugin_config_dir
         if config_dir is not None:
             if config_dir not in self._meta.plugin_config_dirs:
@@ -1321,11 +1342,16 @@ class App(meta.MetaMixin):
 
         # plugin dirs
         if self._meta.plugin_dirs is None:
-            self._meta.plugin_dirs = [
-                fs.join(fs.HOME_DIR, '.%s' % label, 'plugins'),
-                fs.join(fs.HOME_DIR, '.config', label, 'plugins'),
-                '/usr/lib/%s/plugins' % self._meta.label,
-            ]
+            self._meta.plugin_dirs = []
+
+        builtin_paths = [
+            '/usr/lib/%s/plugins' % self._meta.label,
+            fs.join(fs.HOME_DIR, '.config', label, 'plugins'),
+            fs.join(fs.HOME_DIR, '.%s' % label, 'plugins'),
+        ]
+        for path in builtin_paths:
+            self._meta.plugin_dirs.insert(0, path)
+
         plugin_dir = self._meta.plugin_dir
         if plugin_dir is not None:
             if plugin_dir not in self._meta.plugin_dirs:
@@ -1350,26 +1376,6 @@ class App(meta.MetaMixin):
         self.output = self._resolve_handler('output',
                                             self._meta.output_handler,
                                             raise_error=False)
-        # # template module
-        # if self._meta.template_module is None:
-        #     self._meta.template_module = '%s.templates' % label
-        #
-        # # template dirs
-        # if self._meta.template_dirs is None:
-        #     self._meta.template_dirs = []
-        #     paths = [
-        #         fs.join(fs.HOME_DIR, '.%s' % label, 'templates'),
-        #         fs.join(fs.HOME_DIR, '.config', label, 'templates'),
-        #         '/usr/lib/%s/templates' % label,
-        #     ]
-        #     for path in paths:
-        #         self.add_template_dir(path)
-        #
-        # template_dir = self._meta.template_dir
-        # if template_dir is not None:
-        #     if template_dir not in self._meta.template_dirs:
-        #         # insert so that this dir has precedence
-        #         self._meta.template_dirs.insert(0, template_dir)
 
     def _setup_template_handler(self):
         if self._meta.template_handler is None:
@@ -1388,13 +1394,15 @@ class App(meta.MetaMixin):
         # template dirs
         if self._meta.template_dirs is None:
             self._meta.template_dirs = []
-            paths = [
-                fs.join(fs.HOME_DIR, '.%s' % label, 'templates'),
-                fs.join(fs.HOME_DIR, '.config', label, 'templates'),
-                '/usr/lib/%s/templates' % label,
-            ]
-            for path in paths:
-                self.add_template_dir(path)
+
+        builtin_paths = [
+            '/usr/lib/%s/templates' % label,
+            fs.join(fs.HOME_DIR, '.config', label, 'templates'),
+            fs.join(fs.HOME_DIR, '.%s' % label, 'templates'),
+        ]
+        for path in builtin_paths:
+            if path not in self._meta.template_dirs:
+                self._meta.template_dirs.insert(0, path)
 
         template_dir = self._meta.template_dir
         if template_dir is not None:
