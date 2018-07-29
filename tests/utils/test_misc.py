@@ -47,11 +47,6 @@ def test_minimal_logger():
     log.debug('debug test')
 
 
-def test_minimal_logger_deprecated_warn():
-    log = misc.minimal_logger(__name__)
-    log.warn('warning test')
-
-
 def test_wrap_str():
     text = "aaaaa bbbbb ccccc"
     new_text = misc.wrap(text, width=5)

@@ -333,15 +333,6 @@ class App(meta.MetaMixin):
         ``setup()``.
         """
 
-        override_arguments = ['debug']
-        """
-        List of arguments that override their configuration counter-part.
-        For example, if ``--debug`` is passed (and it's config value is
-        ``debug``) then the ``debug`` key of all configuration sections will
-        be overridden by the value of the command line option (``True`` in
-        this example).
-        """
-
         core_handler_override_options = dict(
             output=(['-o'], dict(help='output handler')),
         )
@@ -1135,12 +1126,6 @@ class App(meta.MetaMixin):
             pass
 
         self._parsed_args = self.args.parse(self.argv)
-
-        for member in self._meta.override_arguments:
-            for section in self.config.get_sections():
-                if member in self.config.keys(section):
-                    self.config.set(section, member,
-                                    getattr(self._parsed_args, member))
 
         for res in self.hook.run('post_argument_parsing', self):
             pass

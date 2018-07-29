@@ -57,6 +57,7 @@ Incompatible:
 - `[core]` Replace Interfaces with ABC Base Classes
     - [Issue #192](https://github.com/datafolklabs/cement/issues/192)
 - `[core.foundation]` Rename `CementApp` to `App`.
+- `[core.foundation]` Drop deprecated `App.Meta.override_arguments`
 - `[core.handler]` Rename `CementBaseHandler` to `Handler`
 - `[core.handler]` Drop deprecated backend globals
 - `[core.hook]` Drop deprecated backend globals

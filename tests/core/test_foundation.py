@@ -347,13 +347,6 @@ def test_last_rendered():
         assert app.last_rendered == ({'foo': 'bar'}, output_text)
 
 
-def test_get_last_rendered():
-    # DEPRECATED - REMOVE AFTER THE FUNCTION IS REMOVED
-    with TestApp() as app:
-        output_text = app.render({'foo': 'bar'})
-        assert app.get_last_rendered() == ({'foo': 'bar'}, output_text)
-
-
 def test_close_with_code():
     with pytest.raises(SystemExit) as e:
         with TestApp(exit_on_close=True) as app:

@@ -93,9 +93,6 @@ class MinimalLogger(object):
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.warning(msg, **kwargs)
 
-    def warn(self, msg, namespace=None, **kw):
-        self.warning(msg, namespace, **kw)
-
     def error(self, msg, namespace=None, **kw):
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
