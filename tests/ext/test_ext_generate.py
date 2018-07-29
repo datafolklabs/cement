@@ -95,6 +95,21 @@ def test_no_default(tmp):
         app.run()
 
 
+def test_clone(tmp):
+    # first test for already exists
+    argv = ['generate', 'test1', '--clone', tmp.dir]
+    with raises(AssertionError, match='(.*)already exists(.*)'):
+        with GenerateApp(argv=argv) as app:
+            app.run()
+
+    # then force it
+    argv = ['generate', 'test1', '--clone', tmp.dir, '--force']
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+    assert exists_join(tmp.dir, '.generate.yml')
+
+
 # coverage
 
 def test_generate_from_template_dir(tmp):

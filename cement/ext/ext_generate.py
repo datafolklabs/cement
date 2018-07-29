@@ -245,7 +245,6 @@ class GenerateTemplateAbstractBase(Controller):
             self._generate(source, dest)
 
 
-
 def setup_template_items(app):
     template_dirs = []
     template_items = []
