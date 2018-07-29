@@ -9,7 +9,7 @@ class Base(Controller):
     class Meta:
         label = 'base'
         description = 'Cement Framework Developer Tools'
-        epilog = 'Example: cement generate app /path/to/myapp'
+        epilog = 'Example: cement generate project /path/to/myapp'
 
         arguments = [
             (['-v', '--version'], {'action': 'version', 'version': BANNER}),

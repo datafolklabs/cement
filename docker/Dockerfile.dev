@@ -2,8 +2,8 @@ FROM python:3.6-alpine
 MAINTAINER BJ Dierkes <derks@datafolklabs.com>
 ENV PS1="\[\e[0;33m\]|> cement <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
 
-WORKDIR /app
-COPY requirements-dev.txt /app/
+WORKDIR /src
+COPY requirements-dev.txt /src/
 RUN apk update \
     && apk add libmemcached-dev \
         gcc \
@@ -16,7 +16,7 @@ RUN apk update \
         git \
     && ln -sf /usr/bin/vim /usr/bin/vi \
     && pip install --no-cache-dir -r requirements-dev.txt
-COPY . /app
+COPY . /src
 COPY docker/vimrc /root/.vimrc
 RUN python setup.py develop
 CMD ["/bin/bash"]

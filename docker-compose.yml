@@ -9,7 +9,8 @@ services:
         stdin_open: true
         tty: true
         volumes:
-            - ".:/app"
+            - '.:/src'
+        working_dir: '/src'
         links:
             - redis:redis
             - memcached:memcached

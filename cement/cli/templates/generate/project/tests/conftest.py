@@ -21,6 +21,7 @@ def tmp(request):
         def __init__(self):
             self.dir = mkdtemp()
             _, self.file = mkstemp(dir=self.dir)
+
     t = Tmp()
     yield t
 

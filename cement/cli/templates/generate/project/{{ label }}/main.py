@@ -6,7 +6,7 @@ from .controllers.base import Base
 
 # configuration defaults
 DEFAULTS = init_defaults('{{ label }}')
-DEFAULTS['{{ label }}']['{{ foo }}'] = 'bar'
+DEFAULTS['{{ label }}']['foo'] = 'bar'
 
 
 class {{ class_name }}(App):
