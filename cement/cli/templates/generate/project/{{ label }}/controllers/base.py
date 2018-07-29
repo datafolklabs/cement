@@ -53,8 +53,8 @@ class Base(Controller):
             'foo' : 'bar',
         }
 
-        self.app.log.info('Inside Base.command1()')
-
         ### do something with arguments
         if self.app.pargs.foo is not None:
-            print('Foo => %s' % self.app.pargs.foo)
+            data['foo'] = self.app.pargs.foo
+
+        self.app.render(data, 'command1.jinja2')

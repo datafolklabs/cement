@@ -21,6 +21,25 @@ class {{ class_name }}(App):
         # call sys.exit() on close
         close_on_exit = True
 
+        # load additional framework extensions
+        extensions = [
+            'yaml',
+            'colorlog',
+            'jinja2',
+        ]
+
+        # configuration handler
+        config_handler = 'yaml'
+
+        # configuration file suffix
+        config_file_suffix = '.yml'
+
+        # set the log handler
+        log_handler = 'colorlog'
+
+        # set the output handler
+        output_handler = 'jinja2'
+
         # register handlers
         handlers = [
             Base
