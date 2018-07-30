@@ -6,6 +6,7 @@ os:
 python:
   - 3.5
   - 3.6
+  - 3.7
 services:
   - memcached
   - redis-server
