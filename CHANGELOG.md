@@ -13,7 +13,7 @@ Bugs:
 - `[ext.argparse]` Empty Sub-Commands List
     - [Issue #444](https://github.com/datafolklabs/cement/issues/444)
 - `[core.foundation]` Handler Override Options Do Not Honor Meta Defaults
-    - [Issue #513)(https://github.com/datafolklabs/cement/issues/513)
+    - [Issue #513](https://github.com/datafolklabs/cement/issues/513)
 
 Features:
 
