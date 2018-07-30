@@ -102,10 +102,10 @@ class CementPluginHandler(plugin.PluginHandler):
                     plugin_section = pconfig.get_sections()[0]
                     plugin = re.sub('^plugin.', '', plugin_section)
 
-                    if 'enable' not in pconfig.keys(plugin_section):
+                    if 'enabled' not in pconfig.keys(plugin_section):
                         continue
 
-                    if is_true(pconfig.get(plugin_section, 'enable')):
+                    if is_true(pconfig.get(plugin_section, 'enabled')):
                         LOG.debug("enabling plugin '%s' per plugin config" %
                                   plugin)
                         if plugin not in self._enabled_plugins:
@@ -139,9 +139,9 @@ class CementPluginHandler(plugin.PluginHandler):
             plugin_section = section
             plugin = re.sub('^plugin.', '', section)
 
-            if 'enable' not in self.app.config.keys(plugin_section):
+            if 'enabled' not in self.app.config.keys(plugin_section):
                 continue
-            if is_true(self.app.config.get(plugin_section, 'enable')):
+            if is_true(self.app.config.get(plugin_section, 'enabled')):
                 LOG.debug("enabling plugin '%s' per application config" %
                           plugin)
                 if plugin not in self._enabled_plugins:

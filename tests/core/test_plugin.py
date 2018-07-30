@@ -48,14 +48,14 @@ class TestPluginHandler(object):
 
 CONF1 = """
 [plugin.myplugin]
-enable = true
+enabled = true
 foo = bar
 
 """
 
 CONF2 = """
 [plugin.myplugin]
-enable = false
+enabled = false
 foo = bar
 """
 
@@ -66,7 +66,7 @@ foo = bar
 
 CONF4 = """
 [plugin.ext_json]
-enable = true
+enabled = true
 foo = bar
 """
 
@@ -114,7 +114,7 @@ def test_load_order_presedence_one(tmp):
     # app config defines it as enabled, but the plugin config has it
     # disabled... app trumps the config
     defaults = init_defaults('plugin.myplugin')
-    defaults['plugin.myplugin']['enable'] = True
+    defaults['plugin.myplugin']['enabled'] = True
 
     f = open(os.path.join(tmp.dir, 'myplugin.conf'), 'w')
     f.write(CONF2)
@@ -140,7 +140,7 @@ def test_load_order_presedence_two(tmp):
     # opposite of previous test... the app config defines it as disabled, even
     # though the plugin config has it enabled... app trumps the config
     defaults = init_defaults('plugin.myplugin')
-    defaults['plugin.myplugin']['enable'] = False
+    defaults['plugin.myplugin']['enabled'] = False
 
     f = open(os.path.join(tmp.dir, 'myplugin.conf'), 'w')
     f.write(CONF1)
@@ -266,8 +266,8 @@ def test_load_plugins_from_config(tmp):
     f.close()
 
     defaults = init_defaults('plugin.myplugin', 'plugin.myplugin2')
-    defaults['plugin.myplugin']['enable'] = True
-    defaults['plugin.myplugin2']['enable'] = False
+    defaults['plugin.myplugin']['enabled'] = True
+    defaults['plugin.myplugin2']['enabled'] = False
 
     class MyApp(TestApp):
         class Meta:
