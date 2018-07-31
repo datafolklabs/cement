@@ -52,7 +52,8 @@ Usage
 Toggle Log Level Via Commandline Argument
 -----------------------------------------
 
-This extension adds a commandline argument to toggle the log level on the fly:
+This extension can optionally add a commandline argument to toggle the log
+level on the fly:
 
 .. code-block:: text
 
@@ -78,17 +79,25 @@ This extension adds a commandline argument to toggle the log level on the fly:
     CRITICAL: This is a fatal message
 
 
-**Disabling The Commandline Argument**
+**Enabling The Commandline Argument**
 
-If no command line argument is desired, you can disable it by setting the
-``App.Meta.meta_defaults`` for the ``log.logging`` handler:
+The argument is not enable by default for one specific reason; the log level
+will not be modified until **after** argument parsing happens.  This can lead
+to a lot of confusion for developers who might not see their debug logs from a
+``pre_setup`` hook, or anyhting that happens before argument parsing completes.
+For this reason, you should use this feature with caution and is why we disable
+it by default.
+
+To enable the command line argument, you can disable it by setting the
+The command line argument can be enabled via ``App.Meta.meta_defaults`` for the
+``log.logging`` handler:
 
 .. code-block:: python
 
     from cement import App, init_defaults
 
     meta = init_defaults('log.logging')
-    meta['log.logging']['log_level_argument'] = None
+    meta['log.logging']['log_level_argument'] = ['-l', '--level']
 
     class MyApp(App):
         class Meta:
@@ -179,9 +188,10 @@ class LoggingLogHandler(log.LogHandler):
             max_files=4,
         )
 
-        #: The arguments to use for the cli options.  If a log-level argument
-        #: is not wanted, set to `None`
-        log_level_argument = ['-l']
+        #: List of arguments to use for the cli options
+        #: (ex: [``-l``, ``--list``]).  If a log-level argument is not wanted,
+        #: set to ``None`` (default).
+        log_level_argument = None
 
         #: The help description for the log level argument
         log_level_argument_help = 'logging level'

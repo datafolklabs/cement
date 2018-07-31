@@ -105,14 +105,14 @@ def test_missing_log_dir(tmp):
 
 
 def test_log_level_argument():
-    with TestApp(argv=['-l', 'debug']) as app:
+    meta = init_defaults('log.logging')
+    meta['log.logging']['log_level_argument'] = ['-l', '--level']
+    with TestApp(meta_defaults=meta, argv=['--level', 'debug']) as app:
         app.run()
         assert app.debug is True
         assert app.log.get_level() == 'DEBUG'
 
-    meta = init_defaults('log.logging')
-    meta['log.logging']['log_level_argument'] = None
-
+    # again without the argument (disabled by default)
     with raises(SystemExit):
-        with TestApp(meta_defaults=meta, argv=['-l', 'debug']) as app:
+        with TestApp(argv=['-l', 'debug']) as app:
             app.run()
