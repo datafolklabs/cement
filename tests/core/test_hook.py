@@ -126,3 +126,8 @@ def test_generate_type_hook():
         app.run()
         for res in app.hook.run('test_hook'):
             assert res == 1
+
+
+def test_list():
+    with TestApp() as app:
+        assert 'pre_setup' in app.hook.list()

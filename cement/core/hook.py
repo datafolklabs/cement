@@ -19,6 +19,15 @@ class HookManager(object):
         self.app = app
         self.__hooks__ = {}
 
+    def list(self):
+        """
+        List all defined hooks.
+
+        Returns:
+            hooks (list): List of registered hook labels.
+        """
+        return list(self.__hooks__.keys())
+
     def define(self, name):
         """
         Define a hook namespace that the application and plugins can register
