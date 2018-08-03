@@ -14,7 +14,6 @@ LOG = minimal_logger(__name__)
 
 
 class GenerateTemplateAbstractBase(Controller):
-    
     class Meta:
         pass
 
