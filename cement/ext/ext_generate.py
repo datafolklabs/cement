@@ -1,121 +1,5 @@
 """
-The Generate Extension provides a mechanism for generating common content
-from template directories.  Example use case would be the ability for
-application developers to easily generate new plugins for their application...
-or similar in other applications such as Chef Software's
-``chef generate cookbook`` type utilities.
-
-The Cement CLI uses this extension to generate apps, plugins, extensions, and
-scripts for developers building their applications on the framework.
-
-**Requirements**
-
- * pyYaml (``pip install pyYaml``)
- * A valid TemplateHandler must be defined at the application level via
-   ``App.Meta.template_handler`` such as ``jinja2``, ``mustache``, etc.
-
-
-**Configuration**
-
-This extension does not currently honor any application configuration settings.
-
-**App Meta Data**
-
-This extension honors the following ``App.Meta`` options:
-
-* **template_handler**: A handler class that implements the Template interface.
-* **template_dirs**: A list of data directories to look for templates.
-* **template_module**: A python module to look for templates.
-
-**Example**
-
-.. code-block:: python
-
-    from cement import App
-
-    class MyApp(App):
-        class Meta:
-            label = 'myapp'
-            extensions = ['generate', 'jinja2']
-            template_handler = 'jinja2'
-
-
-    with MyApp() as app:
-        app.run()
-
-
-Looks like:
-
-.. code-block:: console
-
-    $ python myapp.py --help
-    usage: myapp [-h] [--debug] [--quiet] {generate} ...
-
-    optional arguments:
-      -h, --help  show this help message and exit
-      --debug     toggle debug output
-      --quiet     suppress all output
-
-    sub-commands:
-      {generate}
-        generate  generate controller
-
-
-    $ python myapp.py generate --help
-    usage: myapp generate [-h] {plugin} ...
-
-    optional arguments:
-      -h, --help  show this help message and exit
-
-    sub-commands:
-      {plugin}
-        plugin      generate plugin from template
-
-
-**Generate Templates**
-
-The Generate Extension looks for a ``generate`` sub-directory in all defined
-template directory paths defined at the application level.  If it finds a
-``generate`` directory it treats all items within that directory as a
-generate template.
-
-A Generate Template requires a single configuration YAML file called
-``.generate.yml`` that looks something like:
-
-.. code-block:: yaml
-
-    ---
-
-    ignore:
-        - "^(.*)ignore-this(.*)$"
-        - "^(.*)ignore-that(.*)$"
-
-    exclude:
-        - "^(.*)exclude-this(.*)$"
-        - "^(.*)exclude-that(.*)$"
-
-    variables:
-        - name: 'my_variable_name'
-          prompt: 'The Prompt Displayed to The User'
-
-**Generate Template Configuration**
-
-The following configurations are supported in a generate template's config:
-
-* **ignore**: A list of regular expressions to match files that you want to
-  completely ignore.
-* **exclude**: A list of regular expressions to match files that you want to
-  copy, but not render as a template.
-* **variables**: A list of variable definitions that support the following
-  sub-keys:
-    * **name** *(required)*: The variable name (how it will be used in the
-      template).
-    * **prompt** *(required)*: The text displayed to the user to prompt for the
-      value of ``name``.
-    * **validate**: A single regular expression to validate the input value
-      with.
-    * **case**: A case modifyer to apply to the input value.  Valid options
-      are: ``lower``, ``upper``, ``title``.
+Cement generate extension module.
 """
 
 import re
@@ -130,6 +14,7 @@ LOG = minimal_logger(__name__)
 
 
 class GenerateTemplateAbstractBase(Controller):
+    
     class Meta:
         pass
 

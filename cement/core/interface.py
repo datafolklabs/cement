@@ -1,6 +1,5 @@
 """
 Cement core interface module.
-
 """
 
 from abc import ABC

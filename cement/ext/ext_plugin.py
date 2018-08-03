@@ -1,24 +1,5 @@
 """
-The Plugin Extension handles application plugin support, and is the default
-plugin handler used by Cement.
-
-Requirements
-------------
-
- * No external dependencies
-
-
-Configuration
--------------
-
-This extension does not directly honor any configuration settings.
-
-
-Usage
------
-
-For usage information see :cement:`Application Plugins <dev/plugins>`.
-
+Cement plugin extension module.
 """
 
 import os

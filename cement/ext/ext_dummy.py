@@ -1,37 +1,5 @@
 """
-The Dummy Extension provides several 'placeholder' type handlers to either
-mock operations or provide local-only usage during development.  A perfect
-example is the :class:`DummyMailHandler` that can be use during development
-or staging to prevent real email messages from being sent externally.
-
-Requirements
-------------
-
- * No external dependencies
-
-Configuration
--------------
-
- * See each handler's documentation regarding what configurations they
-   support.
-
-Usage
------
-
-.. code-block:: python
-
-    from cement import App
-
-    class MyApp(App):
-        class Meta:
-            label = 'myapp'
-            extensions = ['dummy']
-            output_handler = 'dummy'
-            mail_handler = 'dummy'
-
-    with MyApp() as app:
-        app.run()
-
+Cement dummy extension module.
 """
 
 from ..core.output import OutputHandler
