@@ -64,7 +64,7 @@ class GenerateTemplateAbstractBase(Controller):
             if var['default'] is not None and self.app.pargs.defaults:
                 val = var['default']
 
-            elif 'default' is not None:
+            elif var['default'] is not None:
                 default_text = ' [%s]' % var['default']
 
             else:
