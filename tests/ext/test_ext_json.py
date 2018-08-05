@@ -60,18 +60,6 @@ def test_parse_file():
             CONFIG_PARSED['section']
 
 
-def test_handler_override_options_is_none():
-    class MyApp(JsonApp):
-        class Meta:
-            core_handler_override_options = {}
-            handler_override_options = {}
-            argv = []
-
-    with MyApp() as app:
-        app.run()
-        app.render(dict(foo='bar'))
-
-
 def test_get_dict():
     with JsonApp() as app:
         _config = app.config.get_dict()
