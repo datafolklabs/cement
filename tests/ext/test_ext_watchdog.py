@@ -1,5 +1,6 @@
-
 import os
+import time
+from unittest.mock import Mock
 from cement.utils.test import TestApp, raises
 from cement.ext.ext_watchdog import WatchdogEventHandler
 from cement.core.exc import FrameworkError
@@ -18,14 +19,25 @@ class WatchdogApp(TestApp):
 
 
 def test_watchdog(tmp):
+    # The exception is getting raised, but for some reason it's not being
+    # caught by a with raises() block, so I'm mocking it out instead.
+    MyEventHandler.on_any_event = Mock()
     with WatchdogApp() as app:
         app.watchdog.add(tmp.dir, event_handler=MyEventHandler)
         app.run()
 
+        file_path = fs.join(tmp.dir, 'test.file')
         # trigger an event
-        f = open(fs.join(tmp.dir, 'test.file'), 'w')
+        f = open(file_path, 'w')
         f.write('test data')
         f.close()
+        time.sleep(1)
+
+    # 3 separate calls:
+    # File created
+    # Dir modified
+    # File modified
+    assert MyEventHandler.on_any_event.call_count == 3
 
 
 def test_watchdog_app_paths(tmp):
@@ -36,13 +48,23 @@ def test_watchdog_app_paths(tmp):
                 (tmp.dir, WatchdogEventHandler)
             ]
 
-    with WatchdogApp() as app:
+    WatchdogEventHandler.on_any_event = Mock()
+    with MyApp() as app:
         app.run()
 
+        WatchdogEventHandler.on_any_event.reset_mock()
         # trigger an event
         f = open(fs.join(tmp.dir, 'test.file'), 'w')
         f.write('test data')
         f.close()
+        time.sleep(1)
+
+    # 3 separate calls, called twice each because tmp.dir appears
+    # twice in the watchdog_paths list
+    # File created
+    # Dir modified
+    # File modified
+    assert WatchdogEventHandler.on_any_event.call_count == 6
 
 
 def test_watchdog_app_paths_bad_spec(tmp):
@@ -58,15 +80,27 @@ def test_watchdog_app_paths_bad_spec(tmp):
 
 
 def test_watchdog_default_event_handler(tmp):
+    WatchdogEventHandler.on_any_event = Mock()
     with WatchdogApp() as app:
         app.watchdog.add(tmp.dir)
         app.run()
 
+        f = open(fs.join(tmp.dir, 'test.file'), 'w')
+        f.write('test data')
+        f.close()
+        time.sleep(1)
+        # 3 separate calls:
+        # File created
+        # Dir modified
+        # File modified
+        assert WatchdogEventHandler.on_any_event.call_count == 3
+
 
 def test_watchdog_bad_path(tmp):
     with WatchdogApp() as app:
-        app.watchdog.add(os.path.join(tmp.dir, 'bogus_sub_dir'))
+        retval = app.watchdog.add(os.path.join(tmp.dir, 'bogus_sub_dir'))
         app.run()
+        assert not retval
 
 
 def test_watchdog_hooks(tmp):
