@@ -1,7 +1,6 @@
 import os
 import json
-from unittest.mock import Mock
-from cement.ext.ext_json import JsonConfigHandler
+from unittest.mock import patch
 from cement.utils.test import TestApp
 from cement.utils import fs
 
@@ -48,10 +47,10 @@ def test_keys():
         assert 'subsection' in app.config.keys('section')
 
 
-def test_parse_file_bad_path():
-    JsonConfigHandler._parse_file = Mock()
+@patch('cement.ext.ext_json.JsonConfigHandler._parse_file')
+def test_parse_file_bad_path(parser):
     with JsonApp(config_files=['./some_bogus_path']):
-        assert not JsonConfigHandler._parse_file.called
+        assert not parser.called
 
 
 def test_parse_file():
