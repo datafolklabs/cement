@@ -47,10 +47,10 @@ def test_keys():
         assert 'subsection' in app.config.keys('section')
 
 
-@patch('cement.ext.ext_yaml.YamlConfigHandler._parse_file')
-def test_parse_file_bad_path(parse_file):
-    with YamlApp(config_files=['./some_bogus_path']):
-        assert not parse_file.called
+def test_parse_file_bad_path():
+    with patch('cement.ext.ext_yaml.YamlConfigHandler._parse_file') as pf:
+        with YamlApp(config_files=['./some_bogus_path']):
+            assert not pf.called
 
 
 def test_parse_file():
