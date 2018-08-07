@@ -54,8 +54,8 @@ class ExtensionInterface(Interface):
 class ExtensionHandler(ExtensionInterface, Handler):
 
     """
-    This handler defines the Extention Interface, which handles loading
-    framework extensions.  All extension  handlers should sub-class from
+    This handler implements the Extention Interface, which handles loading
+    framework extensions.  All extension handlers should sub-class from
     here, or ensure that their implementation meets the requirements of this
     base class.
 
