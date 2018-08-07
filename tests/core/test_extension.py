@@ -91,3 +91,15 @@ def test_get_loaded_extensions():
         ext.load_extensions(['json'])
 
         assert 'cement.ext.ext_json' in ext.get_loaded_extensions()
+
+
+def test_list():
+    with TestApp() as app:
+        ext = ExtensionHandler()
+        ext._setup(app)
+
+        assert 'cement.ext.ext_json' not in ext.list()
+
+        ext.load_extensions(['json'])
+
+        assert 'cement.ext.ext_json' in ext.list()

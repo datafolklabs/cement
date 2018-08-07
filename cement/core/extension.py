@@ -86,6 +86,16 @@ class ExtensionHandler(ExtensionInterface, Handler):
         """
         return self._loaded_extensions
 
+    def list(self):
+        """
+        Synonymous with ``get_loaded_extensions()``.
+
+        Returns:
+            list: A list of loaded extensions.
+
+        """
+        return self._loaded_extensions
+
     def load_extension(self, ext_module):
         """
         Given an extension module name, load or in other-words ``import`` the
