@@ -1,6 +1,6 @@
-
 import os
 import yaml
+from unittest.mock import patch
 from cement.utils.test import TestApp
 from cement.utils import fs
 
@@ -48,8 +48,9 @@ def test_keys():
 
 
 def test_parse_file_bad_path():
-    with YamlApp(config_files=['./some_bogus_path']):
-        pass
+    with patch('cement.ext.ext_yaml.YamlConfigHandler._parse_file') as pf:
+        with YamlApp(config_files=['./some_bogus_path']):
+            assert not pf.called
 
 
 def test_parse_file():
@@ -57,6 +58,18 @@ def test_parse_file():
         assert app.config.get('section', 'key1') == 'ok1'
         assert app.config.get_section_dict('section') == \
             CONFIG_PARSED['section']
+
+
+def test_handler_override_options_is_none():
+    class MyApp(YamlApp):
+        class Meta:
+            core_handler_override_options = {}
+            handler_override_options = {}
+            argv = []
+
+    with MyApp() as app:
+        app.run()
+        app.render(dict(foo='bar'))
 
 
 def test_get_dict():

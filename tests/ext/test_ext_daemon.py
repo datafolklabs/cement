@@ -1,18 +1,39 @@
-
 # NOTE: A large portion of ext_daemon is tested, but not included in
 # Coverage report because nose/pytest/coverage lose sight of things after the
 # sub-process is forked.
 
 import os
+from unittest.mock import patch
 from pytest import raises
 from cement.core.foundation import TestApp
 from cement.core.exc import FrameworkError
 from cement.ext import ext_daemon
 
 
-def test_switch():
+class FakeUser(object):
+    def __init__(self):
+        self.pw_uid = 'BogusId'
+        self.pw_dir = 'BogusDir'
+
+
+class FakeGroup(object):
+    def __init__(self):
+        self.gr_gid = 'BogusGroupId'
+
+
+@patch('os.chdir')
+@patch('os.setgid')
+@patch('os.setuid')
+def test_switch(set_uid, set_gid, chdir):
+    assert not set_gid.called
+    assert not chdir.called
     env = ext_daemon.Environment()
+    env.user = FakeUser()
+    env.group = FakeGroup()
     env.switch()
+    set_uid.assert_called_once_with('BogusId')
+    set_gid.assert_called_once_with('BogusGroupId')
+    assert chdir.called
 
 
 def test_switch_with_pid(tmp):

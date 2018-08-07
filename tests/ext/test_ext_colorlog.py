@@ -1,4 +1,3 @@
-
 import os
 import logging
 from tempfile import mkstemp
@@ -22,14 +21,20 @@ class ColorlogApp(TestApp):
         log_handler = 'colorlog'
 
 
-def test_colorlog():
+def test_colorlog(caplog):
     with ColorlogApp() as app:
         app.run()
         app.log.info('this is an info message')
-        app.log.warning('this is an warning message')
+        app.log.warning('this is a warning message')
         app.log.error('this is an error message')
-        app.log.fatal('this is an fatal message')
-        app.log.debug('this is an debug message')
+        app.log.fatal('this is a fatal message')
+        app.log.debug('this is a debug message')
+    logged = [log[2] for log in caplog.record_tuples]
+    assert 'this is an info message' in logged
+    assert 'this is a warning message' in logged
+    assert 'this is an error message' in logged
+    assert 'this is a debug message' in logged
+    assert 'this is a fatal message' in logged
 
 
 def test_colorize_file_log(tmp):

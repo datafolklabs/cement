@@ -1,7 +1,8 @@
-
 import os
 import re
+from unittest.mock import patch
 from cement import TestApp, Controller, FrameworkError
+from cement.utils import shell
 from cement.utils.test import raises
 
 
@@ -31,12 +32,12 @@ def test_generate(tmp):
         # should have everything
         assert exists_join(tmp.dir, 'take-me')
         res = open(os.path.join(tmp.dir, 'take-me'), 'r').read()
-        assert res.find('bar1')
-        assert res.find('bar2')
-        assert res.find('BAR3')
-        assert res.find('Bar4')
-        assert res.find('bar5')
-        assert res.find('bar6')
+        assert res.find('bar1') >= 0
+        assert res.find('bar2') >= 0
+        assert res.find('BAR3') >= 0
+        assert res.find('Bar4') >= 0
+        assert res.find('bar5') >= 0
+        assert res.find('bar6') >= 0
 
         # copied but not rendered
         assert exists_join(tmp.dir, 'exclude-me')
@@ -71,10 +72,16 @@ def test_prompt(tmp):
 
 
 def test_invalid_case(tmp):
-    argv = ['generate', 'test1', tmp.dir, '--defaults']
+    argv = ['generate', 'test3', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
         app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        with open(os.path.join(tmp.dir, 'take-me'), 'r') as f:
+            res = f.read()
+            # Assert that the case was not modified
+            assert 'bar1' in res
 
 
 def test_invalid_variable_value(tmp):
@@ -87,12 +94,14 @@ def test_invalid_variable_value(tmp):
 
 
 def test_no_default(tmp):
-    argv = ['generate', 'test3', tmp.dir, '--defaults']
+    with patch.object(shell.Prompt, 'prompt', return_value='Bogus'):
+        argv = ['generate', 'test5', tmp.dir]
 
-    with GenerateApp(argv=argv) as app:
-        # msg = "Invalid Response (must match: '.*not-bar1.*')"
-        # with raises(AssertionError, message=msg):
-        app.run()
+        with GenerateApp(argv=argv) as app:
+            app.run()
+            with open(os.path.join(tmp.dir, 'take-me'), 'r') as f:
+                res = f.read()
+                assert 'Bogus' in res
 
 
 def test_clone(tmp):
