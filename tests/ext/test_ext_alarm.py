@@ -1,4 +1,3 @@
-
 import time
 import signal
 from pytest import raises
@@ -20,13 +19,15 @@ def test_alarm_timeout():
         assert e.value.signum == signal.SIGALRM
 
         # derks@2018-01-15: I think pytest is interrupting cement handling the
-        # signal here, so we'll run the hooks manuall
+        # signal here, so we'll run the hooks manually
         for res in app.hook.run('signal', app, e.value.signum, e.value.frame):
             pass
 
 
 def test_alarm_no_timeout():
     with AlarmApp() as app:
-        app.alarm.set(3, "The Timer Works!")
+        app.alarm.set(2, "The Timer Works!")
         time.sleep(1)
         app.alarm.stop()
+        time.sleep(1)
+        # raises CaughtSignal if alarm.stop fails

@@ -1,6 +1,6 @@
-
 import os
 import shutil
+import logging
 from pytest import raises
 from cement.core.foundation import TestApp
 from cement.ext.ext_logging import LoggingLogHandler
@@ -17,10 +17,11 @@ class MyLog(LoggingLogHandler):
         super(MyLog, self).__init__(*args, **kw)
 
 
-def test_alternate_namespaces():
+def test_alternate_namespaces(tmp):
+    log_file = os.path.join(tmp.dir, 'test.log')
     defaults = init_defaults('log.logging')
     defaults['log.logging']['to_console'] = False
-    defaults['log.logging']['file'] = '/dev/null'
+    defaults['log.logging']['file'] = log_file
     defaults['log.logging']['level'] = 'debug'
 
     with TestApp(config_defaults=defaults) as app:
@@ -42,6 +43,12 @@ def test_alternate_namespaces():
         app.log.fatal('TEST', __name__)
         app.log.debug('TEST', __name__)
 
+    assert os.path.exists(log_file)
+    with open(log_file, 'r') as f:
+        logs = f.readlines()
+        for log in logs:
+            assert __name__ in log
+
 
 def test_bad_level():
     defaults = init_defaults()
@@ -56,13 +63,25 @@ def test_bad_level():
 
 def test_clear_loggers():
     with TestApp() as app:
+        label = app._meta.label
         han = app.handler.get('log', 'logging')
         Log = han()
-        Log.clear_loggers(app._meta.label)
+        Log.clear_loggers(label)
 
+        handler = logging.getLogger("cement:app:%s" % label).handlers
+        # Nullhandler remains
+        assert len(handler) == 1
+        assert isinstance(handler[0], logging.NullHandler)
+
+
+def test_clear_loggers_via_keyword():
+    with TestApp() as app:
         label = app._meta.label
-        MyLog = LoggingLogHandler(clear_loggers="%s:%s" % (label, label))
+        han = logging.getLogger("cement:app:%s" % label).handlers
+        MyLog = LoggingLogHandler(clear_loggers=["%s:%s" % (label, label)])
         MyLog._setup(app)
+        assert len(han) == 1
+        assert isinstance(han[0], logging.NullHandler)
 
 
 def test_rotate(tmp):
@@ -100,8 +119,9 @@ def test_missing_log_dir(tmp):
         file=os.path.join(tmp.dir, 'test.log'),
     )
 
+    # extension generates the dir if it is missing
     with TestApp(config_defaults=defaults):
-        pass
+        assert os.path.exists(tmp.dir)
 
 
 def test_log_level_argument():
