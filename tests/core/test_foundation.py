@@ -325,17 +325,6 @@ def test_config_files_is_none():
             assert f in app._meta.config_files
 
 
-def test_base_controller_label():
-    class BogusBaseController(Controller):
-        class Meta:
-            label = 'bad_base_controller_label'
-
-    msg = "must have a label of 'base'"
-    with pytest.raises(FrameworkError, match=msg):
-        with TestApp(base_controller=BogusBaseController):
-            pass
-
-
 def test_pargs():
     with TestApp(argv=['--debug']) as app:
         app.run()
@@ -483,7 +472,7 @@ def test_run_forever():
     def handler(signum, frame):
         raise AssertionError('It ran forever!')
 
-    app = TestApp(base_controller=MyController, argv=['run-it'])
+    app = TestApp(handlers=[MyController], argv=['run-it'])
 
     # set the signal handler and a 5-second alarm
     signal.signal(signal.SIGALRM, handler)

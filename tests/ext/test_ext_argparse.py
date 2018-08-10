@@ -575,7 +575,7 @@ def test_get_exposed_commands():
         def cmd2_two(self):
             pass
 
-    with TestApp(base_controller=MyController) as app:
+    with TestApp(handlers=[MyController]) as app:
         app.run()
         assert 'cmd1' in app.controller._get_exposed_commands()
         assert 'cmd2-two' in app.controller._get_exposed_commands()
@@ -591,5 +591,5 @@ def test_coverage():
         def hidden(self):
             pass
 
-    with TestApp(base_controller=MyController) as app:
+    with TestApp(handlers=[MyController]) as app:
         app.run()

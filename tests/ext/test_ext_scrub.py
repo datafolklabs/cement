@@ -1,4 +1,5 @@
 
+from cement import init_defaults
 from cement.utils.test import TestApp
 
 
@@ -22,11 +23,13 @@ def test_scrub():
 
 
 def test_argument():
+    META = init_defaults('controller.scrub')
+    META['controller.scrub']['argument_options'] = ['--not-scrub']
+    META['controller.scrub']['argument_help'] = 'not scrub'
 
     class MyScrubApp(ScrubApp):
         class Meta:
-            scrub_argument = ['--not-scrub']
-            scrub_argument_help = 'not scrub'
+            meta_defaults = META
 
     with MyScrubApp(argv=['--not-scrub']) as app:
         app.run()

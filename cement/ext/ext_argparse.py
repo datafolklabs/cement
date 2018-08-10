@@ -339,8 +339,7 @@ class ArgparseController(ControllerHandler):
             if contr == self.__class__:
                 continue
 
-            contr = contr()
-            contr._setup(self.app)
+            contr = self.app.handler.resolve('controller', contr, setup=True)
             unresolved_controllers.append(contr)
 
         # treat self/base separately

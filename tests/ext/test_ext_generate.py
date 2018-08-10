@@ -1,7 +1,7 @@
 import os
 import re
 from unittest.mock import patch
-from cement import TestApp, Controller, FrameworkError
+from cement import TestApp, Controller
 from cement.utils import shell
 from cement.utils.test import raises
 
@@ -51,14 +51,6 @@ def test_generate(tmp):
 
     with GenerateApp(argv=argv) as app:
         with raises(AssertionError, match='Destination file already exists'):
-            app.run()
-
-
-def test_missing_base_controller(tmp):
-    argv = ['generate', 'test1', tmp.dir, '--defaults']
-    with TestApp(argv=argv, extensions=['jinja2', 'generate']) as app:
-        msg = 'ext.generate extension requires an application base controller'
-        with raises(FrameworkError, match=msg):
             app.run()
 
 

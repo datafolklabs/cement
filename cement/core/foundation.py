@@ -13,6 +13,7 @@ from ..core.handler import HandlerManager
 from ..core.hook import HookManager
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs, misc
+from ..ext.ext_argparse import ArgparseController as Controller
 
 # The `imp` module is deprecated in favor of `importlib` in 3.4, but it
 # wasn't introduced until 3.1.  Finally, reload is a builtin on Python < 3
@@ -440,17 +441,6 @@ class App(meta.MetaMixin):
         cache_handler = None
         """
         A handler class that implements the Cache interface.
-        """
-
-        base_controller = None
-        """
-        This is the base application controller.  If a controller is set,
-        runtime operations are passed to the controller for command
-        dispatch and argument parsing when ``App.run()`` is called.
-
-        Note that Cement will automatically set the ``base_controller`` to a
-        registered controller whose label is ``base`` (only if
-        ``base_controller`` is not currently set).
         """
 
         extensions = []
@@ -920,7 +910,7 @@ class App(meta.MetaMixin):
         if self.controller:
             return_val = self.controller._dispatch()
         else:
-            self._parse_args()
+            self._parse_args()  # pragma: nocover
 
         LOG.debug('running post_run hook')
         for res in self.hook.run('post_run', self):
@@ -1200,20 +1190,19 @@ class App(meta.MetaMixin):
             self.catch_signal(signum)
 
     def _resolve_handler(self, handler_type, handler_def, raise_error=True):
-        meta_defaults = {}
-        if type(handler_def) == str:
-            _meta_label = "%s.%s" % (handler_type, handler_def)
-            meta_defaults = self._meta.meta_defaults.get(_meta_label, {})
-        elif hasattr(handler_def, 'Meta'):
-            _meta_label = "%s.%s" % (handler_type, handler_def.Meta.label)
-            meta_defaults = self._meta.meta_defaults.get(_meta_label, {})
+        # meta_defaults = {}
+        # if type(handler_def) == str:
+        #     _meta_label = "%s.%s" % (handler_type, handler_def)
+        #     meta_defaults = self._meta.meta_defaults.get(_meta_label, {})
+        # elif hasattr(handler_def, 'Meta'):
+        #     _meta_label = "%s.%s" % (handler_type, handler_def.Meta.label)
+        #     meta_defaults = self._meta.meta_defaults.get(_meta_label, {})
 
-        han = self.handler.resolve(handler_type, handler_def,
+        han = self.handler.resolve(handler_type,
+                                   handler_def,
                                    raise_error=raise_error,
-                                   meta_defaults=meta_defaults)
-        if han is not None:
-            han._setup(self)
-            return han
+                                   setup=True)
+        return han
 
     def _setup_extension_handler(self):
         LOG.debug("setting up %s.extension handler" % self._meta.label)
@@ -1527,21 +1516,22 @@ class App(meta.MetaMixin):
     def _setup_controllers(self):
         LOG.debug("setting up application controllers")
 
-        if self._meta.base_controller is not None:
-            cntr = self._resolve_handler('controller',
-                                         self._meta.base_controller)
-            self.controller = cntr
-            self._meta.base_controller = self.controller
-        elif self._meta.base_controller is None:
-            if self.handler.registered('controller', 'base'):
-                self.controller = self._resolve_handler('controller', 'base')
-                self._meta.base_controller = self.controller
+        if self.handler.registered('controller', 'base'):
+            self.controller = self._resolve_handler('controller', 'base')
 
-        # This is necessary for some backend usage
-        if self._meta.base_controller is not None:
-            if self._meta.base_controller._meta.label != 'base':
-                raise exc.FrameworkError("Base controllers must have " +
-                                         "a label of 'base'.")
+        else:
+            class DefaultBaseController(Controller):
+                class Meta:
+                    label = 'base'
+
+                def _default(self):
+                    # don't enforce anything cause developer might not be
+                    # using controllers... if they are, they should define
+                    # a base controller.
+                    pass
+
+            self.handler.register(DefaultBaseController)
+            self.controller = self._resolve_handler('controller', 'base')
 
     def validate_config(self):
         """
@@ -1702,6 +1692,5 @@ class TestApp(App):
         label = "app-%s" % misc.rando()[:12]
         config_files = []
         argv = []
-        base_controller = None
         arguments = []
         exit_on_close = False

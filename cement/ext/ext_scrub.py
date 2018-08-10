@@ -3,6 +3,7 @@ Cement scrub extension module.
 """
 
 import re
+from .. import Controller
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
@@ -27,22 +28,39 @@ def extend_scrub(app):
 
     app.extend('scrub', scrub)
 
-    if hasattr(app._meta, 'scrub_argument'):
-        arg = app._meta.scrub_argument
-    else:
-        arg = ['--scrub']
 
-    if hasattr(app._meta, 'scrub_argument_help'):
-        arg_help = app._meta.scrub_argument_help
-    else:
-        arg_help = 'obfuscate sensitive data from output'
+class ScrubController(Controller):
+    """
+    Add embedded options to the base controller to support scrubbing output.
+    """
 
-    app.args.add_argument(*arg,
-                          help=arg_help,
-                          action='store_true',
-                          dest='scrub')
+    class Meta:
+        #: Controller label
+        label = 'scrub'
+
+        #: Parent controller to stack ontop of
+        stacked_on = 'base'
+
+        #: Stacking method
+        stacked_type = 'embedded'
+
+        #: Command line argument options
+        argument_options = ['--scrub']
+
+        #: Command line argument options help
+        argument_help = 'obfuscate sensitive data from rendered output'
+
+    def _pre_argument_parsing(self):
+        if self._meta.argument_options is not None:
+            assert isinstance(self._meta.argument_options, list), \
+                "ScrubController.Meta.argument_options must be a list"
+            self.app.args.add_argument(*self._meta.argument_options,
+                                       help=self._meta.argument_help,
+                                       action='store_true',
+                                       dest='scrub')
 
 
 def load(app):
+    app.handler.register(ScrubController)
     app.hook.register('post_render', scrub_output)
     app.hook.register('pre_argument_parsing', extend_scrub)

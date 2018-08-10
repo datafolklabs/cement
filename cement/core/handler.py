@@ -335,7 +335,7 @@ class HandlerManager(object):
                 to resolve the handler.
             meta_defaults (dict): Optional meta-data dictionary used as
                 defaults to pass when instantiating uninstantiated handlers.
-                See ``App.Meta.meta_defaults``.
+                Use ``App.Meta.meta_defaults`` by default.
             setup (bool): Whether or not to call ``.setup()`` before return.
                 Default: ``False``
 
@@ -357,7 +357,18 @@ class HandlerManager(object):
 
         """
         raise_error = kwargs.get('raise_error', True)
-        meta_defaults = kwargs.get('meta_defaults', {})
+        meta_defaults = kwargs.get('meta_defaults', None)
+        if meta_defaults is None:
+            meta_defaults = {}
+            if type(handler_def) == str:
+                _meta_label = "%s.%s" % (interface, handler_def)
+                meta_defaults = self.app._meta.meta_defaults.get(_meta_label,
+                                                                 {})
+            elif hasattr(handler_def, 'Meta'):
+                _meta_label = "%s.%s" % (interface, handler_def.Meta.label)
+                meta_defaults = self.app._meta.meta_defaults.get(_meta_label,
+                                                                 {})
+
         setup = kwargs.get('setup', False)
         han = None
 

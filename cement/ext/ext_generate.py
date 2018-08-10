@@ -7,7 +7,7 @@ import os
 import inspect
 import yaml
 import shutil
-from .. import Controller, minimal_logger, shell, FrameworkError
+from .. import Controller, minimal_logger, shell
 from ..utils.version import VERSION, get_version
 
 LOG = minimal_logger(__name__)
@@ -132,14 +132,6 @@ class GenerateTemplateAbstractBase(Controller):
 def setup_template_items(app):
     template_dirs = []
     template_items = []
-
-    # nothing will work without a base controller
-    try:
-        assert app._meta.base_controller is not None, \
-            "The ext.generate extension requires an application base " + \
-            "controller, but none is defined!"
-    except AssertionError as e:
-        raise FrameworkError(e.args[0])
 
     # look in app template dirs
     for path in app._meta.template_dirs:
