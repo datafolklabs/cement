@@ -1,7 +1,7 @@
 ---
 
 exclude:
-    - '^(.*)[\/\\\\]plugin[\/\\\\]{{ label }}[\/\\\\]templates[\/\\\\](.*)$'
+    - '^(.*)[\/\\\\]plugin[\/\\\\]{{ label }}[\/\\\\]templates[\/\\\\]plugins[\/\\\\]{{ label }}[\/\\\\]command1.jinja2$'
 
 ignore:
     - '^(.*)pyc(.*)$'
