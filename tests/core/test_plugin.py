@@ -101,7 +101,7 @@ def test_load_plugins_from_files(tmp):
 
     class MyApp(TestApp):
         class Meta:
-            plugin_config_dir = tmp.dir
+            config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
             plugin_bootstrap = None
 
@@ -111,58 +111,6 @@ def test_load_plugins_from_files(tmp):
 
 
 def test_load_order_presedence_one(tmp):
-    # app config defines it as enabled, but the plugin config has it
-    # disabled... app trumps the config
-    defaults = init_defaults('plugin.myplugin')
-    defaults['plugin.myplugin']['enabled'] = True
-
-    f = open(os.path.join(tmp.dir, 'myplugin.conf'), 'w')
-    f.write(CONF2)
-    f.close()
-
-    f = open(os.path.join(tmp.dir, 'myplugin.py'), 'w')
-    f.write(PLUGIN)
-    f.close()
-
-    class MyApp(TestApp):
-        class Meta:
-            config_defaults = defaults
-            plugin_config_dir = tmp.dir
-            plugin_dir = tmp.dir
-            plugin_bootstrap = None
-
-    with MyApp() as app:
-        assert 'myplugin' in app.plugin._enabled_plugins
-        assert 'myplugin' not in app.plugin._disabled_plugins
-
-
-def test_load_order_presedence_two(tmp):
-    # opposite of previous test... the app config defines it as disabled, even
-    # though the plugin config has it enabled... app trumps the config
-    defaults = init_defaults('plugin.myplugin')
-    defaults['plugin.myplugin']['enabled'] = False
-
-    f = open(os.path.join(tmp.dir, 'myplugin.conf'), 'w')
-    f.write(CONF1)
-    f.close()
-
-    f = open(os.path.join(tmp.dir, 'myplugin.py'), 'w')
-    f.write(PLUGIN)
-    f.close()
-
-    class MyApp(TestApp):
-        class Meta:
-            config_defaults = defaults
-            plugin_config_dir = tmp.dir
-            plugin_dir = tmp.dir
-            plugin_bootstrap = None
-
-    with MyApp() as app:
-        assert 'myplugin' in app.plugin._disabled_plugins
-        assert 'myplugin' not in app.plugin._enabled_plugins
-
-
-def test_load_order_presedence_three(tmp):
     # multiple plugin configs, first plugin conf defines it as disabled,
     # but last read should make it enabled.
     defaults = init_defaults('plugin.myplugin')
@@ -182,16 +130,17 @@ def test_load_order_presedence_three(tmp):
     class MyApp(TestApp):
         class Meta:
             config_defaults = defaults
-            plugin_config_dir = tmp.dir
+            config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
             plugin_bootstrap = None
 
     with MyApp() as app:
+        app.run()
         assert 'myplugin' in app.plugin._enabled_plugins
         assert 'myplugin' not in app.plugin._disabled_plugins
 
 
-def test_load_order_presedence_four(tmp):
+def test_load_order_presedence_two(tmp):
     # multiple plugin configs, first plugin conf defines it as enabled,
     # but last read should make it disabled.
     defaults = init_defaults('plugin.myplugin')
@@ -211,16 +160,20 @@ def test_load_order_presedence_four(tmp):
     class MyApp(TestApp):
         class Meta:
             config_defaults = defaults
-            plugin_config_dir = tmp.dir
+            config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
             plugin_bootstrap = None
+            debug = True
 
     with MyApp() as app:
+        app.run()
+        print(tmp.dir)
+        tmp.cleanup = False
         assert 'myplugin' in app.plugin._disabled_plugins
         assert 'myplugin' not in app.plugin._enabled_plugins
 
 
-def test_load_order_presedence_five(tmp):
+def test_load_order_presedence_three(tmp):
     # Multiple plugin configs, enable -> disabled -> enable
     defaults = init_defaults('plugin.myplugin')
 
@@ -251,7 +204,7 @@ def test_load_order_presedence_five(tmp):
     class MyApp(TestApp):
         class Meta:
             config_defaults = defaults
-            plugin_config_dir = tmp.dir
+            config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
             plugin_bootstrap = None
 
@@ -272,7 +225,7 @@ def test_load_plugins_from_config(tmp):
     class MyApp(TestApp):
         class Meta:
             config_defaults = defaults
-            plugin_config_dir = tmp.dir
+            config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
             plugin_bootstrap = None
 
@@ -300,7 +253,7 @@ def test_disabled_plugins_from_files(tmp):
 
     class MyApp(TestApp):
         class Meta:
-            plugin_config_dir = tmp.dir
+            config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
             plugin_bootstrap = None
 
@@ -321,7 +274,7 @@ def test_bogus_plugin_from_files(tmp):
 
     class MyApp(TestApp):
         class Meta:
-            plugin_config_dir = tmp.dir
+            config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
             plugin_bootstrap = None
 
@@ -336,7 +289,7 @@ def test_bad_plugin_dir(tmp):
 
     class MyApp(TestApp):
         class Meta:
-            plugin_config_dir = tmp.dir
+            config_dirs = [tmp.dir]
             plugin_dir = './some/bogus/path'
             plugin_bootstrap = None
 
@@ -357,7 +310,7 @@ def test_load_plugin_from_module(tmp):
 
     class MyApp(TestApp):
         class Meta:
-            plugin_config_dir = tmp.dir
+            config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
             plugin_bootstrap = 'cement.ext'
 

@@ -19,14 +19,10 @@ Features:
 
 - `[core]` Add Docker / Docker Compose Support
     - [Issue #439](https://github.com/datafolklabs/cement/issues/439)
-- `[core]` Add ability to override the output handler used when `app.render()`
-  is called.
+- `[core]` Add ability to override the output handler used when `app.render()` is called.
     - [Issue #471](https://github.com/datafolklabs/cement/issues/471)
-- `[ext.print]` Add the Print Extension to be used as a drop in replacement
-  for the standard ``print()``, but allowing the developer to honor framework
-  features like `pre_render` and `post_render` hooks.
-- `[ext.scrub]` Add Scrub Extension to easily obfuscate sensitive data from
-  rendered output.
+- `[ext.print]` Add the Print Extension to be used as a drop in replacement for the standard ``print()``, but allowing the developer to honor framework features like `pre_render` and `post_render` hooks.
+- `[ext.scrub]` Add Scrub Extension to easily obfuscate sensitive data from rendered output.
     - [Issue #469](https://github.com/datafolklabs/cement/issues/469)
 - `[core]` Add ability to override config settings via environment variables.
     - [Issue #437](https://github.com/datafolklabs/cement/issues/437)
@@ -58,6 +54,8 @@ Incompatible:
     - [Issue #192](https://github.com/datafolklabs/cement/issues/192)
 - `[core.foundation]` Rename `CementApp` to `App`.
 - `[core.foundation]` Drop deprecated `App.Meta.override_arguments`
+- `[core.foundation]` Remove `App.Meta.plugin_config_dir` and `App.Meta.plugin_config_dirs` in favor of `App.Meta.config_dirs`
+     - [Issue #521](https://github.com/datafolklabs/cement/issues/521)
 - `[core.handler]` Rename `CementBaseHandler` to `Handler`
 - `[core.handler]` Drop deprecated backend globals
 - `[core.hook]` Drop deprecated backend globals
@@ -71,14 +69,11 @@ Incompatible:
 - `[ext.json_configobj]` Drop JSON ConfigObj Extension
 - `[ext.yaml_configobj]` Drop YAML ConfigObj Extension
 - `[ext.genshi]` Drop Genshi Extension
-- `[ext.argparse]` `ArgparseController.Meta.default_func` is now `_default`, and
-  will print help info and exit.  Can now set this to `None` as well to
-  pass/exit.
+- `[ext.argparse]` `ArgparseController.Meta.default_func` is now `_default`, and will print help info and exit.  Can now set this to `None` as well to pass/exit.
     - [Issue #426](https://github.com/datafolklabs/cement/issues/426)
 - `[ext.plugin]` All plugin configuration sections must start with `plugin.`.
     For example, `[plugin.myplugin]`.
-- `[core.foundation]` Renamed `App.Meta.config_extension` to
-    `App.Meta.config_file_suffix`
+- `[core.foundation]` Renamed `App.Meta.config_extension` to `App.Meta.config_file_suffix`
     - [Issue #445](https://github.com/datafolklabs/cement/issues/445)
 - `[core.foundation]` Drop `App.Meta.arguments_override_config`
     - [Issue #493](https://github.com/datafolklabs/cement/issues/493)

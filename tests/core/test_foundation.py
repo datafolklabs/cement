@@ -318,7 +318,8 @@ def test_config_files_is_none():
         files = [
             os.path.join('/', 'etc', app.label, '%s.conf' % app.label),
             os.path.join(user_home, '.%s.conf' % app.label),
-            os.path.join(user_home, '.%s' % app.label, 'config'),
+            os.path.join(user_home, '.%s' % app.label, 'config',
+                         '%s.conf' % app.label),
         ]
         for f in files:
             assert f in app._meta.config_files
@@ -576,3 +577,85 @@ def test_none_template_handler():
     with TestApp(template_handler=None) as app:
         app.run()
         assert not hasattr(app, 'template')
+
+
+def test_core_system_config_dirs(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            core_system_config_dirs = [tmp.dir]
+
+    conf = """
+    [%s]
+    foo = %s
+    """ % (rando, rando)
+    with open(os.path.join(tmp.dir, 'test.conf'), 'w') as f:
+        f.write(conf)
+
+    with ThisTestApp() as app:
+        app.run()
+        assert tmp.dir in app._meta.config_dirs
+        assert app.config.get(app._meta.label, 'foo') == rando
+
+
+def test_core_user_config_dirs(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            core_user_config_dirs = [tmp.dir]
+
+    conf = """
+    [%s]
+    foo = %s
+    """ % (rando, rando)
+    with open(os.path.join(tmp.dir, 'test.conf'), 'w') as f:
+        f.write(conf)
+
+    with ThisTestApp() as app:
+        app.run()
+        assert tmp.dir in app._meta.config_dirs
+        assert app.config.get(app._meta.label, 'foo') == rando
+
+
+def test_core_system_template_dirs(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            core_system_template_dirs = [tmp.dir]
+
+    with ThisTestApp() as app:
+        app.run()
+        assert tmp.dir in app._meta.template_dirs
+
+
+def test_core_user_template_dirs(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            core_user_template_dirs = [tmp.dir]
+
+    with ThisTestApp() as app:
+        app.run()
+        assert tmp.dir in app._meta.template_dirs
+
+
+def test_core_system_plugin_dirs(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            core_system_plugin_dirs = [tmp.dir]
+
+    with ThisTestApp() as app:
+        app.run()
+        assert tmp.dir in app._meta.plugin_dirs
+
+
+def test_core_user_plugin_dirs(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            core_user_plugin_dirs = [tmp.dir]
+
+    with ThisTestApp() as app:
+        app.run()
+        assert tmp.dir in app._meta.plugin_dirs
