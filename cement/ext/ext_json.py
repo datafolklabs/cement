@@ -152,10 +152,11 @@ class JsonConfigHandler(ConfigParserConfigHandler):
             bool
 
         """
-        self.merge(self._json.load(open(file_path)))
+        with open(file_path, 'r') as f:
+            content = f.read()
+            if content is not None and len(content) > 0:
+                self.merge(self._json.loads(content))
 
-        # FIX ME: Should check that file was read properly, however if not it
-        # will likely raise an exception anyhow.
         return True
 
 
