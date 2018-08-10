@@ -318,7 +318,8 @@ def test_config_files_is_none():
         files = [
             os.path.join('/', 'etc', app.label, '%s.conf' % app.label),
             os.path.join(user_home, '.%s.conf' % app.label),
-            os.path.join(user_home, '.%s' % app.label, 'config'),
+            os.path.join(user_home, '.%s' % app.label, 'config',
+                         '%s.conf' % app.label),
         ]
         for f in files:
             assert f in app._meta.config_files
