@@ -1253,8 +1253,6 @@ class App(meta.MetaMixin):
             'home_dir': fs.HOME_DIR,
         }
 
-        print(fs.HOME_DIR)
-
         # generate a final list of directories based on precedence (user level
         # paths take precedence).
 
@@ -1285,9 +1283,7 @@ class App(meta.MetaMixin):
                     config_files.append(f)
 
         for f in self._meta.core_user_config_files:
-            print("FUCK A: %s" % f)
             f = f.format(**template_dict)
-            print("FUCK B: %s" % f)
             if f not in config_files:
                 config_files.append(f)
 
@@ -1511,8 +1507,8 @@ class App(meta.MetaMixin):
 
         # merge handler override meta data
         if self._meta.handler_override_options is not None:
-            # fucking long names... fuck.  anyway, merge the core handler
-            # override options with developer defined options
+            # merge the core handler override options with developer defined
+            # options
             core = self._meta.core_handler_override_options.copy()
             dev = self._meta.handler_override_options.copy()
             core.update(dev)
