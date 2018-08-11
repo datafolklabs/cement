@@ -15,6 +15,8 @@ from ..utils.misc import is_true, minimal_logger
 from ..utils import fs, misc
 from ..ext.ext_argparse import ArgparseController as Controller
 
+join = os.path.join
+
 # The `imp` module is deprecated in favor of `importlib` in 3.4, but it
 # wasn't introduced until 3.1.  Finally, reload is a builtin on Python < 3
 pyver = sys.version_info
@@ -252,17 +254,17 @@ class App(meta.MetaMixin):
         config file.
         """
 
-        plugin_bootstrap = None
+        plugin_module = None
         """
         A python package (dotted import path) where plugin code can be
         loaded from.  This is generally something like ``myapp.plugins``
-        where a plugin file would live at ``myapp/plugins/myplugin.py``.
-        This provides a facility for applications that have builtin plugins
-        that ship with the applications source code and live in the same
-        Python module.
+        where a plugin file would live at ``myapp/plugins/myplugin.py`` or
+        ``myapp/plugins/myplugin/`` (directory). This provides a facility for
+        applications that have builtin plugins that ship with the applications
+        source code and live in the same Python module.
 
         Note: Though the meta default is ``None``, Cement will set this to
-        ``app_label.plugins`` if not set.
+        ``<app_label>.plugins`` if not set.
         """
 
         plugin_dirs = None
@@ -662,8 +664,8 @@ class App(meta.MetaMixin):
         """
 
         core_system_config_dirs = [
-            fs.join('/', 'etc', '{label}', 'ext.d'),
-            fs.join('/', 'etc', '{label}', 'plugins.d'),
+            join('/', 'etc', '{label}', 'ext.d'),
+            join('/', 'etc', '{label}', 'plugins.d'),
         ]
         """
         List of builtin system level configuration directories to scan for
@@ -671,10 +673,10 @@ class App(meta.MetaMixin):
         """
 
         core_user_config_dirs = [
-            fs.join(fs.HOME_DIR, '.config', '{label}', 'ext.d'),
-            fs.join(fs.HOME_DIR, '.config', '{label}', 'plugins.d'),
-            fs.join(fs.HOME_DIR, '.{label}', 'config', 'ext.d'),
-            fs.join(fs.HOME_DIR, '.{label}', 'config', 'plugins.d'),
+            join('{home_dir}', '.config', '{label}', 'ext.d'),
+            join('{home_dir}', '.config', '{label}', 'plugins.d'),
+            join('{home_dir}', '.{label}', 'config', 'ext.d'),
+            join('{home_dir}', '.{label}', 'config', 'plugins.d'),
         ]
         """
         List of builtin user level configuration directories to scan for
@@ -682,16 +684,16 @@ class App(meta.MetaMixin):
         """
 
         core_system_config_files = [
-            fs.join('/', 'etc', '{label}', '{label}{suffix}'),
+            join('/', 'etc', '{label}', '{label}{suffix}'),
         ]
         """
         List of builtin system level configuration files.
         """
 
         core_user_config_files = [
-            fs.join(fs.HOME_DIR, '.config', '{label}', '{label}{suffix}'),
-            fs.join(fs.HOME_DIR, '.{label}', 'config', '{label}{suffix}'),
-            fs.join(fs.HOME_DIR, '.{label}{suffix}'),
+            join('{home_dir}', '.config', '{label}', '{label}{suffix}'),
+            join('{home_dir}', '.{label}', 'config', '{label}{suffix}'),
+            join('{home_dir}', '.{label}{suffix}'),
         ]
         """
         List of builtin user level configuration files.
@@ -705,8 +707,8 @@ class App(meta.MetaMixin):
         """
 
         core_user_template_dirs = [
-            fs.join(fs.HOME_DIR, '.config', '{label}', 'templates'),
-            fs.join(fs.HOME_DIR, '.{label}', 'templates'),
+            join('{home_dir}', '.config', '{label}', 'templates'),
+            join('{home_dir}', '.{label}', 'templates'),
         ]
         """
         List of builtin user level template directories to scan for templates.
@@ -720,8 +722,8 @@ class App(meta.MetaMixin):
         """
 
         core_user_plugin_dirs = [
-            fs.join(fs.HOME_DIR, '.config', '{label}', 'plugins'),
-            fs.join(fs.HOME_DIR, '.{label}', 'plugins'),
+            join('{home_dir}', '.config', '{label}', 'plugins'),
+            join('{home_dir}', '.{label}', 'plugins'),
         ]
         """
         List of builtin user level directories to scan for plugins.
@@ -1251,6 +1253,8 @@ class App(meta.MetaMixin):
             'home_dir': fs.HOME_DIR,
         }
 
+        print(fs.HOME_DIR)
+
         # generate a final list of directories based on precedence (user level
         # paths take precedence).
 
@@ -1281,7 +1285,9 @@ class App(meta.MetaMixin):
                     config_files.append(f)
 
         for f in self._meta.core_user_config_files:
+            print("FUCK A: %s" % f)
             f = f.format(**template_dict)
+            print("FUCK B: %s" % f)
             if f not in config_files:
                 config_files.append(f)
 
@@ -1403,8 +1409,8 @@ class App(meta.MetaMixin):
             self.add_plugin_dir(path)
 
         # plugin bootstrap
-        if self._meta.plugin_bootstrap is None:
-            self._meta.plugin_bootstrap = '%s.plugins' % self._meta.label
+        if self._meta.plugin_module is None:
+            self._meta.plugin_module = '%s.plugins' % self._meta.label
 
         self.plugin = self._resolve_handler('plugin',
                                             self._meta.plugin_handler)

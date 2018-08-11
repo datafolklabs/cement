@@ -41,7 +41,7 @@ class CementPluginHandler(plugin.PluginHandler):
         super()._setup(app_obj)
         self._enabled_plugins = []
         self._disabled_plugins = []
-        self.bootstrap = self.app._meta.plugin_bootstrap
+        self.bootstrap = self.app._meta.plugin_module
         self.load_dirs = self.app._meta.plugin_dirs
 
         # parse all app configs for plugins. Note: these are already
@@ -158,8 +158,7 @@ class CementPluginHandler(plugin.PluginHandler):
         """
         Load a plugin whose name is ``plugin_name``.  First attempt to load
         from a plugin directory (plugin_dir), secondly attempt to load from a
-        bootstrap module (plugin_bootstrap) determined by
-        ``App.Meta.plugin_bootstrap``.
+        Python module determined by ``App.Meta.plugin_module``.
 
         Upon successful loading of a plugin, the plugin name is appended to
         the ``self._loaded_plugins list``.

@@ -55,7 +55,9 @@ Incompatible:
 - `[core.foundation]` Rename `CementApp` to `App`.
 - `[core.foundation]` Drop deprecated `App.Meta.override_arguments`
 - `[core.foundation]` Remove `App.Meta.plugin_config_dir` and `App.Meta.plugin_config_dirs` in favor of `App.Meta.config_dirs`
-     - [Issue #521](https://github.com/datafolklabs/cement/issues/521)
+    - [Issue #521](https://github.com/datafolklabs/cement/issues/521)
+- `[core.founcation]` Rename `App.Meta.plugin_bootstrap` as `App.Meta.plugin_module`
+    - [Issue #523](https://github.com/datafolklabs/cement/issues/523)
 - `[core.handler]` Rename `CementBaseHandler` to `Handler`
 - `[core.handler]` Drop deprecated backend globals
 - `[core.hook]` Drop deprecated backend globals

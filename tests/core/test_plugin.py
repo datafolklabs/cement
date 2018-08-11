@@ -103,7 +103,7 @@ def test_load_plugins_from_files(tmp):
         class Meta:
             config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
-            plugin_bootstrap = None
+            plugin_module = None
 
     with MyApp() as app:
         han = app.handler.get('output', 'my_output_handler')()
@@ -132,7 +132,7 @@ def test_load_order_presedence_one(tmp):
             config_defaults = defaults
             config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
-            plugin_bootstrap = None
+            plugin_module = None
 
     with MyApp() as app:
         app.run()
@@ -162,7 +162,7 @@ def test_load_order_presedence_two(tmp):
             config_defaults = defaults
             config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
-            plugin_bootstrap = None
+            plugin_module = None
             debug = True
 
     with MyApp() as app:
@@ -206,7 +206,7 @@ def test_load_order_presedence_three(tmp):
             config_defaults = defaults
             config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
-            plugin_bootstrap = None
+            plugin_module = None
 
     with MyApp() as app:
         assert 'myplugin' in app.plugin._enabled_plugins
@@ -227,7 +227,7 @@ def test_load_plugins_from_config(tmp):
             config_defaults = defaults
             config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
-            plugin_bootstrap = None
+            plugin_module = None
 
     with MyApp() as app:
         han = app.handler.get('output', 'my_output_handler')()
@@ -255,7 +255,7 @@ def test_disabled_plugins_from_files(tmp):
         class Meta:
             config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
-            plugin_bootstrap = None
+            plugin_module = None
 
     with MyApp() as app:
         assert 'my_output_handler' not in app.handler.__handlers__['output']
@@ -276,7 +276,7 @@ def test_bogus_plugin_from_files(tmp):
         class Meta:
             config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
-            plugin_bootstrap = None
+            plugin_module = None
 
     with MyApp() as app:
         assert 'bogus_plugin' not in app.plugin.get_enabled_plugins()
@@ -291,7 +291,7 @@ def test_bad_plugin_dir(tmp):
         class Meta:
             config_dirs = [tmp.dir]
             plugin_dir = './some/bogus/path'
-            plugin_bootstrap = None
+            plugin_module = None
 
     with raises(FrameworkError, match="Unable to load plugin 'myplugin'."):
         with MyApp():
@@ -312,7 +312,7 @@ def test_load_plugin_from_module(tmp):
         class Meta:
             config_dirs = [tmp.dir]
             plugin_dir = tmp.dir
-            plugin_bootstrap = 'cement.ext'
+            plugin_module = 'cement.ext'
 
     with MyApp() as app:
         assert 'ext_json' in app.plugin.get_enabled_plugins()
