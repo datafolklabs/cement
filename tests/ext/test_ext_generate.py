@@ -111,19 +111,33 @@ def test_clone(tmp):
     assert exists_join(tmp.dir, '.generate.yml')
 
 
-# coverage
-
 def test_generate_from_template_dir(tmp):
-    # argv = ['generate', 'test1', tmp.dir, '--defaults']
-    os.makedirs(os.path.join(tmp.dir, 'generate'))
-    with GenerateApp(template_dir=tmp.dir) as app:
+    class NoTemplateApp(TestApp):
+        class Meta:
+            extensions = ['jinja2', 'yaml', 'generate', 'alarm']
+            template_handler = 'jinja2'
+            template_module = __name__
+            handlers = [GenerateBase]
+
+    # should use the templates dir passed as keyword
+    # instead of the template_module in the Meta info
+    argv = ['generate', 'test1', tmp.dir, '--defaults']
+    with NoTemplateApp(argv=argv, template_dir='tests/data/templates') as app:
         app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        res = open(os.path.join(tmp.dir, 'take-me'), 'r').read()
+        assert res.find('bar1') >= 0
 
 
 def test_generate_default_command(tmp):
-    argv = ['generate']
-    with GenerateApp(argv=argv) as app:
-        app.run()
+    # default command for generate should call print_help
+    patch_target = 'cement.ext.ext_argparse.ArgparseArgumentHandler.print_help'
+    with patch(patch_target) as mock:
+        argv = ['generate']
+        with GenerateApp(argv=argv) as app:
+            app.run()
+    mock.assert_called_once()
 
 
 def test_filtered_sub_dirs(tmp):
