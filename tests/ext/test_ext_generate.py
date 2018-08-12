@@ -137,7 +137,7 @@ def test_generate_default_command(tmp):
         argv = ['generate']
         with GenerateApp(argv=argv) as app:
             app.run()
-    mock.assert_called_once()
+    assert mock.call_count == 1
 
 
 def test_filtered_sub_dirs(tmp):
