@@ -1,6 +1,7 @@
 
 import sys
 from pytest import raises, skip
+from unittest.mock import patch
 from argparse import ArgumentError
 from cement.core.foundation import TestApp
 from cement.ext.ext_argparse import ArgparseArgumentHandler
@@ -581,8 +582,7 @@ def test_get_exposed_commands():
         assert 'cmd2-two' in app.controller._get_exposed_commands()
 
 
-def test_coverage():
-    # coverage
+def test_hide_help():
     class MyController(ArgparseController):
         class Meta:
             label = 'base'
@@ -591,5 +591,9 @@ def test_coverage():
         def hidden(self):
             pass
 
-    with TestApp(handlers=[MyController]) as app:
-        app.run()
+    with patch('argparse._SubParsersAction.add_parser') as mock:
+        with TestApp(handlers=[MyController]) as app:
+            app.run()
+            # help='should not be visible' should not
+            # get sent to the parser if hide=True
+            mock.assert_called_once_with('hidden')

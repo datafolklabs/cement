@@ -1,7 +1,7 @@
 
-import os
+# import os
 from pytest import raises
-
+from unittest.mock import patch, PropertyMock
 from cement.core.foundation import TestApp
 from cement.utils import misc
 
@@ -15,36 +15,69 @@ def test_defaults():
         assert app.config.get_section_dict('section2') == {'foo': 'bar'}
 
 
-def test_minimal_logger():
+def test_minimal_logger_get_kwargs():
     log = misc.minimal_logger(__name__)
-    log = misc.minimal_logger(__name__, debug=True)
-    log.info('info test')
-    log.warning('warning test')
-    log.error('error test')
-    log.fatal('fatal test')
-    log.debug('debug test')
 
-    log.info('info test with namespce', 'test_namespace')
-    log.info('info test with extra kwargs', extra=dict(foo='bar'))
-    log.info('info test with extra kwargs', extra=dict(namespace='foo'))
+    # no keywords
+    kw = log._get_logging_kwargs(__name__ + '.bogus')
+    assert 'extra' in kw.keys()
+    assert kw['extra']['namespace'] == __name__ + '.bogus'
 
-    # set logging back to non-debug
-    misc.minimal_logger(__name__, debug=False)
+    # keywords with extra
+    extra_dict = {'extra': {}}
+    kw = log._get_logging_kwargs(__name__ + '.bogus', **extra_dict)
+    assert kw['extra']['namespace'] == __name__ + '.bogus'
 
-    # coverage ...
-    kw = {}
-    kw['extra'] = {'namespace': __name__}
-    log._get_logging_kwargs(__name__, **kw)
+    # keywords with extra and namespace
+    extra_dict = {'extra': {'namespace': __name__ + '.fake'}}
+    kw = log._get_logging_kwargs('fake', **extra_dict)
+    assert kw['extra']['namespace'] == __name__ + '.fake'
 
-    kw['extra'] = {}
-    log._get_logging_kwargs(__name__, **kw)
 
-    os.environ['CEMENT_FRAMEWORK_LOGGING'] = '1'
-    log.info('info test')
-    log.warning('warning test')
-    log.error('error test')
-    log.fatal('fatal test')
-    log.debug('debug test')
+def test_minimal_logger_logging_is_enabled(caplog):
+    with patch('cement.utils.misc.MinimalLogger.logging_is_enabled',
+               new_callable=PropertyMock) as mock:
+        mock.return_value = True
+
+        log = misc.minimal_logger(__name__, True)
+
+        log.info('info test')
+        log.warning('warning test')
+        log.error('error test')
+        log.fatal('fatal test')
+        log.debug('debug test')
+
+        assert (__name__, 20, 'info test') in caplog.record_tuples
+        assert (__name__, 30, 'warning test') in caplog.record_tuples
+        assert (__name__, 40, 'error test') in caplog.record_tuples
+        assert (__name__, 50, 'fatal test') in caplog.record_tuples
+        assert (__name__, 10, 'debug test') in caplog.record_tuples
+
+        mock.return_value = False
+        log.info('do not log this')
+        log.warning('do not log this')
+        log.error('do not log this')
+        log.fatal('do not log this')
+        log.debug('do not log this')
+        for logged in caplog.record_tuples:
+            assert logged[2] != 'do not log this'
+
+
+def test_minimal_logger_with_arguments(caplog):
+    with patch('cement.utils.misc.MinimalLogger.logging_is_enabled',
+               new_callable=PropertyMock) as mock:
+        log = misc.minimal_logger(__name__)
+        mock.return_value = True
+
+        log.info('info test with namespace', 'test_namespace')
+        assert caplog.records[0].namespace == 'test_namespace'
+        assert caplog.records[0].message == 'info test with namespace'
+
+        log.info('info test with extra kwargs', extra=dict(foo='bar'))
+        assert caplog.records[1].foo == 'bar'
+
+        log.info('info test with extra kwargs', extra=dict(namespace='foo'))
+        assert caplog.records[2].namespace == 'foo'
 
 
 def test_wrap_str():
