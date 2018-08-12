@@ -68,18 +68,22 @@ def test_add_handler_override_options_no_override():
 
 
 def test_handler_override():
-    class MyApp(TestApp):
-        class Meta:
-            argv = ['-o', 'json']
-            extensions = ['json', 'yaml', 'mustache', 'tabulate']
-            meta_defaults = {'output.json': {'overridable': True}}
+    class MetaStub(object):
+        def __init__(self):
+            self.handler_override_options = None
 
-    with MyApp() as app:
-        app.run()
+    class AppStub(object):
+        def __init__(self, meta):
+            self._meta = meta
 
-    # coverage
-    app._meta.handler_override_options = None
+    meta = MetaStub()
+    meta_attrs_pre = dir(meta)
+
+    app = AppStub(meta)
     handler_override(app)
+
+    meta_attrs_post = dir(meta)
+    assert meta_attrs_pre == meta_attrs_post
 
 
 def test_cement_signal_handler():
