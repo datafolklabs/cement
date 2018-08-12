@@ -24,4 +24,3 @@ colorlog
 tabulate
 jinja2
 watchdog
-pybars3

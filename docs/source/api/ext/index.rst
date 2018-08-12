@@ -12,7 +12,6 @@ Extension Modules
    ext_daemon
    ext_dummy
    ext_generate
-   ext_handlebars
    ext_jinja2
    ext_json
    ext_logging

@@ -71,6 +71,7 @@ Incompatible:
 - `[ext.yaml]` Disable `overridable` option by default
 - `[ext.json_configobj]` Drop JSON ConfigObj Extension
 - `[ext.yaml_configobj]` Drop YAML ConfigObj Extension
+- `[ext.handlebars]` Drop Handlebars Extension
 - `[ext.genshi]` Drop Genshi Extension
 - `[ext.argparse]` `ArgparseController.Meta.default_func` is now `_default`, and will print help info and exit.  Can now set this to `None` as well to pass/exit.
     - [Issue #426](https://github.com/datafolklabs/cement/issues/426)

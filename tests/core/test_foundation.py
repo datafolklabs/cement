@@ -107,7 +107,6 @@ def test_loaded():
                 'colorlog',
                 'daemon',
                 'dummy',
-                'handlebars',
                 'jinja2',
                 'json',
                 'memcached',
