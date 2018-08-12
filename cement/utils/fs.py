@@ -1,7 +1,62 @@
 """Common File System Utilities."""
 
 import os
+import tempfile
 import shutil
+
+
+class Tmp(object):
+
+    """
+    Provides creation and cleanup of a temporary directory, and file.
+
+    Keyword Arguments:
+        cleanup (bool): Whether or not to delete the temporary directory and
+            files on exit (when used with the ``with`` operator).
+        suffix (str): The suffix that the directory and file will end with.
+            Default: *no suffix*
+        prefix (str): The prefix that the directory and file will start
+            with. Default: *no prefix*
+        dir (str): The parent directory path that the temp directory will be
+            created in (note that the temporary file is already created under
+            the temporary directory provided here).
+            Default: *system default temporary path*
+
+    Example:
+
+        .. code-block:: python
+
+            from cement.utils import fs
+
+            with fs.Tmp() as tmp:
+                # do something with a temporary directory
+                os.path.listdir(tmp.dir)
+
+                # do something with a temporary file
+                with open(tmp.file, 'w') as f:
+                    f.write('some data')
+
+    """
+
+    def __init__(self, **kwargs):
+        self.cleanup = kwargs.get('cleanup', True)
+        suffix = kwargs.get('suffix', '')
+        prefix = kwargs.get('prefix', 'tmp')
+        dir = kwargs.get('dir', None)
+
+        self.dir = tempfile.mkdtemp(suffix=suffix,
+                                    prefix=prefix,
+                                    dir=dir)
+        _, self.file = tempfile.mkstemp(suffix=suffix,
+                                        prefix=prefix,
+                                        dir=self.dir)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        if self.cleanup is True and os.path.exists(self.dir):
+            shutil.rmtree(self.dir)
 
 
 def abspath(path):
@@ -53,6 +108,60 @@ def join(*args, **kwargs):
     return os.path.join(first_path, *paths, **kwargs)
 
 
+def join_exists(*paths):
+    """
+    Wrapper around ``os.path.join()``, ``os.path.abspath()``, and
+    ``os.path.exists()``.
+
+    Arguments:
+        paths (list): List of paths to join, and then return ``True`` if that
+                      path exists, or ``False`` if it does not.
+
+    Returns:
+        tuple: First item is the fully joined absolute path, and the second
+               is ``bool`` (whether that path exists or not).
+    """
+    path = join(*paths)
+    return (path, os.path.exists(path))
+
+
+def ensure_dir_exists(path):
+    """
+    Ensure the directory ``path`` exists, and if not create it.
+
+    Arguments:
+        path (str): The filesystem path of a directory.
+
+    Raises:
+        AssertionError: If the directory ``path`` exists, but is not a
+        directory.
+
+    Returns: None
+    """
+
+    path = abspath(path)
+
+    if os.path.exists(path) and not os.path.isdir(path):
+        raise AssertionError('Path `%s` exists but is not a directory!' % path)
+    elif not os.path.exists(path):
+        os.makedirs(path)
+
+
+def ensure_parent_dir_exists(path):
+    """
+    Ensure the parent directory of ``path`` (file, or directory) exists, and if
+    not create it.
+
+    Arguments:
+        path (str): The filesystem path of a file or directory.
+
+    Returns: None
+    """
+
+    parent_dir = os.path.dirname(abspath(path))
+    return ensure_dir_exists(parent_dir)
+
+
 def backup(path, suffix='.bak'):
     """
     Rename a file or directory safely without overwriting an existing
@@ -69,7 +178,7 @@ def backup(path, suffix='.bak'):
 
         .. code-block:: python
 
-            from cement.core.utils import fs
+            from cement.utils import fs
 
             fs.backup('/path/to/original/file')
 

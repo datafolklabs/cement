@@ -42,6 +42,7 @@ Features:
     - [Issue #490](https://github.com/datafolklabs/cement/issues/490)
 - `[core]` Added clear separation between Interfaces and Handlers
     - [Issue #506](https://github.com/datafolklabs/cement/issues/506)
+- `[utils.fs]` - Added several helpers include `fs.Tmp` for creation and cleanup of temporary directory and file.
 
 Refactoring:
 
