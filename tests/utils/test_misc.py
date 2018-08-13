@@ -19,15 +19,15 @@ def test_is_true():
     assert misc.is_true(True)
 
     # false
-    assert misc.is_true(0)
-    assert misc.is_true('0')
-    assert misc.is_true('false')
-    assert misc.is_true('False')
-    assert misc.is_true('FALSE')
-    assert misc.is_true('fAlse')
-    assert misc.is_true('no')
-    assert misc.is_true('off')
-    assert misc.is_true(False)
+    assert not misc.is_true(0)
+    assert not misc.is_true('0')
+    assert not misc.is_true('false')
+    assert not misc.is_true('False')
+    assert not misc.is_true('FALSE')
+    assert not misc.is_true('fAlse')
+    assert not misc.is_true('no')
+    assert not misc.is_true('off')
+    assert not misc.is_true(False)
 
 
 def test_defaults():
