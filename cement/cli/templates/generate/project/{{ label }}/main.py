@@ -1,13 +1,16 @@
 
-from cement import App, init_defaults
+from cement import App, TestApp
 from cement.core.exc import CaughtSignal
 from .core.exc import {{ class_name }}Error
 from .controllers.base import Base
 
 # configuration defaults
-DEFAULTS = init_defaults('{{ label }}')
-DEFAULTS['{{ label }}']['foo'] = 'bar'
 
+CONFIG = {
+    '{{ label }}': {
+        'foo': 'bar',
+    }
+}
 
 class {{ class_name }}(App):
     """{{ name }} primary application."""
@@ -16,7 +19,7 @@ class {{ class_name }}(App):
         label = '{{ label }}'
 
         # configuration defaults
-        config_defaults = DEFAULTS
+        config_defaults = CONFIG
 
         # call sys.exit() on close
         close_on_exit = True
@@ -46,18 +49,11 @@ class {{ class_name }}(App):
         ]
 
 
-class {{ class_name }}Test({{ class_name}}):
-    """A sub-class of {{ class_name}} that is better suited for testing."""
+class {{ class_name }}Test(TestApp,{{ class_name }}):
+    """A sub-class of {{ class_name }} that is better suited for testing."""
 
     class Meta:
-        # default argv to empty (don't use sys.argv)
-        argv = []
-
-        # don't look for config files (could break tests)
-        config_files = []
-
-        # don't call sys.exit() when app.close() is called in tests
-        exit_on_close = False
+        label = '{{ label }}'
 
 
 def main():

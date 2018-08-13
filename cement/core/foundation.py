@@ -1693,7 +1693,16 @@ class TestApp(App):
 
     class Meta:
         label = "app-%s" % misc.rando()[:12]
-        config_files = []
         argv = []
-        arguments = []
+        core_system_config_files = []
+        core_user_config_files = []
+        config_files = []
+        core_system_config_dirs = []
+        core_user_config_dirs = []
+        config_dirs = []
+        core_system_template_dirs = []
+        core_user_template_dirs = []
+        core_system_plugin_dirs = []
+        core_user_plugin_dirs = []
+        plugin_dirs = []
         exit_on_close = False

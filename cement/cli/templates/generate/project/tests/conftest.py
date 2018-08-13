@@ -2,11 +2,8 @@
 PyTest Fixtures.
 """
 
-import os
-import shutil
 import pytest
-from tempfile import mkstemp, mkdtemp
-
+from cement import fs
 
 @pytest.fixture(scope="function")
 def tmp(request):
@@ -14,17 +11,6 @@ def tmp(request):
     Create a `tmp` object that geneates a unique temporary directory, and file
     for each test function that requires it.
     """
-
-    class Tmp(object):
-        cleanup = True
-
-        def __init__(self):
-            self.dir = mkdtemp()
-            _, self.file = mkstemp(dir=self.dir)
-
-    t = Tmp()
+    t = fs.Tmp()
     yield t
-
-    # cleanup
-    if os.path.exists(t.dir) and cleanup is True:
-        shutil.rmtree(t.dir)
+    t.remove()

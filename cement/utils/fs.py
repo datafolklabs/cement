@@ -51,12 +51,19 @@ class Tmp(object):
                                         prefix=prefix,
                                         dir=self.dir)
 
+    def remove(self):
+        """
+        Remove the temporary directory (and file) if it exists, and
+        ``self.cleanup`` is ``True``.
+        """
+        if self.cleanup is True and os.path.exists(self.dir):
+            shutil.rmtree(self.dir)
+
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        if self.cleanup is True and os.path.exists(self.dir):
-            shutil.rmtree(self.dir)
+        self.remove()
 
 
 def abspath(path):
