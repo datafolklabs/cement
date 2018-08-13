@@ -13,6 +13,15 @@ def add(a, b):
     return a + b
 
 
+def test_cmd():
+    out, err, ret = shell.cmd('echo KAPLA!')
+    assert ret == 0
+    assert out == b'KAPLA!\n'
+
+    ret = shell.cmd('echo KAPLA', capture=False)
+    assert ret == 0
+
+
 def test_exec_cmd():
     out, err, ret = shell.exec_cmd(['echo', 'KAPLA!'])
     assert ret == 0
@@ -43,6 +52,23 @@ def test_exec_cmd_bad_command():
 def test_exec_cmd2_bad_command():
     ret = shell.exec_cmd2(['false'])
     assert ret == 1
+
+
+def test_spawn():
+    p = shell.spawn(add, args=(23, 2))
+    p.join()
+    assert p.exitcode == 0
+
+    t = shell.spawn(time.sleep, args=(2,), thread=True)
+    # before joining it is alive
+    res = t.is_alive()
+    assert res is True
+
+    t.join()
+
+    # after joining it is not alive
+    res = t.is_alive()
+    assert res is False
 
 
 def test_spawn_process():

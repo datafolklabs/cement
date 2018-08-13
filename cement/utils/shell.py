@@ -8,7 +8,49 @@ from ..core.meta import MetaMixin
 from ..core.exc import FrameworkError
 
 
-def exec_cmd(cmd_args, *args, **kw):
+def cmd(command, capture=True, *args, **kwargs):
+    """
+    Wrapper around ``exec_cmd`` and ``exec_cmd2`` depending on whether
+    capturing output is desired.  Defaults to setting the Popen ``shell``
+    keyword argument to ``True`` (string command rather than list of command
+    and arguments).
+
+    Arguments:
+        command (str): The command (and arguments) to run.
+        capture (bool): Whether or not to capture output.
+
+    Other Parameters:
+        args: Additional arguments are passed to ``Popen()``.
+        kwargs: Additional keyword arguments are passed to ``Popen()``.
+
+    Returns:
+        tuple: When ``capture==True``, returns the ``(stdout, stderror,
+            return_code)`` of the command.
+        int: When ``capture==False``, returns only the ``exitcode`` of the
+            command.
+
+    Example:
+
+        .. code-block:: python
+
+            from cement.utils import shell
+
+            # execute a command and capture output
+            stdout, stderr, exitcode = shell.cmd('echo helloworld')
+
+            # execute a command but do not capture output
+            exitcode = shell.cmd('echo helloworld', capture=False)
+
+    """
+    kwargs['shell'] = kwargs.get('shell', True)
+
+    if capture is True:
+        return exec_cmd(command, *args, **kwargs)
+    else:
+        return exec_cmd2(command, *args, **kwargs)
+
+
+def exec_cmd(cmd_args, *args, **kwargs):
     """
     Execute a shell call using Subprocess.  All additional ``*args`` and
     ``**kwargs`` are passed directly to ``subprocess.Popen``.  See
@@ -35,18 +77,18 @@ def exec_cmd(cmd_args, *args, **kw):
             stdout, stderr, exitcode = shell.exec_cmd(['echo', 'helloworld'])
 
     """
-    if 'stdout' not in kw.keys():
-        kw['stdout'] = PIPE
-    if 'stderr' not in kw.keys():
-        kw['stderr'] = PIPE
+    if 'stdout' not in kwargs.keys():
+        kwargs['stdout'] = PIPE
+    if 'stderr' not in kwargs.keys():
+        kwargs['stderr'] = PIPE
 
-    proc = Popen(cmd_args, *args, **kw)
+    proc = Popen(cmd_args, *args, **kwargs)
     (stdout, stderr) = proc.communicate()
     proc.wait()
     return (stdout, stderr, proc.returncode)
 
 
-def exec_cmd2(cmd_args, *args, **kw):
+def exec_cmd2(cmd_args, *args, **kwargs):
     """
     Similar to ``exec_cmd``, however does not capture stdout, stderr (therefore
     allowing it to print to console).  All additional ``*args`` and
@@ -73,9 +115,49 @@ def exec_cmd2(cmd_args, *args, **kw):
             exitcode = shell.exec_cmd2(['echo', 'helloworld'])
 
     """
-    proc = Popen(cmd_args, *args, **kw)
+    proc = Popen(cmd_args, *args, **kwargs)
     proc.wait()
     return proc.returncode
+
+
+def spawn(target, start=True, join=False, thread=False, *args, **kwargs):
+    """
+    Wrapper around ``spawn_process`` and ``spawn_thread`` depending on
+    desired execution model.
+
+    Args:
+        target (function): The target function to execute in the sub-process.
+
+    Keyword Args:
+        start (bool): Call ``start()`` on the process before returning the
+            process object.
+        join (bool): Call ``join()`` on the process before returning the
+            process object.  Only called if ``start == True``.
+        thread (bool): Whether to spawn as thread instead of process.
+
+    Other Parameters:
+        args: Additional arguments are passed to ``Process()``
+        kwargs: Additional keyword arguments are passed to ``Process()``.
+
+    Returns:
+        object: The process object returned by Process().
+
+    Example:
+
+        .. code-block:: python
+
+            from cement.utils import shell
+
+            def add(a, b):
+                print(a + b)
+
+            p = shell.spawn(add, args=(12, 27))
+            p.join()
+    """
+    if thread is True:
+        return spawn_thread(target, start, join, *args, **kwargs)
+    else:
+        return spawn_process(target, start, join, *args, **kwargs)
 
 
 def spawn_process(target, start=True, join=False, *args, **kwargs):
