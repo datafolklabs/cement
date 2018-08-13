@@ -106,3 +106,14 @@ def test_copy(tmp, rando):
                           exclude=None,
                           ignore=None,
                           force=True)
+
+
+def test_load_template_from_file_does_not_exist(tmp):
+    class ThisApp(TestApp):
+        class Meta:
+            template_dirs = [tmp.dir]
+
+    with ThisApp() as app:
+        app.run()
+        res = app.template._load_template_from_file('bogus')
+        assert res == (None, None)

@@ -561,16 +561,6 @@ def test_quiet():
     sys.stdout = stdout_ref
 
 
-def test_config_dirs(tmp):
-    with open(os.path.join(tmp.dir, 'dummy.conf'), 'w') as f:
-        f.write("[bogus_section]\nbogus: bogus")
-
-    with TestApp(config_dirs=[tmp.dir]) as app:
-        app.run()
-        assert app.config.has_section('bogus_section')
-        assert 'bogus' in app.config.keys('bogus_section')
-
-
 def test_none_template_handler():
     with TestApp(template_handler=None) as app:
         app.run()
@@ -615,6 +605,25 @@ def test_core_user_config_dirs(tmp, rando):
         assert app.config.get(app._meta.label, 'foo') == rando
 
 
+def test_config_dirs(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            config_dirs = [tmp.dir]
+
+    conf = """
+    [%s]
+    foo = %s
+    """ % (rando, rando)
+    with open(os.path.join(tmp.dir, 'test.conf'), 'w') as f:
+        f.write(conf)
+
+    with ThisTestApp() as app:
+        app.run()
+        assert tmp.dir in app._meta.config_dirs
+        assert app.config.get(app._meta.label, 'foo') == rando
+
+
 def test_core_system_template_dirs(tmp, rando):
     class ThisTestApp(TestApp):
         class Meta:
@@ -637,6 +646,17 @@ def test_core_user_template_dirs(tmp, rando):
         assert tmp.dir in app._meta.template_dirs
 
 
+def test_template_dirs(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            template_dirs = [tmp.dir]
+
+    with ThisTestApp() as app:
+        app.run()
+        assert tmp.dir in app._meta.template_dirs
+
+
 def test_core_system_plugin_dirs(tmp, rando):
     class ThisTestApp(TestApp):
         class Meta:
@@ -653,6 +673,17 @@ def test_core_user_plugin_dirs(tmp, rando):
         class Meta:
             label = rando
             core_user_plugin_dirs = [tmp.dir]
+
+    with ThisTestApp() as app:
+        app.run()
+        assert tmp.dir in app._meta.plugin_dirs
+
+
+def test_plugin_dirs(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            plugin_dirs = [tmp.dir]
 
     with ThisTestApp() as app:
         app.run()
