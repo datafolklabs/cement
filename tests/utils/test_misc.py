@@ -6,6 +6,30 @@ from cement.core.foundation import TestApp
 from cement.utils import misc
 
 
+def test_is_true():
+    # true
+    assert misc.is_true(1)
+    assert misc.is_true('1')
+    assert misc.is_true('true')
+    assert misc.is_true('True')
+    assert misc.is_true('TRUE')
+    assert misc.is_true('tRue')
+    assert misc.is_true('yes')
+    assert misc.is_true('on')
+    assert misc.is_true(True)
+
+    # false
+    assert misc.is_true(0)
+    assert misc.is_true('0')
+    assert misc.is_true('false')
+    assert misc.is_true('False')
+    assert misc.is_true('FALSE')
+    assert misc.is_true('fAlse')
+    assert misc.is_true('no')
+    assert misc.is_true('off')
+    assert misc.is_true(False)
+
+
 def test_defaults():
     defaults = misc.init_defaults('section1', 'section2')
     defaults['section1']['debug'] = True

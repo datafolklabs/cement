@@ -173,16 +173,22 @@ def minimal_logger(namespace, debug=False):
 def is_true(item):
     """
     Given a value, determine if it is one of
-    ``[True, 'True', 'true', 1, '1']``.
+    ``[True, 'true', 'yes', 'on', '1', 1,]`` (note: strings are converted to
+    lowercase before comparison).
 
     Args:
         item: The item to convert to a boolean.
 
     Returns:
-        bool: ``True`` if ``item`` equates to ``True``, ``False`` otherwise
+        bool: ``True`` if ``item`` equates to a true-ish value, ``False``
+            otherwise
 
     """
-    if item in [True, 'True', 'true', 1, '1']:
+    if isinstance(item, str) and item.lower() in ['true', 'yes', 'on', '1']:
+        return True
+    elif isinstance(item, int) and item == 1:
+        return True
+    elif isinstance(item, bool) and item is True:
         return True
     else:
         return False
