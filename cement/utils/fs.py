@@ -8,19 +8,17 @@ import shutil
 class Tmp(object):
 
     """
-    Provides creation and cleanup of a temporary directory, and file.
+    Provides creation and cleanup of a separate temporary directory, and file.
 
     Keyword Arguments:
         cleanup (bool): Whether or not to delete the temporary directory and
-            files on exit (when used with the ``with`` operator).
+            file on exit (when used with the ``with`` operator).
         suffix (str): The suffix that the directory and file will end with.
             Default: *no suffix*
         prefix (str): The prefix that the directory and file will start
             with. Default: *no prefix*
-        dir (str): The parent directory path that the temp directory will be
-            created in (note that the temporary file is already created under
-            the temporary directory provided here).
-            Default: *system default temporary path*
+        dir (str): The parent directory path that the temp directory and file
+            will be created in.  Default: *system default temporary path*
 
     Example:
 
@@ -49,15 +47,18 @@ class Tmp(object):
                                     dir=dir)
         _, self.file = tempfile.mkstemp(suffix=suffix,
                                         prefix=prefix,
-                                        dir=self.dir)
+                                        dir=dir)
 
     def remove(self):
         """
         Remove the temporary directory (and file) if it exists, and
         ``self.cleanup`` is ``True``.
         """
-        if self.cleanup is True and os.path.exists(self.dir):
-            shutil.rmtree(self.dir)
+        if self.cleanup is True:
+            if os.path.exists(self.dir):
+                shutil.rmtree(self.dir)
+            if os.path.exists(self.file):
+                os.remove(self.file)
 
     def __enter__(self):
         return self
