@@ -1,7 +1,7 @@
 
 import os
 from tinydb import TinyDB
-from cement import App, init_defaults
+from cement import App, TestApp, init_defaults
 from cement.core.exc import CaughtSignal
 from cement.utils import fs
 from .core.exc import TodoError
