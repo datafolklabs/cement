@@ -1,16 +1,13 @@
 
-from cement import App, TestApp
+from cement import App, TestApp, init_defaults
 from cement.core.exc import CaughtSignal
 from .core.exc import {{ class_name }}Error
 from .controllers.base import Base
 
 # configuration defaults
+CONFIG = init_defaults('todo')
+CONFIG['todo']['foo'] = 'bar'
 
-CONFIG = {
-    '{{ label }}': {
-        'foo': 'bar',
-    }
-}
 
 class {{ class_name }}(App):
     """{{ name }} primary application."""

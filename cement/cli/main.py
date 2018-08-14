@@ -3,17 +3,14 @@ import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), 'contrib'))
 
-from cement import App, init_defaults, CaughtSignal         # noqa: E402
-from .controllers.base import Base                          # noqa: E402
-
-META = init_defaults('generate')
+from cement import App, CaughtSignal  # noqa: E402
+from .controllers.base import Base    # noqa: E402
 
 
 class CementApp(App):
     class Meta:
         label = 'cement'
         controller = 'base'
-        meta_defaults = META
         template_module = 'cement.cli.templates'
         template_handler = 'jinja2'
         config_handler = 'yaml'

@@ -378,10 +378,13 @@ class App(meta.MetaMixin):
 
         .. code-block:: python
 
-            from cement import App, init_defaults
+            from cement import App
 
-            META = init_defaults('output.json')
-            META['output.json']['json_module'] = 'ujson'
+            META = {
+                'output.json': {
+                    'json_module': 'ujson',
+                }
+            }
 
             class MyApp(App):
                 class Meta:

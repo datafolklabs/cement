@@ -10,10 +10,10 @@ from .controllers.items import Items
 
 
 # configuration defaults
-DEFAULTS = init_defaults('todo')
-DEFAULTS['todo']['foo'] = 'bar'
-DEFAULTS['todo']['db_file'] = '~/.todo/db.json'
-DEFAULTS['todo']['email'] = 'you@yourdomain.com'
+CONFIG = init_defaults('todo')
+CONFIG['todo']['foo'] = 'bar'
+CONFIG['todo']['db_file'] = '~/.todo/db.json'
+CONFIG['todo']['email'] = 'you@yourdomain.com'
 
 
 def extend_tinydb(app):
@@ -39,7 +39,7 @@ class Todo(App):
         label = 'todo'
 
         # configuration defaults
-        config_defaults = DEFAULTS
+        config_defaults = CONFIG
 
         # call sys.exit() on close
         close_on_exit = True
@@ -75,18 +75,11 @@ class Todo(App):
         ]
 
 
-class TodoTest(Todo):
+class TodoTest(TestApp,Todo):
     """A sub-class of Todo that is better suited for testing."""
 
     class Meta:
-        # default argv to empty (don't use sys.argv)
-        argv = []
-
-        # don't look for config files (could break tests)
-        config_files = []
-
-        # don't call sys.exit() when app.close() is called in tests
-        exit_on_close = False
+        label = 'todo'
 
 
 def main():

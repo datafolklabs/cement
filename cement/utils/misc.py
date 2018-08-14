@@ -113,6 +113,8 @@ def init_defaults(*sections):
     """
     Returns a standard dictionary object to use for application defaults.
     If sections are given, it will create a nested dict for each section name.
+    This is sometimes more useful, or cleaner than creating an entire dict set
+    (often used in testing).
 
     Args:
         sections: Section keys to create nested dictionaries for.
@@ -124,8 +126,7 @@ def init_defaults(*sections):
 
         .. code-block:: python
 
-            from cement import App
-            from cement.utils.misc import init_defaults
+            from cement import App, init_defaults
 
             defaults = init_defaults('myapp', 'section2', 'section3')
             defaults['myapp']['debug'] = False
