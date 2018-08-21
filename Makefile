@@ -12,6 +12,22 @@ test: comply
 test-core: comply
 	python -m pytest -v --cov=cement.core --cov-report=term --cov-report=html:coverage-report tests/core
 
+virtualenv:
+	virtualenv --prompt '|> cement <| ' env
+	env/bin/pip install -r requirements-dev.txt
+	env/bin/python setup.py develop
+	@echo
+	@echo "VirtualENV Setup Complete. Now run: source env/bin/activate"
+	@echo
+
+virtualenv-windows:
+	virtualenv --prompt '|> cement <| ' env-windows
+	env-windows\\Scripts\\pip.exe install -r requirements-dev.txt
+	env\\bin\\python.exe setup.py develop
+	@echo
+	@echo "VirtualENV Setup Complete. Now run: .\\env\\Scripts\\activate.ps1"
+	@echo
+
 comply:
 	flake8 cement/ tests/
 

@@ -70,15 +70,15 @@ Function Do-Python {
     Write-Host 'Installing Python'
     choco install -y python3 pip
 
-    If (Test-Path('C:\Python36\python.exe')) {
+    If (Test-Path('C:\Python37\python.exe')) {
         Write-Host "Python setup complete" -ForegroundColor Green
     } Else {
         Write-Host "Python setup failed" -ForegroundColor Red
         Exit 1
     }
 
-    C:\Python36\Scripts\pip.exe install virtualenv
-    C:\Python36\Scripts\virtualenv.exe .env-windows
+    C:\Python37\Scripts\pip.exe install virtualenv
+    C:\Python37\Scripts\virtualenv.exe env-windows
 }
 
 Function Do-Misc {
@@ -87,12 +87,6 @@ Function Do-Misc {
 
     Write-Host 'Installing Make'
     choco install -y make
-
-    Write-Host 'Installing Redis'
-    choco install -y redis
-
-    Write-Host 'Installing Memcached'
-    choco install -y memcached
 }
 
 

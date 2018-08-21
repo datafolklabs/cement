@@ -19,9 +19,11 @@ wheel>=0.31.0
 # Required for optional extensions
 pystache
 pyYaml
-pylibmc
 redis
 colorlog
 tabulate
 jinja2
 watchdog
+
+# These are known to fail on windows (put at end so it doesn't block)
+pylibmc
