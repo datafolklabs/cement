@@ -5,6 +5,7 @@ import sys
 import pkgutil
 import re
 import shutil
+import platform
 from abc import abstractmethod
 from ..core import exc
 from ..core.interface import Interface
@@ -232,6 +233,11 @@ class TemplateHandler(TemplateInterface, Handler):
                     os.makedirs(sub_dir_dest)
 
             for _file in files:
+                # windows paths (if condition to avoid unknown breakage)
+                if platform.system().lower() in ['windows']:
+                    src = src.encode('unicode-escape')      # pragma: nocover
+                    src = str(src)                          # pragma: nocover
+
                 new_file = re.sub(src, '', self.render(_file, data))
                 _file = fs.abspath(os.path.join(cur_dir, _file))
                 _file_dest = fs.abspath(os.path.join(cur_dir_dest, new_file))

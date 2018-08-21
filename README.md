@@ -67,6 +67,18 @@ $ docker-compose up -d
 $ docker-compose exec cement /bin/ash
 ```
 
+### VirtualENV
+
+An traditional VirtualENV helper is available:
+
+```
+$ make virtualenv
+
+$ source env/bin/activate
+
+|> cement <| $
+```
+
 ### Vagrant
 
 An alternative option is included to run Vagrant for development.  This is partially supported, primarily for the purpose of developing/testing on Windows as well as testing specific issues on target operating systems.
@@ -88,11 +100,11 @@ vagrant@linux $ cd /vagrant
 
 vagrant@linux $ bash scripts/vagrant/bootstrap.sh
 
+vagrant@linux $ make virtualenv
+
 vagrant@linux $ source env/bin/activate
 
-|> cement >| $ pip install -r requirements-dev.txt
-
-|> cement >| $ python setup.py develop
+|> cement >| $
 ```
 
 #### Windows
@@ -114,12 +126,14 @@ C:\> cd C:\Vagrant
 
 C:\Vagrant> powershell.exe scripts\vagrant\bootstrap.ps1
 
+C:\Vagrant> make virtualenv-windows
+
 C:\Vagrant> .\env-windows\Scripts\activate.ps1
 
-C:\Vagrant> pip install -r requirements-dev.txt
-
-C:\Vagrant> python setup.py develop
+C:\Vagrant> make test-core
 ```
+
+*Note that only the core library is fully tested on Windows.*
 
 
 ### Running Tests and Compliance

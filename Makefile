@@ -22,10 +22,10 @@ virtualenv:
 
 virtualenv-windows:
 	virtualenv --prompt '|> cement <| ' env-windows
-	env-windows\\Scripts\\pip.exe install -r requirements-dev.txt
-	env\\bin\\python.exe setup.py develop
+	env-windows\\Scripts\\pip.exe install -r requirements-dev-windows.txt
+	env-windows\\Scripts\\python.exe setup.py develop
 	@echo
-	@echo "VirtualENV Setup Complete. Now run: .\\env\\Scripts\\activate.ps1"
+	@echo "VirtualENV Setup Complete. Now run: .\env-windows\Scripts\activate.ps1"
 	@echo
 
 comply:

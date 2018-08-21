@@ -78,7 +78,6 @@ Function Do-Python {
     }
 
     C:\Python37\Scripts\pip.exe install virtualenv
-    C:\Python37\Scripts\virtualenv.exe env-windows
 }
 
 Function Do-Misc {

@@ -98,10 +98,6 @@ case "$DISTRO" in
 
 esac
 
-### should work on all distros we are trying to support
-
-virtualenv --prompt="|> cement <| " --python=$(which python3) /vagrant/env
-
 # for tests
 
 sudo systemctl restart memcached

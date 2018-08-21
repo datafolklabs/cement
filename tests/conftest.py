@@ -3,18 +3,12 @@ import os
 import shutil
 import pytest
 from cement.utils.misc import rando as _rando
-from tempfile import mkstemp, mkdtemp
+from cement.utils import fs
 
 
 @pytest.fixture(scope="function")
 def tmp(request):
-    class Tmp(object):
-        cleanup = True
-
-        def __init__(self):
-            self.dir = mkdtemp()
-            _, self.file = mkstemp(dir=self.dir)
-    t = Tmp()
+    t = fs.Tmp()
     yield t
 
     # cleanup

@@ -24,4 +24,6 @@ colorlog
 tabulate
 jinja2
 watchdog
-pylibmc
+
+# unknown/broken/untested
+# pylibmc

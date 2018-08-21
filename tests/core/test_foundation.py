@@ -5,6 +5,7 @@ import re
 import pytest
 import json
 import signal
+import platform
 from unittest.mock import Mock, MagicMock
 
 from cement import App, Controller, ex
@@ -101,22 +102,35 @@ def test_basic():
         app.run()
 
 
-def test_loaded():
-    ext_list = [
-                'alarm',
-                'colorlog',
-                'daemon',
-                'dummy',
-                'jinja2',
-                'json',
-                'memcached',
-                'mustache',
-                'redis',
-                'smtp',
-                'tabulate',
-                'watchdog',
-                'yaml',
-            ]
+def test_loaded_extensions():
+    if platform.system().lower() in ['windows']:
+        ext_list = [
+            'colorlog',
+            'dummy',
+            'jinja2',
+            'json',
+            'mustache',
+            'smtp',
+            'tabulate',
+            'watchdog',
+            'yaml',
+        ]
+    else:
+        ext_list = [
+            'alarm',
+            'colorlog',
+            'daemon',
+            'dummy',
+            'jinja2',
+            'json',
+            'memcached',
+            'mustache',
+            'redis',
+            'smtp',
+            'tabulate',
+            'watchdog',
+            'yaml',
+        ]
 
     class MyApp(TestApp):
         class Meta:
@@ -324,12 +338,20 @@ def test_config_files_is_none():
 
     with ThisApp('test-app', config_files=None) as app:
         user_home = fs.abspath(fs.HOME_DIR)
-        files = [
-            os.path.join('/', 'etc', app.label, '%s.conf' % app.label),
-            os.path.join(user_home, '.%s.conf' % app.label),
-            os.path.join(user_home, '.%s' % app.label, 'config',
-                         '%s.conf' % app.label),
-        ]
+        if platform.system().lower() in ['windows']:
+            files = [
+                os.path.join('C:\\', 'etc', app.label, '%s.conf' % app.label),
+                os.path.join(user_home, '.%s.conf' % app.label),
+                os.path.join(user_home, '.%s' % app.label, 'config',
+                             '%s.conf' % app.label),
+            ]
+        else:
+            files = [
+                os.path.join('/', 'etc', app.label, '%s.conf' % app.label),
+                os.path.join(user_home, '.%s.conf' % app.label),
+                os.path.join(user_home, '.%s' % app.label, 'config',
+                             '%s.conf' % app.label),
+            ]
         for f in files:
             assert f in app._meta.config_files
 
@@ -470,6 +492,9 @@ def test_reload():
 
 
 def test_run_forever():
+    if platform.system().lower() in ['windows']:
+        pytest.skip('Unable to test run_forever on Windows')
+
     class MyController(Controller):
         class Meta:
             label = 'base'
