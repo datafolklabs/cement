@@ -1,5 +1,4 @@
-### FIXME: Replace with 'cement==3.0.0' once it is stable
--e git+https://github.com/datafolklabs/cement.git@portland#egg=cement
+cement==3.0.0
 jinja2
 pyyaml
 colorlog

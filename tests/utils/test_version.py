@@ -4,7 +4,7 @@ from cement.utils import version
 
 def test_get_version():
     ver = version.get_version()
-    assert ver.startswith('2.99')
+    assert ver.startswith('3.0')
 
     ver = version.get_version((2, 1, 1, 'alpha', 1))
     assert ver == '2.1.1a1'

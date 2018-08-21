@@ -1,10 +1,6 @@
 # ChangeLog
 
-## 2.99.1 - DEVELOPMENT (will be released as dev/2.99.2 or stable/3.0.0)
-
-This is a complete fork from Cement 2 code base.  Please continue to use
-stable versions of Cement 2, until Cement 3.0.0 is released.
-
+## 3.0.0 - August 21, 2018
 
 Bugs:
 
