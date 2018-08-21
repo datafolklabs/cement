@@ -82,6 +82,9 @@ Function Do-Python {
 }
 
 Function Do-Misc {
+    Write-Host 'Installing Microsoft Visual C++ Build Tools'
+    choco install -y microsoft-visual-cpp-build-tools
+
     Write-Host 'Installing Make'
     choco install -y make
 
@@ -91,6 +94,7 @@ Function Do-Misc {
     Write-Host 'Installing Memcached'
     choco install -y memcached
 }
+
 
 
 # Function Test-RegistryValue {
@@ -159,8 +163,9 @@ Function Do-Misc {
 # Do-WinRM
 Do-Chocolatey
 Do-Google-Chrome
-Do-Python
 Do-Misc
+Do-Python
+
 # Do-UAC
 Clear-History
 

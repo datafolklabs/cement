@@ -56,7 +56,7 @@ The following creates all required docker containers, and launches an ASH shell 
 ```
 $ make dev
 
-|> cement <| app #
+|> cement <| src #
 ```
 
 The above is the equivalent of running:
