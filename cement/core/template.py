@@ -223,6 +223,11 @@ class TemplateHandler(TemplateInterface, Handler):
                 else:
                     LOG.debug(
                         'rendering sub-directory as template: %s' % full_path)
+
+                    if platform.system().lower() in ['windows']:
+                        src = src.encode('unicode-escape')  # pragma: nocover
+                        src = str(src)                      # pragma: nocover
+
                     new_sub_dir = re.sub(src,
                                          '',
                                          self.render(sub_dir, data))
