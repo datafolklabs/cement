@@ -174,7 +174,7 @@ def minimal_logger(namespace, debug=False):
 def is_true(item):
     """
     Given a value, determine if it is one of
-    ``[True, 'true', 'yes', 'on', '1', 1,]`` (note: strings are converted to
+    ``[True, 'true', 'yes', 'y', 'on', '1', 1 >,]`` (note: strings are converted to
     lowercase before comparison).
 
     Args:
@@ -185,11 +185,11 @@ def is_true(item):
             otherwise
 
     """
-    if isinstance(item, str) and item.lower() in ['true', 'yes', 'on', '1']:
+    if isinstance(item, str) and item.lower() in ['y', 'true', 'yes', 'on', '1']:
         return True
-    elif isinstance(item, bool) and item is True:
+    elif isinstance(item, bool) and item:
         return True
-    elif isinstance(item, int) and item == 1:
+    elif isinstance(item, int) and item > 0:
         return True
     else:
         return False
@@ -222,3 +222,76 @@ def wrap(text, width=77, indent='', long_words=False, hyphens=False):
                           break_long_words=long_words,
                           break_on_hyphens=hyphens)
     return wrapper.fill(text)
+
+def parametrized_decorator(decorator):
+    """
+    Adds fast Parametrizing capabilities within decorators.
+    
+    Args:
+      decorator (function): Function to be made into wrapper for decorator usage
+    
+    Returns:
+      function: Wrapper around function
+    
+    Example:
+       ```
+       @parameterized_decorator
+       def block_ip(function, ip_list):
+         def wrapper(*args, **kwargs):
+           for ip in args[0]:
+             if ip in ip_list:
+               return function(*args, **kwargs)
+           raise ValueError("IP Banned!")
+         return wrapper
+       
+       @block_ip(['10.0.0.22'])
+       def connect(ip):
+         # do work
+         pass
+       ```
+    """
+    def wraps(*args, **kwargs):
+        def repl(function):
+            return decorator(function, *args, **kwargs)
+        return repl
+    return wraps
+
+@parametrized_decorator
+def fallback(function, fallback_functions):
+    """
+    A decorator that checks if the function throws an Exception, 
+    and if so falls back into a collection of functions passed in the decorator
+    to attempt to suppliment the original function
+    
+    Args:
+      function (function): Function to be wrapped
+      fallback_functions (iter): collection of callable replacements
+    
+    Return:
+      Function: A function to execute if original function fails
+    
+    Example:
+      ```
+      def saves_code():
+        return "Foo!"
+      
+      @fallback([saves_code])
+      def crashes_code():
+        raise Exception("Oh no!")
+      
+      print(crashes_code())  # "Foo!"
+      ```
+    """
+    def wrapper(*args, **kwargs):
+        errs = []
+        try:
+            return function(*args, **kwargs)
+        except Exception as e:
+            errs.append((function, e))
+            for func in fallback_functions:
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    errs.append((func.__qualname__, e))
+            raise RuntimeError(f"No fallbacks succeeded \n\n{errs}")
+    return wrapper
