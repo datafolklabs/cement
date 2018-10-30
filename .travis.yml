@@ -6,8 +6,7 @@ os:
 python:
   - 3.5
   - 3.6
-  # not supported by travis yet.
-  # - 3.7
+  - 3.7
 services:
   - memcached
   - redis-server

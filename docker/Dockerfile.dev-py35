@@ -1,4 +1,4 @@
-FROM python:3.7-alpine
+FROM python:3.5-alpine
 MAINTAINER BJ Dierkes <derks@datafolklabs.com>
 ENV PS1="\[\e[0;33m\]|> cement <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
 
