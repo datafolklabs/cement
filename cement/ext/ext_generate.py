@@ -41,7 +41,7 @@ class GenerateTemplateAbstractBase(Controller):
         ignore_list = g_config.get('ignore', [])
 
         # default ignore the .generate.yml config
-        g_config_yml = '^(.*)[\/\\\\]%s[\/\\\\]\.generate\.yml$' % \
+        g_config_yml = r'^(.*)[\/\\\\]%s[\/\\\\]\.generate\.yml$' % \
                        self._meta.label
         ignore_list.append(g_config_yml)
 
@@ -152,7 +152,7 @@ def setup_template_items(app):
                 template_dirs.append(subpath)
 
         # FIXME: not exactly sure how to test for this so not covering
-        except AttributeError as e:                           # pragma: nocover
+        except AttributeError:                                # pragma: nocover
             msg = 'unable to load template module' + \
                   '%s from %s' % (mod, '.'.join(mod_parts))   # pragma: nocover
             app.log.debug(msg)                                # pragma: nocover

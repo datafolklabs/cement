@@ -54,7 +54,7 @@ class Environment(object):
 
         try:
             self.user = pwd.getpwnam(self.user)
-        except KeyError as e:
+        except KeyError:
             raise exc.FrameworkError("Daemon user '%s' doesn't exist." %
                                      self.user)
 
@@ -62,7 +62,7 @@ class Environment(object):
             self.group = kw.get('group',
                                 grp.getgrgid(self.user.pw_gid).gr_name)
             self.group = grp.getgrnam(self.group)
-        except KeyError as e:
+        except KeyError:
             raise exc.FrameworkError("Daemon group '%s' doesn't exist." %
                                      self.group)
 
@@ -151,19 +151,19 @@ class Environment(object):
         if hasattr(sys.stdin, 'fileno'):
             try:
                 os.dup2(stdin.fileno(), sys.stdin.fileno())
-            except io.UnsupportedOperation as e:
+            except io.UnsupportedOperation:
                 # FIXME: ?
                 pass
         if hasattr(sys.stdout, 'fileno'):
             try:
                 os.dup2(stdout.fileno(), sys.stdout.fileno())
-            except io.UnsupportedOperation as e:
+            except io.UnsupportedOperation:
                 # FIXME: ?
                 pass
         if hasattr(sys.stderr, 'fileno'):
             try:
                 os.dup2(stderr.fileno(), sys.stderr.fileno())
-            except io.UnsupportedOperation as e:
+            except io.UnsupportedOperation:
                 # FIXME: ?
                 pass
 

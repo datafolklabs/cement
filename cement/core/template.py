@@ -125,7 +125,7 @@ class TemplateHandler(TemplateInterface, Handler):
         """
 
         # must be provided by a subclass
-        raise NotImplemented  # pragma: nocover
+        raise NotImplementedError  # pragma: nocover
 
     def _match_patterns(self, item, patterns):
         for pattern in patterns:
@@ -315,7 +315,7 @@ class TemplateHandler(TemplateInterface, Handler):
         if template_module not in sys.modules:
             try:
                 __import__(template_module, globals(), locals(), [], 0)
-            except ImportError as e:
+            except ImportError:
                 LOG.debug("unable to import template module '%s'."
                           % template_module)
                 return (None, None)
@@ -326,7 +326,7 @@ class TemplateHandler(TemplateInterface, Handler):
             LOG.debug("loaded output template '%s' from module %s" %
                       (template_path, template_module))
             return (content, full_module_path)
-        except IOError as e:
+        except IOError:
             LOG.debug("output template '%s' does not exist in module %s" %
                       (template_path, template_module))
             return (None, None)
