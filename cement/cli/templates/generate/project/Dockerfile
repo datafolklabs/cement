@@ -7,12 +7,6 @@ COPY . /src
 RUN apk update && \
     apk add git && \
     pip install --no-cache-dir -r requirements.txt \
-    && rm -f /usr/local/lib/python3.6/site-packages/cement.egg-link \
-    && cd src/cement \
-    && python setup.py install \
-    && cd /src \
-    && rm -rf src/cement \
     && python setup.py install
-RUN rm -rf /src
 WORKDIR /
 ENTRYPOINT ["{{ label }}"]
