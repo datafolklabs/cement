@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 3.0.1 - DEVELOPMENT (will be released as 3.0.2)
+
+Bugs:
+
+- `[ext.generator]` Error class is malformed
+    - [Issue #535](https://github.com/datafolklabs/cement/issues/535)
+- `[core.foundation]` Contents of plugin_dirs is printed to console 
+    - [Issue #538](https://github.com/datafolklabs/cement/issues/538)
+
 ## 3.0.0 - August 21, 2018
 
 Bugs:
