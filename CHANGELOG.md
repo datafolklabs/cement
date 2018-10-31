@@ -8,6 +8,8 @@ Bugs:
     - [Issue #532](https://github.com/datafolklabs/cement/issues/532)
 - `[ext.generator]` Error class is malformed
     - [Issue #535](https://github.com/datafolklabs/cement/issues/535)
+- `[core.template]` MemoryError during 'cement generate project'
+    - [Issue #531](https://github.com/datafolklabs/cement/issues/531)
 - `[core.foundation]` Contents of plugin_dirs is printed to console
     - [Issue #538](https://github.com/datafolklabs/cement/issues/538)
 

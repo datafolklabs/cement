@@ -138,7 +138,8 @@ class Jinja2TemplateHandler(TemplateHandler):
             content = content.decode('utf-8')
 
         tmpl = self.env.from_string(content)
-        return tmpl.render(**data)
+        res = tmpl.render(**data)
+        return res
 
 
 def load(app):
