@@ -66,7 +66,7 @@ def main():
                 import traceback
                 traceback.print_exc()
 
-        except {{ class_name}}Error:
+        except {{ class_name }}Error as e:
             print('{{ class_name }}Error > %s' % e.args[0])
             app.exit_code = 1
 
