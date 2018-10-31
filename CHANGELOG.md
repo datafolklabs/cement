@@ -11,6 +11,13 @@ Bugs:
 - `[core.foundation]` Contents of plugin_dirs is printed to console
     - [Issue #538](https://github.com/datafolklabs/cement/issues/538)
 
+
+Features:
+
+- `[ext.argparse]` Command name override
+    - [Issue #529](https://github.com/datafolklabs/cement/issues/529)
+
+
 ## 3.0.0 - August 21, 2018
 
 Bugs:
