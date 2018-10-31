@@ -5,8 +5,8 @@ from .core.exc import {{ class_name }}Error
 from .controllers.base import Base
 
 # configuration defaults
-CONFIG = init_defaults('todo')
-CONFIG['todo']['foo'] = 'bar'
+CONFIG = init_defaults('{{ label }}')
+CONFIG['{{ label }}']['foo'] = 'bar'
 
 
 class {{ class_name }}(App):
