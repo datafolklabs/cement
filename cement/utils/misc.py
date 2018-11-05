@@ -185,9 +185,9 @@ def is_true(item):
             otherwise
 
     """
-    if isinstance(item, str) and item.lower() in ['y', 'true', 'yes', 'on', '1']:
+    if isinstance(item, str) and item.lower() in ['true', 'y', 'yes', 'on', '1']:
         return True
-    elif isinstance(item, bool) and item:
+    elif isinstance(item, bool) and item is True:
         return True
     elif isinstance(item, int) and item > 0:
         return True

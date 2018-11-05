@@ -5,7 +5,6 @@ import sys
 import pkgutil
 import re
 import shutil
-import platform
 from abc import abstractmethod
 from ..core import exc
 from ..core.interface import Interface
@@ -125,7 +124,7 @@ class TemplateHandler(TemplateInterface, Handler):
         """
 
         # must be provided by a subclass
-        raise NotImplemented  # pragma: nocover
+        raise NotImplementedError  # pragma: nocover
 
     def _match_patterns(self, item, patterns):
         for pattern in patterns:
@@ -159,6 +158,11 @@ class TemplateHandler(TemplateInterface, Handler):
 
         dest = fs.abspath(dest)
         src = fs.abspath(src)
+        escaped_src = src.encode('unicode-escape').decode('utf-8')
+
+        # double escape for regex matching
+        escaped_src_pattern = escaped_src.encode('unicode-escape')
+        escaped_src_pattern = escaped_src_pattern.decode('utf-8')
 
         if exclude is None:
             exclude = []
@@ -176,6 +180,8 @@ class TemplateHandler(TemplateInterface, Handler):
 
         # here's the fun
         for cur_dir, sub_dirs, files in os.walk(src):
+            escaped_cur_dir = cur_dir.encode('unicode-escape').decode('utf-8')
+
             if cur_dir == '.':
                 continue    # pragma: nocover
             elif cur_dir == src:
@@ -190,24 +196,33 @@ class TemplateHandler(TemplateInterface, Handler):
                 LOG.debug(
                     'not rendering excluded directory as template: ' +
                     '%s' % cur_dir)
-                cur_dir_stub = re.sub(src, '', cur_dir)
+
+                cur_dir_stub = re.sub(escaped_src_pattern,
+                                      '',
+                                      escaped_cur_dir)
                 cur_dir_stub = cur_dir_stub.lstrip('/')
+                cur_dir_stub = cur_dir_stub.lstrip('\\\\')
                 cur_dir_stub = cur_dir_stub.lstrip('\\')
                 cur_dir_dest = os.path.join(dest, cur_dir_stub)
             else:
                 # render the cur dir
                 LOG.debug(
                     'rendering directory as template: %s' % cur_dir)
-                cur_dir_stub = re.sub(src,
-                                      '',
-                                      self.render(cur_dir, data))
 
+                cur_dir_stub = re.sub(escaped_src_pattern,
+                                      '',
+                                      escaped_cur_dir)
+                cur_dir_stub = self.render(cur_dir_stub, data)
                 cur_dir_stub = cur_dir_stub.lstrip('/')
+                cur_dir_stub = cur_dir_stub.lstrip('\\\\')
                 cur_dir_stub = cur_dir_stub.lstrip('\\')
                 cur_dir_dest = os.path.join(dest, cur_dir_stub)
 
             # render sub-dirs
             for sub_dir in sub_dirs:
+                escaped_sub_dir = sub_dir.encode('unicode-escape')
+                escaped_sub_dir = escaped_sub_dir.decode('utf-8')
+
                 full_path = os.path.join(cur_dir, sub_dir)
 
                 if self._match_patterns(full_path, ignore_patterns):
@@ -224,13 +239,9 @@ class TemplateHandler(TemplateInterface, Handler):
                     LOG.debug(
                         'rendering sub-directory as template: %s' % full_path)
 
-                    if platform.system().lower() in ['windows']:
-                        src = src.encode('unicode-escape')  # pragma: nocover
-                        src = str(src)                      # pragma: nocover
-
-                    new_sub_dir = re.sub(src,
+                    new_sub_dir = re.sub(escaped_src_pattern,
                                          '',
-                                         self.render(sub_dir, data))
+                                         self.render(escaped_sub_dir, data))
                     sub_dir_dest = os.path.join(cur_dir_dest, new_sub_dir)
 
                 if not os.path.exists(sub_dir_dest):
@@ -238,12 +249,9 @@ class TemplateHandler(TemplateInterface, Handler):
                     os.makedirs(sub_dir_dest)
 
             for _file in files:
-                # windows paths (if condition to avoid unknown breakage)
-                if platform.system().lower() in ['windows']:
-                    src = src.encode('unicode-escape')      # pragma: nocover
-                    src = str(src)                          # pragma: nocover
+                _rendered = self.render(_file, data)
+                new_file = re.sub(escaped_src_pattern, '', _rendered)
 
-                new_file = re.sub(src, '', self.render(_file, data))
                 _file = fs.abspath(os.path.join(cur_dir, _file))
                 _file_dest = fs.abspath(os.path.join(cur_dir_dest, new_file))
 
@@ -315,7 +323,7 @@ class TemplateHandler(TemplateInterface, Handler):
         if template_module not in sys.modules:
             try:
                 __import__(template_module, globals(), locals(), [], 0)
-            except ImportError as e:
+            except ImportError:
                 LOG.debug("unable to import template module '%s'."
                           % template_module)
                 return (None, None)
@@ -326,7 +334,7 @@ class TemplateHandler(TemplateInterface, Handler):
             LOG.debug("loaded output template '%s' from module %s" %
                       (template_path, template_module))
             return (content, full_module_path)
-        except IOError as e:
+        except IOError:
             LOG.debug("output template '%s' does not exist in module %s" %
                       (template_path, template_module))
             return (None, None)
