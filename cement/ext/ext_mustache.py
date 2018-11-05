@@ -73,7 +73,7 @@ class MustacheOutputHandler(OutputHandler):
 
         """
 
-        LOG.debug("rendering output using '%s' as a template." % template)
+        LOG.debug("rendering content using '%s' as a template." % template)
         content, _type, _path = self.templater.load(template)
         return self.templater.render(content, data)
 

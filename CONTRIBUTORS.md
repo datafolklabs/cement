@@ -12,3 +12,4 @@ documentation, or testing:
 - Subhash Bhushan (subhashb)
 - Sam Likins (samlikins)
 - Dakota Blair (dakotablair)
+- Luca Crea (lcrea)

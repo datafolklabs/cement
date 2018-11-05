@@ -42,7 +42,7 @@ def test_generate(tmp):
         # copied but not rendered
         assert exists_join(tmp.dir, 'exclude-me')
         res = open(os.path.join(tmp.dir, 'exclude-me'), 'r').read()
-        assert re.match('.*foo1 => \{\{ foo1 \}\}.*', res)
+        assert re.match(r'.*foo1 => \{\{ foo1 \}\}.*', res)
 
         # should not have been copied
         assert not exists_join(tmp.dir, 'ignore-me')

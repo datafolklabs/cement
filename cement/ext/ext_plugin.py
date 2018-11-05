@@ -136,7 +136,7 @@ class CementPluginHandler(plugin.PluginHandler):
         if base_package not in sys.modules:
             try:
                 __import__(base_package, globals(), locals(), [], 0)
-            except ImportError as e:
+            except ImportError:
                 LOG.debug("unable to import plugin bootstrap module '%s'."
                           % base_package)
                 return False

@@ -4,15 +4,7 @@ ENV PS1="\[\e[0;33m\]|> {{ label }} <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
 
 WORKDIR /src
 COPY . /src
-RUN apk update && \
-    apk add git && \
-    pip install --no-cache-dir -r requirements.txt \
-    && rm -f /usr/local/lib/python3.6/site-packages/cement.egg-link \
-    && cd src/cement \
-    && python setup.py install \
-    && cd /src \
-    && rm -rf src/cement \
+RUN pip install --no-cache-dir -r requirements.txt \
     && python setup.py install
-RUN rm -rf /src
 WORKDIR /
 ENTRYPOINT ["{{ label }}"]

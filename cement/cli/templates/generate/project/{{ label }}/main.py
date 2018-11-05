@@ -5,8 +5,8 @@ from .core.exc import {{ class_name }}Error
 from .controllers.base import Base
 
 # configuration defaults
-CONFIG = init_defaults('todo')
-CONFIG['todo']['foo'] = 'bar'
+CONFIG = init_defaults('{{ label }}')
+CONFIG['{{ label }}']['foo'] = 'bar'
 
 
 class {{ class_name }}(App):
@@ -66,7 +66,7 @@ def main():
                 import traceback
                 traceback.print_exc()
 
-        except {{ class_name}}Error:
+        except {{ class_name }}Error as e:
             print('{{ class_name }}Error > %s' % e.args[0])
             app.exit_code = 1
 

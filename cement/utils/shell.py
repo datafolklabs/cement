@@ -450,7 +450,7 @@ class Prompt(MetaMixin):
                 if self._meta.numbered:
                     try:
                         self.input = self._meta.options[int(self.input) - 1]
-                    except (IndexError, ValueError) as e:
+                    except (IndexError, ValueError):
                         self.input = None
                         continue
                 else:

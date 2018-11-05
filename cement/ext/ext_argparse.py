@@ -134,16 +134,18 @@ class expose(object):
     """
     # pylint: disable=W0622
 
-    def __init__(self, hide=False, arguments=[], **parser_options):
+    def __init__(self, hide=False, arguments=[], label=None, **parser_options):
         self.hide = hide
-
-        # FIX ME: Not Implemented
         self.arguments = arguments
+        self.label = label
         self.parser_options = parser_options
 
     def __call__(self, func):
+        if self.label is None:
+            self.label = func.__name__
+
         metadict = {}
-        metadict['label'] = _clean_label(func.__name__)
+        metadict['label'] = _clean_label(self.label)
         metadict['func_name'] = func.__name__
         metadict['exposed'] = True
         metadict['hide'] = self.hide

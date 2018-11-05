@@ -1385,7 +1385,6 @@ class App(meta.MetaMixin):
 
         for d in self._meta.plugin_dirs:
             d = d.format(**template_dict)
-            print(d)
             if d not in plugin_dirs:
                 plugin_dirs.append(d)
 
