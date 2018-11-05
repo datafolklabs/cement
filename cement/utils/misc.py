@@ -257,7 +257,7 @@ def parametrized_decorator(decorator):
     return wraps
 
 @parametrized_decorator
-def fallback(function, fallback_functions):
+def fallback(function, fallback_functions, excepted=(Exception,)):
     """
     A decorator that checks if the function throws an Exception, 
     and if so falls back into a collection of functions passed in the decorator
@@ -266,6 +266,7 @@ def fallback(function, fallback_functions):
     Args:
       function (function): Function to be wrapped
       fallback_functions (iter): collection of callable replacements
+      excepted (tuple(BaseException)): A collection of Exceptions that it ignore, and use fall back functions. 
     
     Return:
       Function: A function to execute if original function fails
@@ -291,7 +292,7 @@ def fallback(function, fallback_functions):
             for func in fallback_functions:
                 try:
                     return func(*args, **kwargs)
-                except Exception as e:
+                except excepted as e:
                     errs.append((func.__qualname__, e))
             raise RuntimeError(f"No fallbacks succeeded \n\n{errs}")
     return wrapper
