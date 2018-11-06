@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 3.0.1 - DEVELOPMENT (will be released as 3.0.2)
+## 3.0.2 - November 6, 2018
 
 Bugs:
 
