@@ -12,7 +12,7 @@ f.close()
 setup(name='cement',
     version=VERSION,
     python_requires='>=3.5',
-    description='CLI Framework for Python',
+    description='Application Framework for Python',
     long_description=LONG,
     long_description_content_type='text/markdown',
     classifiers=[],
