@@ -1,4 +1,4 @@
-.PHONY: dev test test-core comply-fix docs clean dist dist-upload
+.PHONY: dev test test-core comply-fix docs clean dist dist-upload docker docker-push
 
 dev:
 	docker-compose up -d
@@ -51,3 +51,9 @@ dist: clean
 
 dist-upload:
 	twine upload dist/*
+
+docker:
+	docker build -t datafolklabs/cement:latest .
+
+docker-push:
+	docker push datafolklabs/cement:latest
