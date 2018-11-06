@@ -1,5 +1,17 @@
 # ChangeLog
 
+## 3.0.3 - DEVELOPMENT (will be released as stable/3.0.4)
+
+Bugs:
+
+- None
+
+
+Features:
+
+- None
+
+
 ## 3.0.2 - November 6, 2018
 
 Bugs:
