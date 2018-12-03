@@ -1,6 +1,8 @@
 # Cement Framework
 
 [![Continuous Integration Status](https://travis-ci.org/datafolklabs/cement.svg)](https://travis-ci.org/datafolklabs/cement)
+[![Code Quality: Python](https://img.shields.io/lgtm/grade/python/g/datafolklabs/cement.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/datafolklabs/cement/context:python)
+[![Total Alerts](https://img.shields.io/lgtm/alerts/g/datafolklabs/cement.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/datafolklabs/cement/alerts)
 
 Cement is an advanced Application Framework for Python, with a primary focus on Command Line Interfaces (CLI).  Its goal is to introduce a standard, and feature-full platform for both simple and complex command line applications as well as support rapid development needs without sacrificing quality.  Cement is flexible, and it's use cases span from the simplicity of a micro-framework to the complexity of a mega-framework. Whether it's a single file script, or a multi-tier application, Cement is the foundation you've been looking for.
 
