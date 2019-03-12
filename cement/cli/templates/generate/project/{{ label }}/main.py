@@ -19,7 +19,7 @@ class {{ class_name }}(App):
         config_defaults = CONFIG
 
         # call sys.exit() on close
-        close_on_exit = True
+        exit_on_close = True
 
         # load additional framework extensions
         extensions = [
