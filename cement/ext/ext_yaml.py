@@ -122,6 +122,13 @@ class YamlConfigHandler(ConfigParserConfigHandler):
     include `pyYaml` in your application's dependencies as Cement explicitly
     does *not* include external dependencies for optional extensions.
 
+    Due to changes in pyYaml version 5.1 to deprecate `yaml.load` without
+    specifying a `Loader=...`, this class will attempt to parse the yaml
+    content with the 5.1 sugar method `full_load`, falling back to the
+    "unsafe" call for versions prior to 5.1.  The `full_load` method uses
+    the FullLoader, which is the default Loader when none is provided.  See
+    the pyYaml message on this deprecation: https://msg.pyyaml.org/load
+
     """
     class Meta:
         label = 'yaml'
@@ -139,10 +146,12 @@ class YamlConfigHandler(ConfigParserConfigHandler):
                              file.
 
         """
+        yaml_load = yaml.full_load if hasattr(yaml, 'full_load') else yaml.load
+
         with open(file_path, 'r') as f:
             content = f.read()
             if content is not None and len(content) > 0:
-                self.merge(yaml.load(content))
+                self.merge(yaml_load(content))
 
         return True
 

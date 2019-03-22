@@ -33,7 +33,8 @@ class GenerateTemplateAbstractBase(Controller):
         data['cement']['major_minor_version'] = maj_min
 
         f = open(os.path.join(source, '.generate.yml'))
-        g_config = yaml.load(f)
+        yaml_load = yaml.full_load if hasattr(yaml, 'full_load') else yaml.load
+        g_config = yaml_load(f)
         f.close()
 
         vars = g_config.get('variables', {})
