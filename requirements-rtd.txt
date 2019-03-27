@@ -1,7 +1,7 @@
 # The following are only required for Cement development
-pytest
-pytest-cov
-coverage
+pytest>=4.3.1
+pytest-cov>=2.6.1
+coverage>=4.5.3
 sphinx
 sphinx_rtd_theme
 pep8
