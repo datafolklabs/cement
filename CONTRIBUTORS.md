@@ -13,3 +13,4 @@ documentation, or testing:
 - Sam Likins (samlikins)
 - Dakota Blair (dakotablair)
 - Luca Crea (lcrea)
+- Xavier RENE-CORAIL (xcorail)
