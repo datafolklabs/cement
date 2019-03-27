@@ -14,3 +14,4 @@ documentation, or testing:
 - Dakota Blair (dakotablair)
 - Luca Crea (lcrea)
 - Xavier RENE-CORAIL (xcorail)
+- Lucas Clay (mlclay)
