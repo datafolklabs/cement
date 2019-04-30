@@ -18,6 +18,7 @@ class GenerateTemplateAbstractBase(Controller):
         pass
 
     def _generate(self, source, dest):
+        from datetime import datetime
         msg = 'Generating %s %s in %s' % (
                    self.app._meta.label, self._meta.label, dest
                )
@@ -31,6 +32,7 @@ class GenerateTemplateAbstractBase(Controller):
         data['cement']['major_version'] = VERSION[0]
         data['cement']['minor_version'] = VERSION[1]
         data['cement']['major_minor_version'] = maj_min
+        data['today'] = datetime.today()
 
         f = open(os.path.join(source, '.generate.yml'))
         yaml_load = yaml.full_load if hasattr(yaml, 'full_load') else yaml.load
