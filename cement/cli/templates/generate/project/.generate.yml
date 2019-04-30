@@ -4,9 +4,10 @@ exclude:
     - '^(.*)[\/\\\\]project[\/\\\\]{{ label }}[\/\\\\]templates[\/\\\\](.*)$'
 
 ignore:
-    - '^(.*)pyc(.*)$'
-    - '^(.*)pyo(.*)$'
+    - '^(.*)[.]pyc$'
+    - '^(.*)[.]pyo$'
     - '^(.*)__pycache__(.*)$'
+    - '^(.*)[\/\\\\][.]git(.*)$'
 
 variables:
     -   name: label
