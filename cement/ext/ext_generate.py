@@ -48,27 +48,17 @@ class GenerateTemplateAbstractBase(Controller):
                        self._meta.label
         ignore_list.append(g_config_yml)
 
-        var_defaults = {
-            'name': None,
-            'prompt': None,
-            'validate': None,
-            'case': None,
-            'default': None,
-        }
-
-        for defined_var in vars:
-            var = var_defaults.copy()
-            var.update(defined_var)
-            for key in ['name', 'prompt']:
-                assert var[key] is not None, \
-                    "Required generate config key missing: %s" % key
-
+        for var in vars:
+            # `AssertionError` -> `KeyError` for ['name', 'prompt']
+            var_name = var['name']
+            var_prompt = var['prompt']
+            var_default = var.get('default', None)
             val = None
-            if var['default'] is not None and self.app.pargs.defaults:
-                val = var['default']
+            if var_default is not None and self.app.pargs.defaults:
+                val = var_default
 
-            elif var['default'] is not None:
-                default_text = ' [%s]' % var['default']
+            elif var_default is not None:
+                default_text = ' [%s]' % var_default
 
             else:
                 default_text = ''   # pragma: nocover
@@ -76,26 +66,28 @@ class GenerateTemplateAbstractBase(Controller):
             if val is None:
                 class MyPrompt(shell.Prompt):
                     class Meta:
-                        text = "%s%s:" % (var['prompt'], default_text)
-                        default = var.get('default', None)
+                        text = "%s%s:" % (var_prompt, default_text)
+                        default = var_default
 
                 p = MyPrompt()
                 val = p.prompt()    # pragma: nocover
 
-            if var['case'] in ['lower', 'upper', 'title']:
-                val = getattr(val, var['case'])()
-            elif var['case'] is not None:
+            var_case = var.get('case', None)
+            if var_case in ['lower', 'upper', 'title']:
+                val = getattr(val, var_case)()
+            elif var_case is not None:
                 self.app.log.warning(
                     "Invalid configuration for variable " +
-                    "'%s': " % var['name'] +
+                    "'%s': " % var_name +
                     "case must be one of lower, upper, or title."
                 )
 
-            if var['validate'] is not None:
-                assert re.match(var['validate'], val), \
-                    "Invalid Response (must match: '%s')" % var['validate']
+            var_validate = var.get('validate', None)
+            if var_validate is not None:
+                assert re.match(var_validate, val), \
+                    "Invalid Response (must match: '%s')" % var_validate
 
-            data[var['name']] = val
+            data[var_name] = val
 
         try:
             self.app.template.copy(source, dest, data,
