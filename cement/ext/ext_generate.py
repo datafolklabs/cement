@@ -23,16 +23,21 @@ class GenerateTemplateAbstractBase(Controller):
                    self.app._meta.label, self._meta.label, dest
                )
         self.app.log.info(msg)
-        data = {}
 
         # builtin vars
         maj_min = float('%s.%s' % (VERSION[0], VERSION[1]))
-        data['cement'] = {}
-        data['cement']['version'] = get_version()
-        data['cement']['major_version'] = VERSION[0]
-        data['cement']['minor_version'] = VERSION[1]
-        data['cement']['major_minor_version'] = maj_min
-        data['today'] = datetime.today()
+        today = datetime.today()
+        data = dict(
+            cement=dict(
+                version=get_version(),
+                major_version=VERSION[0],
+                minor_version=VERSION[1],
+                major_minor_version=maj_min,
+            ),
+            today=today,
+            iso_today=today.date().isoformat(),
+            dest_label=dest.replace('\\', '/').strip('/').split('/')[-1],
+        )
 
         f = open(os.path.join(source, '.generate.yml'))
         yaml_load = yaml.full_load if hasattr(yaml, 'full_load') else yaml.load
