@@ -54,28 +54,20 @@ class GenerateTemplateAbstractBase(Controller):
         ignore_list.append(g_config_yml)
 
         for var in vars:
-            # `AssertionError` -> `KeyError` for ['name', 'prompt']
-            var_name = var['name']
-            var_prompt = var['prompt']
+            var_name = var.get('name', None)
+            assert var_name is not None, \
+                "Required generate config key missing: name"
+            var_prompt = var.get('prompt', None)
             var_default = var.get('default', None)
             val = None
-            if var_default is not None and self.app.pargs.defaults:
-                val = var_default
-
-            elif var_default is not None:
-                default_text = ' [%s]' % var_default
-
-            else:
-                default_text = ''   # pragma: nocover
+            if var_default is not None:
+                var_default = self.__render(var_default, data)
+                if self.app.pargs.defaults or var_prompt is None:
+                    val = var_default
 
             if val is None:
-                class MyPrompt(shell.Prompt):
-                    class Meta:
-                        text = "%s%s:" % (var_prompt, default_text)
-                        default = var_default
-
-                p = MyPrompt()
-                val = p.prompt()    # pragma: nocover
+                val = self.__prompt(var_prompt, var_default)
+                val = self.__render(val, data)
 
             var_case = var.get('case', None)
             if var_case in ['lower', 'upper', 'title']:
@@ -127,6 +119,28 @@ class GenerateTemplateAbstractBase(Controller):
             self._clone(source, dest)
         else:
             self._generate(source, dest)
+
+    @staticmethod
+    def __prompt(prompt, var_default):
+        if prompt is not None:
+            default_text = ' [%s]' % var_default if var_default else ''
+
+            class MyPrompt(shell.Prompt):
+                class Meta:
+                    text = "%s%s:" % (prompt, default_text)
+                    default = var_default
+
+            p = MyPrompt()
+            return p.prompt()    # pragma: nocover
+        else:
+            assert var_default is not None, \
+                "Required generate config key missing: prompt"
+            return var_default
+
+    def __render(self, value, data):
+        if '{{' in value:
+            value = self.app.template.render(value, data)
+        return value
 
 
 def setup_template_items(app):
