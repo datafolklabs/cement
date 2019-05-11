@@ -19,6 +19,7 @@ class GenerateTemplateAbstractBase(Controller):
 
     def _generate(self, source, dest):
         from datetime import datetime
+        from cement.utils.misc import pyid
         msg = 'Generating %s %s in %s' % (
                    self.app._meta.label, self._meta.label, dest
                )
@@ -27,6 +28,7 @@ class GenerateTemplateAbstractBase(Controller):
         # builtin vars
         maj_min = float('%s.%s' % (VERSION[0], VERSION[1]))
         today = datetime.today()
+        dest_tail = os.path.split(dest.strip(os.path.sep))[-1].strip()
         data = dict(
             cement=dict(
                 version=get_version(),
@@ -36,7 +38,8 @@ class GenerateTemplateAbstractBase(Controller):
             ),
             today=today,
             iso_today=today.date().isoformat(),
-            dest_label=dest.replace('\\', '/').strip('/').split('/')[-1],
+            dest_tail=dest_tail,
+            dest_label=pyid(dest_tail, sep='_'),
         )
 
         f = open(os.path.join(source, '.generate.yml'))
