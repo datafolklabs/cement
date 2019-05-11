@@ -13,32 +13,39 @@ variables:
     -   name: label
         prompt: "App Label"
         case: "lower"
-        default: "myapp"
+        default: "{{ dest_label }}"
 
     -   name: name
         prompt: "App Name"
-        default: "My Application"
+        default: "{{ dest_tail|title|catif(' Application') }}"
 
     -   name: class_name
         prompt: "App Class Name"
         validate: "^[a-zA-Z0-9]+$"
-        default: "MyApp"
+        default: "{{ dest_tail|pyid(case='title')|catif('App') }}"
 
     -   name: description
         prompt: "App Description"
-        default: "MyApp Does Amazing Things!"
+        default: "{{ class_name }} Does Amazing Things!"
 
     -   name: creator
         prompt: "Creator Name"
         default: "John Doe"
 
+    -   name: _creator_mail_id
+        default: "{{ creator|pyid(sep='.') }}"
+
     -   name: creator_email
         prompt: "Creator Email"
-        default: "john.doe@example.com"
+        default: "{{ _creator_mail_id }}@gmail.com"
+
+    -   name: github_user
+        prompt: "GitHub User ID"
+        default: "{{ creator|pyid(sep='-') }}"
 
     -   name: url
         prompt: "Project URL"
-        default: "https://github.com/johndoe/myapp/"
+        default: "https://github.com/{{ github_user }}/{{ label }}/"
 
     -   name: license
         prompt: "License"
