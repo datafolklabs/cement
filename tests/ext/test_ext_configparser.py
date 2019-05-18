@@ -54,3 +54,15 @@ def test_env_var_override():
         assert app.config.get('dummy', 'foo') == 'dummy-not-bar'
         section_dict = app.config.get_section_dict('dummy')
         assert section_dict['foo'] == 'dummy-not-bar'
+
+
+def test_get_boolean():
+    with TestApp(config_section='testapp') as app:
+        app.config.set('testapp', 'foobool', 'true')
+        assert app.config['testapp'].getboolean('foobool') is True
+
+        app.config.set('testapp', 'foobool', 'no')
+        assert app.config['testapp'].getboolean('foobool') is False
+
+        os.environ['TESTAPP_FOOBOOL'] = '1'
+        assert app.config['testapp'].getboolean('foobool') is True
