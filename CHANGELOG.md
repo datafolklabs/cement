@@ -9,7 +9,8 @@ Bugs:
 
 Features:
 
-- None
+- `[utils.misc]` Support `y` as a truth boolean in `utils.misc.is_true`
+    - [Issue #542](https://github.com/datafolklabs/cement/issues/542)
 
 
 ## 3.0.2 - November 6, 2018
