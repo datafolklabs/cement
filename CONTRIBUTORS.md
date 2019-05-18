@@ -16,3 +16,4 @@ documentation, or testing:
 - Xavier RENE-CORAIL (xcorail)
 - Lucas Clay (mlclay)
 - Adam Hodges (ajhodges)
+- Stelios Tymvios (namedLambda)
