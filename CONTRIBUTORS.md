@@ -15,3 +15,4 @@ documentation, or testing:
 - Luca Crea (lcrea)
 - Xavier RENE-CORAIL (xcorail)
 - Lucas Clay (mlclay)
+- Adam Hodges (ajhodges)
