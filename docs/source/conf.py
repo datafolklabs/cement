@@ -169,7 +169,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Cement API Reference'
-copyright = u'2009-2018, Data Folk Labs, LLC'
+copyright = u'2009-2019, Data Folk Labs, LLC'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
