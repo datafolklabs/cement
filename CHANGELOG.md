@@ -1,9 +1,11 @@
 # ChangeLog
 
-## 3.0.3 - DEVELOPMENT (will be released as stable/3.0.4)
+## 3.0.4 - May 17, 2019
 
 Bugs:
 
+- `[ext.yaml]` YamlConfigHandler uses unsafe load method
+   - [Issue #553](https://github.com/datafolklabs/cement/issues/553)
 - `[ext.configparser]` Configparser 'getboolean' exception
    - [Issue #558](https://github.com/datafolklabs/cement/issues/558)
 

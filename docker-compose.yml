@@ -24,18 +24,6 @@ services:
         build:
             context: .
             dockerfile: docker/Dockerfile.dev-py35
-        # hostname: cement
-        # stdin_open: true
-        # tty: true
-        # volumes:
-        #     - '.:/src'
-        # working_dir: '/src'
-        # links:
-        #     - redis:redis
-        #     - memcached:memcached
-        # environment:
-        #     REDIS_HOST: redis
-        #     MEMCACHED_HOST: memcached
 
     cement-py36:
         image: "cement:dev-py36"
@@ -43,18 +31,20 @@ services:
             context: .
             dockerfile: docker/Dockerfile.dev-py36
         <<: *DEFAULTS
-        # hostname: cement
-        # stdin_open: true
-        # tty: true
-        # volumes:
-        #     - '.:/src'
-        # working_dir: '/src'
-        # links:
-        #     - redis:redis
-        #     - memcached:memcached
-        # environment:
-        #     REDIS_HOST: redis
-        #     MEMCACHED_HOST: memcached
+
+    cement-py37:
+        image: "cement:dev-py37"
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.dev-py37
+        <<: *DEFAULTS
+    
+    # cement-py38:
+    #     image: "cement:dev-py38"
+    #     build:
+    #         context: .
+    #         dockerfile: docker/Dockerfile.dev-py38
+    #     <<: *DEFAULTS
 
     redis:
     redis:
