@@ -15,6 +15,7 @@ def test_is_true():
     assert misc.is_true('TRUE')
     assert misc.is_true('tRue')
     assert misc.is_true('yes')
+    assert misc.is_true('y')
     assert misc.is_true('on')
     assert misc.is_true(True)
 
@@ -26,6 +27,7 @@ def test_is_true():
     assert not misc.is_true('FALSE')
     assert not misc.is_true('fAlse')
     assert not misc.is_true('no')
+    assert not misc.is_true('n')
     assert not misc.is_true('off')
     assert not misc.is_true(False)
 
