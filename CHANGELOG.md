@@ -4,7 +4,8 @@
 
 Bugs:
 
-- None
+- `[ext.configparser]` Configparser 'getboolean' exception
+   - [Issue #558](https://github.com/datafolklabs/cement/issues/558)
 
 
 Features:
