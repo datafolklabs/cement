@@ -31,7 +31,10 @@ class ColorLogHandler(LoggingLogHandler):
 
         #: The string identifier of the handler.
         label = "colorlog"
-
+        
+        #: The config_section identifiying the config key.
+        config_section = 'log.colorlog'
+        
         #: Color mapping for each log level
         colors = {
             'DEBUG':    'cyan',
@@ -64,7 +67,7 @@ class ColorLogHandler(LoggingLogHandler):
 
     def _get_console_format(self):
         format = super(ColorLogHandler, self)._get_console_format()
-        colorize = self.app.config.get('log.{}'.format(self.Meta.label),
+        colorize = self.app.config.get(self.Meta.config_section,
                                        'colorize_console_log')
         if sys.stdout.isatty() or 'CEMENT_TEST' in os.environ:
             if is_true(colorize):
@@ -73,14 +76,14 @@ class ColorLogHandler(LoggingLogHandler):
 
     def _get_file_format(self):
         format = super(ColorLogHandler, self)._get_file_format()
-        colorize = self.app.config.get('log.{}'.format(self.Meta.label),
+        colorize = self.app.config.get(self.Meta.config_section,
                                        'colorize_file_log')
         if is_true(colorize):
             format = "%(log_color)s" + format
         return format
 
     def _get_console_formatter(self, format):
-        colorize = self.app.config.get('log.{}'.format(self.Meta.label),
+        colorize = self.app.config.get(self.Meta.config_section,
                                        'colorize_console_log')
         if sys.stdout.isatty() or 'CEMENT_TEST' in os.environ:
             if is_true(colorize):
@@ -99,7 +102,7 @@ class ColorLogHandler(LoggingLogHandler):
         return formatter
 
     def _get_file_formatter(self, format):
-        colorize = self.app.config.get('log.{}'.format(self.Meta.label),
+        colorize = self.app.config.get(self.Meta.config_section,
                                        'colorize_file_log')
         if is_true(colorize):
             formatter = self._meta.formatter_class(
