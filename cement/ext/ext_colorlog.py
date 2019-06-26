@@ -31,10 +31,10 @@ class ColorLogHandler(LoggingLogHandler):
 
         #: The string identifier of the handler.
         label = "colorlog"
-        
+
         #: The config_section identifiying the config key.
         config_section = 'log.colorlog'
-        
+
         #: Color mapping for each log level
         colors = {
             'DEBUG':    'cyan',
