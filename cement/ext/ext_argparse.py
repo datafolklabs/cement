@@ -106,6 +106,7 @@ class expose(object):
         arguments (list): List of tuples that define arguments to add to this
             commands sub-parser.
         parser_options (dict): Additional options to pass to Argparse.
+        label (str): String identifier for the command.
 
     Example:
 
