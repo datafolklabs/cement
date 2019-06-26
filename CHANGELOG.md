@@ -10,6 +10,11 @@ Features:
 
 - None
 
+Refactoring:
+
+- `[ext.colorlog]` Support subclassing of ext_colorlog.
+    - [Issue #571](https://github.com/datafolklabs/cement/issues/571)
+
 
 ## 3.0.4 - May 17, 2019
 
