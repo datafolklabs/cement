@@ -45,5 +45,5 @@ log.colorlog:
 ### Max size in bytes that a log file can grow until it is rotated.
 # max_bytes: 512000
 
-### The maximun number of log files to maintain when rotating
+### The maximum number of log files to maintain when rotating
 # max_files: 4
