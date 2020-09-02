@@ -59,7 +59,7 @@ def test_prompt(tmp):
 
     with GenerateApp(argv=argv) as app:
         msg = "reading from stdin while output is captured"
-        with raises(OSError, message=msg):
+        with raises(OSError, match=msg):
             app.run()
 
 
@@ -80,8 +80,8 @@ def test_invalid_variable_value(tmp):
     argv = ['generate', 'test2', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
-        msg = "Invalid Response (must match: '.*not-bar1.*')"
-        with raises(AssertionError, message=msg):
+        msg = "Invalid Response.*"
+        with raises(AssertionError, match=msg):
             app.run()
 
 

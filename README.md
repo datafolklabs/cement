@@ -50,7 +50,7 @@ The Cement CLI Application Framework is Open Source and is distributed under the
 
 ### Docker
 
-This project includes a `docker-compose` configuration that sets up all required services, and dependencies for development.  This is the recommended path for local development, and is the only fully supported option.
+This project includes a `docker-compose` configuration that sets up all required services, and dependencies for development and testing.  This is the recommended path for local development, and is the only fully supported option.
 
 The following creates all required docker containers, and launches an ASH shell within the `cement` dev container for development.
 ```
@@ -64,8 +64,31 @@ The above is the equivalent of running:
 ```
 $ docker-compose up -d
 
-$ docker-compose exec cement /bin/ash
+$ docker-compose exec cement /bin/bash
 ```
+
+**Testing Alternative Versions of Python**
+
+The latest stable version of Python 3 is the default, and target version accessible as the `cement` container within Docker Compose.  For testing against alternative versions of python, additional containers are created (ex: `cement-py37`, `cement-py38`, etc). You can access these containers via:
+
+```
+$ docker-compose ps
+        Name                      Command               State     Ports
+-------------------------------------------------------------------------
+cement_cement-py35_1   /bin/bash                        Up
+cement_cement-py36_1   /bin/bash                        Up
+cement_cement-py37_1   /bin/bash                        Up
+cement_cement-py38_1   /bin/bash                        Up
+cement_cement_1        /bin/bash                        Up
+cement_memcached_1     docker-entrypoint.sh memcached   Up      11211/tcp
+cement_redis_1         docker-entrypoint.sh redis ...   Up      6379/tcp
+
+
+$ docker-compose exec cement-py37 /bin/bash
+
+|> cement-py37 <| src #
+```
+
 
 ### VirtualENV
 
@@ -144,6 +167,12 @@ Execute the following to run all compliance and unit tests:
 
 ```
 $ make test
+```
+
+A coverage report is printed to console, as well as the HTML version created in `coverage-report`:
+
+```
+$ open coverage-report/index.html
 ```
 
 See `Makefile` for all other common development actions.

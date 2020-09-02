@@ -39,12 +39,12 @@ services:
             dockerfile: docker/Dockerfile.dev-py37
         <<: *DEFAULTS
     
-    # cement-py38:
-    #     image: "cement:dev-py38"
-    #     build:
-    #         context: .
-    #         dockerfile: docker/Dockerfile.dev-py38
-    #     <<: *DEFAULTS
+    cement-py38:
+        image: "cement:dev-py38"
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.dev-py38
+        <<: *DEFAULTS
 
     redis:
     redis:

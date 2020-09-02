@@ -209,7 +209,7 @@ def backup(path, suffix='.bak'):
                     shutil.copytree(path, new_path)
                 break
         else:
-            break
+            break  # pragma: nocover
     return new_path
 
 
