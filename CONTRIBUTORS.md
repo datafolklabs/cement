@@ -17,3 +17,4 @@ documentation, or testing:
 - Lucas Clay (mlclay)
 - Adam Hodges (ajhodges)
 - Stelios Tymvios (namedLambda)
+- Spyros Vlachos (devspyrosv)
