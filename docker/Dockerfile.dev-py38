@@ -1,5 +1,5 @@
 FROM python:3.8-alpine
-MAINTAINER BJ Dierkes <derks@datafolklabs.com>
+LABEL MAINTAINER BJ Dierkes <derks@datafolklabs.com>
 ENV PS1="\[\e[0;33m\]|> cement-py38 <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
 
 WORKDIR /src
