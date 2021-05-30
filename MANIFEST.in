@@ -1,5 +1,5 @@
 recursive-include *.py
 include setup.cfg
-include README.md CHANGELOG.md LICENSE.md CONTRIBUTORS.md
+include README.md CHANGELOG.md LICENSE CONTRIBUTORS.md
 include *.txt
 recursive-include cement/cli/templates/generate *
