@@ -15,6 +15,10 @@ Refactoring:
 - `[ext.colorlog]` Support subclassing of ext_colorlog.
     - [Issue #571](https://github.com/datafolklabs/cement/issues/571)
 
+Misc:
+
+- `[dev]` Update to Python 3.9 for default development / Docker version.
+
 
 ## 3.0.4 - May 17, 2019
 

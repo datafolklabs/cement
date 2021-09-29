@@ -14,6 +14,9 @@ matrix:
     - python: 3.8
       dist: xenial
       sudo: true
+    - python: 3.9
+      dist: xenial
+      sudo: true
 services:
   - memcached
   - redis-server

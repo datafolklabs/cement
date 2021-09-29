@@ -6,6 +6,7 @@ services:
             context: .
             dockerfile: docker/Dockerfile.dev
         hostname: cement
+        privileged: true
         stdin_open: true
         tty: true
         volumes:
@@ -44,6 +45,13 @@ services:
         build:
             context: .
             dockerfile: docker/Dockerfile.dev-py38
+        <<: *DEFAULTS
+    
+    cement-py39:
+        image: "cement:dev-py39"
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.dev-py39
         <<: *DEFAULTS
 
     redis:
