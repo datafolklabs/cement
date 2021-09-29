@@ -5,7 +5,7 @@
 ```
 $ pip install -r requirements.txt
 
-$ pip install setup.py
+$ python setup.py install
 ```
 
 ## Development
