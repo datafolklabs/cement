@@ -47,7 +47,6 @@ services:
         <<: *DEFAULTS
 
     redis:
-    redis:
         image: redis:latest
         hostname: redis
 
