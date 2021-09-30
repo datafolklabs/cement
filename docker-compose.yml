@@ -6,7 +6,6 @@ services:
             context: .
             dockerfile: docker/Dockerfile.dev
         hostname: cement
-        privileged: true
         stdin_open: true
         tty: true
         volumes:

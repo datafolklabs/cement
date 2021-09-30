@@ -33,14 +33,17 @@ def test_watchdog(tmp):
         f.close()
         time.sleep(1)
 
-    # 3 separate calls:
-    # File created
-    # Dir modified
-    # File modified
-    assert MyEventHandler.on_any_event.call_count == 3
+    # 5 separate calls: See print(MyEventHandler.on_any_event.mock_calls)
+    # Tmp File created
+    # Tmp Dir modified
+    # Tmp File modified
+    # Tmp File closed
+    # Tmp Dir modified
+    assert MyEventHandler.on_any_event.call_count == 5
 
 
 def test_watchdog_app_paths(tmp):
+    # duplicate watch path, different handlers, twice the number of events
     class MyApp(WatchdogApp):
         class Meta:
             watchdog_paths = [
@@ -59,12 +62,18 @@ def test_watchdog_app_paths(tmp):
         f.close()
         time.sleep(1)
 
-    # 3 separate calls, called twice each because tmp.dir appears
-    # twice in the watchdog_paths list
-    # File created
-    # Dir modified
-    # File modified
-    assert WatchdogEventHandler.on_any_event.call_count == 6
+    # 5 separate calls: See print(MyEventHandler.on_any_event.mock_calls)
+    # Tmp File created
+    # Tmp File created
+    # Tmp Dir modified
+    # Tmp Dir modified
+    # Tmp File modified
+    # Tmp File modified
+    # Tmp File closed
+    # Tmp File closed
+    # Tmp Dir modified
+    # Tmp Dir modified
+    assert WatchdogEventHandler.on_any_event.call_count == 10
 
 
 def test_watchdog_app_paths_bad_spec(tmp):
@@ -89,11 +98,14 @@ def test_watchdog_default_event_handler(tmp):
         f.write('test data')
         f.close()
         time.sleep(1)
-        # 3 separate calls:
-        # File created
-        # Dir modified
-        # File modified
-        assert WatchdogEventHandler.on_any_event.call_count == 3
+
+        # 5 separate calls: See print(MyEventHandler.on_any_event.mock_calls)
+        # Tmp File created
+        # Tmp Dir modified
+        # Tmp File modified
+        # Tmp File closed
+        # Tmp Dir modified
+        assert WatchdogEventHandler.on_any_event.call_count == 5
 
 
 def test_watchdog_bad_path(tmp):

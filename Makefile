@@ -57,6 +57,3 @@ docker:
 
 docker-push:
 	docker push datafolklabs/cement:latest
-
-tmptest:
-	echo OK
