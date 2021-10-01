@@ -575,6 +575,7 @@ class ArgparseController(ControllerHandler):
                 # controller its stacked on
                 parents[label] = parents[stacked_on]
                 parsers[label] = parsers[stacked_on]
+                contr._parser = parsers[stacked_on]
 
     def _get_parser_by_controller(self, controller):
         if controller._meta.stacked_type == 'embedded':

@@ -4,16 +4,19 @@
 
 Bugs:
 
-- None
+- `[ext.argparse]` Parse (`self._parser`) not accessible inside `_pre_argument_parsing`
+
 
 Features:
 
 - None
 
+
 Refactoring:
 
 - `[ext.colorlog]` Support subclassing of ext_colorlog.
     - [Issue #571](https://github.com/datafolklabs/cement/issues/571)
+
 
 Misc:
 
