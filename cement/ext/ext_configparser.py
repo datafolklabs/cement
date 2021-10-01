@@ -149,11 +149,12 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
                 self.app._meta.config_section, section, key)
 
         env_var = env_var.upper()
-        env_var = re.sub('[^0-9a-zA-Z]+', '_', env_var)
+        env_var = re.sub('[^0-9a-zA-Z_]+', '_', env_var)
         return env_var
 
     def get(self, section, key, **kwargs):
         env_var = self._get_env_var(section, key)
+
         if env_var in os.environ.keys():
             return os.environ[env_var]
         else:

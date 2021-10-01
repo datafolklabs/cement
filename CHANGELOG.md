@@ -4,8 +4,10 @@
 
 Bugs:
 
-- `[ext.argparse]` Parse (`self._parser`) not accessible inside `_pre_argument_parsing`
-
+- `[ext.argparse]` Parser (`self._parser`) not accessible inside `_pre_argument_parsing` when `stacked_type = 'embedded'`
+    - [Issue #569](https://github.com/datafolklabs/cement/issues/569)
+- `[ext.configparser]` Overriding config options with environment variables doesn't work correctly with surrounding underscore characters 
+    - [Issue #590](https://github.com/datafolklabs/cement/issues/590)
 
 Features:
 

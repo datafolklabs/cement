@@ -55,6 +55,16 @@ def test_env_var_override():
         section_dict = app.config.get_section_dict('dummy')
         assert section_dict['foo'] == 'dummy-not-bar'
 
+        # issue/590 - don't sub underscores
+
+        app.config.set('testapp', '__foo__', 'bar')
+        env_var = "TESTAPP___FOO__"
+
+        os.environ[env_var] = 'not-bar'
+        assert app.config.get('testapp', '__foo__') == 'not-bar'
+        section_dict = app.config.get_section_dict('testapp')
+        assert section_dict['__foo__'] == 'not-bar'
+
 
 def test_get_boolean():
     with TestApp(config_section='testapp') as app:
