@@ -28,7 +28,6 @@ Misc:
 
 - `[dev]` Update to Python 3.10 for default development / Docker version.
 - `[dev]` Remove Python 3.5/3.6 from Travis CI tests.
-- `[dev]` Make official Docker images based on Python 3.10.
 
 
 ## 3.0.4 - May 17, 2019
