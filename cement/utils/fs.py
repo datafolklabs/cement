@@ -74,7 +74,6 @@ def abspath(path, strip_trailing_slash=True):
 
     Args:
         path (str): The original path to expand.
-        strip_trailing_slash (bool): Strip `/` and `\\` from `path`.
     Returns:
         str: The fully expanded, absolute path to the given ``path``
 
@@ -88,9 +87,6 @@ def abspath(path, strip_trailing_slash=True):
             fs.abspath('./some.file')
 
     """
-
-    if strip_trailing_slash is True:
-        path = path.rstrip('/').rstrip(r'\\')
 
     return os.path.abspath(os.path.expanduser(path))
 

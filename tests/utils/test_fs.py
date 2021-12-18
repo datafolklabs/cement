@@ -8,13 +8,6 @@ def test_abspath(tmp):
     path = fs.abspath('.')
     assert path.startswith('/')
 
-    # trailing slash
-    path = fs.abspath("%s/" % tmp.file)
-    assert not path.endswith('/')
-
-    path = fs.abspath("%s\\" % tmp.file)
-    assert not path.endswith(r'\\')
-
 
 def test_join(tmp, rando):
     full_path = os.path.abspath(os.path.join(tmp.dir, rando))
