@@ -50,7 +50,7 @@ class MinimalLogger(object):
         self.backend.setLevel(logging.INFO)
 
         # FIX ME: really don't want to hard check sys.argv like this but
-        # can't figure any better way get logging started (only for debug)
+        # can't figure any better way to get logging started (only for debug)
         # before the app logging is setup.
         if '--debug' in sys.argv or debug:
             console.setLevel(logging.DEBUG)
