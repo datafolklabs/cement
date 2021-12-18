@@ -28,8 +28,7 @@ Cement core features include (but are not limited to):
 - 100% test coverage (`pytest`)
 - 100% PEP8 compliant (`flake8`)
 - Extensive API Reference (`sphinx`)
-- Tested on Python 3.5+
-- Does not support Python 2.x
+- Tested on Python 3.7+
 
 *Some optional extensions that are shipped with the mainline Cement sources do require external dependencies.  It is the responsibility of the application developer to include these dependencies along with their application, as Cement explicitly does not include them.*
 

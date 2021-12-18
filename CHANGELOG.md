@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 3.0.5 - DEVELOPMENT (will be released as stable/3.0.6)
+## 3.0.6 - Dec 18, 2021
 
 Bugs:
 
@@ -8,6 +8,10 @@ Bugs:
     - [Issue #569](https://github.com/datafolklabs/cement/issues/569)
 - `[ext.configparser]` Overriding config options with environment variables doesn't work correctly with surrounding underscore characters 
     - [Issue #590](https://github.com/datafolklabs/cement/issues/590)
+- `[utils.fs]` Fix bug where trailing slash was not removed in `fs.backup()` of a directory.
+    - [Issue #610](https://github.com/datafolklabs/cement/issues/610)
+- `[cement.cli]` Generated README contains incorrect installation instructions.
+    - [Issue #588](https://github.com/datafolklabs/cement/issues/588)
 
 Features:
 
@@ -22,7 +26,9 @@ Refactoring:
 
 Misc:
 
-- `[dev]` Update to Python 3.9 for default development / Docker version.
+- `[dev]` Update to Python 3.10 for default development / Docker version.
+- `[dev]` Remove Python 3.5/3.6 from Travis CI tests.
+- `[dev]` Make official Docker images based on Python 3.10.
 
 
 ## 3.0.4 - May 17, 2019
