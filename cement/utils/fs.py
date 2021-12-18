@@ -67,14 +67,14 @@ class Tmp(object):
         self.remove()
 
 
-def abspath(path):
+def abspath(path, strip_trailing_slash=True):
     """
     Return an absolute path, while also expanding the ``~`` user directory
     shortcut.
 
     Args:
         path (str): The original path to expand.
-
+        strip_trailing_slash (bool): Strip `/` and `\\` from `path`.
     Returns:
         str: The fully expanded, absolute path to the given ``path``
 
@@ -88,6 +88,10 @@ def abspath(path):
             fs.abspath('./some.file')
 
     """
+
+    if strip_trailing_slash is True:
+        path = path.rstrip('/').rstrip(r'\\')
+
     return os.path.abspath(os.path.expanduser(path))
 
 
@@ -193,6 +197,7 @@ def backup(path, suffix='.bak'):
     """
     count = -1
     new_path = None
+    path = abspath(path)
     while True:
         if os.path.exists(path):
             if count == -1:

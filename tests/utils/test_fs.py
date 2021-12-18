@@ -4,9 +4,16 @@ from pytest import raises
 from cement.utils import fs
 
 
-def test_abspath():
+def test_abspath(tmp):
     path = fs.abspath('.')
     assert path.startswith('/')
+
+    # trailing slash
+    path = fs.abspath("%s/" % tmp.file)
+    assert not path.endswith('/')
+
+    path = fs.abspath("%s\\" % tmp.file)
+    assert not path.endswith(r'\\')
 
 
 def test_join(tmp, rando):
@@ -67,3 +74,9 @@ def test_backup(tmp):
     assert "%s.bak" % os.path.basename(tmp.dir) == os.path.basename(bkdir)
 
     assert fs.backup('someboguspath') is None
+
+
+def test_backup_dir_trailing_slash(tmp):
+    # https://github.com/datafolklabs/cement/issues/610
+    bkdir = fs.backup("%s/" % tmp.dir)
+    assert "%s.bak" % os.path.basename(tmp.dir) == os.path.basename(bkdir)
