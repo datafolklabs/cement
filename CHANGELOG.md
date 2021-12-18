@@ -1,5 +1,28 @@
 # ChangeLog
 
+## 3.0.7 - DEVELOPMENT (will be released as stable/3.0.8)
+
+Bugs:
+
+- None
+
+
+Features:
+
+- None
+
+
+Refactoring:
+
+- None
+
+
+Misc:
+
+- None
+
+
+
 ## 3.0.6 - Dec 18, 2021
 
 Bugs:
