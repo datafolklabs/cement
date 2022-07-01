@@ -2,12 +2,17 @@
 Cement colorlog extension module.
 """
 
+from __future__ import annotations
 import os
 import sys
 import logging
+from typing import TYPE_CHECKING
 from colorlog import ColoredFormatter
 from ..ext.ext_logging import LoggingLogHandler
 from ..utils.misc import is_true
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 
 class ColorLogHandler(LoggingLogHandler):
@@ -25,7 +30,7 @@ class ColorLogHandler(LoggingLogHandler):
     extensions.
 
     """
-    class Meta:
+    class Meta(LoggingLogHandler.Meta):
 
         """Handler meta-data."""
 
@@ -62,7 +67,9 @@ class ColorLogHandler(LoggingLogHandler):
         #: Formatter class to use for colorized logging
         formatter_class = ColoredFormatter
 
-    def _get_console_format(self):
+    _meta: Meta
+
+    def _get_console_format(self) -> str:
         format = super(ColorLogHandler, self)._get_console_format()
         colorize = self.app.config.get(self._meta.config_section,
                                        'colorize_console_log')
@@ -71,7 +78,7 @@ class ColorLogHandler(LoggingLogHandler):
                 format = "%(log_color)s" + format
         return format
 
-    def _get_file_format(self):
+    def _get_file_format(self) -> str:
         format = super(ColorLogHandler, self)._get_file_format()
         colorize = self.app.config.get(self._meta.config_section,
                                        'colorize_file_log')
@@ -79,9 +86,10 @@ class ColorLogHandler(LoggingLogHandler):
             format = "%(log_color)s" + format
         return format
 
-    def _get_console_formatter(self, format):
+    def _get_console_formatter(self, format: str) -> logging.Formatter:
         colorize = self.app.config.get(self._meta.config_section,
                                        'colorize_console_log')
+        formatter: logging.Formatter
         if sys.stdout.isatty() or 'CEMENT_TEST' in os.environ:
             if is_true(colorize):
                 formatter = self._meta.formatter_class(
@@ -98,9 +106,10 @@ class ColorLogHandler(LoggingLogHandler):
 
         return formatter
 
-    def _get_file_formatter(self, format):
+    def _get_file_formatter(self, format: str) -> logging.Formatter:
         colorize = self.app.config.get(self._meta.config_section,
                                        'colorize_file_log')
+        formatter: logging.Formatter
         if is_true(colorize):
             formatter = self._meta.formatter_class(
                 format,
@@ -112,5 +121,5 @@ class ColorLogHandler(LoggingLogHandler):
         return formatter
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(ColorLogHandler)

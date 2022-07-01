@@ -9,7 +9,15 @@ Bugs:
 
 Features:
 
-- None
+- Add [python type hints](https://docs.python.org/3/library/typing.html) to cement framework
+    - [Issue #599](https://github.com/datafolklabs/cement/issues/599)
+- Extend `make comply` with [mypy](https://mypy.readthedocs.io/en/stable/index.html) check, all rules enabled.
+- Introduce dataclass store for `CommandMeta` in favor of dictionary. See `[ext.argparse]`
+
+
+Incompatible:
+
+- `[ext.dummy]` DummyTemplateHandler now renders empty string instead of None. Removing optionality in render results of a TemplateInstance
 
 
 Refactoring:

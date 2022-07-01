@@ -1,11 +1,16 @@
 """Cement core extensions module."""
 
+from __future__ import annotations
 import sys
 from abc import abstractmethod
+from typing import Any, List, TYPE_CHECKING
 from ..core import exc
 from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma nocover
 
 LOG = minimal_logger(__name__)
 
@@ -19,7 +24,7 @@ class ExtensionInterface(Interface):
     :class:`ExtensionHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Handler meta-data."""
 
@@ -27,7 +32,7 @@ class ExtensionInterface(Interface):
         interface = 'extension'
 
     @abstractmethod
-    def load_extension(self, ext_module):
+    def load_extension(self, ext_module: str) -> None:
         """
         Load an extension whose module is ``ext_module``.  For example,
         ``cement.ext.ext_json``.
@@ -39,7 +44,7 @@ class ExtensionInterface(Interface):
         pass    # pragma: no cover
 
     @abstractmethod
-    def load_extensions(self, ext_list):
+    def load_extensions(self, ext_list: list[str]) -> None:
         """
         Load all extensions from ``ext_list``.
 
@@ -51,7 +56,7 @@ class ExtensionInterface(Interface):
         pass    # pragma: no cover
 
 
-class ExtensionHandler(ExtensionInterface, Handler):
+class ExtensionHandler(ExtensionInterface, Handler):  # type: ignore
 
     """
     This handler implements the Extention Interface, which handles loading
@@ -61,7 +66,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
 
     """
 
-    class Meta:
+    class Meta(Handler.Meta):
 
         """
         Handler meta-data (can be passed as keyword arguments to the parent
@@ -71,12 +76,14 @@ class ExtensionHandler(ExtensionInterface, Handler):
         #: The string identifier of the handler.
         label = 'cement'
 
-    def __init__(self, **kw):
+    _loaded_extensions: list[str]
+
+    def __init__(self, **kw: Any) -> None:
         super().__init__(**kw)
-        self.app = None
+        self.app: App = None  # type: ignore
         self._loaded_extensions = []
 
-    def get_loaded_extensions(self):
+    def get_loaded_extensions(self) -> list[str]:
         """
         Get all loaded extensions.
 
@@ -86,7 +93,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
         """
         return self._loaded_extensions
 
-    def list(self):
+    def list(self) -> List[str]:
         """
         Synonymous with ``get_loaded_extensions()``.
 
@@ -96,7 +103,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
         """
         return self._loaded_extensions
 
-    def load_extension(self, ext_module):
+    def load_extension(self, ext_module: str) -> None:
         """
         Given an extension module name, load or in other-words ``import`` the
         extension.
@@ -132,7 +139,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
         except ImportError as e:
             raise exc.FrameworkError(e.args[0])
 
-    def load_extensions(self, ext_list):
+    def load_extensions(self, ext_list: List[str]) -> None:
         """
         Given a list of extension modules, iterate over the list and pass
         individually to ``self.load_extension()``.

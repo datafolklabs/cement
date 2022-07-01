@@ -2,10 +2,15 @@
 Cement jinja2 extension module.
 """
 
+from __future__ import annotations
+from typing import Any, Optional, TYPE_CHECKING, Tuple, Union
 from ..core.output import OutputHandler
 from ..core.template import TemplateHandler
 from ..utils.misc import minimal_logger
 from jinja2 import Environment, FileSystemLoader, PackageLoader
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -22,22 +27,23 @@ class Jinja2OutputHandler(OutputHandler):
 
     """
 
-    class Meta:
+    class Meta(OutputHandler.Meta):
 
         """Handler meta-data."""
 
         label = 'jinja2'
 
-    def __init__(self, *args, **kw):
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super(Jinja2OutputHandler, self).__init__(*args, **kw)
-        self.templater = None
+        self.templater: TemplateHandler = None  # type: ignore
 
-    def _setup(self, app):
+    def _setup(self, app: App) -> None:
         super(Jinja2OutputHandler, self)._setup(app)
-        self.templater = self.app.handler.resolve('template', 'jinja2',
-                                                  setup=True)
+        self.templater = self.app.handler.resolve('template',  # type: ignore
+                                                  'jinja2', setup=True)
 
-    def render(self, data, template=None, **kw):
+    def render(
+            self, data: Any, template: str = '', **kwargs: Any) -> str:
         """
         Take a data dictionary and render it using the given template file.
         Additional keyword arguments are ignored.
@@ -76,20 +82,21 @@ class Jinja2TemplateHandler(TemplateHandler):
     extensions.
     """
 
-    class Meta:
+    class Meta(TemplateHandler.Meta):
 
         """Handler meta-data."""
 
         label = 'jinja2'
 
-    def __init__(self, *args, **kw):
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super(Jinja2TemplateHandler, self).__init__(*args, **kw)
 
         # expose Jinja2 Environment instance so that we can manipulate it
         # higher in application code if necessary
         self.env = Environment(keep_trailing_newline=True)
 
-    def load(self, *args, **kw):
+    def load(self, *args: Any, **kw: Any) -> Tuple[Union[str, bytes],
+                                                   str, Optional[str]]:
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
@@ -120,7 +127,8 @@ class Jinja2TemplateHandler(TemplateHandler):
 
         return content, _type, _path
 
-    def render(self, content, data, *args, **kw):
+    def render(self, content: Union[str, bytes], data: Any,
+               **kwargs: Any) -> str:
         """
         Render the given ``content`` as template with the ``data`` dictionary.
 
@@ -142,6 +150,6 @@ class Jinja2TemplateHandler(TemplateHandler):
         return res
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(Jinja2OutputHandler)
     app.handler.register(Jinja2TemplateHandler)

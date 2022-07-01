@@ -2,27 +2,35 @@
 Cement generate extension module.
 """
 
+from __future__ import annotations
 import re
 import os
 import inspect
 import yaml
 import shutil
+from typing import Any, Callable, Dict, TYPE_CHECKING
 from .. import Controller, minimal_logger, shell
 from ..utils.version import VERSION, get_version
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
+
 
 LOG = minimal_logger(__name__)
 
 
 class GenerateTemplateAbstractBase(Controller):
-    class Meta:
-        pass
+    class Meta(Controller.Meta):
+        source_path: str = None  # type: ignore
 
-    def _generate(self, source, dest):
+    _meta: Meta  # type: ignore
+
+    def _generate(self, source: str, dest: str) -> None:
         msg = 'Generating %s %s in %s' % (
                    self.app._meta.label, self._meta.label, dest
                )
         self.app.log.info(msg)
-        data = {}
+        data: Dict[str, dict[str, Any]] = {}
 
         # builtin vars
         maj_min = float('%s.%s' % (VERSION[0], VERSION[1]))
@@ -33,7 +41,11 @@ class GenerateTemplateAbstractBase(Controller):
         data['cement']['major_minor_version'] = maj_min
 
         f = open(os.path.join(source, '.generate.yml'))
-        yaml_load = yaml.full_load if hasattr(yaml, 'full_load') else yaml.load
+        yaml_load: Callable
+        if hasattr(yaml, 'full_load'):
+            yaml_load = yaml.full_load
+        else:
+            yaml_load = yaml.load  # pragma: nocover
         g_config = yaml_load(f)
         f.close()
 
@@ -46,7 +58,7 @@ class GenerateTemplateAbstractBase(Controller):
                        self._meta.label
         ignore_list.append(g_config_yml)
 
-        var_defaults = {
+        var_defaults: Dict = {
             'name': None,
             'prompt': None,
             'validate': None,
@@ -61,7 +73,7 @@ class GenerateTemplateAbstractBase(Controller):
                 assert var[key] is not None, \
                     "Required generate config key missing: %s" % key
 
-            val = None
+            val: Any = None
             if var['default'] is not None and self.app.pargs.defaults:
                 val = var['default']
 
@@ -96,7 +108,7 @@ class GenerateTemplateAbstractBase(Controller):
             data[var['name']] = val
 
         try:
-            self.app.template.copy(source, dest, data,
+            self.app.template.copy(source, dest, data,  # type: ignore
                                    force=self.app.pargs.force,
                                    ignore=ignore_list,
                                    exclude=exclude_list)
@@ -106,7 +118,7 @@ class GenerateTemplateAbstractBase(Controller):
             else:
                 raise  # pragma: nocover
 
-    def _clone(self, source, dest):
+    def _clone(self, source: str, dest: str) -> None:
         msg = 'Cloning %s %s template to %s' % (
                    self.app._meta.label, self._meta.label, dest
                )
@@ -120,7 +132,7 @@ class GenerateTemplateAbstractBase(Controller):
 
         shutil.copytree(source, dest)
 
-    def _default(self):
+    def _default(self) -> None:
         source = self._meta.source_path
         dest = self.app.pargs.dest
 
@@ -130,7 +142,7 @@ class GenerateTemplateAbstractBase(Controller):
             self._generate(source, dest)
 
 
-def setup_template_items(app):
+def setup_template_items(app: App) -> None:
     template_dirs = []
     template_items = []
 
@@ -143,9 +155,9 @@ def setup_template_items(app):
     # use app template module, find it's path on filesystem
     if app._meta.template_module is not None:
         mod_parts = app._meta.template_module.split('.')
-        mod = mod_parts.pop()
+        mod_name = mod_parts.pop()
         try:
-            mod = app.__import__(mod, from_module='.'.join(mod_parts))
+            mod = app.__import__(mod_name, from_module='.'.join(mod_parts))
             mod_path = os.path.dirname(inspect.getfile(mod))
             subpath = os.path.join(mod_path, 'generate')
 
@@ -195,19 +207,19 @@ def setup_template_items(app):
 
 
 class Generate(Controller):
-    class Meta:
+    class Meta(Controller.Meta):
         label = 'generate'
         stacked_on = 'base'
         stacked_type = 'nested'
         config_section = 'generate'
 
-    def _setup(self, app):
+    def _setup(self, app: App) -> None:
         super(Generate, self)._setup(app)
 
-    def _default(self):
+    def _default(self) -> None:
         self._parser.print_help()
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(Generate)
     app.hook.register('pre_run', setup_template_items)

@@ -1,9 +1,14 @@
 """Cement core hooks module."""
 
+from __future__ import annotations
 import operator
 import types
+from typing import Any, Callable, Dict, Generator, TYPE_CHECKING
 from ..core import exc
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma nocover
 
 LOG = minimal_logger(__name__)
 
@@ -15,11 +20,11 @@ class HookManager(object):
 
     """
 
-    def __init__(self, app):
+    def __init__(self, app: App) -> None:
         self.app = app
-        self.__hooks__ = {}
+        self.__hooks__: Dict[str, list] = {}
 
-    def list(self):
+    def list(self) -> list[str]:
         """
         List all defined hooks.
 
@@ -28,7 +33,7 @@ class HookManager(object):
         """
         return list(self.__hooks__.keys())
 
-    def define(self, name):
+    def define(self, name: str) -> None:
         """
         Define a hook namespace that the application and plugins can register
         hooks in.
@@ -55,7 +60,7 @@ class HookManager(object):
             raise exc.FrameworkError("Hook name '%s' already defined!" % name)
         self.__hooks__[name] = []
 
-    def defined(self, hook_name):
+    def defined(self, hook_name: str) -> bool:
         """
         Test whether a hook name is defined.
 
@@ -83,7 +88,7 @@ class HookManager(object):
         else:
             return False
 
-    def register(self, name, func, weight=0):
+    def register(self, name: str, func: Callable, weight: int = 0) -> bool:
         """
         Register a function to a hook.  The function will be called, in order
         of weight, when the hook is run.
@@ -121,8 +126,9 @@ class HookManager(object):
 
         # Hooks are as follows: (weight, name, func)
         self.__hooks__[name].append((int(weight), func.__name__, func))
+        return True
 
-    def run(self, name, *args, **kwargs):
+    def run(self, name: str, *args: Any, **kwargs: Any) -> Generator:
         """
         Run all defined hooks in the namespace.
 

@@ -2,25 +2,32 @@
 Cement scrub extension module.
 """
 
+from __future__ import annotations
 import re
+from typing import TYPE_CHECKING
 from .. import Controller
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
 
-def scrub_output(app, text):
+def scrub_output(app: App, text: str) -> str:
     if app.pargs.scrub:
-        text = app.scrub(text)
+        text = app.scrub(text)  # type: ignore
     return text
 
 
-def extend_scrub(app):
-    def scrub(text):
-        if not hasattr(app._meta, 'scrub') or app._meta.scrub is None:
+def extend_scrub(app: App) -> None:
+    def scrub(text: str) -> str:
+        # type: ignore
+        if not hasattr(
+                app._meta, 'scrub') or app._meta.scrub is None:  # type: ignore
             return text  # pragma: nocover
         elif isinstance(text, str):
-            for regex, replace in app._meta.scrub:
+            for regex, replace in app._meta.scrub:  # type: ignore
                 text = re.sub(regex, replace, text)
         else:
             LOG.debug('text is not str > %s' % type(text))
@@ -34,7 +41,7 @@ class ScrubController(Controller):
     Add embedded options to the base controller to support scrubbing output.
     """
 
-    class Meta:
+    class Meta(Controller.Meta):
         #: Controller label
         label = 'scrub'
 
@@ -50,7 +57,9 @@ class ScrubController(Controller):
         #: Command line argument options help
         argument_help = 'obfuscate sensitive data from rendered output'
 
-    def _pre_argument_parsing(self):
+    _meta: Meta  # type: ignore
+
+    def _pre_argument_parsing(self) -> None:
         if self._meta.argument_options is not None:
             assert isinstance(self._meta.argument_options, list), \
                 "ScrubController.Meta.argument_options must be a list"
@@ -60,7 +69,7 @@ class ScrubController(Controller):
                                        dest='scrub')
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(ScrubController)
     app.hook.register('post_render', scrub_output)
     app.hook.register('pre_argument_parsing', extend_scrub)

@@ -40,11 +40,13 @@ import datetime  # pragma: nocover
 import os  # pragma: nocover
 import sys  # pragma: nocover
 import subprocess  # pragma: nocover
-import platform  # pragma: nocover
+import platform
+from typing import Optional, Tuple  # pragma: nocover
 from ..core.backend import VERSION  # pragma: nocover
 
 
-def get_version(version=VERSION):  # pragma: nocover
+def get_version(  # pragma: nocover
+        version: Tuple[int, int, int, str, int] = VERSION) -> str:
     "Returns a PEP 386-compliant version number from VERSION."
     assert len(version) == 5
     assert version[3] in ('alpha', 'beta', 'rc', 'final')
@@ -72,7 +74,7 @@ def get_version(version=VERSION):  # pragma: nocover
     return main + sub
 
 
-def get_version_banner():
+def get_version_banner() -> str:
     cement_ver = get_version()
     python_ver = '.'.join([str(x) for x in sys.version_info[0:3]])
     plat = platform.platform()
@@ -84,7 +86,7 @@ def get_version_banner():
     return banner
 
 
-def get_git_changeset():  # pragma: nocover
+def get_git_changeset() -> Optional[str]:  # pragma: nocover
     """Returns a numeric identifier of the latest git changeset.
 
     The result is the UTC timestamp of the changeset in YYYYMMDDHHMMSS format.
@@ -97,9 +99,9 @@ def get_git_changeset():  # pragma: nocover
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                shell=True, cwd=repo_dir,
                                universal_newlines=True)
-    timestamp = git_log.communicate()[0]
+    ts = git_log.communicate()[0]
     try:
-        timestamp = datetime.datetime.utcfromtimestamp(int(timestamp))
+        timestamp = datetime.datetime.utcfromtimestamp(int(ts))
     except ValueError: 	# pragma: nocover
         return None  	# pragma: nocover
     return timestamp.strftime('%Y%m%d%H%M%S')

@@ -2,12 +2,17 @@
 Cement smtp extension module.
 """
 
+from __future__ import annotations
 import smtplib
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from typing import Any, TYPE_CHECKING, Dict
 from ..core import mail
 from ..utils.misc import minimal_logger, is_true
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -21,7 +26,7 @@ class SMTPMailHandler(mail.MailHandler):
 
     """
 
-    class Meta:
+    class Meta(mail.MailHandler.Meta):
 
         """Handler meta-data."""
 
@@ -46,7 +51,7 @@ class SMTPMailHandler(mail.MailHandler):
             'password': None,
         }
 
-    def _get_params(self, **kw):
+    def _get_params(self, **kw: Any) -> Dict[str, Any]:
         params = dict()
 
         # some keyword args override configuration defaults
@@ -69,7 +74,7 @@ class SMTPMailHandler(mail.MailHandler):
 
         return params
 
-    def send(self, body, **kw):
+    def send(self, body: str, **kw: Any) -> bool:
         """
         Send an email message via SMTP.  Keyword arguments override
         configuration defaults (cc, bcc, etc).
@@ -105,6 +110,7 @@ class SMTPMailHandler(mail.MailHandler):
         """
         params = self._get_params(**kw)
 
+        server:  smtplib.SMTP
         if is_true(params['ssl']):
             server = smtplib.SMTP_SSL(params['host'], params['port'],
                                       params['timeout'])
@@ -125,8 +131,10 @@ class SMTPMailHandler(mail.MailHandler):
 
         self._send_message(server, body, **params)
         server.quit()
+        return True
 
-    def _send_message(self, server, body, **params):
+    def _send_message(self, server: smtplib.SMTP, body: str,
+                      **params: str) -> None:
         msg = MIMEMultipart('alternative')
         msg.set_charset('utf-8')
 
@@ -146,5 +154,5 @@ class SMTPMailHandler(mail.MailHandler):
         server.send_message(msg)
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(SMTPMailHandler)

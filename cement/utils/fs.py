@@ -1,8 +1,13 @@
 """Common File System Utilities."""
 
+from __future__ import annotations
 import os
 import tempfile
 import shutil
+from typing import Any, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from types import TracebackType  # pragma: nocover
 
 
 class Tmp(object):
@@ -36,7 +41,10 @@ class Tmp(object):
 
     """
 
-    def __init__(self, **kwargs):
+    dir: str
+    file: str
+
+    def __init__(self, **kwargs: str) -> None:
         self.cleanup = kwargs.get('cleanup', True)
         suffix = kwargs.get('suffix', '')
         prefix = kwargs.get('prefix', 'tmp')
@@ -49,7 +57,7 @@ class Tmp(object):
                                         prefix=prefix,
                                         dir=dir)
 
-    def remove(self):
+    def remove(self) -> None:
         """
         Remove the temporary directory (and file) if it exists, and
         ``self.cleanup`` is ``True``.
@@ -60,14 +68,17 @@ class Tmp(object):
             if os.path.exists(self.file):
                 os.remove(self.file)
 
-    def __enter__(self):
+    def __enter__(self) -> Tmp:
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(self,
+                 __exc_type: type[BaseException] | None,
+                 __exc_val: BaseException | None,
+                 __exc_tb: TracebackType | None) -> None:
         self.remove()
 
 
-def abspath(path, strip_trailing_slash=True):
+def abspath(path: str, strip_trailing_slash: bool = True) -> str:
     """
     Return an absolute path, while also expanding the ``~`` user directory
     shortcut.
@@ -91,7 +102,7 @@ def abspath(path, strip_trailing_slash=True):
     return os.path.abspath(os.path.expanduser(path))
 
 
-def join(*args, **kwargs):
+def join(*args: str, **kwargs: Any) -> str:
     """
     Return a complete, joined path, by first calling ``abspath()`` on the first
     item to ensure the final path is complete.
@@ -116,7 +127,7 @@ def join(*args, **kwargs):
     return os.path.join(first_path, *paths, **kwargs)
 
 
-def join_exists(*paths):
+def join_exists(*paths: str) -> tuple[str, bool]:
     """
     Wrapper around ``os.path.join()``, ``os.path.abspath()``, and
     ``os.path.exists()``.
@@ -133,7 +144,7 @@ def join_exists(*paths):
     return (path, os.path.exists(path))
 
 
-def ensure_dir_exists(path):
+def ensure_dir_exists(path: str) -> None:
     """
     Ensure the directory ``path`` exists, and if not create it.
 
@@ -155,7 +166,7 @@ def ensure_dir_exists(path):
         os.makedirs(path)
 
 
-def ensure_parent_dir_exists(path):
+def ensure_parent_dir_exists(path: str) -> None:
     """
     Ensure the parent directory of ``path`` (file, or directory) exists, and if
     not create it.
@@ -170,7 +181,7 @@ def ensure_parent_dir_exists(path):
     return ensure_dir_exists(parent_dir)
 
 
-def backup(path, suffix='.bak'):
+def backup(path: str, suffix: str = '.bak') -> Optional[str]:
     """
     Rename a file or directory safely without overwriting an existing
     backup of the same name.

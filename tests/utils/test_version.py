@@ -1,10 +1,14 @@
 
+import re
 from cement.utils import version
 
 
 def test_get_version():
     ver = version.get_version()
     assert ver.startswith('3.0')
+
+    ver = version.get_version((2, 1, 1, 'alpha', 0))
+    assert re.match(r'2.1.1.dev\d{14}', ver)
 
     ver = version.get_version((2, 1, 1, 'alpha', 1))
     assert ver == '2.1.1a1'

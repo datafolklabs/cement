@@ -2,14 +2,19 @@
 Cement print extension module.
 """
 
+from __future__ import annotations
+from typing import Any, TYPE_CHECKING
 from ..core import output
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
 
-def extend_print(app):
-    def _print(text):
+def extend_print(app: App) -> None:
+    def _print(text: str) -> None:
         app.render({'out': text}, handler='print')
     app.extend('print', _print)
 
@@ -25,7 +30,7 @@ class PrintOutputHandler(output.OutputHandler):
     on :cement:`Output Handling <dev/output>`.
 
     """
-    class Meta:
+    class Meta(output.OutputHandler.Meta):
 
         """Handler meta-data"""
 
@@ -36,14 +41,14 @@ class PrintOutputHandler(output.OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-    def render(self, data_dict, template=None, **kw):
+    def render(self, data: Any, **kwargs: Any) -> str:
         """
         Take a data dictionary and render only the ``out`` key as text output.
         Note that the template option is received here per the interface,
         however this handler just ignores it.
 
         Args:
-            data_dict (dict): The data dictionary to render.
+            data (dict): The data dictionary to render.
 
         Keyword Args:
             template: This option is completely ignored.
@@ -52,13 +57,13 @@ class PrintOutputHandler(output.OutputHandler):
             str: A text string.
 
         """
-        if 'out' in data_dict.keys():
+        if 'out' in data.keys():
             LOG.debug("rendering content as text via %s" % self.__module__)
-            return data_dict['out'] + '\n'
+            return data['out'] + '\n'
         else:
             LOG.debug("no 'out' key found in data dict. "
                       "not rendering content via %s" % self.__module__)
-            return None
+            return ''
 
 
 class PrintDictOutputHandler(output.OutputHandler):
@@ -70,7 +75,7 @@ class PrintDictOutputHandler(output.OutputHandler):
     the developer documentation on :cement:`Output Handling <dev/output>`.
 
     """
-    class Meta:
+    class Meta(output.OutputHandler.Meta):
 
         """Handler meta-data"""
 
@@ -81,14 +86,14 @@ class PrintDictOutputHandler(output.OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-    def render(self, data_dict, template=None, **kw):
+    def render(self, data: Any, **kwargs: Any) -> str:
         """
         Take a data dictionary and render it as text output.  Note that the
         template option is received here per the interface, however this
         handler just ignores it.
 
         Args:
-            data_dict (dict): The data dictionary to render.
+            data (dict): The data dictionary to render.
 
         Keyword Args:
             template: This option is completely ignored.
@@ -99,13 +104,13 @@ class PrintDictOutputHandler(output.OutputHandler):
         """
         LOG.debug("rendering content as text via %s" % self.__module__)
         out = ''
-        for key, val in data_dict.items():
+        for key, val in data.items():
             out = out + '%s: %s\n' % (key, val)
 
         return out
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(PrintDictOutputHandler)
     app.handler.register(PrintOutputHandler)
     app.hook.register('pre_argument_parsing', extend_print)

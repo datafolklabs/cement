@@ -30,6 +30,7 @@ virtualenv-windows:
 
 comply:
 	flake8 cement/ tests/
+	mypy cement
 
 comply-fix:
 	autopep8 -ri cement/ tests/
