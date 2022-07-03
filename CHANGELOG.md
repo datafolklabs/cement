@@ -6,11 +6,13 @@ Bugs:
 
 - `[cement.cli]` Cement CLI Broken on Python 3.10
     - [Issue #619](https://github.com/datafolklabs/cement/issues/619)
-
+- `[cement.cli]` Generated Script Returns Version of Cement
+    - [Issue #632](https://github.com/datafolklabs/cement/issues/632)
 
 Features:
 
-- None
+- `[cement.cli]` Cement CLI Smoke Tests
+    - [Issue #620](https://github.com/datafolklabs/cement/issues/620)
 
 
 Refactoring:
@@ -20,7 +22,8 @@ Refactoring:
 
 Misc:
 
-- None
+- `[dev]` Add Python 3.10 to Travis CI tests.
+    - [Issue #618](https://github.com/datafolklabs/cement/issues/618)
 
 
 
