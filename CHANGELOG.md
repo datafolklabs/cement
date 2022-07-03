@@ -17,7 +17,8 @@ Features:
 
 Refactoring:
 
-- None
+- `[utils.misc]` Use SHA256 instead of MD5 in `randio()` to support Redhap/FIPS compliance. Limit to 32 characters for backward compatibility.
+    - [Issue #626](https://github.com/datafolklabs/cement/issues/626)
 
 
 Misc:

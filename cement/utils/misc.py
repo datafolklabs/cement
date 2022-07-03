@@ -10,7 +10,7 @@ from random import random
 
 def rando(salt=None):
     """
-    Generate a random MD5 hash for whatever purpose.  Useful for testing
+    Generate a random hash for whatever purpose.  Useful for testing
     or any other time that something random is required.
 
     Args:
@@ -18,7 +18,7 @@ def rando(salt=None):
             is used.
 
     Returns:
-        str: Random MD5 hash
+        str: Random hash
 
     Example:
 
@@ -33,7 +33,9 @@ def rando(salt=None):
     if salt is None:
         salt = random()
 
-    return hashlib.md5(str(salt).encode()).hexdigest()
+    # issue-626: Use sha256 for compatibility with Redhat/FIPS restricted
+    # policies. Return only 32 chars for backward compat with previous md5
+    return hashlib.sha256(str(salt).encode()).hexdigest()[:32]
 
 
 class MinimalLogger(object):
