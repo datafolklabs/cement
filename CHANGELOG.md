@@ -4,7 +4,8 @@
 
 Bugs:
 
-- None
+- `[cement.cli]` Cement CLI Broken on Python 3.10
+    - [Issue #619](https://github.com/datafolklabs/cement/issues/619)
 
 
 Features:
