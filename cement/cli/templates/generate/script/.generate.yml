@@ -13,4 +13,4 @@ variables:
     -   name: label
         prompt: "Script Name"
         default: "myscript"
-        validate: "^[a-zA-Z0-9]+$"
+        validate: "^[a-zA-Z0-9-_]+$"

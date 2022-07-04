@@ -8,6 +8,9 @@ Bugs:
     - [Issue #619](https://github.com/datafolklabs/cement/issues/619)
 - `[cli]` Generated Script Returns Version of Cement
     - [Issue #632](https://github.com/datafolklabs/cement/issues/632)
+- `[cli]` Generated Script Should Allow Dash/Underscore
+    - [Issue #614](https://github.com/datafolklabs/cement/issues/614)
+
 
 Features:
 
