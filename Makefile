@@ -57,3 +57,6 @@ docker:
 
 docker-push:
 	docker push datafolklabs/cement:latest
+
+remove-merged-branches:
+	git branch --merged | grep -v -e 'main\|stable/*\|dev/*' | xargs git branch -d
