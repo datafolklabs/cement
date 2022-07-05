@@ -17,6 +17,7 @@ RUN apk update \
         libffi \
         libffi-dev \
         openssl-dev \
+        jq \
     && ln -sf /usr/bin/vim /usr/bin/vi \
     && pip install --no-cache-dir -r requirements-dev.txt
 COPY . /src
