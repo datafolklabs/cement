@@ -10,6 +10,10 @@ Bugs:
     - [Issue #632](https://github.com/datafolklabs/cement/issues/632)
 - `[cli]` Generated Script Should Allow Dash/Underscore
     - [Issue #614](https://github.com/datafolklabs/cement/issues/614)
+- `[core.foundation]` App.render() Not Suppressed in Quiet Mode
+    - [Issue #636](https://github.com/datafolklabs/cement/issues/636)
+- `[core.foundation]` Console Log Not Suppressed by Output Handler Override (JSON/YAML)
+    - [Issue #637](https://github.com/datafolklabs/cement/issues/637)
 
 
 Features:

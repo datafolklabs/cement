@@ -571,6 +571,8 @@ def test_quiet():
     stdout_ref = sys.stdout
     with TestApp(argv=['--quiet']) as app:
         app.run()
+        app.render({})  # coverage
+        assert app.quiet is True
         assert stdout_ref is not sys.stdout
 
     sys.stdout = stdout_ref

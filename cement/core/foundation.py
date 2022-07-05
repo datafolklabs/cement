@@ -153,12 +153,13 @@ class App(meta.MetaMixin):
 
         debug = False
         """
-        Used internally, and should not be used by developers.  This is set
-        to ``True`` if the ``debug`` option is passed at command line."""
+        This is set to ``True`` if any of the ``debug_argument_options``
+        are passed at command line. Useful for debugging."""
 
         debug_argument_options = ['-d', '--debug']
         """
-        The argument option(s) to toggle debug mode via cli.
+        The argument option(s) to toggle debug mode via cli. Set to `None` to
+        remove these options from the app.
         """
 
         debug_argument_help = 'full application debug mode'
@@ -168,12 +169,14 @@ class App(meta.MetaMixin):
 
         quiet = False
         """
-        Used internally, and should not be used by developers.  This is set
-        to ``True`` if the ``quiet`` option is passed at command line."""
+        Suppress all console output (print/log/render). This is set to
+        ``True`` if any of the ``quiet_argument_options`` are passed at
+        command line."""
 
         quiet_argument_options = ['-q', '--quiet']
         """
-        The argument option(s) to toggle quiet mode via cli.
+        The argument option(s) to toggle quiet mode via cli. Set to `None` to
+        remove these options from the app.
         """
 
         quiet_argument_help = 'suppress all console output'
@@ -791,12 +794,20 @@ class App(meta.MetaMixin):
     @property
     def debug(self):
         """
-        Returns boolean based on whether the ``debug`` option was passed at
-        command line or set via the application's configuration file.
+        Application debug mode.
 
         :returns: boolean
         """
         return self._meta.debug
+
+    @property
+    def quiet(self):
+        """
+        Application quiet mode.
+
+        :returns: boolean
+        """
+        return self._meta.quiet
 
     @property
     def argv(self):
@@ -1017,7 +1028,8 @@ class App(meta.MetaMixin):
                 output handlers do not use templates).
             out: A file like object (i.e. ``sys.stdout``, or actual file).
                 Set to ``None`` if no output is desired (just render and
-                return).
+                return). Default is ``sys.stdout``, however if ``App.quiet``
+                is ``True``, this will be set to ``None``.
             handler: The output handler to use to render.  Defaults to
                 ``App.Meta.output_handler``.
 
@@ -1031,6 +1043,11 @@ class App(meta.MetaMixin):
                 LOG.debug("pre_render hook did not return a dict().")
             else:
                 data = res
+
+        # Issue #636: override sys.stdout if in quiet mode
+        stdouts = [sys.stdout, self.__saved_stdout__]
+        if self._meta.quiet is True and out in stdouts:
+            out = None
 
         kw['template'] = template
 
@@ -1096,6 +1113,10 @@ class App(meta.MetaMixin):
         self.__saved_stderr__ = sys.stderr
         sys.stdout = open(os.devnull, 'w')
         sys.stderr = open(os.devnull, 'w')
+
+        # have to resetup the log handler to suppress console output
+        if self.log is not None:
+            self._setup_log_handler()
 
     def _unsuppress_output(self):
         LOG.debug('unsuppressing all console output')
