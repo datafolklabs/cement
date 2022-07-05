@@ -11,6 +11,7 @@ from ..core import template
 from ..core.interface import InterfaceManager
 from ..core.handler import HandlerManager
 from ..core.hook import HookManager
+from ..core.deprecations import deprecate
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs, misc
 from ..ext.ext_argparse import ArgparseController as Controller
@@ -569,16 +570,21 @@ class App(meta.MetaMixin):
 
         framework_logging = True
         """
-        Whether or not to enable Cement framework logging.  This is separate
-        from the application log, and is generally used for debugging issues
-        with the framework and/or extensions primarily in development.
+        This setting is deprecated and will be changed or removed in Cement
+        v3.2.0. See:
+        https://docs.builtoncement.com/release-information/deprecations#3.0.8-2
+
+        Whether or not to enable Cement framework logging if ``--debug`` is
+        passed at the command line.  This is separate from the application
+        log, and is generally used for debugging issues with the framework
+        and/or extensions primarily in development.
 
         This option is overridden by the environment variable
-        `CEMENT_FRAMEWORK_LOGGING`.  Therefore, if in production you do not
-        want the Cement framework log enabled, you can set this option to
-        ``False`` but override it in your environment by doing something like
-        ``export CEMENT_FRAMEWORK_LOGGING=1`` in your shell whenever you need
-        it enabled.
+        `CEMENT_LOG`.  Therefore, if in production you do not
+        want the Cement framework log enabled (when the ``debug`` option is
+        passed at command line), you can set this option to ``False``. Setting
+        ``CEMENT_LOG=1`` in the environment will trigger this setting to
+        ``True``.
         """
 
         define_hooks = []
@@ -738,12 +744,32 @@ class App(meta.MetaMixin):
     def __init__(self, label=None, **kw):
         super(App, self).__init__(**kw)
 
-        # disable framework logging?
-        if 'CEMENT_FRAMEWORK_LOGGING' not in os.environ.keys():
-            if self._meta.framework_logging is True:
-                os.environ['CEMENT_FRAMEWORK_LOGGING'] = '1'
+        # enable framework logging from environment?
+        if 'CEMENT_LOG' in os.environ.keys():
+            val = os.environ.get('CEMENT_LOG')
+            assert val in ['0', '1'], \
+                f'Invalid value for CEMENT_LOG ({val}). Must be one of: 0, 1'
+            if is_true(val):
+                self._meta.framework_logging = True
             else:
-                os.environ['CEMENT_FRAMEWORK_LOGGING'] = '0'
+                self._meta.framework_logging = False
+
+        if 'CEMENT_FRAMEWORK_LOGGING' in os.environ.keys():
+            deprecate('3.0.8-1')
+            val = os.environ.get('CEMENT_FRAMEWORK_LOGGING')
+            assert val in ['0', '1'], (
+                f'Invalid value for CEMENT_FRAMEWORK_LOGGING ({val}). Must '
+                f'be one of: 0, 1'
+            )
+            if is_true(val):
+                self._meta.framework_logging = True
+            else:
+                self._meta.framework_logging = False
+
+        # DEPRECATE: in v3.2.0, this needs to set os.environ if is True
+        if self._meta.framework_logging is True:
+            deprecate('3.0.8-2')
+            os.environ['CEMENT_LOG_DEPRECATED_DEBUG_OPTION'] = '1'
 
         # for convenience we translate this to _meta
         if label:
@@ -786,6 +812,10 @@ class App(meta.MetaMixin):
                 self._suppress_output()
 
         self._lay_cement()
+
+        # add deprecation warnings?
+        # if is_true(os.environ.get('CEMENT_DEPRECATION_WARNINGS', 0)):
+        #     self.hook.register('pre_close', display_deprecation_warnings)
 
     @property
     def label(self):

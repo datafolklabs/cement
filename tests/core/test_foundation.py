@@ -152,20 +152,85 @@ def test_argv():
 def test_framework_logging():
     # is true
 
-    del os.environ['CEMENT_FRAMEWORK_LOGGING']
+    env_vars = [
+        'CEMENT_LOG_DEPRECATED_DEBUG_OPTION',
+        'CEMENT_LOG',
+        'CEMENT_FRAMEWORK_LOGGING'
+    ]
+    for var in env_vars:
+        if var in os.environ.keys():
+            del os.environ[var]
 
-    with TestApp(framework_logging=True):
-        assert os.environ['CEMENT_FRAMEWORK_LOGGING'] == '1'
+    os.environ['CEMENT_LOG'] = '1'
+
+    with TestApp(framework_logging=True) as app:
+        assert app._meta.framework_logging is True
 
     ml = minimal_logger(__name__)
     assert ml.logging_is_enabled is True
 
     # is false
 
-    del os.environ['CEMENT_FRAMEWORK_LOGGING']
+    orig_argv = sys.argv
+    sys.argv = ['--debug']
+    for var in env_vars:
+        if var in os.environ.keys():
+            del os.environ[var]
+    os.environ['CEMENT_LOG'] = '0'
 
-    with TestApp(framework_logging=False):
-        assert os.environ['CEMENT_FRAMEWORK_LOGGING'] == '0'
+    with TestApp() as app:
+        assert app._meta.framework_logging is False
+
+    ml = minimal_logger(__name__)
+    assert ml.logging_is_enabled is False
+    sys.argv = orig_argv
+
+
+def test_framework_logging_deprecated_debug_option():
+    # is true
+
+    env_vars = [
+        'CEMENT_LOG_DEPRECATED_DEBUG_OPTION',
+        'CEMENT_LOG',
+        'CEMENT_FRAMEWORK_LOGGING'
+    ]
+    for var in env_vars:
+        if var in os.environ.keys():
+            del os.environ[var]
+
+    orig_argv = sys.argv
+    sys.argv = ['--debug']
+    with TestApp(framework_logging=True):
+        assert os.environ['CEMENT_LOG_DEPRECATED_DEBUG_OPTION'] == '1'
+
+    ml = minimal_logger(__name__)
+    assert ml.logging_is_enabled is True
+
+    # is false
+
+    for var in env_vars:
+        if var in os.environ.keys():
+            del os.environ[var]
+
+    ml = minimal_logger(__name__)
+    assert ml.logging_is_enabled is False
+    sys.argv = orig_argv
+
+
+def test_deprecated_cement_framework_logging_env_var():
+    # is true
+
+    os.environ['CEMENT_FRAMEWORK_LOGGING'] = '1'
+
+    with TestApp() as app:
+        assert app._meta.framework_logging is True
+
+    ml = minimal_logger(__name__)
+    assert ml.logging_is_enabled is True
+
+    # is false
+
+    os.environ['CEMENT_FRAMEWORK_LOGGING'] = '0'
 
     ml = minimal_logger(__name__)
     assert ml.logging_is_enabled is False
@@ -230,6 +295,13 @@ def test_debug():
 
     # meta overricde
     with TestApp(argv=['--debug']) as app:
+        assert app.debug is True
+
+    # alternative options
+    argv = ['--not-debug']
+    with TestApp(debug_argument_options=['--not-debug']) as app:
+        assert app.debug is False
+    with TestApp(debug_argument_options=['--not-debug'], argv=argv) as app:
         assert app.debug is True
 
     # config defaults override

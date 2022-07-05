@@ -4,15 +4,15 @@
 
 Bugs:
 
-- `[cli]` Cement CLI Broken on Python 3.10
+- `[cli]` Cement CLI broken on Python 3.10
     - [Issue #619](https://github.com/datafolklabs/cement/issues/619)
-- `[cli]` Generated Script Returns Version of Cement
+- `[cli]` Generated script returns version of Cement
     - [Issue #632](https://github.com/datafolklabs/cement/issues/632)
-- `[cli]` Generated Script Should Allow Dash/Underscore
+- `[cli]` Generated script should allow dash/underscore
     - [Issue #614](https://github.com/datafolklabs/cement/issues/614)
-- `[core.foundation]` App.render() Not Suppressed in Quiet Mode
+- `[core.foundation]` App.render() not suppressed in quiet mode
     - [Issue #636](https://github.com/datafolklabs/cement/issues/636)
-- `[core.foundation]` Console Log Not Suppressed by Output Handler Override (JSON/YAML)
+- `[core.foundation]` Console log not suppressed by output handler override (JSON/YAML)
     - [Issue #637](https://github.com/datafolklabs/cement/issues/637)
 
 
@@ -23,17 +23,25 @@ Features:
 
 Refactoring:
 
-- `[utils.misc]` Use SHA256 instead of MD5 in `rando()` to support Redhap/FIPS compliance. Limit to 32 characters for backward compatibility.
+- `[utils.misc]` Use SHA256 instead of MD5 in `rando()` to support Redhap/FIPS compliance
     - [Issue #626](https://github.com/datafolklabs/cement/issues/626)
-
+- `[core.foundation] Make quiet/debug options configurable
+    - [Issue #613](https://github.com/datafolklabs/cement/issues/613)
 
 Misc:
 
-- `[dev]` Cement CLI Smoke Tests
+- `[dev]` Cement CLI smoke tests
     - [Issue #620](https://github.com/datafolklabs/cement/issues/620)
-- `[dev]` Add Python 3.10 to Travis CI tests.
+- `[dev]` Add Python 3.10 to Travis CI tests
     - [Issue #618](https://github.com/datafolklabs/cement/issues/618)
+- `[core.deprecations]` Implement Cement deprecation warnings
+    - [Issue #631](https://github.com/datafolklabs/cement/issues/631)
 
+
+Deprecations:
+
+- `[core.foundation]` Deprecate CEMENT_FRAMEWORK_LOGGING in favor of CEMENT_LOG.
+    - [Issue #638](https://github.com/datafolklabs/cement/issues/638)
 
 
 ## 3.0.6 - Dec 18, 2021

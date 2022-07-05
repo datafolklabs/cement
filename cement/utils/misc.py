@@ -6,6 +6,7 @@ import logging
 import hashlib
 from textwrap import TextWrapper
 from random import random
+from ..core.deprecations import deprecate
 
 
 def rando(salt=None):
@@ -43,6 +44,7 @@ class MinimalLogger(object):
     def __init__(self, namespace, debug, *args, **kw):
         self.namespace = namespace
         self.backend = logging.getLogger(namespace)
+        self._debug = debug
         formatter = logging.Formatter(
             "%(asctime)s (%(levelname)s) %(namespace)s : %(message)s"
         )
@@ -51,10 +53,18 @@ class MinimalLogger(object):
         console.setLevel(logging.INFO)
         self.backend.setLevel(logging.INFO)
 
-        # FIX ME: really don't want to hard check sys.argv like this but
-        # can't figure any better way to get logging started (only for debug)
-        # before the app logging is setup.
-        if '--debug' in sys.argv or debug:
+        _enabled = False
+        if is_true(os.environ.get('CEMENT_LOG', 0)) or debug is True:
+            _enabled = True
+        elif '--debug' in sys.argv:
+            deprecate('3.0.8-2')
+            _enabled = True
+        elif is_true(os.environ.get('CEMENT_FRAMEWORK_LOGGING', 0)):
+            deprecate('3.0.8-1')
+            _enabled = True
+
+        if _enabled is True:
+            # framework and extensions only log to debug
             console.setLevel(logging.DEBUG)
             self.backend.setLevel(logging.DEBUG)
 
@@ -75,15 +85,19 @@ class MinimalLogger(object):
 
     @property
     def logging_is_enabled(self):
-        if 'CEMENT_FRAMEWORK_LOGGING' in os.environ.keys():
-            if is_true(os.environ['CEMENT_FRAMEWORK_LOGGING']):
-                res = True
-            else:
-                res = False
-        else:
-            res = True  # pragma: nocover
+        enabled = False
+        if '--debug' in sys.argv or self._debug:
+            deprecate('3.0.8-2')
+            val = os.environ.get('CEMENT_LOG_DEPRECATED_DEBUG_OPTION', 0)
+            if is_true(val):
+                enabled = True
+        elif is_true(os.environ.get('CEMENT_LOG', 0)):
+            enabled = True
+        elif is_true(os.environ.get('CEMENT_FRAMEWORK_LOGGING', 0)):
+            deprecate('3.0.8-1')
+            enabled = True
 
-        return res
+        return enabled
 
     def info(self, msg, namespace=None, **kw):
         if self.logging_is_enabled:
