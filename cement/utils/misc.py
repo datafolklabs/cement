@@ -7,11 +7,12 @@ import hashlib
 from textwrap import TextWrapper
 from random import random
 from typing import Any, Dict, Optional, Union
+from ..core.deprecations import deprecate
 
 
-def rando(salt: Optional[str] = None) -> str:
+def rando(salt: Optional[Union[str, float]] = None) -> str:
     """
-    Generate a random MD5 hash for whatever purpose.  Useful for testing
+    Generate a random hash for whatever purpose.  Useful for testing
     or any other time that something random is required.
 
     Args:
@@ -19,7 +20,7 @@ def rando(salt: Optional[str] = None) -> str:
             is used.
 
     Returns:
-        str: Random MD5 hash
+        str: Random hash
 
     Example:
 
@@ -32,17 +33,19 @@ def rando(salt: Optional[str] = None) -> str:
     """
 
     if salt is None:
-        salt = str(random())
+        salt = random()
 
-    return hashlib.md5(str(salt).encode()).hexdigest()
+    # issue-626: Use sha256 for compatibility with Redhat/FIPS restricted
+    # policies. Return only 32 chars for backward compat with previous md5
+    return hashlib.sha256(str(salt).encode()).hexdigest()[:32]
 
 
 class MinimalLogger(object):
 
-    def __init__(
-            self, namespace: str, debug: bool, *args: str, **kw: str) -> None:
+    def __init__(self, namespace: str, debug: bool, *args: Any, **kw: Any):
         self.namespace = namespace
         self.backend = logging.getLogger(namespace)
+        self._debug = debug
         formatter = logging.Formatter(
             "%(asctime)s (%(levelname)s) %(namespace)s : %(message)s"
         )
@@ -51,17 +54,25 @@ class MinimalLogger(object):
         console.setLevel(logging.INFO)
         self.backend.setLevel(logging.INFO)
 
-        # FIX ME: really don't want to hard check sys.argv like this but
-        # can't figure any better way to get logging started (only for debug)
-        # before the app logging is setup.
-        if '--debug' in sys.argv or debug:
+        _enabled = False
+        if is_true(os.environ.get('CEMENT_LOG', 0)) or debug is True:
+            _enabled = True
+        elif '--debug' in sys.argv:
+            deprecate('3.0.8-2')
+            _enabled = True
+        elif is_true(os.environ.get('CEMENT_FRAMEWORK_LOGGING', 0)):
+            deprecate('3.0.8-1')
+            _enabled = True
+
+        if _enabled is True:
+            # framework and extensions only log to debug
             console.setLevel(logging.DEBUG)
             self.backend.setLevel(logging.DEBUG)
 
         self.backend.addHandler(console)
 
     def _get_logging_kwargs(self, namespace: Optional[str],
-                            **kw: Dict[str, Any]) -> Dict[str, Any]:
+                            **kw: Any) -> Dict[Any, Any]:
         if not namespace:
             namespace = self.namespace
 
@@ -76,53 +87,52 @@ class MinimalLogger(object):
 
     @property
     def logging_is_enabled(self) -> bool:
-        if 'CEMENT_FRAMEWORK_LOGGING' in os.environ.keys():
-            if is_true(os.environ['CEMENT_FRAMEWORK_LOGGING']):
-                res = True
-            else:
-                res = False
-        else:
-            res = True  # pragma: nocover
+        enabled = False
+        if '--debug' in sys.argv or self._debug:
+            deprecate('3.0.8-2')
+            val = os.environ.get('CEMENT_LOG_DEPRECATED_DEBUG_OPTION', 0)
+            if is_true(val):
+                enabled = True
+        elif is_true(os.environ.get('CEMENT_LOG', 0)):
+            enabled = True
+        elif is_true(os.environ.get('CEMENT_FRAMEWORK_LOGGING', 0)):
+            deprecate('3.0.8-1')
+            enabled = True
 
-        return res
+        return enabled
 
-    def info(
-            self, msg: str, namespace: Optional[str] = None, **kw:
-            Dict[str, Any]) -> None:
+    def info(self, msg: str, namespace: Optional[str] = None,
+             **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.info(msg, **kwargs)
 
-    def warning(
-            self, msg: str, namespace: Optional[str] = None, **kw:
-            Dict[str, Any]) -> None:
+    def warning(self, msg: str, namespace: Optional[str] = None,
+                **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.warning(msg, **kwargs)
 
-    def error(
-            self, msg: str, namespace: Optional[str] = None, **kw:
-            Dict[str, Any]) -> None:
+    def error(self, msg: str, namespace: Optional[str] = None,
+              **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.error(msg, **kwargs)
 
-    def fatal(
-            self, msg: str, namespace: Optional[str] = None, **kw:
-            Dict[str, Any]) -> None:
+    def fatal(self, msg: str, namespace: Optional[str] = None,
+              **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.fatal(msg, **kwargs)
 
-    def debug(
-            self, msg: str, namespace: Optional[str] = None, **kw:
-            Dict[str, Any]) -> None:
+    def debug(self, msg: str, namespace: Optional[str] = None,
+              **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.debug(msg, **kwargs)
 
 
-def init_defaults(*sections: str) -> Dict[str, dict]:
+def init_defaults(*sections: str) -> Dict[str, Any]:
     """
     Returns a standard dictionary object to use for application defaults.
     If sections are given, it will create a nested dict for each section name.
@@ -184,7 +194,7 @@ def minimal_logger(namespace: str, debug: bool = False) -> MinimalLogger:
     return MinimalLogger(namespace, debug)
 
 
-def is_true(item: Union[str, bool, int, object]) -> bool:
+def is_true(item: Any) -> bool:
     """
     Given a value, determine if it is one of
     ``[True, 'true', 'yes', 'y', 'on', '1', 1,]`` (note: strings are converted
@@ -209,9 +219,8 @@ def is_true(item: Union[str, bool, int, object]) -> bool:
         return False
 
 
-def wrap(
-        text: str, width: int = 77, indent: str = '', long_words: bool = False,
-        hyphens: bool = False) -> str:
+def wrap(text: str, width: int = 77, indent: str = '',
+         long_words: bool = False, hyphens: bool = False) -> str:
     """
     Wrap text for cleaner output (this is a simple wrapper around
     ``textwrap.TextWrapper`` in the standard library).

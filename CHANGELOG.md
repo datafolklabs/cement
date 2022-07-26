@@ -4,7 +4,16 @@
 
 Bugs:
 
-- None
+- `[cli]` Cement CLI broken on Python 3.10
+    - [Issue #619](https://github.com/datafolklabs/cement/issues/619)
+- `[cli]` Generated script returns version of Cement
+    - [Issue #632](https://github.com/datafolklabs/cement/issues/632)
+- `[cli]` Generated script should allow dash/underscore
+    - [Issue #614](https://github.com/datafolklabs/cement/issues/614)
+- `[core.foundation]` App.render() not suppressed in quiet mode
+    - [Issue #636](https://github.com/datafolklabs/cement/issues/636)
+- `[core.foundation]` Console log not suppressed by output handler override (JSON/YAML)
+    - [Issue #637](https://github.com/datafolklabs/cement/issues/637)
 
 
 Features:
@@ -22,13 +31,25 @@ Incompatible:
 
 Refactoring:
 
-- None
-
+- `[utils.misc]` Use SHA256 instead of MD5 in `rando()` to support Redhap/FIPS compliance
+    - [Issue #626](https://github.com/datafolklabs/cement/issues/626)
+- `[core.foundation] Make quiet/debug options configurable
+    - [Issue #613](https://github.com/datafolklabs/cement/issues/613)
 
 Misc:
 
-- None
+- `[dev]` Cement CLI smoke tests
+    - [Issue #620](https://github.com/datafolklabs/cement/issues/620)
+- `[dev]` Add Python 3.10 to Travis CI tests
+    - [Issue #618](https://github.com/datafolklabs/cement/issues/618)
+- `[core.deprecations]` Implement Cement deprecation warnings
+    - [Issue #631](https://github.com/datafolklabs/cement/issues/631)
 
+
+Deprecations:
+
+- `[core.foundation]` Deprecate CEMENT_FRAMEWORK_LOGGING in favor of CEMENT_LOG.
+    - [Issue #638](https://github.com/datafolklabs/cement/issues/638)
 
 
 ## 3.0.6 - Dec 18, 2021

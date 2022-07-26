@@ -5,7 +5,7 @@ VERSION = (0, 0, 1, 'alpha', 0)
 
 VERSION_BANNER = """
 {{ label }} v%s
-""" % get_version()
+""" % get_version(VERSION)
 
 
 class Base(Controller):

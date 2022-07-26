@@ -16,6 +16,7 @@ from ..core import template
 from ..core.interface import Interface, InterfaceManager
 from ..core.handler import Handler, HandlerManager
 from ..core.hook import HookManager
+from ..core.deprecations import deprecate
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs, misc
 from ..ext.ext_argparse import ArgparseController as Controller
@@ -169,12 +170,13 @@ class App(meta.MetaMixin):
 
         debug = False
         """
-        Used internally, and should not be used by developers.  This is set
-        to ``True`` if the ``debug`` option is passed at command line."""
+        This is set to ``True`` if any of the ``debug_argument_options``
+        are passed at command line. Useful for debugging."""
 
         debug_argument_options = ['-d', '--debug']
         """
-        The argument option(s) to toggle debug mode via cli.
+        The argument option(s) to toggle debug mode via cli. Set to `None` to
+        remove these options from the app.
         """
 
         debug_argument_help = 'full application debug mode'
@@ -184,12 +186,14 @@ class App(meta.MetaMixin):
 
         quiet = False
         """
-        Used internally, and should not be used by developers.  This is set
-        to ``True`` if the ``quiet`` option is passed at command line."""
+        Suppress all console output (print/log/render). This is set to
+        ``True`` if any of the ``quiet_argument_options`` are passed at
+        command line."""
 
         quiet_argument_options = ['-q', '--quiet']
         """
-        The argument option(s) to toggle quiet mode via cli.
+        The argument option(s) to toggle quiet mode via cli. Set to `None` to
+        remove these options from the app.
         """
 
         quiet_argument_help = 'suppress all console output'
@@ -582,16 +586,21 @@ class App(meta.MetaMixin):
 
         framework_logging = True
         """
-        Whether or not to enable Cement framework logging.  This is separate
-        from the application log, and is generally used for debugging issues
-        with the framework and/or extensions primarily in development.
+        This setting is deprecated and will be changed or removed in Cement
+        v3.2.0. See:
+        https://docs.builtoncement.com/release-information/deprecations#3.0.8-2
+
+        Whether or not to enable Cement framework logging if ``--debug`` is
+        passed at the command line.  This is separate from the application
+        log, and is generally used for debugging issues with the framework
+        and/or extensions primarily in development.
 
         This option is overridden by the environment variable
-        `CEMENT_FRAMEWORK_LOGGING`.  Therefore, if in production you do not
-        want the Cement framework log enabled, you can set this option to
-        ``False`` but override it in your environment by doing something like
-        ``export CEMENT_FRAMEWORK_LOGGING=1`` in your shell whenever you need
-        it enabled.
+        `CEMENT_LOG`.  Therefore, if in production you do not
+        want the Cement framework log enabled (when the ``debug`` option is
+        passed at command line), you can set this option to ``False``. Setting
+        ``CEMENT_LOG=1`` in the environment will trigger this setting to
+        ``True``.
         """
 
         define_hooks: list[str] = []
@@ -753,12 +762,32 @@ class App(meta.MetaMixin):
     def __init__(self, label: Optional[str] = None, **kw: Any):
         super(App, self).__init__(**kw)
 
-        # disable framework logging?
-        if 'CEMENT_FRAMEWORK_LOGGING' not in os.environ.keys():
-            if self._meta.framework_logging is True:
-                os.environ['CEMENT_FRAMEWORK_LOGGING'] = '1'
+        # enable framework logging from environment?
+        if 'CEMENT_LOG' in os.environ.keys():
+            val = os.environ.get('CEMENT_LOG')
+            assert val in ['0', '1'], \
+                f'Invalid value for CEMENT_LOG ({val}). Must be one of: 0, 1'
+            if is_true(val):
+                self._meta.framework_logging = True
             else:
-                os.environ['CEMENT_FRAMEWORK_LOGGING'] = '0'
+                self._meta.framework_logging = False
+
+        if 'CEMENT_FRAMEWORK_LOGGING' in os.environ.keys():
+            deprecate('3.0.8-1')
+            val = os.environ.get('CEMENT_FRAMEWORK_LOGGING')
+            assert val in ['0', '1'], (
+                f'Invalid value for CEMENT_FRAMEWORK_LOGGING ({val}). Must '
+                f'be one of: 0, 1'
+            )
+            if is_true(val):
+                self._meta.framework_logging = True
+            else:
+                self._meta.framework_logging = False
+
+        # DEPRECATE: in v3.2.0, this needs to set os.environ if is True
+        if self._meta.framework_logging is True:
+            deprecate('3.0.8-2')
+            os.environ['CEMENT_LOG_DEPRECATED_DEBUG_OPTION'] = '1'
 
         # for convenience we translate this to _meta
         if label:
@@ -803,6 +832,10 @@ class App(meta.MetaMixin):
 
         self._lay_cement()
 
+        # add deprecation warnings?
+        # if is_true(os.environ.get('CEMENT_DEPRECATION_WARNINGS', 0)):
+        #     self.hook.register('pre_close', display_deprecation_warnings)
+
     @property
     def label(self) -> str:
         return self._meta.label
@@ -810,15 +843,23 @@ class App(meta.MetaMixin):
     @property
     def debug(self) -> bool:
         """
-        Returns boolean based on whether the ``debug`` option was passed at
-        command line or set via the application's configuration file.
+        Application debug mode.
 
         :returns: boolean
         """
         return self._meta.debug
 
     @property
-    def argv(self) -> list[str]:
+    def quiet(self) -> bool:
+        """
+        Application quiet mode.
+
+        :returns: boolean
+        """
+        return self._meta.quiet
+
+    @property
+    def argv(self):
         """The arguments list that will be used when self.run() is called."""
         return self._meta.argv
 
@@ -1039,7 +1080,8 @@ class App(meta.MetaMixin):
                 output handlers do not use templates).
             out: A file like object (i.e. ``sys.stdout``, or actual file).
                 Set to ``None`` if no output is desired (just render and
-                return).
+                return). Default is ``sys.stdout``, however if ``App.quiet``
+                is ``True``, this will be set to ``None``.
             handler: The output handler to use to render.  Defaults to
                 ``App.Meta.output_handler``.
 
@@ -1053,6 +1095,11 @@ class App(meta.MetaMixin):
                 LOG.debug("pre_render hook did not return a dict().")
             else:
                 data = res
+
+        # Issue #636: override sys.stdout if in quiet mode
+        stdouts = [sys.stdout, self.__saved_stdout__]
+        if self._meta.quiet is True and out in stdouts:
+            out = None
 
         kw['template'] = template
 
@@ -1118,6 +1165,10 @@ class App(meta.MetaMixin):
         self.__saved_stderr__ = sys.stderr
         sys.stdout = open(os.devnull, 'w')
         sys.stderr = open(os.devnull, 'w')
+
+        # have to resetup the log handler to suppress console output
+        if self.log is not None:
+            self._setup_log_handler()
 
     def _unsuppress_output(self) -> None:
         LOG.debug('unsuppressing all console output')
