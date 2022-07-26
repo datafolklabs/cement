@@ -1,6 +1,9 @@
 """Cement core exceptions module."""
 
 
+from typing import Any
+
+
 class FrameworkError(Exception):
 
     """
@@ -11,11 +14,11 @@ class FrameworkError(Exception):
 
     """
 
-    def __init__(self, msg):
+    def __init__(self, msg: str) -> None:
         Exception.__init__(self)
         self.msg = msg
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.msg
 
 
@@ -38,7 +41,7 @@ class CaughtSignal(FrameworkError):
 
     """
 
-    def __init__(self, signum, frame):
+    def __init__(self, signum: int, frame: Any) -> None:
         msg = 'Caught signal %s' % signum
         super(CaughtSignal, self).__init__(msg)
         self.signum = signum

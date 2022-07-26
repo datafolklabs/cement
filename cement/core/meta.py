@@ -1,6 +1,9 @@
 """Cement core meta functionality."""
 
 
+from typing import Any, Dict
+
+
 class Meta(object):
 
     """
@@ -9,10 +12,10 @@ class Meta(object):
 
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         self._merge(kwargs)
 
-    def _merge(self, dict_obj):
+    def _merge(self, dict_obj: Dict[str, Any]) -> None:
         for key in dict_obj.keys():
             setattr(self, key, dict_obj[key])
 
@@ -25,10 +28,10 @@ class MetaMixin(object):
 
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         # Get a List of all the Classes we in our MRO, find any attribute named
         #     Meta on them, and then merge them together in order of MRO
-        metas = reversed([x.Meta for x in self.__class__.mro()
+        metas = reversed([x.Meta for x in self.__class__.mro()  # type: ignore
                           if hasattr(x, "Meta")])
         final_meta = {}
 

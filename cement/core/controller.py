@@ -17,7 +17,7 @@ class ControllerInterface(Interface):
     :class:`ControllerHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Interface meta-data."""
 
@@ -25,7 +25,7 @@ class ControllerInterface(Interface):
         interface = 'controller'
 
     @abstractmethod
-    def _dispatch(self):
+    def _dispatch(self) -> None:
         """
         Reads the application object's data to dispatch a command from this
         controller.  For example, reading ``self.app.pargs`` to determine what
@@ -43,6 +43,8 @@ class ControllerInterface(Interface):
         pass    # pragma: nocover
 
 
-class ControllerHandler(ControllerInterface, Handler):
+class ControllerHandler(ControllerInterface, Handler):  # type: ignore
     """Controller handler implementation."""
-    pass    # pragma: nocover
+
+    class Meta(Handler.Meta):
+        pass  # pragma: nocover

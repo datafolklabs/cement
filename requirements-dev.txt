@@ -8,6 +8,10 @@ pep8
 autopep8
 pycodestyle
 flake8
+mypy
+types-tabulate
+types-redis
+types-PyYAML
 guzzle_sphinx_theme
 sphinxcontrib-napoleon
 mock

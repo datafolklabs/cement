@@ -2,16 +2,22 @@
 Cement configparser extension module.
 """
 
+from __future__ import annotations
 import os
 import re
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 from ..core import config
 from ..utils.misc import minimal_logger
 from configparser import RawConfigParser
 
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
+
 LOG = minimal_logger(__name__)
 
 
-class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
+class ConfigParserConfigHandler(  # type: ignore
+        config.ConfigHandler, RawConfigParser):
 
     """
     This class is an implementation of the :ref:`Config <cement.core.config>`
@@ -24,14 +30,14 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
     Additional arguments and keyword arguments are passed directly to
     RawConfigParser on initialization.
     """
-    class Meta:
+    class Meta(config.ConfigHandler.Meta):
 
         """Handler meta-data."""
 
         label = 'configparser'
         """The string identifier of this handler."""
 
-    def merge(self, dict_obj, override=True):
+    def merge(self, dict_obj: dict, override: bool = True) -> None:
         """
         Merge a dictionary into our config.  If override is True then
         existing config values are overridden by those passed in.
@@ -63,7 +69,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
                 # we don't support nested config blocks, so no need to go
                 # further down to more nested dicts.
 
-    def _parse_file(self, file_path):
+    def _parse_file(self, file_path: str) -> bool:
         """
         Parse a configuration file at ``file_path`` and store it.
 
@@ -80,7 +86,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         # will likely raise an exception anyhow.
         return True
 
-    def keys(self, section):
+    def keys(self, section: str) -> List[str]:  # type: ignore
         """
         Return a list of keys within ``section``.
 
@@ -93,7 +99,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         """
         return self.options(section)
 
-    def get_dict(self):
+    def get_dict(self) -> Dict[str, Any]:
         """
         Return a dict of the entire configuration.
 
@@ -105,7 +111,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
             _config[section] = self.get_section_dict(section)
         return _config
 
-    def get_sections(self):
+    def get_sections(self) -> List[str]:
         """
         Return a list of configuration sections.
 
@@ -115,7 +121,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         """
         return self.sections()
 
-    def get_section_dict(self, section):
+    def get_section_dict(self, section: str) -> Dict[str, Any]:
         """
         Return a dict representation of a section.
 
@@ -131,7 +137,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
             dict_obj[key] = self.get(section, key)
         return dict_obj
 
-    def add_section(self, section):
+    def add_section(self, section: str) -> None:
         """
         Adds a block section to the config.
 
@@ -139,9 +145,9 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
             section (str): The section to add.
 
         """
-        return RawConfigParser.add_section(self, section)
+        RawConfigParser.add_section(self, section)
 
-    def _get_env_var(self, section, key):
+    def _get_env_var(self, section: str, key: str) -> str:
         if section == self.app._meta.config_section:
             env_var = "%s_%s" % (self.app._meta.config_section, key)
         else:
@@ -152,7 +158,8 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         env_var = re.sub('[^0-9a-zA-Z_]+', '_', env_var)
         return env_var
 
-    def get(self, section, key, **kwargs):
+    def get(self, section: str, key: str,  # type: ignore
+            **kwargs: Any) -> str:
         env_var = self._get_env_var(section, key)
 
         if env_var in os.environ.keys():
@@ -160,12 +167,12 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         else:
             return RawConfigParser.get(self, section, key, **kwargs)
 
-    def has_section(self, section):
+    def has_section(self, section: str) -> bool:
         return RawConfigParser.has_section(self, section)
 
-    def set(self, section, key, value):
-        return RawConfigParser.set(self, section, key, value)
+    def set(self, section: str, key: str, value: Optional[str] = None) -> None:
+        RawConfigParser.set(self, section, key, value)
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(ConfigParserConfigHandler)

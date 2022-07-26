@@ -1,6 +1,7 @@
 """Cement core output module."""
 
 from abc import abstractmethod
+from typing import Any
 from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
@@ -17,7 +18,7 @@ class OutputInterface(Interface):
     :class:`OutputHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Handler meta-data."""
 
@@ -25,7 +26,7 @@ class OutputInterface(Interface):
         interface = 'output'
 
     @abstractmethod
-    def render(self, data, *args, **kwargs):
+    def render(self, data: Any, **kwargs: Any) -> str:
         """
         Render the ``data`` dict into output in some fashion.  This function
         must accept both ``*args`` and ``**kwargs`` to allow an application to
@@ -43,8 +44,9 @@ class OutputInterface(Interface):
         pass  # pragma: nocover
 
 
-class OutputHandler(OutputInterface, Handler):
+class OutputHandler(OutputInterface, Handler):  # type: ignore
 
     """Output handler implementation."""
 
-    pass  # pragma: nocover
+    class Meta(Handler.Meta):
+        pass  # pragma: nocover

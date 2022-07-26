@@ -7,7 +7,7 @@ def test_dummy_output():
     with TestApp() as app:
         app.run()
         app.render({'foo': 'bar'})
-        assert app.last_rendered == ({'foo': 'bar'}, None)
+        assert app.last_rendered == ({'foo': 'bar'}, '')
 
 
 def test_dummy_template(tmp):
@@ -15,7 +15,7 @@ def test_dummy_template(tmp):
         app.run()
 
         res = app.template.render('{{ foo }}', {'foo': 'bar'})
-        assert res is None
+        assert res == ''
 
         app.template.copy('/path/to/src', '/path/to/dest', {})
 

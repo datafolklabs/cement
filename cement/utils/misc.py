@@ -6,10 +6,11 @@ import logging
 import hashlib
 from textwrap import TextWrapper
 from random import random
+from typing import Any, Dict, Optional, Union
 from ..core.deprecations import deprecate
 
 
-def rando(salt=None):
+def rando(salt: Optional[Union[str, float]] = None) -> str:
     """
     Generate a random hash for whatever purpose.  Useful for testing
     or any other time that something random is required.
@@ -41,7 +42,7 @@ def rando(salt=None):
 
 class MinimalLogger(object):
 
-    def __init__(self, namespace, debug, *args, **kw):
+    def __init__(self, namespace: str, debug: bool, *args: Any, **kw: Any):
         self.namespace = namespace
         self.backend = logging.getLogger(namespace)
         self._debug = debug
@@ -70,7 +71,8 @@ class MinimalLogger(object):
 
         self.backend.addHandler(console)
 
-    def _get_logging_kwargs(self, namespace, **kw):
+    def _get_logging_kwargs(self, namespace: Optional[str],
+                            **kw: Any) -> Dict[Any, Any]:
         if not namespace:
             namespace = self.namespace
 
@@ -84,7 +86,7 @@ class MinimalLogger(object):
         return kw
 
     @property
-    def logging_is_enabled(self):
+    def logging_is_enabled(self) -> bool:
         enabled = False
         if '--debug' in sys.argv or self._debug:
             deprecate('3.0.8-2')
@@ -99,33 +101,38 @@ class MinimalLogger(object):
 
         return enabled
 
-    def info(self, msg, namespace=None, **kw):
+    def info(self, msg: str, namespace: Optional[str] = None,
+             **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.info(msg, **kwargs)
 
-    def warning(self, msg, namespace=None, **kw):
+    def warning(self, msg: str, namespace: Optional[str] = None,
+                **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.warning(msg, **kwargs)
 
-    def error(self, msg, namespace=None, **kw):
+    def error(self, msg: str, namespace: Optional[str] = None,
+              **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.error(msg, **kwargs)
 
-    def fatal(self, msg, namespace=None, **kw):
+    def fatal(self, msg: str, namespace: Optional[str] = None,
+              **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.fatal(msg, **kwargs)
 
-    def debug(self, msg, namespace=None, **kw):
+    def debug(self, msg: str, namespace: Optional[str] = None,
+              **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
             self.backend.debug(msg, **kwargs)
 
 
-def init_defaults(*sections):
+def init_defaults(*sections: str) -> Dict[str, Any]:
     """
     Returns a standard dictionary object to use for application defaults.
     If sections are given, it will create a nested dict for each section name.
@@ -152,13 +159,13 @@ def init_defaults(*sections):
             app = App('myapp', config_defaults=defaults)
 
     """
-    defaults = dict()
+    defaults: Dict[str, Any] = dict()
     for section in sections:
         defaults[section] = dict()
     return defaults
 
 
-def minimal_logger(namespace, debug=False):
+def minimal_logger(namespace: str, debug: bool = False) -> MinimalLogger:
     """
     Setup just enough for cement to be able to do debug logging.  This is the
     logger used by the Cement framework, which is setup and accessed before
@@ -187,7 +194,7 @@ def minimal_logger(namespace, debug=False):
     return MinimalLogger(namespace, debug)
 
 
-def is_true(item):
+def is_true(item: Any) -> bool:
     """
     Given a value, determine if it is one of
     ``[True, 'true', 'yes', 'y', 'on', '1', 1,]`` (note: strings are converted
@@ -212,7 +219,8 @@ def is_true(item):
         return False
 
 
-def wrap(text, width=77, indent='', long_words=False, hyphens=False):
+def wrap(text: str, width: int = 77, indent: str = '',
+         long_words: bool = False, hyphens: bool = False) -> str:
     """
     Wrap text for cleaner output (this is a simple wrapper around
     ``textwrap.TextWrapper`` in the standard library).

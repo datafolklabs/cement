@@ -2,13 +2,18 @@
 Cement watchdog extension module.
 """
 
+from __future__ import annotations
 import os
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer  # type: ignore
+from watchdog.events import FileSystemEventHandler  # type: ignore
+from typing import Any, Optional, Type, TYPE_CHECKING
 from ..core.meta import MetaMixin
 from ..core.exc import FrameworkError
 from ..utils.misc import minimal_logger
 from ..utils import fs
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -23,11 +28,11 @@ class WatchdogEventHandler(FileSystemEventHandler):
 
     """
 
-    def __init__(self, app, *args, **kw):
+    def __init__(self, app: App, *args: Any, **kw: Any) -> None:
         super(WatchdogEventHandler, self).__init__(*args, **kw)
         self.app = app
 
-    def on_any_event(self, event):
+    def on_any_event(self, event: str) -> None:
         self.app.log.debug("Watchdog Event: %s" % event)  # pragma: nocover
 
 
@@ -53,13 +58,17 @@ class WatchdogManager(MetaMixin):
         #: The default event handler class to use if none is provided
         default_event_handler = WatchdogEventHandler
 
-    def __init__(self, app, *args, **kw):
+    _meta: Meta  # type: ignore
+
+    def __init__(self, app: App, *args: Any, **kw: Any) -> None:
         super(WatchdogManager, self).__init__(*args, **kw)
         self.app = app
-        self.paths = []
+        self.paths: list[str] = []
         self.observer = self._meta.observer()
 
-    def add(self, path, event_handler=None, recursive=True):
+    def add(
+            self, path: str, event_handler: Optional[Type] = None,
+            recursive: bool = True) -> bool:
         """
         Add a directory path and event handler to the observer.
 
@@ -88,7 +97,7 @@ class WatchdogManager(MetaMixin):
                                path, recursive=recursive)
         return True
 
-    def start(self, *args, **kw):
+    def start(self, *args: Any, **kw: Any) -> None:
         """
         Start the observer.  All ``*args`` and ``**kwargs`` are passed down
         to the backend observer.
@@ -101,7 +110,7 @@ class WatchdogManager(MetaMixin):
         for res in self.app.hook.run('watchdog_post_start', self.app):
             pass
 
-    def stop(self, *args, **kw):
+    def stop(self, *args: Any, **kw: Any) -> None:
         """
         Stop the observer.  All ``*args`` and ``**kwargs`` are passed down
         to the backend observer.
@@ -114,7 +123,7 @@ class WatchdogManager(MetaMixin):
         for res in self.app.hook.run('watchdog_post_stop', self.app):
             pass
 
-    def join(self, *args, **kw):
+    def join(self, *args: Any, **kw: Any) -> None:
         """
         Join the observer with the parent process.  All ``*args`` and
         ``**kwargs`` are passed down to the backend observer.
@@ -128,23 +137,23 @@ class WatchdogManager(MetaMixin):
             pass
 
 
-def watchdog_extend_app(app):
+def watchdog_extend_app(app: App) -> None:
     app.extend('watchdog', WatchdogManager(app))
 
 
-def watchdog_start(app):
-    app.watchdog.start()
+def watchdog_start(app: App) -> None:
+    app.watchdog.start()  # type: ignore
 
 
-def watchdog_cleanup(app):
+def watchdog_cleanup(app: Any) -> None:
     if app.watchdog.observer.is_alive():
         app.watchdog.stop()
         app.watchdog.join()
 
 
-def watchdog_add_paths(app):
+def watchdog_add_paths(app: Any) -> None:
     if hasattr(app._meta, 'watchdog_paths'):
-        for path_spec in app._meta.watchdog_paths:
+        for path_spec in app._meta.watchdog_paths:  # type: ignore
             # odd... if a tuple is a single item it ends up as a str?
             # FIXME: coverage gets lots in testing
             if isinstance(path_spec, str):
@@ -158,7 +167,7 @@ def watchdog_add_paths(app):
                 )
 
 
-def load(app):
+def load(app: App) -> None:
     app.hook.define('watchdog_pre_start')
     app.hook.define('watchdog_post_start')
     app.hook.define('watchdog_pre_stop')

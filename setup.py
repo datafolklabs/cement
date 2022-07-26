@@ -1,5 +1,3 @@
-
-import sys
 from setuptools import setup, find_packages
 from cement.utils import version
 
@@ -9,7 +7,8 @@ f = open('README.md', 'r')
 LONG = f.read()
 f.close()
 
-setup(name='cement',
+setup(
+    name='cement',
     version=VERSION,
     python_requires='>=3.5',
     description='Application Framework for Python',

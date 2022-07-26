@@ -1,6 +1,7 @@
 """Cement core plugins module."""
 
 from abc import abstractmethod
+from typing import List
 from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
@@ -17,13 +18,13 @@ class PluginInterface(Interface):
     :class:`PluginHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         #: String identifier of the interface.
         interface = 'plugin'
 
     @abstractmethod
-    def load_plugin(plugin_name):
+    def load_plugin(self, plugin_name: str) -> None:
         """
         Load a plugin whose name is ``plugin_name``.
 
@@ -34,7 +35,7 @@ class PluginInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def load_plugins(self, plugins):
+    def load_plugins(self, plugins: List[str]) -> None:
         """
         Load all plugins from ``plugins``.
 
@@ -45,26 +46,27 @@ class PluginInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def get_loaded_plugins(self):
+    def get_loaded_plugins(self) -> List[str]:
         """Returns a list of plugins that have been loaded."""
         pass  # pragma: nocover
 
     @abstractmethod
-    def get_enabled_plugins(self):
+    def get_enabled_plugins(self) -> List[str]:
         """Returns a list of plugins that are enabled in the config."""
         pass  # pragma: nocover
 
     @abstractmethod
-    def get_disabled_plugins(self):
+    def get_disabled_plugins(self) -> List[str]:
         """Returns a list of plugins that are disabled in the config."""
         pass  # pragma: nocover
 
 
-class PluginHandler(PluginInterface, Handler):
+class PluginHandler(PluginInterface, Handler):  # type: ignore
 
     """
     Plugin handler implementation.
 
     """
 
-    pass  # pragma: nocover
+    class Meta(Handler.Meta):
+        pass  # pragma: nocover
