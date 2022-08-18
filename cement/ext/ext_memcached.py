@@ -1,5 +1,14 @@
 """
 Cement memcached extension module.
+
+**Note** This extension has an external dependency on ``pylibmc``. Cement
+explicitly does **not** include external dependencies for optional
+extensions.
+
+* In Cement ``>=3.0.8`` you must include ``cement[memcached]`` in your
+  applications dependencies.  
+* In Cement ``<3.0.8`` you must include ``pylibmc`` in your applications
+  dependencies.
 """
 
 import pylibmc
@@ -15,11 +24,6 @@ class MemcachedCacheHandler(cache.CacheHandler):
     This class implements the :ref:`Cache <cement.core.cache>` Handler
     interface.  It provides a caching interface using the
     `pylibmc <http://sendapatch.se/projects/pylibmc/>`_ library.
-
-    **Note** This extension has an external dependency on ``pylibmc``.  You
-    must include ``pylibmc`` in your applications dependencies as Cement
-    explicitly does *not* include external dependencies for optional
-    extensions.
     """
 
     class Meta:

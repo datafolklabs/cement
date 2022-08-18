@@ -1,5 +1,14 @@
 """
-Cement tabulate extension module.
+Cement Tabulate extension module.
+
+**Note** This extension has an external dependency on ``tabulate``. Cement
+explicitly does **not** include external dependencies for optional
+extensions.
+
+* In Cement ``>=3.0.8`` you must include ``cement[tabulate]`` in your
+  applications dependencies.  
+* In Cement ``<3.0.8`` you must include ``tabulate`` in your applications
+  dependencies.
 """
 
 from tabulate import tabulate
@@ -17,11 +26,6 @@ class TabulateOutputHandler(output.OutputHandler):
     `Tabulate <https://pypi.python.org/pypi/tabulate>`_ module.  Please
     see the developer documentation on
     :cement:`Output Handling <dev/output>`.
-
-    **Note** This extension has an external dependency on ``tabulate``.  You
-    must include ``tabulate`` in your applications dependencies as Cement
-    explicitly does **not** include external dependencies for optional
-    extensions.
     """
 
     class Meta:

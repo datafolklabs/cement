@@ -1,5 +1,14 @@
 """
-Cement colorlog extension module.
+Cement Colorlog extension module.
+
+**Note** This extension has an external dependency on ``colorlog``. Cement
+explicitly does **not** include external dependencies for optional
+extensions.
+
+* In Cement ``>=3.0.8`` you must include ``cement[colorlog]`` in your
+  applications dependencies.  
+* In Cement ``<3.0.8`` you must include ``colorlog`` in your applications
+  dependencies.
 """
 
 import os
@@ -18,12 +27,6 @@ class ColorLogHandler(LoggingLogHandler):
     based on the standard :py:class:`logging` library, and adds colorized
     console output using the
     `ColorLog <https://pypi.python.org/pypi/colorlog>`_ library.
-
-    **Note** This extension has an external dependency on ``colorlog``.  You
-    must include ``colorlog`` in your applications dependencies as Cement
-    explicitly does **not** include external dependencies for optional
-    extensions.
-
     """
     class Meta:
 

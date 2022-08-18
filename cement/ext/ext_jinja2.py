@@ -1,5 +1,14 @@
 """
 Cement jinja2 extension module.
+
+**Note** This extension has an external dependency on ``jinja2``. Cement
+explicitly does **not** include external dependencies for optional
+extensions.
+
+* In Cement ``>=3.0.8`` you must include ``cement[jinja2]`` in your
+  applications dependencies.  
+* In Cement ``<3.0.8`` you must include ``jinja2`` in your applications
+  dependencies.
 """
 
 from ..core.output import OutputHandler
@@ -69,11 +78,6 @@ class Jinja2TemplateHandler(TemplateHandler):
     `Jinja2 Templating Language <http://jinja.pocoo.org/>`_.  Please
     see the developer documentation on
     :cement:`Template Handling <dev/template>`.
-
-    **Note** This extension has an external dependency on ``jinja2``.  You
-    must include ``jinja2`` in your applications dependencies as Cement
-    explicitly does **not** include external dependencies for optional
-    extensions.
     """
 
     class Meta:

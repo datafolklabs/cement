@@ -1,5 +1,14 @@
 """
 Cement redis extension module.
+
+**Note** This extension has an external dependency on ``redis``. Cement
+explicitly does **not** include external dependencies for optional
+extensions.
+
+* In Cement ``>=3.0.8`` you must include ``cement[redis]`` in your
+  applications dependencies.  
+* In Cement ``<3.0.8`` you must include ``redis`` in your applications
+  dependencies.
 """
 
 import redis
@@ -15,11 +24,6 @@ class RedisCacheHandler(cache.CacheHandler):
     This class implements the :ref:`Cache <cement.core.cache>` Handler
     interface.  It provides a caching interface using the
     `redis <http://github.com/andymccurdy/redis-py>`_ library.
-
-    **Note** This extension has an external dependency on ``redis``.  You
-    must include ``redis`` in your applications dependencies as Cement
-    explicitly does *not* include external dependencies for optional
-    extensions.
     """
 
     class Meta:

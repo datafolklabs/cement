@@ -1,5 +1,14 @@
 """
 Cement mustache extension module.
+
+**Note** This extension has an external dependency on ``pystache``. Cement
+explicitly does **not** include external dependencies for optional
+extensions.
+
+* In Cement ``>=3.0.8`` you must include ``cement[mustache]`` in your
+  applications dependencies.  
+* In Cement ``<3.0.8`` you must include ``pystache`` in your applications
+  dependencies.
 """
 
 from pystache.renderer import Renderer
@@ -28,11 +37,6 @@ class MustacheOutputHandler(OutputHandler):
     `Mustache Templating Language <http://mustache.github.com>`_.  Please
     see the developer documentation on
     :cement:`Output Handling <dev/output>`.
-
-    **Note** This extension has an external dependency on ``pystache``.  You
-    must include ``pystache`` in your applications dependencies as Cement
-    explicitly does **not** include external dependencies for optional
-    extensions.
     """
 
     class Meta:

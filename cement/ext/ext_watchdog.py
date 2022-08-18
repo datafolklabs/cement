@@ -1,5 +1,14 @@
 """
 Cement watchdog extension module.
+
+**Note** This extension has an external dependency on ``watchdog``. Cement
+explicitly does **not** include external dependencies for optional
+extensions.
+
+* In Cement ``>=3.0.8`` you must include ``cement[watchdog]`` in your
+  applications dependencies.  
+* In Cement ``<3.0.8`` you must include ``watchdog`` in your applications
+  dependencies.
 """
 
 import os
