@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 3.0.7 - DEVELOPMENT (will be released as stable/3.0.8)
+## 3.0.8 - Aug 18, 2022
 
 Bugs:
 
@@ -27,7 +27,7 @@ Refactoring:
 
 - `[utils.misc]` Use SHA256 instead of MD5 in `rando()` to support Redhap/FIPS compliance
     - [Issue #626](https://github.com/datafolklabs/cement/issues/626)
-- `[core.foundation] Make quiet/debug options configurable
+- `[core.foundation]` Make quiet/debug options configurable
     - [Issue #613](https://github.com/datafolklabs/cement/issues/613)
 
 Misc:
