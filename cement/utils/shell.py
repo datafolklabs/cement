@@ -1,6 +1,8 @@
 """Common Shell Utilities."""
 
 import os
+import builtins
+from getpass import getpass
 from subprocess import Popen, PIPE
 from multiprocessing import Process
 from threading import Thread
@@ -388,8 +390,12 @@ class Prompt(MetaMixin):
         max_attempts = 10
 
         #: Raise an exception when max_attempts is hit?  If not, Prompt
-        #: passes the input through as `None`.
+        #: passes the input through as ``None``.
         max_attempts_exception = True
+
+        #: Suppress user input (use ``getpass.getpass`` instead of
+        #: ``builtins.input``. Default: ``False``.
+        suppress = False
 
     def __init__(self, text=None, *args, **kw):
         if text is not None:
@@ -399,6 +405,18 @@ class Prompt(MetaMixin):
         self.input = None
         if self._meta.auto:
             self.prompt()
+
+    def _get_suppressed_input(self, text):
+        return getpass(text)  # pragma: nocover
+
+    def _get_unsuppressed_input(self, text):
+        return builtins.input(text)  # pragma: nocover
+
+    def _get_input(self, text):
+        if self._meta.suppress is True:
+            return self._get_suppressed_input(text)  # pragma: nocover
+        else:
+            return self._get_unsuppressed_input(text)  # pragma: nocover
 
     def _prompt(self):
         if self._meta.clear:
@@ -421,7 +439,8 @@ class Prompt(MetaMixin):
         else:
             text = self._meta.text
 
-        self.input = input("%s " % text)
+        self.input = self._get_input("%s " % text)
+        # self.input = input("%s " % text)
         if self.input == '' and self._meta.default is not None:
             self.input = self._meta.default
         elif self.input == '':

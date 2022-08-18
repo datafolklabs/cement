@@ -6,7 +6,8 @@ from pytest import raises
 from cement.utils import shell
 from cement.core.exc import FrameworkError
 
-INPUT = 'builtins.input'
+# INPUT = 'builtins.input'
+INPUT = 'cement.utils.shell.Prompt._get_input'
 
 
 def add(a, b):
@@ -209,3 +210,9 @@ def test_prompt_case_sensitive():
             max_attempts_exception=False,
         )
         assert p.input is None
+
+
+def test_prompt_suppress_user_input():
+    with mock.patch(INPUT, return_value='UBER_SECURE_PASSWORD'):
+        p = shell.Prompt("Input password", suppress=True)
+        assert p.input == 'UBER_SECURE_PASSWORD'
