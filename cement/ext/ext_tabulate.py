@@ -6,7 +6,7 @@ explicitly does **not** include external dependencies for optional
 extensions.
 
 * In Cement ``>=3.0.8`` you must include ``cement[tabulate]`` in your
-  applications dependencies.  
+  applications dependencies.
 * In Cement ``<3.0.8`` you must include ``tabulate`` in your applications
   dependencies.
 """
