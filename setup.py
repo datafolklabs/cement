@@ -31,8 +31,31 @@ setup(name='cement',
     include_package_data=True,
     zip_safe=False,
     test_suite='nose.collector',
-    entry_points="""
-        [console_scripts]
-        cement = cement.cli.main:main
-    """,
+    entry_points = {   
+        'console_scripts' : [
+            'cement = cement.cli.main:main',
+        ],
+    },
+    extras_require = {
+        'ext.alarm': [],
+        'ext.argparse': [],
+        'ext.colorlog': ['colorlog'],
+        'ext.configparser': [],
+        'ext.daemon': [],
+        'ext.dummy': [],
+        'ext.generate': [],
+        'ext.jinja2': ['jinja2'],
+        'ext.json': [],
+        'ext.logging': [],
+        'ext.memcached': ['pylibmc'],
+        'ext.mustache': ['pystache'],
+        'ext.plugin': [],
+        'ext.print': [],
+        'ext.redis': ['redis'],
+        'ext.scrub': [],
+        'ext.smtp': [],
+        'ext.tabulate': ['tabulate'],
+        'ext.watchdog': ['watchdog'],
+        'ext.yaml': ['pyYaml'],
+    }
 )

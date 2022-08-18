@@ -20,7 +20,8 @@ Features:
 
 - `[utils.shell]` Support `suppress` meta option on `Prompt` to suppress user input.
     - [Issue #621](https://github.com/datafolklabs/cement/issues/621)
-
+- `[ext]` Use `extras_require` for optional extensions
+    - [Issue #604](https://github.com/datafolklabs/cement/issues/604)
 
 Refactoring:
 
