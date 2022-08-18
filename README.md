@@ -1,6 +1,7 @@
 # Cement Framework
 
 [![Built on Cement™](https://img.shields.io/badge/Built%20on%20Cement%E2%84%A2-3.0-yellow)](https://builtoncement.com)
+[![PyPi Downloads](https://img.shields.io/pypi/dm/cement)](https://pypistats.org/packages/cement)
 [![Continuous Integration Status](https://app.travis-ci.com/datafolklabs/cement.svg?branch=master)](https://app.travis-ci.com/github/datafolklabs/cement/)
 [![Code Quality: Python](https://img.shields.io/lgtm/grade/python/g/datafolklabs/cement.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/datafolklabs/cement/context:python)
 [![Total Alerts](https://img.shields.io/lgtm/alerts/g/datafolklabs/cement.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/datafolklabs/cement/alerts)

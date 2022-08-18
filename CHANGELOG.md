@@ -1,5 +1,32 @@
 # ChangeLog
 
+## DEVELOPMENT - Will be released as 3.0.10 or 3.2
+
+Bugs: 
+
+- None
+
+
+Features:
+
+- None
+
+
+Refactoring: 
+
+- None
+
+
+Misc:
+
+- None
+
+
+Deprecations:
+
+- None
+
+
 ## 3.0.8 - Aug 18, 2022
 
 Bugs:
