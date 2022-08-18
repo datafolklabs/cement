@@ -1,4 +1,4 @@
 cement=={{ cement.version }}
-jinja2
-pyyaml
-colorlog
+cement[jinja2]
+cement[yaml]
+cement[colorlog]
