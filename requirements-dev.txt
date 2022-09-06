@@ -8,6 +8,7 @@ pep8
 autopep8
 pycodestyle
 flake8
+pyflakes>=1.4.0
 guzzle_sphinx_theme
 sphinxcontrib-napoleon
 mock
