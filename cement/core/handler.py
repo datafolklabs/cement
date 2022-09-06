@@ -61,7 +61,7 @@ class Handler(ABC, meta.MetaMixin):
             assert self._meta.interface, \
                 "%s.Meta.interface undefined." % self.__class__.__name__
         except AssertionError as e:
-            raise(exc.FrameworkError(e.args[0]))
+            raise exc.FrameworkError(e.args[0])
 
         self.app = None
 
