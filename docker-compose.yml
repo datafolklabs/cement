@@ -56,6 +56,13 @@ services:
         build:
             context: .
             dockerfile: docker/Dockerfile.dev-py39
+    
+    cement-py310:
+        <<: *DEFAULTS
+        image: "cement:dev-py310"
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.dev-py310
 
     redis:
         image: redis:latest

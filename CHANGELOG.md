@@ -19,7 +19,9 @@ Refactoring:
 
 Misc:
 
-- None
+- `[dev]` Add Smoke tests for Python 3.11
+- `[dev]` Make Python 3.11 the default dev target
+- `[docker]` Base official Docker image on Python 3.11
 
 
 Deprecations:

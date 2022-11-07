@@ -76,11 +76,10 @@ The latest stable version of Python 3 is the default, and target version accessi
 $ docker-compose ps
         Name                      Command               State     Ports
 -------------------------------------------------------------------------
-cement_cement-py35_1   /bin/bash                        Up
-cement_cement-py36_1   /bin/bash                        Up
 cement_cement-py37_1   /bin/bash                        Up
 cement_cement-py38_1   /bin/bash                        Up
 cement_cement-py39_1   /bin/bash                        Up
+cement_cement-py310_1   /bin/bash                        Up
 cement_cement_1        /bin/bash                        Up
 cement_memcached_1     docker-entrypoint.sh memcached   Up      11211/tcp
 cement_redis_1         docker-entrypoint.sh redis ...   Up      6379/tcp

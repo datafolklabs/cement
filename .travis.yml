@@ -17,6 +17,9 @@ matrix:
     - python: "3.10"
       dist: "focal"
       sudo: true
+    - python: "3.11"
+      dist: "focal"
+      sudo: true
 services:
   - memcached
   - redis-server

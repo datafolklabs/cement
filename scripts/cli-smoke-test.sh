@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-CEMENT_VERSION="3.0"
-PYTHON_VERSIONS="3.7 3.8 3.9 3.10"
+[ -z "$CEMENT_VERSION" ] && CEMENT_VERSION="3.0"
+[ -z "$PYTHON_VERSIONS" ] && PYTHON_VERSIONS="3.7 3.8 3.9 3.10 3.11"
 
 function smoke-test {
     pyver=$1
