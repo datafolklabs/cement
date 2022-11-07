@@ -17,7 +17,7 @@ matrix:
     - python: "3.10"
       dist: "focal"
       sudo: true
-    - python: "3.11"
+    - python: "3.11-dev"
       dist: "focal"
       sudo: true
 services:
