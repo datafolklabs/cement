@@ -48,7 +48,7 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         assert isinstance(dict_obj, dict), "Dictionary object required."
 
         for section in list(dict_obj.keys()):
-            if type(dict_obj[section]) == dict:
+            if type(dict_obj[section]) is dict:
                 if section not in self.get_sections():
                     self.add_section(section)
 

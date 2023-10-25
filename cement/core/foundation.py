@@ -1029,7 +1029,7 @@ class App(meta.MetaMixin):
         self._unlay_cement()
 
         if code is not None:
-            assert type(code) == int, \
+            assert type(code) is int, \
                 "Invalid exit status code (must be integer)"
             self.exit_code = code
 
