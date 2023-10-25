@@ -1,24 +1,23 @@
 """Cement core foundation module."""
 
 import os
-import sys
-import signal
 import platform
+import signal
+import sys
+from importlib import reload as reload_module
 from time import sleep
-from ..core import exc, log, config, plugin
-from ..core import output, extension, arg, controller, meta, cache, mail
-from ..core import template
-from ..core.interface import InterfaceManager
+
+from ..core import (arg, cache, config, controller, exc, extension, log, mail,
+                    meta, output, plugin, template)
+from ..core.deprecations import deprecate
 from ..core.handler import HandlerManager
 from ..core.hook import HookManager
-from ..core.deprecations import deprecate
-from ..utils.misc import is_true, minimal_logger
-from ..utils import fs, misc
+from ..core.interface import InterfaceManager
 from ..ext.ext_argparse import ArgparseController as Controller
+from ..utils import fs, misc
+from ..utils.misc import is_true, minimal_logger
 
 join = os.path.join
-
-from importlib import reload as reload_module
 
 
 LOG = minimal_logger(__name__)

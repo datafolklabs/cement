@@ -89,7 +89,9 @@ class CementPluginHandler(plugin.PluginHandler):
             LOG.debug("plugin directory '%s' does not exist." % plugin_dir)
             return False
 
-        spec = importlib.machinery.PathFinder().find_spec(plugin_name, [plugin_dir])
+        spec = importlib.machinery.PathFinder().find_spec(
+            plugin_name, [plugin_dir]
+        )
         if not spec:
             LOG.debug("plugin '%s' does not exist in '%s'." %
                       (plugin_name, plugin_dir))
