@@ -4,7 +4,7 @@ Cement plugin extension module.
 
 import os
 import sys
-import imp
+import importlib
 import re
 from ..core import plugin, exc
 from ..utils.misc import is_true, minimal_logger
@@ -82,12 +82,6 @@ class CementPluginHandler(plugin.PluginHandler):
                 exists.
 
         """
-
-        # FIX ME: `imp` is deprecated in Python 3.4 and will be  going away
-        # so we need to update forward compatibility for ``importlib``.
-        #
-        # See: https://github.com/datafolklabs/cement/issues/386
-
         LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
                                                          plugin_dir))
 
@@ -95,16 +89,15 @@ class CementPluginHandler(plugin.PluginHandler):
             LOG.debug("plugin directory '%s' does not exist." % plugin_dir)
             return False
 
-        try:
-            f, path, desc = imp.find_module(plugin_name, [plugin_dir])
-        except ImportError:
+        spec = importlib.machinery.PathFinder().find_spec(plugin_name, [plugin_dir])
+        if not spec:
             LOG.debug("plugin '%s' does not exist in '%s'." %
                       (plugin_name, plugin_dir))
             return False
 
         # We don't catch this because it would make debugging a
         # nightmare
-        mod = imp.load_module(plugin_name, f, path, desc)
+        mod = spec.loader.load_module()
         if mod and hasattr(mod, 'load'):
             mod.load(self.app)
         return True
