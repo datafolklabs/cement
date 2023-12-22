@@ -5,6 +5,8 @@ Cement plugin extension module.
 import os
 import sys
 import importlib
+import importlib.util
+import importlib.machinery
 import re
 from ..core import plugin, exc
 from ..utils.misc import is_true, minimal_logger
@@ -99,7 +101,10 @@ class CementPluginHandler(plugin.PluginHandler):
 
         # We don't catch this because it would make debugging a
         # nightmare
-        mod = spec.loader.load_module()
+        mod = importlib.util.module_from_spec(spec)
+        sys.modules[plugin_name] = mod
+        spec.loader.exec_module(mod)
+
         if mod and hasattr(mod, 'load'):
             mod.load(self.app)
         return True
