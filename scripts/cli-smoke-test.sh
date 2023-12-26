@@ -2,7 +2,7 @@
 set -e
 
 [ -z "$CEMENT_VERSION" ] && CEMENT_VERSION="3.0"
-[ -z "$PYTHON_VERSIONS" ] && PYTHON_VERSIONS="3.7 3.8 3.9 3.10 3.11"
+[ -z "$PYTHON_VERSIONS" ] && PYTHON_VERSIONS="3.8 3.9 3.10 3.11 3.12"
 
 function smoke-test {
     pyver=$1

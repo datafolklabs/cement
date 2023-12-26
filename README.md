@@ -29,7 +29,7 @@ Cement core features include (but are not limited to):
 - 100% test coverage (`pytest`)
 - 100% PEP8 compliant (`flake8`)
 - Extensive API Reference (`sphinx`)
-- Tested on Python 3.7+
+- Tested on Python 3.8+
 
 *Some optional extensions that are shipped with the mainline Cement sources do require external dependencies.  It is the responsibility of the application developer to include these dependencies along with their application, as Cement explicitly does not include them.*
 
@@ -70,24 +70,24 @@ $ docker-compose exec cement /bin/bash
 
 **Testing Alternative Versions of Python**
 
-The latest stable version of Python 3 is the default, and target version accessible as the `cement` container within Docker Compose.  For testing against alternative versions of python, additional containers are created (ex: `cement-py37`, `cement-py38`, etc). You can access these containers via:
+The latest stable version of Python 3 is the default, and target version accessible as the `cement` container within Docker Compose.  For testing against alternative versions of python, additional containers are created (ex: `cement-py38`, `cement-py39`, etc). You can access these containers via:
 
 ```
 $ docker-compose ps
         Name                      Command               State     Ports
 -------------------------------------------------------------------------
-cement_cement-py37_1   /bin/bash                        Up
 cement_cement-py38_1   /bin/bash                        Up
 cement_cement-py39_1   /bin/bash                        Up
 cement_cement-py310_1   /bin/bash                        Up
+cement_cement-py311_1   /bin/bash                        Up
 cement_cement_1        /bin/bash                        Up
 cement_memcached_1     docker-entrypoint.sh memcached   Up      11211/tcp
 cement_redis_1         docker-entrypoint.sh redis ...   Up      6379/tcp
 
 
-$ docker-compose exec cement-py37 /bin/bash
+$ docker-compose exec cement-py39 /bin/bash
 
-|> cement-py37 <| src #
+|> cement-py39 <| src #
 ```
 
 
