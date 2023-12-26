@@ -48,7 +48,7 @@ def test_watchdog(tmp):
     # But on Travis... this isn't resulting in the same counts so
     # fudging the test a little... it's 5 or 6
 
-    assert WatchdogEventHandler.on_any_event.call_count in [5, 6]
+    assert MyEventHandler.on_any_event.call_count in [5, 6]
 
 
 def test_watchdog_app_paths(tmp):
@@ -71,7 +71,6 @@ def test_watchdog_app_paths(tmp):
         f.close()
         time.sleep(1)
 
-    print(MyEventHandler.on_any_event.mock_calls)
     # 10 or 12 separate calls
     # See print(MyEventHandler.on_any_event.mock_calls)
 
@@ -136,7 +135,7 @@ def test_watchdog_default_event_handler(tmp):
         # But on Travis... this isn't resulting in the same counts so
         # fudging the test a little... it's 5 or 6
 
-        assert MyEventHandler.on_any_event.call_count in [5, 6]
+        assert WatchdogEventHandler.on_any_event.call_count in [5, 6]
 
 
 def test_watchdog_bad_path(tmp):
