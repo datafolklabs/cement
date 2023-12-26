@@ -29,7 +29,8 @@ Misc:
 
 Deprecations:
 
-- None
+- `[ext.logging]` Deprecate FATAL facility in favor of CRITICAL.
+    - [Issue #533](https://github.com/datafolklabs/cement/issues/533)
 
 
 ## 3.0.8 - Aug 18, 2022
