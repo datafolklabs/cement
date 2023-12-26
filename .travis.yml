@@ -20,6 +20,9 @@ matrix:
     - python: "3.11-dev"
       dist: "focal"
       sudo: true
+    - python: "3.12-dev"
+      dist: "jammy"
+      sudo: true
 services:
   - memcached
   - redis-server
