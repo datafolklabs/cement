@@ -64,6 +64,13 @@ services:
             context: .
             dockerfile: docker/Dockerfile.dev-py310
 
+    cement-py311:
+        <<: *DEFAULTS
+        image: "cement:dev-py311"
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.dev-py311
+
     redis:
         image: redis:latest
         hostname: redis
