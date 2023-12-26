@@ -19,3 +19,4 @@ documentation, or testing:
 - Stelios Tymvios (namedLambda)
 - Spyros Vlachos (devspyrosv)
 - Joe Roberts (jjroberts)
+- sigma67
