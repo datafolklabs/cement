@@ -25,3 +25,6 @@ tabulate
 jinja2
 watchdog
 pylibmc
+
+# Required on Travis?
+async-timeout
