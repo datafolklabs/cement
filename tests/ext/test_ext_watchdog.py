@@ -1,5 +1,6 @@
 import os
 import time
+import sys
 from unittest.mock import Mock
 from cement.utils.test import TestApp, raises
 from cement.ext.ext_watchdog import WatchdogEventHandler
@@ -33,13 +34,22 @@ def test_watchdog(tmp):
         f.close()
         time.sleep(1)
 
-    # 5 separate calls: See print(MyEventHandler.on_any_event.mock_calls)
+    # 5 or 6 separate calls: See print(MyEventHandler.on_any_event.mock_calls)
+
+    # Python < 3.11
     # Tmp File created
     # Tmp Dir modified
     # Tmp File modified
     # Tmp File closed
     # Tmp Dir modified
-    assert MyEventHandler.on_any_event.call_count == 5
+
+    # In Python >= 3.11 this has one additional
+    # Tmp File opened
+
+    if sys.version_info[0] == 3 and sys.version_info[1] < 11:
+        assert MyEventHandler.on_any_event.call_count == 5
+    else:
+        assert MyEventHandler.on_any_event.call_count == 6
 
 
 def test_watchdog_app_paths(tmp):
@@ -62,7 +72,11 @@ def test_watchdog_app_paths(tmp):
         f.close()
         time.sleep(1)
 
-    # 5 separate calls: See print(MyEventHandler.on_any_event.mock_calls)
+    print(MyEventHandler.on_any_event.mock_calls)
+    # 10 or 12 separate calls
+    # See print(MyEventHandler.on_any_event.mock_calls)
+
+    # Python < 3.11
     # Tmp File created
     # Tmp File created
     # Tmp Dir modified
@@ -73,7 +87,14 @@ def test_watchdog_app_paths(tmp):
     # Tmp File closed
     # Tmp Dir modified
     # Tmp Dir modified
-    assert WatchdogEventHandler.on_any_event.call_count == 10
+
+    # In Python >= 3.11 this has one additional
+    # Tmp File opened
+    # Tmp File opened
+    if sys.version_info[0] == 3 and sys.version_info[1] < 11:
+        assert WatchdogEventHandler.on_any_event.call_count == 10
+    else:
+        assert WatchdogEventHandler.on_any_event.call_count == 12
 
 
 def test_watchdog_app_paths_bad_spec(tmp):
@@ -99,13 +120,23 @@ def test_watchdog_default_event_handler(tmp):
         f.close()
         time.sleep(1)
 
-        # 5 separate calls: See print(MyEventHandler.on_any_event.mock_calls)
+        # 5 or 6 separate calls
+        # See print(MyEventHandler.on_any_event.mock_calls)
+
+        # Python < 3.11
         # Tmp File created
         # Tmp Dir modified
         # Tmp File modified
         # Tmp File closed
         # Tmp Dir modified
-        assert WatchdogEventHandler.on_any_event.call_count == 5
+
+        # In Python >= 3.11 this has one additional
+        # Tmp File opened
+
+        if sys.version_info[0] == 3 and sys.version_info[1] < 11:
+            assert MyEventHandler.on_any_event.call_count == 5
+        else:
+            assert MyEventHandler.on_any_event.call_count == 6
 
 
 def test_watchdog_bad_path(tmp):
