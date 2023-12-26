@@ -14,7 +14,8 @@ Features:
 
 Refactoring: 
 
-- None
+- `[core.plugin]` Deprecate the use of `imp` in favor of `importlib`
+    - [Issue #386](https://github.com/datafolklabs/cement/issues/386)
 
 
 Misc:
@@ -22,6 +23,10 @@ Misc:
 - `[dev]` Add Smoke tests for Python 3.11
 - `[dev]` Make Python 3.11 the default dev target
 - `[docker]` Base official Docker image on Python 3.11
+- `[core]` Make Python 3.12 the default development target
+    - [Issue #658](https://github.com/datafolklabs/cement/issues/657)
+- `[core]` Drop support for Python 3.7
+    - [Issue #658](https://github.com/datafolklabs/cement/issues/658)
 
 
 Deprecations:
