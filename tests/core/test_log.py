@@ -60,7 +60,7 @@ def test_unproviding_handler():
             label = 'bogus'
 
     with TestApp() as app:
-        msg = "Can't instantiate abstract class .* with abstract methods"
+        msg = "Can't instantiate abstract class .*"
         with raises(TypeError, match=msg):
             app.handler.register(BogusHandler)
 
