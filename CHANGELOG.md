@@ -10,7 +10,8 @@ Bugs:
 
 Features:
 
-- None
+- `[utils.fs]` Add Timestamp Support to fs.backup
+    - [Issue #611](https://github.com/datafolklabs/cement/issues/611)
 
 
 Refactoring: 
