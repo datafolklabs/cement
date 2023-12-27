@@ -4,7 +4,8 @@
 
 Bugs: 
 
-- None
+- `[ext.logging]` Support `logging.propagate` to avoid duplicate log entries.
+    - [Issue #310](https://github.com/datafolklabs/cement/issues/310)
 
 
 Features:
