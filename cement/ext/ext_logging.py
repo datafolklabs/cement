@@ -95,9 +95,8 @@ class LoggingLogHandler(log.LogHandler):
 
         #: Whether or not to propagate logs up to parents. Likely should
         #: always be ``False``, but is here in the off chance this breaks
-        #: something. Setting to ``False`` resolves situation where duplicate
-        #: logs appears when using other libraries who logged to the root
-        #: logger.
+        #: something. Setting to ``False`` resolves situations where duplicate
+        #: logs appear with other libraries who logged to the root logger.
         #:
         #: Note, if attempting to use PyTest ``caplog`` fixture, this may need
         #: to be set to ``True``.
@@ -170,10 +169,6 @@ class LoggingLogHandler(log.LogHandler):
 
     def clear_loggers(self, namespace):
         """Clear any previously configured loggers for ``namespace``."""
-
-        # clear root loggers
-        # logging.getLogger().handlers = []
-        # logging.l
 
         for i in logging.getLogger("cement:app:%s" % namespace).handlers:
             logging.getLogger("cement:app:%s" % namespace).removeHandler(i)
