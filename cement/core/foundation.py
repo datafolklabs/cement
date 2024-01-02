@@ -1023,7 +1023,8 @@ class App(meta.MetaMixin):
 
         # reattach our stdout if in quiet mode to avoid lingering file handles
         # resolves: https://github.com/datafolklabs/cement/issues/653
-        self._unsuppress_output()
+        if self._meta.quiet is True:
+            self._unsuppress_output()
 
         # in theory, this should happen last-last... but at that point `self`
         # would be kind of busted after _unlay_cement() is run.
@@ -1145,10 +1146,18 @@ class App(meta.MetaMixin):
 
     def _unsuppress_output(self):
         LOG.debug('unsuppressing all console output')
-        sys.stdout.close()
-        sys.stderr.close()
+
+        # don't accidentally close the actual <stdout>/<stderr>
+        if hasattr(sys.stdout, 'name') and sys.stdout.name != '<stdout>':
+            sys.stdout.close()
+        if hasattr(sys.stderr, 'name') and sys.stderr.name != '<stderr>':
+            sys.stderr.close()
         sys.stdout = self.__saved_stdout__
         sys.stderr = self.__saved_stderr__
+
+        # have to resetup the log handler to unsuppress console output
+        if self.log is not None:
+            self._setup_log_handler()
 
     def _lay_cement(self):
         """Initialize the framework."""

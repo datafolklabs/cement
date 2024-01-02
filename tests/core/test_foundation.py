@@ -641,23 +641,46 @@ def test_pre_render_hook():
 
 def test_quiet():
     stdout_ref = sys.stdout
-    with TestApp(argv=['--quiet']) as app:
-        app.run()
-        app.render({})  # coverage
-        assert app.quiet is True
-        assert stdout_ref is not sys.stdout
+    stderr_ref = sys.stderr
+    try:
+        with TestApp(argv=['--quiet']) as app:
+            app.run()
+            app.render({})  # coverage
+            assert app.quiet is True
+            assert stdout_ref is not sys.stdout
 
-    sys.stdout = stdout_ref
-    with TestApp(argv=['--quiet', '--debug']) as app:
-        app.run()
-        assert stdout_ref is sys.stdout
+        sys.stdout = stdout_ref
+        sys.stderr = stderr_ref
+        with TestApp(argv=['--quiet', '--debug']) as app:
+            app.run()
+            assert stdout_ref is sys.stdout
 
-    sys.stdout = stdout_ref
-    with TestApp(argv=['--quiet'], debug=True) as app:
-        app.run()
-        assert stdout_ref is sys.stdout
+        sys.stdout = stdout_ref
+        sys.stderr = stderr_ref
+        with TestApp(argv=['--quiet'], debug=True) as app:
+            app.run()
+            assert stdout_ref is sys.stdout
 
-    sys.stdout = stdout_ref
+        sys.stdout = stdout_ref
+        sys.stderr = stderr_ref
+    except Exception:
+        sys.stdout = stdout_ref
+        sys.stderr = stderr_ref
+        raise
+
+
+def test_issue_653():
+    with pytest.raises(SystemExit):
+        with App('myapp', argv=[], exit_on_close=True) as app:
+            app.run()
+    with pytest.raises(SystemExit):
+        with App('myapp', argv=["--quiet"], exit_on_close=True) as app:
+            app.run()
+    with App('myapp', argv=[]) as app:
+        print(app._meta.exit_on_close)
+        app.run()
+    with App('myapp', argv=["--quiet"]) as app:
+        app.run()
 
 
 def test_none_template_handler():

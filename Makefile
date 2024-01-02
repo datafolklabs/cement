@@ -7,10 +7,10 @@ dev:
 	docker-compose exec cement /bin/bash
 
 test: comply
-	python -m pytest -v --cov=cement --cov-report=term --cov-report=html:coverage-report tests/
+	python -m pytest -v --cov=cement --cov-report=term --cov-report=html:coverage-report --capture=sys tests/
 
 test-core: comply
-	python -m pytest -v --cov=cement.core --cov-report=term --cov-report=html:coverage-report tests/core
+	python -m pytest -v --cov=cement.core --cov-report=term --cov-report=html:coverage-report --capture=sys tests/core
 
 virtualenv:
 	virtualenv --prompt '|> cement <| ' env
