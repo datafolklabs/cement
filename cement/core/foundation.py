@@ -1021,6 +1021,10 @@ class App(meta.MetaMixin):
 
         LOG.debug("closing the %s application" % self._meta.label)
 
+        # reattach our stdout if in quiet mode to avoid lingering file handles
+        # resolves: https://github.com/datafolklabs/cement/issues/653
+        self._unsuppress_output()
+
         # in theory, this should happen last-last... but at that point `self`
         # would be kind of busted after _unlay_cement() is run.
         for res in self.hook.run('post_close', self):
@@ -1141,6 +1145,8 @@ class App(meta.MetaMixin):
 
     def _unsuppress_output(self):
         LOG.debug('unsuppressing all console output')
+        sys.stdout.close()
+        sys.stderr.close()
         sys.stdout = self.__saved_stdout__
         sys.stderr = self.__saved_stderr__
 

@@ -4,10 +4,12 @@
 
 Bugs: 
 
-- `[ext.logging]` Support `logging.propagate` to avoid duplicate log entries.
+- `[ext.logging]` Support `logging.propagate` to avoid duplicate log entries
     - [Issue #310](https://github.com/datafolklabs/cement/issues/310)
+- `[core.foundation]` Quiet mode file is never closed
+    - [Issue #653](https://github.com/datafolklabs/cement/issues/653)
 
-
+    
 Features:
 
 - `[utils.fs]` Add Timestamp Support to fs.backup
