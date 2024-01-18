@@ -2,10 +2,13 @@
 Cement smtp extension module.
 """
 
+import os
 import smtplib
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
+from email import encoders
 from ..core import mail
 from ..utils.misc import minimal_logger, is_true
 
@@ -67,6 +70,9 @@ class SMTPMailHandler(mail.MailHandler):
             'subject_prefix'
         )
 
+        # allow files to append
+        params['files'] = kw.get('files', [])
+
         return params
 
     def send(self, body, **kw):
@@ -109,19 +115,21 @@ class SMTPMailHandler(mail.MailHandler):
             server = smtplib.SMTP_SSL(params['host'], params['port'],
                                       params['timeout'])
             LOG.debug("%s : initiating ssl" % self._meta.label)
-            if is_true(params['tls']):
-                LOG.debug("%s : initiating tls" % self._meta.label)
-                server.starttls()
 
         else:
             server = smtplib.SMTP(params['host'], params['port'],
                                   params['timeout'])
-
-        if is_true(params['auth']):
-            server.login(params['username'], params['password'])
+            LOG.debug("%s : initiating smtp" % self._meta.label)
 
         if self.app.debug is True:
             server.set_debuglevel(9)
+
+        if is_true(params['tls']):
+            LOG.debug("%s : initiating tls" % self._meta.label)
+            server.starttls()
+
+        if is_true(params['auth']):
+            server.login(params['username'], params['password'])
 
         self._send_message(server, body, **params)
         server.quit()
@@ -132,17 +140,58 @@ class SMTPMailHandler(mail.MailHandler):
 
         msg['From'] = params['from_addr']
         msg['To'] = ', '.join(params['to'])
-        msg['Cc'] = ', '.join(params['cc'])
-        msg['Bcc'] = ', '.join(params['bcc'])
+        if params['cc']:
+            msg['Cc'] = ', '.join(params['cc'])
+        if params['bcc']:
+            msg['Bcc'] = ', '.join(params['bcc'])
         if params['subject_prefix'] not in [None, '']:
             subject = '%s %s' % (params['subject_prefix'],
                                  params['subject'])
         else:
             subject = params['subject']
         msg['Subject'] = Header(subject)
+        # add body as text and or or as html
+        partText = None
+        partHtml = None
+        if isinstance(body, str):
+            partText = MIMEText(body)
+        elif isinstance(body, list):
+            if len(body) >= 1:
+                partText = MIMEText(body[0])
+            if len(body) >= 2:
+                partHtml = MIMEText(body[1], 'html')
+        elif isinstance(body, dict):
+            if 'text' in body:
+                partText = MIMEText(body['text'])
+            if 'html' in body:
+                partHtml = MIMEText(body['html'], 'html')
+        if partText:
+            msg.attach(partText)
+        if partHtml:
+            msg.attach(partHtml)
+        # loop files
+        for path in params['files']:
+            part = MIMEBase('application', 'octet-stream')
+            # test filename for a seperate attachement disposition name (filename.ext=attname.ext)
+            filename = os.path.basename(path)
+            # test for divider in filename
+            i = filename.find('=')
+            # split attname from filename
+            if i < 0:
+                attname = filename
+            else:
+                attname = filename[i + 1 :]
+                filename = filename[0:i]
+                # update the filename to read from
+                path = os.path.dirname(path) + '/' + filename
+            # add attachment
+            with open(path, 'rb') as file:
+                part.set_payload(file.read())
+            # encode and name
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', f'attachment; filename={attname}')
+            msg.attach(part)
 
-        part = MIMEText(body)
-        msg.attach(part)
         server.send_message(msg)
 
 
