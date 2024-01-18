@@ -172,7 +172,8 @@ class SMTPMailHandler(mail.MailHandler):
         # loop files
         for path in params['files']:
             part = MIMEBase('application', 'octet-stream')
-            # test filename for a seperate attachement disposition name (filename.ext=attname.ext)
+            # test filename for a seperate attachement 
+            # disposition name (filename.ext=attname.ext)
             filename = os.path.basename(path)
             # test for divider in filename
             i = filename.find('=')
@@ -180,7 +181,7 @@ class SMTPMailHandler(mail.MailHandler):
             if i < 0:
                 attname = filename
             else:
-                attname = filename[i + 1 :]
+                attname = filename[i+1:]
                 filename = filename[0:i]
                 # update the filename to read from
                 path = os.path.dirname(path) + '/' + filename
@@ -189,7 +190,10 @@ class SMTPMailHandler(mail.MailHandler):
                 part.set_payload(file.read())
             # encode and name
             encoders.encode_base64(part)
-            part.add_header('Content-Disposition', f'attachment; filename={attname}')
+            part.add_header(
+                'Content-Disposition',
+                f'attachment; filename={attname}',
+            )
             msg.attach(part)
 
         server.send_message(msg)
