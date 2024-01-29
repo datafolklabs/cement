@@ -172,7 +172,8 @@ class SMTPMailHandler(mail.MailHandler):
         # loop files
         for path in params['files']:
             part = MIMEBase('application', 'octet-stream')
-            # test filename for a seperate attachement disposition name (filename.ext=attname.ext)
+            # test filename for a seperate attachement disposition name
+            # like (filename.ext=attname.ext)
             filename = os.path.basename(path)
             # test for divider in filename
             i = filename.find('=')
