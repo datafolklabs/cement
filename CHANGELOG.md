@@ -31,6 +31,9 @@ Misc:
 - `[docker]` Base official Docker image on Python 3.12
 - `[utils.version]` Resolve deprecated `datetime.utcfromtimestamp()`
     - [Issue #661](https://github.com/datafolklabs/cement/issues/661)
+- `[dev]` Add `comply-typing` to make helpers, start working toward typing.
+    - [Issue #599](https://github.com/datafolklabs/cement/issues/661)
+    - [PR #628](https://github.com/datafolklabs/cement/pull/628)
 
 
 Deprecations:

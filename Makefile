@@ -34,6 +34,9 @@ comply:
 comply-fix:
 	autopep8 -ri cement/ tests/
 
+comply-typing:
+	mypy ./cement
+
 docs:
 	python setup.py build_sphinx
 	@echo
