@@ -47,13 +47,15 @@ class SMTPMailHandler(mail.MailHandler):
             'auth': False,
             'username': None,
             'password': None,
+            'files': None,
         }
 
     def _get_params(self, **kw):
         params = dict()
 
         # some keyword args override configuration defaults
-        for item in ['to', 'from_addr', 'cc', 'bcc', 'subject']:
+        for item in ['to', 'from_addr', 'cc', 'bcc', 'subject',
+                        'subject_prefix', 'files']:
             config_item = self.app.config.get(self._meta.config_section, item)
             params[item] = kw.get(item, config_item)
 
@@ -63,15 +65,6 @@ class SMTPMailHandler(mail.MailHandler):
         for item in other_params:
             params[item] = self.app.config.get(self._meta.config_section,
                                                item)
-
-        # also grab the subject_prefix
-        params['subject_prefix'] = self.app.config.get(
-            self._meta.config_section,
-            'subject_prefix'
-        )
-
-        # allow files to append
-        params['files'] = kw.get('files', [])
 
         return params
 
@@ -170,31 +163,32 @@ class SMTPMailHandler(mail.MailHandler):
         if partHtml:
             msg.attach(partHtml)
         # loop files
-        for path in params['files']:
-            part = MIMEBase('application', 'octet-stream')
-            # test filename for a seperate attachement disposition name
-            # like (filename.ext=attname.ext)
-            filename = os.path.basename(path)
-            # test for divider in filename
-            i = filename.find('=')
-            # split attname from filename
-            if i < 0:
-                attname = filename
-            else:
-                attname = filename[i+1:]
-                filename = filename[0:i]
-                # update the filename to read from
-                path = os.path.dirname(path) + '/' + filename
-            # add attachment
-            with open(path, 'rb') as file:
-                part.set_payload(file.read())
-            # encode and name
-            encoders.encode_base64(part)
-            part.add_header(
-                'Content-Disposition',
-                f'attachment; filename={attname}',
-            )
-            msg.attach(part)
+        if params['files']:
+            for path in params['files']:
+                part = MIMEBase('application', 'octet-stream')
+                # test filename for a seperate attachement disposition name
+                # like (filename.ext=attname.ext)
+                filename = os.path.basename(path)
+                # test for divider in filename
+                i = filename.find('=')
+                # split attname from filename
+                if i < 0:
+                    attname = filename
+                else:
+                    attname = filename[i+1:]
+                    filename = filename[0:i]
+                    # update the filename to read from
+                    path = os.path.dirname(path) + '/' + filename
+                # add attachment
+                with open(path, 'rb') as file:
+                    part.set_payload(file.read())
+                # encode and name
+                encoders.encode_base64(part)
+                part.add_header(
+                    'Content-Disposition',
+                    f'attachment; filename={attname}',
+                )
+                msg.attach(part)
 
         server.send_message(msg)
 
