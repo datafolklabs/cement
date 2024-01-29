@@ -157,12 +157,12 @@ class SMTPMailHandler(mail.MailHandler):
             partText = MIMEText(body)
         elif isinstance(body, list):
             if len(body) >= 1:
-                partText = MIMEText(body[0])
+                partText = MIMEText(body[0], 'plain')
             if len(body) >= 2:
                 partHtml = MIMEText(body[1], 'html')
         elif isinstance(body, dict):
             if 'text' in body:
-                partText = MIMEText(body['text'])
+                partText = MIMEText(body['text'], 'plain')
             if 'html' in body:
                 partHtml = MIMEText(body['html'], 'html')
         if partText:
@@ -172,7 +172,7 @@ class SMTPMailHandler(mail.MailHandler):
         # loop files
         for path in params['files']:
             part = MIMEBase('application', 'octet-stream')
-            # test seperate disposition name (filename.ext=attname.ext)
+            # test filename for a seperate attachement disposition name (filename.ext=attname.ext)
             filename = os.path.basename(path)
             # test for divider in filename
             i = filename.find('=')
