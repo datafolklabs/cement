@@ -29,6 +29,8 @@ Misc:
 - `[dev]` Drop support for Python 3.7
     - [Issue #658](https://github.com/datafolklabs/cement/issues/658)
 - `[docker]` Base official Docker image on Python 3.12
+- `[utils.version]` Resolve deprecated `datetime.utcfromtimestamp()`
+    - [Issue #661](https://github.com/datafolklabs/cement/issues/661)
 
 
 Deprecations:
