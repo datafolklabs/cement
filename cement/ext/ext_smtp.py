@@ -55,7 +55,7 @@ class SMTPMailHandler(mail.MailHandler):
 
         # some keyword args override configuration defaults
         for item in ['to', 'from_addr', 'cc', 'bcc', 'subject',
-                        'subject_prefix', 'files']:
+                     'subject_prefix', 'files']:
             config_item = self.app.config.get(self._meta.config_section, item)
             params[item] = kw.get(item, config_item)
 
