@@ -48,7 +48,7 @@ class MemcachedExtTestCase(test.CementTestCase):
 
     def test_memcache_str_type_config(self):
         defaults = init_defaults('tests', 'cache.memcached')
-        defaults['cache.memcached']['hosts'] = 'memcached'
+        defaults['cache.memcached']['hosts'] = memcached_host
         self.app = self.make_app('tests',
                                  config_defaults=defaults,
                                  extensions=['memcached'],
