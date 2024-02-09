@@ -15,7 +15,7 @@ class MemcachedExtTestCase(test.CementTestCase):
         super(MemcachedExtTestCase, self).setUp()
         self.key = "cement-tests-random-key-%s" % random()
         defaults = init_defaults('tests', 'cache.memcached')
-        defaults['cache.memcached']['hosts'] = '127.0.0.1, localhost'
+        defaults['cache.memcached']['hosts'] = 'memcached'
         self.app = self.make_app('tests',
                                  config_defaults=defaults,
                                  extensions=['memcached'],
@@ -29,7 +29,7 @@ class MemcachedExtTestCase(test.CementTestCase):
 
     def test_memcache_list_type_config(self):
         defaults = init_defaults('tests', 'cache.memcached')
-        defaults['cache.memcached']['hosts'] = ['127.0.0.1', 'localhost']
+        defaults['cache.memcached']['hosts'] = ['memcached', 'memcached']
         self.app = self.make_app('tests',
                                  config_defaults=defaults,
                                  extensions=['memcached'],
@@ -37,11 +37,11 @@ class MemcachedExtTestCase(test.CementTestCase):
                                  )
         self.app.setup()
         self.eq(self.app.config.get('cache.memcached', 'hosts'),
-                ['127.0.0.1', 'localhost'])
+                ['memcached', 'memcached'])
 
     def test_memcache_str_type_config(self):
         defaults = init_defaults('tests', 'cache.memcached')
-        defaults['cache.memcached']['hosts'] = '127.0.0.1, localhost'
+        defaults['cache.memcached']['hosts'] = 'memcached'
         self.app = self.make_app('tests',
                                  config_defaults=defaults,
                                  extensions=['memcached'],
@@ -49,7 +49,7 @@ class MemcachedExtTestCase(test.CementTestCase):
                                  )
         self.app.setup()
         self.eq(self.app.config.get('cache.memcached', 'hosts'),
-                ['127.0.0.1', 'localhost'])
+                ['memcached'])
 
     def test_memcached_set(self):
         self.app.cache.set(self.key, 1001)

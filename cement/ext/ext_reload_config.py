@@ -264,13 +264,13 @@ def spawn_watcher(app):
 
 
 def kill_watcher(app):
-    if NOTIFIER.isAlive():
+    if NOTIFIER.is_alive():
         NOTIFIER.stop()
 
 
 def signal_handler(app, signum, frame):
     if signum in [signal.SIGTERM, signal.SIGINT]:
-        if NOTIFIER.isAlive():
+        if NOTIFIER.is_alive():
             NOTIFIER.stop()
 
 

@@ -1,5 +1,5 @@
 # The following are only required in development, not production
-nose
+pynose
 coverage
 sphinx
 pep8
@@ -24,3 +24,5 @@ tabulate
 jinja2
 watchdog
 pybars3
+pyinotify
+pyasyncore

@@ -1,5 +1,5 @@
 # The following are only required in development, not production
-nose
+pynose
 coverage
 sphinx
 pep8
