@@ -2,6 +2,12 @@
 
 all: init test doc clean
 
+dev:
+	docker-compose up -d
+	docker-compose exec cement pip install -r requirements-dev.txt
+	docker-compose exec cement python setup.py develop
+	docker-compose exec cement /bin/bash
+	
 init:
 	pip install --upgrade -r requirements-dev.txt
 
