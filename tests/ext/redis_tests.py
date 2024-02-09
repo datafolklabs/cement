@@ -1,5 +1,6 @@
 """Tests for cement.ext.ext_redis."""
 
+import os
 import sys
 import redis
 from time import sleep
@@ -9,13 +10,19 @@ from cement.utils import test
 from cement.utils.misc import init_defaults
 
 
+if 'REDIS_HOST' in os.environ.keys():
+    redis_host = os.environ['REDIS_HOST']
+else:
+    redis_host = 'localhost'
+
+
 class RedisExtTestCase(test.CementTestCase):
 
     def setUp(self):
         super(RedisExtTestCase, self).setUp()
         self.key = "cement-tests-random-key-%s" % random()
         defaults = init_defaults('tests', 'cache.redis')
-        defaults['cache.redis']['host'] = 'redis'
+        defaults['cache.redis']['host'] = redis_host
         defaults['cache.redis']['port'] = 6379
         defaults['cache.redis']['db'] = 0
         self.app = self.make_app('tests',
