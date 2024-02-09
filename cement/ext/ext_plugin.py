@@ -24,7 +24,12 @@ For usage information see :ref:`application_plugins`.
 import os
 import sys
 import glob
-import imp
+if sys.version_info[0] == 3 and sys.version_info[1] >= 4:
+    import importlib
+    import importlib.util
+    import importlib.machinery
+else:
+    import imp
 from ..core import plugin, exc
 from ..utils.misc import is_true, minimal_logger
 from ..utils.fs import abspath
@@ -160,14 +165,7 @@ class CementPluginHandler(plugin.CementPluginHandler):
         :param plugin_name: The name of the plugin.
         :param plugin_dir: The filesystem directory path where the plugin
          exists.
-
         """
-
-        # FIX ME: `imp` is deprecated in Python 3.4 and will be  going away
-        # so we need to update forward compatibility for ``importlib``.
-        #
-        # See: https://github.com/datafolklabs/cement/issues/386
-
         LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
                                                          plugin_dir))
 
@@ -175,19 +173,38 @@ class CementPluginHandler(plugin.CementPluginHandler):
             LOG.debug("plugin directory '%s' does not exist." % plugin_dir)
             return False
 
-        try:
-            f, path, desc = imp.find_module(plugin_name, [plugin_dir])
-        except ImportError:
-            LOG.debug("plugin '%s' does not exist in '%s'." %
-                      (plugin_name, plugin_dir))
-            return False
+        if sys.version_info[0] == 3 and sys.version_info[1] >= 4:
+            spec = importlib.machinery.PathFinder().find_spec(
+                plugin_name, [plugin_dir]
+            )
+            if not spec:
+                LOG.debug("plugin '%s' does not exist in '%s'." %
+                          (plugin_name, plugin_dir))
+                return False
 
-        # We don't catch this because it would make debugging a
-        # nightmare
-        mod = imp.load_module(plugin_name, f, path, desc)
-        if mod and hasattr(mod, 'load'):
-            mod.load(self.app)
-        return True
+            # We don't catch this because it would make debugging a
+            # nightmare
+            mod = importlib.util.module_from_spec(spec)
+            sys.modules[plugin_name] = mod
+            spec.loader.exec_module(mod)
+
+            if mod and hasattr(mod, 'load'):
+                mod.load(self.app)
+            return True
+        else:
+            try:
+                f, path, desc = imp.find_module(plugin_name, [plugin_dir])
+            except ImportError:
+                LOG.debug("plugin '%s' does not exist in '%s'." %
+                          (plugin_name, plugin_dir))
+                return False
+
+            # We don't catch this because it would make debugging a
+            # nightmare
+            mod = imp.load_module(plugin_name, f, path, desc)
+            if mod and hasattr(mod, 'load'):
+                mod.load(self.app)
+            return True
 
     def _load_plugin_from_bootstrap(self, plugin_name, base_package):
         """
