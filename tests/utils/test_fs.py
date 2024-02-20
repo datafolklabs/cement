@@ -78,4 +78,4 @@ def test_backup_dir_trailing_slash(tmp):
 
 def test_backup_timestamp(tmp):
     bkfile = fs.backup(tmp.file, timestamp=True)
-    assert re.match('(.*).bak-[\d]+-[\d]+-[\d]+(.*)', bkfile)  # noqa: W605
+    assert re.match(r'(.*).bak-[\d]+-[\d]+-[\d]+(.*)', bkfile)  # noqa: W605
