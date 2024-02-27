@@ -6,6 +6,10 @@ set -e
 # https://travis-ci.community/t/build-error-for-python-3-7-on-two-different-projects/12895/3
 # pip install -U importlib_metadata
 
+docker-compose up -d mailpit 2>&1 >/dev/null
+
+sleep 10
+
 rm -f .coverage
 pip install -r requirements-dev.txt
 make test

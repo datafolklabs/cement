@@ -3,23 +3,47 @@ sudo: false
 script: ./scripts/travis.sh
 os:
   - linux
+
+# env's are redundant, but at global scope additional jobs are created for
+# each env var which I'm sure has a purpose but don't like
 matrix:
   include:
     - python: "3.8"
-      dist: "xenial"
+      dist: "focal"
       sudo: true
+      env:
+        - DOCKER_COMPOSE_VERSION=v2.17.3
+        - SMTP_HOST=localhost
+        - SMTP_PORT=1025
     - python: "3.9"
-      dist: "xenial"
+      dist: "focal"
       sudo: true
+      env:
+        - DOCKER_COMPOSE_VERSION=v2.17.3
+        - SMTP_HOST=localhost
+        - SMTP_PORT=1025
     - python: "3.10"
       dist: "focal"
       sudo: true
+      env:
+        - DOCKER_COMPOSE_VERSION=v2.17.3
+        - SMTP_HOST=localhost
+        - SMTP_PORT=1025
     - python: "3.11"
       dist: "focal"
       sudo: true
+      env:
+        - DOCKER_COMPOSE_VERSION=v2.17.3
+        - SMTP_HOST=localhost
+        - SMTP_PORT=1025
     - python: "3.12"
       dist: "jammy"
       sudo: true
+      env:
+        - DOCKER_COMPOSE_VERSION=v2.17.3
+        - SMTP_HOST=localhost
+        - SMTP_PORT=1025
 services:
   - memcached
   - redis-server
+  - docker
