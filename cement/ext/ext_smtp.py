@@ -186,21 +186,6 @@ class SMTPMailHandler(mail.MailHandler):
 
                 path = fs.abspath(path)
 
-                # filename = os.path.basename(path)
-
-                # # test for divider in filename
-                # i = filename.find('=')
-
-                # # split attname from filename
-                # if i < 0:
-                #     attname = filename
-                # else:
-                #     attname = filename[i+1:]
-                #     filename = filename[0:i]
-
-                #     # update the filename to read from
-                #     path = fs.join(os.path.dirname(path), filename)
-
                 # add attachment
                 with open(path, 'rb') as file:
                     part.set_payload(file.read())
