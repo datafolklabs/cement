@@ -1,6 +1,6 @@
 # ChangeLog
 
-## DEVELOPMENT - Will be released as 3.0.10 or 3.2
+## 3.0.10 - Feb 28, 2024
 
 Bugs: 
 
