@@ -3,6 +3,7 @@
 import os
 import tempfile
 import shutil
+from datetime import datetime
 
 
 class Tmp(object):
@@ -170,7 +171,7 @@ def ensure_parent_dir_exists(path):
     return ensure_dir_exists(parent_dir)
 
 
-def backup(path, suffix='.bak'):
+def backup(path, suffix='.bak', **kwargs):
     """
     Rename a file or directory safely without overwriting an existing
     backup of the same name.
@@ -178,6 +179,9 @@ def backup(path, suffix='.bak'):
     Args:
         path (str): The path to the file or directory to make a backup of.
         suffix (str): The suffix to rename files with.
+        timestamp(bool): whether to add a timestamp to the backup suffix
+        timestamp_format(str): Date-Time format in python datetime.datetime
+            notation. default '%Y-%m-%d-%H:%M:%S'
 
     Returns:
         str: The new path of backed up file/directory
@@ -194,6 +198,12 @@ def backup(path, suffix='.bak'):
     count = -1
     new_path = None
     path = abspath(path)
+
+    if kwargs.get('timestamp', False) is True:
+        timestamp_format = kwargs.get('timestamp_format', '%Y-%m-%d-%H:%M:%S')
+        timestamp = datetime.now().strftime(timestamp_format)
+        suffix = '-'.join((suffix, timestamp))
+
     while True:
         if os.path.exists(path):
             if count == -1:

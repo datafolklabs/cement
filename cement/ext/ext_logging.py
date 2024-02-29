@@ -5,6 +5,7 @@ Cement logging extension module.
 import os
 import logging
 from ..core import log
+from ..core.deprecations import deprecate
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
 
@@ -92,7 +93,18 @@ class LoggingLogHandler(log.LogHandler):
         #: The help description for the log level argument
         log_level_argument_help = 'logging level'
 
-    levels = ['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL']
+        #: Whether or not to propagate logs up to parents. Likely should
+        #: always be ``False``, but is here in the off chance this breaks
+        #: something. Setting to ``False`` resolves situations where duplicate
+        #: logs appear with other libraries who logged to the root logger.
+        #:
+        #: Note, if attempting to use PyTest ``caplog`` fixture, this may need
+        #: to be set to ``True``.
+        #:
+        #: See: ``tests.ext.test_ext_colorlog.test_colorlog``.
+        propagate = False
+
+    levels = ['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL', 'CRITICAL']
 
     def __init__(self, *args, **kw):
         super(LoggingLogHandler, self).__init__(*args, **kw)
@@ -112,6 +124,7 @@ class LoggingLogHandler(log.LogHandler):
 
         level = self.app.config.get(self._meta.config_section, 'level')
         self.set_level(level)
+        self.backend.propagate = self._meta.propagate
 
         LOG.debug("logging initialized for '%s' using %s" %
                   (self._meta.namespace, self.__class__.__name__))
@@ -120,7 +133,10 @@ class LoggingLogHandler(log.LogHandler):
         """
         Set the log level.  Must be one of the log levels configured in
         self.levels which are
-        ``['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL']``.
+        ``['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL', 'CRITICAL]``.
+
+        As of Cement 3.0.10, the FATAL facility is deprecated and will be
+        removed in future versions of Cement. Please us `CRITICAL` instead.
 
         :param level: The log level to set.
 
@@ -130,8 +146,13 @@ class LoggingLogHandler(log.LogHandler):
             self.clear_loggers(namespace)
 
         level = level.upper()
+
         if level not in self.levels:
             level = 'INFO'
+
+        if level == 'FATAL':
+            deprecate('3.0.10-1')
+
         level = getattr(logging, level.upper())
 
         self.backend.setLevel(level)
@@ -311,9 +332,9 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.error(msg, **kwargs)
 
-    def fatal(self, msg, namespace=None, **kw):
+    def critical(self, msg, namespace=None, **kw):
         """
-        Log to the FATAL (aka CRITICAL) facility.
+        Log to the CRITICAL facility.
 
         Args:
             msg (str): The message to log.
@@ -328,6 +349,30 @@ class LoggingLogHandler(log.LogHandler):
                 system.
 
         """
+        kwargs = self._get_logging_kwargs(namespace, **kw)
+        self.backend.critical(msg, **kwargs)
+
+    def fatal(self, msg, namespace=None, **kw):
+        """
+        Log to the FATAL (aka CRITICAL) facility.
+
+        As of Cement 3.0.10, this method is deprecated and will be removed in
+        future versions of Cement. Please us `critical()` instead.
+
+        Args:
+            msg (str): The message to log.
+
+        Keyword Args:
+            namespace (str): A log prefix, generally the module ``__name__``
+                that the log is coming from.  Will default to
+                ``self._meta.namespace`` if none is passed.
+
+        Other Parameters:
+            kwargs: Keyword arguments are passed on to the backend logging
+                system.
+
+        """
+        deprecate('3.0.10-1')
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.fatal(msg, **kwargs)
 

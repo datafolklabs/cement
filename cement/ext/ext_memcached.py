@@ -59,11 +59,11 @@ class MemcachedCacheHandler(cache.CacheHandler):
         hosts = self._config('hosts')
         fixed_hosts = []
 
-        if type(hosts) == str:
+        if type(hosts) is str:
             parts = hosts.split(',')
             for part in parts:
                 fixed_hosts.append(part.strip())
-        elif type(hosts) == list:
+        elif type(hosts) is list:
             fixed_hosts = hosts
         self.app.config.set(self._meta.config_section, 'hosts', fixed_hosts)
 

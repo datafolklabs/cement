@@ -23,3 +23,9 @@ class TestDeprecations(object):
                 app.run()
                 assert "3.0.8-2" in str(w[-1].message)
         sys.argv = orig_argv
+
+    def test_3_0_10__1(self):
+        with TestApp() as app:
+            with warnings.catch_warnings(record=True) as w:
+                app.log.set_level('FATAL')
+                assert "3.0.10-1" in str(w[-1].message)

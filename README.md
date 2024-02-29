@@ -1,9 +1,9 @@
 # Cement Framework
 
 [![Built on Cement™](https://img.shields.io/badge/Built%20on%20Cement%E2%84%A2-3.0-yellow)](https://builtoncement.com)
+[![PyPi Downloads](https://img.shields.io/pypi/dm/cement)](https://pypistats.org/packages/cement)
 [![Continuous Integration Status](https://app.travis-ci.com/datafolklabs/cement.svg?branch=master)](https://app.travis-ci.com/github/datafolklabs/cement/)
-[![Code Quality: Python](https://img.shields.io/lgtm/grade/python/g/datafolklabs/cement.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/datafolklabs/cement/context:python)
-[![Total Alerts](https://img.shields.io/lgtm/alerts/g/datafolklabs/cement.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/datafolklabs/cement/alerts)
+
 
 Cement is an advanced Application Framework for Python, with a primary focus on Command Line Interfaces (CLI).  Its goal is to introduce a standard, and feature-full platform for both simple and complex command line applications as well as support rapid development needs without sacrificing quality.  Cement is flexible, and it's use cases span from the simplicity of a micro-framework to the complexity of a mega-framework. Whether it's a single file script, or a multi-tier application, Cement is the foundation you've been looking for.
 
@@ -28,7 +28,7 @@ Cement core features include (but are not limited to):
 - 100% test coverage (`pytest`)
 - 100% PEP8 compliant (`flake8`)
 - Extensive API Reference (`sphinx`)
-- Tested on Python 3.7+
+- Tested on Python 3.8+
 
 *Some optional extensions that are shipped with the mainline Cement sources do require external dependencies.  It is the responsibility of the application developer to include these dependencies along with their application, as Cement explicitly does not include them.*
 
@@ -69,25 +69,24 @@ $ docker-compose exec cement /bin/bash
 
 **Testing Alternative Versions of Python**
 
-The latest stable version of Python 3 is the default, and target version accessible as the `cement` container within Docker Compose.  For testing against alternative versions of python, additional containers are created (ex: `cement-py37`, `cement-py38`, etc). You can access these containers via:
+The latest stable version of Python 3 is the default, and target version accessible as the `cement` container within Docker Compose.  For testing against alternative versions of python, additional containers are created (ex: `cement-py38`, `cement-py39`, etc). You can access these containers via:
 
 ```
 $ docker-compose ps
         Name                      Command               State     Ports
 -------------------------------------------------------------------------
-cement_cement-py35_1   /bin/bash                        Up
-cement_cement-py36_1   /bin/bash                        Up
-cement_cement-py37_1   /bin/bash                        Up
 cement_cement-py38_1   /bin/bash                        Up
 cement_cement-py39_1   /bin/bash                        Up
+cement_cement-py310_1   /bin/bash                        Up
+cement_cement-py311_1   /bin/bash                        Up
 cement_cement_1        /bin/bash                        Up
 cement_memcached_1     docker-entrypoint.sh memcached   Up      11211/tcp
 cement_redis_1         docker-entrypoint.sh redis ...   Up      6379/tcp
 
 
-$ docker-compose exec cement-py37 /bin/bash
+$ docker-compose exec cement-py39 /bin/bash
 
-|> cement-py37 <| src #
+|> cement-py39 <| src #
 ```
 
 

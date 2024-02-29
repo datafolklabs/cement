@@ -23,4 +23,4 @@ def key(request):
 
 @pytest.fixture(scope="function")
 def rando(request):
-    yield _rando()
+    yield _rando()[:12]

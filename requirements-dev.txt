@@ -8,12 +8,14 @@ pep8
 autopep8
 pycodestyle
 flake8
+pyflakes>=1.4.0
 guzzle_sphinx_theme
 sphinxcontrib-napoleon
 mock
 twine>=1.11.0
 setuptools>=38.6.0
 wheel>=0.31.0
+mypy
 
 # Required for optional extensions
 pystache
@@ -24,3 +26,6 @@ tabulate
 jinja2
 watchdog
 pylibmc
+
+# Required on Travis?
+async-timeout

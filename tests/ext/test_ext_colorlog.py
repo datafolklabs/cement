@@ -22,7 +22,9 @@ class ColorlogApp(TestApp):
 
 
 def test_colorlog(caplog):
-    with ColorlogApp() as app:
+    META = init_defaults('log.colorlog')
+    META['log.colorlog']['propagate'] = True
+    with ColorlogApp(meta_defaults=META) as app:
         app.run()
         app.log.info('this is an info message')
         app.log.warning('this is a warning message')

@@ -28,18 +28,21 @@ def test_alternate_namespaces(tmp):
         app.log.info('TEST', extra=dict(namespace=__name__))
         app.log.warning('TEST', extra=dict(namespace=__name__))
         app.log.error('TEST', extra=dict(namespace=__name__))
+        app.log.critical('TEST', extra=dict(namespace=__name__))
         app.log.fatal('TEST', extra=dict(namespace=__name__))
         app.log.debug('TEST', extra=dict(namespace=__name__))
 
         app.log.info('TEST', __name__, extra=dict(foo='bar'))
         app.log.warning('TEST', __name__, extra=dict(foo='bar'))
         app.log.error('TEST', __name__, extra=dict(foo='bar'))
+        app.log.critical('TEST', __name__, extra=dict(foo='bar'))
         app.log.fatal('TEST', __name__, extra=dict(foo='bar'))
         app.log.debug('TEST', __name__, extra=dict(foo='bar'))
 
         app.log.info('TEST', __name__)
         app.log.warning('TEST', __name__)
         app.log.error('TEST', __name__)
+        app.log.critical('TEST', __name__)
         app.log.fatal('TEST', __name__)
         app.log.debug('TEST', __name__)
 

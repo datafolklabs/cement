@@ -1,5 +1,56 @@
 # ChangeLog
 
+## 3.0.10 - Feb 28, 2024
+
+Bugs: 
+
+- `[ext.logging]` Support `logging.propagate` to avoid duplicate log entries
+    - [Issue #310](https://github.com/datafolklabs/cement/issues/310)
+- `[core.foundation]` Quiet mode file is never closed
+    - [Issue #653](https://github.com/datafolklabs/cement/issues/653)
+- `[ext.smtp]` Ability to Enable TLS without SSL
+    - [Issue #667](https://github.com/datafolklabs/cement/issues/667)
+- `[ext.smtp]` Empty (wrong) addresses sent when CC/BCC is `None`
+    - [Issue #668](https://github.com/datafolklabs/cement/issues/668)
+
+
+Features:
+
+- `[utils.fs]` Add Timestamp Support to fs.backup
+    - [Issue #611](https://github.com/datafolklabs/cement/issues/611)
+- `[ext.smtp]` Support for sending file attachements.
+    - [PR #669](https://github.com/datafolklabs/cement/pull/669)
+- `[ext.smtp]` Support for sending both Plain Text and HTML
+    - [PR #669](https://github.com/datafolklabs/cement/pull/669)
+
+
+Refactoring: 
+
+- `[core.plugin]` Deprecate the use of `imp` in favor of `importlib`
+    - [Issue #386](https://github.com/datafolklabs/cement/issues/386)
+- `[ext.smtp]` Actually test SMTP against a real server (replace mocks)
+
+
+Misc:
+
+- `[dev]` Add Smoke tests for Python 3.11, 3.12
+- `[dev]` Make Python 3.12 the default development target
+- `[dev]` Drop support for Python 3.7
+    - [Issue #658](https://github.com/datafolklabs/cement/issues/658)
+- `[docker]` Base official Docker image on Python 3.12
+- `[utils.version]` Resolve deprecated `datetime.utcfromtimestamp()`
+    - [Issue #661](https://github.com/datafolklabs/cement/issues/661)
+- `[dev]` Add `comply-typing` to make helpers, start working toward typing.
+    - [Issue #599](https://github.com/datafolklabs/cement/issues/661)
+    - [PR #628](https://github.com/datafolklabs/cement/pull/628)
+- `[dev]` Add `mailpit` service to docker-compose development config.
+
+Deprecations:
+
+- `[ext.logging]` Deprecate FATAL facility in favor of CRITICAL.
+    - [Issue #533](https://github.com/datafolklabs/cement/issues/533)
+
+
 ## 3.0.8 - Aug 18, 2022
 
 Bugs:

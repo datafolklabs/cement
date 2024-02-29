@@ -1,5 +1,6 @@
 
 import os
+import re
 from pytest import raises
 from cement.utils import fs
 
@@ -73,3 +74,8 @@ def test_backup_dir_trailing_slash(tmp):
     # https://github.com/datafolklabs/cement/issues/610
     bkdir = fs.backup("%s/" % tmp.dir)
     assert "%s.bak" % os.path.basename(tmp.dir) == os.path.basename(bkdir)
+
+
+def test_backup_timestamp(tmp):
+    bkfile = fs.backup(tmp.file, timestamp=True)
+    assert re.match(r'(.*).bak-[\d]+-[\d]+-[\d]+(.*)', bkfile)  # noqa: W605

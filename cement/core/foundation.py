@@ -1,32 +1,23 @@
 """Cement core foundation module."""
 
 import os
-import sys
-import signal
 import platform
+import signal
+import sys
+from importlib import reload as reload_module
 from time import sleep
-from ..core import exc, log, config, plugin
-from ..core import output, extension, arg, controller, meta, cache, mail
-from ..core import template
-from ..core.interface import InterfaceManager
+
+from ..core import (arg, cache, config, controller, exc, extension, log, mail,
+                    meta, output, plugin, template)
+from ..core.deprecations import deprecate
 from ..core.handler import HandlerManager
 from ..core.hook import HookManager
-from ..core.deprecations import deprecate
-from ..utils.misc import is_true, minimal_logger
-from ..utils import fs, misc
+from ..core.interface import InterfaceManager
 from ..ext.ext_argparse import ArgparseController as Controller
+from ..utils import fs, misc
+from ..utils.misc import is_true, minimal_logger
 
 join = os.path.join
-
-# The `imp` module is deprecated in favor of `importlib` in 3.4, but it
-# wasn't introduced until 3.1.  Finally, reload is a builtin on Python < 3
-pyver = sys.version_info
-if pyver[0] >= 3 and pyver[1] >= 4:                # pragma: nocover  # noqa
-    from importlib import reload as reload_module  # pragma: nocover  # noqa
-elif pyver[0] >= 3:                                # pragma: nocover  # noqa
-    from imp import reload as reload_module        # pragma: nocover  # noqa
-else:                                              # pragma: nocover  # noqa
-    reload_module = reload                         # pragma: nocover  # noqa
 
 
 LOG = minimal_logger(__name__)
@@ -1030,6 +1021,11 @@ class App(meta.MetaMixin):
 
         LOG.debug("closing the %s application" % self._meta.label)
 
+        # reattach our stdout if in quiet mode to avoid lingering file handles
+        # resolves: https://github.com/datafolklabs/cement/issues/653
+        if self._meta.quiet is True:
+            self._unsuppress_output()
+
         # in theory, this should happen last-last... but at that point `self`
         # would be kind of busted after _unlay_cement() is run.
         for res in self.hook.run('post_close', self):
@@ -1038,7 +1034,7 @@ class App(meta.MetaMixin):
         self._unlay_cement()
 
         if code is not None:
-            assert type(code) == int, \
+            assert type(code) is int, \
                 "Invalid exit status code (must be integer)"
             self.exit_code = code
 
@@ -1150,8 +1146,18 @@ class App(meta.MetaMixin):
 
     def _unsuppress_output(self):
         LOG.debug('unsuppressing all console output')
+
+        # don't accidentally close the actual <stdout>/<stderr>
+        if hasattr(sys.stdout, 'name') and sys.stdout.name != '<stdout>':
+            sys.stdout.close()
+        if hasattr(sys.stderr, 'name') and sys.stderr.name != '<stderr>':
+            sys.stderr.close()
         sys.stdout = self.__saved_stdout__
         sys.stderr = self.__saved_stderr__
+
+        # have to resetup the log handler to unsuppress console output
+        if self.log is not None:
+            self._setup_log_handler()
 
     def _lay_cement(self):
         """Initialize the framework."""

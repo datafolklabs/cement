@@ -1,66 +1,104 @@
 version: "3"
+
+volumes:
+  mailpit-data:
+
 services:
-    cement: &DEFAULTS
-        image: "cement:dev"
-        build:
-            context: .
-            dockerfile: docker/Dockerfile.dev
-        hostname: cement
-        stdin_open: true
-        tty: true
-        volumes:
-            - '.:/src'
-        working_dir: '/src'
-        links:
-            - redis:redis
-            - memcached:memcached
-        environment:
-            REDIS_HOST: redis
-            MEMCACHED_HOST: memcached
+  cement: &DEFAULTS
+    image: "cement:dev"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    hostname: cement
+    stdin_open: true
+    tty: true
+    volumes:
+    - '.:/src'
+    working_dir: '/src'
+    links:
+    - redis:redis
+    - memcached:memcached
+    environment:
+      REDIS_HOST: redis
+      MEMCACHED_HOST: memcached
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
 
-    cement-py35:
-        <<: *DEFAULTS
-        image: "cement:dev-py35"
-        build:
-            context: .
-            dockerfile: docker/Dockerfile.dev-py35
-        profiles:
-          - donotstart
+  cement-py35:
+    <<: *DEFAULTS
+    image: "cement:dev-py35"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py35
+    profiles:
+    - donotstart
 
-    cement-py36:
-        <<: *DEFAULTS
-        image: "cement:dev-py36"
-        build:
-            context: .
-            dockerfile: docker/Dockerfile.dev-py36
-        profiles:
-          - donotstart
+  cement-py36:
+    <<: *DEFAULTS
+    image: "cement:dev-py36"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py36
+    profiles:
+    - donotstart
 
-    cement-py37:
-        <<: *DEFAULTS
-        image: "cement:dev-py37"
-        build:
-            context: .
-            dockerfile: docker/Dockerfile.dev-py37
-    
-    cement-py38:
-        <<: *DEFAULTS
-        image: "cement:dev-py38"
-        build:
-            context: .
-            dockerfile: docker/Dockerfile.dev-py38
-    
-    cement-py39:
-        <<: *DEFAULTS
-        image: "cement:dev-py39"
-        build:
-            context: .
-            dockerfile: docker/Dockerfile.dev-py39
+  cement-py37:
+    <<: *DEFAULTS
+    image: "cement:dev-py37"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py37
+  
+  cement-py38:
+    <<: *DEFAULTS
+    image: "cement:dev-py38"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py38
+  
+  cement-py39:
+    <<: *DEFAULTS
+    image: "cement:dev-py39"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py39
+  
+  cement-py310:
+    <<: *DEFAULTS
+    image: "cement:dev-py310"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py310
 
-    redis:
-        image: redis:latest
-        hostname: redis
+  cement-py311:
+    <<: *DEFAULTS
+    image: "cement:dev-py311"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py311
 
-    memcached:
-        image: memcached:latest
-        hostname: memcached
+  redis:
+    image: redis:latest
+    hostname: redis
+
+  memcached:
+    image: memcached:latest
+    hostname: memcached
+  
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: always
+    volumes:
+    - mailpit-data:/data
+    - ./docker/mailpit:/certificates
+    ports:
+    - 8025:8025
+    - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      MP_SMTP_TLS_CERT: /certificates/dev-cert.pem
+      MP_SMTP_TLS_KEY: /certificates/dev-key.pem

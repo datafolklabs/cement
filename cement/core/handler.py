@@ -61,7 +61,7 @@ class Handler(ABC, meta.MetaMixin):
             assert self._meta.interface, \
                 "%s.Meta.interface undefined." % self.__class__.__name__
         except AssertionError as e:
-            raise(exc.FrameworkError(e.args[0]))
+            raise exc.FrameworkError(e.args[0])
 
         self.app = None
 
@@ -360,7 +360,7 @@ class HandlerManager(object):
         meta_defaults = kwargs.get('meta_defaults', None)
         if meta_defaults is None:
             meta_defaults = {}
-            if type(handler_def) == str:
+            if type(handler_def) is str:
                 _meta_label = "%s.%s" % (interface, handler_def)
                 meta_defaults = self.app._meta.meta_defaults.get(_meta_label,
                                                                  {})
@@ -372,7 +372,7 @@ class HandlerManager(object):
         setup = kwargs.get('setup', False)
         han = None
 
-        if type(handler_def) == str:
+        if type(handler_def) is str:
             han = self.get(interface, handler_def)(**meta_defaults)
         elif hasattr(handler_def, '_meta'):
             if not self.registered(interface, handler_def._meta.label):
