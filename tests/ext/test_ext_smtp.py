@@ -4,6 +4,7 @@ import mock
 import requests
 import json
 from time import sleep
+from pytest import raises
 from cement.utils.test import TestApp
 from cement.utils.misc import init_defaults
 
@@ -73,7 +74,7 @@ def test_smtp_html(rando):
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
 
-        app.mail.send([f"{rando}", f"<body>{rando}</body>"])
+        app.mail.send((f"{rando}", f"<body>{rando}</body>"))
         sleep(3)
         res = requests.get(f"{mailpit_api}/search?query={rando}")
         data = res.json()
@@ -89,6 +90,17 @@ def test_smtp_html(rando):
         assert res_html.content.decode('utf-8') == f"<body>{rando}</body>"
 
         delete_msg(msg['ID'])
+
+
+def test_smtp_html_bad_body_type(rando):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        error_msg = '(.*)Message body must be string or tuple(.*)'
+        with raises(TypeError, match=error_msg):
+            app.mail.send(['text', '<body>html</body>'])
 
 
 def test_smtp_cc_bcc(rando):
@@ -161,6 +173,42 @@ def test_smtp_files_alt_name(rando, tmp):
         res_full = requests.get(f"{mailpit_api}/message/{msg['ID']}")
         data = res_full.json()
         assert data['Attachments'][0]['FileName'] == f"alt-filename-{rando}"
+        delete_msg(msg['ID'])
+
+
+def test_smtp_files_path_does_not_exist(rando, tmp):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        files = [(f"{tmp.file}-does-not-exist")]
+
+        with raises(FileNotFoundError):
+            app.mail.send(f"{rando}", files=files)
+
+
+def test_smtp_files_alt_name_is_path(rando, tmp):
+    # ensure only the basename of file is set if full path is passed as alt
+    # name
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        files = [(tmp.file, tmp.file)]
+        app.mail.send(f"{rando}", files=files)
+        sleep(3)
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        assert msg['Attachments'] == 1
+
+        res_full = requests.get(f"{mailpit_api}/message/{msg['ID']}")
+        data = res_full.json()
+        assert data['Attachments'][0]['FileName'] == os.path.basename(tmp.file)
         delete_msg(msg['ID'])
 
 

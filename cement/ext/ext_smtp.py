@@ -2,6 +2,7 @@
 Cement smtp extension module.
 """
 
+import os
 import smtplib
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
@@ -75,9 +76,9 @@ class SMTPMailHandler(mail.MailHandler):
         configuration defaults (cc, bcc, etc).
 
         Args:
-            body (list): The message body to send. List is treated as:
-                ``[<text>, <html>]``. If a single string is passed it will be
-                converted to ``[<text>]``. At minimum, a text version is
+            body (tuple): The message body to send. Tuple is treated as:
+                ``(<text>, <html>)``. If a single string is passed it will be
+                converted to ``(<text>)``. At minimum, a text version is
                 required.
 
         Keyword Args:
@@ -88,7 +89,10 @@ class SMTPMailHandler(mail.MailHandler):
             subject (str): Message subject line
             subject_prefix (str): Prefix for message subject line (useful to
                 override if you want to remove/change the default prefix).
-            files (list): List of file paths to attach to the message.
+            files (list): List of file paths to attach to the message. Can be
+                ``[ '/path/to/file.ext', ... ]`` or alternative filename can
+                be defined by passing a list of tuples in the form of
+                ``[ ('alt-name.ext', '/path/to/file.ext'), ...]``
 
         Returns:
             bool:``True`` if message is sent successfully, ``False`` otherwise
@@ -151,12 +155,18 @@ class SMTPMailHandler(mail.MailHandler):
             subject = params['subject']
         msg['Subject'] = Header(subject)
 
-        # add body as text and or or as html
+        # add body as text and/or as html
         partText = None
         partHtml = None
+
+        if type(body) not in [str, tuple]:
+            error_msg = "Message body must be string or tuple " \
+                        "('<text>', '<html>')"
+            raise TypeError(error_msg)
+
         if isinstance(body, str):
             partText = MIMEText(body)
-        elif isinstance(body, list):
+        elif isinstance(body, tuple):
             # handle plain text
             if len(body) >= 1:
                 partText = MIMEText(body[0], 'plain')
@@ -176,12 +186,16 @@ class SMTPMailHandler(mail.MailHandler):
                 part = MIMEBase('application', 'octet-stream')
 
                 # support for alternative file name if its tuple
-                # like (filename.ext=attname.ext)
+                # like ('alt-name.ext', '/path/to/file.ext')
                 if isinstance(in_path, tuple):
-                    attname = in_path[0]
+                    if in_path[0] == in_path[1]:
+                        # protect against the full path being passed in
+                        alt_name = os.path.basename(in_path[0])
+                    else:
+                        alt_name = in_path[0]
                     path = in_path[1]
                 else:
-                    attname = in_path
+                    alt_name = os.path.basename(in_path)
                     path = in_path
 
                 path = fs.abspath(path)
@@ -194,7 +208,7 @@ class SMTPMailHandler(mail.MailHandler):
                 encoders.encode_base64(part)
                 part.add_header(
                     'Content-Disposition',
-                    f'attachment; filename={attname}',
+                    f'attachment; filename={alt_name}',
                 )
                 msg.attach(part)
 
