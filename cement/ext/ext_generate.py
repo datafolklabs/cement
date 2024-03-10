@@ -18,19 +18,29 @@ class GenerateTemplateAbstractBase(Controller):
         pass
 
     def _generate(self, source, dest):
+        from datetime import datetime
+        from cement.utils.misc import pyid
         msg = 'Generating %s %s in %s' % (
                    self.app._meta.label, self._meta.label, dest
                )
         self.app.log.info(msg)
-        data = {}
 
         # builtin vars
         maj_min = float('%s.%s' % (VERSION[0], VERSION[1]))
-        data['cement'] = {}
-        data['cement']['version'] = get_version()
-        data['cement']['major_version'] = VERSION[0]
-        data['cement']['minor_version'] = VERSION[1]
-        data['cement']['major_minor_version'] = maj_min
+        today = datetime.today()
+        dest_tail = os.path.split(dest.strip(os.path.sep))[-1].strip()
+        data = dict(
+            cement=dict(
+                version=get_version(),
+                major_version=VERSION[0],
+                minor_version=VERSION[1],
+                major_minor_version=maj_min,
+            ),
+            today=today,
+            iso_today=today.date().isoformat(),
+            dest_tail=dest_tail,
+            dest_label=pyid(dest_tail, sep='_'),
+        )
 
         f = open(os.path.join(source, '.generate.yml'))
         yaml_load = yaml.full_load if hasattr(yaml, 'full_load') else yaml.load
@@ -46,54 +56,38 @@ class GenerateTemplateAbstractBase(Controller):
                        self._meta.label
         ignore_list.append(g_config_yml)
 
-        var_defaults = {
-            'name': None,
-            'prompt': None,
-            'validate': None,
-            'case': None,
-            'default': None,
-        }
-
-        for defined_var in vars:
-            var = var_defaults.copy()
-            var.update(defined_var)
-            for key in ['name', 'prompt']:
-                assert var[key] is not None, \
-                    "Required generate config key missing: %s" % key
-
+        for var in vars:
+            var_name = var.get('name', None)
+            assert var_name is not None, \
+                "Required generate config key missing: name"
+            var_prompt = var.get('prompt', None)
+            var_default = var.get('default', None)
             val = None
-            if var['default'] is not None and self.app.pargs.defaults:
-                val = var['default']
-
-            elif var['default'] is not None:
-                default_text = ' [%s]' % var['default']
-
-            else:
-                default_text = ''   # pragma: nocover
+            if var_default is not None:
+                var_default = self.__render(var_default, data)
+                if self.app.pargs.defaults or var_prompt is None:
+                    val = var_default
 
             if val is None:
-                class MyPrompt(shell.Prompt):
-                    class Meta:
-                        text = "%s%s:" % (var['prompt'], default_text)
-                        default = var.get('default', None)
+                val = self.__prompt(var_prompt, var_default)
+                val = self.__render(val, data)
 
-                p = MyPrompt()
-                val = p.prompt()    # pragma: nocover
-
-            if var['case'] in ['lower', 'upper', 'title']:
-                val = getattr(val, var['case'])()
-            elif var['case'] is not None:
+            var_case = var.get('case', None)
+            if var_case in ['lower', 'upper', 'title']:
+                val = getattr(val, var_case)()
+            elif var_case is not None:
                 self.app.log.warning(
                     "Invalid configuration for variable " +
-                    "'%s': " % var['name'] +
+                    "'%s': " % var_name +
                     "case must be one of lower, upper, or title."
                 )
 
-            if var['validate'] is not None:
-                assert re.match(var['validate'], val), \
-                    "Invalid Response (must match: '%s')" % var['validate']
+            var_validate = var.get('validate', None)
+            if var_validate is not None:
+                assert re.match(var_validate, val), \
+                    "Invalid Response (must match: '%s')" % var_validate
 
-            data[var['name']] = val
+            data[var_name] = val
 
         try:
             self.app.template.copy(source, dest, data,
@@ -128,6 +122,28 @@ class GenerateTemplateAbstractBase(Controller):
             self._clone(source, dest)
         else:
             self._generate(source, dest)
+
+    @staticmethod
+    def __prompt(prompt, var_default):
+        if prompt is not None:
+            default_text = ' [%s]' % var_default if var_default else ''
+
+            class MyPrompt(shell.Prompt):
+                class Meta:
+                    text = "%s%s:" % (prompt, default_text)
+                    default = var_default
+
+            p = MyPrompt()
+            return p.prompt()    # pragma: nocover
+        else:
+            assert var_default is not None, \
+                "Required generate config key missing: prompt"
+            return var_default
+
+    def __render(self, value, data):
+        if '{{' in value:
+            value = self.app.template.render(value, data)
+        return value
 
 
 def setup_template_items(app):

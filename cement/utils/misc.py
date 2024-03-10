@@ -9,6 +9,52 @@ from random import random
 from ..core.deprecations import deprecate
 
 
+def pyid(value, case=None, sep=None):
+    '''Convert a value into a Python identifier.
+
+    :param case: function to transform each part, defaults to ``str.lower``.
+
+    :param sep: separator to join all parts, defaults to '_' if value contains
+                it, otherwise it's ''.
+
+    For example::
+
+        >>> pyid(' foo_Bar v2 ')
+        'foo_bar_v2'
+
+        >>> pyid(' foo Bar v2 ', case='title')
+        'FooBarV2'
+
+    '''
+    import re
+    from jinja2.utils import soft_unicode
+    value = soft_unicode(value)
+    if case is None:
+        case = str.lower
+    elif isinstance(case, str):
+        case = getattr(str, case)
+    if sep is None:
+        sep = '_' if '_' in value else ''
+    return sep.join(case(p) for p in re.findall('[a-z0-9_]+', value, re.I))
+
+
+def catif(value, tail):
+    '''Concatenate a tail if missing.
+
+    For example::
+
+        >>> catif('MainApp', 'App')
+        'MainApp'
+
+    '''
+    from jinja2.utils import soft_unicode
+    value = soft_unicode(value)
+    tail = soft_unicode(tail)
+    if not value.endswith(tail):
+        value += tail
+    return value
+
+
 def rando(salt=None):
     """
     Generate a random hash for whatever purpose.  Useful for testing
