@@ -11,5 +11,6 @@ docker-compose up -d mailpit 2>&1 >/dev/null
 sleep 10
 
 rm -f .coverage
-pip install -r requirements-dev.txt
+pdm venv create
+pdm install
 make test

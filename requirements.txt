@@ -1,3 +1,0 @@
-# Cement core does not have any external dependencies, however optional
-# extension might.  It is up to the application developer to manage
-# requirements for optional extensions/dependencies.
