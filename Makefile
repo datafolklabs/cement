@@ -2,8 +2,7 @@
 
 dev:
 	docker-compose up -d
-	docker-compose exec cement pip install -r requirements-dev.txt
-	docker-compose exec cement python setup.py develop
+	docker-compose exec cement pip install .
 	docker-compose exec cement /bin/bash
 
 test: comply
@@ -15,9 +14,6 @@ test-core: comply
 virtualenv:
 	pdm venv create
 	pdm install
-	virtualenv --prompt '|> cement <| ' env
-	env/bin/pip install -r requirements-dev.txt
-	env/bin/python setup.py develop
 	@echo
 	@echo "VirtualENV Setup Complete. Now run: eval $(pdm venv activate)"
 	@echo

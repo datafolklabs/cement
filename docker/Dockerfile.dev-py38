@@ -1,9 +1,8 @@
 FROM python:3.8-alpine
 LABEL MAINTAINER="BJ Dierkes <derks@datafolklabs.com>"
-ENV PS1="\[\e[0;33m\]|> cement-py38 <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
+ENV PS1="\[\e[0;33m\]|> cement-py8 <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
 
 WORKDIR /src
-COPY requirements-dev.txt /src/
 RUN apk update \
     && apk add libmemcached-dev \
         gcc \
@@ -18,10 +17,12 @@ RUN apk update \
         libffi-dev \
         openssl-dev \
         jq \
-    && ln -sf /usr/bin/vim /usr/bin/vi \
-    && pip install --no-cache-dir -r requirements-dev.txt \
-    && pip install --upgrade -r requirements-dev.txt
+        pipx \
+    && ln -sf /usr/bin/vim /usr/bin/vi
+RUN pipx install pdm
+ENV PATH="${PATH}:/root/.local/bin"
 COPY . /src
 COPY docker/vimrc /root/.vimrc
-RUN python setup.py develop
+RUN pdm venv create
+RUN pdm install
 CMD ["/bin/bash"]

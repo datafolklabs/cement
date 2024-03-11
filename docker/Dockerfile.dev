@@ -3,8 +3,8 @@ LABEL MAINTAINER="BJ Dierkes <derks@datafolklabs.com>"
 ENV PS1="\[\e[0;33m\]|> cement-py312 <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
 
 WORKDIR /src
-RUN apk update --no-check-certificate \
-    && apk add --no-check-certificate libmemcached-dev \
+RUN apk update \
+    && apk add libmemcached-dev \
         gcc \
         musl-dev \
         cyrus-sasl-dev \

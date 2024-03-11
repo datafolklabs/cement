@@ -14,7 +14,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
 
-dynamic = ["version"]
+dynamic = ["version", "README"]
 
 requires-python = ">=3.8"
 
@@ -44,8 +44,6 @@ tabulate = ["tabulate"]
 watchdog = ["watchdog"]
 yaml = ["pyYaml"]
 
-dynamic = ["version", "readme"]
-
 [project.scripts]
 cement = "cement.cli.main:main"
 
@@ -73,7 +71,12 @@ precision = 2
 
 [tool.pdm.build]
 package-dir = "cement"
-includes = ["cement/cli/templates/generate/*"]
+includes = [
+    "cement",
+    "cement/cli/templates/generate",
+    "CONTRIBUTORS.md",
+    "CHANGELOG.md"
+]
 excludes = ["tests"]
 
 [tool.pdm.version]

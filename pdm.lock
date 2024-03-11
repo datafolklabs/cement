@@ -2,10 +2,10 @@
 # It is not intended for manual editing.
 
 [metadata]
-groups = ["default", "alarm", "argparse", "colorlog", "configparser", "daemon", "dev", "docs", "dummy", "dynamic", "generate", "jinja2", "json", "logging", "memcached", "mustache", "plugin", "print", "redis", "scrub", "smtp", "tabulate", "watchdog", "yaml"]
+groups = ["default", "alarm", "argparse", "colorlog", "configparser", "daemon", "dev", "docs", "dummy", "generate", "jinja2", "json", "logging", "memcached", "mustache", "plugin", "print", "redis", "scrub", "smtp", "tabulate", "watchdog", "yaml"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:bf23e124fbd46134cf85ca0a29c598a95ef26581c672933995aa6a452cdfd069"
+content_hash = "sha256:7ee1b527b606c4f99aa980b75b4591ee99f97bd57e78a773fcdb8c3b36f6fd93"
 
 [[package]]
 name = "alabaster"
@@ -299,7 +299,7 @@ name = "docutils"
 version = "0.20.1"
 requires_python = ">=3.7"
 summary = "Docutils -- Python Documentation Utilities"
-groups = ["docs", "dynamic"]
+groups = ["docs"]
 files = [
     {file = "docutils-0.20.1-py3-none-any.whl", hash = "sha256:96f387a2c5562db4476f09f13bbab2192e764cac08ebbf3a34a95d9b1e4a59d6"},
     {file = "docutils-0.20.1.tar.gz", hash = "sha256:f08a4e276c3a1583a86dce3e34aba3fe04d02bba2dd51ed16106244e8a923e3b"},
@@ -504,30 +504,6 @@ files = [
 ]
 
 [[package]]
-name = "nh3"
-version = "0.2.15"
-summary = "Python bindings to the ammonia HTML sanitization library."
-groups = ["dynamic"]
-files = [
-    {file = "nh3-0.2.15-cp37-abi3-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:9c0d415f6b7f2338f93035bba5c0d8c1b464e538bfbb1d598acd47d7969284f0"},
-    {file = "nh3-0.2.15-cp37-abi3-macosx_10_12_x86_64.whl", hash = "sha256:6f42f99f0cf6312e470b6c09e04da31f9abaadcd3eb591d7d1a88ea931dca7f3"},
-    {file = "nh3-0.2.15-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ac19c0d68cd42ecd7ead91a3a032fdfff23d29302dbb1311e641a130dfefba97"},
-    {file = "nh3-0.2.15-cp37-abi3-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:5f0d77272ce6d34db6c87b4f894f037d55183d9518f948bba236fe81e2bb4e28"},
-    {file = "nh3-0.2.15-cp37-abi3-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:8d595df02413aa38586c24811237e95937ef18304e108b7e92c890a06793e3bf"},
-    {file = "nh3-0.2.15-cp37-abi3-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:86e447a63ca0b16318deb62498db4f76fc60699ce0a1231262880b38b6cff911"},
-    {file = "nh3-0.2.15-cp37-abi3-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:3277481293b868b2715907310c7be0f1b9d10491d5adf9fce11756a97e97eddf"},
-    {file = "nh3-0.2.15-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:60684857cfa8fdbb74daa867e5cad3f0c9789415aba660614fe16cd66cbb9ec7"},
-    {file = "nh3-0.2.15-cp37-abi3-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:3b803a5875e7234907f7d64777dfde2b93db992376f3d6d7af7f3bc347deb305"},
-    {file = "nh3-0.2.15-cp37-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:0d02d0ff79dfd8208ed25a39c12cbda092388fff7f1662466e27d97ad011b770"},
-    {file = "nh3-0.2.15-cp37-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:f3b53ba93bb7725acab1e030bc2ecd012a817040fd7851b332f86e2f9bb98dc6"},
-    {file = "nh3-0.2.15-cp37-abi3-musllinux_1_2_i686.whl", hash = "sha256:b1e97221cedaf15a54f5243f2c5894bb12ca951ae4ddfd02a9d4ea9df9e1a29d"},
-    {file = "nh3-0.2.15-cp37-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:a5167a6403d19c515217b6bcaaa9be420974a6ac30e0da9e84d4fc67a5d474c5"},
-    {file = "nh3-0.2.15-cp37-abi3-win32.whl", hash = "sha256:427fecbb1031db085eaac9931362adf4a796428ef0163070c484b5a768e71601"},
-    {file = "nh3-0.2.15-cp37-abi3-win_amd64.whl", hash = "sha256:bc2d086fb540d0fa52ce35afaded4ea526b8fc4d3339f783db55c95de40ef02e"},
-    {file = "nh3-0.2.15.tar.gz", hash = "sha256:d1e30ff2d8d58fb2a14961f7aac1bbb1c51f9bdd7da727be35c63826060b0bf3"},
-]
-
-[[package]]
 name = "packaging"
 version = "24.0"
 requires_python = ">=3.7"
@@ -567,7 +543,7 @@ name = "pygments"
 version = "2.17.2"
 requires_python = ">=3.7"
 summary = "Pygments is a syntax highlighting package written in Python."
-groups = ["docs", "dynamic"]
+groups = ["docs"]
 files = [
     {file = "pygments-2.17.2-py3-none-any.whl", hash = "sha256:b27c2826c47d0f3219f29554824c30c5e8945175d888647acd804ddd04af846c"},
     {file = "pygments-2.17.2.tar.gz", hash = "sha256:da46cec9fd2de5be3a8a784f434e4c4ab670b4ff54d605c4c2717e9d49c4c367"},
@@ -704,35 +680,6 @@ files = [
     {file = "PyYAML-6.0.1-cp39-cp39-win32.whl", hash = "sha256:faca3bdcf85b2fc05d06ff3fbc1f83e1391b3e724afa3feba7d13eeab355484c"},
     {file = "PyYAML-6.0.1-cp39-cp39-win_amd64.whl", hash = "sha256:510c9deebc5c0225e8c96813043e62b680ba2f9c50a08d3724c7f28a747d1486"},
     {file = "PyYAML-6.0.1.tar.gz", hash = "sha256:bfdf460b1736c775f2ba9f6a92bca30bc2095067b8a9d77876d1fad6cc3b4a43"},
-]
-
-[[package]]
-name = "readme"
-version = "0.7.1"
-summary = "readme is a library for rendering \"readme\" descriptions for Warehouse"
-groups = ["dynamic"]
-dependencies = [
-    "readme-renderer",
-]
-files = [
-    {file = "readme-0.7.1-py2.py3-none-any.whl", hash = "sha256:37482f34fc20bff7e4ad8a42f726dc902250d27a52e1196bb8fad4bdcfdcbbe4"},
-    {file = "readme-0.7.1.tar.gz", hash = "sha256:32fbe1538a437da160fa4e4477270bfdcd8876e2e364d0d12898302644496231"},
-]
-
-[[package]]
-name = "readme-renderer"
-version = "43.0"
-requires_python = ">=3.8"
-summary = "readme_renderer is a library for rendering readme descriptions for Warehouse"
-groups = ["dynamic"]
-dependencies = [
-    "Pygments>=2.5.1",
-    "docutils>=0.13.1",
-    "nh3>=0.2.14",
-]
-files = [
-    {file = "readme_renderer-43.0-py3-none-any.whl", hash = "sha256:19db308d86ecd60e5affa3b2a98f017af384678c63c88e5d4556a380e674f3f9"},
-    {file = "readme_renderer-43.0.tar.gz", hash = "sha256:1818dd28140813509eeed8d62687f7cd4f7bad90d4db586001c5dc09d4fde311"},
 ]
 
 [[package]]
@@ -996,15 +943,6 @@ groups = ["docs"]
 files = [
     {file = "urllib3-2.2.1-py3-none-any.whl", hash = "sha256:450b20ec296a467077128bff42b73080516e71b56ff59a60a02bef2232c4fa9d"},
     {file = "urllib3-2.2.1.tar.gz", hash = "sha256:d0570876c61ab9e520d776c38acbbb5b05a776d3f9ff98a5c8fd5162a444cf19"},
-]
-
-[[package]]
-name = "version"
-version = "0.1.1"
-summary = ""
-groups = ["dynamic"]
-files = [
-    {file = "version-0.1.1.tar.gz", hash = "sha256:9ca4aae0312bc3924f4fd31cbfbef468ebf29f278174be0a6bb418fbfad7e85f"},
 ]
 
 [[package]]
