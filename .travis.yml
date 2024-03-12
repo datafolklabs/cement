@@ -1,5 +1,8 @@
 language: python
 sudo: false
+before_install:
+  - sudo apt-get -y install pipx
+  - pipx install pdm
 script: ./scripts/travis.sh
 os:
   - linux
