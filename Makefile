@@ -37,13 +37,8 @@ clean:
 	find . -name '*.py[co]' -delete
 	rm -rf doc/build
 
-dist: clean
-	rm -rf dist/*
-	python setup.py sdist
-	python setup.py bdist_wheel
-
-dist-upload:
-	twine upload dist/*
+dist:
+	pdm build
 
 docker:
 	docker build -t datafolklabs/cement:latest .
