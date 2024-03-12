@@ -65,6 +65,11 @@ testpaths = ["tests"]
 addopts = "-v --cov-report=term --cov-report=html:coverage-report --capture=sys tests/"
 python_files= "test_*.py"
 
+[tool.coverage.run]
+omit = [
+    "cement/cli/contrib/*"
+]
+
 [tool.coverage.report]
 precision = 2
 
