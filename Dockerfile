@@ -3,7 +3,8 @@ LABEL MAINTAINER="BJ Dierkes <derks@datafolklabs.com>"
 ENV PS1="\[\e[0;33m\]|> cement <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
 WORKDIR /src
 COPY . /src
-RUN python setup.py install \
+ENV PDM_BUILD_SCM_VERSION=0.0.0.dev
+RUN pip install . \
     && rm -rf /src
 WORKDIR /
 ENTRYPOINT ["/usr/local/bin/cement"]

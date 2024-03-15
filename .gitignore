@@ -78,3 +78,9 @@ dump.rdb
 
 # VS Code
 .vscode/
+
+# PDM
+.venv
+__pypackages__
+.pdm.toml
+.pdm-python
