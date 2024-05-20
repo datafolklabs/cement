@@ -25,12 +25,16 @@ Cement core features include (but are not limited to):
 - Controller handler supports sub-commands, and nested controllers
 - Hook support adds a bit of magic to apps and also ties into framework
 - Zero external dependencies* (not including optional extensions)
-- 100% test coverage (`pytest`)
-- 100% PEP8 compliant (`flake8`)
+- 100% test coverage (`pytest`, `coverage`)
+- 100% PEP8 compliant (`ruff`)
 - Extensive API Reference (`sphinx`)
 - Tested on Python 3.8+
 
-*Some optional extensions that are shipped with the mainline Cement sources do require external dependencies.  It is the responsibility of the application developer to include these dependencies along with their application, as Cement explicitly does not include them.*
+## Optional Extensions
+
+Some extensions that are shipped with the mainline Cement source do require external dependencies.  It is the responsibility of the application developer to include these dependencies along with their application, as Cement explicitly does not include them. Dependencies can be installed via each extensions optional package (ex: `cement[colorlog]`, `cement[redis]`, etc).
+
+See: [https://docs.builtoncement.com/extensions](https://docs.builtoncement.com/extensions)
 
 
 ## More Information
@@ -67,6 +71,9 @@ $ docker-compose up -d
 $ docker-compose exec cement /bin/bash
 ```
 
+All execution is done *inside the docker containers*.
+
+
 **Testing Alternative Versions of Python**
 
 The latest stable version of Python 3 is the default, and target version accessible as the `cement` container within Docker Compose.  For testing against alternative versions of python, additional containers are created (ex: `cement-py38`, `cement-py39`, etc). You can access these containers via:
@@ -89,18 +96,6 @@ $ docker-compose exec cement-py39 /bin/bash
 |> cement-py39 <| src #
 ```
 
-
-### VirtualENV
-
-An traditional VirtualENV helper is available:
-
-```
-$ make virtualenv
-
-$ source env/bin/activate
-
-|> cement <| $
-```
 
 ### Vagrant
 
@@ -125,7 +120,7 @@ vagrant@linux $ bash scripts/vagrant/bootstrap.sh
 
 vagrant@linux $ make virtualenv
 
-vagrant@linux $ source env/bin/activate
+vagrant@linux $ pdm venv activate
 
 |> cement >| $
 ```
@@ -149,9 +144,9 @@ C:\> cd C:\Vagrant
 
 C:\Vagrant> powershell.exe scripts\vagrant\bootstrap.ps1
 
-C:\Vagrant> make virtualenv-windows
+C:\Vagrant> make virtualenv
 
-C:\Vagrant> .\env-windows\Scripts\activate.ps1
+C:\Vagrant> pdm venv activate
 
 C:\Vagrant> make test-core
 ```
@@ -161,7 +156,7 @@ C:\Vagrant> make test-core
 
 ### Running Tests and Compliance
 
-Cement has a strict policy that all code and tests meet PEP8 guidelines, therefore `flake8` is called before any unit tests run.  All code submissions require 100% test coverage and PEP8 compliance:
+Cement has a strict policy that all code and tests meet PEP8 guidelines, therefore `ruff` is called before any unit tests run.  All code submissions require 100% test coverage and PEP8 compliance:
 
 Execute the following to run all compliance and unit tests:
 
