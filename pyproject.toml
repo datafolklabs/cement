@@ -18,9 +18,6 @@ dynamic = ["version", "README"]
 
 requires-python = ">=3.8"
 
-dependencies = [
-]
-
 [project.optional-dependencies]
 alarm = []
 argparse = []
@@ -43,6 +40,9 @@ smtp = []
 tabulate = ["tabulate"]
 watchdog = ["watchdog"]
 yaml = ["pyYaml"]
+
+[tool.pdm.scripts]
+cement = {call = "cement.cli.main:main"}
 
 [project.scripts]
 cement = "cement.cli.main:main"
@@ -94,10 +94,13 @@ dev = [
     "coverage>=4.5.3",
     "mypy>=1.9.0",
     "ruff>=0.3.2",
+    "mock>=5.1.0",
 ]
 
 [tool.ruff]
-line-length = 100
+target-version = "py38"
+line-length = 99
+indent-width = 4
 exclude = [
     ".git",
     "cement/cli/templates",
@@ -105,25 +108,42 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-extend-select = [
-    "F", # pyflakes
-    "E", "W", # pycodestyle
-    # "N", # pep8-naming - enable later, some variables are not lowercase
-]
-ignore = [
-    "E402",
-    "E713",
-    "E721",
-    "E714",
-    "F841",
-    "F507"
-]
+preview = true
+extend-select = ["E", "F", "W"]
+ignore = []
+fixable = ["ALL"]
+unfixable = []
+
+# ignore = [
+#     "E402",
+#     "E713",
+#     "E721",
+#     "E714",
+#     "F841",
+#     "F507"
+# ]
 
 # TBD
 # [tool.ruff.format]
 # quote-style = "single"
 
+# [[tool.mypy.overrides]]
+# module = "cement.*"
+# ignore_missing_imports = true
+
 [tool.mypy]
+python_version = "3.8"
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_any_unimported = false
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+strict_optional = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
 files = [
     "cement/",
     # "tests/"
@@ -134,14 +154,3 @@ exclude = """(?x)(
     ^.git/ |
     ^tests
   )"""
-
-# https://mypy.readthedocs.io/en/stable/config_file.html#untyped-definitions-and-calls
-disallow_untyped_calls = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-
-# https://mypy.readthedocs.io/en/stable/config_file.html#none-and-optional-handling
-no_implicit_optional = true
-strict_optional = true

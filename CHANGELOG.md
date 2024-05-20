@@ -1,5 +1,43 @@
 # ChangeLog
 
+## 3.0.11 - DEVELOPMENT (will be released as stable/3.0.12)
+
+Bugs:
+
+- ?
+
+
+Features:
+
+- ?
+
+
+Refactoring:
+
+- `[dev]` Modernize Packaging (pyproject.toml, PDM)
+    - [Issue #680](https://github.com/datafolklabs/cement/issues/680)
+    - [PR #681](https://github.com/datafolklabs/cement/pull/681)
+- `[dev]` Implement Ruff for Code Compliance
+    - [Issue #671](https://github.com/datafolklabs/cement/issues/671)
+    - [PR #681](https://github.com/datafolklabs/cement/pull/681)
+- `[dev]` Remove Python 3.5, 3.6, 3.7 Docker Dev Targets 
+
+
+Misc: 
+
+- ?
+
+
+Deprecations:
+
+- ?
+
+
+Special Recognitions:
+
+Many thanks to `sigma67` for their contributions in modernizing the packaging system. Cement was started in 2009, and has some lingering technical debt that is now being addressed. Their contribution was a major help in moving off of setuptools and on to PDM and `pyproject.toml`, along with initial implementations of Ruff for a new generation of code compliance. I sincerely appreciate your help!
+
+
 ## 3.0.10 - Feb 28, 2024
 
 Bugs: 

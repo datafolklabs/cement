@@ -15,7 +15,7 @@ def add(a, b):
 
 
 def test_cmd():
-    out, err, ret = shell.cmd('echo KAPLA!')
+    out, err, ret = shell.cmd('echo KAPLA!')  # noqa: F841
     assert ret == 0
     assert out == b'KAPLA!\n'
 
@@ -24,13 +24,13 @@ def test_cmd():
 
 
 def test_exec_cmd():
-    out, err, ret = shell.exec_cmd(['echo', 'KAPLA!'])
+    out, err, ret = shell.exec_cmd(['echo', 'KAPLA!'])  # noqa: F841
     assert ret == 0
     assert out == b'KAPLA!\n'
 
 
 def test_exec_cmd_shell_true():
-    out, err, ret = shell.exec_cmd(['echo KAPLA!'], shell=True)
+    out, err, ret = shell.exec_cmd(['echo KAPLA!'], shell=True)  # noqa: F841
     assert ret == 0
     assert out == b'KAPLA!\n'
 
@@ -46,7 +46,7 @@ def test_exec_cmd2_shell_true():
 
 
 def test_exec_cmd_bad_command():
-    out, err, ret = shell.exec_cmd(['false'])
+    out, err, ret = shell.exec_cmd(['false'])  # noqa: F841
     assert ret == 1
 
 

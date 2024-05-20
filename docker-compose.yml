@@ -4,6 +4,32 @@ volumes:
   mailpit-data:
 
 services:
+  redis: 
+    image: redis:latest
+    hostname: redis
+
+  memcached:
+    image: memcached:latest
+    hostname: memcached
+  
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: always
+    volumes:
+    - mailpit-data:/data
+    - ./docker/mailpit:/certificates
+    ports:
+    - 8025:8025
+    - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      MP_SMTP_TLS_CERT: /certificates/dev-cert.pem
+      MP_SMTP_TLS_KEY: /certificates/dev-key.pem
+
   cement: &DEFAULTS
     image: "cement:dev"
     build:
@@ -23,6 +49,10 @@ services:
       MEMCACHED_HOST: memcached
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
+    depends_on:
+      - redis
+      - memcached
+      - mailpit
   
   cement-py38:
     <<: *DEFAULTS
@@ -51,29 +81,3 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.dev-py311
-
-  redis:
-    image: redis:latest
-    hostname: redis
-
-  memcached:
-    image: memcached:latest
-    hostname: memcached
-  
-  mailpit:
-    image: axllent/mailpit
-    container_name: mailpit
-    restart: always
-    volumes:
-    - mailpit-data:/data
-    - ./docker/mailpit:/certificates
-    ports:
-    - 8025:8025
-    - 1025:1025
-    environment:
-      MP_MAX_MESSAGES: 5000
-      MP_DATA_FILE: /data/mailpit.db
-      MP_SMTP_AUTH_ACCEPT_ANY: 1
-      MP_SMTP_AUTH_ALLOW_INSECURE: 1
-      MP_SMTP_TLS_CERT: /certificates/dev-cert.pem
-      MP_SMTP_TLS_KEY: /certificates/dev-key.pem

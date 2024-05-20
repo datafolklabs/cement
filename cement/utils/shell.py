@@ -476,7 +476,7 @@ class Prompt(MetaMixin):
                     if self._meta.case_insensitive is True:
                         lower_options = [x.lower()
                                          for x in self._meta.options]
-                        if not self.input.lower() in lower_options:
+                        if self.input.lower() not in lower_options:
                             self.input = None
                             continue
                     else:

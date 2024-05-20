@@ -1065,7 +1065,7 @@ class App(meta.MetaMixin):
 
         """
         for res in self.hook.run('pre_render', self, data):
-            if not type(res) is dict:
+            if type(res) is not dict:
                 LOG.debug("pre_render hook did not return a dict().")
             else:
                 data = res
@@ -1090,7 +1090,7 @@ class App(meta.MetaMixin):
             out_text = oh.render(data, **kw)
 
         for res in self.hook.run('post_render', self, out_text):
-            if not type(res) is str:
+            if type(res) is not str:
                 LOG.debug('post_render hook did not return a str()')
             else:
                 out_text = str(res)

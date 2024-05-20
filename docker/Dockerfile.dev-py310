@@ -23,6 +23,6 @@ RUN pipx install pdm
 ENV PATH="${PATH}:/root/.local/bin"
 COPY . /src
 COPY docker/vimrc /root/.vimrc
-RUN pdm venv create
+COPY docker/bashrc /root/.bashrc
 RUN pdm install
 CMD ["/bin/bash"]
