@@ -91,7 +91,9 @@ class Jinja2TemplateHandler(TemplateHandler):
 
         # expose Jinja2 Environment instance so that we can manipulate it
         # higher in application code if necessary
+        from cement.utils.misc import pyid, catif
         self.env = Environment(keep_trailing_newline=True)
+        self.env.filters.update(pyid=pyid, catif=catif)
 
     def load(self, *args, **kw):
         """
