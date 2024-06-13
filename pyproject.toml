@@ -40,11 +40,7 @@ smtp = []
 tabulate = ["tabulate"]
 watchdog = ["watchdog"]
 yaml = ["pyYaml"]
-cli = [
-    "jinja2>=3.1.4",
-    "markupsafe>=2.1.5",
-    "pyyaml>=6.0.1",
-]
+cli = ["cement[yaml,jinja2]"]
 
 [tool.pdm.scripts]
 cement = {call = "cement.cli.main:main"}

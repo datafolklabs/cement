@@ -5,7 +5,7 @@
 groups = ["default", "alarm", "argparse", "colorlog", "configparser", "daemon", "dev", "docs", "dummy", "generate", "jinja2", "json", "logging", "memcached", "mustache", "plugin", "print", "redis", "scrub", "smtp", "tabulate", "watchdog", "yaml", "cli"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:93956382ffe7f8e0c7376e940245a61ca8e9336b8801d69aa41069b84ab4faae"
+content_hash = "sha256:93bbcbfd6b1a08c9a37b42a42d1300b6f9ede3eb6e643a085a8152fb81a60d88"
 
 [[package]]
 name = "alabaster"
