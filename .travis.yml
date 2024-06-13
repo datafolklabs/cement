@@ -47,6 +47,13 @@ matrix:
         - DOCKER_COMPOSE_VERSION=v2.17.3
         - SMTP_HOST=localhost
         - SMTP_PORT=1025
+    - python: "3.13"
+      dist: "jammy"
+      sudo: true
+      env:
+        - DOCKER_COMPOSE_VERSION=v2.17.3
+        - SMTP_HOST=localhost
+        - SMTP_PORT=1025
 services:
   - memcached
   - redis-server
