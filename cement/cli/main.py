@@ -1,6 +1,4 @@
 
-import os
-import sys
 
 from cement import App, CaughtSignal  # noqa: E402
 from .controllers.base import Base    # noqa: E402
