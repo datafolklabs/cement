@@ -1,7 +1,6 @@
 
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), 'contrib'))
 
 from cement import App, CaughtSignal  # noqa: E402
 from .controllers.base import Base    # noqa: E402
