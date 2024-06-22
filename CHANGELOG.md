@@ -25,6 +25,9 @@ Refactoring:
 - `[utils.fs]` Type Annotations
     - [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - [PR #628](https://github.com/datafolklabs/cement/pull/628)
+- `[utils.misc]` Type Annotations
+    - [Issue #689](https://github.com/datafolklabs/cement/issues/689)
+    - [PR #628](https://github.com/datafolklabs/cement/pull/628)
 
 
 Misc: 
