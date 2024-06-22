@@ -22,7 +22,7 @@ Refactoring:
     - [PR #681](https://github.com/datafolklabs/cement/pull/681)
 - `[dev]` Remove Python 3.5, 3.6, 3.7 Docker Dev Targets 
 - `[dev]` Added Python 3.13 Dev Target
-- `[utils.fs]` Type Annotations: utils.fs
+- `[utils.fs]` Type Annotations
     - [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - [PR #628](https://github.com/datafolklabs/cement/pull/628)
 
