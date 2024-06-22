@@ -7,7 +7,6 @@ dev:
 	docker-compose exec cement-py39 pdm install
 	docker-compose exec cement-py310 pdm install
 	docker-compose exec cement-py311 pdm install
-	docker-compose exec cement-py312 pdm install
 	docker-compose exec cement-py313 pdm install
 	docker-compose exec cement /bin/bash
 

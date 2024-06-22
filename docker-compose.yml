@@ -13,7 +13,7 @@ services:
   
   mailpit:
     image: axllent/mailpit
-    container_name: mailpit
+    hostname: mailpit
     restart: always
     volumes:
     - mailpit-data:/data
@@ -81,13 +81,15 @@ services:
       context: .
       dockerfile: docker/Dockerfile.dev-py311
 
-  cement-py312:
-    <<: *DEFAULTS
-    image: "cement:dev-py312"
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.dev-py312
+  # derks@2024-06-22: not necessary atm as default cement container is 3.12
+  # cement-py312:
+  #   <<: *DEFAULTS
+  #   image: "cement:dev-py312"
+  #   build:
+  #     context: .
+  #     dockerfile: docker/Dockerfile.dev-py312
 
+  # derks@2024-06-22: future dev target
   cement-py313:
     <<: *DEFAULTS
     image: "cement:dev-py313"

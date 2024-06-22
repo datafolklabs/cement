@@ -1,6 +1,7 @@
 FROM python:3.11-alpine
 LABEL MAINTAINER="BJ Dierkes <derks@datafolklabs.com>"
 ENV PS1="\[\e[0;33m\]|> cement-py311 <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
+ENV PATH="${PATH}:/root/.local/bin"
 
 WORKDIR /src
 RUN apk update \
@@ -20,7 +21,6 @@ RUN apk update \
         pipx \
     && ln -sf /usr/bin/vim /usr/bin/vi
 RUN pipx install pdm
-ENV PATH="${PATH}:/root/.local/bin"
 COPY . /src
 COPY docker/vimrc /root/.vimrc
 COPY docker/bashrc /root/.bashrc
