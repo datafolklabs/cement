@@ -80,3 +80,17 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.dev-py311
+
+  cement-py312:
+    <<: *DEFAULTS
+    image: "cement:dev-py312"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py312
+
+  cement-py313:
+    <<: *DEFAULTS
+    image: "cement:dev-py313"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py313
