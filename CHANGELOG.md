@@ -41,7 +41,7 @@ Special Recognitions:
 
 Many thanks to @sigma67 for their contributions in modernizing the packaging system. Cement was started in 2009, and has some lingering technical debt that is now being addressed. Their contribution was a major help in moving off of setuptools and on to PDM and `pyproject.toml`, along with initial implementations of Ruff for a new generation of code compliance. I sincerely appreciate your help!
 
-Many thanks to @rednar for their contributions toward adding type annotations in [PR 628](https://github.com/datafolklabs/cement/pull/628). This PR was too large to merge directly, but it serving as a guide to finally begin work toward adding type annotations to Cement. This was a massive effort, and is very helpful to have this work available to guide the effort even if it will not be merged directly.
+Many thanks to @rednar for their contributions toward adding type annotations in [PR #628](https://github.com/datafolklabs/cement/pull/628). This PR was too large to merge directly, but it is serving as a guide to finally begin work toward adding type annotations to Cement. This was a massive effort, and is very helpful to have this work available to guide the effort even if it will not be merged directly.
 
 
 ## 3.0.10 - Feb 28, 2024
