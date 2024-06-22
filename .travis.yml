@@ -47,16 +47,20 @@ matrix:
         - DOCKER_COMPOSE_VERSION=v2.17.3
         - SMTP_HOST=localhost
         - SMTP_PORT=1025
-    - python: "3.13"
-      dist: "jammy"
-      sudo: true
-      env:
-        - DOCKER_COMPOSE_VERSION=v2.17.3
-        - SMTP_HOST=localhost
-        - SMTP_PORT=1025
-        # below is a workaround due to invalid travis Python version
-        - PDM_IGNORE_ACTIVE_VENV=true
-        - PYTHON_VERSION=3.13
+    
+    # derks@2024-06-22: disable until travis support 3.13
+    # see: https://github.com/datafolklabs/cement/issues/683
+    # - python: "3.13"
+    #   dist: "jammy"
+    #   sudo: true
+    #   env:
+    #     - DOCKER_COMPOSE_VERSION=v2.17.3
+    #     - SMTP_HOST=localhost
+    #     - SMTP_PORT=1025
+    #     # below is a workaround due to invalid travis Python version
+    #     - PDM_IGNORE_ACTIVE_VENV=true
+    #     - PYTHON_VERSION=3.13
+  
 services:
   - memcached
   - redis-server
