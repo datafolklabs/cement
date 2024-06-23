@@ -6,11 +6,16 @@ from getpass import getpass
 from subprocess import Popen, PIPE
 from multiprocessing import Process
 from threading import Thread
+from typing import Any, Tuple, List, Union, Callable, Optional
+from typing_extensions import Self
 from ..core.meta import MetaMixin
 from ..core.exc import FrameworkError
 
 
-def cmd(command, capture=True, *args, **kwargs):
+def cmd(command: str,
+        capture: bool = True,
+        *args: Any,
+        **kwargs: Any) -> Union[Tuple[str, str, int], int]:
     """
     Wrapper around ``exec_cmd`` and ``exec_cmd2`` depending on whether
     capturing output is desired.  Defaults to setting the Popen ``shell``
@@ -41,18 +46,25 @@ def cmd(command, capture=True, *args, **kwargs):
             stdout, stderr, exitcode = shell.cmd('echo helloworld')
 
             # execute a command but do not capture output
-            exitcode = shell.cmd('echo helloworld', capture=False)
+            exit_code = shell.cmd('echo helloworld', capture=False)
 
     """
     kwargs['shell'] = kwargs.get('shell', True)
+    exitcode: int
 
     if capture is True:
-        return exec_cmd(command, *args, **kwargs)
+        stdout: str
+        stderr: str
+        (stdout, stderr, exitcode) = exec_cmd(command, *args, **kwargs)
+        return (stdout, stderr, exitcode)
     else:
-        return exec_cmd2(command, *args, **kwargs)
+        exitcode = exec_cmd2(command, *args, **kwargs)
+        return exitcode
 
 
-def exec_cmd(cmd_args, *args, **kwargs):
+def exec_cmd(cmd_args: Union[str, List[str]],
+             *args: Any,
+             **kwargs: Any) -> Tuple[str, str, int]:
     """
     Execute a shell call using Subprocess.  All additional ``*args`` and
     ``**kwargs`` are passed directly to ``subprocess.Popen``.  See
@@ -90,7 +102,9 @@ def exec_cmd(cmd_args, *args, **kwargs):
     return (stdout, stderr, proc.returncode)
 
 
-def exec_cmd2(cmd_args, *args, **kwargs):
+def exec_cmd2(cmd_args: Union[str, List[str]],
+              *args: Any,
+              **kwargs: Any) -> int:
     """
     Similar to ``exec_cmd``, however does not capture stdout, stderr (therefore
     allowing it to print to console).  All additional ``*args`` and
@@ -122,7 +136,12 @@ def exec_cmd2(cmd_args, *args, **kwargs):
     return proc.returncode
 
 
-def spawn(target, start=True, join=False, thread=False, *args, **kwargs):
+def spawn(target: Callable,
+          start: bool = True,
+          join: bool = False,
+          thread: bool = False,
+          *args: Any,
+          **kwargs: Any) -> Union[Process, Thread]:
     """
     Wrapper around ``spawn_process`` and ``spawn_thread`` depending on
     desired execution model.
@@ -162,7 +181,11 @@ def spawn(target, start=True, join=False, thread=False, *args, **kwargs):
         return spawn_process(target, start, join, *args, **kwargs)
 
 
-def spawn_process(target, start=True, join=False, *args, **kwargs):
+def spawn_process(target: Callable,
+                  start: bool = True,
+                  join: bool = False,
+                  *args: Any,
+                  **kwargs: Any) -> Process:
     """
     A quick wrapper around ``multiprocessing.Process()``.  By default the
     ``start()`` function will be called before the spawned process object is
@@ -199,7 +222,8 @@ def spawn_process(target, start=True, join=False, *args, **kwargs):
             p.join()
 
     """
-    proc = Process(target=target, *args, **kwargs)
+    kwargs['target'] = target
+    proc = Process(*args, **kwargs)
 
     if start and not join:
         proc.start()
@@ -209,7 +233,11 @@ def spawn_process(target, start=True, join=False, *args, **kwargs):
     return proc
 
 
-def spawn_thread(target, start=True, join=False, *args, **kwargs):
+def spawn_thread(target: Callable,
+                 start: bool = True,
+                 join: bool = False,
+                 *args: Any,
+                 **kwargs: Any) -> Thread:
     """
     A quick wrapper around ``threading.Thread()``.  By default the ``start()``
     function will be called before the spawned thread object is returned
@@ -246,7 +274,8 @@ def spawn_thread(target, start=True, join=False, *args, **kwargs):
             t.join()
 
     """
-    thr = Thread(target=target, *args, **kwargs)
+    kwargs['target'] = target
+    thr = Thread(*args, **kwargs)
 
     if start and not join:
         thr.start()
@@ -352,73 +381,83 @@ class Prompt(MetaMixin):
         parent class).
         """
         #: The text that is displayed to prompt the user
-        text = "Tell me someting interesting:"
+        text: str = "Tell me someting interesting:"
 
         #: A default value to use if the user doesn't provide any input
-        default = None
+        default: Optional[str] = None
 
         #: Options to provide to the user.  If set, the input must match one
         #: of the items in the options selection.
-        options = None
+        options: Optional[dict] = None
 
         #: Separator to use within the option selection (non-numbered)
-        options_separator = ','
+        options_separator: str = ','
 
         #: Display options in a numbered list, where the user can enter a
         #: number.  Useful for long selections.
-        numbered = False
+        numbered: bool = False
 
         #: The text to display along with the numbered selection for user
         #: input.
-        selection_text = "Enter the number for your selection:"
+        selection_text: str = "Enter the number for your selection:"
 
         #: Whether or not to automatically prompt() the user once the class
         #: is instantiated.
-        auto = True
+        auto: bool = True
 
         #: Whether to treat user input as case insensitive (only used to
         #: compare user input with available options).
-        case_insensitive = True
+        case_insensitive: bool = True
 
         #: Whether or not to clear the terminal when prompting the user.
-        clear = False
+        clear: bool = False
 
         #: Command to issue when clearing the terminal.
-        clear_command = 'clear'
+        clear_command: str = 'clear'
 
         #: Max attempts to get proper input from the user before giving up.
-        max_attempts = 10
+        max_attempts: int = 10
 
         #: Raise an exception when max_attempts is hit?  If not, Prompt
         #: passes the input through as ``None``.
-        max_attempts_exception = True
+        max_attempts_exception: bool = True
 
         #: Suppress user input (use ``getpass.getpass`` instead of
         #: ``builtins.input``. Default: ``False``.
-        suppress = False
+        suppress: bool = False
 
-    def __init__(self, text=None, *args, **kw):
+        _meta: Self
+        input: Optional[str]
+
+    def __init__(self,
+                 text: Optional[str] = None,
+                 *args: Any,
+                 **kw: Any) -> None:
         if text is not None:
             kw['text'] = text
         super(Prompt, self).__init__(*args, **kw)
 
-        self.input = None
+        self.input: Optional[str] = None
         if self._meta.auto:
             self.prompt()
 
-    def _get_suppressed_input(self, text):
-        return getpass(text)  # pragma: nocover
+    def _get_suppressed_input(self, text: str) -> str:
+        res: str = getpass(text)  # pragma: nocover
+        return res  # pragma: nocover
 
-    def _get_unsuppressed_input(self, text):
-        return builtins.input(text)  # pragma: nocover
+    def _get_unsuppressed_input(self, text: str) -> str:
+        res: str = builtins.input(text)
+        return res  # pragma: nocover
 
-    def _get_input(self, text):
+    def _get_input(self, text: str) -> str:
+        res: str
         if self._meta.suppress is True:
-            return self._get_suppressed_input(text)  # pragma: nocover
+            res = self._get_suppressed_input(text)  # pragma: nocover
         else:
-            return self._get_unsuppressed_input(text)  # pragma: nocover
+            res = self._get_unsuppressed_input(text)  # pragma: nocover
+        return res  # pragma: nocover
 
-    def _prompt(self):
+    def _prompt(self) -> None:
         if self._meta.clear:
             os.system(self._meta.clear_command)
 
@@ -440,13 +479,12 @@ class Prompt(MetaMixin):
             text = self._meta.text
 
         self.input = self._get_input("%s " % text)
-        # self.input = input("%s " % text)
         if self.input == '' and self._meta.default is not None:
             self.input = self._meta.default
         elif self.input == '':
             self.input = None
 
-    def prompt(self):
+    def prompt(self) -> Optional[str]:
         """
         Prompt the user, and store their input as ``self.input``.
         """
@@ -487,7 +525,7 @@ class Prompt(MetaMixin):
         self.process_input()
         return self.input
 
-    def process_input(self):
+    def process_input(self) -> None:
         """
         Does not do anything.  Is intended to be used in a sub-class to handle
         user input after it is prompted.

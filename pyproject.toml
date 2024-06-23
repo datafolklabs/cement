@@ -144,6 +144,12 @@ check_untyped_defs = true
 warn_return_any = true
 warn_unused_ignores = true
 show_error_codes = true
+
+disable_error_code = [
+    # disable as MetaMixin/Meta is used everywhere and triggers this
+    "attr-defined",
+]
+
 files = [
     "cement/",
     # "tests/"
