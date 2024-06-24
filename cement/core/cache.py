@@ -1,6 +1,7 @@
 """Cement core cache module."""
 
 from abc import abstractmethod
+from typing import Any, Optional
 from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
@@ -25,7 +26,7 @@ class CacheInterface(Interface):
         interface = 'cache'
 
     @abstractmethod
-    def get(self, key, fallback=None):
+    def get(self, key: str, fallback: Any = None) -> Any:
         """
         Get the value for a key in the cache.
 
@@ -47,7 +48,7 @@ class CacheInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def set(self, key, value, time=None):
+    def set(self, key: str, value: Any, time: Optional[int] = None) -> None:
         """
         Set the key/value in the cache for a set amount of ``time``.
 
@@ -66,7 +67,7 @@ class CacheInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def delete(self, key):
+    def delete(self, key: str) -> bool:
         """
         Deletes a key/value from the cache.
 
@@ -81,7 +82,7 @@ class CacheInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def purge(self):
+    def purge(self) -> None:
         """
         Clears all data from the cache.
 
@@ -95,4 +96,5 @@ class CacheHandler(CacheInterface, Handler):
     Cache handler implementation.
 
     """
-    pass    # pragma: nocover
+    class Meta:
+        pass    # pragma: nocover
