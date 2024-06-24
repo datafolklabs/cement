@@ -26,6 +26,7 @@ Refactoring:
     - `[core.arg]` [Issue #692](https://github.com/datafolklabs/cement/issues/692)
     - `[core.cache]` [Issue #693](https://github.com/datafolklabs/cement/issues/693)
     - `[core.config]` [Issue #694](https://github.com/datafolklabs/cement/issues/694)
+    - `[core.controller]` [Issue #695](https://github.com/datafolklabs/cement/issues/695)
     - `[core.exc]` [Issue #697](https://github.com/datafolklabs/cement/issues/697)
     - `[core.interface]` [Issue #702](https://github.com/datafolklabs/cement/issues/702)
     - `[core.meta]` [Issue #705](https://github.com/datafolklabs/cement/issues/705)

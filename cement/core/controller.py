@@ -1,6 +1,8 @@
 """Cement core controller module."""
 
+from __future__ import annotations
 from abc import abstractmethod
+from typing import Any, Union
 from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
@@ -17,7 +19,7 @@ class ControllerInterface(Interface):
     :class:`ControllerHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Interface meta-data."""
 
@@ -25,7 +27,7 @@ class ControllerInterface(Interface):
         interface = 'controller'
 
     @abstractmethod
-    def _dispatch(self):
+    def _dispatch(self) -> Union[Any | None]:
         """
         Reads the application object's data to dispatch a command from this
         controller.  For example, reading ``self.app.pargs`` to determine what
@@ -45,4 +47,5 @@ class ControllerInterface(Interface):
 
 class ControllerHandler(ControllerInterface, Handler):
     """Controller handler implementation."""
-    pass    # pragma: nocover
+    class Meta(Handler.Meta):
+        pass    # pragma: nocover
