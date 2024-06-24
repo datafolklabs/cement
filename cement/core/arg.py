@@ -4,6 +4,7 @@ Cement core argument module.
 """
 
 from abc import abstractmethod
+from typing import Any, List
 from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
@@ -28,7 +29,7 @@ class ArgumentInterface(Interface):
         interface = 'argument'
 
     @abstractmethod
-    def add_argument(self, *args, **kw):
+    def add_argument(self, *args: str, **kw: Any) -> None:
         """Add arguments to the parser.
 
         This should be ``-o/--option`` or positional. Note that the interface
@@ -60,7 +61,7 @@ class ArgumentInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def parse(self, *args):
+    def parse(self, *args: List[str]) -> object:
         """
         Parse the argument list (i.e. ``sys.argv``).  Can return any object as
         long as its' members contain those of the added arguments.  For
@@ -71,7 +72,7 @@ class ArgumentInterface(Interface):
             args (list): A list of command line arguments
 
         Returns:
-            object: A callable object whose member reprisent the available
+            object: A callable object whose members reprisent the available
             arguments
 
         """
@@ -82,4 +83,5 @@ class ArgumentHandler(ArgumentInterface, Handler):
 
     """Argument handler implementation"""
 
-    pass    # pragma: nocover
+    class Meta:
+        pass    # pragma: nocover

@@ -2,11 +2,18 @@
 Cement core interface module.
 """
 
+from __future__ import annotations
 from abc import ABC
+from typing import Any, Dict, Optional, Type, TYPE_CHECKING
+from typing_extensions import Self
 from ..core import exc, meta
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
+
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 
 class Interface(ABC, meta.MetaMixin):
@@ -21,10 +28,12 @@ class Interface(ABC, meta.MetaMixin):
 
         """
 
-        interface = NotImplemented
+        interface: str = NotImplemented
         """The string identifier of this interface."""
 
-    def __init__(self, **kw):
+        _meta: Self
+
+    def __init__(self, **kw: Any) -> None:
         super(Interface, self).__init__(**kw)
         try:
             assert self._meta.interface, \
@@ -32,7 +41,7 @@ class Interface(ABC, meta.MetaMixin):
         except AssertionError as e:
             raise exc.InterfaceError(e.args[0])
 
-    def _validate(self):
+    def _validate(self) -> None:
         """
         Perform any validation to ensure proper data, meta-data, etc.
         """
@@ -46,11 +55,16 @@ class InterfaceManager(object):
 
     """
 
-    def __init__(self, app):
+    __interfaces__: Dict[str, Type[Interface]]
+
+    def __init__(self, app: App) -> None:
         self.app = app
         self.__interfaces__ = {}
 
-    def get(self, interface, fallback=None, **kwargs):
+    def get(self,
+            interface: str,
+            fallback: Optional[Type[Interface]] = None,
+            **kwargs: Any) -> Type[Interface]:
         """
         Get an interface class.
 
@@ -82,7 +96,7 @@ class InterfaceManager(object):
             raise exc.InterfaceError("interface '%s' does not exist!" %
                                      interface)
 
-    def list(self):
+    def list(self) -> list[str]:
         """
         Return a list of defined interfaces.
 
@@ -98,7 +112,7 @@ class InterfaceManager(object):
         """
         return list(self.__interfaces__.keys())
 
-    def define(self, ibc):
+    def define(self, ibc: Type[Interface]) -> None:
         """
         Define an ``ibc`` (interface base class).
 
@@ -125,7 +139,7 @@ class InterfaceManager(object):
             raise exc.InterfaceError(msg)
         self.__interfaces__[ibc.Meta.interface] = ibc
 
-    def defined(self, interface):
+    def defined(self, interface: str) -> bool:
         """
         Test whether ``interface`` is defined.
 
