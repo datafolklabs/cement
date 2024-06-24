@@ -8,7 +8,7 @@ DEPRECATIONS = {
 }
 
 
-def deprecate(deprecation_id: str):
+def deprecate(deprecation_id: str) -> None:
     deprecation_id = str(deprecation_id)
     msg = DEPRECATIONS[deprecation_id]
     total_msg = f"{msg}. See: https://docs.builtoncement.com/release-information/deprecations#{deprecation_id}"  # noqa: E501
