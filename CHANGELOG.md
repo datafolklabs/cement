@@ -24,7 +24,7 @@ Refactoring:
 - `[dev]` Added Python 3.13 Dev Target
 - Type Annotations (related: [PR #628](https://github.com/datafolklabs/cement/pull/628))
     - `[core.arg]` [Issue #692](https://github.com/datafolklabs/cement/issues/692)
-    - `[core.cache]` [Issue #692](https://github.com/datafolklabs/cement/issues/693)
+    - `[core.cache]` [Issue #693](https://github.com/datafolklabs/cement/issues/693)
     - `[core.exc]` [Issue #697](https://github.com/datafolklabs/cement/issues/697)
     - `[core.interface]` [Issue #702](https://github.com/datafolklabs/cement/issues/702)
     - `[core.meta]` [Issue #705](https://github.com/datafolklabs/cement/issues/705)
