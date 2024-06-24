@@ -3,13 +3,19 @@ Cement core handler module.
 
 """
 
+from __future__ import annotations
 import re
 from abc import ABC
+from typing import Any, List, Dict, Optional, Type, Union, TYPE_CHECKING
 from ..core import exc
 from ..core.meta import MetaMixin
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
+
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 
 class Handler(ABC, MetaMixin):
@@ -24,13 +30,13 @@ class Handler(ABC, MetaMixin):
 
         """
 
-        label = NotImplemented
+        label: str = NotImplemented
         """The string identifier of this handler."""
 
-        interface = NotImplemented
+        interface: str = NotImplemented
         """The interface that this class implements."""
 
-        config_section = None
+        config_section: str = None  # type: ignore
         """
         A config section to merge config_defaults with.
 
@@ -39,14 +45,14 @@ class Handler(ABC, MetaMixin):
         no section is set by the user/developer.
         """
 
-        config_defaults = None
+        config_defaults: Optional[Dict[str, Any]] = None
         """
         A config dictionary that is merged into the applications config
         in the ``[<config_section>]`` block.  These are defaults and do not
         override any existing defaults under that section.
         """
 
-        overridable = False
+        overridable: bool = False
         """
         Whether or not handler can be overridden by
         ``App.Meta.handler_override_options``.  Will be listed as an
@@ -54,7 +60,7 @@ class Handler(ABC, MetaMixin):
         ``App.Meta.output_handler``, etc).
         """
 
-    def __init__(self, **kw):
+    def __init__(self, **kw: Any) -> None:
         super(Handler, self).__init__(**kw)
         try:
             assert self._meta.label, \
@@ -64,9 +70,9 @@ class Handler(ABC, MetaMixin):
         except AssertionError as e:
             raise exc.FrameworkError(e.args[0])
 
-        self.app = None
+        self.app: App = None  # type: ignore
 
-    def _setup(self, app):
+    def _setup(self, app: App) -> None:
         """
         Called during application initialization and must ``setup`` the handler
         object making it ready for the framework or the application to make
@@ -88,11 +94,11 @@ class Handler(ABC, MetaMixin):
                       "into section '%s'" % self._meta.config_section)
             dict_obj = dict()
             dict_obj[self._meta.config_section] = self._meta.config_defaults
-            self.app.config.merge(dict_obj, override=False)
+            self.app.config.merge(dict_obj, override=False)  # type: ignore
 
         self._validate()
 
-    def _validate(self):
+    def _validate(self) -> None:
         """
         Perform any validation to ensure proper data, meta-data, etc.
         """
@@ -106,11 +112,15 @@ class HandlerManager(object):
 
     """
 
-    def __init__(self, app):
+    def __init__(self, app: App):
         self.app = app
-        self.__handlers__ = {}
+        self.__handlers__: Dict[str, dict[str, Type[Handler]]] = {}
 
-    def get(self, interface, handler_label, fallback=None, **kwargs):
+    def get(self,
+            interface: str,
+            handler_label: str,
+            fallback: Optional[Type[Handler]] = None,
+            **kwargs: Any) -> Union[Handler, Type[Handler]]:
         """
         Get a handler object.
 
@@ -144,7 +154,7 @@ class HandlerManager(object):
         """
         setup = kwargs.get('setup', False)
 
-        if interface not in self.app.interface.list():
+        if interface not in self.app.interface.list():  # type: ignore
             raise exc.InterfaceError("Interface '%s' does not exist!" %
                                      interface)
 
@@ -160,7 +170,7 @@ class HandlerManager(object):
             raise exc.InterfaceError("handlers['%s']['%s'] does not exist!" %
                                      (interface, handler_label))
 
-    def list(self, interface):
+    def list(self, interface: str) -> List[Type[Handler]]:
         """
         Return a list of handlers for a given ``interface``.
 
@@ -181,7 +191,7 @@ class HandlerManager(object):
                 app.handler.list('log')
 
         """
-        if not self.app.interface.defined(interface):
+        if not self.app.interface.defined(interface):  # type: ignore
             raise exc.InterfaceError("Interface '%s' does not exist!" %
                                      interface)
 
@@ -190,7 +200,9 @@ class HandlerManager(object):
             res.append(self.__handlers__[interface][label])
         return res
 
-    def register(self, handler_class, force=False):
+    def register(self,
+                 handler_class: Type[Handler],
+                 force: bool = False) -> None:
         """
         Register a handler class to an interface.  If the same object is
         already registered then no exception is raised, however if a different
@@ -243,7 +255,7 @@ class HandlerManager(object):
         LOG.debug("registering handler '%s' into handlers['%s']['%s']" %
                   (handler_class, interface, obj._meta.label))
 
-        if interface not in self.app.interface.list():
+        if interface not in self.app.interface.list():  # type: ignore
             raise exc.InterfaceError("Handler interface '%s' doesn't exist." %
                                      interface)
         elif interface not in self.__handlers__.keys():
@@ -264,7 +276,7 @@ class HandlerManager(object):
                     (interface, obj._meta.label)
                 )
 
-        interface_class = self.app.interface.get(interface)
+        interface_class = self.app.interface.get(interface)  # type: ignore
 
         if not issubclass(handler_class, interface_class):
             raise exc.InterfaceError("Handler %s " % handler_class.__name__ +
@@ -273,7 +285,7 @@ class HandlerManager(object):
 
         self.__handlers__[interface][obj._meta.label] = handler_class
 
-    def registered(self, interface, handler_label):
+    def registered(self, interface: str, handler_label: str) -> bool:
         """
         Check if a handler is registered.
 
@@ -291,14 +303,14 @@ class HandlerManager(object):
                 app.handler.registered('log', 'colorlog')
 
         """
-        if interface in self.app.interface.list():
+        if interface in self.app.interface.list():  # type: ignore
             if interface in self.__handlers__.keys() and \
                handler_label in self.__handlers__[interface]:
                 return True
 
         return False
 
-    def setup(self, handler_class):
+    def setup(self, handler_class: Type[Handler]) -> Handler:
         """
         Setup a handler class so that it can be used.
 
@@ -319,7 +331,10 @@ class HandlerManager(object):
         h._setup(self.app)
         return h
 
-    def resolve(self, interface, handler_def, **kwargs):
+    def resolve(self,
+                interface: str,
+                handler_def: Union[str, Handler, Type[Handler]],
+                **kwargs: Any) -> Union[Handler, Optional[Handler]]:
         """
         Resolves the actual handler, as it can be either a string identifying
         the handler to load from ``self.__handlers__``, or it can be an
@@ -374,15 +389,15 @@ class HandlerManager(object):
         han = None
 
         if type(handler_def) is str:
-            han = self.get(interface, handler_def)(**meta_defaults)
+            han = self.get(interface, handler_def)(**meta_defaults)  # type: ignore
         elif hasattr(handler_def, '_meta'):
-            if not self.registered(interface, handler_def._meta.label):
-                self.register(handler_def.__class__)
+            if not self.registered(interface, handler_def._meta.label):  # type: ignore
+                self.register(handler_def.__class__)  # type: ignore
             han = handler_def
         elif hasattr(handler_def, 'Meta'):
-            han = handler_def(**meta_defaults)
+            han = handler_def(**meta_defaults)  # type: ignore
             if not self.registered(interface, han._meta.label):
-                self.register(handler_def)
+                self.register(handler_def)  # type: ignore
 
         msg = "Unable to resolve handler '%s' of interface '%s'" % \
               (handler_def, interface)

@@ -29,6 +29,8 @@ Refactoring:
     - `[core.controller]` [Issue #695](https://github.com/datafolklabs/cement/issues/695)
     - `[core.deprecations]` [Issue #696](https://github.com/datafolklabs/cement/issues/696)
     - `[core.exc]` [Issue #697](https://github.com/datafolklabs/cement/issues/697)
+    - `[core.extension]` [Issue #698](https://github.com/datafolklabs/cement/issues/698)
+    - `[core.handler]` [Issue #700](https://github.com/datafolklabs/cement/issues/700)
     - `[core.interface]` [Issue #702](https://github.com/datafolklabs/cement/issues/702)
     - `[core.meta]` [Issue #705](https://github.com/datafolklabs/cement/issues/705)
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
