@@ -5,13 +5,14 @@ Cement core handler module.
 
 import re
 from abc import ABC
-from ..core import exc, meta
+from ..core import exc
+from ..core.meta import MetaMixin
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
 
-class Handler(ABC, meta.MetaMixin):
+class Handler(ABC, MetaMixin):
 
     """Base handler class that all Cement Handlers should subclass from."""
 

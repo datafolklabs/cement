@@ -18,7 +18,7 @@ class CacheInterface(Interface):
     :class:`CacheHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Handler meta-data."""
 
@@ -96,5 +96,5 @@ class CacheHandler(CacheInterface, Handler):
     Cache handler implementation.
 
     """
-    class Meta:
+    class Meta(Handler.Meta):
         pass    # pragma: nocover

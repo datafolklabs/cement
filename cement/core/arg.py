@@ -21,7 +21,7 @@ class ArgumentInterface(Interface):
     :class:`ArgumentHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Interface meta-data options."""
 
@@ -83,5 +83,5 @@ class ArgumentHandler(ArgumentInterface, Handler):
 
     """Argument handler implementation"""
 
-    class Meta:
+    class Meta(Handler.Meta):
         pass    # pragma: nocover

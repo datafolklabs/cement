@@ -20,7 +20,7 @@ class ConfigInterface(Interface):
     :class:`ConfigHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Handler meta-data."""
 
@@ -184,7 +184,7 @@ class ConfigHandler(ConfigInterface, Handler):
 
     """
 
-    class Meta:
+    class Meta(Handler.Meta):
         pass  # pragma: nocover
 
     @abstractmethod
