@@ -9,6 +9,10 @@ def test_get_version():
     ver = version.get_version((2, 1, 1, 'alpha', 1))
     assert ver == '2.1.1a1'
 
+    changeset = version.get_git_changeset()
+    ver = version.get_version((2, 1, 1, 'alpha', 0))
+    assert ver == f'2.1.1.dev{changeset}'
+
     ver = version.get_version((2, 1, 2, 'beta', 2))
     assert ver == '2.1.2b2'
 

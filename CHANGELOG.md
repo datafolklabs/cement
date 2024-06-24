@@ -28,6 +28,7 @@ Refactoring:
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - `[utils.misc]` [Issue #689](https://github.com/datafolklabs/cement/issues/689)
     - `[utils.shell]` [Issue #690](https://github.com/datafolklabs/cement/issues/690)
+    - `[utils.version]` [Issue #691](https://github.com/datafolklabs/cement/issues/691)
 
 
 Misc: 
