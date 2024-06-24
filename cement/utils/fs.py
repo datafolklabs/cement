@@ -7,9 +7,7 @@ import os
 import tempfile
 import shutil
 from datetime import datetime
-# from typing import Any, Optional, TYPE_CHECKING
 from typing import Any, Optional
-from typing_extensions import Self
 from types import TracebackType
 
 
@@ -71,7 +69,7 @@ class Tmp(object):
             if os.path.exists(self.file):
                 os.remove(self.file)
 
-    def __enter__(self) -> Self:
+    def __enter__(self):  # type: ignore
         return self
 
     def __exit__(self,

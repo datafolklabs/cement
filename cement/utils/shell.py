@@ -7,7 +7,6 @@ from subprocess import Popen, PIPE
 from multiprocessing import Process
 from threading import Thread
 from typing import Any, Tuple, List, Union, Callable, Optional
-from typing_extensions import Self
 from ..core.meta import MetaMixin
 from ..core.exc import FrameworkError
 
@@ -425,9 +424,6 @@ class Prompt(MetaMixin):
         #: Suppress user input (use ``getpass.getpass`` instead of
         #: ``builtins.input``. Default: ``False``.
         suppress: bool = False
-
-        _meta: Self
-        input: Optional[str]
 
     def __init__(self,
                  text: Optional[str] = None,

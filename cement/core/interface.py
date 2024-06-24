@@ -5,7 +5,6 @@ Cement core interface module.
 from __future__ import annotations
 from abc import ABC
 from typing import Any, Dict, Optional, Type, TYPE_CHECKING
-from typing_extensions import Self
 from ..core import exc, meta
 from ..utils.misc import minimal_logger
 
@@ -30,8 +29,6 @@ class Interface(ABC, meta.MetaMixin):
 
         interface: str = NotImplemented
         """The string identifier of this interface."""
-
-        _meta: Self
 
     def __init__(self, **kw: Any) -> None:
         super(Interface, self).__init__(**kw)
