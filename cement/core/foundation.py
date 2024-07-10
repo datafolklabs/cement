@@ -41,7 +41,7 @@ def add_handler_override_options(app):
 
     for i in app._meta.handler_override_options:
         if i not in app.interface.list():
-            LOG.debug("interface '%s'" % i +
+            LOG.debug(f"interface '{i}'" +
                       " is not defined, can not override handlers")
             continue
 
@@ -57,12 +57,12 @@ def add_handler_override_options(app):
             # don't display the option if no handlers are overridable
             if not len(choices) > 0:
                 LOG.debug("no handlers are overridable within the " +
-                          "%s interface" % i)
+                          f"{i} interface")
                 continue
 
             # override things that we need to control
             argument_kw = app._meta.handler_override_options[i][1]
-            argument_kw['dest'] = '%s_handler_override' % i
+            argument_kw['dest'] = f'{i}_handler_override'
             argument_kw['action'] = 'store'
             argument_kw['choices'] = choices
 
@@ -86,17 +86,17 @@ def handler_override(app):
         return
 
     for i in app._meta.handler_override_options.keys():
-        if not hasattr(app.pargs, '%s_handler_override' % i):
+        if not hasattr(app.pargs, f'{i}_handler_override'):
             continue  # pragma: nocover
-        elif getattr(app.pargs, '%s_handler_override' % i) is None:
+        elif getattr(app.pargs, f'{i}_handler_override') is None:
             continue  # pragma: nocover
         else:
             # get the argument value from command line
-            argument = getattr(app.pargs, '%s_handler_override' % i)
-            setattr(app._meta, '%s_handler' % i, argument)
+            argument = getattr(app.pargs, f'{i}_handler_override')
+            setattr(app._meta, f'{i}_handler', argument)
 
             # and then re-setup the handler
-            getattr(app, '_setup_%s_handler' % i)()
+            getattr(app, f'_setup_{i}_handler')()
 
 
 def cement_signal_handler(signum, frame):
@@ -112,7 +112,7 @@ def cement_signal_handler(signum, frame):
         cement.core.exc.CaughtSignal: Raised, passing ``signum``, and ``frame``
 
     """
-    LOG.debug('Caught signal %s' % signum)
+    LOG.debug(f'Caught signal {signum}')
 
     # FIXME: Maybe this isn't ideal... purhaps make
     # App.Meta.signal_handler a decorator that take the app object
@@ -853,10 +853,8 @@ class App(meta.MetaMixin):
 
         """
         if hasattr(self, member_name):
-            raise exc.FrameworkError("App member '%s' already exists!" %
-                                     member_name)
-        LOG.debug("extending appication with '.%s' (%s)" %
-                  (member_name, member_object))
+            raise exc.FrameworkError(f"App member '{member_name}' already exists!")
+        LOG.debug(f"extending appication with '.{member_name}' ({member_object})")
         setattr(self, member_name, member_object)
         if member_name not in self._extended_members:
             self._extended_members.append(member_name)
@@ -888,11 +886,10 @@ class App(meta.MetaMixin):
         complete.
 
         """
-        LOG.debug("now setting up the '%s' application" % self._meta.label)
+        LOG.debug(f"now setting up the '{self._meta.label}' application")
 
         if self._meta.bootstrap is not None:
-            LOG.debug("importing bootstrap code from %s" %
-                      self._meta.bootstrap)
+            LOG.debug(f"importing bootstrap code from {self._meta.bootstrap}")
 
             if self._meta.bootstrap not in sys.modules \
                     or self._loaded_bootstrap is None:
@@ -976,7 +973,7 @@ class App(meta.MetaMixin):
             try:
                 self.run()
             except Exception as e:
-                self.log.fatal('Caught Exception: %s' % e)
+                self.log.fatal(f'Caught Exception: {e}')
 
                 if tb is True:
                     exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -992,7 +989,7 @@ class App(meta.MetaMixin):
         This function is useful for reloading a running applications, for
         example to reload configuration settings, etc.
         """
-        LOG.debug('reloading the %s application' % self._meta.label)
+        LOG.debug(f'reloading the {self._meta.label} application')
         self._unlay_cement()
         self._lay_cement()
         self.setup()
@@ -1019,7 +1016,7 @@ class App(meta.MetaMixin):
         for res in self.hook.run('pre_close', self):
             pass
 
-        LOG.debug("closing the %s application" % self._meta.label)
+        LOG.debug(f"closing the {self._meta.label} application")
 
         # reattach our stdout if in quiet mode to avoid lingering file handles
         # resolves: https://github.com/datafolklabs/cement/issues/653
@@ -1161,8 +1158,7 @@ class App(meta.MetaMixin):
 
     def _lay_cement(self):
         """Initialize the framework."""
-        LOG.debug("laying cement for the '%s' application" %
-                  self._meta.label)
+        LOG.debug(f"laying cement for the '{self._meta.label}' application")
 
         self.interface = InterfaceManager(self)
         self.handler = HandlerManager(self)
@@ -1199,8 +1195,7 @@ class App(meta.MetaMixin):
         self.__retry_hooks__ = []
         for hook_spec in self._meta.hooks:
             if not self.hook.defined(hook_spec[0]):
-                LOG.debug('hook %s not defined, will retry after setup' %
-                          hook_spec[0])
+                LOG.debug(f'hook {hook_spec[0]} not defined, will retry after setup')
                 self.__retry_hooks__.append(hook_spec)
             else:
                 self.hook.register(*hook_spec)
@@ -1267,7 +1262,7 @@ class App(meta.MetaMixin):
         return han
 
     def _setup_extension_handler(self):
-        LOG.debug("setting up %s.extension handler" % self._meta.label)
+        LOG.debug(f"setting up {self._meta.label}.extension handler")
         self.ext = self._resolve_handler('extension',
                                          self._meta.extension_handler)
         self.ext.load_extensions(self._meta.core_extensions)
@@ -1285,7 +1280,7 @@ class App(meta.MetaMixin):
         return found_files
 
     def _setup_config_handler(self):
-        LOG.debug("setting up %s.config handler" % self._meta.label)
+        LOG.debug(f"setting up {self._meta.label}.config handler")
         label = self._meta.label
         ext = self._meta.config_file_suffix
         self.config = self._resolve_handler('config',
@@ -1411,16 +1406,16 @@ class App(meta.MetaMixin):
                 self._meta.extensions.append(ext)
 
     def _setup_mail_handler(self):
-        LOG.debug("setting up %s.mail handler" % self._meta.label)
+        LOG.debug(f"setting up {self._meta.label}.mail handler")
         self.mail = self._resolve_handler('mail',
                                           self._meta.mail_handler)
 
     def _setup_log_handler(self):
-        LOG.debug("setting up %s.log handler" % self._meta.label)
+        LOG.debug(f"setting up {self._meta.label}.log handler")
         self.log = self._resolve_handler('log', self._meta.log_handler)
 
     def _setup_plugin_handler(self):
-        LOG.debug("setting up %s.plugin handler" % self._meta.label)
+        LOG.debug(f"setting up {self._meta.label}.plugin handler")
 
         # plugin dirs
         if self._meta.plugin_dirs is None:
@@ -1466,7 +1461,7 @@ class App(meta.MetaMixin):
 
         # plugin bootstrap
         if self._meta.plugin_module is None:
-            self._meta.plugin_module = '%s.plugins' % self._meta.label
+            self._meta.plugin_module = f'{self._meta.label}.plugins'
 
         self.plugin = self._resolve_handler('plugin',
                                             self._meta.plugin_handler)
@@ -1478,7 +1473,7 @@ class App(meta.MetaMixin):
             LOG.debug("no output handler defined, skipping.")
             return
 
-        LOG.debug("setting up %s.output handler" % self._meta.label)
+        LOG.debug(f"setting up {self._meta.label}.output handler")
         self.output = self._resolve_handler('output',
                                             self._meta.output_handler,
                                             raise_error=False)
@@ -1489,13 +1484,13 @@ class App(meta.MetaMixin):
             return
 
         label = self._meta.label
-        LOG.debug("setting up %s.template handler" % self._meta.label)
+        LOG.debug(f"setting up {self._meta.label}.template handler")
         self.template = self._resolve_handler('template',
                                               self._meta.template_handler,
                                               raise_error=False)
         # template module
         if self._meta.template_module is None:
-            self._meta.template_module = '%s.templates' % label
+            self._meta.template_module = f'{label}.templates'
 
         # template dirs
         if self._meta.template_dirs is None:
@@ -1543,13 +1538,13 @@ class App(meta.MetaMixin):
             LOG.debug("no cache handler defined, skipping.")
             return
 
-        LOG.debug("setting up %s.cache handler" % self._meta.label)
+        LOG.debug(f"setting up {self._meta.label}.cache handler")
         self.cache = self._resolve_handler('cache',
                                            self._meta.cache_handler,
                                            raise_error=False)
 
     def _setup_arg_handler(self):
-        LOG.debug("setting up %s.arg handler" % self._meta.label)
+        LOG.debug(f"setting up {self._meta.label}.arg handler")
         self.args = self._resolve_handler('argument',
                                           self._meta.argument_handler)
         self.args.prog = self._meta.label
@@ -1751,7 +1746,7 @@ class TestApp(App):
     __test__ = False
 
     class Meta:
-        label = "app-%s" % misc.rando()[:12]
+        label = f"app-{misc.rando()[:12]}"
         argv = []
         core_system_config_files = []
         core_user_config_files = []

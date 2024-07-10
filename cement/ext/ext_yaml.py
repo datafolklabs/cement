@@ -104,7 +104,7 @@ class YamlOutputHandler(output.OutputHandler):
             str: A Yaml encoded string.
 
         """
-        LOG.debug("rendering output as yaml via %s" % self.__module__)
+        LOG.debug(f"rendering output as yaml via {self.__module__}")
         return yaml.dump(data_dict, **kw)
 
 

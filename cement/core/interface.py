@@ -34,7 +34,7 @@ class Interface(ABC, meta.MetaMixin):
         super(Interface, self).__init__(**kw)
         try:
             assert self._meta.interface, \
-                "%s.Meta.interface undefined." % self.__class__.__name__
+                f"{self.__class__.__name__}.Meta.interface undefined."
         except AssertionError as e:
             raise exc.InterfaceError(e.args[0])
 
@@ -90,8 +90,7 @@ class InterfaceManager(object):
         elif fallback is not None:
             return fallback
         else:
-            raise exc.InterfaceError("interface '%s' does not exist!" %
-                                     interface)
+            raise exc.InterfaceError(f"interface '{interface}' does not exist!")
 
     def list(self) -> list[str]:
         """
@@ -128,11 +127,10 @@ class InterfaceManager(object):
 
         """
 
-        LOG.debug("defining interface '%s' (%s)" %
-                  (ibc.Meta.interface, ibc.__name__))
+        LOG.debug(f"defining interface '{ibc.Meta.interface}' ({ibc.__name__})")
 
         if ibc.Meta.interface in self.__interfaces__:
-            msg = "interface '%s' already defined!" % ibc.Meta.interface
+            msg = f"interface '{ibc.Meta.interface}' already defined!"
             raise exc.InterfaceError(msg)
         self.__interfaces__[ibc.Meta.interface] = ibc
 

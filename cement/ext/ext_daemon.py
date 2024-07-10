@@ -55,23 +55,21 @@ class Environment(object):
         try:
             self.user = pwd.getpwnam(self.user)
         except KeyError:
-            raise exc.FrameworkError("Daemon user '%s' doesn't exist." %
-                                     self.user)
+            raise exc.FrameworkError(f"Daemon user '{self.user}' doesn't exist.")
 
         try:
             self.group = kw.get('group',
                                 grp.getgrgid(self.user.pw_gid).gr_name)
             self.group = grp.getgrnam(self.group)
         except KeyError:
-            raise exc.FrameworkError("Daemon group '%s' doesn't exist." %
-                                     self.group)
+            raise exc.FrameworkError(f"Daemon group '{self.group}' doesn't exist.")
 
     def _write_pid_file(self):
         """
         Writes ``os.getpid()`` out to ``self.pid_file``.
         """
         pid = str(os.getpid())
-        LOG.debug('writing pid (%s) out to %s' % (pid, self.pid_file))
+        LOG.debug(f'writing pid ({pid}) out to {self.pid_file}')
 
         # setup pid
         if self.pid_file:
@@ -95,8 +93,7 @@ class Environment(object):
         os.environ['HOME'] = self.user.pw_dir
         os.chdir(self.dir)
         if self.pid_file and os.path.exists(self.pid_file):
-            raise exc.FrameworkError("Process already running (%s)" %
-                                     self.pid_file)
+            raise exc.FrameworkError(f"Process already running ({self.pid_file})")
         else:
             self._write_pid_file()
 

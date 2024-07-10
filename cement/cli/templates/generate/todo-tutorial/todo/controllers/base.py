@@ -3,10 +3,10 @@ from cement import Controller, ex
 from cement.utils.version import get_version_banner
 from ..core.version import get_version
 
-VERSION_BANNER = """
-A Simple TODO Application %s
-%s
-""" % (get_version(), get_version_banner())
+VERSION_BANNER = f"""
+A Simple TODO Application {get_version()}
+{get_version_banner()}
+"""
 
 
 class Base(Controller):

@@ -164,11 +164,10 @@ class Emitter:
             self.write_stream_start()
             self.state = self.expect_first_document_start
         else:
-            raise EmitterError("expected StreamStartEvent, but got %s"
-                    % self.event)
+            raise EmitterError(f"expected StreamStartEvent, but got {self.event}")
 
     def expect_nothing(self):
-        raise EmitterError("expected nothing, but got %s" % self.event)
+        raise EmitterError(f"expected nothing, but got {self.event}")
 
     # Document handlers.
 
@@ -208,8 +207,7 @@ class Emitter:
             self.write_stream_end()
             self.state = self.expect_nothing
         else:
-            raise EmitterError("expected DocumentStartEvent, but got %s"
-                    % self.event)
+            raise EmitterError(f"expected DocumentStartEvent, but got {self.event}")
 
     def expect_document_end(self):
         if isinstance(self.event, DocumentEndEvent):
@@ -220,8 +218,7 @@ class Emitter:
             self.flush_stream()
             self.state = self.expect_document_start
         else:
-            raise EmitterError("expected DocumentEndEvent, but got %s"
-                    % self.event)
+            raise EmitterError(f"expected DocumentEndEvent, but got {self.event}")
 
     def expect_document_root(self):
         self.states.append(self.expect_document_end)
@@ -255,7 +252,7 @@ class Emitter:
                 else:
                     self.expect_block_mapping()
         else:
-            raise EmitterError("expected NodeEvent, but got %s" % self.event)
+            raise EmitterError(f"expected NodeEvent, but got {self.event}")
 
     def expect_alias(self):
         if self.event.anchor is None:
@@ -546,7 +543,7 @@ class Emitter:
         if not handle:
             raise EmitterError("tag handle must not be empty")
         if handle[0] != '!' or handle[-1] != '!':
-            raise EmitterError("tag handle must start and end with '!': %r" % handle)
+            raise EmitterError(f"tag handle must start and end with '!': {handle!r}")
         for ch in handle[1:-1]:
             if not ('0' <= ch <= '9' or 'A' <= ch <= 'Z' or 'a' <= ch <= 'z'    \
                     or ch in '-_'):
@@ -572,7 +569,7 @@ class Emitter:
                 start = end = end+1
                 data = ch.encode('utf-8')
                 for ch in data:
-                    chunks.append('%%%02X' % ord(ch))
+                    chunks.append(f'%{ord(ch):02X}')
         if start < end:
             chunks.append(prefix[start:end])
         return ''.join(chunks)
@@ -604,14 +601,14 @@ class Emitter:
                 start = end = end+1
                 data = ch.encode('utf-8')
                 for ch in data:
-                    chunks.append('%%%02X' % ch)
+                    chunks.append(f'%{ch:02X}')
         if start < end:
             chunks.append(suffix[start:end])
         suffix_text = ''.join(chunks)
         if handle:
-            return '%s%s' % (handle, suffix_text)
+            return f'{handle}{suffix_text}'
         else:
-            return '!<%s>' % suffix_text
+            return f'!<{suffix_text}>'
 
     def prepare_anchor(self, anchor):
         if not anchor:
@@ -836,14 +833,14 @@ class Emitter:
         self.stream.write(data)
 
     def write_version_directive(self, version_text):
-        data = '%%YAML %s' % version_text
+        data = f'%YAML {version_text}'
         if self.encoding:
             data = data.encode(self.encoding)
         self.stream.write(data)
         self.write_line_break()
 
     def write_tag_directive(self, handle_text, prefix_text):
-        data = '%%TAG %s %s' % (handle_text, prefix_text)
+        data = f'%TAG {handle_text} {prefix_text}'
         if self.encoding:
             data = data.encode(self.encoding)
         self.stream.write(data)
@@ -946,11 +943,11 @@ class Emitter:
                     if ch in self.ESCAPE_REPLACEMENTS:
                         data = '\\'+self.ESCAPE_REPLACEMENTS[ch]
                     elif ch <= '\xFF':
-                        data = '\\x%02X' % ord(ch)
+                        data = f'\\x{ord(ch):02X}'
                     elif ch <= '\uFFFF':
-                        data = '\\u%04X' % ord(ch)
+                        data = f'\\u{ord(ch):04X}'
                     else:
-                        data = '\\U%08X' % ord(ch)
+                        data = f'\\U{ord(ch):08X}'
                     self.column += len(data)
                     if self.encoding:
                         data = data.encode(self.encoding)

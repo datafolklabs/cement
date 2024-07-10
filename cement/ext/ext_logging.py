@@ -113,10 +113,9 @@ class LoggingLogHandler(log.LogHandler):
     def _setup(self, app_obj):
         super(LoggingLogHandler, self)._setup(app_obj)
         if self._meta.namespace is None:
-            self._meta.namespace = "%s" % self.app._meta.label
+            self._meta.namespace = f"{self.app._meta.label}"
 
-        self.backend = logging.getLogger("cement:app:%s" %
-                                         self._meta.namespace)
+        self.backend = logging.getLogger(f"cement:app:{self._meta.namespace}")
 
         # hack for application debugging
         if is_true(self.app._meta.debug):
@@ -170,10 +169,10 @@ class LoggingLogHandler(log.LogHandler):
     def clear_loggers(self, namespace):
         """Clear any previously configured loggers for ``namespace``."""
 
-        for i in logging.getLogger("cement:app:%s" % namespace).handlers:
-            logging.getLogger("cement:app:%s" % namespace).removeHandler(i)
+        for i in logging.getLogger(f"cement:app:{namespace}").handlers:
+            logging.getLogger(f"cement:app:{namespace}").removeHandler(i)
 
-        self.backend = logging.getLogger("cement:app:%s" % namespace)
+        self.backend = logging.getLogger(f"cement:app:{namespace}")
 
     def _get_console_format(self):
         if self.get_level() == logging.getLevelName(logging.DEBUG):
@@ -212,7 +211,7 @@ class LoggingLogHandler(log.LogHandler):
             console_handler = NullHandler()
 
         # FIXME: self._clear_loggers() should be preventing this but its not!
-        for i in logging.getLogger("cement:app:%s" % namespace).handlers:
+        for i in logging.getLogger(f"cement:app:{namespace}").handlers:
             if isinstance(i, logging.StreamHandler):
                 self.backend.removeHandler(i)
 
@@ -253,7 +252,7 @@ class LoggingLogHandler(log.LogHandler):
             file_handler = NullHandler()
 
         # FIXME: self._clear_loggers() should be preventing this but its not!
-        for i in logging.getLogger("cement:app:%s" % namespace).handlers:
+        for i in logging.getLogger(f"cement:app:{namespace}").handlers:
             if isinstance(i, file_handler.__class__):   # pragma: nocover
                 self.backend.removeHandler(i)           # pragma: nocover
 

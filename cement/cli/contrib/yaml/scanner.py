@@ -256,7 +256,7 @@ class Scanner:
 
         # No? It's an error. Let's produce a nice error message.
         raise ScannerError("while scanning for the next token", None,
-                "found character %r that cannot start any token" % ch,
+                f"found character {ch!r} that cannot start any token",
                 self.get_mark())
 
     # Simple keys treatment.
@@ -831,13 +831,13 @@ class Scanner:
         major = self.scan_yaml_directive_number(start_mark)
         if self.peek() != '.':
             raise ScannerError("while scanning a directive", start_mark,
-                    "expected a digit or '.', but found %r" % self.peek(),
+                    f"expected a digit or '.', but found {self.peek()!r}",
                     self.get_mark())
         self.forward()
         minor = self.scan_yaml_directive_number(start_mark)
         if self.peek() not in '\0 \r\n\x85\u2028\u2029':
             raise ScannerError("while scanning a directive", start_mark,
-                    "expected a digit or ' ', but found %r" % self.peek(),
+                    f"expected a digit or ' ', but found {self.peek()!r}",
                     self.get_mark())
         return (major, minor)
 
@@ -846,7 +846,7 @@ class Scanner:
         ch = self.peek()
         if not ('0' <= ch <= '9'):
             raise ScannerError("while scanning a directive", start_mark,
-                    "expected a digit, but found %r" % ch, self.get_mark())
+                    f"expected a digit, but found {ch!r}", self.get_mark())
         length = 0
         while '0' <= self.peek(length) <= '9':
             length += 1
@@ -870,7 +870,7 @@ class Scanner:
         ch = self.peek()
         if ch != ' ':
             raise ScannerError("while scanning a directive", start_mark,
-                    "expected ' ', but found %r" % ch, self.get_mark())
+                    f"expected ' ', but found {ch!r}", self.get_mark())
         return value
 
     def scan_tag_directive_prefix(self, start_mark):
@@ -879,7 +879,7 @@ class Scanner:
         ch = self.peek()
         if ch not in '\0 \r\n\x85\u2028\u2029':
             raise ScannerError("while scanning a directive", start_mark,
-                    "expected ' ', but found %r" % ch, self.get_mark())
+                    f"expected ' ', but found {ch!r}", self.get_mark())
         return value
 
     def scan_directive_ignored_line(self, start_mark):
@@ -919,14 +919,14 @@ class Scanner:
             length += 1
             ch = self.peek(length)
         if not length:
-            raise ScannerError("while scanning an %s" % name, start_mark,
+            raise ScannerError(f"while scanning an {name}", start_mark,
                     "expected alphabetic or numeric character, but found %r"
                     % ch, self.get_mark())
         value = self.prefix(length)
         self.forward(length)
         ch = self.peek()
         if ch not in '\0 \t\r\n\x85\u2028\u2029?:,]}%@`':
-            raise ScannerError("while scanning an %s" % name, start_mark,
+            raise ScannerError(f"while scanning an {name}", start_mark,
                     "expected alphabetic or numeric character, but found %r"
                     % ch, self.get_mark())
         end_mark = self.get_mark()
@@ -942,7 +942,7 @@ class Scanner:
             suffix = self.scan_tag_uri('tag', start_mark)
             if self.peek() != '>':
                 raise ScannerError("while parsing a tag", start_mark,
-                        "expected '>', but found %r" % self.peek(),
+                        f"expected '>', but found {self.peek()!r}",
                         self.get_mark())
             self.forward()
         elif ch in '\0 \t\r\n\x85\u2028\u2029':
@@ -968,7 +968,7 @@ class Scanner:
         ch = self.peek()
         if ch not in '\0 \r\n\x85\u2028\u2029':
             raise ScannerError("while scanning a tag", start_mark,
-                    "expected ' ', but found %r" % ch, self.get_mark())
+                    f"expected ' ', but found {ch!r}", self.get_mark())
         value = (handle, suffix)
         end_mark = self.get_mark()
         return TagToken(value, start_mark, end_mark)
@@ -1099,7 +1099,7 @@ class Scanner:
         ch = self.peek()
         if ch not in '\0\r\n\x85\u2028\u2029':
             raise ScannerError("while scanning a block scalar", start_mark,
-                    "expected a comment or a line break, but found %r" % ch,
+                    f"expected a comment or a line break, but found {ch!r}",
                     self.get_mark())
         self.scan_line_break()
 
@@ -1221,7 +1221,7 @@ class Scanner:
                     chunks.extend(self.scan_flow_scalar_breaks(double, start_mark))
                 else:
                     raise ScannerError("while scanning a double-quoted scalar", start_mark,
-                            "found unknown escape character %r" % ch, self.get_mark())
+                            f"found unknown escape character {ch!r}", self.get_mark())
             else:
                 return chunks
 
@@ -1351,8 +1351,8 @@ class Scanner:
         # tag handles. I have allowed it anyway.
         ch = self.peek()
         if ch != '!':
-            raise ScannerError("while scanning a %s" % name, start_mark,
-                    "expected '!', but found %r" % ch, self.get_mark())
+            raise ScannerError(f"while scanning a {name}", start_mark,
+                    f"expected '!', but found {ch!r}", self.get_mark())
         length = 1
         ch = self.peek(length)
         if ch != ' ':
@@ -1362,8 +1362,8 @@ class Scanner:
                 ch = self.peek(length)
             if ch != '!':
                 self.forward(length)
-                raise ScannerError("while scanning a %s" % name, start_mark,
-                        "expected '!', but found %r" % ch, self.get_mark())
+                raise ScannerError(f"while scanning a {name}", start_mark,
+                        f"expected '!', but found {ch!r}", self.get_mark())
             length += 1
         value = self.prefix(length)
         self.forward(length)
@@ -1390,8 +1390,8 @@ class Scanner:
             self.forward(length)
             length = 0
         if not chunks:
-            raise ScannerError("while parsing a %s" % name, start_mark,
-                    "expected URI, but found %r" % ch, self.get_mark())
+            raise ScannerError(f"while parsing a {name}", start_mark,
+                    f"expected URI, but found {ch!r}", self.get_mark())
         return ''.join(chunks)
 
     def scan_uri_escapes(self, name, start_mark):
@@ -1402,7 +1402,7 @@ class Scanner:
             self.forward()
             for k in range(2):
                 if self.peek(k) not in '0123456789ABCDEFabcdef':
-                    raise ScannerError("while scanning a %s" % name, start_mark,
+                    raise ScannerError(f"while scanning a {name}", start_mark,
                             "expected URI escape sequence of 2 hexadecimal numbers, but found %r"
                             % self.peek(k), self.get_mark())
             codes.append(int(self.prefix(2), 16))
@@ -1410,7 +1410,7 @@ class Scanner:
         try:
             value = bytes(codes).decode('utf-8')
         except UnicodeDecodeError as exc:
-            raise ScannerError("while scanning a %s" % name, start_mark, str(exc), mark)
+            raise ScannerError(f"while scanning a {name}", start_mark, str(exc), mark)
         return value
 
     def scan_line_break(self):

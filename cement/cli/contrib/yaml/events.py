@@ -8,9 +8,9 @@ class Event(object):
     def __repr__(self):
         attributes = [key for key in ['anchor', 'tag', 'implicit', 'value']
                 if hasattr(self, key)]
-        arguments = ', '.join(['%s=%r' % (key, getattr(self, key))
+        arguments = ', '.join([f'{key}={getattr(self, key)!r}'
                 for key in attributes])
-        return '%s(%s)' % (self.__class__.__name__, arguments)
+        return f'{self.__class__.__name__}({arguments})'
 
 class NodeEvent(Event):
     def __init__(self, anchor, start_mark=None, end_mark=None):

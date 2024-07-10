@@ -106,6 +106,10 @@ exclude = [
     "cement/cli/templates",
     "cement/cli/contrib"
 ]
+include = [
+    "cement/**/*.py",
+    "tests/**/*.py"
+]
 
 [tool.ruff.lint]
 preview = true

@@ -39,10 +39,10 @@ def main(argv=None):
         try:
             app.run()
         except AssertionError as e:                     # pragma: nocover
-            print('AssertionError > %s' % e.args[0])    # pragma: nocover
+            print(f'AssertionError > {e.args[0]}')    # pragma: nocover
             app.exit_code = 1                           # pragma: nocover
         except CaughtSignal as e:                       # pragma: nocover
-            print('\n%s' % e)                           # pragma: nocover
+            print(f'\n{e}')                           # pragma: nocover
             app.exit_code = 0                           # pragma: nocover
 
 

@@ -18,14 +18,12 @@ class GenerateTemplateAbstractBase(Controller):
         pass
 
     def _generate(self, source, dest):
-        msg = 'Generating %s %s in %s' % (
-                   self.app._meta.label, self._meta.label, dest
-               )
+        msg = f'Generating {self.app._meta.label} {self._meta.label} in {dest}'
         self.app.log.info(msg)
         data = {}
 
         # builtin vars
-        maj_min = float('%s.%s' % (VERSION[0], VERSION[1]))
+        maj_min = float(f'{VERSION[0]}.{VERSION[1]}')
         data['cement'] = {}
         data['cement']['version'] = get_version()
         data['cement']['major_version'] = VERSION[0]
@@ -59,14 +57,14 @@ class GenerateTemplateAbstractBase(Controller):
             var.update(defined_var)
             for key in ['name', 'prompt']:
                 assert var[key] is not None, \
-                    "Required generate config key missing: %s" % key
+                    f"Required generate config key missing: {key}"
 
             val = None
             if var['default'] is not None and self.app.pargs.defaults:
                 val = var['default']
 
             elif var['default'] is not None:
-                default_text = ' [%s]' % var['default']
+                default_text = f" [{var['default']}]"
 
             else:
                 default_text = ''   # pragma: nocover
@@ -74,7 +72,7 @@ class GenerateTemplateAbstractBase(Controller):
             if val is None:
                 class MyPrompt(shell.Prompt):
                     class Meta:
-                        text = "%s%s:" % (var['prompt'], default_text)
+                        text = f"{var['prompt']}{default_text}:"
                         default = var.get('default', None)
 
                 p = MyPrompt()
@@ -85,13 +83,13 @@ class GenerateTemplateAbstractBase(Controller):
             elif var['case'] is not None:
                 self.app.log.warning(
                     "Invalid configuration for variable " +
-                    "'%s': " % var['name'] +
+                    f"'{var['name']}': " +
                     "case must be one of lower, upper, or title."
                 )
 
             if var['validate'] is not None:
                 assert re.match(var['validate'], val), \
-                    "Invalid Response (must match: '%s')" % var['validate']
+                    f"Invalid Response (must match: '{var['validate']}')"
 
             data[var['name']] = val
 
@@ -107,15 +105,13 @@ class GenerateTemplateAbstractBase(Controller):
                 raise  # pragma: nocover
 
     def _clone(self, source, dest):
-        msg = 'Cloning %s %s template to %s' % (
-                   self.app._meta.label, self._meta.label, dest
-               )
+        msg = f'Cloning {self.app._meta.label} {self._meta.label} template to {dest}'
         self.app.log.info(msg)
 
         if os.path.exists(dest) and self.app.pargs.force is True:
             shutil.rmtree(dest)
         elif os.path.exists(dest):
-            msg = "Destination path already exists: %s (try: --force)" % dest
+            msg = f"Destination path already exists: {dest} (try: --force)"
             raise AssertionError(msg)
 
         shutil.copytree(source, dest)
@@ -155,7 +151,7 @@ def setup_template_items(app):
         # FIXME: not exactly sure how to test for this so not covering
         except AttributeError:                                # pragma: nocover
             msg = 'unable to load template module' + \
-                  '%s from %s' % (mod, '.'.join(mod_parts))   # pragma: nocover
+                  f"{mod} from {'.'.join(mod_parts)}"   # pragma: nocover
             app.log.debug(msg)                                # pragma: nocover
 
     for path in template_dirs:
@@ -168,7 +164,7 @@ def setup_template_items(app):
                     label = item
                     stacked_on = 'generate'
                     stacked_type = 'nested'
-                    help = 'generate %s from template' % item
+                    help = f'generate {item} from template'
                     arguments = [
                         # ------------------------------------------------------
                         (['dest'],

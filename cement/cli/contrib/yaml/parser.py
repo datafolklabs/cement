@@ -233,7 +233,7 @@ class Parser:
                 handle, prefix = token.value
                 if handle in self.tag_handles:
                     raise ParserError(None, None,
-                            "duplicate tag handle %r" % handle,
+                            f"duplicate tag handle {handle!r}",
                             token.start_mark)
                 self.tag_handles[handle] = prefix
         if self.tag_handles:
@@ -303,7 +303,7 @@ class Parser:
                 if handle is not None:
                     if handle not in self.tag_handles:
                         raise ParserError("while parsing a node", start_mark,
-                                "found undefined tag handle %r" % handle,
+                                f"found undefined tag handle {handle!r}",
                                 tag_mark)
                     tag = self.tag_handles[handle]+suffix
                 else:
@@ -366,8 +366,8 @@ class Parser:
                     else:
                         node = 'flow'
                     token = self.peek_token()
-                    raise ParserError("while parsing a %s node" % node, start_mark,
-                            "expected the node content, but found %r" % token.id,
+                    raise ParserError(f"while parsing a {node} node", start_mark,
+                            f"expected the node content, but found {token.id!r}",
                             token.start_mark)
         return event
 
@@ -390,7 +390,7 @@ class Parser:
         if not self.check_token(BlockEndToken):
             token = self.peek_token()
             raise ParserError("while parsing a block collection", self.marks[-1],
-                    "expected <block end>, but found %r" % token.id, token.start_mark)
+                    f"expected <block end>, but found {token.id!r}", token.start_mark)
         token = self.get_token()
         event = SequenceEndEvent(token.start_mark, token.end_mark)
         self.state = self.states.pop()
@@ -436,7 +436,7 @@ class Parser:
         if not self.check_token(BlockEndToken):
             token = self.peek_token()
             raise ParserError("while parsing a block mapping", self.marks[-1],
-                    "expected <block end>, but found %r" % token.id, token.start_mark)
+                    f"expected <block end>, but found {token.id!r}", token.start_mark)
         token = self.get_token()
         event = MappingEndEvent(token.start_mark, token.end_mark)
         self.state = self.states.pop()
@@ -481,7 +481,7 @@ class Parser:
                 else:
                     token = self.peek_token()
                     raise ParserError("while parsing a flow sequence", self.marks[-1],
-                            "expected ',' or ']', but got %r" % token.id, token.start_mark)
+                            f"expected ',' or ']', but got {token.id!r}", token.start_mark)
             
             if self.check_token(KeyToken):
                 token = self.peek_token()

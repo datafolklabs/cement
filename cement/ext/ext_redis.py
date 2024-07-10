@@ -80,7 +80,7 @@ class RedisCacheHandler(cache.CacheHandler):
             value.
 
         """
-        LOG.debug("getting cache value using key '%s'" % key)
+        LOG.debug(f"getting cache value using key '{key}'")
         res = self.r.get(key)
         if res is None:
             return fallback

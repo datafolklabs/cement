@@ -53,7 +53,7 @@ class PrintOutputHandler(output.OutputHandler):
 
         """
         if 'out' in data_dict.keys():
-            LOG.debug("rendering content as text via %s" % self.__module__)
+            LOG.debug(f"rendering content as text via {self.__module__}")
             return data_dict['out'] + '\n'
         else:
             LOG.debug("no 'out' key found in data dict. "
@@ -97,10 +97,10 @@ class PrintDictOutputHandler(output.OutputHandler):
             str: A text string.
 
         """
-        LOG.debug("rendering content as text via %s" % self.__module__)
+        LOG.debug(f"rendering content as text via {self.__module__}")
         out = ''
         for key, val in data_dict.items():
-            out = out + '%s: %s\n' % (key, val)
+            out = out + f'{key}: {val}\n'
 
         return out
 

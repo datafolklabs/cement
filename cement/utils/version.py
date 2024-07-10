@@ -64,7 +64,7 @@ def get_version(version: Tuple[int, int, int, str, int] = VERSION) -> str:
     if version[3] == 'alpha' and version[4] == 0:
         git_changeset = get_git_changeset()
         if git_changeset:
-            sub = '.dev%s' % git_changeset
+            sub = f'.dev{git_changeset}'
 
     elif version[3] != 'final':
         mapping = {'alpha': 'a', 'beta': 'b', 'rc': 'c'}
@@ -78,9 +78,9 @@ def get_version_banner() -> str:
     python_ver = '.'.join([str(x) for x in sys.version_info[0:3]])
     plat = platform.platform()
 
-    banner = 'Cement Framework %s\n' % cement_ver + \
-             'Python %s\n' % python_ver + \
-             'Platform %s' % plat
+    banner = f'Cement Framework {cement_ver}\n' + \
+             f'Python {python_ver}\n' + \
+             f'Platform {plat}'
 
     return banner
 

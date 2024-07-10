@@ -41,7 +41,7 @@ class CaughtSignal(FrameworkError):
     """
 
     def __init__(self, signum: int, frame: Any) -> None:
-        msg = 'Caught signal %s' % signum
+        msg = f'Caught signal {signum}'
         super(CaughtSignal, self).__init__(msg)
         self.signum = signum
         self.frame = frame

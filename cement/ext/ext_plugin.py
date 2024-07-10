@@ -58,15 +58,13 @@ class CementPluginHandler(plugin.PluginHandler):
             if 'enabled' not in self.app.config.keys(plugin_section):
                 continue
             if is_true(self.app.config.get(plugin_section, 'enabled')):
-                LOG.debug("enabling plugin '%s' per application config" %
-                          plugin)
+                LOG.debug(f"enabling plugin '{plugin}' per application config")
                 if plugin not in self._enabled_plugins:
                     self._enabled_plugins.append(plugin)  # pragma: nocover
                 if plugin in self._disabled_plugins:
                     self._disabled_plugins.remove(plugin)  # pragma: nocover
             else:
-                LOG.debug("disabling plugin '%s' per application config" %
-                          plugin)
+                LOG.debug(f"disabling plugin '{plugin}' per application config")
                 if plugin not in self._disabled_plugins:
                     self._disabled_plugins.append(plugin)  # pragma: nocover
                 if plugin in self._enabled_plugins:
@@ -84,19 +82,17 @@ class CementPluginHandler(plugin.PluginHandler):
                 exists.
 
         """
-        LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
-                                                         plugin_dir))
+        LOG.debug(f"attempting to load '{plugin_name}' from '{plugin_dir}'")
 
         if not os.path.exists(plugin_dir):
-            LOG.debug("plugin directory '%s' does not exist." % plugin_dir)
+            LOG.debug(f"plugin directory '{plugin_dir}' does not exist.")
             return False
 
         spec = importlib.machinery.PathFinder().find_spec(
             plugin_name, [plugin_dir]
         )
         if not spec:
-            LOG.debug("plugin '%s' does not exist in '%s'." %
-                      (plugin_name, plugin_dir))
+            LOG.debug(f"plugin '{plugin_name}' does not exist in '{plugin_dir}'.")
             return False
 
         # We don't catch this because it would make debugging a
@@ -129,7 +125,7 @@ class CementPluginHandler(plugin.PluginHandler):
 
         """
 
-        full_module = '%s.%s' % (base_package, plugin_name)
+        full_module = f'{base_package}.{plugin_name}'
 
         # If the base package doesn't exist, we return False rather than
         # bombing out.
@@ -137,12 +133,10 @@ class CementPluginHandler(plugin.PluginHandler):
             try:
                 __import__(base_package, globals(), locals(), [], 0)
             except ImportError:
-                LOG.debug("unable to import plugin bootstrap module '%s'."
-                          % base_package)
+                LOG.debug(f"unable to import plugin bootstrap module '{base_package}'.")
                 return False
 
-        LOG.debug("attempting to load '%s' from '%s'" % (plugin_name,
-                                                         base_package))
+        LOG.debug(f"attempting to load '{plugin_name}' from '{base_package}'")
         # We don't catch this because it would make debugging a nightmare
         # FIXME: not sure how to test/cover this
         if full_module not in sys.modules:
@@ -170,7 +164,7 @@ class CementPluginHandler(plugin.PluginHandler):
             cement.core.exc.FrameworkError: If the plugin can not be loaded
 
         """
-        LOG.debug("loading application plugin '%s'" % plugin_name)
+        LOG.debug(f"loading application plugin '{plugin_name}'")
 
         # first attempt to load from plugin_dirs
         for load_dir in self.load_dirs:
@@ -187,8 +181,7 @@ class CementPluginHandler(plugin.PluginHandler):
 
         # otherwise it's a bust
         if plugin_name not in self._loaded_plugins:
-            raise exc.FrameworkError("Unable to load plugin '%s'." %
-                                     plugin_name)
+            raise exc.FrameworkError(f"Unable to load plugin '{plugin_name}'.")
 
     def load_plugins(self, plugin_list):
         """

@@ -10,4 +10,4 @@ class TodoError(Exception):
         return self.msg
 
     def __repr__(self):
-        return "<TodoError - %s>" % self.msg
+        return f"<TodoError - {self.msg}>"

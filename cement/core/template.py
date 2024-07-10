@@ -171,12 +171,12 @@ class TemplateHandler(TemplateInterface, Handler):
         ignore_patterns = self._meta.ignore + ignore
         exclude_patterns = self._meta.exclude + exclude
 
-        assert os.path.exists(src), "Source path %s does not exist!" % src
+        assert os.path.exists(src), f"Source path {src} does not exist!"
 
         if not os.path.exists(dest):
             os.makedirs(dest)
 
-        LOG.debug('copying source template %s -> %s' % (src, dest))
+        LOG.debug(f'copying source template {src} -> {dest}')
 
         # here's the fun
         for cur_dir, sub_dirs, files in os.walk(src):
@@ -190,12 +190,12 @@ class TemplateHandler(TemplateInterface, Handler):
                 cur_dir_dest = dest
             elif self._match_patterns(cur_dir, ignore_patterns):
                 LOG.debug(
-                    'not copying ignored directory: %s' % cur_dir)
+                    f'not copying ignored directory: {cur_dir}')
                 continue
             elif self._match_patterns(cur_dir, exclude_patterns):
                 LOG.debug(
                     'not rendering excluded directory as template: ' +
-                    '%s' % cur_dir)
+                    f'{cur_dir}')
 
                 cur_dir_stub = re.sub(escaped_src_pattern,
                                       '',
@@ -207,7 +207,7 @@ class TemplateHandler(TemplateInterface, Handler):
             else:
                 # render the cur dir
                 LOG.debug(
-                    'rendering directory as template: %s' % cur_dir)
+                    f'rendering directory as template: {cur_dir}')
 
                 cur_dir_stub = re.sub(escaped_src_pattern,
                                       '',
@@ -228,16 +228,16 @@ class TemplateHandler(TemplateInterface, Handler):
                 if self._match_patterns(full_path, ignore_patterns):
                     LOG.debug(
                         'not copying ignored sub-directory: ' +
-                        '%s' % full_path)
+                        f'{full_path}')
                     continue
                 elif self._match_patterns(full_path, exclude_patterns):
                     LOG.debug(
                         'not rendering excluded sub-directory as template: ' +
-                        '%s' % full_path)
+                        f'{full_path}')
                     sub_dir_dest = os.path.join(cur_dir_dest, sub_dir)
                 else:
                     LOG.debug(
-                        'rendering sub-directory as template: %s' % full_path)
+                        f'rendering sub-directory as template: {full_path}')
 
                     new_sub_dir = re.sub(escaped_src_pattern,
                                          '',
@@ -245,7 +245,7 @@ class TemplateHandler(TemplateInterface, Handler):
                     sub_dir_dest = os.path.join(cur_dir_dest, new_sub_dir)
 
                 if not os.path.exists(sub_dir_dest):
-                    LOG.debug('creating sub-directory %s' % sub_dir_dest)
+                    LOG.debug(f'creating sub-directory {sub_dir_dest}')
                     os.makedirs(sub_dir_dest)
 
             for _file in files:
@@ -260,25 +260,25 @@ class TemplateHandler(TemplateInterface, Handler):
                 if os.path.exists(_file_dest):
                     if force is True:
                         LOG.debug(
-                            'overwriting existing file: %s ' % _file_dest)
+                            f'overwriting existing file: {_file_dest} ')
                     else:
                         assert False, \
-                            'Destination file already exists: %s ' % _file_dest
+                            f'Destination file already exists: {_file_dest} '
 
                 if self._match_patterns(_file, ignore_patterns):
                     LOG.debug(
                         'not copying ignored file: ' +
-                        '%s' % _file)
+                        f'{_file}')
                     continue
 
                 elif self._match_patterns(_file, exclude_patterns):
                     LOG.debug(
                         'not rendering excluded file: ' +
-                        '%s' % _file)
+                        f'{_file}')
                     shutil.copy(_file, _file_dest)
 
                 else:
-                    LOG.debug('rendering file as template: %s' % _file)
+                    LOG.debug(f'rendering file as template: {_file}')
                     f = open(_file, 'r')
                     content = f.read()
                     f.close()
@@ -297,15 +297,13 @@ class TemplateHandler(TemplateInterface, Handler):
             full_path = fs.abspath(os.path.join(template_prefix,
                                                 template_path))
             LOG.debug(
-                "attemping to load output template from file %s" % full_path)
+                f"attemping to load output template from file {full_path}")
             if os.path.exists(full_path):
                 content = open(full_path, 'r').read()
-                LOG.debug("loaded output template from file %s" %
-                          full_path)
+                LOG.debug(f"loaded output template from file {full_path}")
                 return (content, full_path)
             else:
-                LOG.debug("output template file %s does not exist" %
-                          full_path)
+                LOG.debug(f"output template file {full_path} does not exist")
                 continue
 
         return (None, None)
@@ -313,8 +311,7 @@ class TemplateHandler(TemplateInterface, Handler):
     def _load_template_from_module(self, template_path):
         template_module = self.app._meta.template_module
         template_path = template_path.lstrip('/')
-        full_module_path = "%s.%s" % (template_module,
-                                      re.sub('/', '.', template_path))
+        full_module_path = f"{template_module}.{re.sub('/', '.', template_path)}"
 
         LOG.debug("attemping to load output template '%s' from module %s" %
                   (template_path, template_module))
@@ -324,8 +321,7 @@ class TemplateHandler(TemplateInterface, Handler):
             try:
                 __import__(template_module, globals(), locals(), [], 0)
             except ImportError:
-                LOG.debug("unable to import template module '%s'."
-                          % template_module)
+                LOG.debug(f"unable to import template module '{template_module}'.")
                 return (None, None)
 
         # get the template content
@@ -360,8 +356,7 @@ class TemplateHandler(TemplateInterface, Handler):
                 either the ``template_module`` or ``template_dirs``.
         """
         if not template_path:
-            raise exc.FrameworkError("Invalid template path '%s'." %
-                                     template_path)
+            raise exc.FrameworkError(f"Invalid template path '{template_path}'.")
 
         # first attempt to load from file
         content, path = self._load_template_from_file(template_path)
@@ -375,7 +370,6 @@ class TemplateHandler(TemplateInterface, Handler):
         # if content is None, that means we didn't find a template file in
         # either and that is an exception
         if content is None:
-            raise exc.FrameworkError("Could not locate template: %s" %
-                                     template_path)
+            raise exc.FrameworkError(f"Could not locate template: {template_path}")
 
         return (content, template_type, path)

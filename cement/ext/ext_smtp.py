@@ -118,18 +118,18 @@ class SMTPMailHandler(mail.MailHandler):
         if is_true(params['ssl']):
             server = smtplib.SMTP_SSL(params['host'], params['port'],
                                       params['timeout'])
-            LOG.debug("%s : initiating smtp over ssl" % self._meta.label)
+            LOG.debug(f"{self._meta.label} : initiating smtp over ssl")
 
         else:
             server = smtplib.SMTP(params['host'], params['port'],
                                   params['timeout'])
-            LOG.debug("%s : initiating smtp" % self._meta.label)
+            LOG.debug(f"{self._meta.label} : initiating smtp")
 
         if self.app.debug is True:
             server.set_debuglevel(9)
 
         if is_true(params['tls']):
-            LOG.debug("%s : initiating tls" % self._meta.label)
+            LOG.debug(f"{self._meta.label} : initiating tls")
             server.starttls()
 
         if is_true(params['auth']):
@@ -149,8 +149,7 @@ class SMTPMailHandler(mail.MailHandler):
         if params['bcc']:
             msg['Bcc'] = ', '.join(params['bcc'])
         if params['subject_prefix'] not in [None, '']:
-            subject = '%s %s' % (params['subject_prefix'],
-                                 params['subject'])
+            subject = f"{params['subject_prefix']} {params['subject']}"
         else:
             subject = params['subject']
         msg['Subject'] = Header(subject)

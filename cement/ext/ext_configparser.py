@@ -143,10 +143,9 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
 
     def _get_env_var(self, section, key):
         if section == self.app._meta.config_section:
-            env_var = "%s_%s" % (self.app._meta.config_section, key)
+            env_var = f"{self.app._meta.config_section}_{key}"
         else:
-            env_var = "%s_%s_%s" % (
-                self.app._meta.config_section, section, key)
+            env_var = f"{self.app._meta.config_section}_{section}_{key}"
 
         env_var = env_var.upper()
         env_var = re.sub('[^0-9a-zA-Z_]+', '_', env_var)

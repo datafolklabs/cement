@@ -43,7 +43,7 @@ class DummyOutputHandler(OutputHandler):
 
         """
         LOG.debug("not rendering any output to console")
-        LOG.debug("DATA: %s" % data)
+        LOG.debug(f"DATA: {data}")
         return None
 
 
@@ -73,8 +73,8 @@ class DummyTemplateHandler(TemplateHandler):
             data (dict): The data dictionary to render.
 
         """
-        LOG.debug("CONTENT: %s" % content)
-        LOG.debug("DATA: %s" % data)
+        LOG.debug(f"CONTENT: {content}")
+        LOG.debug(f"DATA: {data}")
         return None
 
     def copy(self, src, dest, data):
@@ -87,7 +87,7 @@ class DummyTemplateHandler(TemplateHandler):
             dest (str): The destination directory.
             data (dict): The data dictionary to render with templates.
         """
-        LOG.debug("COPY: %s -> %s" % (src, dest))
+        LOG.debug(f"COPY: {src} -> {dest}")
 
 
 class DummyMailHandler(MailHandler):
@@ -246,16 +246,15 @@ class DummyMailHandler(MailHandler):
         msg = "\n" + "=" * 77 + "\n"
         msg += "DUMMY MAIL MESSAGE\n"
         msg += "-" * 77 + "\n\n"
-        msg += "To: %s\n" % ', '.join(params['to'])
-        msg += "From: %s\n" % params['from_addr']
-        msg += "CC: %s\n" % ', '.join(params['cc'])
-        msg += "BCC: %s\n" % ', '.join(params['bcc'])
+        msg += f"To: {', '.join(params['to'])}\n"
+        msg += f"From: {params['from_addr']}\n"
+        msg += f"CC: {', '.join(params['cc'])}\n"
+        msg += f"BCC: {', '.join(params['bcc'])}\n"
 
         if params['subject_prefix'] not in [None, '']:
-            msg += "Subject: %s %s\n\n---\n\n" % (params['subject_prefix'],
-                                                  params['subject'])
+            msg += f"Subject: {params['subject_prefix']} {params['subject']}\n\n---\n\n"
         else:
-            msg += "Subject: %s\n\n---\n\n" % params['subject']
+            msg += f"Subject: {params['subject']}\n\n---\n\n"
         msg += body + "\n"
 
         msg += "\n" + "-" * 77 + "\n"

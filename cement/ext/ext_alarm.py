@@ -34,7 +34,7 @@ class AlarmManager(object):
             msg (str): The message to display if the alarm is triggered.
         """
 
-        LOG.debug('setting application alarm for %s seconds' % time)
+        LOG.debug(f'setting application alarm for {time} seconds')
         self.msg = msg
         signal.alarm(int(time))
 

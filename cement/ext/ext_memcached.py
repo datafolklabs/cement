@@ -84,7 +84,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
             value.
 
         """
-        LOG.debug("getting cache value using key '%s'" % key)
+        LOG.debug(f"getting cache value using key '{key}'")
         res = self.mc.get(key, **kw)
         if res is None:
             return fallback

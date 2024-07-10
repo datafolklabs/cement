@@ -223,10 +223,8 @@ class ConfigHandler(ConfigInterface, Handler):
         """
         file_path = abspath(file_path)
         if os.path.exists(file_path):
-            LOG.debug("config file '%s' exists, loading settings..." %
-                      file_path)
+            LOG.debug(f"config file '{file_path}' exists, loading settings...")
             return self._parse_file(file_path)
         else:
-            LOG.debug("config file '%s' does not exist, skipping..." %
-                      file_path)
+            LOG.debug(f"config file '{file_path}' does not exist, skipping...")
             return False

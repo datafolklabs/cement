@@ -23,7 +23,7 @@ def extend_scrub(app):
             for regex, replace in app._meta.scrub:
                 text = re.sub(regex, replace, text)
         else:
-            LOG.debug('text is not str > %s' % type(text))
+            LOG.debug(f'text is not str > {type(text)}')
         return text
 
     app.extend('scrub', scrub)

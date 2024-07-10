@@ -163,7 +163,7 @@ def ensure_dir_exists(path: str) -> None:
     path = abspath(path)
 
     if os.path.exists(path) and not os.path.isdir(path):
-        raise AssertionError('Path `%s` exists but is not a directory!' % path)
+        raise AssertionError(f'Path `{path}` exists but is not a directory!')
     elif not os.path.exists(path):
         os.makedirs(path)
 
@@ -221,9 +221,9 @@ def backup(path: str, suffix: str = '.bak', **kwargs: Any) -> Optional[str]:
     while True:
         if os.path.exists(path):
             if count == -1:
-                new_path = "%s%s" % (path, suffix)
+                new_path = f"{path}{suffix}"
             else:
-                new_path = "%s%s.%s" % (path, suffix, count)
+                new_path = f"{path}{suffix}.{count}"
             if os.path.exists(new_path):
                 count += 1
                 continue

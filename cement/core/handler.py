@@ -64,9 +64,9 @@ class Handler(ABC, MetaMixin):
         super(Handler, self).__init__(**kw)
         try:
             assert self._meta.label, \
-                "%s.Meta.label undefined." % self.__class__.__name__
+                f"{self.__class__.__name__}.Meta.label undefined."
             assert self._meta.interface, \
-                "%s.Meta.interface undefined." % self.__class__.__name__
+                f"{self.__class__.__name__}.Meta.interface undefined."
         except AssertionError as e:
             raise exc.FrameworkError(e.args[0])
 
@@ -86,12 +86,11 @@ class Handler(ABC, MetaMixin):
         self.app = app
 
         if self._meta.config_section is None:
-            self._meta.config_section = "%s.%s" % \
-                (self._meta.interface, self._meta.label)
+            self._meta.config_section = f"{self._meta.interface}.{self._meta.label}"
 
         if self._meta.config_defaults is not None:
-            LOG.debug("merging config defaults from '%s' " % self +
-                      "into section '%s'" % self._meta.config_section)
+            LOG.debug(f"merging config defaults from '{self}' " +
+                      f"into section '{self._meta.config_section}'")
             dict_obj = dict()
             dict_obj[self._meta.config_section] = self._meta.config_defaults
             self.app.config.merge(dict_obj, override=False)  # type: ignore
@@ -155,8 +154,7 @@ class HandlerManager(object):
         setup = kwargs.get('setup', False)
 
         if interface not in self.app.interface.list():  # type: ignore
-            raise exc.InterfaceError("Interface '%s' does not exist!" %
-                                     interface)
+            raise exc.InterfaceError(f"Interface '{interface}' does not exist!")
 
         if handler_label in self.__handlers__[interface]:
             if setup is True:
@@ -192,8 +190,7 @@ class HandlerManager(object):
 
         """
         if not self.app.interface.defined(interface):  # type: ignore
-            raise exc.InterfaceError("Interface '%s' does not exist!" %
-                                     interface)
+            raise exc.InterfaceError(f"Interface '{interface}' does not exist!")
 
         res = []
         for label in self.__handlers__[interface]:
@@ -242,7 +239,7 @@ class HandlerManager(object):
 
         # for checks
         if not issubclass(handler_class, Handler):
-            raise exc.InterfaceError("Class %s " % handler_class +
+            raise exc.InterfaceError(f"Class {handler_class} " +
                                      "does not implement Handler")
 
         obj = handler_class()
@@ -256,8 +253,7 @@ class HandlerManager(object):
                   (handler_class, interface, obj._meta.label))
 
         if interface not in self.app.interface.list():  # type: ignore
-            raise exc.InterfaceError("Handler interface '%s' doesn't exist." %
-                                     interface)
+            raise exc.InterfaceError(f"Handler interface '{interface}' doesn't exist.")
         elif interface not in self.__handlers__.keys():
             self.__handlers__[interface] = {}
 
@@ -266,22 +262,19 @@ class HandlerManager(object):
 
             if force is True:
                 LOG.debug(
-                    "handlers['%s']['%s'] already exists" %
-                    (interface, obj._meta.label) +
+                    f"handlers['{interface}']['{obj._meta.label}'] already exists" +
                     ", but `force==True`"
                 )
             else:
                 raise exc.InterfaceError(
-                    "handlers['%s']['%s'] already exists" %
-                    (interface, obj._meta.label)
+                    f"handlers['{interface}']['{obj._meta.label}'] already exists"
                 )
 
         interface_class = self.app.interface.get(interface)  # type: ignore
 
         if not issubclass(handler_class, interface_class):
-            raise exc.InterfaceError("Handler %s " % handler_class.__name__ +
-                                     "does not sub-class %s" %
-                                     interface_class.__name__)
+            raise exc.InterfaceError(f"Handler {handler_class.__name__} " +
+                                     f"does not sub-class {interface_class.__name__}")
 
         self.__handlers__[interface][obj._meta.label] = handler_class
 
@@ -377,11 +370,11 @@ class HandlerManager(object):
         if meta_defaults is None:
             meta_defaults = {}
             if type(handler_def) is str:
-                _meta_label = "%s.%s" % (interface, handler_def)
+                _meta_label = f"{interface}.{handler_def}"
                 meta_defaults = self.app._meta.meta_defaults.get(_meta_label,
                                                                  {})
             elif hasattr(handler_def, 'Meta'):
-                _meta_label = "%s.%s" % (interface, handler_def.Meta.label)
+                _meta_label = f"{interface}.{handler_def.Meta.label}"
                 meta_defaults = self.app._meta.meta_defaults.get(_meta_label,
                                                                  {})
 
@@ -399,8 +392,7 @@ class HandlerManager(object):
             if not self.registered(interface, han._meta.label):
                 self.register(handler_def)  # type: ignore
 
-        msg = "Unable to resolve handler '%s' of interface '%s'" % \
-              (handler_def, interface)
+        msg = f"Unable to resolve handler '{handler_def}' of interface '{interface}'"
         if han is not None:
             if setup is True:
                 han._setup(self.app)

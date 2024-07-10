@@ -315,7 +315,7 @@ class ArgparseController(ControllerHandler):
             self._controllers_map = {}
 
         if self._meta.help is None:
-            self._meta.help = '%s controller' % _clean_label(self._meta.label)
+            self._meta.help = f'{_clean_label(self._meta.label)} controller'
 
     def _default(self):
         self._parser.print_help()
@@ -323,7 +323,7 @@ class ArgparseController(ControllerHandler):
     def _validate(self):
         try:
             assert self._meta.stacked_type in ['embedded', 'nested'], \
-                "Invalid stacked type %s.  " % self._meta.stacked_type \
+                f"Invalid stacked type {self._meta.stacked_type}.  " \
                 + "Expecting one of: [embedded, nested]"
         except AssertionError as e:
             raise FrameworkError(e.args[0])
@@ -356,8 +356,8 @@ class ArgparseController(ControllerHandler):
 
         current_parent = self._meta.label
         while unresolved_controllers:
-            LOG.debug('unresolved controllers > %s' % unresolved_controllers)
-            LOG.debug('current parent > %s' % current_parent)
+            LOG.debug(f'unresolved controllers > {unresolved_controllers}')
+            LOG.debug(f'current parent > {current_parent}')
 
             # handle all controllers nested on parent
             current_children = []
@@ -480,8 +480,8 @@ class ArgparseController(ControllerHandler):
         from cement.utils.misc import rando
 
         _rando = rando()[:12]
-        self._dispatch_option = '--dispatch-%s' % _rando
-        self._controller_option = '--controller-namespace-%s' % _rando
+        self._dispatch_option = f'--dispatch-{_rando}'
+        self._controller_option = f'--controller-namespace-{_rando}'
 
         # parents are sub-parser namespaces (that we can add subparsers to)
         # where-as parsers are the actual root parser and sub-parsers to
@@ -602,18 +602,18 @@ class ArgparseController(ControllerHandler):
     def _process_arguments(self, controller):
         label = controller._meta.label
 
-        LOG.debug("processing arguments for '%s' " % label +
+        LOG.debug(f"processing arguments for '{label}' " +
                   "controller namespace")
 
         parser = self._get_parser_by_controller(controller)
         arguments = controller._collect_arguments()
         for arg, kw in arguments:
-            LOG.debug('adding argument (args=%s, kwargs=%s)' % (arg, kw))
+            LOG.debug(f'adding argument (args={arg}, kwargs={kw})')
             parser.add_argument(*arg, **kw)
 
     def _process_commands(self, controller):
         label = controller._meta.label
-        LOG.debug("processing commands for '%s' " % label +
+        LOG.debug(f"processing commands for '{label}' " +
                   "controller namespace")
 
         commands = controller._collect_commands()
@@ -621,9 +621,8 @@ class ArgparseController(ControllerHandler):
             kwargs = self._get_command_parser_options(command)
 
             func_name = command['func_name']
-            LOG.debug("adding command '%s' " % command['label'] +
-                      "(controller=%s, func=%s)" %
-                      (controller._meta.label, func_name))
+            LOG.debug(f"adding command '{command['label']}' " +
+                      f"(controller={controller._meta.label}, func={func_name})")
 
             cmd_parent = self._get_parser_parent_by_controller(controller)
             command_parser = cmd_parent.add_parser(command['label'], **kwargs)
@@ -640,11 +639,10 @@ class ArgparseController(ControllerHandler):
                                         )
 
             # add additional arguments to the sub-command namespace
-            LOG.debug("processing arguments for '%s' " % command['label'] +
+            LOG.debug(f"processing arguments for '{command['label']}' " +
                       "command namespace")
             for arg, kw in command['arguments']:
-                LOG.debug('adding argument (args=%s, kwargs=%s)' %
-                          (arg, kw))
+                LOG.debug(f'adding argument (args={arg}, kwargs={kw})')
                 command_parser.add_argument(*arg, **kw)
 
     def _collect(self):
@@ -653,13 +651,13 @@ class ArgparseController(ControllerHandler):
         return (arguments, commands)
 
     def _collect_arguments(self):
-        LOG.debug("collecting arguments from %s " % self +
+        LOG.debug(f"collecting arguments from {self} " +
                   "(stacked_on='%s', stacked_type='%s')" %
                   (self._meta.stacked_on, self._meta.stacked_type))
         return self._meta.arguments
 
     def _collect_commands(self):
-        LOG.debug("collecting commands from %s " % self +
+        LOG.debug(f"collecting commands from {self} " +
                   "(stacked_on='%s', stacked_type='%s')" %
                   (self._meta.stacked_on, self._meta.stacked_type))
 
@@ -761,7 +759,7 @@ class ArgparseController(ControllerHandler):
         pass
 
     def _dispatch(self):
-        LOG.debug("controller dispatch passed off to %s" % self)
+        LOG.debug(f"controller dispatch passed off to {self}")
         self._setup_controllers()
         self._setup_parsers()
 

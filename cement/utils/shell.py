@@ -463,18 +463,17 @@ class Prompt(MetaMixin):
                 text = text + self._meta.text + "\n\n"
                 count = 1
                 for option in self._meta.options:
-                    text = text + "%s: %s\n" % (count, option)
+                    text = text + f"{count}: {option}\n"
                     count += 1
                 text = text + "\n"
                 text = text + self._meta.selection_text
             else:
                 sep = self._meta.options_separator
-                text = "%s [%s]" % (self._meta.text,
-                                    sep.join(self._meta.options))
+                text = f"{self._meta.text} [{sep.join(self._meta.options)}]"
         else:
             text = self._meta.text
 
-        self.input = self._get_input("%s " % text)
+        self.input = self._get_input(f"{text} ")
         if self.input == '' and self._meta.default is not None:
             self.input = self._meta.default
         elif self.input == '':

@@ -118,13 +118,13 @@ class ExtensionHandler(ExtensionInterface, Handler):
         """
         # If its not a full module path then preppend our default path
         if ext_module.find('.') == -1:
-            ext_module = 'cement.ext.ext_%s' % ext_module
+            ext_module = f'cement.ext.ext_{ext_module}'
 
         if ext_module in self._loaded_extensions:
-            LOG.debug("framework extension '%s' already loaded" % ext_module)
+            LOG.debug(f"framework extension '{ext_module}' already loaded")
             return
 
-        LOG.debug("loading the '%s' framework extension" % ext_module)
+        LOG.debug(f"loading the '{ext_module}' framework extension")
         try:
             if ext_module not in sys.modules:
                 __import__(ext_module, globals(), locals(), [], 0)

@@ -64,7 +64,7 @@ class Jinja2OutputHandler(OutputHandler):
 
         """
 
-        LOG.debug("rendering content using '%s' as a template." % template)
+        LOG.debug(f"rendering content using '{template}' as a template.")
         content, _type, _path = self.templater.load(template)
         return self.templater.render(content, data)
 
@@ -136,7 +136,7 @@ class Jinja2TemplateHandler(TemplateHandler):
             str: The rendered template text
 
         """
-        LOG.debug("rendering content as text via %s" % self.__module__)
+        LOG.debug(f"rendering content as text via {self.__module__}")
 
         if not isinstance(content, str):
             content = content.decode('utf-8')

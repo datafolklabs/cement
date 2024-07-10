@@ -108,7 +108,7 @@ class JsonOutputHandler(output.OutputHandler):
             str: A JSON encoded string.
 
         """
-        LOG.debug("rendering output as Json via %s" % self.__module__)
+        LOG.debug(f"rendering output as Json via {self.__module__}")
         return self._json.dumps(data_dict, **kw)
 
 

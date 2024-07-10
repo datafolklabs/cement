@@ -50,9 +50,9 @@ class HookManager(object):
                     app.hook.define('my_hook_name')
 
         """
-        LOG.debug("defining hook '%s'" % name)
+        LOG.debug(f"defining hook '{name}'")
         if name in self.__hooks__:
-            raise exc.FrameworkError("Hook name '%s' already defined!" % name)
+            raise exc.FrameworkError(f"Hook name '{name}' already defined!")
         self.__hooks__[name] = []
 
     def defined(self, hook_name):
@@ -113,7 +113,7 @@ class HookManager(object):
 
         """
         if name not in self.__hooks__:
-            LOG.debug("hook name '%s' is not defined! ignoring..." % name)
+            LOG.debug(f"hook name '{name}' is not defined! ignoring...")
             return False
 
         LOG.debug("registering hook '%s' from %s into hooks['%s']" %
@@ -159,13 +159,12 @@ class HookManager(object):
 
         """
         if name not in self.__hooks__:
-            raise exc.FrameworkError("Hook name '%s' is not defined!" % name)
+            raise exc.FrameworkError(f"Hook name '{name}' is not defined!")
 
         # Will order based on weight (the first item in the tuple)
         self.__hooks__[name].sort(key=operator.itemgetter(0))
         for hook in self.__hooks__[name]:
-            LOG.debug("running hook '%s' (%s) from %s" %
-                      (name, hook[2], hook[2].__module__))
+            LOG.debug(f"running hook '{name}' ({hook[2]}) from {hook[2].__module__}")
             res = hook[2](*args, **kwargs)
 
             # Check if result is a nested generator - needed to support e.g.

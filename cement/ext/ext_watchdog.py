@@ -37,7 +37,7 @@ class WatchdogEventHandler(FileSystemEventHandler):
         self.app = app
 
     def on_any_event(self, event):
-        self.app.log.debug("Watchdog Event: %s" % event)  # pragma: nocover
+        self.app.log.debug(f"Watchdog Event: {event}")  # pragma: nocover
 
 
 class WatchdogManager(MetaMixin):
@@ -86,13 +86,12 @@ class WatchdogManager(MetaMixin):
         """
         path = fs.abspath(path)
         if not os.path.exists(path):
-            LOG.debug('watchdog path %s does not exist... ignoring' % path)
+            LOG.debug(f'watchdog path {path} does not exist... ignoring')
             return False
 
         if event_handler is None:
             event_handler = self._meta.default_event_handler
-        LOG.debug('adding path %s with event handler %s' %
-                  (path, event_handler))
+        LOG.debug(f'adding path {path} with event handler {event_handler}')
         self.observer.schedule(event_handler(self.app),
                                path, recursive=recursive)
         return True
