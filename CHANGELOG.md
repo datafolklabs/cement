@@ -14,6 +14,8 @@ Features:
 
 Refactoring:
 
+- Refactor String Substitutions (`%s`) with F-Strings
+    - [Issue #733](https://github.com/datafolklabs/cement/issues/733)
 - `[dev]` Modernize Packaging (pyproject.toml, PDM)
     - [Issue #680](https://github.com/datafolklabs/cement/issues/680)
     - [PR #681](https://github.com/datafolklabs/cement/pull/681)
