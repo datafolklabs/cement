@@ -18,7 +18,7 @@ function smoke-test {
         -v `pwd`:/src \
         python:$pyver \
         /bin/bash
-    docker exec -it cement-cli-smoke-test /bin/bash -c "cd /src ; python setup.py install"
+    docker exec -it cement-cli-smoke-test /bin/bash -c "cd /src ; pip install dist/cement-*.whl"
     tmp=$(docker exec cement-cli-smoke-test /bin/bash -c "mktemp -d")
 
     
@@ -85,6 +85,7 @@ function smoke-test {
 
 rm -rf tmp/cli-smoke-test.out
 echo "output in tmp/cli-smoke-test.out"
+docker-compose exec cement pdm build
 
 for pyver in $PYTHON_VERSIONS; do
     echo -n "python $pyver . . . "
