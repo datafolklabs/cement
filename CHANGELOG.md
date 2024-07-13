@@ -40,6 +40,7 @@ Refactoring:
     - `[core.log]` [Issue #703](https://github.com/datafolklabs/cement/issues/703)
     - `[core.mail]` [Issue #704](https://github.com/datafolklabs/cement/issues/704)
     - `[core.meta]` [Issue #705](https://github.com/datafolklabs/cement/issues/705)
+    - `[core.output]` [Issue #706](https://github.com/datafolklabs/cement/issues/706)
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - `[utils.misc]` [Issue #689](https://github.com/datafolklabs/cement/issues/689)
     - `[utils.shell]` [Issue #690](https://github.com/datafolklabs/cement/issues/690)
