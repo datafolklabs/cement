@@ -16,6 +16,7 @@ Refactoring:
 
 - Refactor String Substitutions (`%s`) with F-Strings
     - [Issue #733](https://github.com/datafolklabs/cement/issues/733)
+- Allow line lengths up to 100 characters (previously 78)
 - `[dev]` Modernize Packaging (pyproject.toml, PDM)
     - [Issue #680](https://github.com/datafolklabs/cement/issues/680)
     - [PR #681](https://github.com/datafolklabs/cement/pull/681)
@@ -32,7 +33,9 @@ Refactoring:
     - `[core.deprecations]` [Issue #696](https://github.com/datafolklabs/cement/issues/696)
     - `[core.exc]` [Issue #697](https://github.com/datafolklabs/cement/issues/697)
     - `[core.extension]` [Issue #698](https://github.com/datafolklabs/cement/issues/698)
+    - `[core.foundation]` [Issue #699](https://github.com/datafolklabs/cement/issues/699)
     - `[core.handler]` [Issue #700](https://github.com/datafolklabs/cement/issues/700)
+    - `[core.hook]` [Issue #700](https://github.com/datafolklabs/cement/issues/701)
     - `[core.interface]` [Issue #702](https://github.com/datafolklabs/cement/issues/702)
     - `[core.meta]` [Issue #705](https://github.com/datafolklabs/cement/issues/705)
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
