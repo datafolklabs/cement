@@ -18,7 +18,7 @@ class LogInterface(Interface):
     :class:`LogHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Handler meta-data."""
 
@@ -26,7 +26,7 @@ class LogInterface(Interface):
         interface = 'log'
 
     @abstractmethod
-    def set_level(self):
+    def set_level(self, level: str) -> None:
         """
         Set the log level.  Must except atleast one of:
             ``['INFO', 'WARNING', 'ERROR', 'DEBUG', or 'FATAL']``.
@@ -35,12 +35,12 @@ class LogInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def get_level(self):
+    def get_level(self) -> str:
         """Return a string representation of the log level."""
         pass  # pragma: nocover
 
     @abstractmethod
-    def info(self, msg):
+    def info(self, msg: str) -> None:
         """
         Log to the ``INFO`` facility.
 
@@ -51,7 +51,7 @@ class LogInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def warning(self, msg):
+    def warning(self, msg: str) -> None:
         """
         Log to the ``WARNING`` facility.
 
@@ -62,7 +62,7 @@ class LogInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def error(self, msg):
+    def error(self, msg: str) -> None:
         """
         Log to the ``ERROR`` facility.
 
@@ -73,7 +73,7 @@ class LogInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def fatal(self, msg):
+    def fatal(self, msg: str) -> None:
         """
         Log to the ``FATAL`` facility.
 
@@ -84,7 +84,7 @@ class LogInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def debug(self, msg):
+    def debug(self, msg: str) -> None:
         """
         Log to the ``DEBUG`` facility.
 
@@ -102,4 +102,5 @@ class LogHandler(LogInterface, Handler):
 
     """
 
-    pass  # pragma: nocover
+    class Meta(Handler.Meta):
+        pass  # pragma: nocover
