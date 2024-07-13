@@ -75,17 +75,18 @@ precision = 2
 
 
 [tool.pdm.build]
-package-dir = "cement"
+package-dir = "."
 includes = [
-    "cement",
-    "cement/cli/templates/generate",
+    "cement/",
+    "cement/cli/templates/generate/",
     "CONTRIBUTORS.md",
     "CHANGELOG.md"
 ]
-excludes = ["tests"]
+excludes = ["tests/"]
 
 [tool.pdm.version]
-source = "scm"
+source = "call"
+getter = "cement.utils.version:get_version"
 
 [tool.pdm.dev-dependencies]
 dev = [
