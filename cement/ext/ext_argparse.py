@@ -840,7 +840,7 @@ class ArgparseController(ControllerHandler):
             # We never get here on Python < 3 as Argparse would have already
             # complained about too few arguments
             raise FrameworkError(                           # pragma: nocover
-                "Controller function does not exist %s.%s()" % \
+                "Controller function does not exist %s.%s()" %
                 (contr.__class__.__name__, func_name))      # pragma: nocover
 
 
