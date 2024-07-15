@@ -42,6 +42,7 @@ Refactoring:
     - `[core.meta]` [Issue #705](https://github.com/datafolklabs/cement/issues/705)
     - `[core.output]` [Issue #706](https://github.com/datafolklabs/cement/issues/706)
     - `[core.plugin]` [Issue #707](https://github.com/datafolklabs/cement/issues/707)
+    - `[core.template]` [Issue #708](https://github.com/datafolklabs/cement/issues/708)
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - `[utils.misc]` [Issue #689](https://github.com/datafolklabs/cement/issues/689)
     - `[utils.shell]` [Issue #690](https://github.com/datafolklabs/cement/issues/690)
