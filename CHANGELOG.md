@@ -47,6 +47,7 @@ Refactoring:
     - `[ext.argparse]` [Issue #710](https://github.com/datafolklabs/cement/issues/710)
     - `[ext.colorlog]` [Issue #711](https://github.com/datafolklabs/cement/issues/711)
     - `[ext.configparser]` [Issue #712](https://github.com/datafolklabs/cement/issues/712)
+    - `[ext.daemon]` [Issue #713](https://github.com/datafolklabs/cement/issues/713)
     - `[ext.logging]` [Issue #718](https://github.com/datafolklabs/cement/issues/718)
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - `[utils.misc]` [Issue #689](https://github.com/datafolklabs/cement/issues/689)
