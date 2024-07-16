@@ -14,18 +14,18 @@ Features:
 
 Refactoring:
 
-- Refactor String Substitutions (`%s`) with F-Strings
+- `[dev]` Refactor String Substitutions (`%s`) with F-Strings
     - [Issue #733](https://github.com/datafolklabs/cement/issues/733)
-- Allow line lengths up to 100 characters (previously 78)
+- `[dev]` Allow line lengths up to 100 characters (previously 78)
 - `[dev]` Modernize Packaging (pyproject.toml, PDM)
     - [Issue #680](https://github.com/datafolklabs/cement/issues/680)
     - [PR #681](https://github.com/datafolklabs/cement/pull/681)
-- `[dev]` Implement Ruff for Code Compliance
+- `[dev]` Implement Ruff for Code Compliance (replaces Flake8)
     - [Issue #671](https://github.com/datafolklabs/cement/issues/671)
     - [PR #681](https://github.com/datafolklabs/cement/pull/681)
 - `[dev]` Remove Python 3.5, 3.6, 3.7 Docker Dev Targets 
 - `[dev]` Added Python 3.13 Dev Target
-- Type Annotations (related: [PR #628](https://github.com/datafolklabs/cement/pull/628))
+- `[dev]` Type Annotations (related: [PR #628](https://github.com/datafolklabs/cement/pull/628))
     - `[core.arg]` [Issue #692](https://github.com/datafolklabs/cement/issues/692)
     - `[core.cache]` [Issue #693](https://github.com/datafolklabs/cement/issues/693)
     - `[core.config]` [Issue #694](https://github.com/datafolklabs/cement/issues/694)
@@ -46,6 +46,7 @@ Refactoring:
     - `[ext.alarm]` [Issue #709](https://github.com/datafolklabs/cement/issues/709)
     - `[ext.argparse]` [Issue #710](https://github.com/datafolklabs/cement/issues/710)
     - `[ext.colorlog]` [Issue #711](https://github.com/datafolklabs/cement/issues/711)
+    - `[ext.configparser]` [Issue #712](https://github.com/datafolklabs/cement/issues/712)
     - `[ext.logging]` [Issue #718](https://github.com/datafolklabs/cement/issues/718)
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - `[utils.misc]` [Issue #689](https://github.com/datafolklabs/cement/issues/689)
