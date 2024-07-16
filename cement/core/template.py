@@ -35,7 +35,7 @@ class TemplateInterface(Interface):
         interface = 'template'
 
     @abstractmethod
-    def render(self, content: str, data: Dict[str, Any]) -> str:
+    def render(self, content: str, data: Dict[str, Any]) -> Union[str, None]:
         """
         Render ``content`` as a template using the ``data`` dict.
 
@@ -44,7 +44,7 @@ class TemplateInterface(Interface):
             data (dict): The data dictionary to render with template.
 
         Returns:
-            str: The rendered template string.
+            str, None: The rendered template string, or ``None`` if nothing is rendered.
 
         """
         pass  # pragma: nocover
@@ -116,7 +116,7 @@ class TemplateHandler(TemplateInterface, Handler):
         if self._meta.exclude is None:
             self._meta.exclude = []
 
-    def render(self, content: Union[str, bytes], data: Dict[str, Any]) -> str:
+    def render(self, content: Union[str, bytes], data: Dict[str, Any]) -> Union[str, None]:
         """
         Render ``content`` as template using using the ``data`` dictionary.
 
@@ -125,7 +125,7 @@ class TemplateHandler(TemplateInterface, Handler):
             data (dict): The data dictionary to interpolate in the template.
 
         Returns:
-            str: The rendered content.
+            str, None: The rendered content, or ``None`` if nothing is rendered.
         """
 
         # must be provided by a subclass

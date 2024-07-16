@@ -2,10 +2,15 @@
 Cement dummy extension module.
 """
 
+from __future__ import annotations
+from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
 from ..core.output import OutputHandler
 from ..core.template import TemplateHandler
 from ..core.mail import MailHandler
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -18,7 +23,7 @@ class DummyOutputHandler(OutputHandler):
     any parameters on initialization, and does not actually output anything.
 
     """
-    class Meta:
+    class Meta(OutputHandler.Meta):
 
         """Handler meta-data"""
 
@@ -29,7 +34,7 @@ class DummyOutputHandler(OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-    def render(self, data, template=None, **kw):
+    def render(self, data: Dict[str, Any], **kw: Any) -> None:
         """
         This implementation does not actually render anything to output, but
         rather logs it to the debug facility.
@@ -56,14 +61,14 @@ class DummyTemplateHandler(TemplateHandler):
     anything.
 
     """
-    class Meta:
+    class Meta(TemplateHandler.Meta):
 
         """Handler meta-data"""
 
         #: The string identifier of this handler.
         label = 'dummy'
 
-    def render(self, content, data, *args, **kw):
+    def render(self, content: Union[str, bytes], data: Dict[str, Any]) -> None:
         """
         This implementation does not actually render anything, but
         rather logs it to the debug facility.
@@ -73,11 +78,17 @@ class DummyTemplateHandler(TemplateHandler):
             data (dict): The data dictionary to render.
 
         """
-        LOG.debug(f"CONTENT: {content}")
+        LOG.debug(f"CONTENT: {str(content)}")
         LOG.debug(f"DATA: {data}")
         return None
 
-    def copy(self, src, dest, data):
+    def copy(self,
+             src: str,
+             dest: str,
+             data: Dict[str, Any],
+             force: bool = False,
+             exclude: Optional[List[str]] = None,
+             ignore: Optional[List[str]] = None) -> bool:
         """
         This implementation does not actually copy anything, but rather logs it
         to the debug facility.
@@ -88,6 +99,7 @@ class DummyTemplateHandler(TemplateHandler):
             data (dict): The data dictionary to render with templates.
         """
         LOG.debug(f"COPY: {src} -> {dest}")
+        return True
 
 
 class DummyMailHandler(MailHandler):
@@ -185,14 +197,14 @@ class DummyMailHandler(MailHandler):
 
     """
 
-    class Meta:
+    class Meta(MailHandler.Meta):
 
         """Handler meta-data."""
 
         #: Unique identifier for this handler
         label = 'dummy'
 
-    def _get_params(self, **kw):
+    def _get_params(self, **kw: Any) -> Dict[str, Any]:
         params = dict()
         for item in ['to', 'from_addr', 'cc', 'bcc', 'subject']:
             config_item = self.app.config.get(self._meta.config_section, item)
@@ -206,14 +218,14 @@ class DummyMailHandler(MailHandler):
 
         return params
 
-    def send(self, body, **kw):
+    def send(self, body: str, **kw: Any) -> bool:
         """
         Mimic sending an email message, but really just print what would be
         sent to console.  Keyword arguments override configuration
         defaults (cc, bcc, etc).
 
         Args:
-            body: The message body to send
+            body (str): The message body to send
 
         Keyword Args:
             to (list): List of recipients (generally email addresses)
@@ -263,7 +275,7 @@ class DummyMailHandler(MailHandler):
         return True
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(DummyOutputHandler)
     app.handler.register(DummyTemplateHandler)
     app.handler.register(DummyMailHandler)
