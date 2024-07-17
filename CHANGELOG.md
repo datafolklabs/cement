@@ -56,6 +56,7 @@ Refactoring:
     - `[ext.memcached]` [Issue #719](https://github.com/datafolklabs/cement/issues/719)
     - `[ext.mustache]` [Issue #720](https://github.com/datafolklabs/cement/issues/720)
     - `[ext.plugin]` [Issue #721](https://github.com/datafolklabs/cement/issues/721)
+    - `[ext.print]` [Issue #722](https://github.com/datafolklabs/cement/issues/722)
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - `[utils.misc]` [Issue #689](https://github.com/datafolklabs/cement/issues/689)
     - `[utils.shell]` [Issue #690](https://github.com/datafolklabs/cement/issues/690)
