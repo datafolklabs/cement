@@ -2,15 +2,20 @@
 Cement plugin extension module.
 """
 
+from __future__ import annotations
 import os
 import sys
 import importlib
 import importlib.util
 import importlib.machinery
 import re
+from typing import List, TYPE_CHECKING
 from ..core import plugin, exc
 from ..utils.misc import is_true, minimal_logger
 from ..utils.fs import abspath
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -26,20 +31,22 @@ class CementPluginHandler(plugin.PluginHandler):
 
     """
 
-    class Meta:
+    class Meta(plugin.PluginHandler.Meta):
 
         """Handler meta-data."""
 
         label = 'cement'
         """The string identifier for this class."""
 
-    def __init__(self):
-        super().__init__()
-        self._loaded_plugins = []
-        self._enabled_plugins = []
-        self._disabled_plugins = []
+    _meta: Meta  # type: ignore
 
-    def _setup(self, app_obj):
+    def __init__(self) -> None:
+        super().__init__()
+        self._loaded_plugins: List[str] = []
+        self._enabled_plugins: List[str] = []
+        self._disabled_plugins: List[str] = []
+
+    def _setup(self, app_obj: App) -> None:
         super()._setup(app_obj)
         self._enabled_plugins = []
         self._disabled_plugins = []
@@ -70,7 +77,7 @@ class CementPluginHandler(plugin.PluginHandler):
                 if plugin in self._enabled_plugins:
                     self._enabled_plugins.remove(plugin)  # pragma: nocover
 
-    def _load_plugin_from_dir(self, plugin_name, plugin_dir):
+    def _load_plugin_from_dir(self, plugin_name: str, plugin_dir: str) -> bool:
         """
         Load a plugin from a directory path rather than a python package
         within sys.path.  This would either be ``myplugin.py`` or
@@ -80,6 +87,9 @@ class CementPluginHandler(plugin.PluginHandler):
             plugin_name (str): The name of the plugin.
             plugin_dir (str): The filesystem directory path where the plugin
                 exists.
+
+        Returns:
+            bool: ``True`` is the plugin was loaded, ``False`` otherwise.
 
         """
         LOG.debug(f"attempting to load '{plugin_name}' from '{plugin_dir}'")
@@ -99,13 +109,13 @@ class CementPluginHandler(plugin.PluginHandler):
         # nightmare
         mod = importlib.util.module_from_spec(spec)
         sys.modules[plugin_name] = mod
-        spec.loader.exec_module(mod)
+        spec.loader.exec_module(mod)  # type: ignore
 
         if mod and hasattr(mod, 'load'):
             mod.load(self.app)
         return True
 
-    def _load_plugin_from_bootstrap(self, plugin_name, base_package):
+    def _load_plugin_from_bootstrap(self, plugin_name: str, base_package: str) -> bool:
         """
         Load a plugin from a python package.  Returns True if no ImportError
         is encountered.
@@ -114,11 +124,11 @@ class CementPluginHandler(plugin.PluginHandler):
             plugin_name (str): The name of the plugin, also the name of the
                 module to load from base_package. I.e.
                 ``myapp.bootstrap.myplugin``
-            base_package: The base python package to load the plugin module
+            base_package (str): The base python package to load the plugin module
                 from.  I.e. ``myapp.bootstrap`` or similar.
 
         Returns:
-            bool: ``True`` is the plugin was loaded, ``False`` otherwise
+            bool: ``True`` is the plugin was loaded, ``False`` otherwise.
 
         Raises:
             :py:class:`ImportError`: If the plugin can not be imported
@@ -148,7 +158,7 @@ class CementPluginHandler(plugin.PluginHandler):
 
         return True
 
-    def load_plugin(self, plugin_name):
+    def load_plugin(self, plugin_name: str) -> None:
         """
         Load a plugin whose name is ``plugin_name``.  First attempt to load
         from a plugin directory (plugin_dir), secondly attempt to load from a
@@ -183,7 +193,7 @@ class CementPluginHandler(plugin.PluginHandler):
         if plugin_name not in self._loaded_plugins:
             raise exc.FrameworkError(f"Unable to load plugin '{plugin_name}'.")
 
-    def load_plugins(self, plugin_list):
+    def load_plugins(self, plugin_list: List[str]) -> None:
         """
         Load a list of plugins.  Each plugin name is passed to
         ``self.load_plugin()``.
@@ -195,18 +205,18 @@ class CementPluginHandler(plugin.PluginHandler):
         for plugin_name in plugin_list:
             self.load_plugin(plugin_name)
 
-    def get_loaded_plugins(self):
+    def get_loaded_plugins(self) -> List[str]:
         """List of plugins that have been loaded."""
         return self._loaded_plugins
 
-    def get_enabled_plugins(self):
+    def get_enabled_plugins(self) -> List[str]:
         """List of plugins that are enabled (not necessary loaded yet)."""
         return self._enabled_plugins
 
-    def get_disabled_plugins(self):
+    def get_disabled_plugins(self) -> List[str]:
         """List of disabled plugins"""
         return self._disabled_plugins
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(CementPluginHandler)
