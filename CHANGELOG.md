@@ -53,6 +53,7 @@ Refactoring:
     - `[ext.jinja2]` [Issue #716](https://github.com/datafolklabs/cement/issues/716)
     - `[ext.json]` [Issue #717](https://github.com/datafolklabs/cement/issues/717)
     - `[ext.logging]` [Issue #718](https://github.com/datafolklabs/cement/issues/718)
+    - `[ext.memcached]` [Issue #719](https://github.com/datafolklabs/cement/issues/719)
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - `[utils.misc]` [Issue #689](https://github.com/datafolklabs/cement/issues/689)
     - `[utils.shell]` [Issue #690](https://github.com/datafolklabs/cement/issues/690)
