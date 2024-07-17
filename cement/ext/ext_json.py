@@ -2,14 +2,19 @@
 Cement json extension module.
 """
 
+from __future__ import annotations
+from typing import Any, Dict, TYPE_CHECKING
 from ..core import output
 from ..utils.misc import minimal_logger
 from ..ext.ext_configparser import ConfigParserConfigHandler
 
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
+
 LOG = minimal_logger(__name__)
 
 
-def suppress_output_before_run(app):
+def suppress_output_before_run(app: App) -> None:
     """
     This is a ``post_argument_parsing`` hook that suppresses console output if
     the ``JsonOutputHandler`` is triggered via command line.
@@ -23,7 +28,7 @@ def suppress_output_before_run(app):
         app._suppress_output()
 
 
-def unsuppress_output_before_render(app, data):
+def unsuppress_output_before_render(app: App, data: Any) -> None:
     """
     This is a ``pre_render`` that unsuppresses console output if
     the ``JsonOutputHandler`` is triggered via command line so that the JSON
@@ -38,7 +43,7 @@ def unsuppress_output_before_render(app, data):
         app._unsuppress_output()
 
 
-def suppress_output_after_render(app, out_text):
+def suppress_output_after_render(app: App, out_text: str) -> None:
     """
     This is a ``post_render`` hook that suppresses console output again after
     rendering, only if the ``JsonOutputHandler`` is triggered via command
@@ -68,7 +73,7 @@ class JsonOutputHandler(output.OutputHandler):
     order to unsuppress output and see what's happening.
 
     """
-    class Meta:
+    class Meta(output.OutputHandler.Meta):
 
         """Handler meta-data"""
 
@@ -82,16 +87,18 @@ class JsonOutputHandler(output.OutputHandler):
         #: Backend JSON library module to use (`json`, `ujson`)
         json_module = 'json'
 
-    def __init__(self, *args, **kw):
+    _meta: Meta  # type: ignore
+
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super().__init__(*args, **kw)
         self._json = None
 
-    def _setup(self, app):
+    def _setup(self, app: App) -> None:
         super()._setup(app)
-        self._json = __import__(self._meta.json_module,
+        self._json = __import__(self._meta.json_module,         # type: ignore
                                 globals(), locals(), [], 0)
 
-    def render(self, data_dict, template=None, **kw):
+    def render(self, data: Dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
         """
         Take a data dictionary and render it as Json output.  Note that the
         template option is received here per the interface, however this
@@ -99,7 +106,7 @@ class JsonOutputHandler(output.OutputHandler):
         ``json.dumps()``.
 
         Args:
-            data_dict (dict): The data dictionary to render.
+            data (dict): The data dictionary to render.
 
         Keyword Args:
             template: This option is completely ignored.
@@ -109,7 +116,7 @@ class JsonOutputHandler(output.OutputHandler):
 
         """
         LOG.debug(f"rendering output as Json via {self.__module__}")
-        return self._json.dumps(data_dict, **kw)
+        return self._json.dumps(data, **kw)  # type: ignore
 
 
 class JsonConfigHandler(ConfigParserConfigHandler):
@@ -121,7 +128,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
     but with JSON configuration files.
 
     """
-    class Meta:
+    class Meta(ConfigParserConfigHandler.Meta):
 
         """Handler meta-data."""
 
@@ -130,16 +137,18 @@ class JsonConfigHandler(ConfigParserConfigHandler):
         #: Backend JSON library module to use (`json`, `ujson`).
         json_module = 'json'
 
-    def __init__(self, *args, **kw):
+    _meta: Meta  # type: ignore
+
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super().__init__(*args, **kw)
         self._json = None
 
-    def _setup(self, app):
+    def _setup(self, app: App) -> None:
         super()._setup(app)
-        self._json = __import__(self._meta.json_module,
+        self._json = __import__(self._meta.json_module,         # type: ignore
                                 globals(), locals(), [], 0)
 
-    def _parse_file(self, file_path):
+    def _parse_file(self, file_path: str) -> bool:
         """
         Parse JSON configuration file settings from file_path, overwriting
         existing config settings.  If the file does not exist, returns False.
@@ -160,7 +169,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
         return True
 
 
-def load(app):
+def load(app: App) -> None:
     app.hook.register('post_argument_parsing', suppress_output_before_run)
     app.hook.register('pre_render', unsuppress_output_before_render)
     app.hook.register('post_render', suppress_output_after_render)
