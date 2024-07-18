@@ -11,9 +11,14 @@ extensions.
   dependencies.
 """
 
-from tabulate import tabulate
+from __future__ import annotations
+from tabulate import tabulate  # type: ignore
+from typing import Any, List, Dict, TYPE_CHECKING
 from ..core import output
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -28,7 +33,7 @@ class TabulateOutputHandler(output.OutputHandler):
     :cement:`Output Handling <dev/output>`.
     """
 
-    class Meta:
+    class Meta(output.OutputHandler.Meta):
 
         """Handler meta-data."""
 
@@ -42,7 +47,7 @@ class TabulateOutputHandler(output.OutputHandler):
         format = 'orgtbl'
 
         #: Default headers to use.
-        headers = []
+        headers: List[str] = []
 
         #: Default alignment for string columns.  See the ``tabulate``
         #: documentation for all supported ``stralign`` options.
@@ -62,7 +67,9 @@ class TabulateOutputHandler(output.OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-    def render(self, data, **kw):
+    _meta: Meta  # type: ignore
+
+    def render(self, data: Dict[str, Any], **kw: Any) -> str:
         """
         Take a data dictionary and render it into a table.  Additional
         keyword arguments are passed directly to ``tabulate.tabulate``.
@@ -91,8 +98,8 @@ class TabulateOutputHandler(output.OutputHandler):
         if self._meta.padding is True:
             out = '\n' + out + '\n'
 
-        return out
+        return out  # type: ignore
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(TabulateOutputHandler)

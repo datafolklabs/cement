@@ -93,7 +93,7 @@ class Handler(ABC, MetaMixin):
                       f"into section '{self._meta.config_section}'")
             dict_obj = dict()
             dict_obj[self._meta.config_section] = self._meta.config_defaults
-            self.app.config.merge(dict_obj, override=False)  # type: ignore
+            self.app.config.merge(dict_obj, override=False)
 
         self._validate()
 
@@ -153,7 +153,7 @@ class HandlerManager(object):
         """
         setup = kwargs.get('setup', False)
 
-        if interface not in self.app.interface.list():  # type: ignore
+        if interface not in self.app.interface.list():
             raise exc.InterfaceError(f"Interface '{interface}' does not exist!")
 
         if handler_label in self.__handlers__[interface]:
@@ -189,7 +189,7 @@ class HandlerManager(object):
                 app.handler.list('log')
 
         """
-        if not self.app.interface.defined(interface):  # type: ignore
+        if not self.app.interface.defined(interface):
             raise exc.InterfaceError(f"Interface '{interface}' does not exist!")
 
         res = []
@@ -252,7 +252,7 @@ class HandlerManager(object):
         LOG.debug("registering handler '%s' into handlers['%s']['%s']" %
                   (handler_class, interface, obj._meta.label))
 
-        if interface not in self.app.interface.list():  # type: ignore
+        if interface not in self.app.interface.list():
             raise exc.InterfaceError(f"Handler interface '{interface}' doesn't exist.")
         elif interface not in self.__handlers__.keys():
             self.__handlers__[interface] = {}
@@ -270,7 +270,7 @@ class HandlerManager(object):
                     f"handlers['{interface}']['{obj._meta.label}'] already exists"
                 )
 
-        interface_class = self.app.interface.get(interface)  # type: ignore
+        interface_class = self.app.interface.get(interface)
 
         if not issubclass(handler_class, interface_class):
             raise exc.InterfaceError(f"Handler {handler_class.__name__} " +
@@ -296,7 +296,7 @@ class HandlerManager(object):
                 app.handler.registered('log', 'colorlog')
 
         """
-        if interface in self.app.interface.list():  # type: ignore
+        if interface in self.app.interface.list():
             if interface in self.__handlers__.keys() and \
                handler_label in self.__handlers__[interface]:
                 return True

@@ -224,7 +224,7 @@ class TemplateHandler(TemplateInterface, Handler):
                 cur_dir_stub = re.sub(escaped_src_pattern,
                                       '',
                                       escaped_cur_dir)
-                cur_dir_stub = self.render(cur_dir_stub, data)
+                cur_dir_stub = self.render(cur_dir_stub, data)  # type: ignore
                 cur_dir_stub = cur_dir_stub.lstrip('/')
                 cur_dir_stub = cur_dir_stub.lstrip('\\\\')
                 cur_dir_stub = cur_dir_stub.lstrip('\\')
@@ -253,7 +253,7 @@ class TemplateHandler(TemplateInterface, Handler):
 
                     new_sub_dir = re.sub(escaped_src_pattern,
                                          '',
-                                         self.render(escaped_sub_dir, data))
+                                         self.render(escaped_sub_dir, data))  # type: ignore
                     sub_dir_dest = os.path.join(cur_dir_dest, new_sub_dir)
 
                 if not os.path.exists(sub_dir_dest):
@@ -262,7 +262,7 @@ class TemplateHandler(TemplateInterface, Handler):
 
             for _file in files:
                 _rendered = self.render(_file, data)
-                new_file = re.sub(escaped_src_pattern, '', _rendered)
+                new_file = re.sub(escaped_src_pattern, '', _rendered)  # type: ignore
 
                 _file = fs.abspath(os.path.join(cur_dir, _file))
                 _file_dest = fs.abspath(os.path.join(cur_dir_dest, new_file))
@@ -297,7 +297,7 @@ class TemplateHandler(TemplateInterface, Handler):
 
                     _file_content = self.render(content, data)
                     f = open(_file_dest, 'w')
-                    f.write(_file_content)
+                    f.write(_file_content)  # type: ignore
                     f.close()
 
         return True
