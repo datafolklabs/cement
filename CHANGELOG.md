@@ -62,6 +62,7 @@ Refactoring:
     - `[ext.smtp]` [Issue #725](https://github.com/datafolklabs/cement/issues/725)
     - `[ext.tabulate]` [Issue #726](https://github.com/datafolklabs/cement/issues/726)
     - `[ext.watchdog]` [Issue #727](https://github.com/datafolklabs/cement/issues/727)
+    - `[ext.yaml]` [Issue #728](https://github.com/datafolklabs/cement/issues/728)
     - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
     - `[utils.misc]` [Issue #689](https://github.com/datafolklabs/cement/issues/689)
     - `[utils.shell]` [Issue #690](https://github.com/datafolklabs/cement/issues/690)

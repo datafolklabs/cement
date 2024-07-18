@@ -2,15 +2,20 @@
 Cement yaml extension module.
 """
 
-import yaml
+from __future__ import annotations
+import yaml  # type: ignore
+from typing import Any, Dict, Callable, TYPE_CHECKING
 from ..core import output
 from ..utils.misc import minimal_logger
 from ..ext.ext_configparser import ConfigParserConfigHandler
 
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
+
 LOG = minimal_logger(__name__)
 
 
-def suppress_output_before_run(app):
+def suppress_output_before_run(app: App) -> None:
     """
     This is a ``post_argument_parsing`` hook that suppresses console output if
     the ``YamlOutputHandler`` is triggered via command line.
@@ -24,7 +29,7 @@ def suppress_output_before_run(app):
         app._suppress_output()
 
 
-def unsuppress_output_before_render(app, data):
+def unsuppress_output_before_render(app: App, data: Dict[str, Any]) -> None:
     """
     This is a ``pre_render`` that unsuppresses console output if
     the ``YamlOutputHandler`` is triggered via command line so that the Yaml
@@ -39,7 +44,7 @@ def unsuppress_output_before_render(app, data):
         app._unsuppress_output()
 
 
-def suppress_output_after_render(app, out_text):
+def suppress_output_after_render(app: App, out_text: str) -> None:
     """
     This is a ``post_render`` hook that suppresses console output again after
     rendering, only if the ``YamlOutputHandler`` is triggered via command
@@ -70,7 +75,7 @@ class YamlOutputHandler(output.OutputHandler):
 
     """
 
-    class Meta:
+    class Meta(output.OutputHandler.Meta):
 
         """Handler meta-data."""
 
@@ -80,14 +85,16 @@ class YamlOutputHandler(output.OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-    def __init__(self, *args, **kw):
+    _meta: Meta  # type: ignore
+
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super(YamlOutputHandler, self).__init__(*args, **kw)
         self.config = None
 
-    def _setup(self, app_obj):
+    def _setup(self, app_obj: App) -> None:
         self.app = app_obj
 
-    def render(self, data_dict, template=None, **kw):
+    def render(self, data: Dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
         """
         Take a data dictionary and render it as Yaml output.  Note that the
         template option is received here per the interface, however this
@@ -95,7 +102,7 @@ class YamlOutputHandler(output.OutputHandler):
         ``yaml.dump()``.
 
         Args:
-            data_dict (dict): The data dictionary to render.
+            data (dict): The data dictionary to render.
 
         Keyword Args:
             template (str): Ignored in this output handler implementation.
@@ -105,7 +112,7 @@ class YamlOutputHandler(output.OutputHandler):
 
         """
         LOG.debug(f"rendering output as yaml via {self.__module__}")
-        return yaml.dump(data_dict, **kw)
+        return yaml.dump(data, **kw)  # type: ignore
 
 
 class YamlConfigHandler(ConfigParserConfigHandler):
@@ -130,13 +137,15 @@ class YamlConfigHandler(ConfigParserConfigHandler):
     the pyYaml message on this deprecation: https://msg.pyyaml.org/load
 
     """
-    class Meta:
+    class Meta(ConfigParserConfigHandler.Meta):
         label = 'yaml'
 
-    def __init__(self, *args, **kw):
+    _meta: Meta  # type: ignore
+
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super(YamlConfigHandler, self).__init__(*args, **kw)
 
-    def _parse_file(self, file_path):
+    def _parse_file(self, file_path: str) -> bool:
         """
         Parse Yaml configuration file settings from file_path, overwriting
         existing config settings.  If the file does not exist, returns False.
@@ -146,7 +155,7 @@ class YamlConfigHandler(ConfigParserConfigHandler):
                              file.
 
         """
-        yaml_load = yaml.full_load if hasattr(yaml, 'full_load') else yaml.load
+        yaml_load: Callable = yaml.full_load if hasattr(yaml, 'full_load') else yaml.load
 
         with open(file_path, 'r') as f:
             content = f.read()
@@ -156,7 +165,7 @@ class YamlConfigHandler(ConfigParserConfigHandler):
         return True
 
 
-def load(app):
+def load(app: App) -> None:
     app.hook.register('post_argument_parsing', suppress_output_before_run)
     app.hook.register('pre_render', unsuppress_output_before_render)
     app.hook.register('post_render', suppress_output_after_render)
