@@ -15,5 +15,5 @@ class Base(Controller):
             (['-v', '--version'], {'action': 'version', 'version': BANNER}),
         ]
 
-    def _default(self):
+    def _default(self) -> None:
         self.app.args.print_help()

@@ -1,6 +1,8 @@
 
+from __future__ import annotations
 import os
 import sys
+from typing import Optional, List
 sys.path.append(os.path.join(os.path.dirname(__file__), 'contrib'))
 
 from cement import App, CaughtSignal  # noqa: E402
@@ -29,12 +31,12 @@ class CementApp(App):
 
 class CementTestApp(CementApp):
     class Meta:
-        argv = []
-        config_files = []
+        argv: List[str] = []
+        config_files: List[str] = []
         exit_on_close = False
 
 
-def main(argv=None):
+def main(argv: Optional[List[str]] = None) -> None:
     with CementApp() as app:
         try:
             app.run()
