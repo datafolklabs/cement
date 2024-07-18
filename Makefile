@@ -23,13 +23,15 @@ virtualenv:
 	@echo "VirtualENV Setup Complete. Now run: eval $(pdm venv activate)"
 	@echo
 
-comply:
+comply: comply-ruff comply-mypy
+
+comply-ruff:
 	pdm run ruff check cement/ tests/
 
-comply-fix:
+comply-ruff-fix:
 	pdm run ruff check --fix cement/ tests/
 
-comply-typing:
+comply-mypy:
 	pdm run mypy
 
 docs:

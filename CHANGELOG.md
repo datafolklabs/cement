@@ -25,6 +25,7 @@ Refactoring:
     - [PR #681](https://github.com/datafolklabs/cement/pull/681)
 - `[dev]` Remove Python 3.5, 3.6, 3.7 Docker Dev Targets 
 - `[dev]` Added Python 3.13 Dev Target
+- `[dev]` Testing now requires typing compliance (`make test` -> `make comply-mypy`)
 - `[dev]` Type Annotations (related: [PR #628](https://github.com/datafolklabs/cement/pull/628))
     - `[core.arg]` [Issue #692](https://github.com/datafolklabs/cement/issues/692)
     - `[core.cache]` [Issue #693](https://github.com/datafolklabs/cement/issues/693)
