@@ -53,6 +53,7 @@ def test_smtp_send(rando):
         app.mail.send(f"{rando}",
                       to=[f'to-{rando}@localhost'],
                       from_addr=f'from-{rando}@localhost')
+
         res = requests.get(f"{mailpit_api}/search?query={rando}")
         data = res.json()
         assert len(data['messages']) == 1

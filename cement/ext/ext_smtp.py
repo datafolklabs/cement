@@ -2,6 +2,7 @@
 Cement smtp extension module.
 """
 
+from __future__ import annotations
 import os
 import smtplib
 from email.header import Header
@@ -9,10 +10,13 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
+from typing import Any, Dict, Union, Tuple, TYPE_CHECKING
 from ..core import mail
 from ..utils import fs
 from ..utils.misc import minimal_logger, is_true
 
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -26,7 +30,7 @@ class SMTPMailHandler(mail.MailHandler):
 
     """
 
-    class Meta:
+    class Meta(mail.MailHandler.Meta):
 
         """Handler meta-data."""
 
@@ -52,7 +56,9 @@ class SMTPMailHandler(mail.MailHandler):
             'files': None,
         }
 
-    def _get_params(self, **kw):
+    _meta: Meta  # type: ignore
+
+    def _get_params(self, **kw: Any) -> Dict[str, Any]:
         params = dict()
 
         # some keyword args override configuration defaults
@@ -70,7 +76,7 @@ class SMTPMailHandler(mail.MailHandler):
 
         return params
 
-    def send(self, body, **kw):
+    def send(self, body: Union[str, Tuple[str, str]], **kw: Any) -> bool:
         """
         Send an email message via SMTP.  Keyword arguments override
         configuration defaults (cc, bcc, etc).
@@ -116,12 +122,14 @@ class SMTPMailHandler(mail.MailHandler):
         params = self._get_params(**kw)
 
         if is_true(params['ssl']):
-            server = smtplib.SMTP_SSL(params['host'], params['port'],
+            server = smtplib.SMTP_SSL(params['host'],
+                                      params['port'],
                                       params['timeout'])
             LOG.debug(f"{self._meta.label} : initiating smtp over ssl")
 
         else:
-            server = smtplib.SMTP(params['host'], params['port'],
+            server = smtplib.SMTP(params['host'],  # type: ignore
+                                  params['port'],
                                   params['timeout'])
             LOG.debug(f"{self._meta.label} : initiating smtp")
 
@@ -135,10 +143,14 @@ class SMTPMailHandler(mail.MailHandler):
         if is_true(params['auth']):
             server.login(params['username'], params['password'])
 
-        self._send_message(server, body, **params)
+        res = self._send_message(server, body, **params)
         server.quit()
+        return res
 
-    def _send_message(self, server, body, **params):
+    def _send_message(self,
+                      server: Union[smtplib.SMTP, smtplib.SMTP_SSL],
+                      body: Union[str, Tuple[str, str]],
+                      **params: Any) -> bool:
         msg = MIMEMultipart('alternative')
         msg.set_charset('utf-8')
 
@@ -213,6 +225,10 @@ class SMTPMailHandler(mail.MailHandler):
 
         server.send_message(msg)
 
+        # FIXME: how to check success? docs don't say return type
+        # - `[ext.scrub]` [Issue #724](https://github.com/datafolklabs/cement/issues/724)
+        return True
 
-def load(app):
+
+def load(app: App) -> None:
     app.handler.register(SMTPMailHandler)
