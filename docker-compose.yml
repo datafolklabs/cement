@@ -81,18 +81,9 @@ services:
       context: .
       dockerfile: docker/Dockerfile.dev-py311
 
-  # derks@2024-06-22: not necessary atm as default cement container is 3.12
-  # cement-py312:
-  #   <<: *DEFAULTS
-  #   image: "cement:dev-py312"
-  #   build:
-  #     context: .
-  #     dockerfile: docker/Dockerfile.dev-py312
-
-  # derks@2024-06-22: future dev target
-  cement-py313:
+  cement-py312:
     <<: *DEFAULTS
-    image: "cement:dev-py313"
+    image: "cement:dev-py312"
     build:
       context: .
-      dockerfile: docker/Dockerfile.dev-py313
+      dockerfile: docker/Dockerfile.dev-py312

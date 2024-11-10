@@ -37,8 +37,8 @@ def main(argv: Optional[List[str]] = None) -> None:
     # Issue #679: https://github.com/datafolklabs/cement/issues/679
     try:
         import yaml, jinja2  # type: ignore  # noqa: F401 E401
-    except ModuleNotFoundError:
-        raise FrameworkError('Cement CLI Dependencies are missing!  Install cement[cli] extras ' +
+    except ModuleNotFoundError:  # pragma: nocover
+        raise FrameworkError('Cement CLI Dependencies are missing! Install cement[cli] extras ' +
                              'package to resolve -> pip install cement[cli]')
 
     with CementApp() as app:
