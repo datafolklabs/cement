@@ -9,6 +9,19 @@ Cement is an advanced Application Framework for Python, with a primary focus on 
 
 The first commit to Git was on Dec 4, 2009.  Since then, the framework has seen several iterations in design, and has continued to grow and improve since it's inception.  Cement is the most stable, and complete framework for command line and backend application development.
 
+## Installation
+
+```
+pip install cement
+```
+
+Optional CLI Extras (for development):
+
+```
+pip install cement[cli]
+```
+
+
 ## Core Features
 
 Cement core features include (but are not limited to):
@@ -26,9 +39,11 @@ Cement core features include (but are not limited to):
 - Hook support adds a bit of magic to apps and also ties into framework
 - Zero external dependencies* (not including optional extensions)
 - 100% test coverage (`pytest`, `coverage`)
-- 100% PEP8 compliant (`ruff`)
+- 100% PEP8 compliance (`ruff`)
+- Type annotation compliance (`mypy`)
 - Extensive API Reference (`sphinx`)
 - Tested on Python 3.8+
+
 
 ## Optional Extensions
 
@@ -50,11 +65,12 @@ See: [https://docs.builtoncement.com/extensions](https://docs.builtoncement.com/
 
 The Cement CLI Application Framework is Open Source and is distributed under the BSD License (three clause).  Please see the LICENSE file included with this software.
 
+
 ## Development
 
 ### Docker
 
-This project includes a `docker-compose` configuration that sets up all required services, and dependencies for development and testing.  This is the recommended path for local development, and is the only fully supported option.
+This project includes a Docker Compose configuration that sets up all required services, and dependencies for development and testing.  This is the recommended path for local development, and is the only fully supported option.
 
 The following creates all required docker containers, and launches an BASH shell within the `cement` dev container for development.
 ```
@@ -66,9 +82,9 @@ $ make dev
 The above is the equivalent of running:
 
 ```
-$ docker-compose up -d
+$ docker compose up -d
 
-$ docker-compose exec cement /bin/bash
+$ docker compose exec cement /bin/bash
 ```
 
 All execution is done *inside the docker containers*.
@@ -98,62 +114,81 @@ $ docker-compose exec cement-py39 /bin/bash
 ```
 
 
-### Vagrant
+### Windows Targeted Development
 
-An alternative option is included to run Vagrant for development.  This is partially supported, primarily for the purpose of developing/testing on Windows as well as testing specific issues on target operating systems.
+*Windows development and support is not 100% complete.  Applications Built on Cement is known to run and work on Windows well, however it is not a primary target for development and as such the setup is not as streamlined and currently has several known issues.*
 
-To see a list of configured systems:
+If you are developing on Windows, the recommended path is still Docker. However if you are specifically targeting development *for* Windows you will want to run Python/Cement natively which will require setting up a development environment on the Windows host. 
 
-```
-$ vagrant status
-```
+This is very rough (future doc coming), however the following will be required:
 
-#### Linux
+- Python 3.x (latest stable preferred)
+  - pip
+  - pipx
+  - pdm
+- Visual C++ 14.0 or Greater Build Tools
+  - Including: CMake
 
-```
-$ vagrant up linux
-
-$ vagrant ssh linux
-
-vagrant@linux $ cd /vagrant
-
-vagrant@linux $ bash scripts/vagrant/bootstrap.sh
-
-vagrant@linux $ make virtualenv
-
-vagrant@linux $ pdm venv activate
-
-|> cement >| $
-```
-
-#### Windows
-
-*Windows development and support is not 100% complete.  Cement is known to run and work on Windows, however it is not a primary target for development and as such the setup is not as streamlined and currently has several known errors.*
-
-The following assumes you're running these two initial commands from a unix based system:
+Assuming Python/PIP are installed, the following will install PDM:
 
 ```
-$ make clean
+pip install pipx
 
-$ vagrant up windows
+pipx install pdm
 ```
 
-RDP or Login to Desktop/Console, and open a PowerShell terminal:
+C++ Build Tools are install, the following will create a development virtual env:
 
 ```
-C:\> cd C:\Vagrant
+pdm venv create
 
-C:\Vagrant> powershell.exe scripts\vagrant\bootstrap.ps1
+pdm install --without memcached
+```
 
-C:\Vagrant> make virtualenv
+You can then run the core tests:
 
-C:\Vagrant> pdm venv activate
-
-C:\Vagrant> make test-core
+```
+pdm run pytest --cov=cement.core tests/core
 ```
 
 *Note that only the core library is fully tested on Windows.*
 
+Please explore the Makefile for helpers that may or may not work. Example, the following will run the same as the above `pdm run pytest` command:
+
+```
+make test-core
+```
+
+And, you can run Cement CLI via:
+
+```
+pdm run cement --help
+```
+
+
+### macOS Targeted Development
+
+Similar to the above... if you are developing on macOS, the recommended path is still Docker. However if you are specifically targeting development *for* macOS you will want to run Python/Cement natively which will require setting up a development environment on the macOS host. 
+
+This is less nuanced than Windows, however still required some dependencies that will not be fully covered here (example: memcached). The following will get you setup to run the core library tests.
+
+```
+pip install pipx
+
+pipx install pdm
+
+pdm venv create
+
+pdm install --without memcached
+
+make test-core
+```
+
+And, you can run Cement CLI via:
+
+```
+pdm run cement --help
+```
 
 ### Running Tests and Compliance
 
