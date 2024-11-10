@@ -6,10 +6,6 @@ WORKDIR /src
 COPY . /src
 COPY docker/vimrc /root/.vimrc
 COPY docker/bashrc /root/.bashrc
-# ENV PDM_BUILD_SCM_VERSION=0.0.0.dev
-# RUN pip install . \
-#     && rm -rf /src
-# RUN pip install .
 
 RUN apk update \
     && apk add pipx vim \
