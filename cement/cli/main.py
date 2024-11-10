@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Optional, List
 from cement import App, CaughtSignal  # noqa: E402
 from .controllers.base import Base    # noqa: E402
+from cement.core.exc import FrameworkError
 
 
 class CementApp(App):
@@ -33,6 +34,12 @@ class CementTestApp(CementApp):
 
 
 def main(argv: Optional[List[str]] = None) -> None:
+    # Issue #679: https://github.com/datafolklabs/cement/issues/679
+    try:
+        import yaml, jinja2
+    except ModuleNotFoundError as e:
+        raise FrameworkError('Cement CLI Dependencies are missing!  Install cement[cli] extras package to resolve -> pip install cement[cli]')
+
     with CementApp() as app:
         try:
             app.run()
