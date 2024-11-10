@@ -36,18 +36,19 @@ class CementTestApp(CementApp):
 def main(argv: Optional[List[str]] = None) -> None:
     # Issue #679: https://github.com/datafolklabs/cement/issues/679
     try:
-        import yaml, jinja2
-    except ModuleNotFoundError as e:
-        raise FrameworkError('Cement CLI Dependencies are missing!  Install cement[cli] extras package to resolve -> pip install cement[cli]')
+        import yaml, jinja2  # type: ignore  # noqa: F401 E401
+    except ModuleNotFoundError:
+        raise FrameworkError('Cement CLI Dependencies are missing!  Install cement[cli] extras ' +
+                             'package to resolve -> pip install cement[cli]')
 
     with CementApp() as app:
         try:
             app.run()
         except AssertionError as e:                     # pragma: nocover
-            print(f'AssertionError > {e.args[0]}')    # pragma: nocover
+            print(f'AssertionError > {e.args[0]}')      # pragma: nocover
             app.exit_code = 1                           # pragma: nocover
         except CaughtSignal as e:                       # pragma: nocover
-            print(f'\n{e}')                           # pragma: nocover
+            print(f'\n{e}')                             # pragma: nocover
             app.exit_code = 0                           # pragma: nocover
 
 
