@@ -40,6 +40,7 @@ smtp = []
 tabulate = ["tabulate"]
 watchdog = ["watchdog"]
 yaml = ["pyYaml"]
+cli = ["cement[yaml,jinja2]"]
 
 [tool.pdm.scripts]
 cement = {call = "cement.cli.main:main"}
@@ -64,11 +65,6 @@ build-backend = "pdm.backend"
 testpaths = ["tests"]
 addopts = "-v --cov-report=term --cov-report=html:coverage-report --capture=sys tests/"
 python_files= "test_*.py"
-
-[tool.coverage.run]
-omit = [
-    "cement/cli/contrib/*"
-]
 
 [tool.coverage.report]
 precision = 2
@@ -161,7 +157,6 @@ files = [
 ]
 exclude = """(?x)(
     ^cement/cli/templates |
-    ^cement/cli/contrib |
     ^.git/ |
     ^tests
   )"""
