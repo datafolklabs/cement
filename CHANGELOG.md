@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 3.0.11 - DEVELOPMENT (will be released as stable/3.0.12)
+## 3.0.12 - Nov 10, 2024
 
 Bugs:
 
