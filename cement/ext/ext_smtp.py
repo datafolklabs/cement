@@ -164,7 +164,7 @@ class SMTPMailHandler(mail.MailHandler):
             subject = f"{params['subject_prefix']} {params['subject']}"
         else:
             subject = params['subject']
-        msg['Subject'] = Header(subject)
+        msg['Subject'] = Header(subject)  # type: ignore
 
         # add body as text and/or as html
         partText = None

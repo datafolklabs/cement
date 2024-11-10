@@ -171,7 +171,7 @@ class LoggingLogHandler(log.LogHandler):
 
     def get_level(self) -> str:
         """Returns the current log level."""
-        return logging.getLevelName(self.backend.level)  # type: ignore
+        return logging.getLevelName(self.backend.level)
 
     def clear_loggers(self, namespace: str) -> None:
         """Clear any previously configured loggers for ``namespace``."""
