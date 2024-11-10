@@ -11,9 +11,14 @@ extensions.
   dependencies.
 """
 
-import pylibmc
+from __future__ import annotations
+import pylibmc  # type: ignore
+from typing import Any, List, Optional, TYPE_CHECKING
 from ..core import cache
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -26,7 +31,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
     `pylibmc <http://sendapatch.se/projects/pylibmc/>`_ library.
     """
 
-    class Meta:
+    class Meta(cache.CacheHandler.Meta):
 
         """Handler meta-data."""
 
@@ -36,16 +41,18 @@ class MemcachedCacheHandler(cache.CacheHandler):
             expire_time=0,
         )
 
-    def __init__(self, *args, **kw):
+    _meta: Meta  # type: ignore
+
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super(MemcachedCacheHandler, self).__init__(*args, **kw)
         self.mc = None
 
-    def _setup(self, *args, **kw):
+    def _setup(self, *args: Any, **kw: Any) -> None:
         super(MemcachedCacheHandler, self)._setup(*args, **kw)
         self._fix_hosts()
         self.mc = pylibmc.Client(self._config('hosts'))
 
-    def _fix_hosts(self):
+    def _fix_hosts(self) -> None:
         """
         Useful to fix up the hosts configuration (i.e. convert a
         comma-separated string into a list).  This function does not return
@@ -56,7 +63,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
         :returns: ``None``
 
         """
-        hosts = self._config('hosts')
+        hosts: List[str] = self._config('hosts')
         fixed_hosts = []
 
         if type(hosts) is str:
@@ -67,7 +74,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
             fixed_hosts = hosts
         self.app.config.set(self._meta.config_section, 'hosts', fixed_hosts)
 
-    def get(self, key, fallback=None, **kw):
+    def get(self, key: str, fallback: Any = None, **kw: Any) -> Any:
         """
         Get a value from the cache.  Any additional keyword arguments will be
         passed directly to `pylibmc` get function.
@@ -84,14 +91,14 @@ class MemcachedCacheHandler(cache.CacheHandler):
             value.
 
         """
-        LOG.debug("getting cache value using key '%s'" % key)
+        LOG.debug(f"getting cache value using key '{key}'")
         res = self.mc.get(key, **kw)
         if res is None:
             return fallback
         else:
             return res
 
-    def _config(self, key):
+    def _config(self, key: str) -> Any:
         """
         This is a simple wrapper, and is equivalent to:
         ``self.app.config.get('cache.memcached', <key>)``.
@@ -106,7 +113,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
         """
         return self.app.config.get(self._meta.config_section, key)
 
-    def set(self, key, value, time=None, **kw):
+    def set(self, key: str, value: Any, time: Optional[int] = None, **kw: Any) -> None:
         """
         Set a value in the cache for the given ``key``.  Any additional
         keyword arguments will be passed directly to the `pylibmc` set
@@ -127,7 +134,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
 
         self.mc.set(key, value, time=time, **kw)
 
-    def delete(self, key, **kw):
+    def delete(self, key: str, **kw: Any) -> bool:
         """
         Delete an item from the cache for the given ``key``.  Any additional
         keyword arguments will be passed directly to the `pylibmc` delete
@@ -138,8 +145,9 @@ class MemcachedCacheHandler(cache.CacheHandler):
 
         """
         self.mc.delete(key, **kw)
+        return True
 
-    def purge(self, **kw):
+    def purge(self, **kw: Any) -> None:
         """
         Purge the entire cache, all keys and values will be lost.  Any
         additional keyword arguments will be passed directly to the
@@ -150,5 +158,5 @@ class MemcachedCacheHandler(cache.CacheHandler):
         self.mc.flush_all(**kw)
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(MemcachedCacheHandler)

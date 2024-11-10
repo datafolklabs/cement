@@ -26,7 +26,7 @@ class Items(Controller):
     def create(self):
         text = self.app.pargs.item_text
         now = strftime("%Y-%m-%d %H:%M:%S")
-        self.app.log.info('creating todo item: %s' % text)
+        self.app.log.info(f'creating todo item: {text}')
 
         item = {
             'timestamp': now,
@@ -52,7 +52,7 @@ class Items(Controller):
         id = int(self.app.pargs.item_id)
         text = self.app.pargs.item_text
         now = strftime("%Y-%m-%d %H:%M:%S")
-        self.app.log.info('updating todo item: %s - %s' % (id, text))
+        self.app.log.info(f'updating todo item: {id} - {text}')
 
         item = {
             'timestamp': now,
@@ -76,14 +76,14 @@ class Items(Controller):
         item['timestamp'] = now
         item['state'] = 'complete'
 
-        self.app.log.info('completing item id: %s - %s' % (id, item['text']))
+        self.app.log.info(f"completing item id: {id} - {item['text']}")
         self.app.db.update(item, doc_ids=[id])
 
-        msg = """
+        msg = f"""
         Congratulations! The following item has been completed:
 
-        %s - %s
-        """ % (id, item['text'])
+        {id} - {item['text']}
+        """
 
         self.app.mail.send(msg,
                       subject='TODO Item Complete',
@@ -101,5 +101,5 @@ class Items(Controller):
     )
     def delete(self):
         id = int(self.app.pargs.item_id)
-        self.app.log.info('deleting todo item id: %s' % id)
+        self.app.log.info(f'deleting todo item id: {id}')
         self.app.db.remove(doc_ids=[id])

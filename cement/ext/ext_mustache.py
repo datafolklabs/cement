@@ -11,20 +11,25 @@ extensions.
   dependencies.
 """
 
-from pystache.renderer import Renderer
+from __future__ import annotations
+from pystache.renderer import Renderer  # type: ignore
+from typing import Any, Dict, Union, TYPE_CHECKING
 from ..core.output import OutputHandler
 from ..core.template import TemplateHandler
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
 
 class PartialsLoader(object):
 
-    def __init__(self, handler):
+    def __init__(self, handler: TemplateHandler) -> None:
         self.handler = handler
 
-    def get(self, template):
+    def get(self, template: str) -> Union[str, bytes, None]:
         content, _type, _path = self.handler.load(template)
         return content
 
@@ -39,7 +44,7 @@ class MustacheOutputHandler(OutputHandler):
     :cement:`Output Handling <dev/output>`.
     """
 
-    class Meta:
+    class Meta(OutputHandler.Meta):
 
         """Handler meta-data."""
 
@@ -49,17 +54,18 @@ class MustacheOutputHandler(OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-    def __init__(self, *args, **kw):
-        super(MustacheOutputHandler, self).__init__(*args, **kw)
-        # self._partials_loader = PartialsLoader(self)
-        self.templater = None
+    _meta: Meta  # type: ignore
 
-    def _setup(self, app):
+    def __init__(self, *args: Any, **kw: Any) -> None:
+        super(MustacheOutputHandler, self).__init__(*args, **kw)
+        self.templater: MustacheTemplateHandler = None  # type: ignore
+
+    def _setup(self, app: App) -> None:
         super(MustacheOutputHandler, self)._setup(app)
-        self.templater = self.app.handler.resolve('template', 'mustache',
+        self.templater = self.app.handler.resolve('template', 'mustache',  # type: ignore
                                                   setup=True)
 
-    def render(self, data, template=None, **kw):
+    def render(self, data: Dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
         """
         Take a data dictionary and render it using the given template file.
         Additional keyword arguments passed to ``stache.render()``.
@@ -77,7 +83,7 @@ class MustacheOutputHandler(OutputHandler):
 
         """
 
-        LOG.debug("rendering content using '%s' as a template." % template)
+        LOG.debug(f"rendering content using '{template}' as a template.")
         content, _type, _path = self.templater.load(template)
         return self.templater.render(content, data)
 
@@ -98,17 +104,19 @@ class MustacheTemplateHandler(TemplateHandler):
     extensions.
     """
 
-    class Meta:
+    class Meta(TemplateHandler.Meta):
 
         """Handler meta-data."""
 
         label = 'mustache'
 
-    def __init__(self, *args, **kw):
+    _meta: Meta  # type: ignore
+
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super(MustacheTemplateHandler, self).__init__(*args, **kw)
         self._partials_loader = PartialsLoader(self)
 
-    def render(self, content, data):
+    def render(self, content: Union[str, bytes], data: Dict[str, Any]) -> str:
         """
         Render the given ``content`` as template with the ``data`` dictionary.
 
@@ -122,9 +130,9 @@ class MustacheTemplateHandler(TemplateHandler):
         """
 
         stache = Renderer(partials=self._partials_loader)
-        return stache.render(content, data)
+        return stache.render(content, data)  # type: ignore
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(MustacheOutputHandler)
     app.handler.register(MustacheTemplateHandler)

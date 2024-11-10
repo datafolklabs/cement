@@ -1,5 +1,9 @@
 language: python
 sudo: false
+before_install:
+  - sudo apt-get -y install pipx python3-venv
+  - pipx ensurepath
+  - pipx install pdm
 script: ./scripts/travis.sh
 os:
   - linux
@@ -43,6 +47,18 @@ matrix:
         - DOCKER_COMPOSE_VERSION=v2.17.3
         - SMTP_HOST=localhost
         - SMTP_PORT=1025
+
+    - python: "3.13"
+      dist: "jammy"
+      sudo: true
+      env:
+        - DOCKER_COMPOSE_VERSION=v2.17.3
+        - SMTP_HOST=localhost
+        - SMTP_PORT=1025
+        # below is a workaround due to invalid travis Python version
+        - PDM_IGNORE_ACTIVE_VENV=true
+        - PYTHON_VERSION=3.13
+
 services:
   - memcached
   - redis-server

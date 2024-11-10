@@ -1,5 +1,107 @@
 # ChangeLog
 
+## 3.0.12 - Nov 10, 2024
+
+Bugs:
+
+- None
+
+
+Features:
+
+- None
+
+
+Refactoring:
+
+- `[dev]` Refactor String Substitutions (`%s`) with F-Strings
+    - [Issue #733](https://github.com/datafolklabs/cement/issues/733)
+- `[dev]` Allow line lengths up to 100 characters (previously 78)
+- `[dev]` Modernize Packaging (pyproject.toml, PDM)
+    - [Issue #680](https://github.com/datafolklabs/cement/issues/680)
+    - [PR #681](https://github.com/datafolklabs/cement/pull/681)
+- `[dev]` Implement Ruff for Code Compliance (replaces Flake8)
+    - [Issue #671](https://github.com/datafolklabs/cement/issues/671)
+    - [PR #681](https://github.com/datafolklabs/cement/pull/681)
+- `[dev]` Remove Python 3.5, 3.6, 3.7 Docker Dev Targets 
+- `[dev]` Added Python 3.13 Dev Target
+- `[dev]` Testing now requires typing compliance (`make test` -> `make comply-mypy`)
+- `[dev]` Type Annotations (related: [PR #628](https://github.com/datafolklabs/cement/pull/628))
+    - `[core.arg]` [Issue #692](https://github.com/datafolklabs/cement/issues/692)
+    - `[core.cache]` [Issue #693](https://github.com/datafolklabs/cement/issues/693)
+    - `[core.config]` [Issue #694](https://github.com/datafolklabs/cement/issues/694)
+    - `[core.controller]` [Issue #695](https://github.com/datafolklabs/cement/issues/695)
+    - `[core.deprecations]` [Issue #696](https://github.com/datafolklabs/cement/issues/696)
+    - `[core.exc]` [Issue #697](https://github.com/datafolklabs/cement/issues/697)
+    - `[core.extension]` [Issue #698](https://github.com/datafolklabs/cement/issues/698)
+    - `[core.foundation]` [Issue #699](https://github.com/datafolklabs/cement/issues/699)
+    - `[core.handler]` [Issue #700](https://github.com/datafolklabs/cement/issues/700)
+    - `[core.hook]` [Issue #700](https://github.com/datafolklabs/cement/issues/701)
+    - `[core.interface]` [Issue #702](https://github.com/datafolklabs/cement/issues/702)
+    - `[core.log]` [Issue #703](https://github.com/datafolklabs/cement/issues/703)
+    - `[core.mail]` [Issue #704](https://github.com/datafolklabs/cement/issues/704)
+    - `[core.meta]` [Issue #705](https://github.com/datafolklabs/cement/issues/705)
+    - `[core.output]` [Issue #706](https://github.com/datafolklabs/cement/issues/706)
+    - `[core.plugin]` [Issue #707](https://github.com/datafolklabs/cement/issues/707)
+    - `[core.template]` [Issue #708](https://github.com/datafolklabs/cement/issues/708)
+    - `[ext.alarm]` [Issue #709](https://github.com/datafolklabs/cement/issues/709)
+    - `[ext.argparse]` [Issue #710](https://github.com/datafolklabs/cement/issues/710)
+    - `[ext.colorlog]` [Issue #711](https://github.com/datafolklabs/cement/issues/711)
+    - `[ext.configparser]` [Issue #712](https://github.com/datafolklabs/cement/issues/712)
+    - `[ext.daemon]` [Issue #713](https://github.com/datafolklabs/cement/issues/713)
+    - `[ext.dummy]` [Issue #714](https://github.com/datafolklabs/cement/issues/714)
+    - `[ext.generate]` [Issue #715](https://github.com/datafolklabs/cement/issues/715)
+    - `[ext.jinja2]` [Issue #716](https://github.com/datafolklabs/cement/issues/716)
+    - `[ext.json]` [Issue #717](https://github.com/datafolklabs/cement/issues/717)
+    - `[ext.logging]` [Issue #718](https://github.com/datafolklabs/cement/issues/718)
+    - `[ext.memcached]` [Issue #719](https://github.com/datafolklabs/cement/issues/719)
+    - `[ext.mustache]` [Issue #720](https://github.com/datafolklabs/cement/issues/720)
+    - `[ext.plugin]` [Issue #721](https://github.com/datafolklabs/cement/issues/721)
+    - `[ext.print]` [Issue #722](https://github.com/datafolklabs/cement/issues/722)
+    - `[ext.redis]` [Issue #723](https://github.com/datafolklabs/cement/issues/723)
+    - `[ext.scrub]` [Issue #724](https://github.com/datafolklabs/cement/issues/724)
+    - `[ext.smtp]` [Issue #725](https://github.com/datafolklabs/cement/issues/725)
+    - `[ext.tabulate]` [Issue #726](https://github.com/datafolklabs/cement/issues/726)
+    - `[ext.watchdog]` [Issue #727](https://github.com/datafolklabs/cement/issues/727)
+    - `[ext.yaml]` [Issue #728](https://github.com/datafolklabs/cement/issues/728)
+    - `[utils.fs]` [Issue #688](https://github.com/datafolklabs/cement/issues/688)
+    - `[utils.misc]` [Issue #689](https://github.com/datafolklabs/cement/issues/689)
+    - `[utils.shell]` [Issue #690](https://github.com/datafolklabs/cement/issues/690)
+    - `[utils.version]` [Issue #691](https://github.com/datafolklabs/cement/issues/691)
+
+
+
+Misc: 
+
+- [cli] Move CLI dependencies to `cement[cli]` extras package, and remove included/nexted `contrib` sources.  See note on 'Potential Upgrade Incompatibility'
+  - [Issue #679](https://github.com/datafolklabs/cement/issues/679)
+
+
+Deprecations:
+
+- None
+
+
+Special Recognitions:
+
+Many thanks to [@sigma67](https://github.com/sigma67) for their contributions in modernizing the packaging system. Cement was started in 2009, and has some lingering technical debt that is now being addressed. Their contribution was a major help in moving off of setuptools and on to PDM and `pyproject.toml`, along with initial implementations of Ruff for a new generation of code compliance. I sincerely appreciate your help!
+
+Many thanks to [@rednar](https://github.com/rednar) for their contributions toward adding type annotations in [PR #628](https://github.com/datafolklabs/cement/pull/628). This PR was too large to merge directly, but it is serving as a guide to finally begin work toward adding type annotations to Cement. This was a massive effort, and is very helpful to have this work available to guide the effort even if it will not be merged directly.
+
+
+Potential Upgrade Incompatibility:
+
+This update removes included `contrib` libraries that are dependencies for the `cement` command line tool to function (PyYAML, and Jinja2). The dependencies are now included via the `cement[cli]` extras package.
+
+This is not an upgrade incompatibility in the core Cement code, and it would not affect any applications that are built on Cement. That said, it does have the potential to break any automation or other uses of the `cement` command line tool.
+
+Resolution:
+
+```
+pip install cement[cli]
+```
+
+
 ## 3.0.10 - Feb 28, 2024
 
 Bugs: 

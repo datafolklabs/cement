@@ -103,7 +103,7 @@ def test_basic():
 
 
 def test_loaded_extensions():
-    if platform.system().lower() in ['windows']:
+    if platform.system().lower() in ['windows', 'darwin']:
         ext_list = [
             'colorlog',
             'dummy',

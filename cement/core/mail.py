@@ -1,9 +1,14 @@
 """Cement core mail module."""
 
+from __future__ import annotations
 from abc import abstractmethod
+from typing import Any, Dict, TYPE_CHECKING
 from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -17,7 +22,7 @@ class MailInterface(Interface):
     :class:`MailHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Handler meta-data."""
 
@@ -25,7 +30,7 @@ class MailInterface(Interface):
         """The label identifier of the interface."""
 
     @abstractmethod
-    def send(self, body, **kwargs):
+    def send(self, body: str, **kwargs: Any) -> bool:
         """
         Send a mail message.  Keyword arguments override configuration
         defaults (cc, bcc, etc).
@@ -84,7 +89,7 @@ class MailHandler(MailInterface, Handler):
 
     """
 
-    class Meta:
+    class Meta(Handler.Meta):
 
         """
         Handler meta-data (can be passed as keyword arguments to the parent
@@ -92,7 +97,7 @@ class MailHandler(MailInterface, Handler):
         """
 
         #: Configuration default values
-        config_defaults = {
+        config_defaults: Dict[str, Any] = {
             'to': [],
             'from_addr': 'noreply@example.com',
             'cc': [],
@@ -101,11 +106,11 @@ class MailHandler(MailInterface, Handler):
             'subject_prefix': '',
         }
 
-    def _setup(self, app_obj):
+    def _setup(self, app_obj: App) -> None:
         super()._setup(app_obj)
         self._validate_config()
 
-    def _validate_config(self):
+    def _validate_config(self) -> None:
         # convert comma separated strings to lists (ConfigParser)
         for item in ['to', 'cc', 'bcc']:
             if item in self.app.config.keys(self._meta.config_section):

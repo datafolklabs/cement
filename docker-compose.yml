@@ -1,9 +1,34 @@
-version: "3"
 
 volumes:
   mailpit-data:
 
 services:
+  redis: 
+    image: redis:latest
+    hostname: redis
+
+  memcached:
+    image: memcached:latest
+    hostname: memcached
+  
+  mailpit:
+    image: axllent/mailpit
+    hostname: mailpit
+    restart: always
+    volumes:
+    - mailpit-data:/data
+    - ./docker/mailpit:/certificates
+    ports:
+    - 8025:8025
+    - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      MP_SMTP_TLS_CERT: /certificates/dev-cert.pem
+      MP_SMTP_TLS_KEY: /certificates/dev-key.pem
+
   cement: &DEFAULTS
     image: "cement:dev"
     build:
@@ -23,31 +48,10 @@ services:
       MEMCACHED_HOST: memcached
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
-
-  cement-py35:
-    <<: *DEFAULTS
-    image: "cement:dev-py35"
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.dev-py35
-    profiles:
-    - donotstart
-
-  cement-py36:
-    <<: *DEFAULTS
-    image: "cement:dev-py36"
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.dev-py36
-    profiles:
-    - donotstart
-
-  cement-py37:
-    <<: *DEFAULTS
-    image: "cement:dev-py37"
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.dev-py37
+    depends_on:
+      - redis
+      - memcached
+      - mailpit
   
   cement-py38:
     <<: *DEFAULTS
@@ -77,28 +81,9 @@ services:
       context: .
       dockerfile: docker/Dockerfile.dev-py311
 
-  redis:
-    image: redis:latest
-    hostname: redis
-
-  memcached:
-    image: memcached:latest
-    hostname: memcached
-  
-  mailpit:
-    image: axllent/mailpit
-    container_name: mailpit
-    restart: always
-    volumes:
-    - mailpit-data:/data
-    - ./docker/mailpit:/certificates
-    ports:
-    - 8025:8025
-    - 1025:1025
-    environment:
-      MP_MAX_MESSAGES: 5000
-      MP_DATA_FILE: /data/mailpit.db
-      MP_SMTP_AUTH_ACCEPT_ANY: 1
-      MP_SMTP_AUTH_ALLOW_INSECURE: 1
-      MP_SMTP_TLS_CERT: /certificates/dev-cert.pem
-      MP_SMTP_TLS_KEY: /certificates/dev-key.pem
+  cement-py312:
+    <<: *DEFAULTS
+    image: "cement:dev-py312"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py312

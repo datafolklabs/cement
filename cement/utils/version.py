@@ -36,15 +36,16 @@
 # Note: Nothing is covered here because this file is imported before nose and
 # coverage take over.. and so its a false positive that nothing is covered.
 
-import datetime  # pragma: nocover
-import os  # pragma: nocover
-import sys  # pragma: nocover
-import subprocess  # pragma: nocover
-import platform  # pragma: nocover
-from ..core.backend import VERSION  # pragma: nocover
+import datetime
+import os
+import sys
+import subprocess
+import platform
+from typing import Optional, Tuple
+from ..core.backend import VERSION
 
 
-def get_version(version=VERSION):  # pragma: nocover
+def get_version(version: Tuple[int, int, int, str, int] = VERSION) -> str:
     "Returns a PEP 386-compliant version number from VERSION."
     assert len(version) == 5
     assert version[3] in ('alpha', 'beta', 'rc', 'final')
@@ -63,7 +64,7 @@ def get_version(version=VERSION):  # pragma: nocover
     if version[3] == 'alpha' and version[4] == 0:
         git_changeset = get_git_changeset()
         if git_changeset:
-            sub = '.dev%s' % git_changeset
+            sub = f'.dev{git_changeset}'
 
     elif version[3] != 'final':
         mapping = {'alpha': 'a', 'beta': 'b', 'rc': 'c'}
@@ -72,19 +73,19 @@ def get_version(version=VERSION):  # pragma: nocover
     return main + sub
 
 
-def get_version_banner():
+def get_version_banner() -> str:
     cement_ver = get_version()
     python_ver = '.'.join([str(x) for x in sys.version_info[0:3]])
     plat = platform.platform()
 
-    banner = 'Cement Framework %s\n' % cement_ver + \
-             'Python %s\n' % python_ver + \
-             'Platform %s' % plat
+    banner = f'Cement Framework {cement_ver}\n' + \
+             f'Python {python_ver}\n' + \
+             f'Platform {plat}'
 
     return banner
 
 
-def get_git_changeset():  # pragma: nocover
+def get_git_changeset() -> Optional[str]:
     """Returns a numeric identifier of the latest git changeset.
 
     The result is the UTC timestamp of the changeset in YYYYMMDDHHMMSS format.
@@ -97,11 +98,9 @@ def get_git_changeset():  # pragma: nocover
                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                shell=True, cwd=repo_dir,
                                universal_newlines=True)
-    timestamp = git_log.communicate()[0]
+    ts = git_log.communicate()[0]
     try:
-        timestamp = datetime.datetime.fromtimestamp(
-            int(timestamp), datetime.UTC
-        )
+        timestamp = datetime.datetime.fromtimestamp(int(ts), datetime.timezone.utc)
     except ValueError: 	# pragma: nocover
         return None  	# pragma: nocover
     return timestamp.strftime('%Y%m%d%H%M%S')

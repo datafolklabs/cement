@@ -11,9 +11,14 @@ extensions.
   dependencies.
 """
 
+from __future__ import annotations
 import redis
+from typing import Any, Optional, TYPE_CHECKING
 from ..core import cache
 from ..utils.misc import minimal_logger
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 LOG = minimal_logger(__name__)
 
@@ -26,7 +31,7 @@ class RedisCacheHandler(cache.CacheHandler):
     `redis <http://github.com/andymccurdy/redis-py>`_ library.
     """
 
-    class Meta:
+    class Meta(cache.CacheHandler.Meta):
 
         """Handler meta-data."""
 
@@ -38,18 +43,20 @@ class RedisCacheHandler(cache.CacheHandler):
             expire_time=0,
         )
 
-    def __init__(self, *args, **kw):
+    _meta: Meta  # type: ignore
+
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super(RedisCacheHandler, self).__init__(*args, **kw)
         self.mc = None
 
-    def _setup(self, *args, **kw):
+    def _setup(self, *args: Any, **kw: Any) -> None:
         super(RedisCacheHandler, self)._setup(*args, **kw)
         self.r = redis.StrictRedis(
             host=self._config('host', default='127.0.0.1'),
             port=self._config('port', default=6379),
             db=self._config('db', default=0))
 
-    def _config(self, key, default=None):
+    def _config(self, key: str, default: Any = None) -> Any:
         """
         This is a simple wrapper, and is equivalent to:
         ``self.app.config.get('cache.redis', <key>)``.
@@ -64,7 +71,7 @@ class RedisCacheHandler(cache.CacheHandler):
         """
         return self.app.config.get(self._meta.config_section, key)
 
-    def get(self, key, fallback=None, **kw):
+    def get(self, key: str, fallback: Any = None, **kw: Any) -> Any:
         """
         Get a value from the cache.  Additional keyword arguments are ignored.
 
@@ -80,14 +87,14 @@ class RedisCacheHandler(cache.CacheHandler):
             value.
 
         """
-        LOG.debug("getting cache value using key '%s'" % key)
+        LOG.debug(f"getting cache value using key '{key}'")
         res = self.r.get(key)
         if res is None:
             return fallback
         else:
-            return res.decode('utf-8')
+            return res.decode('utf-8')  # type: ignore
 
-    def set(self, key, value, time=None, **kw):
+    def set(self, key: str, value: Any, time: Optional[int] = None, **kw: Any) -> None:
         """
         Set a value in the cache for the given ``key``.  Additional
         keyword arguments are ignored.
@@ -108,7 +115,7 @@ class RedisCacheHandler(cache.CacheHandler):
         else:
             self.r.setex(key, time, value)
 
-    def delete(self, key, **kw):
+    def delete(self, key: str, **kw: Any) -> bool:
         """
         Delete an item from the cache for the given ``key``.  Additional
         keyword arguments are ignored.
@@ -116,10 +123,14 @@ class RedisCacheHandler(cache.CacheHandler):
         Args:
             key (str): The key to delete from the cache.
 
+        Returns:
+            bool: ``True`` if the key is successfully deleted, ``False``
+            otherwise
         """
-        self.r.delete(key)
+        res = self.r.delete(key)
+        return int(res) > 0  # type: ignore
 
-    def purge(self, **kw):
+    def purge(self, **kw: Any) -> None:
         """
         Purge the entire cache, all keys and values will be lost.  Any
         additional keyword arguments will be passed directly to the
@@ -128,8 +139,8 @@ class RedisCacheHandler(cache.CacheHandler):
         """
         keys = self.r.keys('*')
         if keys:
-            self.r.delete(*keys)
+            self.r.delete(*keys)  # type: ignore
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(RedisCacheHandler)

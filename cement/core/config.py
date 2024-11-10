@@ -2,6 +2,7 @@
 
 import os
 from abc import abstractmethod
+from typing import Any, Dict, List
 from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.fs import abspath
@@ -19,7 +20,7 @@ class ConfigInterface(Interface):
     :class:`ConfigHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Handler meta-data."""
 
@@ -27,7 +28,7 @@ class ConfigInterface(Interface):
         interface = 'config'
 
     @abstractmethod
-    def parse_file(self, file_path):
+    def parse_file(self, file_path: str) -> bool:
         """
         Parse config file settings from ``file_path``.  Returns True if the
         file existed, and was parsed successfully.  Returns False otherwise.
@@ -42,7 +43,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def keys(self, section):
+    def keys(self, section: str) -> List[str]:
         """
         Return a list of configuration keys from ``section``.
 
@@ -56,7 +57,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def get_sections(self):
+    def get_sections(self) -> List[str]:
         """
         Return a list of configuration sections.
 
@@ -67,7 +68,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def get_dict(self):
+    def get_dict(self) -> Dict[str, Any]:
         """
         Return a dict of the entire configuration.
 
@@ -77,7 +78,7 @@ class ConfigInterface(Interface):
         """
 
     @abstractmethod
-    def get_section_dict(self, section):
+    def get_section_dict(self, section: str) -> Dict[str, Any]:
         """
         Return a dict of configuration parameters for ``section``.
 
@@ -92,7 +93,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def add_section(self, section):
+    def add_section(self, section: str) -> None:
         """
         Add a new section if it doesn't already exist.
 
@@ -106,7 +107,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def get(self, section, key):
+    def get(self, section: str, key: str) -> Any:
         """
         Return a configuration value based on ``section.key``.  Must honor
         environment variables if they exist to override the config... for
@@ -129,7 +130,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def set(self, section, key, value):
+    def set(self, section: str, key: str, value: Any) -> None:
         """
         Set a configuration value based at ``section.key``.
 
@@ -146,7 +147,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def merge(self, dict_obj, override=True):
+    def merge(self, dict_obj: dict, override: bool = True) -> None:
         """
         Merges a dict object into the configuration.
 
@@ -161,7 +162,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def has_section(self, section):
+    def has_section(self, section: str) -> bool:
         """
         Returns whether or not the section exists.
 
@@ -183,8 +184,11 @@ class ConfigHandler(ConfigInterface, Handler):
 
     """
 
+    class Meta(Handler.Meta):
+        pass  # pragma: nocover
+
     @abstractmethod
-    def _parse_file(self, file_path):
+    def _parse_file(self, file_path: str) -> bool:
         """
         Parse a configuration file at ``file_path`` and store it.  This
         function must be provided by the handler implementation (that is
@@ -199,7 +203,7 @@ class ConfigHandler(ConfigInterface, Handler):
         """
         pass    # pragma: nocover
 
-    def parse_file(self, file_path):
+    def parse_file(self, file_path: str) -> bool:
         """
         Ensure we are using the absolute/expanded path to ``file_path``, and
         then call ``self._parse_file`` to parse config file settings from it,
@@ -219,10 +223,8 @@ class ConfigHandler(ConfigInterface, Handler):
         """
         file_path = abspath(file_path)
         if os.path.exists(file_path):
-            LOG.debug("config file '%s' exists, loading settings..." %
-                      file_path)
+            LOG.debug(f"config file '{file_path}' exists, loading settings...")
             return self._parse_file(file_path)
         else:
-            LOG.debug("config file '%s' does not exist, skipping..." %
-                      file_path)
+            LOG.debug(f"config file '{file_path}' does not exist, skipping...")
             return False

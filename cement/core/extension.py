@@ -1,13 +1,19 @@
 """Cement core extensions module."""
 
+from __future__ import annotations
 import sys
 from abc import abstractmethod
+from typing import Any, List, TYPE_CHECKING
 from ..core import exc
 from ..core.interface import Interface
 from ..core.handler import Handler
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
+
+
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
 
 
 class ExtensionInterface(Interface):
@@ -19,15 +25,15 @@ class ExtensionInterface(Interface):
     :class:`ExtensionHandler` base class as a starting point.
     """
 
-    class Meta:
+    class Meta(Interface.Meta):
 
         """Handler meta-data."""
 
         #: The string identifier of the interface.
-        interface = 'extension'
+        interface: str = 'extension'
 
     @abstractmethod
-    def load_extension(self, ext_module):
+    def load_extension(self, ext_module: str) -> None:
         """
         Load an extension whose module is ``ext_module``.  For example,
         ``cement.ext.ext_json``.
@@ -39,7 +45,7 @@ class ExtensionInterface(Interface):
         pass    # pragma: no cover
 
     @abstractmethod
-    def load_extensions(self, ext_list):
+    def load_extensions(self, ext_list: List[str]) -> None:
         """
         Load all extensions from ``ext_list``.
 
@@ -61,7 +67,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
 
     """
 
-    class Meta:
+    class Meta(Handler.Meta):
 
         """
         Handler meta-data (can be passed as keyword arguments to the parent
@@ -69,14 +75,14 @@ class ExtensionHandler(ExtensionInterface, Handler):
         """
 
         #: The string identifier of the handler.
-        label = 'cement'
+        label: str = 'cement'
 
-    def __init__(self, **kw):
+    def __init__(self, **kw: Any) -> None:
         super().__init__(**kw)
-        self.app = None
-        self._loaded_extensions = []
+        self.app: App = None  # type: ignore
+        self._loaded_extensions: List[str] = []
 
-    def get_loaded_extensions(self):
+    def get_loaded_extensions(self) -> List[str]:
         """
         Get all loaded extensions.
 
@@ -86,7 +92,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
         """
         return self._loaded_extensions
 
-    def list(self):
+    def list(self) -> List[str]:
         """
         Synonymous with ``get_loaded_extensions()``.
 
@@ -96,7 +102,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
         """
         return self._loaded_extensions
 
-    def load_extension(self, ext_module):
+    def load_extension(self, ext_module: str) -> None:
         """
         Given an extension module name, load or in other-words ``import`` the
         extension.
@@ -112,13 +118,13 @@ class ExtensionHandler(ExtensionInterface, Handler):
         """
         # If its not a full module path then preppend our default path
         if ext_module.find('.') == -1:
-            ext_module = 'cement.ext.ext_%s' % ext_module
+            ext_module = f'cement.ext.ext_{ext_module}'
 
         if ext_module in self._loaded_extensions:
-            LOG.debug("framework extension '%s' already loaded" % ext_module)
+            LOG.debug(f"framework extension '{ext_module}' already loaded")
             return
 
-        LOG.debug("loading the '%s' framework extension" % ext_module)
+        LOG.debug(f"loading the '{ext_module}' framework extension")
         try:
             if ext_module not in sys.modules:
                 __import__(ext_module, globals(), locals(), [], 0)
@@ -132,7 +138,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
         except ImportError as e:
             raise exc.FrameworkError(e.args[0])
 
-    def load_extensions(self, ext_list):
+    def load_extensions(self, ext_list: List[str]) -> None:
         """
         Given a list of extension modules, iterate over the list and pass
         individually to ``self.load_extension()``.

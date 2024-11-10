@@ -43,7 +43,7 @@ class Base(Controller):
 
         ### do something with arguments
         if self.app.pargs.foo is not None:
-            print('Foo Argument > %s' % self.app.pargs.foo)
+            print(f'Foo Argument > {self.app.pargs.foo}')
 
 
 class MyApp(App):
@@ -67,7 +67,7 @@ def main():
             app.run()
         except CaughtSignal as e:
             # Default Cement signals are SIGINT and SIGTERM, exit 0 (non-error)
-            print('\n%s' % e)
+            print(f'\n{e}')
             app.exit_code = 0
 
 

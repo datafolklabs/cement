@@ -2,31 +2,36 @@
 Cement logging extension module.
 """
 
+from __future__ import annotations
 import os
 import logging
+from logging.handlers import RotatingFileHandler
+from typing import Any, Dict, List, Union, Optional, Type, TYPE_CHECKING
 from ..core import log
 from ..core.deprecations import deprecate
 from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
 
+if TYPE_CHECKING:
+    from ..core.foundation import App  # pragma: nocover
+
+
 LOG = minimal_logger(__name__)
 
-try:                                        # pragma: no cover
-    NullHandler = logging.NullHandler       # pragma: no cover
-except AttributeError:                      # pragma: no cover
-    # Not supported on Python < 3.1/2.7     # pragma: no cover
-    class NullHandler(logging.Handler):     # pragma: no cover
+try:                                                                 # pragma: no cover
+    NullHandler = logging.NullHandler                                # pragma: no cover
+except AttributeError:                                               # pragma: no cover
+    # Not supported on Python < 3.1/2.7                              # pragma: no cover
+    class NullHandler(logging.Handler):             # type: ignore   # pragma: no cover
 
-        def handle(self, record):           # pragma: no cover
-            pass                            # pragma: no cover
-            # pragma: no cover
+        def handle(self, record):                   # type: ignore   # pragma: no cover
+            pass                                                     # pragma: no cover
 
-        def emit(self, record):             # pragma: no cover
-            pass                            # pragma: no cover
-            # pragma: no cover
+        def emit(self, record):                     # type: ignore   # pragma: no cover
+            pass                                                     # pragma: no cover
 
-        def createLock(self):               # pragma: no cover
-            self.lock = None                # pragma: no cover
+        def createLock(self):                       # type: ignore   # pragma: no cover
+            self.lock = None                                         # pragma: no cover
 
 
 class LoggingLogHandler(log.LogHandler):
@@ -38,7 +43,7 @@ class LoggingLogHandler(log.LogHandler):
 
     """
 
-    class Meta:
+    class Meta(log.LogHandler.Meta):
 
         """Handler meta-data."""
 
@@ -50,10 +55,10 @@ class LoggingLogHandler(log.LogHandler):
         #: Note: Although Meta.namespace defaults to None, Cement will set
         #: this to the application label (App.Meta.label) if not set
         #: during setup.
-        namespace = None
+        namespace: str = None  # type: ignore
 
         #: Class to use as the formatter
-        formatter_class = logging.Formatter
+        formatter_class: Type = logging.Formatter
 
         #: The logging format for the file logger.
         file_format = "%(asctime)s (%(levelname)s) %(namespace)s : " + \
@@ -72,7 +77,7 @@ class LoggingLogHandler(log.LogHandler):
         #: Changes in Cement 2.1.3.  Previous versions only supported
         #: `clear_loggers` as a boolean, but did fully support clearing
         #: non-app logging namespaces.
-        clear_loggers = []
+        clear_loggers: List[str] = []
 
         #: The default configuration dictionary to populate the ``log``
         #: section.
@@ -88,7 +93,7 @@ class LoggingLogHandler(log.LogHandler):
         #: List of arguments to use for the cli options
         #: (ex: [``-l``, ``--list``]).  If a log-level argument is not wanted,
         #: set to ``None`` (default).
-        log_level_argument = None
+        log_level_argument: Optional[List[str]] = None
 
         #: The help description for the log level argument
         log_level_argument_help = 'logging level'
@@ -104,19 +109,20 @@ class LoggingLogHandler(log.LogHandler):
         #: See: ``tests.ext.test_ext_colorlog.test_colorlog``.
         propagate = False
 
+    _meta: Meta  # type: ignore
+
     levels = ['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL', 'CRITICAL']
 
-    def __init__(self, *args, **kw):
+    def __init__(self, *args: Any, **kw: Any) -> None:
         super(LoggingLogHandler, self).__init__(*args, **kw)
-        self.app = None
+        self.app: App = None  # type: ignore
 
-    def _setup(self, app_obj):
+    def _setup(self, app_obj: App) -> None:
         super(LoggingLogHandler, self)._setup(app_obj)
         if self._meta.namespace is None:
-            self._meta.namespace = "%s" % self.app._meta.label
+            self._meta.namespace = f"{self.app._meta.label}"
 
-        self.backend = logging.getLogger("cement:app:%s" %
-                                         self._meta.namespace)
+        self.backend = logging.getLogger(f"cement:app:{self._meta.namespace}")
 
         # hack for application debugging
         if is_true(self.app._meta.debug):
@@ -129,7 +135,7 @@ class LoggingLogHandler(log.LogHandler):
         LOG.debug("logging initialized for '%s' using %s" %
                   (self._meta.namespace, self.__class__.__name__))
 
-    def set_level(self, level):
+    def set_level(self, level: str) -> None:
         """
         Set the log level.  Must be one of the log levels configured in
         self.levels which are
@@ -163,19 +169,19 @@ class LoggingLogHandler(log.LogHandler):
         # file
         self._setup_file_log()
 
-    def get_level(self):
+    def get_level(self) -> str:
         """Returns the current log level."""
         return logging.getLevelName(self.backend.level)
 
-    def clear_loggers(self, namespace):
+    def clear_loggers(self, namespace: str) -> None:
         """Clear any previously configured loggers for ``namespace``."""
 
-        for i in logging.getLogger("cement:app:%s" % namespace).handlers:
-            logging.getLogger("cement:app:%s" % namespace).removeHandler(i)
+        for i in logging.getLogger(f"cement:app:{namespace}").handlers:
+            logging.getLogger(f"cement:app:{namespace}").removeHandler(i)
 
-        self.backend = logging.getLogger("cement:app:%s" % namespace)
+        self.backend = logging.getLogger(f"cement:app:{namespace}")
 
-    def _get_console_format(self):
+    def _get_console_format(self) -> str:
         if self.get_level() == logging.getLevelName(logging.DEBUG):
             format = self._meta.debug_format
         else:
@@ -183,7 +189,7 @@ class LoggingLogHandler(log.LogHandler):
 
         return format
 
-    def _get_file_format(self):
+    def _get_file_format(self) -> str:
         if self.get_level() == logging.getLevelName(logging.DEBUG):
             format = self._meta.debug_format
         else:
@@ -191,17 +197,18 @@ class LoggingLogHandler(log.LogHandler):
 
         return format
 
-    def _get_file_formatter(self, format):
-        return self._meta.formatter_class(format)
+    def _get_file_formatter(self, format: str) -> logging.Formatter:
+        return self._meta.formatter_class(format)  # type: ignore
 
-    def _get_console_formatter(self, format):
-        return self._meta.formatter_class(format)
+    def _get_console_formatter(self, format: str) -> logging.Formatter:
+        return self._meta.formatter_class(format)  # type: ignore
 
-    def _setup_console_log(self):
+    def _setup_console_log(self) -> None:
         """Add a console log handler."""
         namespace = self._meta.namespace
         to_console = self.app.config.get(self._meta.config_section,
                                          'to_console')
+        console_handler: Union[logging.StreamHandler, NullHandler]
         if is_true(to_console):
             console_handler = logging.StreamHandler()
             format = self._get_console_format()
@@ -212,13 +219,13 @@ class LoggingLogHandler(log.LogHandler):
             console_handler = NullHandler()
 
         # FIXME: self._clear_loggers() should be preventing this but its not!
-        for i in logging.getLogger("cement:app:%s" % namespace).handlers:
+        for i in logging.getLogger(f"cement:app:{namespace}").handlers:
             if isinstance(i, logging.StreamHandler):
                 self.backend.removeHandler(i)
 
         self.backend.addHandler(console_handler)
 
-    def _setup_file_log(self):
+    def _setup_file_log(self) -> None:
         """Add a file log handler."""
 
         namespace = self._meta.namespace
@@ -228,6 +235,8 @@ class LoggingLogHandler(log.LogHandler):
                                         'max_bytes')
         max_files = self.app.config.get(self._meta.config_section,
                                         'max_files')
+        file_handler: Union[logging.FileHandler, RotatingFileHandler, NullHandler]
+
         if file_path:
             file_path = fs.abspath(file_path)
             log_dir = os.path.dirname(file_path)
@@ -235,15 +244,13 @@ class LoggingLogHandler(log.LogHandler):
                 os.makedirs(log_dir)
 
             if rotate:
-                from logging.handlers import RotatingFileHandler
                 file_handler = RotatingFileHandler(
                     file_path,
                     maxBytes=int(max_bytes),
                     backupCount=int(max_files),
                 )
             else:
-                from logging import FileHandler
-                file_handler = FileHandler(file_path)
+                file_handler = logging.FileHandler(file_path)
 
             format = self._get_file_format()
             formatter = self._get_file_formatter(format)
@@ -253,13 +260,13 @@ class LoggingLogHandler(log.LogHandler):
             file_handler = NullHandler()
 
         # FIXME: self._clear_loggers() should be preventing this but its not!
-        for i in logging.getLogger("cement:app:%s" % namespace).handlers:
+        for i in logging.getLogger(f"cement:app:{namespace}").handlers:
             if isinstance(i, file_handler.__class__):   # pragma: nocover
                 self.backend.removeHandler(i)           # pragma: nocover
 
         self.backend.addHandler(file_handler)
 
-    def _get_logging_kwargs(self, namespace, **kw):
+    def _get_logging_kwargs(self, namespace: Optional[str], **kw: Any) -> Dict[str, Any]:
         if namespace is None:
             namespace = self._meta.namespace
 
@@ -272,7 +279,7 @@ class LoggingLogHandler(log.LogHandler):
 
         return kw
 
-    def info(self, msg, namespace=None, **kw):
+    def info(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
         """
         Log to the INFO facility.
 
@@ -292,7 +299,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.info(msg, **kwargs)
 
-    def warning(self, msg, namespace=None, **kw):
+    def warning(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
         """
         Log to the WARNING facility.
 
@@ -312,7 +319,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.warning(msg, **kwargs)
 
-    def error(self, msg, namespace=None, **kw):
+    def error(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
         """
         Log to the ERROR facility.
 
@@ -332,7 +339,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.error(msg, **kwargs)
 
-    def critical(self, msg, namespace=None, **kw):
+    def critical(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
         """
         Log to the CRITICAL facility.
 
@@ -352,7 +359,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.critical(msg, **kwargs)
 
-    def fatal(self, msg, namespace=None, **kw):
+    def fatal(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
         """
         Log to the FATAL (aka CRITICAL) facility.
 
@@ -376,7 +383,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.fatal(msg, **kwargs)
 
-    def debug(self, msg, namespace=None, **kw):
+    def debug(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
         """
         Log to the DEBUG facility.
 
@@ -397,7 +404,7 @@ class LoggingLogHandler(log.LogHandler):
         self.backend.debug(msg, **kwargs)
 
 
-def add_logging_arguments(app):
+def add_logging_arguments(app: App) -> None:
     if app.log._meta.log_level_argument is not None:
         app.args.add_argument(*app.log._meta.log_level_argument,
                               dest='log_logging_level',
@@ -405,7 +412,7 @@ def add_logging_arguments(app):
                               choices=[x.lower() for x in app.log.levels])
 
 
-def handle_logging_arguments(app):
+def handle_logging_arguments(app: App) -> None:
     if hasattr(app.pargs, 'log_logging_level'):
         if app.pargs.log_logging_level is not None:
             app.log.set_level(app.pargs.log_logging_level)
@@ -413,7 +420,7 @@ def handle_logging_arguments(app):
             app._meta.debug = True
 
 
-def load(app):
+def load(app: App) -> None:
     app.handler.register(LoggingLogHandler)
     app.hook.register('pre_argument_parsing', add_logging_arguments)
     app.hook.register('post_argument_parsing', handle_logging_arguments)

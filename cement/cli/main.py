@@ -1,10 +1,9 @@
 
-import os
-import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), 'contrib'))
-
+from __future__ import annotations
+from typing import Optional, List
 from cement import App, CaughtSignal  # noqa: E402
 from .controllers.base import Base    # noqa: E402
+from cement.core.exc import FrameworkError
 
 
 class CementApp(App):
@@ -29,20 +28,27 @@ class CementApp(App):
 
 class CementTestApp(CementApp):
     class Meta:
-        argv = []
-        config_files = []
+        argv: List[str] = []
+        config_files: List[str] = []
         exit_on_close = False
 
 
-def main(argv=None):
+def main(argv: Optional[List[str]] = None) -> None:
+    # Issue #679: https://github.com/datafolklabs/cement/issues/679
+    try:
+        import yaml, jinja2  # type: ignore  # noqa: F401 E401
+    except ModuleNotFoundError:  # pragma: nocover
+        raise FrameworkError('Cement CLI Dependencies are missing! Install cement[cli] extras ' +
+                             'package to resolve -> pip install cement[cli]')
+
     with CementApp() as app:
         try:
             app.run()
         except AssertionError as e:                     # pragma: nocover
-            print('AssertionError > %s' % e.args[0])    # pragma: nocover
+            print(f'AssertionError > {e.args[0]}')      # pragma: nocover
             app.exit_code = 1                           # pragma: nocover
         except CaughtSignal as e:                       # pragma: nocover
-            print('\n%s' % e)                           # pragma: nocover
+            print(f'\n{e}')                             # pragma: nocover
             app.exit_code = 0                           # pragma: nocover
 
 

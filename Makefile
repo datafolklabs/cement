@@ -1,44 +1,41 @@
 .PHONY: dev test test-core comply-fix docs clean dist dist-upload docker docker-push
 
 dev:
-	docker-compose up -d
-	docker-compose exec cement pip install -r requirements-dev.txt
-	docker-compose exec cement python setup.py develop
-	docker-compose exec cement /bin/bash
+	docker compose up -d
+	docker compose exec cement pdm install
+	docker compose exec cement-py38 pdm install
+	docker compose exec cement-py39 pdm install
+	docker compose exec cement-py310 pdm install
+	docker compose exec cement-py311 pdm install
+	docker compose exec cement-py312 pdm install
+	docker compose exec cement /bin/bash
 
 test: comply
-	python -m pytest -v --cov=cement --cov-report=term --cov-report=html:coverage-report --capture=sys tests/
+	pdm run pytest --cov=cement tests
 
 test-core: comply
-	python -m pytest -v --cov=cement.core --cov-report=term --cov-report=html:coverage-report --capture=sys tests/core
+	pdm run pytest --cov=cement.core tests/core
 
 virtualenv:
-	virtualenv --prompt '|> cement <| ' env
-	env/bin/pip install -r requirements-dev.txt
-	env/bin/python setup.py develop
+	pdm venv create
+	pdm install
 	@echo
-	@echo "VirtualENV Setup Complete. Now run: source env/bin/activate"
-	@echo
-
-virtualenv-windows:
-	virtualenv --prompt '|> cement <| ' env-windows
-	env-windows\\Scripts\\pip.exe install -r requirements-dev-windows.txt
-	env-windows\\Scripts\\python.exe setup.py develop
-	@echo
-	@echo "VirtualENV Setup Complete. Now run: .\env-windows\Scripts\activate.ps1"
+	@echo "VirtualENV Setup Complete. Now run: eval $(pdm venv activate)"
 	@echo
 
-comply:
-	flake8 cement/ tests/
+comply: comply-ruff comply-mypy
 
-comply-fix:
-	autopep8 -ri cement/ tests/
+comply-ruff:
+	pdm run ruff check cement/ tests/
 
-comply-typing:
-	mypy ./cement
+comply-ruff-fix:
+	pdm run ruff check --fix cement/ tests/
+
+comply-mypy:
+	pdm run mypy
 
 docs:
-	python setup.py build_sphinx
+	cd docs; pdm run sphinx-build ./source ./build; cd ..
 	@echo
 	@echo DOC: "file://"$$(echo `pwd`/docs/build/html/index.html)
 	@echo
@@ -47,13 +44,8 @@ clean:
 	find . -name '*.py[co]' -delete
 	rm -rf doc/build
 
-dist: clean
-	rm -rf dist/*
-	python setup.py sdist
-	python setup.py bdist_wheel
-
-dist-upload:
-	twine upload dist/*
+dist:
+	pdm build
 
 docker:
 	docker build -t datafolklabs/cement:latest .

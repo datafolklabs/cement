@@ -19,5 +19,6 @@ documentation, or testing:
 - Stelios Tymvios (namedLambda)
 - Spyros Vlachos (devspyrosv)
 - Joe Roberts (jjroberts)
-- Mudassir Chapra(muddi900)
+- Mudassir Chapra (muddi900)
+- Christian Hengl (rednar)
 - sigma67

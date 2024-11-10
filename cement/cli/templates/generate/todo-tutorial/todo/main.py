@@ -22,7 +22,7 @@ def extend_tinydb(app):
 
     # ensure that we expand the full path
     db_file = fs.abspath(db_file)
-    app.log.info('tinydb database file is: %s' % db_file)
+    app.log.info(f'tinydb database file is: {db_file}')
 
     # ensure our parent directory exists
     db_dir = os.path.dirname(db_file)
@@ -88,7 +88,7 @@ def main():
             app.run()
 
         except AssertionError as e:
-            print('AssertionError > %s' % e.args[0])
+            print(f'AssertionError > {e.args[0]}')
             app.exit_code = 1
 
             if app.debug is True:
@@ -96,7 +96,7 @@ def main():
                 traceback.print_exc()
 
         except TodoError:
-            print('TodoError > %s' % e.args[0])
+            print(f'TodoError > {e.args[0]}')
             app.exit_code = 1
 
             if app.debug is True:
@@ -105,7 +105,7 @@ def main():
 
         except CaughtSignal as e:
             # Default Cement signals are SIGINT and SIGTERM, exit 0 (non-error)
-            print('\n%s' % e)
+            print(f'\n{e}')
             app.exit_code = 0
 
 

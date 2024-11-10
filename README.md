@@ -9,6 +9,19 @@ Cement is an advanced Application Framework for Python, with a primary focus on 
 
 The first commit to Git was on Dec 4, 2009.  Since then, the framework has seen several iterations in design, and has continued to grow and improve since it's inception.  Cement is the most stable, and complete framework for command line and backend application development.
 
+## Installation
+
+```
+pip install cement
+```
+
+Optional CLI Extras (for development):
+
+```
+pip install cement[cli]
+```
+
+
 ## Core Features
 
 Cement core features include (but are not limited to):
@@ -25,12 +38,18 @@ Cement core features include (but are not limited to):
 - Controller handler supports sub-commands, and nested controllers
 - Hook support adds a bit of magic to apps and also ties into framework
 - Zero external dependencies* (not including optional extensions)
-- 100% test coverage (`pytest`)
-- 100% PEP8 compliant (`flake8`)
+- 100% test coverage (`pytest`, `coverage`)
+- 100% PEP8 compliance (`ruff`)
+- Type annotation compliance (`mypy`)
 - Extensive API Reference (`sphinx`)
 - Tested on Python 3.8+
 
-*Some optional extensions that are shipped with the mainline Cement sources do require external dependencies.  It is the responsibility of the application developer to include these dependencies along with their application, as Cement explicitly does not include them.*
+
+## Optional Extensions
+
+Some extensions that are shipped with the mainline Cement source do require external dependencies.  It is the responsibility of the application developer to include these dependencies along with their application, as Cement explicitly does not include them. Dependencies can be installed via each extensions optional package (ex: `cement[colorlog]`, `cement[redis]`, etc).
+
+See: [https://docs.builtoncement.com/extensions](https://docs.builtoncement.com/extensions)
 
 
 ## More Information
@@ -46,11 +65,12 @@ Cement core features include (but are not limited to):
 
 The Cement CLI Application Framework is Open Source and is distributed under the BSD License (three clause).  Please see the LICENSE file included with this software.
 
+
 ## Development
 
 ### Docker
 
-This project includes a `docker-compose` configuration that sets up all required services, and dependencies for development and testing.  This is the recommended path for local development, and is the only fully supported option.
+This project includes a Docker Compose configuration that sets up all required services, and dependencies for development and testing.  This is the recommended path for local development, and is the only fully supported option.
 
 The following creates all required docker containers, and launches an BASH shell within the `cement` dev container for development.
 ```
@@ -62,10 +82,13 @@ $ make dev
 The above is the equivalent of running:
 
 ```
-$ docker-compose up -d
+$ docker compose up -d
 
-$ docker-compose exec cement /bin/bash
+$ docker compose exec cement /bin/bash
 ```
+
+All execution is done *inside the docker containers*.
+
 
 **Testing Alternative Versions of Python**
 
@@ -75,13 +98,14 @@ The latest stable version of Python 3 is the default, and target version accessi
 $ docker-compose ps
         Name                      Command               State     Ports
 -------------------------------------------------------------------------
-cement_cement-py38_1   /bin/bash                        Up
-cement_cement-py39_1   /bin/bash                        Up
+cement_cement-py38_1    /bin/bash                        Up
+cement_cement-py39_1    /bin/bash                        Up
 cement_cement-py310_1   /bin/bash                        Up
 cement_cement-py311_1   /bin/bash                        Up
-cement_cement_1        /bin/bash                        Up
-cement_memcached_1     docker-entrypoint.sh memcached   Up      11211/tcp
-cement_redis_1         docker-entrypoint.sh redis ...   Up      6379/tcp
+cement_cement-py312_1   /bin/bash                        Up
+cement_cement_1         /bin/bash                        Up
+cement_memcached_1      docker-entrypoint.sh memcached   Up       11211/tcp
+cement_redis_1          docker-entrypoint.sh redis ...   Up       6379/tcp
 
 
 $ docker-compose exec cement-py39 /bin/bash
@@ -90,78 +114,85 @@ $ docker-compose exec cement-py39 /bin/bash
 ```
 
 
-### VirtualENV
+### Windows Targeted Development
 
-An traditional VirtualENV helper is available:
+*Windows development and support is not 100% complete.  Applications Built on Cement is known to run and work on Windows well, however it is not a primary target for development and as such the setup is not as streamlined and currently has several known issues.*
 
-```
-$ make virtualenv
+If you are developing on Windows, the recommended path is still Docker. However if you are specifically targeting development *for* Windows you will want to run Python/Cement natively which will require setting up a development environment on the Windows host. 
 
-$ source env/bin/activate
+This is very rough (future doc coming), however the following will be required:
 
-|> cement <| $
-```
+- Python 3.x (latest stable preferred)
+  - pip
+  - pipx
+  - pdm
+- Visual C++ 14.0 or Greater Build Tools
+  - Including: CMake
 
-### Vagrant
-
-An alternative option is included to run Vagrant for development.  This is partially supported, primarily for the purpose of developing/testing on Windows as well as testing specific issues on target operating systems.
-
-To see a list of configured systems:
-
-```
-$ vagrant status
-```
-
-#### Linux
+Assuming Python/PIP are installed, the following will install PDM:
 
 ```
-$ vagrant up linux
+pip install pipx
 
-$ vagrant ssh linux
-
-vagrant@linux $ cd /vagrant
-
-vagrant@linux $ bash scripts/vagrant/bootstrap.sh
-
-vagrant@linux $ make virtualenv
-
-vagrant@linux $ source env/bin/activate
-
-|> cement >| $
+pipx install pdm
 ```
 
-#### Windows
-
-*Windows development and support is not 100% complete.  Cement is known to run and work on Windows, however it is not a primary target for development and as such the setup is not as streamlined and currently has several known errors.*
-
-The following assumes you're running these two initial commands from a unix based system:
+C++ Build Tools are install, the following will create a development virtual env:
 
 ```
-$ make clean
+pdm venv create
 
-$ vagrant up windows
+pdm install --without memcached
 ```
 
-RDP or Login to Desktop/Console, and open a PowerShell terminal:
+You can then run the core tests:
 
 ```
-C:\> cd C:\Vagrant
-
-C:\Vagrant> powershell.exe scripts\vagrant\bootstrap.ps1
-
-C:\Vagrant> make virtualenv-windows
-
-C:\Vagrant> .\env-windows\Scripts\activate.ps1
-
-C:\Vagrant> make test-core
+pdm run pytest --cov=cement.core tests/core
 ```
 
 *Note that only the core library is fully tested on Windows.*
 
+Please explore the Makefile for helpers that may or may not work. Example, the following will run the same as the above `pdm run pytest` command:
+
+```
+make test-core
+```
+
+And, you can run Cement CLI via:
+
+```
+pdm run cement --help
+```
+
+
+### macOS Targeted Development
+
+Similar to the above... if you are developing on macOS, the recommended path is still Docker. However if you are specifically targeting development *for* macOS you will want to run Python/Cement natively which will require setting up a development environment on the macOS host. 
+
+This is less nuanced than Windows, however still required some dependencies that will not be fully covered here (example: memcached). The following will get you setup to run the core library tests.
+
+```
+pip install pipx
+
+pipx install pdm
+
+pdm venv create
+
+pdm install --without memcached
+
+make test-core
+```
+
+And, you can run Cement CLI via:
+
+```
+pdm run cement --help
+```
 
 ### Running Tests and Compliance
 
-Cement has a strict policy that all code and tests meet PEP8 guidelines, therefore `flake8` is called before any unit tests run.  All code submissions require 100% test coverage and PEP8 compliance:
+Cement has a strict policy that all code and tests meet PEP8 guidelines, therefore `ruff` is called before any unit tests run.  All code submissions require 100% test coverage and PEP8 compliance:
 
 Execute the following to run all compliance and unit tests:
 

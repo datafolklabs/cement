@@ -1,0 +1,162 @@
+[project]
+name = "cement"
+description = "Application Framework for Python"
+readme = "README.md"
+keywords = [
+    "python",
+    "module",
+    "cli framework"
+]
+authors=[{name = "Data Folk Labs, LLC", email= "derks@datafolklabs.com"}]
+license={file="LICENSE"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License"
+]
+
+dynamic = ["version", "README"]
+
+requires-python = ">=3.8"
+
+[project.optional-dependencies]
+alarm = []
+argparse = []
+colorlog = ["colorlog"]
+configparser = []
+daemon = []
+docs = ["sphinx", "sphinx_rtd_theme", "guzzle_sphinx_theme", "sphinxcontrib-napoleon"]
+dummy = []
+generate = ["pyYaml"]
+jinja2 = ["jinja2"]
+json = []
+logging = []
+memcached = ["pylibmc"]
+mustache = ["pystache"]
+plugin = []
+print = []
+redis = ["redis"]
+scrub = []
+smtp = []
+tabulate = ["tabulate"]
+watchdog = ["watchdog"]
+yaml = ["pyYaml"]
+cli = ["cement[yaml,jinja2]"]
+
+[tool.pdm.scripts]
+cement = {call = "cement.cli.main:main"}
+
+[project.scripts]
+cement = "cement.cli.main:main"
+
+[project.urls]
+homepage = "https://builtoncement.com"
+documentation = "https://docs.builtoncement.com"
+repository = "https://github.com/datafolklabs/cement"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+###############
+# DEVELOPMENT #
+###############
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov-report=term --cov-report=html:coverage-report --capture=sys tests/"
+python_files= "test_*.py"
+
+[tool.coverage.report]
+precision = 2
+
+
+[tool.pdm.build]
+package-dir = "."
+includes = [
+    "cement/",
+    "cement/cli/templates/generate/",
+    "CONTRIBUTORS.md",
+    "CHANGELOG.md"
+]
+excludes = ["tests/"]
+
+[tool.pdm.version]
+source = "call"
+getter = "cement.utils.version:get_version"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=4.3.1",
+    "pytest-cov>=2.6.1",
+    "coverage>=4.5.3",
+    "mypy>=1.9.0",
+    "ruff>=0.3.2",
+    "mock>=5.1.0",
+]
+
+[tool.ruff]
+target-version = "py38"
+line-length = 100
+indent-width = 4
+exclude = [
+    ".git",
+    "cement/cli/templates",
+    "cement/cli/contrib"
+]
+include = [
+    "cement/**/*.py",
+    "tests/**/*.py"
+]
+
+[tool.ruff.lint]
+preview = true
+extend-select = ["E", "F", "W"]
+ignore = []
+fixable = ["ALL"]
+unfixable = []
+
+# ignore = [
+#     "E402",
+#     "E713",
+#     "E721",
+#     "E714",
+#     "F841",
+#     "F507"
+# ]
+
+# TBD
+# [tool.ruff.format]
+# quote-style = "single"
+
+# [[tool.mypy.overrides]]
+# module = "cement.*"
+# ignore_missing_imports = true
+
+[tool.mypy]
+python_version = "3.8"
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_any_unimported = false
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+strict_optional = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+
+disable_error_code = [
+    # disable as MetaMixin/Meta is used everywhere and triggers this
+    "attr-defined",
+]
+
+files = [
+    "cement/",
+    # "tests/"
+]
+exclude = """(?x)(
+    ^cement/cli/templates |
+    ^.git/ |
+    ^tests
+  )"""

@@ -1,9 +1,9 @@
 FROM python:3.10-alpine
 LABEL MAINTAINER="BJ Dierkes <derks@datafolklabs.com>"
 ENV PS1="\[\e[0;33m\]|> cement-py310 <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
+ENV PATH="${PATH}:/root/.local/bin"
 
 WORKDIR /src
-COPY requirements-dev.txt /src/
 RUN apk update \
     && apk add libmemcached-dev \
         gcc \
@@ -18,10 +18,11 @@ RUN apk update \
         libffi-dev \
         openssl-dev \
         jq \
-    && ln -sf /usr/bin/vim /usr/bin/vi \
-    && pip install --no-cache-dir -r requirements-dev.txt \
-    && pip install --upgrade -r requirements-dev.txt
+        pipx \
+    && ln -sf /usr/bin/vim /usr/bin/vi
+RUN pipx install pdm
 COPY . /src
 COPY docker/vimrc /root/.vimrc
-RUN python setup.py develop
+COPY docker/bashrc /root/.bashrc
+RUN pdm install
 CMD ["/bin/bash"]
