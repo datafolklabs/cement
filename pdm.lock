@@ -4,8 +4,11 @@
 [metadata]
 groups = ["default", "alarm", "argparse", "cli", "colorlog", "configparser", "daemon", "dev", "docs", "dummy", "generate", "jinja2", "json", "logging", "memcached", "mustache", "plugin", "print", "redis", "scrub", "smtp", "tabulate", "watchdog", "yaml"]
 strategy = ["cross_platform", "inherit_metadata"]
-lock_version = "4.4.1"
-content_hash = "sha256:93bbcbfd6b1a08c9a37b42a42d1300b6f9ede3eb6e643a085a8152fb81a60d88"
+lock_version = "4.5.0"
+content_hash = "sha256:7837e4994dfec4e6dc58ed6160458ce67c146f206cca44eceef966cae3293b18"
+
+[[metadata.targets]]
+requires_python = ">=3.8"
 
 [[package]]
 name = "alabaster"
@@ -25,6 +28,9 @@ requires_python = ">=3.7"
 summary = "Timeout context manager for asyncio programs"
 groups = ["redis"]
 marker = "python_full_version < \"3.11.3\""
+dependencies = [
+    "typing-extensions>=3.6.5; python_version < \"3.8\"",
+]
 files = [
     {file = "async-timeout-4.0.3.tar.gz", hash = "sha256:4640d96be84d82d02ed59ea2b7105a0f7b33abe8703703cd0ab0bf87c427522f"},
     {file = "async_timeout-4.0.3-py3-none-any.whl", hash = "sha256:7405140ff1230c310e51dc27b3145b9092d659ce68ff733fb0cefe3ee42be028"},
@@ -399,6 +405,7 @@ summary = "Read metadata from Python packages"
 groups = ["docs", "mustache"]
 marker = "python_version < \"3.10\""
 dependencies = [
+    "typing-extensions>=3.6.4; python_version < \"3.8\"",
     "zipp>=0.5",
 ]
 files = [
