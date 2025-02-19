@@ -1,5 +1,28 @@
 # ChangeLog
 
+## 3.0.13 - DEVELOPMENT (will be released as stable/3.0.14 or stable/3.2.0)
+
+Bugs:
+
+- None
+
+Features:
+
+- None
+
+Refactoring:
+
+- None
+
+Misc:
+
+- None
+
+Deprecations:
+
+- None
+
+
 ## 3.0.12 - Nov 10, 2024
 
 Bugs:
@@ -23,7 +46,7 @@ Refactoring:
 - `[dev]` Implement Ruff for Code Compliance (replaces Flake8)
     - [Issue #671](https://github.com/datafolklabs/cement/issues/671)
     - [PR #681](https://github.com/datafolklabs/cement/pull/681)
-- `[dev]` Remove Python 3.5, 3.6, 3.7 Docker Dev Targets 
+- `[dev]` Remove Python 3.5, 3.6, 3.7 Docker Dev Targets
 - `[dev]` Added Python 3.13 Dev Target
 - `[dev]` Testing now requires typing compliance (`make test` -> `make comply-mypy`)
 - `[dev]` Type Annotations (related: [PR #628](https://github.com/datafolklabs/cement/pull/628))
@@ -71,7 +94,7 @@ Refactoring:
 
 
 
-Misc: 
+Misc:
 
 - [cli] Move CLI dependencies to `cement[cli]` extras package, and remove included/nexted `contrib` sources.  See note on 'Potential Upgrade Incompatibility'
   - [Issue #679](https://github.com/datafolklabs/cement/issues/679)
@@ -104,7 +127,7 @@ pip install cement[cli]
 
 ## 3.0.10 - Feb 28, 2024
 
-Bugs: 
+Bugs:
 
 - `[ext.logging]` Support `logging.propagate` to avoid duplicate log entries
     - [Issue #310](https://github.com/datafolklabs/cement/issues/310)
@@ -126,7 +149,7 @@ Features:
     - [PR #669](https://github.com/datafolklabs/cement/pull/669)
 
 
-Refactoring: 
+Refactoring:
 
 - `[core.plugin]` Deprecate the use of `imp` in favor of `importlib`
     - [Issue #386](https://github.com/datafolklabs/cement/issues/386)
@@ -205,7 +228,7 @@ Bugs:
 
 - `[ext.argparse]` Parser (`self._parser`) not accessible inside `_pre_argument_parsing` when `stacked_type = 'embedded'`
     - [Issue #569](https://github.com/datafolklabs/cement/issues/569)
-- `[ext.configparser]` Overriding config options with environment variables doesn't work correctly with surrounding underscore characters 
+- `[ext.configparser]` Overriding config options with environment variables doesn't work correctly with surrounding underscore characters
     - [Issue #590](https://github.com/datafolklabs/cement/issues/590)
 - `[utils.fs]` Fix bug where trailing slash was not removed in `fs.backup()` of a directory.
     - [Issue #610](https://github.com/datafolklabs/cement/issues/610)
