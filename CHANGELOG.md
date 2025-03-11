@@ -4,7 +4,8 @@
 
 Bugs:
 
-- None
+- `[ext_jinja2]` Refactor hard-coded reference to `jinja2` template handler.
+  - [Issue #749](https://github.com/datafolklabs/cement/issues/749)
 
 Features:
 
