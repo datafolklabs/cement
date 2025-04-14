@@ -599,7 +599,7 @@ class ArgparseController(ControllerHandler):
 
             elif stacked_type == 'embedded':
                 # if it's embedded, then just set it to use the same as the
-                # controller its stacked on
+                # controller it's stacked on
                 parents[label] = parents[stacked_on]
                 parsers[label] = parsers[stacked_on]
                 contr._parser = parsers[stacked_on]
@@ -812,7 +812,7 @@ class ArgparseController(ControllerHandler):
             # if no __dispatch__ is set then that means we have hit a
             # controller with not sub-command (argparse doesn't support
             # default sub-command yet... so we rely on
-            # __controller_namespace__ and it's default func
+            # __controller_namespace__ and its default func
 
             # We never get here on Python < 3 as Argparse would have already
             # complained about too few arguments

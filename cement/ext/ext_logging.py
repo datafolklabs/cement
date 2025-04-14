@@ -218,7 +218,7 @@ class LoggingLogHandler(log.LogHandler):
         else:
             console_handler = NullHandler()
 
-        # FIXME: self._clear_loggers() should be preventing this but its not!
+        # FIXME: self._clear_loggers() should be preventing this but it's not!
         for i in logging.getLogger(f"cement:app:{namespace}").handlers:
             if isinstance(i, logging.StreamHandler):
                 self.backend.removeHandler(i)
@@ -259,7 +259,7 @@ class LoggingLogHandler(log.LogHandler):
         else:
             file_handler = NullHandler()
 
-        # FIXME: self._clear_loggers() should be preventing this but its not!
+        # FIXME: self._clear_loggers() should be preventing this but it's not!
         for i in logging.getLogger(f"cement:app:{namespace}").handlers:
             if isinstance(i, file_handler.__class__):   # pragma: nocover
                 self.backend.removeHandler(i)           # pragma: nocover
