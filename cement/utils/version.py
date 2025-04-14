@@ -34,7 +34,7 @@
 # in this file.
 
 # Note: Nothing is covered here because this file is imported before nose and
-# coverage take over.. and so its a false positive that nothing is covered.
+# coverage take over.. and so it's a false positive that nothing is covered.
 
 import datetime
 import os

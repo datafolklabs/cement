@@ -143,7 +143,7 @@ def setup_template_items(app: App) -> None:
         if os.path.exists(subpath) and subpath not in template_dirs:
             template_dirs.append(subpath)
 
-    # use app template module, find it's path on filesystem
+    # use app template module, find its path on filesystem
     if app._meta.template_module is not None:
         mod_parts = app._meta.template_module.split('.')
         mod_name = mod_parts.pop()

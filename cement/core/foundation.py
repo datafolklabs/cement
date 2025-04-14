@@ -651,10 +651,10 @@ class App(meta.MetaMixin):
         extensions.  Developers can optionally use the
         ``App.__import__()`` method to import simple modules, and if
         that module exists in this mapping it will import the alternative
-        library in it's place.
+        library in its place.
 
-        This is a low-level feature, and may not produce the results you are
-        expecting.  It's purpose is to allow the developer to replace specific
+        This is a low-level feature and may not produce the results you are
+        expecting.  Its purpose is to allow the developer to replace specific
         modules at a high level.  Example: For an application wanting to use
         ``ujson`` in place of ``json``, the developer could set the following:
 

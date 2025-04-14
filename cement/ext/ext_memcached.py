@@ -58,7 +58,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
         comma-separated string into a list).  This function does not return
         anything, however it is expected to set the `hosts` value of the
         ``[cache.memcached]`` section (which is what this extension reads for
-        it's host configution).
+        its host configution).
 
         :returns: ``None``
 
