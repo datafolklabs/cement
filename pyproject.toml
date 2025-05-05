@@ -17,6 +17,7 @@ classifiers = [
 dynamic = ["version", "README"]
 
 requires-python = ">=3.8"
+dependencies = []
 
 [project.optional-dependencies]
 alarm = []
@@ -42,9 +43,6 @@ watchdog = ["watchdog"]
 yaml = ["pyYaml"]
 cli = ["cement[yaml,jinja2]"]
 
-[tool.pdm.scripts]
-cement = {call = "cement.cli.main:main"}
-
 [project.scripts]
 cement = "cement.cli.main:main"
 
@@ -69,30 +67,6 @@ python_files= "test_*.py"
 [tool.coverage.report]
 precision = 2
 
-
-[tool.pdm.build]
-package-dir = "."
-includes = [
-    "cement/",
-    "cement/cli/templates/generate/",
-    "CONTRIBUTORS.md",
-    "CHANGELOG.md"
-]
-excludes = ["tests/"]
-
-[tool.pdm.version]
-source = "call"
-getter = "cement.utils.version:get_version"
-
-[tool.pdm.dev-dependencies]
-dev = [
-    "pytest>=4.3.1",
-    "pytest-cov>=2.6.1",
-    "coverage>=4.5.3",
-    "mypy>=1.9.0",
-    "ruff>=0.3.2",
-    "mock>=5.1.0",
-]
 
 [tool.ruff]
 target-version = "py38"
@@ -160,3 +134,32 @@ exclude = """(?x)(
     ^.git/ |
     ^tests
   )"""
+
+[tool.pdm.scripts]
+cement = {call = "cement.cli.main:main"}
+
+[tool.pdm.build]
+package-dir = "."
+includes = [
+    "cement/",
+    "cement/cli/templates/generate/",
+    "CONTRIBUTORS.md",
+    "CHANGELOG.md"
+]
+excludes = ["tests/"]
+
+[tool.pdm.version]
+source = "call"
+getter = "cement.utils.version:get_version"
+
+
+[dependency-groups]
+dev = [
+    "pytest>=4.3.1",
+    "pytest-cov>=2.6.1",
+    "coverage>=4.5.3",
+    "mypy>=1.9.0",
+    "ruff>=0.3.2",
+    "mock>=5.1.0",
+    "pypng>=0.20220715.0",
+]

@@ -5,7 +5,7 @@
 groups = ["default", "alarm", "argparse", "cli", "colorlog", "configparser", "daemon", "dev", "docs", "dummy", "generate", "jinja2", "json", "logging", "memcached", "mustache", "plugin", "print", "redis", "scrub", "smtp", "tabulate", "watchdog", "yaml"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:7837e4994dfec4e6dc58ed6160458ce67c146f206cca44eceef966cae3293b18"
+content_hash = "sha256:edb453570d1f7e2dcd14a71e866fa1814be1c5341a716c96164858feae2e3662"
 
 [[metadata.targets]]
 requires_python = ">=3.8"
@@ -642,6 +642,16 @@ files = [
     {file = "pylibmc-1.6.3-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7660c561e5415f4be01ff4791c1b035359c1d76fed012e18eee907c2d3249deb"},
     {file = "pylibmc-1.6.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9f4516a14b2beff6062d1d240c00098227ca5478c00afba7e8b329415b0d4d67"},
     {file = "pylibmc-1.6.3.tar.gz", hash = "sha256:eefa46115537abad65fbe2e032acd1b3463d9bf9e335af4b0916df4e4d3206e0"},
+]
+
+[[package]]
+name = "pypng"
+version = "0.20220715.0"
+summary = "Pure Python library for saving and loading PNG images"
+groups = ["dev"]
+files = [
+    {file = "pypng-0.20220715.0-py3-none-any.whl", hash = "sha256:4a43e969b8f5aaafb2a415536c1a8ec7e341cd6a3f957fd5b5f32a4cfeed902c"},
+    {file = "pypng-0.20220715.0.tar.gz", hash = "sha256:739c433ba96f078315de54c0db975aee537cbc3e1d0ae4ed9aab0ca1e427e2c1"},
 ]
 
 [[package]]
