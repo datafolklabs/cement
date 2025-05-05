@@ -1,6 +1,6 @@
 # ChangeLog
 
-## 3.0.13 - DEVELOPMENT (will be released as stable/3.0.14 or stable/3.2.0)
+## 3.0.14 - May 5, 2025
 
 Bugs:
 
