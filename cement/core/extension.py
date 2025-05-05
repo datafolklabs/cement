@@ -116,7 +116,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
                 loaded.
 
         """
-        # If its not a full module path then preppend our default path
+        # If it's not a full module path then preppend our default path
         if ext_module.find('.') == -1:
             ext_module = f'cement.ext.ext_{ext_module}'
 

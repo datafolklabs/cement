@@ -196,7 +196,7 @@ class SMTPMailHandler(mail.MailHandler):
             for in_path in params['files']:
                 part = MIMEBase('application', 'octet-stream')
 
-                # support for alternative file name if its tuple
+                # support for alternative file name if it's tuple
                 # like ('alt-name.ext', '/path/to/file.ext')
                 if isinstance(in_path, tuple):
                     if in_path[0] == in_path[1]:

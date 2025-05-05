@@ -22,3 +22,4 @@ documentation, or testing:
 - Mudassir Chapra (muddi900)
 - Christian Hengl (rednar)
 - sigma67
+- Blake Jameson (blakejameson)
