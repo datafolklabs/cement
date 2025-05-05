@@ -126,7 +126,7 @@ class Environment(object):
                 os._exit(os.EX_OK)
         except OSError as e:
             sys.stderr.write("Fork #1 failed: (%d) %s\n" %
-                             (e.errno, e.strerror))
+                             (e.errno, e.strerror))  # type: ignore
             sys.exit(1)
 
         # Decouple from parent environment.
@@ -142,7 +142,7 @@ class Environment(object):
                 os._exit(os.EX_OK)
         except OSError as e:
             sys.stderr.write("Fork #2 failed: (%d) %s\n" %
-                             (e.errno, e.strerror))
+                             (e.errno, e.strerror))  # type: ignore
             sys.exit(1)
 
         # Redirect standard file descriptors.

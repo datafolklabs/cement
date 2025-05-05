@@ -34,6 +34,9 @@ class Jinja2OutputHandler(OutputHandler):
     Please see the developer documentation on
     :cement:`Output Handling <dev/output>`.
 
+    This class has an assumed depency on it's associated Jinja2TemplateHandler.
+    If sub-classing, you must also sub-class/implement the Jinja2TemplateHandler
+    and give it the same label.
     """
 
     class Meta(OutputHandler.Meta):
@@ -48,7 +51,7 @@ class Jinja2OutputHandler(OutputHandler):
 
     def _setup(self, app: App) -> None:
         super(Jinja2OutputHandler, self)._setup(app)
-        self.templater = self.app.handler.resolve('template', 'jinja2', setup=True)  # type: ignore
+        self.templater = self.app.handler.resolve('template', self._meta.label, setup=True)  # type: ignore
 
     def render(self, data: Dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
         """

@@ -1,3 +1,3 @@
 """Cement core backend module."""
 
-VERSION = (3, 0, 12, 'final', 0)  # pragma: nocover
+VERSION = (3, 0, 14, 'final', 0)  # pragma: nocover

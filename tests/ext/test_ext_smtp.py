@@ -3,6 +3,7 @@ import os
 import mock
 import requests
 import json
+import png
 from time import sleep
 from pytest import raises
 from cement.utils.test import TestApp
@@ -69,6 +70,137 @@ def test_smtp_send(rando):
         delete_msg(msg['ID'])
 
 
+def test_smtp_send_with_message_id(rando):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        app.mail.send(f"{rando}",
+                      to=[f'to-{rando}@localhost'],
+                      from_addr=f'from-{rando}@localhost',
+                      message_id=f'message_id_{rando}')
+
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        # FIXME: Mailpit doesn't support this??? See: PR #742
+        # assert msg['Message-Id'] == f'message_id_{rando}'
+
+        delete_msg(msg['ID'])
+
+
+def test_smtp_send_with_return_path(rando):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        app.mail.send(f"{rando}",
+                      to=[f'to-{rando}@localhost'],
+                      from_addr=f'from-{rando}@localhost',
+                      return_path=f'return_path_{rando}')
+
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        # FIXME: Mailpit doesn't support this??? See: PR #742
+        # assert msg['Return-Path'] == f'return_path_{rando}'
+
+        delete_msg(msg['ID'])
+
+
+def test_smtp_send_with_reply_to(rando):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        app.mail.send(f"{rando}",
+                      to=[f'to-{rando}@localhost'],
+                      from_addr=f'from-{rando}@localhost',
+                      reply_to=f'reply_to_{rando}@localhost')
+
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        assert msg['ReplyTo'][0]['Address'] == f'reply_to_{rando}@localhost'
+
+        delete_msg(msg['ID'])
+
+
+def test_smtp_send_with_x_headers(rando):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        app.mail.send(f"{rando}",
+                      to=[f'to-{rando}@localhost'],
+                      from_addr=f'from-{rando}@localhost',
+                      X_Test_Header=f'x_header_{rando}')
+
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        # FIXME: Mailpit doesn't support this??? See: PR #742
+        # assert msg['X_Test_Header'] == f'x_header_{rando}'
+
+        delete_msg(msg['ID'])
+
+
+def test_smtp_send_with_base64_encoding(rando):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        app.mail.send(f"{rando}",
+                      to=[f'to-{rando}@localhost'],
+                      from_addr=f'from-{rando}@localhost',
+                      header_encoding='base64',
+                      body_encoding='base64')
+
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        # FIXME: Not sure how to test this? See: PR #742
+
+        delete_msg(msg['ID'])
+
+
+def test_smtp_send_with_qp_encoding(rando):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        app.mail.send(f"{rando}",
+                      to=[f'to-{rando}@localhost'],
+                      from_addr=f'from-{rando}@localhost',
+                      header_encoding='qp',
+                      body_encoding='qp')
+
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        # FIXME: Not sure how to test this? See: PR #742
+
+        delete_msg(msg['ID'])
+
+
 def test_smtp_html(rando):
     defaults['mail.smtp']['subject'] = rando
 
@@ -93,13 +225,65 @@ def test_smtp_html(rando):
         delete_msg(msg['ID'])
 
 
+def test_smtp_dict_text_and_html(rando):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        body = dict(
+            text=rando,
+            html=f"<body>{rando}</body>"
+        )
+        app.mail.send(body)
+        sleep(3)
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        text_url = f"http://{smtp_host}:8025/view/{msg['ID']}.txt"
+        res_text = requests.get(text_url)
+        assert res_text.content.decode('utf-8') == rando
+
+        html_url = f"http://{smtp_host}:8025/view/{msg['ID']}.html"
+        res_html = requests.get(html_url)
+        assert res_html.content.decode('utf-8') == f"<body>{rando}</body>"
+
+        delete_msg(msg['ID'])
+
+
+def test_smtp_dict_html_only(rando):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        body = dict(
+            html=f"<body>{rando}</body>"
+        )
+        app.mail.send(body)
+        sleep(3)
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        html_url = f"http://{smtp_host}:8025/view/{msg['ID']}.html"
+        res_html = requests.get(html_url)
+        assert res_html.content.decode('utf-8') == f"<body>{rando}</body>"
+
+        delete_msg(msg['ID'])
+
+
 def test_smtp_html_bad_body_type(rando):
     defaults['mail.smtp']['subject'] = rando
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
 
-        error_msg = '(.*)Message body must be string or tuple(.*)'
+        # ruff: noqa: E501
+        error_msg = "(.*)Message body must be string, tuple(.*)"
         with raises(TypeError, match=error_msg):
             app.mail.send(['text', '<body>html</body>'])
 
@@ -155,6 +339,35 @@ def test_smtp_files(rando, tmp):
         delete_msg(msg['ID'])
 
 
+def test_smtp_dict_and_files(rando, tmp):
+    defaults['mail.smtp']['subject'] = rando
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        files = []
+        for iter in [1, 2, 3]:
+            _file = f"{tmp.file}-{iter}"
+            with open(_file, 'w') as _open_file:
+                _open_file.write(f"{rando}-{iter}")
+            files.append(_file)
+
+        body = dict(
+            text=rando,
+            html=f"<body>{rando}</body>"
+        )
+        app.mail.send(body, files=files)
+        sleep(3)
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        assert msg['Attachments'] == 3
+
+        delete_msg(msg['ID'])
+
+
 def test_smtp_files_alt_name(rando, tmp):
     defaults['mail.smtp']['subject'] = rando
 
@@ -174,6 +387,73 @@ def test_smtp_files_alt_name(rando, tmp):
         res_full = requests.get(f"{mailpit_api}/message/{msg['ID']}")
         data = res_full.json()
         assert data['Attachments'][0]['FileName'] == f"alt-filename-{rando}"
+        delete_msg(msg['ID'])
+
+
+def test_smtp_image_files_as_dict(rando, tmp):
+    defaults['mail.smtp']['subject'] = rando
+
+    image_file = os.path.join(tmp.dir, 'gradient.png')
+    # create a png (coverage)
+    width = 255
+    height = 255
+    img = []
+    for y in range(height):
+        row = ()
+        for x in range(width):
+            row = row + (x, max(0, 255 - x - y), y)
+        img.append(row)
+    with open(image_file, 'wb') as f:
+        w = png.Writer(width, height, greyscale=False)
+        w.write(f, img)
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        app.mail.send(f"{rando}",
+            files=[dict(name=f'alt-filename-{rando}', path=image_file)])
+        sleep(3)
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        assert msg['Attachments'] == 1
+
+        res_full = requests.get(f"{mailpit_api}/message/{msg['ID']}")
+        data = res_full.json()
+        assert data['Attachments'][0]['FileName'] == f"alt-filename-{rando}"
+        delete_msg(msg['ID'])
+
+
+def test_smtp_image_files_as_dict_inline(rando, tmp):
+    defaults['mail.smtp']['subject'] = rando
+
+    image_file = os.path.join(tmp.dir, 'gradient.png')
+    # create a png (coverage)
+    width = 255
+    height = 255
+    img = []
+    for y in range(height):
+        row = ()
+        for x in range(width):
+            row = row + (x, max(0, 255 - x - y), y)
+        img.append(row)
+    with open(image_file, 'wb') as f:
+        w = png.Writer(width, height, greyscale=False)
+        w.write(f, img)
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        app.mail.send(f"{rando}",
+            files=[dict(name=f'alt-filename-{rando}', path=image_file, cid=f'cid-{rando}')])
+        sleep(3)
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
         delete_msg(msg['ID'])
 
 

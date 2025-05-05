@@ -92,7 +92,7 @@ class RedisCacheHandler(cache.CacheHandler):
         if res is None:
             return fallback
         else:
-            return res.decode('utf-8')  # type: ignore
+            return res.decode('utf-8')
 
     def set(self, key: str, value: Any, time: Optional[int] = None, **kw: Any) -> None:
         """
@@ -128,7 +128,7 @@ class RedisCacheHandler(cache.CacheHandler):
             otherwise
         """
         res = self.r.delete(key)
-        return int(res) > 0  # type: ignore
+        return int(res) > 0
 
     def purge(self, **kw: Any) -> None:
         """
@@ -139,7 +139,7 @@ class RedisCacheHandler(cache.CacheHandler):
         """
         keys = self.r.keys('*')
         if keys:
-            self.r.delete(*keys)  # type: ignore
+            self.r.delete(*keys)
 
 
 def load(app: App) -> None:
