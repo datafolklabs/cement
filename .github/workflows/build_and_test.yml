@@ -1,0 +1,94 @@
+name: Build & Test
+
+on: [push]
+
+env:
+  SMTP_HOST: localhost
+  SMTP_PORT: 1025
+  MEMCACHED_HOST: localhost
+  REDIS_HOST: localhost
+
+jobs:
+  comply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ConorMacBride/install-package@v1
+        with:
+          apt: libmemcached-dev
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          architecture: "x64"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4
+      - name: Install dependencies
+        run: pdm install
+      - name: Make Comply
+        run: make comply
+
+  test:
+    needs: comply
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ConorMacBride/install-package@v1
+        with:
+          apt: libmemcached-dev
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          architecture: "x64"
+      - uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: "./docker/compose-services-only.yml"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4
+      - name: Install dependencies
+        run: pdm install
+      - name: Make Test
+        run: make test
+
+  test-all:
+    needs: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # FIXME ?
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
+        python-version: ["3.8", "3.9", "3.11", "3.12", "3.13", "pypy3.10"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ConorMacBride/install-package@v1
+        with:
+          apt: libmemcached-dev
+      - uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: "./docker/compose-services-only.yml"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4
+      - name: Install dependencies
+        run: pdm install
+      - name: Make Test
+        run: make test
+
+  cli-smoke-test:
+    needs: test-all
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: "./docker-compose.yml"
+      - name: CLI Smoke Tests
+        run: ./scripts/cli-smoke-test.sh
+      - if: always()
+        name: Review Output
+        run: cat ./tmp/cli-smoke-test.out
