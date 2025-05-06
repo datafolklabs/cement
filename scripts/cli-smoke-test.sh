@@ -19,15 +19,15 @@ function smoke-test {
         python:$pyver \
         /bin/bash
 
-    docker exec -it cement-cli-smoke-test /bin/bash -c "cd /src ; pip install `ls dist/cement-*.tar.gz`[cli]"
-    tmp=$(docker exec cement-cli-smoke-test /bin/bash -c "mktemp -d")
+    docker exec cement-cli-smoke-test /bin/bash -c "cd /src ; pip install `ls dist/cement-*.tar.gz`[cli]"
+    tmp=$(docker exec -t cement-cli-smoke-test /bin/bash -c "mktemp -d")
 
-    
+
     ### verify help output
 
     res=$(docker exec cement-cli-smoke-test /bin/bash -c "cement --version")
-    echo "$res" | grep "Cement Framework $CEMENT_VERSION.\d"
-    echo "$res" | grep "Python $pyver.\d"
+    echo "$res" | grep "Cement Framework $CEMENT_VERSION.[0-9]"
+    echo "$res" | grep "Python $pyver.[0-9]"
     echo "$res" | grep "Platform Linux.*"
     res=$(docker exec cement-cli-smoke-test /bin/bash -c "cement --help")
     echo "$res" | grep "Cement Framework Developer Tools"
@@ -45,37 +45,37 @@ function smoke-test {
     echo "$res" | grep "destination directory path"
     echo "$res" | grep -- "-D, --defaults"
 
-    
+
     ### generate a project
 
     docker exec cement-cli-smoke-test /bin/bash -c "cement generate project -D $tmp/myapp"
     docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install -r requirements.txt"
     docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install setuptools"
     docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; python setup.py install"
-    res=$(docker exec cement-cli-smoke-test /bin/bash -c "myapp --version")
-    echo "$res" | grep "Cement Framework $CEMENT_VERSION\.\d"
-    echo "$res" | grep "Python $pyver.\d"
+    res=$(docker exec -t cement-cli-smoke-test /bin/bash -c "myapp --version")
+    echo "$res" | grep "Cement Framework $CEMENT_VERSION\.[0-9]"
+    echo "$res" | grep "Python $pyver.[0-9]"
     echo "$res" | grep "Platform Linux.*"
 
-    
+
     ### generate a script
 
     docker exec cement-cli-smoke-test /bin/bash -c "cement generate script -D $tmp/myscript"
-    res=$(docker exec cement-cli-smoke-test /bin/bash -c "python $tmp/myscript/myscript.py --version")
+    res=$(docker exec -t cement-cli-smoke-test /bin/bash -c "python $tmp/myscript/myscript.py --version")
     echo "$res" | grep "myscript v0.0.1"
-    
+
 
     ### generate an extension
 
     docker exec cement-cli-smoke-test /bin/bash -c "cement generate extension -D $tmp/myapp/myapp/ext"
-    res=$(docker exec cement-cli-smoke-test /bin/bash -c "cat $tmp/myapp/myapp/ext/ext_myextension.py")
+    res=$(docker exec -t cement-cli-smoke-test /bin/bash -c "cat $tmp/myapp/myapp/ext/ext_myextension.py")
     echo "$res" | grep "myextension_pre_run_hook"
 
 
     ### generate a plugin
 
     docker exec cement-cli-smoke-test /bin/bash -c "cement generate plugin -D $tmp/myapp/myapp/plugins"
-    res=$(docker exec cement-cli-smoke-test /bin/bash -c "cat $tmp/myapp/myapp/plugins/myplugin/controllers/myplugin.py")
+    res=$(docker exec -t cement-cli-smoke-test /bin/bash -c "cat $tmp/myapp/myapp/plugins/myplugin/controllers/myplugin.py")
     echo "$res" | grep "class MyPlugin(Controller)"
 
     ### finish

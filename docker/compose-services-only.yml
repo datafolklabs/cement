@@ -1,0 +1,33 @@
+volumes:
+  mailpit-data:
+
+services:
+  redis:
+    image: redis:latest
+    hostname: redis
+    ports:
+      - 6379:6379
+
+  memcached:
+    image: memcached:latest
+    hostname: memcached
+    ports:
+      - 11211:11211
+
+  mailpit:
+    image: axllent/mailpit
+    hostname: mailpit
+    restart: always
+    volumes:
+      - mailpit-data:/data
+      - ../docker/mailpit:/certificates
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      MP_SMTP_TLS_CERT: /certificates/dev-cert.pem
+      MP_SMTP_TLS_KEY: /certificates/dev-key.pem
