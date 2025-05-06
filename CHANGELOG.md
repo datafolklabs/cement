@@ -1,5 +1,28 @@
 # ChangeLog
 
+## 3.0.15 - DEVELOPMENT (will be released as stable/3.0.16)
+
+Bugs:
+
+- None
+
+Features:
+
+- None
+
+Refactoring:
+
+- None
+
+Misc:
+
+- None
+
+Deprecations:
+
+- None
+
+
 ## 3.0.14 - May 5, 2025
 
 Bugs:
