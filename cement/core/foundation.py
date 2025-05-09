@@ -1534,14 +1534,25 @@ class App(meta.MetaMixin):
             if d not in template_dirs:
                 template_dirs.append(d)
 
-        if self._meta.template_dir is not None:
-            d = self._meta.template_dir.format(**template_dict)
-            template_dirs.append(d)
-
         for d in self._meta.core_user_template_dirs:
             d = d.format(**template_dict)
             if d not in template_dirs:
                 template_dirs.append(d)
+
+        if self._meta.template_dir is not None:
+            d = self._meta.template_dir.format(**template_dict)
+            template_dirs.append(d)
+
+        config_template_dirs = self.config.get(self._meta.label, 'template_dirs')
+
+        if isinstance(config_template_dirs, str):
+            config_template_dirs = [x.strip() for x in config_template_dirs.split(',')]
+
+        # reverse it becuase it will be reverse again (keep user preference)
+        config_template_dirs.reverse()
+
+        for d in config_template_dirs:
+            template_dirs.append(d)
 
         # reset final list
         self._meta.template_dirs = []
