@@ -497,6 +497,7 @@ class App(meta.MetaMixin):
             'plugin_dir',
             'ignore_deprecation_warnings',
             'template_dir',
+            'template_dirs',
             'mail_handler',
             'cache_handler',
             'log_handler',
@@ -1521,6 +1522,17 @@ class App(meta.MetaMixin):
             'home_dir': fs.HOME_DIR,
         }
 
+        # Check if template_dirs is overridden by config
+        config_template_dirs = []
+        if 'template_dirs' in self.config.keys(self._meta.config_section):
+            config_template_dirs = self.config.get(self._meta.label, 'template_dirs')
+
+            if isinstance(config_template_dirs, str):
+                config_template_dirs = [x.strip() for x in config_template_dirs.split(',')]
+
+            # reverse it becuase it will be reverse again (keep user preference)
+            config_template_dirs.reverse()
+
         # generate a final list of directories based on precedence (user level
         # paths take precedence).
 
@@ -1529,7 +1541,17 @@ class App(meta.MetaMixin):
             if d not in template_dirs:
                 template_dirs.append(d)
 
-        for d in self._meta.template_dirs:
+        # If config overrides template_dirs, use config instead of meta template_dirs
+        if config_template_dirs:
+            for d in config_template_dirs:
+                template_dirs.append(d)
+        else:
+            for d in self._meta.template_dirs:
+                d = d.format(**template_dict)
+                if d not in template_dirs:
+                    template_dirs.append(d)
+
+        for d in self._meta.core_user_template_dirs:
             d = d.format(**template_dict)
             if d not in template_dirs:
                 template_dirs.append(d)
@@ -1537,11 +1559,6 @@ class App(meta.MetaMixin):
         if self._meta.template_dir is not None:
             d = self._meta.template_dir.format(**template_dict)
             template_dirs.append(d)
-
-        for d in self._meta.core_user_template_dirs:
-            d = d.format(**template_dict)
-            if d not in template_dirs:
-                template_dirs.append(d)
 
         # reset final list
         self._meta.template_dirs = []

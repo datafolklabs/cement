@@ -779,6 +779,49 @@ def test_template_dirs(tmp, rando):
         assert tmp.dir in app._meta.template_dirs
 
 
+def test_template_dirs_config_override(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            template_dirs = ['/original/path']
+
+    with ThisTestApp() as app:
+        # Set template_dirs in config - should override Meta.template_dirs
+        app.config.set(app._meta.config_section, 'template_dirs', [tmp.dir, '/config/path2'])
+        app._setup_template_handler()
+        assert tmp.dir in app._meta.template_dirs
+        assert '/config/path2' in app._meta.template_dirs
+        assert '/original/path' not in app._meta.template_dirs
+
+
+def test_template_dirs_string_conversion(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+
+    with ThisTestApp() as app:
+        # Set template_dirs as comma-separated string - should convert to list
+        app.config.set(app._meta.config_section, 'template_dirs', f'{tmp.dir}, /path2 , /path3')
+        app._setup_template_handler()
+        assert tmp.dir in app._meta.template_dirs
+        assert '/path2' in app._meta.template_dirs
+        assert '/path3' in app._meta.template_dirs
+
+
+def test_template_dir_and_dirs_interaction(tmp, rando):
+    class ThisTestApp(TestApp):
+        class Meta:
+            label = rando
+            template_dir = '/single/dir'
+
+    with ThisTestApp() as app:
+        # Both template_dir and template_dirs should be processed
+        app.config.set(app._meta.config_section, 'template_dirs', [tmp.dir])
+        app._setup_template_handler()
+        assert tmp.dir in app._meta.template_dirs
+        assert '/single/dir' in app._meta.template_dirs
+
+
 def test_core_system_plugin_dirs(tmp, rando):
     class ThisTestApp(TestApp):
         class Meta:
