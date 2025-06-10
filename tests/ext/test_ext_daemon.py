@@ -77,24 +77,26 @@ def test_bogus_group(rando):
     env.switch()
 
 
+def _daemon_target(pid_file):
+    """Target function for daemon test subprocess."""
+    with TestApp(argv=['--daemon'], extensions=['daemon']) as app:
+        app.config.set('daemon', 'pid_file', pid_file)
+
+        try:
+            # FIX ME: Can't daemonize, because nose/pytest lose sight of it
+            app.daemonize()
+            app.run()
+        finally:
+            app.close()
+            ext_daemon.cleanup(app)
+
+
 def test_daemon(tmp):
     os.remove(tmp.file)
     from cement.utils import shell
 
     # Test in a sub-process to avoid hangup
-    def target():
-        with TestApp(argv=['--daemon'], extensions=['daemon']) as app:
-            app.config.set('daemon', 'pid_file', tmp.file)
-
-            try:
-                # FIX ME: Can't daemonize, because nose/pytest lose sight of it
-                app.daemonize()
-                app.run()
-            finally:
-                app.close()
-                ext_daemon.cleanup(app)
-
-    p = shell.spawn_process(target)
+    p = shell.spawn_process(_daemon_target, args=(tmp.file,))
     p.join()
     assert p.exitcode == 0
 

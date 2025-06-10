@@ -52,7 +52,7 @@ pip-log.txt
 # Documentation
 doc/build
 # Unit test / coverage reports
-.coverage
+.coverage*
 htmlcov
 coverage-report
 .tox

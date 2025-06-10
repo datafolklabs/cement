@@ -1,0 +1,19 @@
+# Process compose for starting django
+version: "0.5"
+
+processes:
+    memcached:
+        command: memcached
+        availability:
+            restart: "always"
+
+    mailpit:
+        command: mailpit
+        availability:
+            restart: "always"
+        environment:
+            - "MP_MAX_MESSAGES=5000"
+            - "MP_SMTP_AUTH_ACCEPT_ANY=1"
+            - "MP_SMTP_AUTH_ALLOW_INSECURE=1"
+            - "MP_SMTP_TLS_CERT=docker/mailpit/dev-cert.pem"
+            - "MP_SMTP_TLS_KEY=docker/mailpit/dev-key.pem"

@@ -15,7 +15,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pdm run pytest --cov=cement.core tests/core` - Test only core components
 
 **Development Environment:**
-- `make dev` - Start Docker development environment (recommended)
 - `pdm venv create && pdm install` - Set up local development environment
 - `pdm run cement --help` - Run the cement CLI
 
@@ -61,7 +60,6 @@ Cement is a CLI application framework built around a handler/interface pattern w
 - 100% test coverage required (pytest with coverage reporting)
 - 100% PEP8 compliance enforced via ruff
 - Type annotation compliance via mypy
-- Docker-first development approach
 - PDM for dependency management
 - Zero external dependencies for core framework (optional for extensions)
 
@@ -70,7 +68,6 @@ Cement is a CLI application framework built around a handler/interface pattern w
 - Tests located in `tests/` directory mirroring source structure
 - Core tests can run independently via `make test-core`
 - Coverage reports generated in `coverage-report/` directory
-- Tests must pass on Python 3.8+ (see docker containers for multiple versions)
 
 ## Extension Development
 

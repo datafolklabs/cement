@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.0/.schema/devbox.schema.json",
+  "packages": {
+    "python":       "3.13",
+    "pdm":          "latest",
+    "libmemcached": "latest",
+    "zlib": {
+      "version": "latest",
+      "outputs": ["out", "dev"]
+    },
+    "redis": "latest",
+    "memcached": {
+      "version": "latest",
+      "outputs": ["out"]
+    },
+    "mailpit": "latest"
+  },
+  "shell": {
+    "init_hook": [],
+    "scripts": {
+      "test": ["echo \"Error: no test specified\" && exit 1"]
+    }
+  }
+}
