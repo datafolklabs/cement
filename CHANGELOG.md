@@ -8,7 +8,8 @@ Bugs:
 
 Features:
 
-- None
+- `[core.foundation]` Support for App.Meta.template_dirs.
+  - [Issue #746](https://github.com/datafolklabs/cement/issues/749)
 
 Refactoring:
 
