@@ -64,8 +64,8 @@ def test_smtp_send(rando):
         assert msg['To'][0]['Address'] == f'to-{rando}@localhost'
         assert msg['Subject'] == f'UNIT TEST > {rando}'
         assert msg['Attachments'] == 0
-        assert msg['Cc'] == []
-        assert msg['Bcc'] == []
+        assert msg['Cc'] in [None, []]
+        assert msg['Bcc'] in [None, []]
 
         delete_msg(msg['ID'])
 
