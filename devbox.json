@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.0/.schema/devbox.schema.json",
   "packages": {
-    "python":       "3.13",
+    "python":       "3.14",
     "pdm":          "latest",
     "libmemcached": "latest",
     "zlib": {

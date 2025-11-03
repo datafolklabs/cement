@@ -1,6 +1,6 @@
-FROM python:3.8-alpine
+FROM python:3.14-alpine
 LABEL MAINTAINER="BJ Dierkes <derks@datafolklabs.com>"
-ENV PS1="\[\e[0;33m\]|> cement-py38 <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
+ENV PS1="\[\e[0;33m\]|> cement-py314 <| \[\e[1;35m\]\W\[\e[0m\] \[\e[0m\]# "
 ENV PATH="${PATH}:/root/.local/bin"
 
 WORKDIR /src
@@ -22,7 +22,7 @@ RUN apk update \
     && ln -sf /usr/bin/vim /usr/bin/vi
 RUN pipx install pdm
 COPY . /src
-COPY docker/vimrc /root/.vimrc
-COPY docker/bashrc /root/.bashrc
+COPY ./docker/vimrc /root/.vimrc
+COPY ./docker/bashrc /root/.bashrc
 RUN pdm install
 CMD ["/bin/bash"]
