@@ -53,20 +53,13 @@ services:
       - memcached
       - mailpit
   
-  cement-py38:
-    <<: *DEFAULTS
-    image: "cement:dev-py38"
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.dev-py38
-  
   cement-py39:
     <<: *DEFAULTS
     image: "cement:dev-py39"
     build:
       context: .
       dockerfile: docker/Dockerfile.dev-py39
-  
+
   cement-py310:
     <<: *DEFAULTS
     image: "cement:dev-py310"
@@ -87,3 +80,10 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.dev-py312
+
+  cement-py313:
+    <<: *DEFAULTS
+    image: "cement:dev-py313"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev-py313

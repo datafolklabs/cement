@@ -5,7 +5,6 @@ Cement plugin extension module.
 from __future__ import annotations
 import os
 import sys
-import importlib
 import importlib.util
 import importlib.machinery
 import re
