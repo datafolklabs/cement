@@ -93,7 +93,7 @@ class SMTPMailHandler(mail.MailHandler):
         for item in ['date', 'message_id', 'return_path', 'reply_to']:
             value = kw.get(item, None)
             if value is not None and str.strip(f'{value}') != '':
-                params[item] = kw.get(item, config_item)
+                params[item] = value
 
         # take all X-headers as is
         for item in kw.keys():
@@ -152,36 +152,37 @@ class SMTPMailHandler(mail.MailHandler):
         if is_true(params['ssl']):
             server = smtplib.SMTP_SSL(params['host'],
                                       params['port'],
-                                      params['timeout'])
+                                      timeout=params['timeout'])
             LOG.debug(f"{self._meta.label} : initiating smtp over ssl")
 
         else:
             server = smtplib.SMTP(params['host'],  # type: ignore
                                   params['port'],
-                                  params['timeout'])
+                                  timeout=params['timeout'])
             LOG.debug(f"{self._meta.label} : initiating smtp")
 
-        if self.app.debug is True:
-            server.set_debuglevel(9)
+        try:
+            if self.app.debug is True:
+                server.set_debuglevel(9)
 
-        if is_true(params['tls']):
-            LOG.debug(f"{self._meta.label} : initiating tls")
-            server.starttls()
+            if is_true(params['tls']):
+                LOG.debug(f"{self._meta.label} : initiating tls")
+                server.starttls()
 
-        if is_true(params['auth']):
-            server.login(params['username'], params['password'])
+            if is_true(params['auth']):
+                server.login(params['username'], params['password'])
 
-        msg = self._make_message(body, **params)
-        res = server.send_message(msg)
-
-        server.quit()
+            msg = self._make_message(body, **params)
+            res = server.send_message(msg)
+        finally:
+            server.quit()
 
         # FIXME: should deprecate for 3.0 and change in 3.2
         # For smtplib this would be "senderrs" (dict), but for backward compat
         # we need to return bool
         # https://github.com/python/cpython/blob/3.13/Lib/smtplib.py#L899
-        self.app.log.error(f"SMTPHandler Errors: {res}")
         if len(res) > 0:
+            self.app.log.error(f"SMTPHandler Errors: {res}")
             # this will be difficult to test with Mailpit as it accepts everything... no cover
             return False  # pragma: nocover
         else:

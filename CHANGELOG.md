@@ -4,7 +4,10 @@
 
 Bugs:
 
-- None
+- `[ext.smtp]` Fix `timeout` passed as `local_hostname` in SMTP constructors
+- `[ext.smtp]` Fix stale variable reference in `_get_params` for per-message headers
+- `[ext.smtp]` Fix SMTP connection leak when send fails with an exception
+- `[ext.smtp]` Fix unconditional error log on every send (now only logs on errors)
 
 Features:
 
