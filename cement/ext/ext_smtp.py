@@ -92,7 +92,7 @@ class SMTPMailHandler(mail.MailHandler):
         # some are only set by message
         for item in ['date', 'message_id', 'return_path', 'reply_to']:
             value = kw.get(item, None)
-            if value is not None and str.strip(f'{value}') != '':
+            if value is not None and f'{value}'.strip() != '':
                 params[item] = value
 
         # take all X-headers as is
@@ -210,37 +210,37 @@ class SMTPMailHandler(mail.MailHandler):
             cs_body.body_encoding = QP
 
         # setup body parts
-        partText = None
-        partHtml = None
-
-        if type(body) not in [str, tuple, dict]:
-            error_msg = "Message body must be string, " \
-                        "tuple ('<text>', '<html>') or " \
-                        "dict {'text': '<text>', 'html': '<html>'}"
-            raise TypeError(error_msg)
+        part_text = None
+        part_html = None
 
         if isinstance(body, str):
-            partText = MIMEText(body, 'plain', _charset=cs_body)  # type: ignore
+            part_text = MIMEText(body, 'plain', _charset=cs_body)  # type: ignore
         elif isinstance(body, tuple):
             # handle plain text
-            if len(body) >= 1 and body[0] and str.strip(body[0]) != '':
-                partText = MIMEText(str.strip(body[0]),
-                                    'plain',
-                                    _charset=cs_body)  # type: ignore
+            if len(body) >= 1 and body[0] and body[0].strip() != '':
+                part_text = MIMEText(body[0].strip(),
+                                     'plain',
+                                     _charset=cs_body)  # type: ignore
             # handle html
-            if len(body) >= 2 and body[1] and str.strip(body[1]) != '':
-                partHtml = MIMEText(str.strip(body[1]),
-                                    'html',
-                                    _charset=cs_body)  # type: ignore
+            if len(body) >= 2 and body[1] and body[1].strip() != '':
+                part_html = MIMEText(body[1].strip(),
+                                     'html',
+                                     _charset=cs_body)  # type: ignore
         elif isinstance(body, dict):
             # handle plain text
-            if 'text' in body and str.strip(body['text']) != '':
-                partText = MIMEText(str.strip(body['text']),
-                                              'plain',
-                                              _charset=cs_body)
+            if 'text' in body and body['text'].strip() != '':
+                part_text = MIMEText(body['text'].strip(),
+                                     'plain',
+                                     _charset=cs_body)
             # handle html
-            if 'html' in body and str.strip(body['html']) != '':
-                partHtml = MIMEText(str.strip(body['html']), 'html', _charset=cs_body)
+            if 'html' in body and body['html'].strip() != '':
+                part_html = MIMEText(body['html'].strip(), 'html', _charset=cs_body)
+        else:
+            raise TypeError(
+                "Message body must be string, "
+                "tuple ('<text>', '<html>') or "
+                "dict {'text': '<text>', 'html': '<html>'}"
+            )
 
         # To define the correct message content-type
         # we need to indentify the content of this mail.
@@ -252,10 +252,10 @@ class SMTPMailHandler(mail.MailHandler):
         if params['files']:
             msg = MIMEMultipart('mixed')
             msg.set_charset(params['charset'])  # type: ignore
-        elif partText and partHtml:
+        elif part_text and part_html:
             msg = MIMEMultipart('alternative')
             msg.set_charset(params['charset'])  # type: ignore
-        elif partHtml:
+        elif part_html:
             msg = MIMEBase('text', 'html')  # type: ignore
             msg.set_charset(cs_body)
         else:
@@ -305,7 +305,7 @@ class SMTPMailHandler(mail.MailHandler):
         # append the body parts
         if params['files']:
             # multipart/mixed
-            if partHtml:
+            if part_html:
                 # when html exists, create always a related part to include
                 # the body alternatives and eventually files as related
                 # attachments (e.g. images).
@@ -313,30 +313,30 @@ class SMTPMailHandler(mail.MailHandler):
                 # create an alternative part to include bodies for text and html
                 alt = MIMEMultipart('alternative')
                 # body text and body html
-                if partText:
-                    alt.attach(partText)
-                alt.attach(partHtml)
+                if part_text:
+                    alt.attach(part_text)
+                alt.attach(part_html)
                 rel.attach(alt)
                 msg.attach(rel)
             else:
                 # only body text or no body
-                if partText:
-                    msg.attach(partText)
+                if part_text:
+                    msg.attach(part_text)
                 else:
                     # no body no files = empty message = just headers
                     pass  # pragma: no cover
         else:
             # multipart/alternative
-            if partText and partHtml:
+            if part_text and part_html:
                 # plain/text and plain/html
-                msg.attach(partText)
-                msg.attach(partHtml)
+                msg.attach(part_text)
+                msg.attach(part_html)
             else:
                 # plain/text or plain/html only so just append payload
-                if partText:
-                    msg.set_payload(partText.get_payload(), charset=cs_body)
-                elif partHtml:
-                    msg.set_payload(partHtml.get_payload(), charset=cs_body)
+                if part_text:
+                    msg.set_payload(part_text.get_payload(), charset=cs_body)
+                elif part_html:
+                    msg.set_payload(part_html.get_payload(), charset=cs_body)
                 else:
                     # no body no files = empty message = just headers
                     pass  # pragma: no cover
