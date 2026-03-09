@@ -4,6 +4,7 @@ import mock
 import requests
 import json
 import png
+import warnings
 from time import sleep
 from pytest import raises
 from cement.utils.test import TestApp
@@ -610,3 +611,19 @@ def test_mock_smtp_auth(rando):
             instance = mock_smtp.return_value
             assert instance.login.call_count == 1
             assert instance.send_message.call_count == 1
+
+
+def test_smtp_send_deprecation_warning():
+    defaults = init_defaults('mail.smtp')
+    defaults['mail.smtp']['subject'] = 'test_deprecation'
+    defaults['mail.smtp']['subject_prefix'] = 'UNIT TEST >'
+
+    with mock.patch('smtplib.SMTP'):
+        with SMTPApp(config_defaults=defaults) as app:
+            app.run()
+            with warnings.catch_warnings(record=True) as w:
+                warnings.simplefilter("always")
+                app.mail.send('TEST MESSAGE',
+                              to=['me@localhost'],
+                              from_addr='noreply@localhost')
+                assert any("3.0.16-1" in str(warning.message) for warning in w)
