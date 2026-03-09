@@ -28,7 +28,7 @@ Misc:
 
 Deprecations:
 
-- None
+- `[ext.smtp]` `SMTPMailHandler.send()` returning `bool` is deprecated; will return `senderrs` dict in a future version
 
 
 ## 3.0.14 - May 5, 2025

@@ -16,6 +16,7 @@ from email import encoders
 from email.utils import format_datetime, make_msgid
 from typing import Any, Optional, Dict, Union, Tuple, TYPE_CHECKING
 from ..core import mail
+from ..core.deprecations import deprecate
 from ..utils import fs
 from ..utils.misc import minimal_logger, is_true
 
@@ -179,10 +180,10 @@ class SMTPMailHandler(mail.MailHandler):
         finally:
             server.quit()
 
-        # FIXME: should deprecate for 3.0 and change in 3.2
-        # For smtplib this would be "senderrs" (dict), but for backward compat
-        # we need to return bool
+        # Deprecation: bool return will change to senderrs dict
         # https://github.com/python/cpython/blob/3.13/Lib/smtplib.py#L899
+        deprecate('3.0.16-1')
+
         if len(res) > 0:  # pragma: nocover - Mailpit accepts everything
             self.app.log.error(f"SMTPHandler Errors: {res}")
             return False
