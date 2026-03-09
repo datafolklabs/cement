@@ -24,7 +24,7 @@ Refactoring:
 
 Misc:
 
-- None
+- `[ext.smtp]` Isolate test defaults to prevent cross-test state pollution
 
 Deprecations:
 

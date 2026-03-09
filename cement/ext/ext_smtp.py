@@ -183,10 +183,9 @@ class SMTPMailHandler(mail.MailHandler):
         # For smtplib this would be "senderrs" (dict), but for backward compat
         # we need to return bool
         # https://github.com/python/cpython/blob/3.13/Lib/smtplib.py#L899
-        if len(res) > 0:
+        if len(res) > 0:  # pragma: nocover - Mailpit accepts everything
             self.app.log.error(f"SMTPHandler Errors: {res}")
-            # this will be difficult to test with Mailpit as it accepts everything... no cover
-            return False  # pragma: nocover
+            return False
         else:
             return True
 
