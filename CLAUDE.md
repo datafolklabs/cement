@@ -76,3 +76,14 @@ When working with extensions:
 - Optional dependencies declared in pyproject.toml under `[project.optional-dependencies]`
 - Extensions follow naming pattern `ext_<name>.py`
 - Must implement proper interface contracts
+
+## GitHub Project
+
+This project is hosted at **github.com/datafolklabs/cement**. Use the `gh` CLI to interact with GitHub issues, pull requests, and other project resources.
+
+- `gh issue list -R datafolklabs/cement` - List open issues
+- `gh issue view <number> -R datafolklabs/cement` - View a specific issue
+- `gh pr list -R datafolklabs/cement` - List open pull requests
+- `gh pr view <number> -R datafolklabs/cement` - View a specific PR
+- `gh pr checks <number> -R datafolklabs/cement` - View CI status for a PR
+- `gh api repos/datafolklabs/cement/pulls/<number>/comments` - View PR review comments
