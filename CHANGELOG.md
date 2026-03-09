@@ -8,6 +8,7 @@ Bugs:
 - `[ext.smtp]` Fix stale variable reference in `_get_params` for per-message headers
 - `[ext.smtp]` Fix SMTP connection leak when send fails with an exception
 - `[ext.smtp]` Fix unconditional error log on every send (now only logs on errors)
+- `[ext.smtp]` Fix header encoding incorrectly affected by `body_encoding` setting
 
 Features:
 

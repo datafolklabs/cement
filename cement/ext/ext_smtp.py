@@ -199,7 +199,7 @@ class SMTPMailHandler(mail.MailHandler):
         cs_header = Charset(params['charset'])  # type: ignore
         if params['header_encoding'] == 'base64':
             cs_header.header_encoding = BASE64
-        elif params['header_encoding'] == 'qp' or params['body_encoding'] == 'quoted-printable':
+        elif params['header_encoding'] == 'qp' or params['header_encoding'] == 'quoted-printable':
             cs_header.header_encoding = QP
 
         # use encoding for body parts
