@@ -1,4 +1,14 @@
-.PHONY: dev test test-core comply-fix docs clean dist dist-upload docker docker-push
+ROOT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
+ifneq ($(CURDIR),$(patsubst %/,%,$(ROOT_DIR)))
+$(error Must run make from the project root: $(ROOT_DIR))
+endif
+
+.PHONY: init dev up down test test-core comply-fix docs clean superclean dist dist-upload docker docker-push
+
+init:
+	devbox install
+	devbox run pdm install
 
 dev:
 	docker compose up -d
@@ -9,6 +19,12 @@ dev:
 	docker compose exec cement-py312 pdm install
 	docker compose exec cement-py313 pdm install
 	docker compose exec cement /bin/bash
+
+up:
+	process-compose up
+
+down:
+	process-compose down
 
 test: comply
 	pdm run pytest --cov=cement tests
@@ -42,7 +58,18 @@ docs:
 
 clean:
 	find . -name '*.py[co]' -delete
-	rm -rf doc/build
+	find . -name '__pycache__' -type d -delete
+	rm -rf docs/build
+	rm -rf coverage-report .coverage*
+	rm -rf .pytest_cache
+	rm -rf *.egg-info dist
+	rm -rf dump.rdb
+
+superclean: clean
+	rm -rf .devbox/ .venv/
+	rm -rf .mypy_cache .ruff_cache .pdm-build
+	rm -rf tmp/*
+	@echo "Must run 'direnv allow' and 'make init' again"
 
 dist:
 	pdm build

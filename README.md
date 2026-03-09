@@ -68,9 +68,50 @@ The Cement CLI Application Framework is Open Source and is distributed under the
 
 ## Development
 
+### Devbox / Process Compose
+ 
+ *This is now the recommended development setup.*
+ 
+[Devbox](https://www.jetify.com/devbox) provides a fully local development environment with all required services and dependencies, without the need for Docker containers. Everything runs natively on your machine.
+
+**Prerequisites:**
+
+- [Devbox](https://www.jetify.com/devbox/docs/installing_devbox/)
+- [DirEnv](https://direnv.net/) (recommended) — automatically activates the Devbox environment when you `cd` into the project directory. If you don't use DirEnv, you can manually run `source .envrc` or `devbox shell` instead.
+
+**Setup:**
+
+Initialize the Devbox environment and install dependencies:
+
+```
+make init
+```
+
+If using DirEnv, the environment activates automatically on `cd`. Otherwise, run `source .envrc` or `devbox shell` to activate it.
+
+**Running Services and Tests:**
+
+In one terminal, start the required services (Redis, Memcached, Mailpit) via Process Compose:
+
+```
+make up
+```
+
+In another terminal, run the test suite:
+
+```
+make test
+```
+
+Or run cement commands:
+
+```
+pdm run cement --help
+```
+
 ### Docker
 
-This project includes a Docker Compose configuration that sets up all required services, and dependencies for development and testing.  This is the recommended path for local development, and is the only fully supported option.
+This project includes a Docker Compose configuration that sets up all required services, and dependencies for development and testing.  This method is still supported, but may become deprecated in favor of Devbox.
 
 The following creates all required docker containers, and launches an BASH shell within the `cement` dev container for development.
 ```

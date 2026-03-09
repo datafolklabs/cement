@@ -2,6 +2,11 @@
 version: "0.5"
 
 processes:
+    redis:
+        command: redis-server --save "" --appendonly no
+        availability:
+            restart: "always"
+
     memcached:
         command: memcached
         availability:

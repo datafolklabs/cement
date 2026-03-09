@@ -13,7 +13,8 @@
       "version": "latest",
       "outputs": ["out"]
     },
-    "mailpit": "latest"
+    "mailpit":         "latest",
+    "process-compose": "latest"
   },
   "shell": {
     "init_hook": [],
