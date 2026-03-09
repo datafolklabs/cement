@@ -16,6 +16,7 @@ Features:
 
 Refactoring:
 
+- `[ext.smtp]` PEP 8 naming, idiomatic string methods, and cleaner type validation
 - `[dev]` Python 3.14 Default Development Target
 - `[dev]` Remove Support for Python 3.8 (EOL)
 
