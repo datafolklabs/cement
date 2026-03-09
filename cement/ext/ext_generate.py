@@ -26,6 +26,83 @@ class GenerateTemplateAbstractBase(Controller):
 
     _meta: Meta  # type: ignore
 
+    def _process_features(self,
+                          features: list[dict[str, Any]],
+                          vars: list[dict[str, Any]],
+                          exclude_list: list[str],
+                          ignore_list: list[str],
+                          data: dict[str, Any]) -> None:
+        # validate up front so misconfigurations fail fast and consistently
+        # under `python -O` (asserts get stripped, ValueError does not).
+        feature_names: set[str] = set()
+        for feature in features:
+            if feature.get('name') is None:
+                raise ValueError(
+                    "Required feature config key missing: name")
+            feature_names.add(feature['name'])
+        for feature in features:
+            for req in feature.get('requires', []):
+                if req not in feature_names:
+                    raise ValueError(
+                        f"Feature '{feature['name']}' requires unknown "
+                        f"feature '{req}'")
+
+        # pass 1: compute tentative enabled-state per feature from default /
+        # prompt, ignoring requires. Order-independent.
+        feature_states: dict[str, bool] = {}
+        for feature in features:
+            name = feature['name']
+            default = bool(feature.get('default', False))
+            if self.app.pargs.defaults:
+                feature_states[name] = default
+            else:
+                default_hint = 'Y/n' if default else 'y/N'  # pragma: nocover
+                default_val = 'y' if default else 'n'  # pragma: nocover
+
+                class FeaturePrompt(shell.Prompt):  # pragma: nocover
+                    class Meta:
+                        text = f"Enable Feature: {name} [{default_hint}]:"
+                        default = default_val
+
+                p = FeaturePrompt(auto=False)  # pragma: nocover
+                val: str = p.prompt() or default_val  # pragma: nocover
+                feature_states[name] = val.lower() == 'y'  # pragma: nocover
+
+        # pass 2: cascade-disable features whose requires are unsatisfied;
+        # iterate to a fixpoint so transitive chains resolve regardless of
+        # YAML ordering (a feature can declare a `requires` against another
+        # feature defined later in the list).
+        changed = True
+        while changed:
+            changed = False
+            for feature in features:
+                name = feature['name']
+                if not feature_states[name]:
+                    continue
+                for req in feature.get('requires', []):
+                    if not feature_states[req]:
+                        self.app.log.warning(
+                            f"Feature '{name}' disabled (requires: {req})"
+                        )
+                        feature_states[name] = False
+                        changed = True
+                        break
+
+        # merge enabled/disabled configs
+        if 'features' not in data:
+            data['features'] = {}
+        for feature in features:
+            name = feature['name']
+            enabled = feature_states[name]
+            data['features'][name] = enabled
+
+            block_key = 'enabled' if enabled else 'disabled'
+            block = feature.get(block_key) or {}
+
+            vars.extend(block.get('variables', []))
+            exclude_list.extend(block.get('exclude', []))
+            ignore_list.extend(block.get('ignore', []))
+
     def _generate(self, source: str, dest: str) -> None:
         msg = f'Generating {self.app._meta.label} {self._meta.label} in {dest}'
         self.app.log.info(msg)
@@ -44,13 +121,19 @@ class GenerateTemplateAbstractBase(Controller):
         g_config = yaml_load(f)
         f.close()
 
-        vars = g_config.get('variables', {})
+        vars = g_config.get('variables', [])
         exclude_list = g_config.get('exclude', [])
         ignore_list = g_config.get('ignore', [])
 
         # default ignore the .generate.yml config
         g_config_yml = rf'^(.*)[\/\\\\]{self._meta.label}[\/\\\\]\.generate\.yml$'
         ignore_list.append(g_config_yml)
+
+        # process features (merge enabled/disabled config into vars/exclude/ignore)
+        features = g_config.get('features', [])
+        if features:
+            self._process_features(features, vars, exclude_list,
+                                   ignore_list, data)
 
         var_defaults: dict = {
             'name': None,
@@ -156,11 +239,26 @@ def setup_template_items(app: "App") -> None:
             if os.path.exists(subpath) and subpath not in template_dirs:
                 template_dirs.append(subpath)
 
-        # FIXME: not exactly sure how to test for this so not covering
+        # FIXME: AttributeError can fire if the imported module lacks
+        # __file__ (e.g., built-in / namespace packages); not testable
+        # from cement, so keep pragma: nocover on this branch.
         except AttributeError:  # pragma: nocover  # untestable: dynamic import
-            msg = 'unable to load template module' + \
-                  f"{mod} from {'.'.join(mod_parts)}"  # pragma: nocover  # untestable: dynamic import  # noqa: E501
+            msg = ('unable to load template module '
+                   f"'{mod_name}' from '{'.'.join(mod_parts)}'")
             app.log.debug(msg)  # pragma: nocover  # untestable: dynamic import
+        except ModuleNotFoundError as e:
+            # Only swallow when the missing module is the template module
+            # path we tried to import. A ModuleNotFoundError raised inside
+            # the user's template module (transitive dep missing) must
+            # propagate — otherwise we mask the real failure as a generic
+            # "template module not found" debug log.
+            expected = '.'.join(mod_parts + [mod_name])
+            if e.name and e.name != expected and \
+                    not expected.startswith(f"{e.name}."):
+                raise
+            msg = ('unable to load template module '
+                   f"'{mod_name}' from '{'.'.join(mod_parts)}'")
+            app.log.debug(msg)
 
     for path in template_dirs:
         for item in os.listdir(path):

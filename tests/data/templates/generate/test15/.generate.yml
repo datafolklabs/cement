@@ -1,0 +1,30 @@
+---
+
+variables:
+
+-   name: app_name
+    prompt: App Name
+    default: myapp
+
+# Out-of-order requires: feature_b requires feature_a, but feature_b is
+# declared FIRST in the YAML. Both default to true. The buggy single-pass
+# resolver would auto-disable feature_b because feature_a's state has not
+# been computed when feature_b is processed. The two-pass / fixpoint
+# resolver computes all states first, then cascades, so feature_b stays
+# enabled here.
+
+features:
+
+-   name: feature_b
+    default: true
+    requires:
+        - feature_a
+    disabled:
+        ignore:
+            - '.*feature_b-only.*'
+
+-   name: feature_a
+    default: true
+    disabled:
+        ignore:
+            - '.*feature_a-only.*'

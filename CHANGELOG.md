@@ -144,6 +144,15 @@ Bugs:
 - `[dev]` `make docs` zero-warnings gate now uses `&&` (was `;`),
   so the recipe correctly fails on Sphinx warnings instead of
   silently succeeding via the trailing `cd ..` exit code
+- `[ext.generate]` Fix `variables` default from `{}` to `[]` — the
+  generate flow iterates `variables` as a list of dicts, so the dict
+  default would have produced an empty key-iteration on templates
+  that omit the key
+- `[ext.generate]` Narrow the dynamic-template-module `except` from
+  bare `AttributeError` to `(AttributeError, ModuleNotFoundError)`
+  with a `name`-match guard, so transitive `ModuleNotFoundError`s
+  raised inside the user's template module propagate normally
+  instead of being silently swallowed as "module not found"
 
 Features:
 
@@ -154,6 +163,12 @@ Features:
   String form is split + whitespace-trimmed, parallel to the existing
   `extensions` config handling.
   - [Issue #746](https://github.com/datafolklabs/cement/issues/746)
+- `[ext.generate]` Add optional features support to generate templates
+  with conditional variables, exclude/ignore patterns, and dependency
+  resolution via `requires` (with transitive cascade when a required
+  feature is disabled). Resolution is order-independent — features may
+  declare `requires` against features defined later in the YAML.
+  - [Issue #743](https://github.com/datafolklabs/cement/issues/743)
 
 Refactoring:
 

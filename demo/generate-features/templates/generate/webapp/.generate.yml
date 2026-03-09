@@ -1,0 +1,28 @@
+---
+
+variables:
+    -   name: project_name
+        prompt: "Project Name"
+        default: "myproject"
+        case: lower
+
+features:
+    -   name: docker
+        default: true
+        enabled:
+            variables:
+                -   name: python_version
+                    prompt: "Python Version (for Docker)"
+                    default: "3.13"
+        disabled:
+            ignore:
+                - '.*Dockerfile.*'
+                - '.*\.dockerignore.*'
+
+    -   name: docker_compose
+        default: true
+        requires:
+            - docker
+        disabled:
+            ignore:
+                - '.*docker-compose.*'
