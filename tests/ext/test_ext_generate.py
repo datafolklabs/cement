@@ -156,3 +156,211 @@ def test_filtered_sub_dirs(tmp):
         assert exists_join(tmp.dir, 'exclude-me', 'take-me')
         assert not exists_join(tmp.dir, 'ignore-me')
         assert not exists_join(tmp.dir, 'ignore-me', 'take-me')
+
+
+def test_generate_features_enabled(tmp):
+    # feature1 defaults to true, feature2 defaults to false
+    argv = ['generate', 'test6', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        # base variable rendered
+        assert exists_join(tmp.dir, 'take-me')
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            res = f.read()
+            assert 'myapp' in res
+
+        # feature1 enabled: its variable is available and rendered
+        assert exists_join(tmp.dir, 'feature1-file')
+        with open(os.path.join(tmp.dir, 'feature1-file')) as f:
+            res = f.read()
+            assert 'feature1_val' in res
+
+        # feature1 enabled: feature1-only is kept (not ignored)
+        assert exists_join(tmp.dir, 'feature1-only')
+
+        # feature1 enabled: no-feature1 is ignored
+        assert not exists_join(tmp.dir, 'no-feature1')
+
+        # feature2 disabled: feature2-only is ignored
+        assert not exists_join(tmp.dir, 'feature2-only')
+
+
+def test_generate_features_disabled(tmp):
+    # test6 with feature1 disabled via a separate config (test7)
+    # create test7 that flips defaults: feature1=false, feature2=true
+    argv = ['generate', 'test7', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        # base variable rendered
+        assert exists_join(tmp.dir, 'take-me')
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            res = f.read()
+            assert 'myapp' in res
+
+        # feature1 disabled: feature1-file is excluded (copied, not rendered)
+        assert exists_join(tmp.dir, 'feature1-file')
+        with open(os.path.join(tmp.dir, 'feature1-file')) as f:
+            res = f.read()
+            assert re.match(r'.*\{\{ feature1_var \}\}.*', res)
+
+        # feature1 disabled: feature1-only is ignored
+        assert not exists_join(tmp.dir, 'feature1-only')
+
+        # feature1 disabled: no-feature1 is kept
+        assert exists_join(tmp.dir, 'no-feature1')
+
+        # feature2 enabled: feature2-only is kept
+        assert exists_join(tmp.dir, 'feature2-only')
+
+        # feature2 enabled: its variable is available
+        assert exists_join(tmp.dir, 'feature2-file')
+        with open(os.path.join(tmp.dir, 'feature2-file')) as f:
+            res = f.read()
+            assert 'feature2_val' in res
+
+
+def test_generate_features_missing_name(tmp):
+    argv = ['generate', 'test8', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match='Required feature config key missing: name'):
+            app.run()
+
+
+def test_generate_features_requires_satisfied(tmp):
+    # test9: feature1=true (default), feature2=true (default), feature2 requires feature1
+    argv = ['generate', 'test9', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        # both features enabled, both files present
+        assert exists_join(tmp.dir, 'take-me')
+        assert exists_join(tmp.dir, 'feature1-only')
+        assert exists_join(tmp.dir, 'feature2-only')
+
+
+def test_generate_features_requires_not_satisfied(tmp):
+    # test11: feature1=false (default), feature2=true (default) but requires feature1
+    # feature2 should be auto-disabled because feature1 is off
+    argv = ['generate', 'test11', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+
+        # feature1 disabled: feature1-only ignored
+        assert not exists_join(tmp.dir, 'feature1-only')
+
+        # feature2 auto-disabled via requires: feature2-only ignored
+        assert not exists_join(tmp.dir, 'feature2-only')
+
+
+def test_generate_features_requires_unknown(tmp):
+    # test10: feature requires a nonexistent feature
+    argv = ['generate', 'test10', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="requires unknown feature"):
+            app.run()
+
+
+def test_generate_features_minimal(tmp):
+    # test13: feature with only name and default, no enabled/disabled blocks
+    argv = ['generate', 'test13', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            res = f.read()
+            assert 'myapp' in res
+
+
+def test_generate_features_transitive_requires(tmp):
+    # test14: feature1=false, feature2=true requires feature1,
+    # feature3=true requires feature2
+    # disabling feature1 should cascade: feature2 disabled, then feature3 disabled
+    argv = ['generate', 'test14', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+
+        # all three features should be disabled via transitive requires
+        assert not exists_join(tmp.dir, 'feature1-only')
+        assert not exists_join(tmp.dir, 'feature2-only')
+        assert not exists_join(tmp.dir, 'feature3-only')
+
+
+def test_generate_features_requires_out_of_order(tmp):
+    # test15: feature_b (requires feature_a) is declared BEFORE feature_a.
+    # Both default to true. With the legacy single-pass resolver feature_b
+    # would be auto-disabled because feature_a's state has not been
+    # computed yet. The two-pass / fixpoint resolver evaluates all states
+    # first, then cascades, so both end up enabled regardless of the
+    # YAML declaration order.
+    argv = ['generate', 'test15', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+
+        # both features stay enabled despite the out-of-order declaration
+        assert exists_join(tmp.dir, 'feature_a-only')
+        assert exists_join(tmp.dir, 'feature_b-only')
+
+
+def test_generate_features_null_block(tmp):
+    # test12: feature with enabled: null (no block defined)
+    argv = ['generate', 'test12', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            res = f.read()
+            assert 'myapp' in res
+
+
+def test_generate_bad_template_module(tmp):
+    class BadModuleApp(TestApp):
+        class Meta:
+            extensions = ['jinja2', 'yaml', 'generate', 'alarm']
+            template_handler = 'jinja2'
+            template_module = 'nonexistent.templates'
+            handlers = [GenerateBase]
+
+    argv = ['generate', 'test1', tmp.dir, '--defaults']
+    with BadModuleApp(argv=argv, template_dir='tests/data/templates') as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+
+
+def test_generate_template_module_transitive_import_error(tmp):
+    # When the template module itself exists but raises ModuleNotFoundError
+    # for some other (transitive) module during import, setup_template_items
+    # must propagate the error rather than silently swallowing it as a
+    # generic "template module not found" debug log.
+    class TransitiveBadApp(TestApp):
+        class Meta:
+            extensions = ['jinja2', 'yaml', 'generate', 'alarm']
+            template_handler = 'jinja2'
+            template_module = 'tests.data.bad_template_module'
+            handlers = [GenerateBase]
+
+    argv = ['generate', 'test1', tmp.dir, '--defaults']
+    with raises(ModuleNotFoundError, match='nonexistent_transitive_dep'):
+        with TransitiveBadApp(argv=argv,
+                              template_dir='tests/data/templates') as app:
+            app.run()

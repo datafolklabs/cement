@@ -1,0 +1,31 @@
+---
+
+variables:
+
+-   name: app_name
+    prompt: App Name
+    default: myapp
+
+features:
+
+-   name: feature1
+    default: false
+    disabled:
+        ignore:
+            - '.*feature1-only.*'
+
+-   name: feature2
+    default: true
+    requires:
+        - feature1
+    disabled:
+        ignore:
+            - '.*feature2-only.*'
+
+-   name: feature3
+    default: true
+    requires:
+        - feature2
+    disabled:
+        ignore:
+            - '.*feature3-only.*'

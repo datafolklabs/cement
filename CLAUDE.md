@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pdm run pytest --cov=cement.core tests/core` - Test only core components
 
 **Development Environment:**
-- `pdm venv create && pdm install` - Set up local development environment
+- `make init` - Set up local development environment
 - `pdm run cement --help` - Run the cement CLI
 
 **Documentation:**

@@ -1,0 +1,13 @@
+---
+
+variables:
+
+-   name: app_name
+    prompt: App Name
+    default: myapp
+
+features:
+
+-   name: feature1
+    default: true
+    enabled:
