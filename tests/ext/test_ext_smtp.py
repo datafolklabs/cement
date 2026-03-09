@@ -16,12 +16,18 @@ else:
 
 
 mailpit_api = f'http://{smtp_host}:8025/api/v1'
-defaults = init_defaults('mail.smtp')
-defaults['mail.smtp']['host'] = smtp_host
-defaults['mail.smtp']['port'] = 1025
-defaults['mail.smtp']['to'] = 'noreply@localhost'
-defaults['mail.smtp']['from_addr'] = 'nobody@localhost'
-defaults['mail.smtp']['subject_prefix'] = 'UNIT TEST >'
+
+
+def _get_defaults(subject=None):
+    defaults = init_defaults('mail.smtp')
+    defaults['mail.smtp']['host'] = smtp_host
+    defaults['mail.smtp']['port'] = 1025
+    defaults['mail.smtp']['to'] = 'noreply@localhost'
+    defaults['mail.smtp']['from_addr'] = 'nobody@localhost'
+    defaults['mail.smtp']['subject_prefix'] = 'UNIT TEST >'
+    if subject is not None:
+        defaults['mail.smtp']['subject'] = subject
+    return defaults
 
 
 class SMTPApp(TestApp):
@@ -46,7 +52,7 @@ def delete_msg(message_id):
 
 
 def test_smtp_send(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -71,7 +77,7 @@ def test_smtp_send(rando):
 
 
 def test_smtp_send_with_message_id(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -93,7 +99,7 @@ def test_smtp_send_with_message_id(rando):
 
 
 def test_smtp_send_with_return_path(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -115,7 +121,7 @@ def test_smtp_send_with_return_path(rando):
 
 
 def test_smtp_send_with_reply_to(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -136,7 +142,7 @@ def test_smtp_send_with_reply_to(rando):
 
 
 def test_smtp_send_with_x_headers(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -158,7 +164,7 @@ def test_smtp_send_with_x_headers(rando):
 
 
 def test_smtp_send_with_base64_encoding(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -180,7 +186,7 @@ def test_smtp_send_with_base64_encoding(rando):
 
 
 def test_smtp_send_with_qp_encoding(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -202,7 +208,7 @@ def test_smtp_send_with_qp_encoding(rando):
 
 
 def test_smtp_html(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -226,7 +232,7 @@ def test_smtp_html(rando):
 
 
 def test_smtp_dict_text_and_html(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -254,7 +260,7 @@ def test_smtp_dict_text_and_html(rando):
 
 
 def test_smtp_dict_html_only(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -277,7 +283,7 @@ def test_smtp_dict_html_only(rando):
 
 
 def test_smtp_html_bad_body_type(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -289,7 +295,7 @@ def test_smtp_html_bad_body_type(rando):
 
 
 def test_smtp_cc_bcc(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -315,7 +321,7 @@ def test_smtp_cc_bcc(rando):
 
 
 def test_smtp_files(rando, tmp):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -340,7 +346,7 @@ def test_smtp_files(rando, tmp):
 
 
 def test_smtp_dict_and_files(rando, tmp):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -369,7 +375,7 @@ def test_smtp_dict_and_files(rando, tmp):
 
 
 def test_smtp_files_alt_name(rando, tmp):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -391,7 +397,7 @@ def test_smtp_files_alt_name(rando, tmp):
 
 
 def test_smtp_image_files_as_dict(rando, tmp):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     image_file = os.path.join(tmp.dir, 'gradient.png')
     # create a png (coverage)
@@ -427,7 +433,7 @@ def test_smtp_image_files_as_dict(rando, tmp):
 
 
 def test_smtp_image_files_as_dict_inline(rando, tmp):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     image_file = os.path.join(tmp.dir, 'gradient.png')
     # create a png (coverage)
@@ -458,7 +464,7 @@ def test_smtp_image_files_as_dict_inline(rando, tmp):
 
 
 def test_smtp_files_path_does_not_exist(rando, tmp):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -472,7 +478,7 @@ def test_smtp_files_path_does_not_exist(rando, tmp):
 def test_smtp_files_alt_name_is_path(rando, tmp):
     # ensure only the basename of file is set if full path is passed as alt
     # name
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -494,7 +500,7 @@ def test_smtp_files_alt_name_is_path(rando, tmp):
 
 
 def test_smtp_tls(rando):
-    defaults['mail.smtp']['subject'] = rando
+    defaults = _get_defaults(subject=rando)
     defaults['mail.smtp']['tls'] = True
 
     with SMTPApp(config_defaults=defaults, debug=True) as app:
