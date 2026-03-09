@@ -95,12 +95,14 @@ class SMTPMailHandler(mail.MailHandler):
             if value is not None and f'{value}'.strip() != '':
                 params[item] = value
 
-        # take all X-headers as is
+        # take all X-headers, normalizing the prefix to 'X-' and
+        # converting underscores to hyphens in the header name
         for item in kw.keys():
             if len(item) > 2 and item.startswith(('x-', 'X-', 'x_', 'X_')):
                 value = kw.get(item, None)
                 if value is not None:
-                    params[f'X-{item[2:]}'] = value
+                    header_name = f'X-{item[2:].replace("_", "-")}'
+                    params[header_name] = value
 
         return params
 
@@ -302,7 +304,7 @@ class SMTPMailHandler(mail.MailHandler):
         # X-headers
         for item in params.keys():
             if item.startswith('X-'):
-                msg.add_header(item.title(),
+                msg.add_header(item,
                                self._header(f'{params[item]}',  # type: ignore
                                             _charset=cs_header, **params))
 
