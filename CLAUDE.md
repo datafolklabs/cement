@@ -77,6 +77,13 @@ When working with extensions:
 - Extensions follow naming pattern `ext_<name>.py`
 - Must implement proper interface contracts
 
+## Commit Conventions
+
+- All commits MUST follow [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`, `ci:`)
+- Subject line: max 78 characters
+- Body lines: max 78 characters (wrap longer prose at 78)
+- Use `make commit` (runs `pdm run cz commit`) to author commits interactively
+
 ## GitHub Project
 
 This project is hosted at **github.com/datafolklabs/cement**. Use the `gh` CLI to interact with GitHub issues, pull requests, and other project resources.
