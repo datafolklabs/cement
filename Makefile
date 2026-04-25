@@ -4,7 +4,7 @@ ifneq ($(CURDIR),$(patsubst %/,%,$(ROOT_DIR)))
 $(error Must run make from the project root: $(ROOT_DIR))
 endif
 
-.PHONY: init dev up down test test-core comply-fix docs clean superclean dist dist-upload docker docker-push
+.PHONY: init dev up down test test-core comply-fix commit docs clean superclean dist dist-upload docker docker-push
 
 init:
 	devbox install
@@ -49,6 +49,9 @@ comply-ruff-fix:
 
 comply-mypy:
 	pdm run mypy
+
+commit:
+	pdm run cz commit
 
 docs:
 	cd docs; pdm run sphinx-build ./source ./build; cd ..
