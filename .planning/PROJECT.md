@@ -39,7 +39,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - [ ] **Test coverage held at 100%**: every change lands with tests; coverage gate remains absolute
 - [ ] **Docs build healthy**: Sphinx builds cleanly; no broken refs; contributor docs accurate
 - [ ] **GitHub issue backlog triaged**: batch close stale/wontfix/duplicate with user approval; label survivors; spin real bugs into fix-phases
-- [ ] **Internal-only refactor + Cement 4 seams**: dead code removed, type hints tightened, modern stdlib idioms (pathlib, dataclasses where safe); introduce internal seams / deprecation hooks that make the Cement 4 rewrite easier — no public API changes
+- [ ] **Internal-only refactor**: dead code removed, type hints tightened, modern stdlib idioms (pathlib, contextlib helpers, `cached_property`) — no public API changes, no architectural shifts. Cement 4 is unscoped and stays that way during this milestone.
 - [ ] **Deprecation warnings added (warn-only)**: surfaces emit `DeprecationWarning` now; actual removals are scheduled for 3.2.0
 - [ ] **Audit-tooling stub**: backlog item captured for pip-audit / bandit / SAST — spec'd but not implemented this milestone
 - [ ] **Release cut: Cement 3.0.16**: tagged release, changelog, PyPI publish
@@ -90,7 +90,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 |----------|-----------|---------|
 | Anchor priority: Clean & Green first (lint/types/deps/CI/coverage) | Stalled update pipeline is blocking everything else; unblock the baseline before chasing security/performance pillars | — Pending |
 | Deprecations OK in 3.0.x; removals move to 3.2.0 | Preserves strict no-breakage on stable track while still communicating Cement 4 intent to users | — Pending |
-| Internal refactor may introduce Cement 4 seams, but only non-breaking internal changes | Lets us prep for the v4 rewrite without violating 3.0.x's compat guarantee | — Pending |
+| Internal refactor is cleanup-only — no Cement 4 architectural seams | Cement 4 is unscoped; introducing seams for an undefined target risks locking in premature decisions and constitutes architectural change, which is out of bounds on 3.0.x. A future Cement 4 milestone gets a clean slate. | — Pending |
 | GitHub issues triaged in batch-approve mode | User-reviewed bulk triage balances throughput against accuracy on issues that may have real signal buried in the pile | — Pending |
 | Python 3.9 dropped this milestone (EOL Oct 2025) | Standing project policy: drop at upstream EOL. Internal/dev matrix change, not treated as public-API breakage | — Pending |
 | Release cut as Cement 3.0.16 | Even-patch convention for stable release; current dev in git = 3.0.15 (odd) | — Pending |
