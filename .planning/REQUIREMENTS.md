@@ -125,54 +125,54 @@ Populated by the roadmapper during phase mapping.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TOOL-01 | TBD | Pending |
-| TOOL-02 | TBD | Pending |
-| TOOL-03 | TBD | Pending |
-| TOOL-04 | TBD | Pending |
-| DEPS-01 | TBD | Pending |
-| DEPS-02 | TBD | Pending |
-| DEPS-03 | TBD | Pending |
-| DEPS-04 | TBD | Pending |
-| CI-01 | TBD | Pending |
-| CI-02 | TBD | Pending |
-| CI-03 | TBD | Pending |
-| CI-04 | TBD | Pending |
-| CI-05 | TBD | Pending |
-| PYVER-01 | TBD | Pending |
-| PYVER-02 | TBD | Pending |
-| PYVER-03 | TBD | Pending |
-| COV-01 | TBD | Pending |
-| COV-02 | TBD | Pending |
-| COV-03 | TBD | Pending |
-| DOCS-01 | TBD | Pending |
-| DOCS-02 | TBD | Pending |
-| DOCS-03 | TBD | Pending |
-| DOCS-04 | TBD | Pending |
-| TRIAGE-01 | TBD | Pending |
-| TRIAGE-02 | TBD | Pending |
-| TRIAGE-03 | TBD | Pending |
-| TRIAGE-04 | TBD | Pending |
-| REFACTOR-01 | TBD | Pending |
-| REFACTOR-02 | TBD | Pending |
-| REFACTOR-03 | TBD | Pending |
-| REFACTOR-04 | TBD | Pending |
-| DEPREC-01 | TBD | Pending |
-| DEPREC-02 | TBD | Pending |
-| DEPREC-03 | TBD | Pending |
-| SEC-01 | TBD | Pending |
-| SEC-02 | TBD | Pending |
-| SEC-03 | TBD | Pending |
-| REL-01 | TBD | Pending |
-| REL-02 | TBD | Pending |
-| REL-03 | TBD | Pending |
-| REL-04 | TBD | Pending |
-| REL-05 | TBD | Pending |
+| TOOL-01 | Phase 1 | Pending |
+| TOOL-02 | Phase 1 | Pending |
+| TOOL-03 | Phase 1 | Pending |
+| TOOL-04 | Phase 1 | Pending |
+| DEPS-01 | Phase 2 | Pending |
+| DEPS-02 | Phase 2 | Pending |
+| DEPS-03 | Phase 2 | Pending |
+| DEPS-04 | Phase 2 | Pending |
+| CI-01 | Phase 2 | Pending |
+| CI-02 | Phase 2 | Pending |
+| CI-03 | Phase 2 | Pending |
+| CI-04 | Phase 6 | Pending |
+| CI-05 | Phase 2 | Pending |
+| PYVER-01 | Phase 1 | Pending |
+| PYVER-02 | Phase 1 | Pending |
+| PYVER-03 | Phase 1 | Pending |
+| COV-01 | Phase 3 | Pending |
+| COV-02 | Phase 3 | Pending |
+| COV-03 | Phase 3 | Pending |
+| DOCS-01 | Phase 5 | Pending |
+| DOCS-02 | Phase 5 | Pending |
+| DOCS-03 | Phase 6 | Pending |
+| DOCS-04 | Phase 5 | Pending |
+| TRIAGE-01 | Phase 4 | Pending |
+| TRIAGE-02 | Phase 4 | Pending |
+| TRIAGE-03 | Phase 4 | Pending |
+| TRIAGE-04 | Phase 4 | Pending |
+| REFACTOR-01 | Phase 3 | Pending |
+| REFACTOR-02 | Phase 3 | Pending |
+| REFACTOR-03 | Phase 3 | Pending |
+| REFACTOR-04 | Phase 3 | Pending |
+| DEPREC-01 | Phase 5 | Pending |
+| DEPREC-02 | Phase 5 | Pending |
+| DEPREC-03 | Phase 5 | Pending |
+| SEC-01 | Phase 5 | Pending |
+| SEC-02 | Phase 5 | Pending |
+| SEC-03 | Phase 5 | Pending |
+| REL-01 | Phase 6 | Pending |
+| REL-02 | Phase 6 | Pending |
+| REL-03 | Phase 6 | Pending |
+| REL-04 | Phase 6 | Pending |
+| REL-05 | Phase 6 | Pending |
 
 **Coverage:**
 - v1 requirements: 42 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 42 ⚠️ (pending roadmap)
+- Mapped to phases: 42
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-24*
-*Last updated: 2026-04-24 after initial definition*
+*Last updated: 2026-04-24 after roadmap mapping*
