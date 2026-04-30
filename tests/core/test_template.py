@@ -69,9 +69,6 @@ def test_copy(tmp, rando):
 
         # assert variables are interpolated
 
-        print(os.listdir(tmp.dir))
-        print(os.listdir(os.path.join(tmp.dir, 'src')))
-        print(os.listdir(os.path.join(tmp.dir, 'dest')))
         with open(os.path.join(tmp.dir, 'dest', 'take-me'), 'r') as f:
             assert f.read() == rando
 

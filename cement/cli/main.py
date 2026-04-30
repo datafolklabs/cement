@@ -49,10 +49,10 @@ def main(argv: Optional[List[str]] = None) -> None:
         try:
             app.run()
         except AssertionError as e:                     # pragma: nocover
-            print(f'AssertionError > {e.args[0]}')      # pragma: nocover
+            print(f'AssertionError > {e.args[0]}')      # pragma: nocover  # noqa: T201 - intentional CLI error output
             app.exit_code = 1                           # pragma: nocover
         except CaughtSignal as e:                       # pragma: nocover
-            print(f'\n{e}')                             # pragma: nocover
+            print(f'\n{e}')                             # pragma: nocover  # noqa: T201 - intentional CLI signal output
             app.exit_code = 0                           # pragma: nocover
 
 
