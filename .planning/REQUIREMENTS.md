@@ -31,9 +31,9 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 
 ### Python Version Policy
 
-- [ ] **PYVER-01**: Python 3.9 removed from `pyproject.toml` `python-requires` and CI matrix (EOL Oct 2025 per upstream policy)
-- [ ] **PYVER-02**: Python 3.10 declared as minimum supported version across pyproject, docs, README, and CI
-- [ ] **PYVER-03**: No 3.9-only compat shims remain in source (verified by grep + linter pass)
+- [x] **PYVER-01**: Python 3.9 removed from `pyproject.toml` `python-requires` and CI matrix (EOL Oct 2025 per upstream policy)
+- [x] **PYVER-02**: Python 3.10 declared as minimum supported version across pyproject, docs, README, and CI
+- [x] **PYVER-03**: No 3.9-only compat shims remain in source (verified by grep + linter pass)
 
 ### Test Coverage
 
@@ -138,9 +138,9 @@ Populated by the roadmapper during phase mapping.
 | CI-03 | Phase 2 | Pending |
 | CI-04 | Phase 6 | Pending |
 | CI-05 | Phase 2 | Pending |
-| PYVER-01 | Phase 1 | Pending |
-| PYVER-02 | Phase 1 | Pending |
-| PYVER-03 | Phase 1 | Pending |
+| PYVER-01 | Phase 1 | Complete |
+| PYVER-02 | Phase 1 | Complete |
+| PYVER-03 | Phase 1 | Complete |
 | COV-01 | Phase 3 | Pending |
 | COV-02 | Phase 3 | Pending |
 | COV-03 | Phase 3 | Pending |
