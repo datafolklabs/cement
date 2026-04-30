@@ -49,6 +49,7 @@ function smoke-test {
     ### generate a project
 
     docker exec cement-cli-smoke-test /bin/bash -c "cement generate project -D $tmp/myapp"
+    docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install -r requirements.txt"
     docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install ."
     res=$(docker exec -t cement-cli-smoke-test /bin/bash -c "myapp --version")
     echo "$res" | grep "Cement Framework $CEMENT_VERSION\.[0-9]"
