@@ -35,7 +35,8 @@
     "plan_bounce": false,
     "plan_bounce_script": null,
     "plan_bounce_passes": 2,
-    "auto_prune_state": false
+    "auto_prune_state": false,
+    "_auto_chain_active": false
   },
   "hooks": {
     "context_warnings": true
