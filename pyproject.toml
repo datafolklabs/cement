@@ -127,6 +127,14 @@ unfixable = []
              # MyLog) is intentional. Justified 2026-04-30 Phase 1.
     "N805",  # subclass-pattern test methods omit `self` deliberately
              # to verify framework behavior. Justified 2026-04-30.
+    "PT012", # `pytest.raises()` blocks intentionally wrap multi-step
+             # setup-then-trigger-then-assert sequences; refactoring is
+             # Phase 3 test-modernization work (D-13 strict-minimum).
+             # Justified 2026-04-30 Phase 1.
+    "PT013", # `from pytest import raises` is the existing cement
+             # test convention (cited at tests/core/test_exc.py).
+             # Mass-rewriting to `import pytest` exceeds D-13
+             # strict-minimum. Justified 2026-04-30 Phase 1.
 ]
 
 # ignore = [

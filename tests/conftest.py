@@ -8,7 +8,7 @@ from cement.utils import fs
 from cement.utils.misc import rando as _rando
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def tmp(request):
     t = fs.Tmp()
     yield t
@@ -18,11 +18,11 @@ def tmp(request):
         shutil.rmtree(t.dir)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def key(request):
-    yield _rando()
+    return _rando()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def rando(request):
-    yield _rando()[:12]
+    return _rando()[:12]
