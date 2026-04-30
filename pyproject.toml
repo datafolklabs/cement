@@ -207,9 +207,9 @@ getter = "cement.utils.version:get_version"
 
 [dependency-groups]
 dev = [
-    "pytest>=4.3.1",
-    "pytest-cov>=2.6.1",
-    "coverage>=4.5.3",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "coverage>=7.13.5",
     "mypy~=1.20.2",
     "ruff~=0.15.12",
     "mock>=5.1.0",
