@@ -39,8 +39,8 @@ class CementTestApp(CementApp):
 def main(argv: Optional[List[str]] = None) -> None:
     # Issue #679: https://github.com/datafolklabs/cement/issues/679
     try:
-        import jinja2
-        import yaml  # type: ignore  # noqa: F401 E401
+        import jinja2  # noqa: F401
+        import yaml  # type: ignore  # noqa: F401
     except ModuleNotFoundError as e:  # pragma: nocover
         raise FrameworkError('Cement CLI Dependencies are missing! Install cement[cli] extras ' +
                              'package to resolve -> pip install cement[cli]') from e
@@ -48,12 +48,14 @@ def main(argv: Optional[List[str]] = None) -> None:
     with CementApp() as app:
         try:
             app.run()
-        except AssertionError as e:                     # pragma: nocover
-            print(f'AssertionError > {e.args[0]}')      # pragma: nocover  # noqa: T201 - intentional CLI error output
-            app.exit_code = 1                           # pragma: nocover
-        except CaughtSignal as e:                       # pragma: nocover
-            print(f'\n{e}')                             # pragma: nocover  # noqa: T201 - intentional CLI signal output
-            app.exit_code = 0                           # pragma: nocover
+        except AssertionError as e:  # pragma: nocover
+            # noqa: T201 - intentional CLI error output
+            print(f'AssertionError > {e.args[0]}')  # pragma: nocover  # noqa: T201
+            app.exit_code = 1  # pragma: nocover
+        except CaughtSignal as e:  # pragma: nocover
+            # noqa: T201 - intentional CLI signal output
+            print(f'\n{e}')  # pragma: nocover  # noqa: T201
+            app.exit_code = 0  # pragma: nocover
 
 
 if __name__ == '__main__':

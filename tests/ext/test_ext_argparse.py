@@ -1,5 +1,4 @@
 
-import sys
 from argparse import ArgumentError
 from unittest.mock import patch
 
@@ -15,10 +14,8 @@ from cement.ext.ext_argparse import (
     expose,
 )
 
-if (sys.version_info[0] >= 3 and sys.version_info[1] >= 4):
-    ARGPARSE_SUPPORTS_DEFAULTS = True
-else:
-    ARGPARSE_SUPPORTS_DEFAULTS = False
+# Python 3.4+ universal under the cement 3.10 floor.
+ARGPARSE_SUPPORTS_DEFAULTS = True
 
 
 class Base(ArgparseController):
