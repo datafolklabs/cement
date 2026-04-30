@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 Phase: 2
 Plan: Not started
 Status: Phase complete — ready for verification
-Last activity: 2026-04-30
+Last activity: 2026-04-30 - Completed quick task 260430-3b0: fix scripts/cli-smoke-test.sh — drop py3.9 default and modernize generated-project install path (phase-1 gap closure)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -95,6 +95,12 @@ None yet.
 - Stalled `pdm update` GitHub Action (the user's pain point): drowning in ruff lint on each run. Phase 1 directly unblocks this.
 - 100% coverage gate is absolute and must hold across every phase — no temporary relaxations.
 - Public API surface includes subclass-exposed internals (downstream extensions may subclass); refactor must assume unknown third-party subclasses.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260430-3b0 | fix scripts/cli-smoke-test.sh — drop py3.9 default and modernize generated-project install path (phase-1 gap closure) | 2026-04-30 | 020ec7b7 | [260430-3b0-fix-scripts-cli-smoke-test-sh-drop-py3-9](./quick/260430-3b0-fix-scripts-cli-smoke-test-sh-drop-py3-9/) |
 
 ## Session Continuity
 
