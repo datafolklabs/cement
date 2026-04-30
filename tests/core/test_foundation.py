@@ -680,7 +680,6 @@ def test_issue_653():
         with App('myapp', argv=["--quiet"], exit_on_close=True) as app:
             app.run()
     with App('myapp', argv=[]) as app:
-        print(app._meta.exit_on_close)
         app.run()
     with App('myapp', argv=["--quiet"]) as app:
         app.run()

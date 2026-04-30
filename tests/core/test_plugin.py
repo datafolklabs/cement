@@ -167,7 +167,6 @@ def test_load_order_presedence_two(tmp):
 
     with MyApp() as app:
         app.run()
-        print(tmp.dir)
         tmp.cleanup = False
         assert 'myplugin' in app.plugin._disabled_plugins
         assert 'myplugin' not in app.plugin._enabled_plugins

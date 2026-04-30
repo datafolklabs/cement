@@ -273,7 +273,7 @@ class DummyMailHandler(MailHandler):
 
         msg += "\n" + "-" * 77 + "\n"
 
-        print(msg)
+        print(msg)  # noqa: T201 - DummyMailHandler intentionally prints message to stdout (no real send)
         return True
 
 
