@@ -42,7 +42,7 @@ Cement core features include (but are not limited to):
 - 100% PEP8 compliance (`ruff`)
 - Type annotation compliance (`mypy`)
 - Extensive API Reference (`sphinx`)
-- Tested on Python 3.9+
+- Tested on Python 3.10+
 
 
 ## Optional Extensions
@@ -133,13 +133,12 @@ All execution is done *inside the docker containers*.
 
 **Testing Alternative Versions of Python**
 
-The latest stable version of Python 3 is the default, and target version accessible as the `cement` container within Docker Compose.  For testing against alternative versions of python, additional containers are created (ex: `cement-py39`, `cement-py310`, etc). You can access these containers via:
+The latest stable version of Python 3 is the default, and target version accessible as the `cement` container within Docker Compose.  For testing against alternative versions of python, additional containers are created (ex: `cement-py310`, `cement-py311`, etc). You can access these containers via:
 
 ```
 $ docker-compose ps
         Name                      Command               State     Ports
 -------------------------------------------------------------------------
-cement_cement-py39_1    /bin/bash                        Up
 cement_cement-py310_1   /bin/bash                        Up
 cement_cement-py311_1   /bin/bash                        Up
 cement_cement-py312_1   /bin/bash                        Up
@@ -149,9 +148,9 @@ cement_memcached_1      docker-entrypoint.sh memcached   Up       11211/tcp
 cement_redis_1          docker-entrypoint.sh redis ...   Up       6379/tcp
 
 
-$ docker-compose exec cement-py39 /bin/bash
+$ docker-compose exec cement-py310 /bin/bash
 
-|> cement-py39 <| src #
+|> cement-py310 <| src #
 ```
 
 
