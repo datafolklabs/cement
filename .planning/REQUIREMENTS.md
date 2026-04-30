@@ -9,10 +9,10 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 
 ### Tooling Baseline
 
-- [ ] **TOOL-01**: Latest stable `ruff` adopted; `make comply-ruff` exits clean across `cement/` and `tests/`
+- [x] **TOOL-01**: Latest stable `ruff` adopted; `make comply-ruff` exits clean across `cement/` and `tests/`
 - [ ] **TOOL-02**: Latest stable `mypy` adopted; `make comply-mypy` exits clean with project's strict configuration
 - [ ] **TOOL-03**: `pytest`, `pytest-cov`, `coverage` upgraded to current stable; `make test` runs without deprecation warnings from the test framework itself
-- [ ] **TOOL-04**: `ruff` and `mypy` rule configuration in `pyproject.toml` reviewed and codified (no implicit rule drift on next tool bump)
+- [x] **TOOL-04**: `ruff` and `mypy` rule configuration in `pyproject.toml` reviewed and codified (no implicit rule drift on next tool bump)
 
 ### Dependencies
 
@@ -125,10 +125,10 @@ Populated by the roadmapper during phase mapping.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TOOL-01 | Phase 1 | Pending |
+| TOOL-01 | Phase 1 | Complete |
 | TOOL-02 | Phase 1 | Pending |
 | TOOL-03 | Phase 1 | Pending |
-| TOOL-04 | Phase 1 | Pending |
+| TOOL-04 | Phase 1 | Complete |
 | DEPS-01 | Phase 2 | Pending |
 | DEPS-02 | Phase 2 | Pending |
 | DEPS-03 | Phase 2 | Pending |

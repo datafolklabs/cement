@@ -35,7 +35,7 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
   5. Ruff and mypy rule sets are explicitly enumerated in `pyproject.toml` (no implicit defaults that drift on the next tool bump)
 **Plans**: 4 plans
   - [x] 01-01-PLAN.md — Step 1: atomic Python 3.9 drop across all 9 files (D-05)
-  - [ ] 01-02-PLAN.md — Step 2a: ruff 0.15.12 bump + codification + 8 per-family fix commits
+  - [x] 01-02-PLAN.md — Step 2a: ruff 0.15.12 bump + codification + 8 per-family fix commits
   - [ ] 01-03-PLAN.md — Step 2b: mypy 1.20.2 bump + audit comment + union-attr fix
   - [ ] 01-04-PLAN.md — Step 2c: pytest+pytest-cov+coverage floor bump
 
