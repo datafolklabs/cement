@@ -4,7 +4,7 @@ ifneq ($(CURDIR),$(patsubst %/,%,$(ROOT_DIR)))
 $(error Must run make from the project root: $(ROOT_DIR))
 endif
 
-.PHONY: init dev up down test test-core comply-fix commit docs clean superclean dist dist-upload docker docker-push
+.PHONY: init dev up down test test-core cli-smoke-test comply-fix commit docs clean superclean dist dist-upload docker docker-push
 
 init:
 	devbox install
@@ -30,6 +30,9 @@ test: comply
 
 test-core: comply
 	pdm run pytest --cov=cement.core tests/core
+
+cli-smoke-test:
+	bash scripts/cli-smoke-test.sh
 
 virtualenv:
 	pdm venv create
