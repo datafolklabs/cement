@@ -61,15 +61,19 @@ class Environment(object):
 
         try:
             self.user = pwd.getpwnam(self.user)
-        except KeyError:
-            raise exc.FrameworkError(f"Daemon user '{self.user}' doesn't exist.")
+        except KeyError as e:
+            raise exc.FrameworkError(
+                f"Daemon user '{self.user}' doesn't exist."
+            ) from e
 
         try:
             self.group = kw.get('group',
                                 grp.getgrgid(self.user.pw_gid).gr_name)
             self.group = grp.getgrnam(self.group)
-        except KeyError:
-            raise exc.FrameworkError(f"Daemon group '{self.group}' doesn't exist.")
+        except KeyError as e:
+            raise exc.FrameworkError(
+                f"Daemon group '{self.group}' doesn't exist."
+            ) from e
 
     def _write_pid_file(self) -> None:
         """

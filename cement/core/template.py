@@ -214,7 +214,7 @@ class TemplateHandler(TemplateInterface, Handler):
                                       '',
                                       escaped_cur_dir)
                 cur_dir_stub = cur_dir_stub.lstrip('/')
-                cur_dir_stub = cur_dir_stub.lstrip('\\\\')
+                cur_dir_stub = cur_dir_stub.lstrip('\\\\')  # noqa: B005 - intentional redundant strip preserved for behavioral parity (D-13)
                 cur_dir_stub = cur_dir_stub.lstrip('\\')
                 cur_dir_dest = os.path.join(dest, cur_dir_stub)
             else:
@@ -227,7 +227,7 @@ class TemplateHandler(TemplateInterface, Handler):
                                       escaped_cur_dir)
                 cur_dir_stub = self.render(cur_dir_stub, data)  # type: ignore
                 cur_dir_stub = cur_dir_stub.lstrip('/')
-                cur_dir_stub = cur_dir_stub.lstrip('\\\\')
+                cur_dir_stub = cur_dir_stub.lstrip('\\\\')  # noqa: B005 - intentional redundant strip preserved for behavioral parity (D-13)
                 cur_dir_stub = cur_dir_stub.lstrip('\\')
                 cur_dir_dest = os.path.join(dest, cur_dir_stub)
 
@@ -275,8 +275,9 @@ class TemplateHandler(TemplateInterface, Handler):
                         LOG.debug(
                             f'overwriting existing file: {_file_dest} ')
                     else:
-                        assert False, \
+                        raise AssertionError(
                             f'Destination file already exists: {_file_dest} '
+                        )
 
                 if self._match_patterns(_file, ignore_patterns):
                     LOG.debug(

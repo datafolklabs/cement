@@ -157,11 +157,11 @@ class expose(object):
 
     def __init__(self,
                  hide: bool = False,
-                 arguments: List[ArgparseArgumentType] = [],
+                 arguments: Optional[List[ArgparseArgumentType]] = None,
                  label: Optional[str] = None,
                  **parser_options: Any) -> None:
         self.hide = hide
-        self.arguments = arguments
+        self.arguments = arguments if arguments is not None else []
         self.label = label
         self.parser_options = parser_options
 
@@ -352,7 +352,7 @@ class ArgparseController(ControllerHandler):
                 f"Invalid stacked type {self._meta.stacked_type}.  " \
                 + "Expecting one of: [embedded, nested]"
         except AssertionError as e:
-            raise FrameworkError(e.args[0])
+            raise FrameworkError(e.args[0]) from e
 
     def _setup_controllers(self) -> None:
         # need a list to maintain order

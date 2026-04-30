@@ -114,11 +114,11 @@ class WatchdogManager(MetaMixin):
         to the backend observer.
         """
 
-        for res in self.app.hook.run('watchdog_pre_start', self.app):
+        for _res in self.app.hook.run('watchdog_pre_start', self.app):
             pass
         LOG.debug('starting watchdog observer')
         self.observer.start(*args, **kw)  # type: ignore
-        for res in self.app.hook.run('watchdog_post_start', self.app):
+        for _res in self.app.hook.run('watchdog_post_start', self.app):
             pass
 
     def stop(self, *args: Any, **kw: Any) -> None:
@@ -127,11 +127,11 @@ class WatchdogManager(MetaMixin):
         to the backend observer.
         """
 
-        for res in self.app.hook.run('watchdog_pre_stop', self.app):
+        for _res in self.app.hook.run('watchdog_pre_stop', self.app):
             pass
         LOG.debug('stopping watchdog observer')
         self.observer.stop(*args, **kw)  # type: ignore
-        for res in self.app.hook.run('watchdog_post_stop', self.app):
+        for _res in self.app.hook.run('watchdog_post_stop', self.app):
             pass
 
     def join(self, *args: Any, **kw: Any) -> None:
@@ -140,11 +140,11 @@ class WatchdogManager(MetaMixin):
         ``**kwargs`` are passed down to the backend observer.
         """
 
-        for res in self.app.hook.run('watchdog_pre_join', self.app):
+        for _res in self.app.hook.run('watchdog_pre_join', self.app):
             pass
         LOG.debug('joining watchdog observer')
         self.observer.join(*args, **kw)
-        for res in self.app.hook.run('watchdog_post_join', self.app):
+        for _res in self.app.hook.run('watchdog_post_join', self.app):
             pass
 
 

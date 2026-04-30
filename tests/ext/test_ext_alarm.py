@@ -22,7 +22,7 @@ def test_alarm_timeout():
 
         # derks@2018-01-15: I think pytest is interrupting cement handling the
         # signal here, so we'll run the hooks manually
-        for res in app.hook.run('signal', app, e.value.signum, e.value.frame):
+        for _res in app.hook.run('signal', app, e.value.signum, e.value.frame):
             pass
 
 

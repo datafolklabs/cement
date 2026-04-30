@@ -110,7 +110,7 @@ class GenerateTemplateAbstractBase(Controller):
                                    exclude=exclude_list)
         except AssertionError as e:
             if re.match('(.*)already exists(.*)', e.args[0]):
-                raise AssertionError(e.args[0] + ' (try: --force)')
+                raise AssertionError(e.args[0] + ' (try: --force)') from e
             else:
                 raise  # pragma: nocover
 

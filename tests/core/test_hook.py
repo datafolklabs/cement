@@ -63,7 +63,7 @@ def test_register_hook_name_not_defined():
 def test_run_bad_hook():
     with TestApp() as app:
         with raises(FrameworkError, match='Hook name .* is not defined!'):
-            for res in app.hook.run('some_bogus_hook'):
+            for _res in app.hook.run('some_bogus_hook'):
                 pass
 
 
