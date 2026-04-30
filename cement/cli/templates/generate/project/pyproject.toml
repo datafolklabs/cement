@@ -1,0 +1,8 @@
+# Build-system declaration for pip's default PEP 517 build isolation.
+# cement is required at build time because setup.py transitively imports
+# it via {{ label }}/core/version.py. Project metadata stays in setup.py
+# — this file declares ONLY the build system.
+
+[build-system]
+requires = ["setuptools", "wheel", "cement>={{ cement.version }}"]
+build-backend = "setuptools.build_meta"
