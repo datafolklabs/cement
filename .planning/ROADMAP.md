@@ -14,7 +14,7 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Tooling Baseline & Python Matrix** - Bump ruff/mypy/pytest, drop 3.9, fix the lint/type fallout
+- [x] **Phase 1: Tooling Baseline & Python Matrix** - Bump ruff/mypy/pytest, drop 3.9, fix the lint/type fallout (completed 2026-04-30)
 - [ ] **Phase 2: Dependencies & CI Pipeline** - Refresh deps, unblock the `pdm update` Action, get the matrix green
 - [ ] **Phase 3: Internal Refactor & Coverage Hardening** - Cleanup-only refactor under the 100% coverage gate
 - [ ] **Phase 4: Backlog Triage** - Bulk-close stale issues with user approval, label and prioritize survivors
@@ -37,7 +37,7 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
   - [x] 01-01-PLAN.md — Step 1: atomic Python 3.9 drop across all 9 files (D-05)
   - [x] 01-02-PLAN.md — Step 2a: ruff 0.15.12 bump + codification + 8 per-family fix commits
   - [x] 01-03-PLAN.md — Step 2b: mypy 1.20.2 bump + audit comment + union-attr fix
-  - [ ] 01-04-PLAN.md — Step 2c: pytest+pytest-cov+coverage floor bump
+  - [x] 01-04-PLAN.md — Step 2c: pytest+pytest-cov+coverage floor bump
 
 ### Phase 2: Dependencies & CI Pipeline
 **Goal**: Regenerate the lockfile against the new tooling baseline, refresh optional-extras to versions compatible with Python 3.10–3.14, and prove the GitHub Actions matrix is green end-to-end (including the previously stalled `pdm update` job).
@@ -105,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6. Phases 3 and 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Tooling Baseline & Python Matrix | 3/4 | In progress | - |
+| 1. Tooling Baseline & Python Matrix | 4/4 | Complete   | 2026-04-30 |
 | 2. Dependencies & CI Pipeline | 0/TBD | Not started | - |
 | 3. Internal Refactor & Coverage Hardening | 0/TBD | Not started | - |
 | 4. Backlog Triage | 0/TBD | Not started | - |
