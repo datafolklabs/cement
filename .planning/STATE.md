@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-04-30T05:33:16.904Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-04-30T05:58:54.117Z"
 last_activity: 2026-04-30
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 4
-  completed_plans: 1
-  percent: 25
+  completed_plans: 2
+  percent: 50
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 01 (tooling-baseline-python-matrix) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-04-30
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-tooling-baseline-python-matrix P01 | 2 min | 1 tasks | 9 files |
+| Phase 01-tooling-baseline-python-matrix P02 | 20 min | 9 tasks | 91 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,11 @@ Recent decisions affecting current work:
 - [Phase 01-tooling-baseline-python-matrix]: D-05 atomic-commit pattern proven on a 9-file change: all Python 3.9 traces dropped in a single conventional commit (chore: drop python 3.9 from supported matrix, 00d37e16) without splitting. — Validates D-05: ALL 3.9 traces simultaneously. Bisect anchor is clean — before this commit 3.9 supported, after it dropped. PYVER-03 audit grep returned empty on first pass.
 - [Phase 01-tooling-baseline-python-matrix]: Travis CI configuration deleted entirely (.travis.yml) rather than partially edited to drop 3.8/3.9 entries. — Travis is no longer cement's CI; GitHub Actions is. Per RESEARCH.md Pitfall 7 + Open Question 2, keeping a non-active CI definition is dead infrastructure and a future-grep liability. Deletion satisfies D-05 ALL-3.9-traces cleanly.
 - [Phase 01-tooling-baseline-python-matrix]: D-13/D-14 strict-minimum upheld: cement/utils/fs.py from __future__ import annotations and the self-flagged remove-after-3.9-EOL comment stay in place this phase. — Phase 1 is mechanical-removal-only; modernization-style cleanup defers to Phase 3 REFACTOR-04. The PYVER-03 audit grep filter explicitly excludes the __future__ line for this reason.
+- [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 02]: D-15 coupling held — ruff pin (~=0.15.12) + preview flip + 11-family extend-select + AUDIT POINT comment all land in ONE chore: bump ruff to 0.15 commit. Pin and bump are inseparable for D-08 hybrid drift detection.
+- [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 02]: A001/A002 absorbed via broad-ignore in [tool.ruff.lint] ignore (Option C from plan). 18 sites cluster across 5 files in framework-intentional builtin-shadowing patterns matching Python stdlib conventions (logging.Formatter format kwarg, Tmp.__init__ dir kwarg). Same posture attrs uses for the same reason; per-call noqa rejected as polluting too many sites for a structurally pervasive pattern.
+- [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 02]: C901 absorbed in [tool.ruff.lint] ignore with Phase 3 REFACTOR-01/02 cross-reference (RESEARCH.md Open Question 3 explicit recommendation). 12 hot-spot functions in cement/core/foundation.py + handler.py exceed default complexity 10; refactoring violates D-13 strict-minimum. Adding C90 family to extend-select keeps the signal active for new code.
+- [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 02]: D-04 one-commit-per-rule-family proven across 8 families (185 violations resolved in 8 atomic fix(lint): commits). Each commit is independently revertable, each fix is annotated with the rule code in the commit subject, and bisect can pinpoint exactly which family's fix introduced any regression.
+- [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 02]: PT013 ruff 0.15 reversed its preference (now wants 'import pytest' instead of 'from pytest import raises') vs the existing cement convention (cited at tests/core/test_exc.py). Absorbed via per-file-ignore on tests/**/*.py rather than mass-rewriting the convention — mass-rewrite would itself be a D-13 strict-minimum violation. Documented as deviation from RESEARCH.md prediction.
 
 ### Pending Todos
 
@@ -82,6 +88,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-30T05:33:03.194Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-04-30T05:58:54.114Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
