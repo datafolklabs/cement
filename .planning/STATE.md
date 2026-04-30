@@ -86,6 +86,10 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 04]: Pitfall 3 (pytest-cov 7.0 subprocess-measurement removal) verified no-op for cement — cement/utils/shell.py 129/0/100% and cement/cli/main.py 28/0/100% pre/post-bump identical. Per-module Miss=0 held across cement/ tree. TOTAL stmt-count drift (3311->3285) is coverage 7.6->7.13 detection-heuristics internal, not a coverage regression.
 - [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 04]: Phase 1 implementation COMPLETE — all 5 ROADMAP cumulative success criteria GREEN (PYVER-01/02, TOOL-01/02/03/04). 13 atomic phase-1 commits across 4 plans. CI matrix (3.10/3.11/3.12/3.13/3.14/pypy3.10) is the final verification gate on PR open.
 
+### Roadmap Evolution
+
+- Phase 01.1 inserted after Phase 1: Generated Project Template Build Modernization (URGENT) — PEP 517 build isolation fails because the generated `cement generate project` template imports cement at build time via setup.py → version.py. Blocks Phase 2 CI-green goal; smoke test cannot pass on the matrix until template no longer requires cement (or any runtime dep) at build time.
+
 ### Pending Todos
 
 None yet.
