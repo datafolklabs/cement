@@ -33,7 +33,11 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
   3. `make test` runs without deprecation warnings emitted by pytest, pytest-cov, or coverage themselves
   4. `pyproject.toml` declares `requires-python = ">=3.10"` and a `grep -rn "3\.9\|sys\.version_info.*9"` across `cement/` returns no compat shims
   5. Ruff and mypy rule sets are explicitly enumerated in `pyproject.toml` (no implicit defaults that drift on the next tool bump)
-**Plans**: TBD
+**Plans**: 4 plans
+  - [ ] 01-01-PLAN.md — Step 1: atomic Python 3.9 drop across all 9 files (D-05)
+  - [ ] 01-02-PLAN.md — Step 2a: ruff 0.15.12 bump + codification + 8 per-family fix commits
+  - [ ] 01-03-PLAN.md — Step 2b: mypy 1.20.2 bump + audit comment + union-attr fix
+  - [ ] 01-04-PLAN.md — Step 2c: pytest+pytest-cov+coverage floor bump
 
 ### Phase 2: Dependencies & CI Pipeline
 **Goal**: Regenerate the lockfile against the new tooling baseline, refresh optional-extras to versions compatible with Python 3.10–3.14, and prove the GitHub Actions matrix is green end-to-end (including the previously stalled `pdm update` job).
@@ -101,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6. Phases 3 and 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Tooling Baseline & Python Matrix | 0/TBD | Not started | - |
+| 1. Tooling Baseline & Python Matrix | 0/4 | Not started | - |
 | 2. Dependencies & CI Pipeline | 0/TBD | Not started | - |
 | 3. Internal Refactor & Coverage Hardening | 0/TBD | Not started | - |
 | 4. Backlog Triage | 0/TBD | Not started | - |
