@@ -1,6 +1,5 @@
 
-from cement.core.cache import CacheInterface, CacheHandler
-
+from cement.core.cache import CacheHandler, CacheInterface
 
 # module tests
 

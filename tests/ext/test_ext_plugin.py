@@ -1,7 +1,6 @@
 
 from cement.ext.ext_plugin import CementPluginHandler
 
-
 # module tests
 
 class TestCementPluginHandler(object):

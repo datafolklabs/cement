@@ -1,14 +1,19 @@
 
 import sys
-from pytest import raises, skip
-from unittest.mock import patch
 from argparse import ArgumentError
-from cement.core.foundation import TestApp
-from cement.ext.ext_argparse import ArgparseArgumentHandler
-from cement.ext.ext_argparse import ArgparseController, expose
-from cement.ext.ext_argparse import _clean_label, _clean_func
-from cement.core.exc import FrameworkError
+from unittest.mock import patch
 
+from pytest import raises, skip
+
+from cement.core.exc import FrameworkError
+from cement.core.foundation import TestApp
+from cement.ext.ext_argparse import (
+    ArgparseArgumentHandler,
+    ArgparseController,
+    _clean_func,
+    _clean_label,
+    expose,
+)
 
 if (sys.version_info[0] >= 3 and sys.version_info[1] >= 4):
     ARGPARSE_SUPPORTS_DEFAULTS = True

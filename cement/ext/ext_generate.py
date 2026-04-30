@@ -3,12 +3,15 @@ Cement generate extension module.
 """
 
 from __future__ import annotations
-import re
-import os
+
 import inspect
-import yaml  # type: ignore
+import os
+import re
 import shutil
-from typing import Any, Callable, Dict, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Dict
+
+import yaml  # type: ignore
+
 from .. import Controller, minimal_logger, shell
 from ..utils.version import VERSION, get_version
 

@@ -1,6 +1,5 @@
 
-from cement.core.output import OutputInterface, OutputHandler
-
+from cement.core.output import OutputHandler, OutputInterface
 
 # module tests
 

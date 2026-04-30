@@ -1,9 +1,11 @@
 
 import os
 import shutil
+
 import pytest
-from cement.utils.misc import rando as _rando
+
 from cement.utils import fs
+from cement.utils.misc import rando as _rando
 
 
 @pytest.fixture(scope="function")

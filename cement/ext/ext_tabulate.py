@@ -12,8 +12,11 @@ extensions.
 """
 
 from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, Dict, List
+
 from tabulate import tabulate  # type: ignore
-from typing import Any, List, Dict, TYPE_CHECKING
+
 from ..core import output
 from ..utils.misc import minimal_logger
 

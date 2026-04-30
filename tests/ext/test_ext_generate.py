@@ -1,7 +1,8 @@
 import os
 import re
 from unittest.mock import patch
-from cement import TestApp, Controller
+
+from cement import Controller, TestApp
 from cement.utils import shell
 from cement.utils.test import raises
 

@@ -1,11 +1,10 @@
 
 from pytest import raises
 
+from cement.core.exc import InterfaceError
 from cement.core.foundation import TestApp
 from cement.core.interface import Interface
-from cement.core.exc import InterfaceError
 from cement.core.output import OutputInterface
-
 
 # module tests
 

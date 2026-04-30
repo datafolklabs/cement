@@ -3,12 +3,14 @@ Cement configparser extension module.
 """
 
 from __future__ import annotations
+
 import os
 import re
-from typing import Any, Dict, List, TYPE_CHECKING
+from configparser import RawConfigParser
+from typing import TYPE_CHECKING, Any, Dict, List
+
 from ..core import config
 from ..utils.misc import minimal_logger
-from configparser import RawConfigParser
 
 if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover

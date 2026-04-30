@@ -12,11 +12,14 @@ extensions.
 """
 
 from __future__ import annotations
-from typing import Any, Optional, Dict, Tuple, Union, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
+
+from jinja2 import Environment, FileSystemLoader, PackageLoader
+
 from ..core.output import OutputHandler
 from ..core.template import TemplateHandler
 from ..utils.misc import minimal_logger
-from jinja2 import Environment, FileSystemLoader, PackageLoader
 
 if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover

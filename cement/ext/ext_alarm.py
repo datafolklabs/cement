@@ -3,8 +3,10 @@ Cement alarm extension module.
 """
 
 from __future__ import annotations
+
 import signal
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
 from ..utils.misc import minimal_logger
 
 if TYPE_CHECKING:

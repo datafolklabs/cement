@@ -1,10 +1,11 @@
 
 import time
+
 import mock
 from pytest import raises
 
-from cement.utils import shell
 from cement.core.exc import FrameworkError
+from cement.utils import shell
 
 # INPUT = 'builtins.input'
 INPUT = 'cement.utils.shell.Prompt._get_input'

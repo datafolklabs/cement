@@ -1,10 +1,11 @@
 import os
 import time
 from unittest.mock import Mock
-from cement.utils.test import TestApp, raises
-from cement.ext.ext_watchdog import WatchdogEventHandler
+
 from cement.core.exc import FrameworkError
+from cement.ext.ext_watchdog import WatchdogEventHandler
 from cement.utils import fs
+from cement.utils.test import TestApp, raises
 
 
 class MyEventHandler(WatchdogEventHandler):

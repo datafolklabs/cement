@@ -1,8 +1,9 @@
-import os
 import json
+import os
 from unittest.mock import patch
-from cement.utils.test import TestApp
+
 from cement.utils import fs
+from cement.utils.test import TestApp
 
 CONFIG_PARSED = dict(
     section=dict(

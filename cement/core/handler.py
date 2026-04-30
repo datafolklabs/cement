@@ -4,9 +4,11 @@ Cement core handler module.
 """
 
 from __future__ import annotations
+
 import re
 from abc import ABC
-from typing import Any, List, Dict, Optional, Type, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+
 from ..core import exc
 from ..core.meta import MetaMixin
 from ..utils.misc import minimal_logger

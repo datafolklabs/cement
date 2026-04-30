@@ -1,7 +1,9 @@
 
 # import os
+from unittest.mock import PropertyMock, patch
+
 from pytest import raises
-from unittest.mock import patch, PropertyMock
+
 from cement.core.foundation import TestApp
 from cement.utils import misc
 

@@ -1,10 +1,10 @@
-import os
 import logging
+import os
 from tempfile import mkstemp
+
 from cement.core.foundation import TestApp
 from cement.ext.ext_colorlog import ColoredFormatter
 from cement.utils.misc import init_defaults
-
 
 _, log_file = mkstemp()
 defaults = init_defaults()

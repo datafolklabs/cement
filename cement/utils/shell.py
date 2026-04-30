@@ -1,14 +1,15 @@
 """Common Shell Utilities."""
 
-import os
 import builtins
+import os
 from getpass import getpass
-from subprocess import Popen, PIPE
 from multiprocessing import Process
+from subprocess import PIPE, Popen
 from threading import Thread
-from typing import Any, Tuple, List, Union, Callable, Optional
-from ..core.meta import MetaMixin
+from typing import Any, Callable, List, Optional, Tuple, Union
+
 from ..core.exc import FrameworkError
+from ..core.meta import MetaMixin
 
 
 def cmd(command: str,

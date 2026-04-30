@@ -1,7 +1,8 @@
 import os
 from time import sleep
-from cement.utils.test import TestApp
+
 from cement.utils.misc import init_defaults
+from cement.utils.test import TestApp
 
 if 'MEMCACHED_HOST' in os.environ.keys():
     memcached_host = os.environ['MEMCACHED_HOST']

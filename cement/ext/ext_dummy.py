@@ -3,10 +3,12 @@ Cement dummy extension module.
 """
 
 from __future__ import annotations
-from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+
+from ..core.mail import MailHandler
 from ..core.output import OutputHandler
 from ..core.template import TemplateHandler
-from ..core.mail import MailHandler
 from ..utils.misc import minimal_logger
 
 if TYPE_CHECKING:

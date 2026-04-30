@@ -1,13 +1,13 @@
 
 import os
 import sys
+
 from pytest import raises
 
 from cement import init_defaults
-from cement.core.foundation import TestApp
 from cement.core.exc import FrameworkError
-from cement.core.plugin import PluginInterface, PluginHandler
-
+from cement.core.foundation import TestApp
+from cement.core.plugin import PluginHandler, PluginInterface
 
 # module tests
 

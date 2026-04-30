@@ -1,23 +1,26 @@
 
-import os
-import sys
-import re
-import pytest
 import json
-import signal
+import os
 import platform
-from unittest.mock import Mock, MagicMock
+import re
+import signal
+import sys
+from unittest.mock import MagicMock, Mock
+
+import pytest
 
 from cement import App, Controller, ex
-from cement.core.interface import Interface
-from cement.core.handler import Handler
 from cement.core.exc import CaughtSignal, FrameworkError
-from cement.core.foundation import TestApp
-from cement.core.foundation import add_handler_override_options
-from cement.core.foundation import handler_override
-from cement.core.foundation import cement_signal_handler
-from cement.utils.misc import minimal_logger, init_defaults
-from cement.utils import test, fs, misc
+from cement.core.foundation import (
+    TestApp,
+    add_handler_override_options,
+    cement_signal_handler,
+    handler_override,
+)
+from cement.core.handler import Handler
+from cement.core.interface import Interface
+from cement.utils import fs, misc, test
+from cement.utils.misc import init_defaults, minimal_logger
 
 
 def pre_render_hook(app, data):
@@ -260,12 +263,12 @@ def test_resolve_bad_handler():
 def test_passed_handlers():
     # forces App._resolve_handler to register the handler by class
     from cement.core.extension import ExtensionHandler
-    from cement.ext.ext_configparser import ConfigParserConfigHandler
-    from cement.ext.ext_logging import LoggingLogHandler
     from cement.ext.ext_argparse import ArgparseArgumentHandler
-    from cement.ext.ext_plugin import CementPluginHandler
+    from cement.ext.ext_configparser import ConfigParserConfigHandler
     from cement.ext.ext_dummy import DummyMailHandler
     from cement.ext.ext_json import JsonOutputHandler
+    from cement.ext.ext_logging import LoggingLogHandler
+    from cement.ext.ext_plugin import CementPluginHandler
 
     class MyApp(TestApp):
         class Meta:

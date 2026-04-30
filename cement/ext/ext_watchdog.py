@@ -12,14 +12,17 @@ extensions.
 """
 
 from __future__ import annotations
+
 import os
+from typing import TYPE_CHECKING, Any, List, Optional, Type
+
+from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler, FileSystemEvent
-from typing import Any, List, Optional, Type, TYPE_CHECKING
-from ..core.meta import MetaMixin
+
 from ..core.exc import FrameworkError
-from ..utils.misc import minimal_logger
+from ..core.meta import MetaMixin
 from ..utils import fs
+from ..utils.misc import minimal_logger
 
 if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover

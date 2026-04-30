@@ -1,6 +1,5 @@
 
-from cement.core.controller import ControllerInterface, ControllerHandler
-
+from cement.core.controller import ControllerHandler, ControllerInterface
 
 # module tests
 

@@ -1,10 +1,12 @@
 """Cement core mail module."""
 
 from __future__ import annotations
+
 from abc import abstractmethod
-from typing import Any, Dict, TYPE_CHECKING
-from ..core.interface import Interface
+from typing import TYPE_CHECKING, Any, Dict
+
 from ..core.handler import Handler
+from ..core.interface import Interface
 from ..utils.misc import minimal_logger
 
 if TYPE_CHECKING:

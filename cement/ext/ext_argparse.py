@@ -3,10 +3,12 @@ Cement argparse extension module.
 """
 
 from __future__ import annotations
+
 import re
+from argparse import SUPPRESS, ArgumentParser, RawDescriptionHelpFormatter
 from dataclasses import dataclass
-from argparse import ArgumentParser, RawDescriptionHelpFormatter, SUPPRESS
-from typing import Any, Callable, List, Dict, Tuple, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
+
 from ..core.arg import ArgumentHandler
 from ..core.controller import ControllerHandler
 from ..core.exc import FrameworkError

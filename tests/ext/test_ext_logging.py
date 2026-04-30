@@ -1,7 +1,9 @@
+import logging
 import os
 import shutil
-import logging
+
 from pytest import raises
+
 from cement.core.foundation import TestApp
 from cement.ext.ext_logging import LoggingLogHandler
 from cement.utils.misc import init_defaults

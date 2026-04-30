@@ -1,8 +1,8 @@
 
 import os
+
 from cement.core.foundation import TestApp
 from cement.ext.ext_configparser import ConfigParserConfigHandler
-
 
 # module tests
 

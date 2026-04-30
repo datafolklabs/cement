@@ -1,14 +1,16 @@
 
-import os
-import mock
-import requests
 import json
-import png
+import os
 import warnings
 from time import sleep
+
+import mock
+import png
+import requests
 from pytest import raises
-from cement.utils.test import TestApp
+
 from cement.utils.misc import init_defaults
+from cement.utils.test import TestApp
 
 if 'SMTP_HOST' in os.environ.keys():
     smtp_host = os.environ['SMTP_HOST']

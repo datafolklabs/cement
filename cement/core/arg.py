@@ -5,8 +5,9 @@ Cement core argument module.
 
 from abc import abstractmethod
 from typing import Any, List
-from ..core.interface import Interface
+
 from ..core.handler import Handler
+from ..core.interface import Interface
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
