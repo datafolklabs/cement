@@ -114,7 +114,7 @@ class CommandMeta:
     controller: ArgparseController
 
 
-class expose(object):
+class expose(object):  # noqa: N801 - public decorator (used as @expose); renaming breaks 3.0.x API
 
     """
     Used to expose functions to be listed as sub-commands under the

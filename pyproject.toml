@@ -120,6 +120,15 @@ ignore = [
 fixable = ["ALL"]
 unfixable = []
 
+[tool.ruff.lint.per-file-ignores]
+# AUDIT POINT (D-08): per-file-ignores require one-line justification.
+"tests/**/*.py" = [
+    "N806",  # test-fixture variable casing (META, DEBUG_FORMAT, Log,
+             # MyLog) is intentional. Justified 2026-04-30 Phase 1.
+    "N805",  # subclass-pattern test methods omit `self` deliberately
+             # to verify framework behavior. Justified 2026-04-30.
+]
+
 # ignore = [
 #     "E402",
 #     "E713",
