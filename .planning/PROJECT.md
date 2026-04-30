@@ -27,15 +27,18 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - ✓ PDM-based dependency management — existing
 - ✓ Sphinx documentation — existing
 - ✓ Python 3.9–3.14 support matrix (current) — existing
+- ✓ Python 3.10–3.14 support matrix (3.9 dropped per EOL policy) — Validated in Phase 01: tooling-baseline-python-matrix
+- ✓ Tooling baseline at current pins (ruff ~=0.15.12, mypy ~=1.20.2, pytest>=9.0.3, pytest-cov>=7.1.0, coverage>=7.13.5) — Validated in Phase 01: tooling-baseline-python-matrix
+- ✓ No-implicit-drift codification (AUDIT POINT comments in pyproject.toml; explicit ruff `extend-select` + `preview = false`; mypy strictness knobs enumerated) — Validated in Phase 01: tooling-baseline-python-matrix
 
 ### Active
 
 <!-- v1 = Milestone 1: "Clean & Green" — ships as Cement 3.0.16 (dev = 3.0.15 in git). -->
 
-- [ ] **Tooling baseline current**: latest ruff, mypy, pytest, pytest-cov; all lint + type errors resolved
+- [x] **Tooling baseline current**: latest ruff, mypy, pytest, pytest-cov; all lint + type errors resolved — Validated in Phase 01
 - [ ] **Dependencies current**: unblock the stalled PDM auto-update pipeline; pin/resolve CVEs if any
 - [ ] **CI pipeline green**: all matrix jobs passing across supported Python versions; PDM auto-update resumes without drowning in lint
-- [ ] **Python 3.9 dropped per EOL policy**: floor raised to 3.10; Python matrix = 3.10–3.14
+- [x] **Python 3.9 dropped per EOL policy**: floor raised to 3.10; Python matrix = 3.10–3.14 — Validated in Phase 01
 - [ ] **Test coverage held at 100%**: every change lands with tests; coverage gate remains absolute
 - [ ] **Docs build healthy**: Sphinx builds cleanly; no broken refs; contributor docs accurate
 - [ ] **GitHub issue backlog triaged**: batch close stale/wontfix/duplicate with user approval; label survivors; spin real bugs into fix-phases
@@ -92,7 +95,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 | Deprecations OK in 3.0.x; removals move to 3.2.0 | Preserves strict no-breakage on stable track while still communicating Cement 4 intent to users | — Pending |
 | Internal refactor is cleanup-only — no Cement 4 architectural seams | Cement 4 is unscoped; introducing seams for an undefined target risks locking in premature decisions and constitutes architectural change, which is out of bounds on 3.0.x. A future Cement 4 milestone gets a clean slate. | — Pending |
 | GitHub issues triaged in batch-approve mode | User-reviewed bulk triage balances throughput against accuracy on issues that may have real signal buried in the pile | — Pending |
-| Python 3.9 dropped this milestone (EOL Oct 2025) | Standing project policy: drop at upstream EOL. Internal/dev matrix change, not treated as public-API breakage | — Pending |
+| Python 3.9 dropped this milestone (EOL Oct 2025) | Standing project policy: drop at upstream EOL. Internal/dev matrix change, not treated as public-API breakage | ✓ Done — Phase 01 |
 | Release cut as Cement 3.0.16 | Even-patch convention for stable release; current dev in git = 3.0.15 (odd) | — Pending |
 | Security audit tooling (pip-audit/bandit/SAST) stubbed, not implemented | Adding tooling while the lint baseline is already red would multiply noise; revisit once CI is green | — Pending |
 | 100% coverage gate stays absolute | Non-negotiable for a framework; relaxing the gate erodes downstream confidence | — Pending |
@@ -115,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-24 after initialization*
+*Last updated: 2026-04-30 after Phase 01 completion (tooling-baseline-python-matrix)*
