@@ -39,6 +39,16 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
   - [x] 01-03-PLAN.md — Step 2b: mypy 1.20.2 bump + audit comment + union-attr fix
   - [x] 01-04-PLAN.md — Step 2c: pytest+pytest-cov+coverage floor bump
 
+### Phase 01.1: Generated Project Template Build Modernization (INSERTED)
+
+**Goal:** [Urgent work - to be planned]
+**Requirements**: TBD
+**Depends on:** Phase 1
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 01.1 to break down)
+
 ### Phase 2: Dependencies & CI Pipeline
 **Goal**: Regenerate the lockfile against the new tooling baseline, refresh optional-extras to versions compatible with Python 3.10–3.14, and prove the GitHub Actions matrix is green end-to-end (including the previously stalled `pdm update` job).
 **Depends on**: Phase 1
