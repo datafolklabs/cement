@@ -156,6 +156,10 @@ unfixable = []
 
 [tool.mypy]
 python_version = "3.10"
+# AUDIT POINT (D-08+D-11): strictness knobs are deliberately enumerated,
+# NOT `strict = true`. Adding a knob is a deliberate decision; mypy
+# bumps that introduce new strict defaults will fail CI and force the
+# same audit conversation as ruff. See Phase 1 RESEARCH.md.
 disallow_untyped_calls = true
 disallow_untyped_defs = true
 disallow_any_unimported = false
@@ -206,7 +210,7 @@ dev = [
     "pytest>=4.3.1",
     "pytest-cov>=2.6.1",
     "coverage>=4.5.3",
-    "mypy>=1.9.0",
+    "mypy~=1.20.2",
     "ruff~=0.15.12",
     "mock>=5.1.0",
     "pypng>=0.20220715.0",
