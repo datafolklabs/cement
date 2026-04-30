@@ -2,7 +2,7 @@
 set -e
 
 [ -z "$CEMENT_VERSION" ] && CEMENT_VERSION="3.0"
-[ -z "$PYTHON_VERSIONS" ] && PYTHON_VERSIONS="3.9 3.10 3.11 3.12 3.13 3.14"
+[ -z "$PYTHON_VERSIONS" ] && PYTHON_VERSIONS="3.10 3.11 3.12 3.13 3.14"
 
 function smoke-test {
     pyver=$1
@@ -49,9 +49,7 @@ function smoke-test {
     ### generate a project
 
     docker exec cement-cli-smoke-test /bin/bash -c "cement generate project -D $tmp/myapp"
-    docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install -r requirements.txt"
-    docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install setuptools"
-    docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; python setup.py install"
+    docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install ."
     res=$(docker exec -t cement-cli-smoke-test /bin/bash -c "myapp --version")
     echo "$res" | grep "Cement Framework $CEMENT_VERSION\.[0-9]"
     echo "$res" | grep "Python $pyver.[0-9]"
