@@ -83,9 +83,27 @@ include = [
 ]
 
 [tool.ruff.lint]
-preview = true
-extend-select = ["E", "F", "W"]
-ignore = []
+# AUDIT POINT (D-08): re-review on every ruff bump. New rules added by
+# ruff to a selected family fire as CI failures, forcing a deliberate
+# add-with-comment to `ignore` or a fix. See Phase 1 RESEARCH.md.
+preview = false
+extend-select = [
+    "E",   # pycodestyle errors
+    "F",   # Pyflakes
+    "W",   # pycodestyle warnings
+    "B",   # flake8-bugbear (NEW, D-06)
+    "I",   # isort (NEW, D-06)
+    "A",   # flake8-builtins (NEW, D-06)
+    "C90", # mccabe complexity (NEW, D-06)
+    "N",   # pep8-naming (NEW, D-06)
+    "PT",  # flake8-pytest-style (NEW, D-06)
+    "T20", # flake8-print (NEW, D-06)
+    "YTT", # flake8-2020 (NEW, D-06)
+]
+ignore = [
+    # AUDIT POINT (D-08): each entry MUST have a one-line justification.
+    # Empty list is the green-baseline goal.
+]
 fixable = ["ALL"]
 unfixable = []
 
@@ -159,7 +177,7 @@ dev = [
     "pytest-cov>=2.6.1",
     "coverage>=4.5.3",
     "mypy>=1.9.0",
-    "ruff>=0.3.2",
+    "ruff~=0.15.12",
     "mock>=5.1.0",
     "pypng>=0.20220715.0",
     "requests>=2.31.0",
