@@ -32,7 +32,7 @@ except AttributeError:                                               # pragma: n
         def emit(self, record):                     # type: ignore   # pragma: no cover
             pass                                                     # pragma: no cover
 
-        def createLock(self):                       # type: ignore   # pragma: no cover
+        def createLock(self):  # type: ignore  # pragma: no cover  # noqa: N802 - overrides logging.Handler.createLock (stdlib camelCase)
             self.lock = None                                         # pragma: no cover
 
 

@@ -27,7 +27,7 @@ class InterfaceError(FrameworkError):
     pass
 
 
-class CaughtSignal(FrameworkError):
+class CaughtSignal(FrameworkError):  # noqa: N818 - public exception name; adding Error suffix would break 3.0.x API
 
     """
     Raised when a defined signal is caught.  For more information regarding
