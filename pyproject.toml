@@ -112,6 +112,10 @@ ignore = [
              # Handler method signatures (e.g., LoggingLogHandler
              # `_get_console_formatter(self, format)` is a subclass
              # contract — see ColorLogHandler). Justified 2026-04-30.
+    "C901",  # cement framework is intentionally complex
+             # (handler/interface dispatch, lifecycle hooks,
+             # extension loading). Phase 3 REFACTOR-01/02 will
+             # re-evaluate. Justified 2026-04-30 Phase 1.
 ]
 fixable = ["ALL"]
 unfixable = []
