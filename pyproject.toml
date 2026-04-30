@@ -103,6 +103,15 @@ extend-select = [
 ignore = [
     # AUDIT POINT (D-08): each entry MUST have a one-line justification.
     # Empty list is the green-baseline goal.
+    "A001",  # framework intentionally shadows builtins (`format`,
+             # `vars`, `dir`, etc.) in handler/Meta locals matching
+             # Python stdlib conventions (e.g., logging.Formatter
+             # `format` argument). D-13 strict-minimum + 3.0.x
+             # no-breakage rule. Justified 2026-04-30 Phase 1.
+    "A002",  # ditto for argument-shadowing in subclass-exposed
+             # Handler method signatures (e.g., LoggingLogHandler
+             # `_get_console_formatter(self, format)` is a subclass
+             # contract — see ColorLogHandler). Justified 2026-04-30.
 ]
 fixable = ["ALL"]
 unfixable = []
