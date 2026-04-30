@@ -391,7 +391,7 @@ class HandlerManager(object):
             han = handler_def
         elif hasattr(handler_def, 'Meta'):
             han = handler_def(**meta_defaults)  # type: ignore
-            if not self.registered(interface, han._meta.label):
+            if not self.registered(interface, han._meta.label):  # type: ignore
                 self.register(handler_def)  # type: ignore
 
         msg = f"Unable to resolve handler '{handler_def}' of interface '{interface}'"
