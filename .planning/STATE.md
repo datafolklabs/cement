@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 01.1 context gathered
-last_updated: "2026-04-30T19:00:31.770Z"
-last_activity: 2026-04-30 -- Phase 01.1 planning complete
+last_updated: "2026-04-30T19:01:19.297Z"
+last_activity: 2026-04-30 -- Phase 01.1 execution started
 progress:
   total_phases: 7
   completed_phases: 1
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-24)
 
 **Core value:** Cement 3 stays solid, secure, performant, and bug-free under strict backward compatibility — while being continuously maintained against a modern Python and tooling ecosystem.
-**Current focus:** Phase 01 — tooling-baseline-python-matrix
+**Current focus:** Phase 01.1 — generated-project-template-build-modernization
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-04-30 -- Phase 01.1 planning complete
+Phase: 01.1 (generated-project-template-build-modernization) — EXECUTING
+Plan: 1 of 1
+Status: Executing Phase 01.1
+Last activity: 2026-04-30 -- Phase 01.1 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
