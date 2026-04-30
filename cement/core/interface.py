@@ -38,7 +38,7 @@ class Interface(ABC, meta.MetaMixin):
             assert self._meta.interface, \
                 f"{self.__class__.__name__}.Meta.interface undefined."
         except AssertionError as e:
-            raise exc.InterfaceError(e.args[0])
+            raise exc.InterfaceError(e.args[0]) from e
 
     def _validate(self) -> None:
         """

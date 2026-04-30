@@ -41,9 +41,9 @@ def main(argv: Optional[List[str]] = None) -> None:
     try:
         import jinja2
         import yaml  # type: ignore  # noqa: F401 E401
-    except ModuleNotFoundError:  # pragma: nocover
+    except ModuleNotFoundError as e:  # pragma: nocover
         raise FrameworkError('Cement CLI Dependencies are missing! Install cement[cli] extras ' +
-                             'package to resolve -> pip install cement[cli]')
+                             'package to resolve -> pip install cement[cli]') from e
 
     with CementApp() as app:
         try:

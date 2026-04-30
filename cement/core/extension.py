@@ -138,7 +138,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
                 self._loaded_extensions.append(ext_module)
 
         except ImportError as e:
-            raise exc.FrameworkError(e.args[0])
+            raise exc.FrameworkError(e.args[0]) from e
 
     def load_extensions(self, ext_list: List[str]) -> None:
         """

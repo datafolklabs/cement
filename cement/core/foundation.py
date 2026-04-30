@@ -154,7 +154,7 @@ def cement_signal_handler(signum: int, frame: Optional[FrameType]) -> Any:
         for f_global in frame.f_globals.values():
             if isinstance(f_global, App):
                 app = f_global
-                for res in app.hook.run('signal', app, signum, frame):
+                for _res in app.hook.run('signal', app, signum, frame):
                     pass  # pragma: nocover
     raise exc.CaughtSignal(signum, frame)
 
@@ -937,7 +937,7 @@ class App(meta.MetaMixin):
             else:
                 reload_module(self._loaded_bootstrap)
 
-        for res in self.hook.run('pre_setup', self):
+        for _res in self.hook.run('pre_setup', self):
             pass
 
         self._setup_extension_handler()
@@ -955,7 +955,7 @@ class App(meta.MetaMixin):
         for hook_spec in self.__retry_hooks__:
             self.hook.register(*hook_spec)
 
-        for res in self.hook.run('post_setup', self):
+        for _res in self.hook.run('post_setup', self):
             pass
 
     def run(self) -> Union[None, Any]:
@@ -973,7 +973,7 @@ class App(meta.MetaMixin):
         return_val = None
 
         LOG.debug('running pre_run hook')
-        for res in self.hook.run('pre_run', self):
+        for _res in self.hook.run('pre_run', self):
             pass
 
         # If controller exists, then dispatch it
@@ -983,7 +983,7 @@ class App(meta.MetaMixin):
             self._parse_args()  # pragma: nocover
 
         LOG.debug('running post_run hook')
-        for res in self.hook.run('post_run', self):
+        for _res in self.hook.run('post_run', self):
             pass
 
         return return_val
@@ -1049,7 +1049,7 @@ class App(meta.MetaMixin):
             to.  Note: ``sys.exit()`` will only be called if
             ``App.Meta.exit_on_close==True``.
         """
-        for res in self.hook.run('pre_close', self):
+        for _res in self.hook.run('pre_close', self):
             pass
 
         LOG.debug(f"closing the {self._meta.label} application")
@@ -1061,7 +1061,7 @@ class App(meta.MetaMixin):
 
         # in theory, this should happen last-last... but at that point `self`
         # would be kind of busted after _unlay_cement() is run.
-        for res in self.hook.run('post_close', self):
+        for _res in self.hook.run('post_close', self):
             pass
 
         self._unlay_cement()
@@ -1256,12 +1256,12 @@ class App(meta.MetaMixin):
             self.handler.register(handler_class)
 
     def _parse_args(self) -> None:
-        for res in self.hook.run('pre_argument_parsing', self):
+        for _res in self.hook.run('pre_argument_parsing', self):
             pass
 
         self._parsed_args = self.args.parse(self.argv)
 
-        for res in self.hook.run('post_argument_parsing', self):
+        for _res in self.hook.run('post_argument_parsing', self):
             pass
 
     def catch_signal(self, signum: int) -> None:
