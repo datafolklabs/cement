@@ -36,7 +36,7 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
 **Plans**: 4 plans
   - [x] 01-01-PLAN.md — Step 1: atomic Python 3.9 drop across all 9 files (D-05)
   - [x] 01-02-PLAN.md — Step 2a: ruff 0.15.12 bump + codification + 8 per-family fix commits
-  - [ ] 01-03-PLAN.md — Step 2b: mypy 1.20.2 bump + audit comment + union-attr fix
+  - [x] 01-03-PLAN.md — Step 2b: mypy 1.20.2 bump + audit comment + union-attr fix
   - [ ] 01-04-PLAN.md — Step 2c: pytest+pytest-cov+coverage floor bump
 
 ### Phase 2: Dependencies & CI Pipeline
@@ -105,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6. Phases 3 and 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Tooling Baseline & Python Matrix | 0/4 | Not started | - |
+| 1. Tooling Baseline & Python Matrix | 3/4 | In progress | - |
 | 2. Dependencies & CI Pipeline | 0/TBD | Not started | - |
 | 3. Internal Refactor & Coverage Hardening | 0/TBD | Not started | - |
 | 4. Backlog Triage | 0/TBD | Not started | - |

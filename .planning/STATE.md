@@ -4,14 +4,14 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-04-30T05:58:54.117Z"
+last_updated: "2026-04-30T06:06:15.848Z"
 last_activity: 2026-04-30
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
-  percent: 50
+  completed_plans: 3
+  percent: 75
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 01 (tooling-baseline-python-matrix) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-04-30
 
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 01-tooling-baseline-python-matrix P01 | 2 min | 1 tasks | 9 files |
 | Phase 01-tooling-baseline-python-matrix P02 | 20 min | 9 tasks | 91 files |
+| Phase 01-tooling-baseline-python-matrix P03 | 3 min | 2 tasks tasks | 2 files files |
 
 ## Accumulated Context
 
@@ -75,6 +76,10 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 02]: C901 absorbed in [tool.ruff.lint] ignore with Phase 3 REFACTOR-01/02 cross-reference (RESEARCH.md Open Question 3 explicit recommendation). 12 hot-spot functions in cement/core/foundation.py + handler.py exceed default complexity 10; refactoring violates D-13 strict-minimum. Adding C90 family to extend-select keeps the signal active for new code.
 - [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 02]: D-04 one-commit-per-rule-family proven across 8 families (185 violations resolved in 8 atomic fix(lint): commits). Each commit is independently revertable, each fix is annotated with the rule code in the commit subject, and bisect can pinpoint exactly which family's fix introduced any regression.
 - [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 02]: PT013 ruff 0.15 reversed its preference (now wants 'import pytest' instead of 'from pytest import raises') vs the existing cement convention (cited at tests/core/test_exc.py). Absorbed via per-file-ignore on tests/**/*.py rather than mass-rewriting the convention — mass-rewrite would itself be a D-13 strict-minimum violation. Documented as deviation from RESEARCH.md prediction.
+- [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 03]: D-15 coupling pattern repeated — mypy pin (~=1.20.2) + AUDIT POINT comment land in single chore: bump mypy to 1.20 commit. Same shape as Plan 02's chore: bump ruff. Pattern generalized across both ruff and mypy.
+- [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 03]: D-11 strict preservation held — ZERO mypy strictness knob value changed; the only [tool.mypy] addition was the 4-line AUDIT POINT comment block. Knob tightening explicitly deferred to Phase 3 REFACTOR-02.
+- [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 03]: D-13 strict-minimum on handler.py:394 — chose # type: ignore append over narrowing assertion. Mirrors framework's established sibling pattern at lines 387/389/390/393/395 (all use # type: ignore for the same MetaMixin/Meta union-attr pattern). Phase 3 REFACTOR-02 may revisit.
+- [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 03]: Line drift acknowledged — RESEARCH.md cited line 392; Plan 02 lint fixes shifted union-attr site to line 394. Same code, same fix. Plan anticipated this with read-line-numbers-first directive.
 
 ### Pending Todos
 
@@ -88,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-30T05:58:54.114Z
+Last session: 2026-04-30T06:05:50.596Z
 Stopped at: Completed 01-02-PLAN.md
 Resume file: None
