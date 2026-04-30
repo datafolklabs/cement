@@ -3,7 +3,9 @@ Cement print extension module.
 """
 
 from __future__ import annotations
-from typing import Any, Dict, Union, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Any, Dict, Union
+
 from ..core import output
 from ..utils.misc import minimal_logger
 

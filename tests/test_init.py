@@ -3,4 +3,4 @@
 
 
 def test_import():
-    from cement import App, Controller, ex, init_defaults   # noqa: F401
+    from cement import App, Controller, ex, init_defaults  # noqa: F401

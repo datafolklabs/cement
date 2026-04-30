@@ -12,8 +12,11 @@ extensions.
 """
 
 from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, List, Optional
+
 import pylibmc  # type: ignore
-from typing import Any, List, Optional, TYPE_CHECKING
+
 from ..core import cache
 from ..utils.misc import minimal_logger
 

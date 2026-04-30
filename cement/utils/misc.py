@@ -1,12 +1,13 @@
 """Misc utilities."""
 
+import hashlib
+import logging
 import os
 import sys
-import logging
-import hashlib
-from textwrap import TextWrapper
 from random import random
-from typing import Any, Optional, Dict
+from textwrap import TextWrapper
+from typing import Any, Dict, Optional
+
 from ..core.deprecations import deprecate
 
 

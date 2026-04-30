@@ -1,6 +1,5 @@
 
-from cement.core.arg import ArgumentInterface, ArgumentHandler
-
+from cement.core.arg import ArgumentHandler, ArgumentInterface
 
 # module tests
 

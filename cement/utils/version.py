@@ -38,10 +38,11 @@
 
 import datetime
 import os
-import sys
-import subprocess
 import platform
+import subprocess
+import sys
 from typing import Optional, Tuple
+
 from ..core.backend import VERSION
 
 

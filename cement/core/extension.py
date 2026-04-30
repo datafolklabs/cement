@@ -1,12 +1,14 @@
 """Cement core extensions module."""
 
 from __future__ import annotations
+
 import sys
 from abc import abstractmethod
-from typing import Any, List, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, List
+
 from ..core import exc
-from ..core.interface import Interface
 from ..core.handler import Handler
+from ..core.interface import Interface
 from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)

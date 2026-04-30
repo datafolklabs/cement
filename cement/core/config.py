@@ -3,8 +3,9 @@
 import os
 from abc import abstractmethod
 from typing import Any, Dict, List
-from ..core.interface import Interface
+
 from ..core.handler import Handler
+from ..core.interface import Interface
 from ..utils.fs import abspath
 from ..utils.misc import minimal_logger
 

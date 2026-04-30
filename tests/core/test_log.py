@@ -4,8 +4,7 @@ from pytest import raises
 
 from cement import init_defaults
 from cement.core.foundation import TestApp
-from cement.core.log import LogInterface, LogHandler
-
+from cement.core.log import LogHandler, LogInterface
 
 # module tests
 

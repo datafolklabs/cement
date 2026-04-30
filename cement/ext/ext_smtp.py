@@ -3,22 +3,24 @@ Cement smtp extension module.
 """
 
 from __future__ import annotations
+
 import os
-from datetime import datetime, timezone
 import smtplib
-from email.header import Header
-from email.charset import Charset, BASE64, QP
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
+from datetime import datetime, timezone
 from email import encoders
+from email.charset import BASE64, QP, Charset
+from email.header import Header
+from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from email.utils import format_datetime, make_msgid
-from typing import Any, Optional, Dict, Union, Tuple, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
+
 from ..core import mail
 from ..core.deprecations import deprecate
 from ..utils import fs
-from ..utils.misc import minimal_logger, is_true
+from ..utils.misc import is_true, minimal_logger
 
 if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover

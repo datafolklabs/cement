@@ -1,13 +1,12 @@
 
 from pytest import raises
 
+from cement.core.exc import FrameworkError, InterfaceError
 from cement.core.foundation import TestApp
 from cement.core.handler import Handler
 from cement.core.meta import MetaMixin
-from cement.core.exc import FrameworkError, InterfaceError
 from cement.ext.ext_configparser import ConfigParserConfigHandler
 from cement.ext.ext_dummy import DummyOutputHandler
-
 
 # module tests
 

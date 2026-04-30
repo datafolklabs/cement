@@ -3,15 +3,17 @@ Cement plugin extension module.
 """
 
 from __future__ import annotations
-import os
-import sys
-import importlib.util
+
 import importlib.machinery
+import importlib.util
+import os
 import re
-from typing import List, TYPE_CHECKING
-from ..core import plugin, exc
-from ..utils.misc import is_true, minimal_logger
+import sys
+from typing import TYPE_CHECKING, List
+
+from ..core import exc, plugin
 from ..utils.fs import abspath
+from ..utils.misc import is_true, minimal_logger
 
 if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover

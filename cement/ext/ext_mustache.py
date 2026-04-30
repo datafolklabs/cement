@@ -12,8 +12,11 @@ extensions.
 """
 
 from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, Dict, Union
+
 from pystache.renderer import Renderer  # type: ignore
-from typing import Any, Dict, Union, TYPE_CHECKING
+
 from ..core.output import OutputHandler
 from ..core.template import TemplateHandler
 from ..utils.misc import minimal_logger

@@ -5,8 +5,9 @@ Cement core log module.
 
 # from ..core import interface
 from abc import abstractmethod
-from ..core.interface import Interface
+
 from ..core.handler import Handler
+from ..core.interface import Interface
 
 
 class LogInterface(Interface):

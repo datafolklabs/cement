@@ -1,8 +1,9 @@
 
 import os
-from cement.utils.test import raises
-from cement.cli.main import main
+
 from cement.cli.main import CementTestApp as App
+from cement.cli.main import main
+from cement.utils.test import raises
 
 
 def test_main(tmp):

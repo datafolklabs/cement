@@ -1,7 +1,7 @@
 
+from cement.core.exc import FrameworkError
 from cement.core.foundation import TestApp
 from cement.utils.test import raises
-from cement.core.exc import FrameworkError
 
 
 class MustacheApp(TestApp):

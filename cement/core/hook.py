@@ -1,9 +1,11 @@
 """Cement core hooks module."""
 
 from __future__ import annotations
+
 import operator
 import types
-from typing import Any, Callable, Dict, List, Generator, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Callable, Dict, Generator, List
+
 from ..core import exc
 from ..utils.misc import minimal_logger
 

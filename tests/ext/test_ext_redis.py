@@ -1,9 +1,9 @@
 
 import os
 from time import sleep
-from cement.utils.test import TestApp
-from cement.utils.misc import init_defaults
 
+from cement.utils.misc import init_defaults
+from cement.utils.test import TestApp
 
 if 'REDIS_HOST' in os.environ.keys():
     redis_host = os.environ['REDIS_HOST']

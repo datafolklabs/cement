@@ -4,9 +4,11 @@
 
 import os
 from unittest.mock import patch
+
 from pytest import raises
-from cement.core.foundation import TestApp
+
 from cement.core.exc import FrameworkError
+from cement.core.foundation import TestApp
 from cement.ext import ext_daemon
 
 

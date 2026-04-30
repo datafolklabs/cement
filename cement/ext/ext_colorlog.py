@@ -12,11 +12,14 @@ extensions.
 """
 
 from __future__ import annotations
+
+import logging
 import os
 import sys
-import logging
 from typing import TYPE_CHECKING
+
 from colorlog import ColoredFormatter
+
 from ..ext.ext_logging import LoggingLogHandler
 from ..utils.misc import is_true
 

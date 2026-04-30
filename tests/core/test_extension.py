@@ -1,11 +1,10 @@
 
 import pytest
 
+from cement.core.exc import FrameworkError
+from cement.core.extension import ExtensionHandler, ExtensionInterface
 from cement.core.foundation import TestApp
 from cement.core.handler import Handler
-from cement.core.exc import FrameworkError
-from cement.core.extension import ExtensionInterface, ExtensionHandler
-
 
 # module tests
 

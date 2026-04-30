@@ -1,6 +1,5 @@
 
-from cement.core.config import ConfigInterface, ConfigHandler
-
+from cement.core.config import ConfigHandler, ConfigInterface
 
 # module tests
 

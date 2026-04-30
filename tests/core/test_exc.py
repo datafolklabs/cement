@@ -1,6 +1,7 @@
 
 from pytest import raises
-from cement.core.exc import FrameworkError, InterfaceError, CaughtSignal
+
+from cement.core.exc import CaughtSignal, FrameworkError, InterfaceError
 
 
 class TestExceptions(object):

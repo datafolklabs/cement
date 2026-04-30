@@ -1,16 +1,41 @@
 """Cement core foundation module."""
 
 from __future__ import annotations
+
 import os
 import platform
 import signal
 import sys
 from importlib import reload as reload_module
 from time import sleep
-from typing import (IO, Any, Callable, Dict, List, Optional, TextIO, Tuple,
-                    Type, Union, TYPE_CHECKING)
-from ..core import (arg, cache, config, controller, exc, extension, log, mail,
-                    meta, output, plugin, template)
+from typing import (
+    IO,
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    TextIO,
+    Tuple,
+    Type,
+    Union,
+)
+
+from ..core import (
+    arg,
+    cache,
+    config,
+    controller,
+    exc,
+    extension,
+    log,
+    mail,
+    meta,
+    output,
+    plugin,
+    template,
+)
 from ..core.deprecations import deprecate
 from ..core.handler import Handler, HandlerManager
 from ..core.hook import HookManager

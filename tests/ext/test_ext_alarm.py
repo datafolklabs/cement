@@ -1,6 +1,8 @@
-import time
 import signal
+import time
+
 from pytest import raises
+
 from cement.core.exc import CaughtSignal
 from cement.core.foundation import TestApp
 

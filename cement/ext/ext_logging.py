@@ -3,14 +3,16 @@ Cement logging extension module.
 """
 
 from __future__ import annotations
-import os
+
 import logging
+import os
 from logging.handlers import RotatingFileHandler
-from typing import Any, Dict, List, Union, Optional, Type, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+
 from ..core import log
 from ..core.deprecations import deprecate
-from ..utils.misc import is_true, minimal_logger
 from ..utils import fs
+from ..utils.misc import is_true, minimal_logger
 
 if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover

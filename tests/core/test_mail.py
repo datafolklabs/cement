@@ -1,6 +1,5 @@
 
-from cement.core.mail import MailInterface, MailHandler
-
+from cement.core.mail import MailHandler, MailInterface
 
 # module tests
 

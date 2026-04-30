@@ -3,10 +3,12 @@ Cement json extension module.
 """
 
 from __future__ import annotations
-from typing import Any, Dict, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Any, Dict
+
 from ..core import output
-from ..utils.misc import minimal_logger
 from ..ext.ext_configparser import ConfigParserConfigHandler
+from ..utils.misc import minimal_logger
 
 if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover

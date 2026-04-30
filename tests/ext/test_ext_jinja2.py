@@ -1,10 +1,12 @@
 
 import os
-import jinja2
 from shutil import copyfile
-from cement.utils.test import TestApp, raises
+
+import jinja2
+
 from cement.core.exc import FrameworkError
 from cement.utils import fs
+from cement.utils.test import TestApp, raises
 
 
 class Jinja2App(TestApp):

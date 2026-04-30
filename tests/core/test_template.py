@@ -1,8 +1,8 @@
 
 import os
-from cement.utils.test import TestApp, raises
-from cement.core.template import TemplateInterface, TemplateHandler
 
+from cement.core.template import TemplateHandler, TemplateInterface
+from cement.utils.test import TestApp, raises
 
 # module tests
 

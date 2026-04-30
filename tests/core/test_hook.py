@@ -1,10 +1,11 @@
 """Tests for cement.core.hook."""
 
 from unittest.mock import Mock
+
 from pytest import raises
+
 from cement.core.exc import FrameworkError
 from cement.core.foundation import TestApp
-
 
 # module tests
 

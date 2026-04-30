@@ -1,9 +1,10 @@
 import os
-import yaml
 from unittest.mock import patch
-from cement.utils.test import TestApp
-from cement.utils import fs
 
+import yaml
+
+from cement.utils import fs
+from cement.utils.test import TestApp
 
 CONFIG_PARSED = dict(
     section=dict(

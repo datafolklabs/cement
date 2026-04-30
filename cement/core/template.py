@@ -1,17 +1,18 @@
 """Cement core template module."""
 
 import os
-import sys
 import pkgutil
 import re
 import shutil
+import sys
 from abc import abstractmethod
-from typing import Any, List, Dict, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
+
 from ..core import exc
-from ..core.interface import Interface
 from ..core.handler import Handler
-from ..utils.misc import minimal_logger
+from ..core.interface import Interface
 from ..utils import fs
+from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
