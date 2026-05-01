@@ -9,6 +9,10 @@ Bugs:
 - `[ext.smtp]` Fix SMTP connection leak when send fails with an exception
 - `[ext.smtp]` Fix unconditional error log on every send (now only logs on errors)
 - `[ext.smtp]` Fix header encoding incorrectly affected by `body_encoding` setting
+- `[cli]` Generated `cement generate project` output now builds under pip's
+  default PEP 517 isolation on Python 3.10+ — the legacy `setup.py` self-imported
+  the package being built, which fails inside isolated build envs
+- `[core.handler]` Resolve mypy union-attr false-positive in handler resolution
 
 Features:
 
@@ -21,10 +25,22 @@ Refactoring:
 - `[ext.smtp]` Simplify X-header normalization and preserve original casing
 - `[dev]` Python 3.14 Default Development Target
 - `[dev]` Remove Support for Python 3.8 (EOL)
+- `[dev]` Remove Support for Python 3.9 (EOL)
+- `[cli]` Migrate `cement generate project` template from setuptools+setup.py
+  to pdm-backend with full PEP 621 metadata; deps moved to
+  `[project].dependencies` and `[dependency-groups].dev` (PEP 735); generated
+  `version.py` simplified to literal `__version__` + wrapper (no build-time
+  cement import)
 
 Misc:
 
 - `[ext.smtp]` Isolate test defaults to prevent cross-test state pollution
+- `[dev]` Bump ruff to 0.15.x; codify rule sets explicitly; resolve all
+  surfacing lint findings (I001, B*, A*, C901, N*, PT*, T201, YTT203)
+- `[dev]` Bump mypy to ~=1.20.2; codify type-check surface (audit-point comment)
+- `[dev]` Bump pytest 9.0.3, pytest-cov 7.1.0, coverage 7.13.5
+- `[dev]` Add `make cli-smoke-test` target — runs generated-project install
+  smoke test across Python 3.10–3.14 in Docker
 
 Deprecations:
 
