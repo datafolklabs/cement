@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
+status: verifying
 stopped_at: Phase 01.1 re-scoped to pdm-backend migration; CONTEXT.md locked, ready to re-plan
-last_updated: "2026-05-01T17:22:43.258Z"
-last_activity: 2026-05-01 -- Phase 01.1 planning complete
+last_updated: "2026-05-01T17:41:56.674Z"
+last_activity: 2026-05-01
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 5
-  completed_plans: 4
-  percent: 80
+  completed_plans: 5
+  percent: 100
 ---
 
 # Project State
@@ -21,22 +21,22 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-24)
 
 **Core value:** Cement 3 stays solid, secure, performant, and bug-free under strict backward compatibility — while being continuously maintained against a modern Python and tooling ecosystem.
-**Current focus:** Phase 01.1 — generated-project-template-build-modernization
+**Current focus:** Phase 01.1 — Generated Project Template Build Modernization
 
 ## Current Position
 
-Phase: 01.1 (generated-project-template-build-modernization) — EXECUTING
+Phase: 01.1 (Generated Project Template Build Modernization) — EXECUTING
 Plan: 1 of 1
-Status: Ready to execute
-Last activity: 2026-05-01 -- Phase 01.1 planning complete
+Status: Phase complete — ready for verification
+Last activity: 2026-05-01
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 4
+- Total plans completed: 5
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -56,6 +56,7 @@ Progress: [░░░░░░░░░░] 0%
 | Phase 01-tooling-baseline-python-matrix P02 | 20 min | 9 tasks | 91 files |
 | Phase 01-tooling-baseline-python-matrix P03 | 3 min | 2 tasks tasks | 2 files files |
 | Phase 01-tooling-baseline-python-matrix P04 | 11 | 1 tasks | 1 files |
+| Phase 01.1 P01 | 12 min | 7 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 04]: D-13 strict-minimum honored absolutely — ZERO test-config or test-code modernization. [tool.pytest.ini_options] untouched. RESEARCH.md prediction (cement test surface bug-clean against pytest 9.0/pytest-cov 7.0/coverage 7.13) verified — no fix(test): commits needed.
 - [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 04]: Pitfall 3 (pytest-cov 7.0 subprocess-measurement removal) verified no-op for cement — cement/utils/shell.py 129/0/100% and cement/cli/main.py 28/0/100% pre/post-bump identical. Per-module Miss=0 held across cement/ tree. TOTAL stmt-count drift (3311->3285) is coverage 7.6->7.13 detection-heuristics internal, not a coverage regression.
 - [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 04]: Phase 1 implementation COMPLETE — all 5 ROADMAP cumulative success criteria GREEN (PYVER-01/02, TOOL-01/02/03/04). 13 atomic phase-1 commits across 4 plans. CI matrix (3.10/3.11/3.12/3.13/3.14/pypy3.10) is the final verification gate on PR open.
+- [Phase ?]: [Phase 01.1 Plan 01]: pdm-backend migration green on full Python 3.10-3.14 matrix; build-time cement dependency removed; setup.py-era files (5) deleted; PEP 735 dev deps via [dependency-groups].
+- [Phase ?]: [Phase 01.1 Plan 01]: Rule 1 deviation auto-fixed: tests/cli/test_main.py::test_generate updated to assert pyproject.toml exists (was setup.py). Regression caught in Task 7 acceptance check after Task 4 deletion; mechanical one-line fix preserves end-to-end behavior validation.
 
 ### Roadmap Evolution
 
@@ -109,6 +112,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-01T16:37:28.544Z
+Last session: 2026-05-01T17:41:38.251Z
 Stopped at: Phase 01.1 re-scoped to pdm-backend migration; CONTEXT.md locked, ready to re-plan
-Resume file: .planning/phases/01.1-generated-project-template-build-modernization/01.1-CONTEXT.md
+Resume file: None
