@@ -1,7 +1,5 @@
+__version__ = "0.0.1a0"
 
-from cement.utils.version import get_version as cement_get_version
 
-VERSION = (0, 0, 1, 'alpha', 0)
-
-def get_version(version=VERSION):
-    return cement_get_version(version)
+def get_version():
+    return __version__
