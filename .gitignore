@@ -84,3 +84,6 @@ dump.rdb
 __pypackages__
 .pdm.toml
 .pdm-python
+
+# Claude Code agent worktrees (harness-internal scratch)
+.claude/worktrees/
