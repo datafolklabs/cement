@@ -1,8 +1,36 @@
-# Build-system declaration for pip's default PEP 517 build isolation.
-# cement is required at build time because setup.py transitively imports
-# it via {{ label }}/core/version.py. Project metadata stays in setup.py
-# — this file declares ONLY the build system.
+# Generated project — pdm-backend toolchain.
+# Single source of truth for build, metadata, runtime deps, and dev deps.
 
 [build-system]
-requires = ["setuptools", "wheel", "cement>={{ cement.version }}"]
-build-backend = "setuptools.build_meta"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "{{ label }}"
+description = "{{ description }}"
+authors = [{name = "{{ creator }}", email = "{{ creator_email }}"}]
+license = {text = "{{ license }}"}
+readme = "README.md"
+requires-python = ">=3.10"
+dynamic = ["version"]
+dependencies = [
+    "cement[jinja2,yaml,colorlog]=={{ cement.version }}",
+]
+
+[project.urls]
+Homepage = "{{ url }}"
+
+[project.scripts]
+{{ label }} = "{{ label }}.main:main"
+
+[tool.pdm.version]
+source = "file"
+path = "{{ label }}/core/version.py"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "coverage",
+    "twine>=1.11.0",
+]
