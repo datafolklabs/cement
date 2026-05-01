@@ -41,13 +41,13 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
 
 ### Phase 01.1: Generated Project Template Build Modernization (INSERTED)
 
-**Goal:** Restore `pip install .` on freshly-generated `cement generate project` outputs under pip's default PEP 517 build isolation by adding a single `pyproject.toml` to the generate-project template that declares cement (and setuptools/wheel) in `[build-system].requires`. This unblocks the cli-smoke-test on the Python 3.10-3.14 matrix and clears Phase 2's CI-green prerequisite.
+**Goal:** Restore `pip install .` on freshly-generated `cement generate project` outputs under pip's default PEP 517 build isolation by migrating the generate-project template from setuptools+setup.py to pdm-backend with a complete `[project]`-table-driven `pyproject.toml`. This unblocks the cli-smoke-test on the Python 3.10-3.14 matrix and clears Phase 2's CI-green prerequisite. (Re-scoped 2026-04-30 — original strict-minimum patch was empirically insufficient; see 01.1-CONTEXT.md revision_history.)
 **Requirements**: (none — inserted urgent phase, no REQ-IDs assigned)
 **Depends on:** Phase 1
 **Plans:** 1 plan
 
 Plans:
-- [ ] 01.1-01-PLAN.md — Add pyproject.toml to generate-project template; verify `make cli-smoke-test` green on Python 3.10-3.14
+- [ ] 01.1-01-PLAN.md — Migrate generate-project template to pdm-backend (6 atomic commits + verification); verify `make cli-smoke-test` green on Python 3.10-3.14
 
 ### Phase 2: Dependencies & CI Pipeline
 **Goal**: Regenerate the lockfile against the new tooling baseline, refresh optional-extras to versions compatible with Python 3.10–3.14, and prove the GitHub Actions matrix is green end-to-end (including the previously stalled `pdm update` job).
