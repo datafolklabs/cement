@@ -49,12 +49,7 @@ function smoke-test {
     ### generate a project
 
     docker exec cement-cli-smoke-test /bin/bash -c "cement generate project -D $tmp/myapp"
-    docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install -r requirements.txt"
-    # PIP_FIND_LINKS lets pip's PEP 517 isolated build env resolve
-    # cement from the locally-built sdist in /src/dist (the mounted
-    # cement repo) instead of PyPI. Required when smoke-testing a
-    # pre-release dev build of cement that hasn't been published yet.
-    docker exec -e PIP_FIND_LINKS=/src/dist cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install ."
+    docker exec cement-cli-smoke-test /bin/bash -c "cd $tmp/myapp ; pip install ."
     res=$(docker exec -t cement-cli-smoke-test /bin/bash -c "myapp --version")
     echo "$res" | grep "Cement Framework $CEMENT_VERSION\.[0-9]"
     echo "$res" | grep "Python $pyver.[0-9]"
