@@ -84,6 +84,15 @@ When working with extensions:
 - Body lines: max 78 characters (wrap longer prose at 78)
 - Use `make commit` (runs `pdm run cz commit`) to author commits interactively
 
+## Changelog Maintenance
+
+- Update `CHANGELOG.md` phase-by-phase as work lands; do not defer to release-cut time
+- Append entries to the active `## X.Y.Z - DEVELOPMENT` section using the existing buckets: **Bugs**, **Features**, **Refactoring**, **Misc**, **Deprecations**
+- Each entry: one line, prefixed with `[area]` — e.g., `[ext.smtp]`, `[cli]`, `[dev]`, `[core.handler]`
+- Filter out planning-artifact commits (`docs(NN.N):`, `docs(state):`, `docs(quick-...):`) — they are workflow scaffolding, not user-facing changes
+- Filter out commits superseded within the same branch (revert pairs, overwrites) — only the net effect ships in the changelog
+- Bucket by Conventional Commit type: `fix:` → Bugs, `feat:` → Features, `refactor:` → Refactoring, `chore:` (deps/tooling/dev-env) → Misc; structural removals (drop Python version, replace toolchain) or substantive structural reshuffles → Refactoring
+
 ## GitHub Project
 
 This project is hosted at **github.com/datafolklabs/cement**. Use the `gh` CLI to interact with GitHub issues, pull requests, and other project resources.
