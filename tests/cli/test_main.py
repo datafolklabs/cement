@@ -25,4 +25,4 @@ def test_generate(tmp):
     with App(argv=argv) as app:
         app.run()
 
-        assert os.path.exists(os.path.join(tmp.dir, 'setup.py'))
+        assert os.path.exists(os.path.join(tmp.dir, 'pyproject.toml'))
