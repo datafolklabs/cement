@@ -3,20 +3,27 @@
 ## System Requirements
 
 - Python 3.10 or newer
-- [PDM](https://pdm-project.org/) (Python Dependency Manager) for build, dependency, and virtualenv management
 - (Optional) Docker, for container builds via the included `Dockerfile`
 
 ## Installation
 
 ```
-$ make setup
+$ pip install .
 ```
 
-This runs `pdm install`, which automatically creates a project virtualenv and installs both runtime and dev dependencies as declared in `pyproject.toml`.
+Or, from a built distribution / PyPI release:
+
+```
+$ pip install {{ label }}
+```
 
 ## Development
 
 This project includes a number of helpers in the `Makefile` to streamline common development tasks.
+
+Additional development requirements:
+
+- [PDM](https://pdm-project.org/) (Python Dependency Manager) for build, dependency, and virtualenv management
 
 ### Environment Setup
 

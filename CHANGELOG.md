@@ -32,10 +32,12 @@ Refactoring:
   `version.py` simplified to literal `__version__` + wrapper (no build-time
   cement import)
 - `[cli]` Generated project `README.md` now documents system requirements
-  (Python 3.10+, PDM); install/dev steps rewritten for PDM (`make setup`,
-  `pdm run <label>`); generated `Makefile` `virtualenv` target renamed to
-  `setup` and reduced to `pdm install` (drops redundant `pdm venv create`
-  and the manual `eval $(pdm venv activate)` hint)
+  (Python 3.10+); end-user install uses `pip install .` / `pip install
+  <label>`; development section calls out PDM as an additional requirement
+  and uses `make setup` + `pdm run <label>`; generated `Makefile`
+  `virtualenv` target renamed to `setup` and reduced to `pdm install`
+  (drops redundant `pdm venv create` and the manual `eval $(pdm venv
+  activate)` hint)
 
 Misc:
 
