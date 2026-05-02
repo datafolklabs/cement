@@ -1,14 +1,10 @@
-.PHONY: clean virtualenv test docker dist dist-upload
+.PHONY: clean setup test docker dist dist-upload
 
 clean:
 	find . -name '*.py[co]' -delete
 
-virtualenv:
-	pdm venv create
+setup:
 	pdm install
-	@echo
-	@echo "VirtualENV Setup Complete. Now run: eval \$$(pdm venv activate)"
-	@echo
 
 test:
 	pdm run pytest \
