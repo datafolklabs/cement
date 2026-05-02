@@ -709,22 +709,22 @@ Per CLAUDE.md §"Changelog Maintenance" — each commit appends a one-line entry
 | A4 | watchdog 4 → 6 likely doesn't break `cement/ext/ext_watchdog.py` (cement uses minimal API surface) | Pitfall 4 | Surfaces in CI if wrong; D-04 atomic-split absorbs cleanly. Low risk. |
 | A5 | `pypy3.11` (no-dash, mirroring existing `pypy3.10` convention) is interchangeable with `pypy-3.11` (dashed, used in CONTEXT.md D-14) | Example 5 | Verified by setup-python advanced-usage.md. Both forms work. Planner picks the convention. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should D-06 SHA-pinning still apply now that `pdm-project/update-deps-action` has tagged releases?**
    - What we know: 13 tags exist, latest `v1.12` published 2025-04-21. Action's own README still uses `@main` as example (likely historical inertia).
    - What's unclear: User's preference between (a) exact-tag pin like everyone else, OR (b) SHA-pin as belt-and-braces against tag mutation.
-   - Recommendation: **Use `@v1.12` (exact tag, consistent with D-05).** Falls naturally out of D-05's "exact tags everywhere." The SHA-pin posture in D-06 was conditional on "no tags upstream" which turned out to be wrong. Planner can flip back to SHA-pin if user wants the extra hardening — concrete SHA values for both `main` HEAD and `v1.12` are in §"Concrete Substitutions."
+   - **RESOLVED:** **Use `@v1.12` (exact tag, consistent with D-05).** Falls naturally out of D-05's "exact tags everywhere." The SHA-pin posture in D-06 was conditional on "no tags upstream" which turned out to be wrong. Planner can flip back to SHA-pin if user wants the extra hardening — concrete SHA values for both `main` HEAD and `v1.12` are in §"Concrete Substitutions."
 
 2. **`make test-core` will fail under the new 100% gate.**
    - What we know: `make test-core` runs `pytest --cov=cement.core tests/core`; covers only ~30% of `cement/`.
    - What's unclear: Whether anyone uses `make test-core` interactively, and whether breaking it matters.
-   - Recommendation: **Accept as Phase 2 side-effect.** Document in changelog if any user reports it. CI uses `make test`; gate fires correctly there.
+   - **RESOLVED:** **Accept as Phase 2 side-effect.** Document in changelog if any user reports it. CI uses `make test`; gate fires correctly there.
 
 3. **Should `requirements.txt` be regenerated for any downstream/legacy consumers?**
    - What we know: cement uses pdm.lock; no shipped requirements.txt at project root.
    - What's unclear: Whether any contrib doc references a requirements.txt path.
-   - Recommendation: Out of scope. Phase 2 doesn't touch packaging surface.
+   - **RESOLVED:** Out of scope. Phase 2 doesn't touch packaging surface.
 
 ## Environment Availability
 
