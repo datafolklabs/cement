@@ -1,12 +1,18 @@
 # {{ description }}
 
+## System Requirements
+
+- Python 3.10 or newer
+- [PDM](https://pdm-project.org/) (Python Dependency Manager) for build, dependency, and virtualenv management
+- (Optional) Docker, for container builds via the included `Dockerfile`
+
 ## Installation
 
 ```
-$ pip install -r requirements.txt
-
-$ python setup.py install
+$ make setup
 ```
+
+This runs `pdm install`, which automatically creates a project virtualenv and installs both runtime and dev dependencies as declared in `pyproject.toml`.
 
 ## Development
 
@@ -17,16 +23,14 @@ This project includes a number of helpers in the `Makefile` to streamline common
 The following demonstrates setting up and working with a development environment:
 
 ```
-### create a virtualenv for development
+### install dependencies (creates a virtualenv automatically)
 
-$ make virtualenv
-
-$ source env/bin/activate
+$ make setup
 
 
 ### run {{ label }} cli application
 
-$ {{ label }} --help
+$ pdm run {{ label }} --help
 
 
 ### run pytest / coverage
