@@ -99,7 +99,37 @@ Plans:
   3. A diff of public symbols (module-level + class public methods) between `main` and the refactor branch is empty — no signatures changed, no exports added or removed
   4. mypy strict mode reports fewer `Any` occurrences in `cement/core/` than the pre-refactor baseline (concrete number captured in the phase summary)
   5. `os.path` usage in `cement/utils/fs.py` and core internals is migrated to `pathlib` where it doesn't change a public signature; remaining `os.path` callsites are explicitly documented as boundary-preserving
-**Plans**: TBD
+**Plans**: 8 plans across 8 waves (sequential due to file-ownership invariants — UP-family auto-fixes must precede FA strip per D-08; pathlib migration is atomic per-file per D-13; pragma audit lands AFTER refactor commits per D-18)
+
+  **Wave 1**
+  - [ ] 03-01-PLAN.md — Capture public API baseline (D-04 audit gate; permanent dev affordance per D-05)
+
+  **Wave 2** *(blocked on Wave 1)*
+  - [ ] 03-02-PLAN.md — Re-enable ruff UP+FA family in extend-select with refreshed AUDIT POINT comment (D-06)
+
+  **Wave 3** *(blocked on Wave 2)*
+  - [ ] 03-03-PLAN.md — UP-family auto-fixes (UP006/UP007/UP045/UP032) + CONVENTIONS.md PEP 604/585 refresh (D-07, D-19, RESEARCH.md A5)
+
+  **Wave 4** *(blocked on Wave 3 — UP must precede FA per D-08)*
+  - [ ] 03-04-PLAN.md — Strip `from __future__ import annotations` from cement/ via FA100 (D-08)
+
+  **Wave 5** *(blocked on Wave 4)*
+  - [ ] 03-05-PLAN.md — Capture Any-baseline in 03-VERIFICATION.md + tighten Any in cement/core/ (D-09 single-commit pass per RESEARCH.md A3)
+
+  **Wave 6** *(blocked on Wave 5; A7 symlink pre-flight first)*
+  - [ ] 03-06-PLAN.md — pathlib migration: utils/fs.py, core/config.py, core/foundation.py, core/template.py — atomic per-file per D-13; D-12 boundary preserved; D-19 protected callsites untouched
+
+  **Wave 7** *(blocked on Wave 6)*
+  - [ ] 03-07-PLAN.md — pragma:nocover audit with D-15 locked vocabulary (per-file commits across approx 39 files per RESEARCH.md A4: 141 sites, not 123)
+
+  **Wave 8** *(blocked on Wave 7 — final acceptance gate)*
+  - [ ] 03-08-PLAN.md — Finalize 03-VERIFICATION.md with full D-24 9-conjunct evidence + mark Phase 3 complete in ROADMAP
+
+  **Cross-cutting constraints** *(applies to every plan)*
+  - 100% coverage gate must remain green after each commit (Phase 2 D-10/D-11/D-12)
+  - All commits follow Conventional Commits + 78-char wrap (CLAUDE.md)
+  - CHANGELOG.md `## 3.0.16 - DEVELOPMENT` updated phase-by-phase per CLAUDE.md
+  - No public-API breakage on the 3.0.x track — `make audit-public-api` exit 0 enforced byte-for-byte across every commit (D-04 / D-24 conjunct #4)
 
 ### Phase 4: Backlog Triage
 **Goal**: Bring the GitHub issue backlog to a known clean state via user-approved bulk triage, with surviving issues consistently labeled and any real bugs surfaced as either in-milestone fixes or explicitly deferred backlog items.
