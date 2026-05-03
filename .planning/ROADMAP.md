@@ -105,7 +105,7 @@ Plans:
   - [x] 03-01-PLAN.md — Capture public API baseline (D-04 audit gate; permanent dev affordance per D-05) — committed f10f8ce3
 
   **Wave 2** *(blocked on Wave 1)*
-  - [ ] 03-02-PLAN.md — Re-enable ruff UP+FA family in extend-select with refreshed AUDIT POINT comment (D-06)
+  - [x] 03-02-PLAN.md — Re-enable ruff UP+FA family in extend-select with refreshed AUDIT POINT comment (D-06)
 
   **Wave 3** *(blocked on Wave 2)*
   - [ ] 03-03-PLAN.md — UP-family auto-fixes (UP006/UP007/UP045/UP032) + CONVENTIONS.md PEP 604/585 refresh (D-07, D-19, RESEARCH.md A5)
