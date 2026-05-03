@@ -13,6 +13,8 @@ Bugs:
   default PEP 517 isolation on Python 3.10+ — the legacy `setup.py` self-imported
   the package being built, which fails inside isolated build envs
 - `[core.handler]` Resolve mypy union-attr false-positive in handler resolution
+- `[ext.redis]` Resolve mypy union-attr/arg-type/misc errors surfaced by
+  redis 7 typing changes (sync client return-type unions)
 
 Features:
 
