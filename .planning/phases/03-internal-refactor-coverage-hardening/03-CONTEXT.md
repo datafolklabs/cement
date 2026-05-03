@@ -255,7 +255,9 @@ symbol added, removed, or signature-changed).
   free-form label. Maintains audit consistency.
 - **D-17:** **Grep verification** —
   ```bash
-  grep -nE 'pragma:\s*no\s*cover' cement/ \
+  # Use POSIX [[:space:]] (not \s) per RESEARCH.md Pitfall 6 for BSD/macOS
+  # grep portability; matches plans + 03-VALIDATION.md verbatim.
+  grep -nE 'pragma:[[:space:]]*no[[:space:]]*cover' cement/ \
     | grep -vE '# (abstract method|TYPE_CHECKING import|platform-specific|untestable: dynamic import|untestable: subprocess|untestable: signal handler|defensive: unreachable|version constant)'
   ```
   must return empty. Captured in `03-VERIFICATION.md`.
@@ -348,7 +350,7 @@ symbol added, removed, or signature-changed).
      positive in the reduction direction; recorded in
      `03-VERIFICATION.md` (REFACTOR-02 acceptance; ROADMAP success
      criterion #4).
-  7. `grep -nE 'pragma:\s*no\s*cover' cement/ | grep -vE '# (abstract method|TYPE_CHECKING import|platform-specific|untestable: dynamic import|untestable: subprocess|untestable: signal handler|defensive: unreachable|version constant)'`
+  7. `grep -nE 'pragma:[[:space:]]*no[[:space:]]*cover' cement/ | grep -vE '# (abstract method|TYPE_CHECKING import|platform-specific|untestable: dynamic import|untestable: subprocess|untestable: signal handler|defensive: unreachable|version constant)'` (POSIX [[:space:]] per Pitfall 6)
      returns empty (COV-03 acceptance; ROADMAP success criterion
      #2 — strict locked-vocabulary form).
   8. `grep -rn 'os\.path' cement/utils/fs.py cement/core/` returns

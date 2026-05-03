@@ -515,10 +515,11 @@ VERSION = (3, 0, 15, 'final', 0)  # pragma: nocover  # version constant
 | `# defensive: unreachable` | else branches coverage.py can't prove unreachable |
 | `# version constant` | module-level version tuples |
 
-**D-17 verification grep** (verbatim from CONTEXT.md):
+**D-17 verification grep** (verbatim from CONTEXT.md; uses POSIX
+`[[:space:]]` per RESEARCH.md Pitfall 6 for BSD/macOS portability):
 
 ```bash
-grep -nE 'pragma:\s*no\s*cover' cement/ \
+grep -nE 'pragma:[[:space:]]*no[[:space:]]*cover' cement/ \
   | grep -vE '# (abstract method|TYPE_CHECKING import|platform-specific|untestable: dynamic import|untestable: subprocess|untestable: signal handler|defensive: unreachable|version constant)'
 ```
 
