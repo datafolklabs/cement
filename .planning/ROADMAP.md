@@ -75,7 +75,7 @@ Plans:
   - [x] 02-05-PLAN.md — Add pypy-3.11 to test matrix + drop FIXME OS-matrix comment (D-14, D-15)
 
   **Wave 5** *(blocked on Wave 4 completion)*
-  - [ ] 02-06-PLAN.md — Enable Dependabot for github-actions ecosystem + verify repo-level security-updates toggle (D-07; RESEARCH.md Correction 2)
+  - [x] 02-06-PLAN.md — Enable Dependabot for github-actions ecosystem + verify repo-level security-updates toggle (D-07; RESEARCH.md Correction 2)
 
   **Wave 6** *(blocked on Wave 5 completion)*
   - [ ] 02-07-PLAN.md — Add workflow_dispatch trigger to pdm.yml (D-08)
