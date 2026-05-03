@@ -99,9 +99,11 @@ include = [
 ]
 
 [tool.ruff.lint]
-# AUDIT POINT (D-08): re-review on every ruff bump. New rules added by
-# ruff to a selected family fire as CI failures, forcing a deliberate
-# add-with-comment to `ignore` or a fix. See Phase 1 RESEARCH.md.
+# AUDIT POINT (D-08, Phase 03 D-06): re-review on every ruff bump. New
+# rules added by ruff to a selected family fire as CI failures. The
+# UP and FA families (Phase 03) are the highest-churn surfaces — a
+# UP rule graduating from preview lands as a deliberate config
+# decision, not silent CI red. See Phase 1 RESEARCH.md + Phase 03 D-06.
 preview = false
 extend-select = [
     "E",   # pycodestyle errors
@@ -115,6 +117,9 @@ extend-select = [
     "PT",  # flake8-pytest-style (NEW, D-06)
     "T20", # flake8-print (NEW, D-06)
     "YTT", # flake8-2020 (NEW, D-06)
+    "UP",  # pyupgrade (NEW, Phase 03 D-06; lifts Phase 1 D-07 UP ban)
+    "FA",  # flake8-future-annotations (NEW, Phase 03 D-06; mechanizes
+           # `from __future__ import annotations` removal — D-08)
 ]
 ignore = [
     # AUDIT POINT (D-08): each entry MUST have a one-line justification.
