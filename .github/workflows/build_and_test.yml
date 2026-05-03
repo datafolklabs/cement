@@ -27,7 +27,7 @@ jobs:
           python-version: "3.x"
           architecture: "x64"
       - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4.4
+        uses: pdm-project/setup-pdm@v4.5
       - name: Install dependencies
         run: pdm install
       - name: Make Comply
@@ -51,7 +51,7 @@ jobs:
         with:
           compose-file: "./docker/compose-services-only.yml"
       - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4.4
+        uses: pdm-project/setup-pdm@v4.5
       - name: Install dependencies
         run: pdm install
       - name: Make Test
@@ -74,7 +74,7 @@ jobs:
         with:
           compose-file: "./docker/compose-services-only.yml"
       - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4.4
+        uses: pdm-project/setup-pdm@v4.5
       - name: Install dependencies
         run: pdm install
       - name: Make Test
