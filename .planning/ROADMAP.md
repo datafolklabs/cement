@@ -62,7 +62,7 @@ Plans:
 **Plans**: 8 plans across 8 waves (linearized — CHANGELOG.md + workflow yaml file conflicts prevent wave-level parallelism; matches Phase 1 precedent)
 
   **Wave 1**
-  - [ ] 02-01-PLAN.md — `pdm update` lockfile refresh + atomic drift-fix follow-ups (D-01, D-04)
+  - [x] 02-01-PLAN.md — `pdm update` lockfile refresh + atomic drift-fix follow-ups (D-01, D-04)
 
   **Wave 2** *(blocked on Wave 1 completion)*
   - [ ] 02-02-PLAN.md — pip-audit spot-check + 02-PIP-AUDIT.md artifact (D-03)
