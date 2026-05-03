@@ -48,6 +48,8 @@ Misc:
 - `[dev]` Bump pytest 9.0.3, pytest-cov 7.1.0, coverage 7.13.5
 - `[dev]` Add `make cli-smoke-test` target — runs generated-project install
   smoke test across Python 3.10–3.14 in Docker
+- `[dev]` Bump dev/extras lockfile to current non-breaking versions (redis
+  7.4, watchdog 6.0, tabulate 0.10, sphinx 8.1, requests 2.33, others)
 
 Deprecations:
 
