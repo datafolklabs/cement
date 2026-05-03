@@ -61,11 +61,27 @@ build-backend = "pdm.backend"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-v --cov-report=term --cov-report=html:coverage-report --capture=sys tests/"
+addopts = "-v --cov-report=term --cov-report=html:coverage-report --cov-fail-under=100 --capture=sys tests/"
 python_files= "test_*.py"
 
+[tool.coverage.run]
+# AUDIT POINT (Phase 2 D-12): explicit measurement boundary mirrors
+# ruff `exclude` discipline. Re-review if files are added under
+# cement/cli/templates/ or cement/cli/contrib/ that should be
+# measured.
+source = ["cement"]
+omit = [
+    "cement/cli/templates/*",
+    "cement/cli/contrib/*",
+]
+
 [tool.coverage.report]
+# AUDIT POINT (Phase 2 D-10/D-11): fail_under = 100 is the absolute
+# coverage gate. Belt-and-braces: pytest addopts also passes
+# --cov-fail-under=100 in case future pytest-cov bumps change
+# pyproject discovery semantics.
 precision = 2
+fail_under = 100
 
 
 [tool.ruff]
