@@ -72,7 +72,7 @@ Plans:
   - [x] 02-04-PLAN.md — Pin every GitHub Action to exact tags across both workflows (D-05; D-06 deviation: use @v1.12 per RESEARCH.md Correction 1)
 
   **Wave 4** *(blocked on Wave 3 completion)*
-  - [ ] 02-05-PLAN.md — Add pypy-3.11 to test matrix + drop FIXME OS-matrix comment (D-14, D-15)
+  - [x] 02-05-PLAN.md — Add pypy-3.11 to test matrix + drop FIXME OS-matrix comment (D-14, D-15)
 
   **Wave 5** *(blocked on Wave 4 completion)*
   - [ ] 02-06-PLAN.md — Enable Dependabot for github-actions ecosystem + verify repo-level security-updates toggle (D-07; RESEARCH.md Correction 2)
