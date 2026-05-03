@@ -105,7 +105,7 @@ class WatchdogManager(MetaMixin):
         if event_handler is None:
             event_handler = self._meta.default_event_handler
         LOG.debug(f'adding path {path} with event handler {event_handler}')
-        self.observer.schedule(event_handler(self.app), path, recursive=recursive)  # type: ignore
+        self.observer.schedule(event_handler(self.app), path, recursive=recursive)
         return True
 
     def start(self, *args: Any, **kw: Any) -> None:
@@ -117,7 +117,7 @@ class WatchdogManager(MetaMixin):
         for _res in self.app.hook.run('watchdog_pre_start', self.app):
             pass
         LOG.debug('starting watchdog observer')
-        self.observer.start(*args, **kw)  # type: ignore
+        self.observer.start(*args, **kw)
         for _res in self.app.hook.run('watchdog_post_start', self.app):
             pass
 
@@ -130,7 +130,7 @@ class WatchdogManager(MetaMixin):
         for _res in self.app.hook.run('watchdog_pre_stop', self.app):
             pass
         LOG.debug('stopping watchdog observer')
-        self.observer.stop(*args, **kw)  # type: ignore
+        self.observer.stop(*args, **kw)
         for _res in self.app.hook.run('watchdog_post_stop', self.app):
             pass
 
