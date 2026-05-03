@@ -102,7 +102,7 @@ Plans:
 **Plans**: 8 plans across 8 waves (sequential due to file-ownership invariants — UP-family auto-fixes must precede FA strip per D-08; pathlib migration is atomic per-file per D-13; pragma audit lands AFTER refactor commits per D-18)
 
   **Wave 1**
-  - [ ] 03-01-PLAN.md — Capture public API baseline (D-04 audit gate; permanent dev affordance per D-05)
+  - [x] 03-01-PLAN.md — Capture public API baseline (D-04 audit gate; permanent dev affordance per D-05) — committed f10f8ce3
 
   **Wave 2** *(blocked on Wave 1)*
   - [ ] 03-02-PLAN.md — Re-enable ruff UP+FA family in extend-select with refreshed AUDIT POINT comment (D-06)

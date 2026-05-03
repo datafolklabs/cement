@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_execute
-stopped_at: Phase 3 planned (8 plans across 8 waves)
-last_updated: "2026-05-03T20:33:49.000Z"
+status: in_progress
+stopped_at: Phase 3 Plan 01 complete (Wave 1 — D-04 audit gate ENFORCING; 7 plans / 7 waves remaining)
+last_updated: "2026-05-03T21:38:20.000Z"
 last_activity: 2026-05-03
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 21
-  completed_plans: 13
-  percent: 62
+  completed_plans: 14
+  percent: 67
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 3
-Plan: Planned (8 plans across 8 waves; ready to execute)
-Status: Phase 3 planning complete. 8 plans cover REFACTOR-01..04 + COV-01..03; verification PASSED with 0 blockers. Next: `/gsd-execute-phase 03`.
+Plan: 01/08 complete (Wave 1 closed; Wave 2 unblocked)
+Status: Phase 3 Plan 01 (`docs(03): capture public API baseline`, f10f8ce3) committed. D-04 audit gate ENFORCING byte-for-byte; 100% coverage gate green; ruff + mypy clean. Wave 2 (`03-02-PLAN.md` — re-enable ruff UP+FA family) is now ready.
 Last activity: 2026-05-03
 
-Progress: [██████░░░░] 62% (13/21 plans completed)
+Progress: [███████░░░] 67% (14/21 plans completed)
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [██████░░░░] 62% (13/21 plans completed)
 | Phase 01-tooling-baseline-python-matrix P03 | 3 min | 2 tasks tasks | 2 files files |
 | Phase 01-tooling-baseline-python-matrix P04 | 11 | 1 tasks | 1 files |
 | Phase 01.1 P01 | 12 min | 7 tasks | 6 files |
+| Phase 03-internal-refactor-coverage-hardening P01 | 4 min | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -89,6 +90,10 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 01-tooling-baseline-python-matrix Plan 04]: Phase 1 implementation COMPLETE — all 5 ROADMAP cumulative success criteria GREEN (PYVER-01/02, TOOL-01/02/03/04). 13 atomic phase-1 commits across 4 plans. CI matrix (3.10/3.11/3.12/3.13/3.14/pypy3.10) is the final verification gate on PR open.
 - [Phase ?]: [Phase 01.1 Plan 01]: pdm-backend migration green on full Python 3.10-3.14 matrix; build-time cement dependency removed; setup.py-era files (5) deleted; PEP 735 dev deps via [dependency-groups].
 - [Phase ?]: [Phase 01.1 Plan 01]: Rule 1 deviation auto-fixed: tests/cli/test_main.py::test_generate updated to assert pyproject.toml exists (was setup.py). Regression caught in Task 7 acceptance check after Task 4 deletion; mechanical one-line fix preserves end-to-end behavior validation.
+- [Phase 03 Plan 01]: AST walker extended beyond RESEARCH.md canonical pattern to include `ast.ImportFrom` and `ast.Import` re-exports — required to surface `cement/__init__.py`'s 14 `__all__` entries (Open Question 4 / Assumption A6). Without this extension the walker would have emitted ZERO public symbols for the `cement:` namespace, defeating the audit gate.
+- [Phase 03 Plan 01]: AST walker filters `from __future__ import` and collapses `<pkg>/__init__.py` module names to drop the `__init__` suffix — both deviations were necessary to produce a faithful "what users `from cement import` against" surface.
+- [Phase 03 Plan 01]: D-04 audit gate is now ENFORCING (1014-line baseline, byte-for-byte). Every subsequent Phase 03 commit MUST keep `make audit-public-api` exit 0. Permanent dev affordance per D-05; mirrors `scripts/cli-smoke-test.sh` precedent from quick task `260430-i7q`.
+- [Phase 03 Plan 01]: Sort discipline is Python's `sorted()` (ASCII byte order = `LC_ALL=C sort`). Shell `sort -c` under default locale flags `Optional` < `main` as disorder; irrelevant for the gate which uses `diff -u` byte-for-byte against the captured baseline.
 
 ### Roadmap Evolution
 
@@ -117,6 +122,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-03T18:11:43.641Z
-Stopped at: Phase 3 context gathered
-Resume file: .planning/phases/03-internal-refactor-coverage-hardening/03-CONTEXT.md
+Last session: 2026-05-03T21:38:20.000Z
+Stopped at: Phase 3 Plan 01 complete (Wave 1)
+Resume file: .planning/phases/03-internal-refactor-coverage-hardening/03-02-PLAN.md
