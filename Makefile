@@ -4,7 +4,7 @@ ifneq ($(CURDIR),$(patsubst %/,%,$(ROOT_DIR)))
 $(error Must run make from the project root: $(ROOT_DIR))
 endif
 
-.PHONY: init dev up down test test-core cli-smoke-test comply-fix commit docs clean superclean dist dist-upload docker docker-push
+.PHONY: init dev up down test test-core cli-smoke-test audit-public-api comply-fix commit docs clean superclean dist dist-upload docker docker-push
 
 init:
 	devbox install
@@ -33,6 +33,10 @@ test-core: comply
 
 cli-smoke-test:
 	bash scripts/cli-smoke-test.sh
+
+audit-public-api:
+	@pdm run python scripts/audit-public-api.py > /tmp/cement-public-api.txt
+	@diff -u .planning/phases/03-internal-refactor-coverage-hardening/03-PUBLIC-API-BASELINE.txt /tmp/cement-public-api.txt
 
 virtualenv:
 	pdm venv create
