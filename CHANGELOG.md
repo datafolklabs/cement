@@ -57,6 +57,9 @@ Misc:
 - `[dev]` Wire 100% coverage gate via `[tool.coverage.report]`
   `fail_under` + `--cov-fail-under` addopts; explicit
   `[tool.coverage.run] source/omit`
+- `[ci]` Pin GitHub Actions to exact tags (checkout v6.0.2,
+  setup-python v6.2.0, setup-pdm v4.4, install-package v1.1.0,
+  compose-action v2.6.0, update-deps-action v1.12)
 
 Deprecations:
 
