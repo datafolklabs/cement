@@ -69,7 +69,7 @@ Plans:
   - [x] 02-03-PLAN.md — Wire 100% coverage gate via fail_under + addopts + explicit [tool.coverage.run] (D-10/D-11/D-12/D-13)
 
   **Wave 3** *(blocked on Wave 2 completion)*
-  - [ ] 02-04-PLAN.md — Pin every GitHub Action to exact tags across both workflows (D-05; D-06 deviation: use @v1.12 per RESEARCH.md Correction 1)
+  - [x] 02-04-PLAN.md — Pin every GitHub Action to exact tags across both workflows (D-05; D-06 deviation: use @v1.12 per RESEARCH.md Correction 1)
 
   **Wave 4** *(blocked on Wave 3 completion)*
   - [ ] 02-05-PLAN.md — Add pypy-3.11 to test matrix + drop FIXME OS-matrix comment (D-14, D-15)
