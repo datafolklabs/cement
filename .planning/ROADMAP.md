@@ -59,7 +59,35 @@ Plans:
   3. The scheduled `pdm update` workflow runs to completion against the new baseline without surfacing a wall of lint errors
   4. `pdm.lock` reflects current non-breaking versions of all extras (yaml, jinja2, mustache, colorlog, redis, memcached, watchdog, etc.) and `pip-audit`-style spot-check shows no unpatched runtime CVEs (or each is documented with rationale)
   5. All GitHub Action versions (checkout, setup-python, etc.) are pinned to current stable tags
-**Plans**: TBD
+**Plans**: 8 plans across 8 waves (linearized — CHANGELOG.md + workflow yaml file conflicts prevent wave-level parallelism; matches Phase 1 precedent)
+
+  **Wave 1**
+  - [ ] 02-01-PLAN.md — `pdm update` lockfile refresh + atomic drift-fix follow-ups (D-01, D-04)
+
+  **Wave 2** *(blocked on Wave 1 completion)*
+  - [ ] 02-02-PLAN.md — pip-audit spot-check + 02-PIP-AUDIT.md artifact (D-03)
+  - [ ] 02-03-PLAN.md — Wire 100% coverage gate via fail_under + addopts + explicit [tool.coverage.run] (D-10/D-11/D-12/D-13)
+
+  **Wave 3** *(blocked on Wave 2 completion)*
+  - [ ] 02-04-PLAN.md — Pin every GitHub Action to exact tags across both workflows (D-05; D-06 deviation: use @v1.12 per RESEARCH.md Correction 1)
+
+  **Wave 4** *(blocked on Wave 3 completion)*
+  - [ ] 02-05-PLAN.md — Add pypy-3.11 to test matrix + drop FIXME OS-matrix comment (D-14, D-15)
+
+  **Wave 5** *(blocked on Wave 4 completion)*
+  - [ ] 02-06-PLAN.md — Enable Dependabot for github-actions ecosystem + verify repo-level security-updates toggle (D-07; RESEARCH.md Correction 2)
+
+  **Wave 6** *(blocked on Wave 5 completion)*
+  - [ ] 02-07-PLAN.md — Add workflow_dispatch trigger to pdm.yml (D-08)
+
+  **Wave 8** *(blocked on Waves 1–6 completion — final acceptance gate; wave 7 intentionally skipped)*
+  - [ ] 02-08-PLAN.md — Phase 2 acceptance verification: PR-CI green + workflow_dispatch run clean + 02-VERIFICATION.md (D-19)
+
+  **Cross-cutting constraints** *(applies to every plan)*
+  - 100% coverage gate must remain green after each plan's changes (sampling: `pdm run pytest --cov=cement -x tests` per task; `make test` per wave)
+  - All commits follow Conventional Commits + 78-char wrap (CLAUDE.md §"Commit Conventions")
+  - CHANGELOG.md `## 3.0.16 - DEVELOPMENT` updated phase-by-phase per CLAUDE.md §"Changelog Maintenance"
+  - No public-API breakage on the 3.0.x track (PROJECT.md Constraints)
 
 ### Phase 3: Internal Refactor & Coverage Hardening
 **Goal**: Run a cleanup-only internal refactor (dead code, type-hint tightening, `pathlib`, modern stdlib idioms) without changing any public signature, and audit coverage exclusions so the 100% gate is meaningful, not papered over.
