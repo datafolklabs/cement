@@ -81,7 +81,7 @@ Plans:
   - [x] 02-07-PLAN.md — Add workflow_dispatch trigger to pdm.yml (D-08)
 
   **Wave 8** *(blocked on Waves 1–6 completion — final acceptance gate; wave 7 intentionally skipped)*
-  - [ ] 02-08-PLAN.md — Phase 2 acceptance verification: PR-CI green + workflow_dispatch run clean + 02-VERIFICATION.md (D-19)
+  - [x] 02-08-PLAN.md — Phase 2 acceptance verification: PR-CI green + workflow_dispatch run clean + 02-VERIFICATION.md (D-19) [D-19 #1 and #3 deferred to post-PR / post-merge — recorded PENDING in VERIFICATION.md]
 
   **Cross-cutting constraints** *(applies to every plan)*
   - 100% coverage gate must remain green after each plan's changes (sampling: `pdm run pytest --cov=cement -x tests` per task; `make test` per wave)
