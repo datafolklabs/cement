@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Phase 3 Plan 01 complete (Wave 1 — D-04 audit gate ENFORCING; 7 plans / 7 waves remaining)
-last_updated: "2026-05-03T21:38:20.000Z"
+status: "Phase 3 Plan 02 (`chore(ruff): re-enable UP family with AUDIT POINT comment`, b8427466) committed. UP+FA families enabled in [tool.ruff.lint] extend-select with refreshed AUDIT POINT comment (Phase 03 D-06). 491 UP+FA findings surfaced (378 auto-fixable) — make comply-ruff intentionally RED until Wave 3 lands. 100% coverage gate green; audit-public-api gate green. Wave 3 (per-rule UP fix sweep) is now ready."
+stopped_at: Phase 3 Plan 02 complete (Wave 2)
+last_updated: "2026-05-03T23:19:23.184Z"
 last_activity: 2026-05-03
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 21
-  completed_plans: 14
-  percent: 67
+  completed_plans: 15
+  percent: 71
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 3
-Plan: 01/08 complete (Wave 1 closed; Wave 2 unblocked)
-Status: Phase 3 Plan 01 (`docs(03): capture public API baseline`, f10f8ce3) committed. D-04 audit gate ENFORCING byte-for-byte; 100% coverage gate green; ruff + mypy clean. Wave 2 (`03-02-PLAN.md` — re-enable ruff UP+FA family) is now ready.
+Plan: 02/08 complete (Wave 2 closed; Wave 3 unblocked)
+Status: Phase 3 Plan 02 (`chore(ruff): re-enable UP family with AUDIT POINT comment`, b8427466) committed. UP+FA families enabled in [tool.ruff.lint] extend-select with refreshed AUDIT POINT comment (Phase 03 D-06). 491 UP+FA findings surfaced (378 auto-fixable) — `make comply-ruff` intentionally RED until Wave 3 lands. 100% coverage gate green; audit-public-api gate green. Wave 3 (per-rule UP fix sweep — UP006/UP007/UP045/UP032 family siblings) is now ready.
 Last activity: 2026-05-03
 
-Progress: [███████░░░] 67% (14/21 plans completed)
+Progress: [███████░░░] 71% (15/21 plans completed)
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [███████░░░] 67% (14/21 plans completed)
 | Phase 01-tooling-baseline-python-matrix P04 | 11 | 1 tasks | 1 files |
 | Phase 01.1 P01 | 12 min | 7 tasks | 6 files |
 | Phase 03-internal-refactor-coverage-hardening P01 | 4 min | 3 tasks | 4 files |
+| Phase 03-internal-refactor-coverage-hardening P02 | 5 min | 1 tasks tasks | 2 files files |
 
 ## Accumulated Context
 
@@ -94,6 +95,8 @@ Recent decisions affecting current work:
 - [Phase 03 Plan 01]: AST walker filters `from __future__ import` and collapses `<pkg>/__init__.py` module names to drop the `__init__` suffix — both deviations were necessary to produce a faithful "what users `from cement import` against" surface.
 - [Phase 03 Plan 01]: D-04 audit gate is now ENFORCING (1014-line baseline, byte-for-byte). Every subsequent Phase 03 commit MUST keep `make audit-public-api` exit 0. Permanent dev affordance per D-05; mirrors `scripts/cli-smoke-test.sh` precedent from quick task `260430-i7q`.
 - [Phase 03 Plan 01]: Sort discipline is Python's `sorted()` (ASCII byte order = `LC_ALL=C sort`). Shell `sort -c` under default locale flags `Optional` < `main` as disorder; irrelevant for the gate which uses `diff -u` byte-for-byte against the captured baseline.
+- [Phase ?]: [Phase 03 Plan 02]: D-15 coupling pattern reused for config-knob — UP+FA family addition + AUDIT POINT comment refresh land atomically in chore(ruff): re-enable UP family (b8427466). 491 UP+FA findings surfaced (378 auto-fixable) — Wave 3 expected fix volume captured in 03-02-SUMMARY.md per-rule breakdown.
+- [Phase ?]: [Phase 03 Plan 02]: FA family currently surfaces ZERO findings — confirms D-08 ordering rationale (FA100 strip is gated on UP006/UP007/UP045 landing first; once typing imports prune to modern surface, FA100 surfaces naturally for Wave 4).
 
 ### Roadmap Evolution
 
@@ -122,6 +125,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-03T21:38:20.000Z
-Stopped at: Phase 3 Plan 01 complete (Wave 1)
-Resume file: .planning/phases/03-internal-refactor-coverage-hardening/03-02-PLAN.md
+Last session: 2026-05-03T23:19:12.060Z
+Stopped at: Phase 3 Plan 02 complete (Wave 2 — UP+FA enabled in ruff config; comply-ruff intentionally RED with 491 findings; 6 plans / 6 waves remaining)
+Resume file: .planning/phases/03-internal-refactor-coverage-hardening/03-03-PLAN.md
