@@ -61,6 +61,7 @@ Misc:
   setup-python v6.2.0, setup-pdm v4.4, install-package v1.1.0,
   compose-action v2.6.0, update-deps-action v1.12)
 - `[ci]` Add PyPy 3.11 to CI test matrix (alongside existing PyPy 3.10)
+- `[ci]` Enable Dependabot for github-actions ecosystem (weekly)
 
 Deprecations:
 
