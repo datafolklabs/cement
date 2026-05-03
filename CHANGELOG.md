@@ -15,6 +15,8 @@ Bugs:
 - `[core.handler]` Resolve mypy union-attr false-positive in handler resolution
 - `[ext.redis]` Resolve mypy union-attr/arg-type/misc errors surfaced by
   redis 7 typing changes (sync client return-type unions)
+- `[ext.watchdog]` Drop now-unused `# type: ignore` comments on Observer
+  schedule/start/stop calls — watchdog 6 ships precise type stubs
 
 Features:
 
