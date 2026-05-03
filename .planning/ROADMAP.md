@@ -65,8 +65,8 @@ Plans:
   - [x] 02-01-PLAN.md — `pdm update` lockfile refresh + atomic drift-fix follow-ups (D-01, D-04)
 
   **Wave 2** *(blocked on Wave 1 completion)*
-  - [ ] 02-02-PLAN.md — pip-audit spot-check + 02-PIP-AUDIT.md artifact (D-03)
-  - [ ] 02-03-PLAN.md — Wire 100% coverage gate via fail_under + addopts + explicit [tool.coverage.run] (D-10/D-11/D-12/D-13)
+  - [x] 02-02-PLAN.md — pip-audit spot-check + 02-PIP-AUDIT.md artifact (D-03)
+  - [x] 02-03-PLAN.md — Wire 100% coverage gate via fail_under + addopts + explicit [tool.coverage.run] (D-10/D-11/D-12/D-13)
 
   **Wave 3** *(blocked on Wave 2 completion)*
   - [ ] 02-04-PLAN.md — Pin every GitHub Action to exact tags across both workflows (D-05; D-06 deviation: use @v1.12 per RESEARCH.md Correction 1)
