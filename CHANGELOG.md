@@ -62,6 +62,7 @@ Misc:
   compose-action v2.6.0, update-deps-action v1.12)
 - `[ci]` Add PyPy 3.11 to CI test matrix (alongside existing PyPy 3.10)
 - `[ci]` Enable Dependabot for github-actions ecosystem (weekly)
+- `[ci]` Add workflow_dispatch trigger to pdm.yml
 
 Deprecations:
 
