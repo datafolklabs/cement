@@ -54,6 +54,9 @@ Misc:
   smoke test across Python 3.10–3.14 in Docker
 - `[dev]` Bump dev/extras lockfile to current non-breaking versions (redis
   7.4, watchdog 6.0, tabulate 0.10, sphinx 8.1, requests 2.33, others)
+- `[dev]` Wire 100% coverage gate via `[tool.coverage.report]`
+  `fail_under` + `--cov-fail-under` addopts; explicit
+  `[tool.coverage.run] source/omit`
 
 Deprecations:
 
