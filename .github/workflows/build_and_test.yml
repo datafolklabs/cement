@@ -17,17 +17,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: ConorMacBride/install-package@v1
+      - uses: actions/checkout@v6.0.2
+      - uses: ConorMacBride/install-package@v1.1.0
         with:
           apt: libmemcached-dev
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: "3.x"
           architecture: "x64"
       - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4
+        uses: pdm-project/setup-pdm@v4.4
       - name: Install dependencies
         run: pdm install
       - name: Make Comply
@@ -38,20 +38,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: ConorMacBride/install-package@v1
+      - uses: actions/checkout@v6.0.2
+      - uses: ConorMacBride/install-package@v1.1.0
         with:
           apt: libmemcached-dev
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6.2.0
         with:
           python-version: "3.x"
           architecture: "x64"
-      - uses: hoverkraft-tech/compose-action@v2.0.1
+      - uses: hoverkraft-tech/compose-action@v2.6.0
         with:
           compose-file: "./docker/compose-services-only.yml"
       - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4
+        uses: pdm-project/setup-pdm@v4.4
       - name: Install dependencies
         run: pdm install
       - name: Make Test
@@ -68,15 +68,15 @@ jobs:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.10"]
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: ConorMacBride/install-package@v1
+      - uses: actions/checkout@v6.0.2
+      - uses: ConorMacBride/install-package@v1.1.0
         with:
           apt: libmemcached-dev
-      - uses: hoverkraft-tech/compose-action@v2.0.1
+      - uses: hoverkraft-tech/compose-action@v2.6.0
         with:
           compose-file: "./docker/compose-services-only.yml"
       - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4
+        uses: pdm-project/setup-pdm@v4.4
       - name: Install dependencies
         run: pdm install
       - name: Make Test
@@ -87,8 +87,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: hoverkraft-tech/compose-action@v2.0.1
+      - uses: actions/checkout@v6.0.2
+      - uses: hoverkraft-tech/compose-action@v2.6.0
         with:
           compose-file: "./docker-compose.yml"
       - name: CLI Smoke Tests
