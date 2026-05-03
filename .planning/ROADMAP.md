@@ -78,7 +78,7 @@ Plans:
   - [x] 02-06-PLAN.md — Enable Dependabot for github-actions ecosystem + verify repo-level security-updates toggle (D-07; RESEARCH.md Correction 2)
 
   **Wave 6** *(blocked on Wave 5 completion)*
-  - [ ] 02-07-PLAN.md — Add workflow_dispatch trigger to pdm.yml (D-08)
+  - [x] 02-07-PLAN.md — Add workflow_dispatch trigger to pdm.yml (D-08)
 
   **Wave 8** *(blocked on Waves 1–6 completion — final acceptance gate; wave 7 intentionally skipped)*
   - [ ] 02-08-PLAN.md — Phase 2 acceptance verification: PR-CI green + workflow_dispatch run clean + 02-VERIFICATION.md (D-19)
