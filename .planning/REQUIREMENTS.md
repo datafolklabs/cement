@@ -37,7 +37,7 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 
 ### Test Coverage
 
-- [ ] **COV-01**: `make test` produces 100% coverage report; any drift from prior 100% baseline is closed before milestone completion
+- [x] **COV-01**: `make test` produces 100% coverage report; any drift from prior 100% baseline is closed before milestone completion — Validated in Phase 03 Plan 01 (audit gate installed; coverage at 100% with 316 passing tests)
 - [ ] **COV-02**: Coverage HTML report (`coverage-report/`) generates without warnings
 - [ ] **COV-03**: `pragma: no cover` exclusions audited — each remaining one has a code comment justifying it
 
