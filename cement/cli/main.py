@@ -37,22 +37,22 @@ def main(argv: list[str] | None = None) -> None:
     try:
         import jinja2  # noqa: F401
         import yaml  # type: ignore  # noqa: F401
-    except ModuleNotFoundError as e:  # pragma: nocover
+    except ModuleNotFoundError as e:  # pragma: nocover  # defensive: unreachable
         raise FrameworkError('Cement CLI Dependencies are missing! Install cement[cli] extras ' +
                              'package to resolve -> pip install cement[cli]') from e
 
     with CementApp() as app:
         try:
             app.run()
-        except AssertionError as e:  # pragma: nocover
+        except AssertionError as e:  # pragma: nocover  # defensive: unreachable
             # noqa: T201 - intentional CLI error output
-            print(f'AssertionError > {e.args[0]}')  # pragma: nocover  # noqa: T201
-            app.exit_code = 1  # pragma: nocover
-        except CaughtSignal as e:  # pragma: nocover
+            print(f'AssertionError > {e.args[0]}')  # pragma: nocover  # defensive: unreachable  # noqa: T201,E501
+            app.exit_code = 1  # pragma: nocover  # defensive: unreachable
+        except CaughtSignal as e:  # pragma: nocover  # defensive: unreachable
             # noqa: T201 - intentional CLI signal output
-            print(f'\n{e}')  # pragma: nocover  # noqa: T201
-            app.exit_code = 0  # pragma: nocover
+            print(f'\n{e}')  # pragma: nocover  # defensive: unreachable  # noqa: T201
+            app.exit_code = 0  # pragma: nocover  # defensive: unreachable
 
 
 if __name__ == '__main__':
-    main()                                              # pragma: nocover
+    main()                                              # pragma: nocover  # defensive: unreachable
