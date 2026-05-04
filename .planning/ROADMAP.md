@@ -16,7 +16,7 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
 
 - [x] **Phase 1: Tooling Baseline & Python Matrix** - Bump ruff/mypy/pytest, drop 3.9, fix the lint/type fallout (completed 2026-04-30)
 - [x] **Phase 2: Dependencies & CI Pipeline** - Refresh deps, unblock the `pdm update` Action, get the matrix green (completed 2026-05-02; D-19 #1 PR-CI-green and #3 post-merge workflow_dispatch deferred to live-CI verification — see 02-VERIFICATION.md)
-- [ ] **Phase 3: Internal Refactor & Coverage Hardening** - Cleanup-only refactor under the 100% coverage gate
+- [x] **Phase 3: Internal Refactor & Coverage Hardening** - Cleanup-only refactor under the 100% coverage gate (completed 2026-05-04; all 9 D-24 conjuncts GREEN — see 03-VERIFICATION.md)
 - [ ] **Phase 4: Backlog Triage** - Bulk-close stale issues with user approval, label and prioritize survivors
 - [ ] **Phase 5: Deprecations, Docs & Security Stubs** - Add warn-only deprecations, refresh docs, capture audit-tooling backlog
 - [ ] **Phase 6: Release Cut 3.0.16** - Changelog, TestPyPI smoke test, tag, GitHub release, PyPI publish, bump to 3.0.17
@@ -123,7 +123,7 @@ Plans:
   - [x] 03-07-PLAN.md — pragma:nocover audit with D-15 locked vocabulary completed across 141 sites / 39 files. 39 per-file atomic source commits + 3 batch-summary docs(03) commits. Per-category breakdown: defensive: unreachable=51, abstract method=45, TYPE_CHECKING import=26, platform-specific=13, untestable: dynamic import=4, version constant=1, untestable: signal handler=1, total=141. D-24 conjunct #7 GREEN: locked-vocabulary inverse grep returns empty. NO D-16 vocabulary expansion triggered. 4 deviations auto-fixed inline (3 Rule 1, 1 Rule 2)
 
   **Wave 8** *(blocked on Wave 7 — final acceptance gate)*
-  - [ ] 03-08-PLAN.md — Finalize 03-VERIFICATION.md with full D-24 9-conjunct evidence + mark Phase 3 complete in ROADMAP
+  - [x] 03-08-PLAN.md — Finalize 03-VERIFICATION.md with full D-24 9-conjunct evidence + mark Phase 3 complete in ROADMAP — 03-VERIFICATION.md status: passed (9/9 GREEN); REFACTOR-01..04 + COV-01..03 SATISFIED; defense-in-depth reset (make superclean+init+test+comply+audit) all exit 0 against fresh caches
 
   **Cross-cutting constraints** *(applies to every plan)*
   - 100% coverage gate must remain green after each commit (Phase 2 D-10/D-11/D-12)
@@ -175,7 +175,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6. Phases 3 and 4
 |-------|----------------|--------|-----------|
 | 1. Tooling Baseline & Python Matrix | 4/4 | Complete   | 2026-04-30 |
 | 2. Dependencies & CI Pipeline | 0/TBD | Not started | - |
-| 3. Internal Refactor & Coverage Hardening | 4/8 | In Progress | - |
+| 3. Internal Refactor & Coverage Hardening | 8/8 | Complete   | 2026-05-04 |
 | 4. Backlog Triage | 0/TBD | Not started | - |
 | 5. Deprecations, Docs & Security Stubs | 0/TBD | Not started | - |
 | 6. Release Cut 3.0.16 | 0/TBD | Not started | - |
