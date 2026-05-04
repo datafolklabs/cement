@@ -15,7 +15,7 @@ from .. import Controller, minimal_logger, shell
 from ..utils.version import VERSION, get_version
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 LOG = minimal_logger(__name__)
 
@@ -75,7 +75,7 @@ class GenerateTemplateAbstractBase(Controller):
                 default_text = f" [{var['default']}]"
 
             else:
-                default_text = ''   # pragma: nocover
+                default_text = ''   # pragma: nocover  # defensive: unreachable
 
             if val is None:
                 class MyPrompt(shell.Prompt):
@@ -84,7 +84,7 @@ class GenerateTemplateAbstractBase(Controller):
                         default = var.get('default', None)
 
                 p = MyPrompt()
-                val = p.prompt()    # pragma: nocover
+                val = p.prompt()    # pragma: nocover  # defensive: unreachable
 
             if var['case'] in ['lower', 'upper', 'title']:
                 val = getattr(val, var['case'])()
@@ -110,7 +110,7 @@ class GenerateTemplateAbstractBase(Controller):
             if re.match('(.*)already exists(.*)', e.args[0]):
                 raise AssertionError(e.args[0] + ' (try: --force)') from e
             else:
-                raise  # pragma: nocover
+                raise  # pragma: nocover  # defensive: unreachable
 
     def _clone(self, source: str, dest: str) -> None:
         msg = f'Cloning {self.app._meta.label} {self._meta.label} template to {dest}'
@@ -157,10 +157,10 @@ def setup_template_items(app: "App") -> None:
                 template_dirs.append(subpath)
 
         # FIXME: not exactly sure how to test for this so not covering
-        except AttributeError:                                # pragma: nocover
+        except AttributeError:  # pragma: nocover  # untestable: dynamic import
             msg = 'unable to load template module' + \
-                  f"{mod} from {'.'.join(mod_parts)}"   # pragma: nocover
-            app.log.debug(msg)                                # pragma: nocover
+                  f"{mod} from {'.'.join(mod_parts)}"  # pragma: nocover  # untestable: dynamic import  # noqa: E501
+            app.log.debug(msg)  # pragma: nocover  # untestable: dynamic import
 
     for path in template_dirs:
         for item in os.listdir(path):
