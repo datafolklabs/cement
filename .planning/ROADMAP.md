@@ -108,7 +108,7 @@ Plans:
   - [x] 03-02-PLAN.md — Re-enable ruff UP+FA family in extend-select with refreshed AUDIT POINT comment (D-06)
 
   **Wave 3** *(blocked on Wave 2)*
-  - [ ] 03-03-PLAN.md — UP-family auto-fixes (UP006/UP007/UP045/UP032) + CONVENTIONS.md PEP 604/585 refresh (D-07, D-19, RESEARCH.md A5)
+  - [x] 03-03-PLAN.md — UP-family auto-fixes (UP006/UP007/UP045/UP031/UP032 + UP004/UP008/UP015/UP024/UP025/UP026/UP028/UP035) + CONVENTIONS.md PEP 604/585 refresh (D-07, D-19, RESEARCH.md A5) — 16 atomic commits, REFACTOR-04 closed, D-19 protected callsites verified untouched
 
   **Wave 4** *(blocked on Wave 3 — UP must precede FA per D-08)*
   - [ ] 03-04-PLAN.md — Strip `from __future__ import annotations` from cement/ via FA100 (D-08)

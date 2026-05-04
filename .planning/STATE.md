@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: "Phase 3 Plan 02 (`chore(ruff): re-enable UP family with AUDIT POINT comment`, b8427466) committed. UP+FA families enabled in [tool.ruff.lint] extend-select with refreshed AUDIT POINT comment (Phase 03 D-06). 491 UP+FA findings surfaced (378 auto-fixable) — make comply-ruff intentionally RED until Wave 3 lands. 100% coverage gate green; audit-public-api gate green. Wave 3 (per-rule UP fix sweep) is now ready."
-stopped_at: Phase 3 Plan 02 complete (Wave 2)
-last_updated: "2026-05-03T23:19:23.184Z"
+status: "Phase 3 Plan 03 (Wave 3 — UP family per-rule sweep) complete. 16 atomic Wave 3 commits (12 UP-rule + 1 CONVENTIONS refresh + 1 fallout cleanup + 1 deferred-items + 1 SUMMARY). UP family fully resolved (494 findings → 0). REFACTOR-04 closed (printf-style modernization). D-19 protected `.format(**template_dict)` callsites (14 sites in foundation.py) verified untouched via body-diff. 03-PUBLIC-API-BASELINE.txt re-baselined per UP commit when needed (UP006/UP007/UP045 only — orphaned typing re-exports were tooling artifacts, not genuine API; user-approved Rule 4 mid-execution). All D-24 conjuncts (#1-#5) green. Wave 4 unblocked."
+stopped_at: Phase 3 Plan 03 complete (Wave 3 — UP family fully clean; REFACTOR-04 closed; 5 plans / 5 waves remaining)
+last_updated: "2026-05-04T01:30:00.000Z"
 last_activity: 2026-05-03
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 21
-  completed_plans: 15
-  percent: 71
+  completed_plans: 17
+  percent: 81
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 3
-Plan: 02/08 complete (Wave 2 closed; Wave 3 unblocked)
-Status: Phase 3 Plan 02 (`chore(ruff): re-enable UP family with AUDIT POINT comment`, b8427466) committed. UP+FA families enabled in [tool.ruff.lint] extend-select with refreshed AUDIT POINT comment (Phase 03 D-06). 491 UP+FA findings surfaced (378 auto-fixable) — `make comply-ruff` intentionally RED until Wave 3 lands. 100% coverage gate green; audit-public-api gate green. Wave 3 (per-rule UP fix sweep — UP006/UP007/UP045/UP032 family siblings) is now ready.
+Plan: 03/08 complete (Wave 3 closed; Wave 4 unblocked)
+Status: Phase 3 Plan 03 (Wave 3 — UP family per-rule sweep) complete. 16 atomic Wave 3 commits (12 UP-rule + 1 CONVENTIONS refresh + 1 fallout cleanup + 1 deferred-items + 1 SUMMARY). UP family fully resolved (494 findings → 0). REFACTOR-04 closed (printf-style modernization). D-19 protected `.format(**template_dict)` callsites (14 sites in foundation.py) verified untouched via body-diff. 03-PUBLIC-API-BASELINE.txt re-baselined per UP commit when needed (UP006/UP007/UP045 only — orphaned typing re-exports were tooling artifacts, not genuine API; user-approved Rule 4 mid-execution). All D-24 conjuncts (#1-#5) green. Wave 4 unblocked.
 Last activity: 2026-05-03
 
-Progress: [███████░░░] 71% (15/21 plans completed)
+Progress: [████████░░] 81% (17/21 plans completed)
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [███████░░░] 71% (15/21 plans completed)
 | Phase 01.1 P01 | 12 min | 7 tasks | 6 files |
 | Phase 03-internal-refactor-coverage-hardening P01 | 4 min | 3 tasks | 4 files |
 | Phase 03-internal-refactor-coverage-hardening P02 | 5 min | 1 tasks tasks | 2 files files |
+| Phase 03-internal-refactor-coverage-hardening P03 | 60 min | 16 commits | 73 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,9 @@ Recent decisions affecting current work:
 - [Phase 03 Plan 01]: Sort discipline is Python's `sorted()` (ASCII byte order = `LC_ALL=C sort`). Shell `sort -c` under default locale flags `Optional` < `main` as disorder; irrelevant for the gate which uses `diff -u` byte-for-byte against the captured baseline.
 - [Phase ?]: [Phase 03 Plan 02]: D-15 coupling pattern reused for config-knob — UP+FA family addition + AUDIT POINT comment refresh land atomically in chore(ruff): re-enable UP family (b8427466). 491 UP+FA findings surfaced (378 auto-fixable) — Wave 3 expected fix volume captured in 03-02-SUMMARY.md per-rule breakdown.
 - [Phase ?]: [Phase 03 Plan 02]: FA family currently surfaces ZERO findings — confirms D-08 ordering rationale (FA100 strip is gated on UP006/UP007/UP045 landing first; once typing imports prune to modern surface, FA100 surfaces naturally for Wave 4).
+- [Phase 03 Plan 03]: User-approved mid-execution Rule 4 architectural decision: re-baseline `03-PUBLIC-API-BASELINE.txt` per UP commit when the rule prunes orphaned typing re-exports. Phase 03 IS the intentional API change window per D-04 reinterpretation. The 51+ orphaned `typing.{List,Dict,Tuple,Type,Union,Optional}` re-exports being pruned were never genuine public API — they were tooling artifacts of the pre-PEP-585 era. Applied to UP006/UP007/UP045 commits (1014 → 934 baseline lines); UP035 / UP031 / UP004 / UP008 / UP015 / UP024 / UP025 / UP026 / UP028 / UP032 left audit byte-for-byte green and required no rebase (preserves audit signal).
+- [Phase 03 Plan 03]: D-19 protected `.format(**template_dict)` callsite line numbers (CONTEXT.md cites 1359..1567) drifted by 1-7 lines during Wave 3 due to UP006/UP007/UP045/UP032 line-length changes. Verified protection via body-diff (line numbers stripped) rather than literal line-number diff. All 14 sites byte-for-byte preserved at lines 1352, 1357, 1365, 1370, 1378, 1383, 1471, 1476, 1481, 1485, 1546, 1551, 1556, 1560 (post Wave 3). Recorded in deferred-items.md.
+- [Phase 03 Plan 03]: REFACTOR-04 mechanically closed. UP031 (printf → modern format) + UP032 cascade (.format → f-string) together resolved all 114 printf/format-style sites. UP family fully clean end-to-end. FA family still ZERO findings — Wave 4 may have minimal work.
 
 ### Roadmap Evolution
 
@@ -125,6 +129,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-03T23:19:12.060Z
-Stopped at: Phase 3 Plan 02 complete (Wave 2 — UP+FA enabled in ruff config; comply-ruff intentionally RED with 491 findings; 6 plans / 6 waves remaining)
-Resume file: .planning/phases/03-internal-refactor-coverage-hardening/03-03-PLAN.md
+Last session: 2026-05-04T01:30:00.000Z
+Stopped at: Phase 3 Plan 03 complete (Wave 3 — UP family fully clean; REFACTOR-04 closed; 5 plans / 5 waves remaining)
+Resume file: .planning/phases/03-internal-refactor-coverage-hardening/03-04-PLAN.md (or next plan in sequence)
