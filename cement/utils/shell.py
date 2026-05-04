@@ -388,8 +388,11 @@ class Prompt(MetaMixin):
         default: str | None = None
 
         #: Options to provide to the user.  If set, the input must match one
-        #: of the items in the options selection.
-        options: dict | None = None
+        #: of the items in the options selection.  Must be a list of strings
+        #: — the runtime iterates, joins via ``options_separator``, indexes
+        #: by integer when ``numbered=True``, and runs ``in``-membership
+        #: checks.
+        options: list[str] | None = None
 
         #: Separator to use within the option selection (non-numbered)
         options_separator: str = ','

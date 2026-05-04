@@ -50,6 +50,18 @@ Bugs:
   `_attach_files` so the `MIMEImage`/`MIMEBase` branches type-check
   cleanly. Public-API surface byte-identical (`_BodyType` is private
   so `make audit-public-api` stays at exit 0)
+- `[utils.shell]` Correct `Prompt.Meta.options` annotation from
+  `dict | None` to `list[str] | None` — the runtime treats
+  `options` as a list of strings (iteration in
+  `Prompt._prompt`, `str.join` in the non-numbered branch,
+  integer indexing via `options[int(...) - 1]` in the numbered
+  branch, `in`-membership checks in the case-insensitive and
+  case-sensitive branches), all of which the prior `dict`
+  annotation actively misled. mypy didn't flag this previously
+  because `dict` without parameters resolves to
+  `dict[Any, Any]`, and `Any` silenced the type errors at every
+  callsite. All existing tests pass `options=['y', 'n']`-style
+  list literals, so the new concrete type matches actual usage
 - `[ext.yaml]` Replace implicit-Optional `template: str = None` on
   `YamlOutputHandler.render()` with the explicit
   `template: str | None = None` (PEP 484 / ruff RUF013), mirroring
