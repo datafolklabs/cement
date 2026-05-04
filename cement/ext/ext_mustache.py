@@ -13,7 +13,7 @@ extensions.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from pystache.renderer import Renderer  # type: ignore
 
@@ -68,7 +68,7 @@ class MustacheOutputHandler(OutputHandler):
         self.templater = self.app.handler.resolve('template', 'mustache',  # type: ignore
                                                   setup=True)
 
-    def render(self, data: Dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
+    def render(self, data: dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
         """
         Take a data dictionary and render it using the given template file.
         Additional keyword arguments passed to ``stache.render()``.
@@ -119,7 +119,7 @@ class MustacheTemplateHandler(TemplateHandler):
         super(MustacheTemplateHandler, self).__init__(*args, **kw)
         self._partials_loader = PartialsLoader(self)
 
-    def render(self, content: Union[str, bytes], data: Dict[str, Any]) -> str:
+    def render(self, content: Union[str, bytes], data: dict[str, Any]) -> str:
         """
         Render the given ``content`` as template with the ``data`` dictionary.
 

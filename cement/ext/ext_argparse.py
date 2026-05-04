@@ -7,7 +7,7 @@ from __future__ import annotations
 import re
 from argparse import SUPPRESS, ArgumentParser, RawDescriptionHelpFormatter
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Optional
 
 from ..core.arg import ArgumentHandler
 from ..core.controller import ControllerHandler
@@ -72,7 +72,7 @@ class ArgparseArgumentHandler(ArgumentParser, ArgumentHandler):
         self.unknown_args = None
         self.parsed_args = None
 
-    def parse(self, *args: List[str]) -> object:
+    def parse(self, *args: list[str]) -> object:
         """
         Parse a list of arguments, and return them as an object.  Meaning an
         argument name of 'foo' will be stored as parsed_args.foo.
@@ -109,8 +109,8 @@ class CommandMeta:
     func_name: str
     exposed: bool
     hide: bool
-    arguments: List[ArgparseArgumentType]
-    parser_options: Dict[str, Any]
+    arguments: list[ArgparseArgumentType]
+    parser_options: dict[str, Any]
     controller: ArgparseController
 
 
@@ -157,7 +157,7 @@ class expose(object):  # noqa: N801 - public decorator (used as @expose); renami
 
     def __init__(self,
                  hide: bool = False,
-                 arguments: Optional[List[ArgparseArgumentType]] = None,
+                 arguments: Optional[list[ArgparseArgumentType]] = None,
                  label: Optional[str] = None,
                  **parser_options: Any) -> None:
         self.hide = hide
@@ -248,7 +248,7 @@ class ArgparseController(ControllerHandler):
 
         #: A list of aliases for the controller/sub-parser.  **Only available
         #: in Python > 3**.
-        aliases: List[str] = []
+        aliases: list[str] = []
 
         #: A config [section] to merge config_defaults into.  Cement will
         #: default to controller.<label> if None is set.
@@ -256,7 +256,7 @@ class ArgparseController(ControllerHandler):
 
         #: Configuration defaults (type: dict) that are merged into the
         #: applications config object for the config_section mentioned above.
-        config_defaults: Dict[str, Any] = {}
+        config_defaults: dict[str, Any] = {}
 
         #: Arguments to pass to the argument_handler.  The format is a list
         #: of tuples whos items are a ( list, dict ).  Meaning:
@@ -267,7 +267,7 @@ class ArgparseController(ControllerHandler):
         #: parser as in the following example:
         #:
         #: ``add_argument('-f', '--foo', help='foo option', dest='foo')``
-        arguments: List[ArgparseArgumentType] = []
+        arguments: list[ArgparseArgumentType] = []
 
         #: A label of another controller to 'stack' commands/arguments on top
         #: of.
@@ -307,14 +307,14 @@ class ArgparseController(ControllerHandler):
         #: controller namespace.  WARNING: This could break things, use at
         #: your own risk.  Useful if you need additional features from
         #: Argparse that is not built into the controller Meta-data.
-        subparser_options: Dict = {}
+        subparser_options: dict = {}
 
         #: Additional keyword arguments passed when
         #: ``ArgumentParser.add_parser()`` is called to create this
         #: controller sub-parser.  WARNING: This could break things, use at
         #: your own risk.  Useful if you need additional features from
         #: Argparse that is not built into the controller Meta-data.
-        parser_options: Dict = {}
+        parser_options: dict = {}
 
         #: Function to call if no sub-command is passed.  By default this is
         #: ``_default``, which is equivelant to passing ``-h/--help``. It
@@ -335,10 +335,10 @@ class ArgparseController(ControllerHandler):
         self._parser: ArgumentParser = None  # type: ignore
 
         if self._meta.label == 'base':
-            self._sub_parser_parents: Dict[str, Any] = dict()
-            self._sub_parsers: Dict[str, Any] = dict()
-            self._controllers: List[ArgparseController] = []
-            self._controllers_map: Dict[str, ArgparseController] = {}
+            self._sub_parser_parents: dict[str, Any] = dict()
+            self._sub_parsers: dict[str, Any] = dict()
+            self._controllers: list[ArgparseController] = []
+            self._controllers_map: dict[str, ArgparseController] = {}
 
         if self._meta.help is None:
             self._meta.help = f'{_clean_label(self._meta.label)} controller'
@@ -356,13 +356,13 @@ class ArgparseController(ControllerHandler):
 
     def _setup_controllers(self) -> None:
         # need a list to maintain order
-        resolved_controllers: List[ArgparseController] = []
+        resolved_controllers: list[ArgparseController] = []
 
         # need a dict to do key/label based lookup
-        resolved_controllers_map: Dict[str, ArgparseController] = {}
+        resolved_controllers_map: dict[str, ArgparseController] = {}
 
         # list to maintain which controllers we haven't resolved yet
-        unresolved_controllers: List[ArgparseController] = []
+        unresolved_controllers: list[ArgparseController] = []
 
         for ctrl in self.app.handler.list('controller'):
             # don't include self/base
@@ -388,8 +388,8 @@ class ArgparseController(ControllerHandler):
             LOG.debug(f'current parent > {current_parent}')
 
             # handle all controllers nested on parent
-            current_children: List[ArgparseController] = []
-            resolved_child_controllers: List[ArgparseController] = []
+            current_children: list[ArgparseController] = []
+            resolved_child_controllers: list[ArgparseController] = []
 
             for contr in list(unresolved_controllers):
                 # if stacked_on is the current parent, we want to process
@@ -450,8 +450,8 @@ class ArgparseController(ControllerHandler):
     def _process_parsed_arguments(self) -> None:
         pass
 
-    def _get_subparser_options(self, contr: ArgparseController) -> Dict[str, Any]:
-        kwargs: Dict[str, Any] = contr._meta.subparser_options.copy()
+    def _get_subparser_options(self, contr: ArgparseController) -> dict[str, Any]:
+        kwargs: dict[str, Any] = contr._meta.subparser_options.copy()
 
         if 'title' not in kwargs.keys():
             kwargs['title'] = contr._meta.title
@@ -460,8 +460,8 @@ class ArgparseController(ControllerHandler):
 
         return kwargs
 
-    def _get_parser_options(self, contr: ArgparseController) -> Dict[str, Any]:
-        kwargs: Dict[str, Any] = contr._meta.parser_options.copy()
+    def _get_parser_options(self, contr: ArgparseController) -> dict[str, Any]:
+        kwargs: dict[str, Any] = contr._meta.parser_options.copy()
 
         if 'aliases' not in kwargs.keys():
             kwargs['aliases'] = contr._meta.aliases
@@ -483,8 +483,8 @@ class ArgparseController(ControllerHandler):
 
         return kwargs
 
-    def _get_command_parser_options(self, command: CommandMeta) -> Dict[str, Any]:
-        kwargs: Dict[str, Any] = command.parser_options.copy()
+    def _get_command_parser_options(self, command: CommandMeta) -> dict[str, Any]:
+        kwargs: dict[str, Any] = command.parser_options.copy()
 
         contr = command.controller
 
@@ -674,18 +674,18 @@ class ArgparseController(ControllerHandler):
                 LOG.debug(f'adding argument (args={arg}, kwargs={kw})')
                 command_parser.add_argument(*arg, **kw)
 
-    def _collect(self) -> Tuple[List[ArgparseArgumentType], List[CommandMeta]]:
+    def _collect(self) -> tuple[list[ArgparseArgumentType], list[CommandMeta]]:
         arguments = self._collect_arguments()
         commands = self._collect_commands()
         return (arguments, commands)
 
-    def _collect_arguments(self) -> List[ArgparseArgumentType]:
+    def _collect_arguments(self) -> list[ArgparseArgumentType]:
         LOG.debug(f"collecting arguments from {self} " +
                   "(stacked_on='%s', stacked_type='%s')" %
                   (self._meta.stacked_on, self._meta.stacked_type))
         return self._meta.arguments  # type: ignore
 
-    def _collect_commands(self) -> List[CommandMeta]:
+    def _collect_commands(self) -> list[CommandMeta]:
         LOG.debug(f"collecting commands from {self} " +
                   "(stacked_on='%s', stacked_type='%s')" %
                   (self._meta.stacked_on, self._meta.stacked_type))
@@ -701,7 +701,7 @@ class ArgparseController(ControllerHandler):
 
         return commands
 
-    def _get_exposed_commands(self) -> List[str]:
+    def _get_exposed_commands(self) -> list[str]:
         """
         Get a list of exposed commands for this controller
 

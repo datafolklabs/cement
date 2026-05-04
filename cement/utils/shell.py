@@ -6,7 +6,7 @@ from getpass import getpass
 from multiprocessing import Process
 from subprocess import PIPE, Popen
 from threading import Thread
-from typing import Any, Callable, List, Optional, Tuple, Union
+from typing import Any, Callable, Optional, Union
 
 from ..core.exc import FrameworkError
 from ..core.meta import MetaMixin
@@ -15,7 +15,7 @@ from ..core.meta import MetaMixin
 def cmd(command: str,
         capture: bool = True,
         *args: Any,
-        **kwargs: Any) -> Union[Tuple[str, str, int], int]:
+        **kwargs: Any) -> Union[tuple[str, str, int], int]:
     """
     Wrapper around ``exec_cmd`` and ``exec_cmd2`` depending on whether
     capturing output is desired.  Defaults to setting the Popen ``shell``
@@ -62,9 +62,9 @@ def cmd(command: str,
         return exitcode
 
 
-def exec_cmd(cmd_args: Union[str, List[str]],
+def exec_cmd(cmd_args: Union[str, list[str]],
              *args: Any,
-             **kwargs: Any) -> Tuple[str, str, int]:
+             **kwargs: Any) -> tuple[str, str, int]:
     """
     Execute a shell call using Subprocess.  All additional ``*args`` and
     ``**kwargs`` are passed directly to ``subprocess.Popen``.  See
@@ -102,7 +102,7 @@ def exec_cmd(cmd_args: Union[str, List[str]],
     return (stdout, stderr, proc.returncode)
 
 
-def exec_cmd2(cmd_args: Union[str, List[str]],
+def exec_cmd2(cmd_args: Union[str, list[str]],
               *args: Any,
               **kwargs: Any) -> int:
     """

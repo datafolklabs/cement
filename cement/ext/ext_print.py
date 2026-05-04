@@ -4,7 +4,7 @@ Cement print extension module.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from ..core import output
 from ..utils.misc import minimal_logger
@@ -45,7 +45,7 @@ class PrintOutputHandler(output.OutputHandler):
 
     _meta: Meta  # type: ignore
 
-    def render(self, data: Dict[str, Any], *args: Any, **kw: Any) -> Union[str, None]:
+    def render(self, data: dict[str, Any], *args: Any, **kw: Any) -> Union[str, None]:
         """
         Take a data dictionary and render only the ``out`` key as text output.
         Note that the template option is received here per the interface,
@@ -89,7 +89,7 @@ class PrintDictOutputHandler(output.OutputHandler):
 
     _meta: Meta  # type: ignore
 
-    def render(self, data: Dict[str, Any], *args: Any, **kw: Any) -> str:
+    def render(self, data: dict[str, Any], *args: Any, **kw: Any) -> str:
         """
         Take a data dictionary and render it as text output.  Note that the
         template option is received here per the interface, however this

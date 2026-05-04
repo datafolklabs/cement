@@ -13,7 +13,7 @@ extensions.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 import pylibmc  # type: ignore
 
@@ -66,7 +66,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
         :returns: ``None``
 
         """
-        hosts: List[str] = self._config('hosts')
+        hosts: list[str] = self._config('hosts')
         fixed_hosts = []
 
         if type(hosts) is str:

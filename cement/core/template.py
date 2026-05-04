@@ -6,7 +6,7 @@ import re
 import shutil
 import sys
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 from ..core import exc
 from ..core.handler import Handler
@@ -16,7 +16,7 @@ from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
-LoadTemplateReturnType = Tuple[Union[bytes, str, None], Union[str, None]]
+LoadTemplateReturnType = tuple[Union[bytes, str, None], Union[str, None]]
 
 
 class TemplateInterface(Interface):
@@ -36,7 +36,7 @@ class TemplateInterface(Interface):
         interface = 'template'
 
     @abstractmethod
-    def render(self, content: str, data: Dict[str, Any]) -> Union[str, None]:
+    def render(self, content: str, data: dict[str, Any]) -> Union[str, None]:
         """
         Render ``content`` as a template using the ``data`` dict.
 
@@ -51,7 +51,7 @@ class TemplateInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def copy(self, src: str, dest: str, data: Dict[str, Any]) -> bool:
+    def copy(self, src: str, dest: str, data: dict[str, Any]) -> bool:
         """
         Render the ``src`` directory path, and copy to ``dest``.  This method
         must render directory and file **names** as template content, as well
@@ -68,7 +68,7 @@ class TemplateInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def load(self, path: str) -> Tuple[Union[str, bytes], str, Optional[str]]:
+    def load(self, path: str) -> tuple[Union[str, bytes], str, Optional[str]]:
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
@@ -105,10 +105,10 @@ class TemplateHandler(TemplateInterface, Handler):
         interface = 'template'
 
         #: List of file patterns to exclude (copy but not render as template)
-        exclude: List[str] = None  # type: ignore
+        exclude: list[str] = None  # type: ignore
 
         #: List of file patterns to ignore completely (not copy at all)
-        ignore: List[str] = None  # type: ignore
+        ignore: list[str] = None  # type: ignore
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super(TemplateHandler, self).__init__(*args, **kwargs)
@@ -117,7 +117,7 @@ class TemplateHandler(TemplateInterface, Handler):
         if self._meta.exclude is None:
             self._meta.exclude = []
 
-    def render(self, content: Union[str, bytes], data: Dict[str, Any]) -> Union[str, None]:
+    def render(self, content: Union[str, bytes], data: dict[str, Any]) -> Union[str, None]:
         """
         Render ``content`` as template using using the ``data`` dictionary.
 
@@ -132,7 +132,7 @@ class TemplateHandler(TemplateInterface, Handler):
         # must be provided by a subclass
         raise NotImplementedError  # pragma: nocover
 
-    def _match_patterns(self, item: str, patterns: List[str]) -> bool:
+    def _match_patterns(self, item: str, patterns: list[str]) -> bool:
         for pattern in patterns:
             if re.match(pattern, item):
                 return True
@@ -141,10 +141,10 @@ class TemplateHandler(TemplateInterface, Handler):
     def copy(self,
              src: str,
              dest: str,
-             data: Dict[str, Any],
+             data: dict[str, Any],
              force: bool = False,
-             exclude: Optional[List[str]] = None,
-             ignore: Optional[List[str]] = None) -> bool:
+             exclude: Optional[list[str]] = None,
+             ignore: Optional[list[str]] = None) -> bool:
         """
         Render ``src`` directory as template, including directory and file
         names, and copy to ``dest`` directory.
@@ -351,7 +351,7 @@ class TemplateHandler(TemplateInterface, Handler):
                       (template_path, template_module))
             return (None, None)
 
-    def load(self, template_path: str) -> Tuple[Union[str, bytes], str, Optional[str]]:
+    def load(self, template_path: str) -> tuple[Union[str, bytes], str, Optional[str]]:
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The

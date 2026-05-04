@@ -14,7 +14,7 @@ extensions.
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING, Any, List, Optional, Type
+from typing import TYPE_CHECKING, Any, Optional
 
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
@@ -75,12 +75,12 @@ class WatchdogManager(MetaMixin):
     def __init__(self, app: App, *args: Any, **kw: Any) -> None:
         super(WatchdogManager, self).__init__(*args, **kw)
         self.app = app
-        self.paths: List[str] = []
+        self.paths: list[str] = []
         self.observer = self._meta.observer()
 
     def add(self,
             path: str,
-            event_handler: Optional[Type] = None,
+            event_handler: Optional[type] = None,
             recursive: bool = True) -> bool:
         """
         Add a directory path and event handler to the observer.

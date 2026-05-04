@@ -4,7 +4,7 @@ Cement core argument module.
 """
 
 from abc import abstractmethod
-from typing import Any, List
+from typing import Any
 
 from ..core.handler import Handler
 from ..core.interface import Interface
@@ -62,7 +62,7 @@ class ArgumentInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def parse(self, *args: List[str]) -> object:
+    def parse(self, *args: list[str]) -> object:
         """
         Parse the argument list (i.e. ``sys.argv``).  Can return any object as
         long as its' members contain those of the added arguments.  For

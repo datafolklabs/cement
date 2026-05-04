@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from ..core.handler import Handler
 from ..core.interface import Interface
@@ -99,7 +99,7 @@ class MailHandler(MailInterface, Handler):
         """
 
         #: Configuration default values
-        config_defaults: Dict[str, Any] = {
+        config_defaults: dict[str, Any] = {
             'to': [],
             'from_addr': 'noreply@example.com',
             'cc': [],

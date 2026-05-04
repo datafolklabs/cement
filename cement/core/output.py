@@ -1,7 +1,7 @@
 """Cement core output module."""
 
 from abc import abstractmethod
-from typing import Any, Dict, Union
+from typing import Any, Union
 
 from ..core.handler import Handler
 from ..core.interface import Interface
@@ -27,7 +27,7 @@ class OutputInterface(Interface):
         interface = 'output'
 
     @abstractmethod
-    def render(self, data: Dict[str, Any], *args: Any, **kwargs: Any) -> Union[str, None]:
+    def render(self, data: dict[str, Any], *args: Any, **kwargs: Any) -> Union[str, None]:
         """
         Render the ``data`` dict into output in some fashion.  This function
         must accept both ``*args`` and ``**kwargs`` to allow an application to

@@ -7,11 +7,12 @@ from __future__ import annotations
 
 import re
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from ..core import exc
 from ..core.meta import MetaMixin
 from ..utils.misc import minimal_logger
+import builtins
 
 LOG = minimal_logger(__name__)
 
@@ -47,7 +48,7 @@ class Handler(ABC, MetaMixin):
         no section is set by the user/developer.
         """
 
-        config_defaults: Optional[Dict[str, Any]] = None
+        config_defaults: Optional[dict[str, Any]] = None
         """
         A config dictionary that is merged into the applications config
         in the ``[<config_section>]`` block.  These are defaults and do not
@@ -115,13 +116,13 @@ class HandlerManager(object):
 
     def __init__(self, app: App):
         self.app = app
-        self.__handlers__: Dict[str, dict[str, Type[Handler]]] = {}
+        self.__handlers__: dict[str, dict[str, type[Handler]]] = {}
 
     def get(self,
             interface: str,
             handler_label: str,
-            fallback: Optional[Type[Handler]] = None,
-            **kwargs: Any) -> Union[Handler, Type[Handler]]:
+            fallback: Optional[type[Handler]] = None,
+            **kwargs: Any) -> Union[Handler, type[Handler]]:
         """
         Get a handler object.
 
@@ -170,7 +171,7 @@ class HandlerManager(object):
             raise exc.InterfaceError("handlers['%s']['%s'] does not exist!" %
                                      (interface, handler_label))
 
-    def list(self, interface: str) -> List[Type[Handler]]:
+    def list(self, interface: str) -> builtins.list[type[Handler]]:
         """
         Return a list of handlers for a given ``interface``.
 
@@ -200,7 +201,7 @@ class HandlerManager(object):
         return res
 
     def register(self,
-                 handler_class: Type[Handler],
+                 handler_class: type[Handler],
                  force: bool = False) -> None:
         """
         Register a handler class to an interface.  If the same object is
@@ -305,7 +306,7 @@ class HandlerManager(object):
 
         return False
 
-    def setup(self, handler_class: Type[Handler]) -> Handler:
+    def setup(self, handler_class: type[Handler]) -> Handler:
         """
         Setup a handler class so that it can be used.
 
@@ -328,7 +329,7 @@ class HandlerManager(object):
 
     def resolve(self,
                 interface: str,
-                handler_def: Union[str, Handler, Type[Handler]],
+                handler_def: Union[str, Handler, type[Handler]],
                 **kwargs: Any) -> Union[Handler, Optional[Handler]]:
         """
         Resolves the actual handler, as it can be either a string identifying

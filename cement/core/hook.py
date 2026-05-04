@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import operator
 import types
-from typing import TYPE_CHECKING, Any, Callable, Dict, Generator, List
+from typing import TYPE_CHECKING, Any, Callable, Generator
 
 from ..core import exc
 from ..utils.misc import minimal_logger
+import builtins
 
 if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover
@@ -24,9 +25,9 @@ class HookManager(object):
 
     def __init__(self, app: App) -> None:
         self.app = app
-        self.__hooks__: Dict[str, list] = {}
+        self.__hooks__: dict[str, list] = {}
 
-    def list(self) -> List[str]:
+    def list(self) -> builtins.list[str]:
         """
         List all defined hooks.
 

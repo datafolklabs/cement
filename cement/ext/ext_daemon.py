@@ -9,7 +9,7 @@ import io
 import os
 import pwd
 import sys
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from ..core import exc
 from ..utils.misc import minimal_logger
@@ -233,7 +233,7 @@ def extend_app(app: App) -> None:
     user = pwd.getpwuid(os.getuid())
     group = grp.getgrgid(user.pw_gid)
 
-    defaults: Dict[str, Any] = dict()
+    defaults: dict[str, Any] = dict()
     defaults['daemon'] = dict()
     defaults['daemon']['user'] = user.pw_name
     defaults['daemon']['group'] = group.gr_name

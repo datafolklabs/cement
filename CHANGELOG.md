@@ -42,6 +42,10 @@ Refactoring:
   `virtualenv` target renamed to `setup` and reduced to `pdm install`
   (drops redundant `pdm venv create` and the manual `eval $(pdm venv
   activate)` hint)
+- `[core]` Modernize type annotations to PEP 585 builtin generics
+  (UP006: `List` → `list`, `Dict` → `dict`, `Tuple` → `tuple`,
+  `Type` → `type`); orphaned `typing` re-export imports pruned in the
+  same pass (F401)
 
 Misc:
 

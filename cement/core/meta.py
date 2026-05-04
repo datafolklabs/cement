@@ -1,6 +1,6 @@
 """Cement core meta functionality."""
 
-from typing import Any, Dict
+from typing import Any
 
 
 class Meta(object):
@@ -14,7 +14,7 @@ class Meta(object):
     def __init__(self, **kwargs: Any) -> None:
         self._merge(kwargs)
 
-    def _merge(self, dict_obj: Dict[str, Any]) -> None:
+    def _merge(self, dict_obj: dict[str, Any]) -> None:
         for key in dict_obj.keys():
             setattr(self, key, dict_obj[key])
 

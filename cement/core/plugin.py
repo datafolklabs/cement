@@ -1,7 +1,6 @@
 """Cement core plugins module."""
 
 from abc import abstractmethod
-from typing import List
 
 from ..core.handler import Handler
 from ..core.interface import Interface
@@ -36,7 +35,7 @@ class PluginInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def load_plugins(self, plugins: List[str]) -> None:
+    def load_plugins(self, plugins: list[str]) -> None:
         """
         Load all plugins from ``plugins``.
 
@@ -47,17 +46,17 @@ class PluginInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def get_loaded_plugins(self) -> List[str]:
+    def get_loaded_plugins(self) -> list[str]:
         """Returns a list of plugins that have been loaded."""
         pass  # pragma: nocover
 
     @abstractmethod
-    def get_enabled_plugins(self) -> List[str]:
+    def get_enabled_plugins(self) -> list[str]:
         """Returns a list of plugins that are enabled in the config."""
         pass  # pragma: nocover
 
     @abstractmethod
-    def get_disabled_plugins(self) -> List[str]:
+    def get_disabled_plugins(self) -> list[str]:
         """Returns a list of plugins that are disabled in the config."""
         pass  # pragma: nocover
 
