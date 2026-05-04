@@ -11,8 +11,6 @@ extensions.
   dependencies.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from tabulate import tabulate  # type: ignore
@@ -104,5 +102,5 @@ class TabulateOutputHandler(output.OutputHandler):
         return out  # type: ignore
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(TabulateOutputHandler)

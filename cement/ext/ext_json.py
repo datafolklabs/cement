@@ -2,8 +2,6 @@
 Cement json extension module.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from ..core import output
@@ -16,7 +14,7 @@ if TYPE_CHECKING:
 LOG = minimal_logger(__name__)
 
 
-def suppress_output_before_run(app: App) -> None:
+def suppress_output_before_run(app: "App") -> None:
     """
     This is a ``post_argument_parsing`` hook that suppresses console output if
     the ``JsonOutputHandler`` is triggered via command line.
@@ -30,7 +28,7 @@ def suppress_output_before_run(app: App) -> None:
         app._suppress_output()
 
 
-def unsuppress_output_before_render(app: App, data: Any) -> None:
+def unsuppress_output_before_render(app: "App", data: Any) -> None:
     """
     This is a ``pre_render`` that unsuppresses console output if
     the ``JsonOutputHandler`` is triggered via command line so that the JSON
@@ -45,7 +43,7 @@ def unsuppress_output_before_render(app: App, data: Any) -> None:
         app._unsuppress_output()
 
 
-def suppress_output_after_render(app: App, out_text: str) -> None:
+def suppress_output_after_render(app: "App", out_text: str) -> None:
     """
     This is a ``post_render`` hook that suppresses console output again after
     rendering, only if the ``JsonOutputHandler`` is triggered via command
@@ -95,7 +93,7 @@ class JsonOutputHandler(output.OutputHandler):
         super().__init__(*args, **kw)
         self._json = None
 
-    def _setup(self, app: App) -> None:
+    def _setup(self, app: "App") -> None:
         super()._setup(app)
         self._json = __import__(self._meta.json_module,         # type: ignore
                                 globals(), locals(), [], 0)
@@ -145,7 +143,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
         super().__init__(*args, **kw)
         self._json = None
 
-    def _setup(self, app: App) -> None:
+    def _setup(self, app: "App") -> None:
         super()._setup(app)
         self._json = __import__(self._meta.json_module,         # type: ignore
                                 globals(), locals(), [], 0)
@@ -171,7 +169,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
         return True
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.hook.register('post_argument_parsing', suppress_output_before_run)
     app.hook.register('pre_render', unsuppress_output_before_render)
     app.hook.register('post_render', suppress_output_after_render)

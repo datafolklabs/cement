@@ -2,8 +2,6 @@
 Cement generate extension module.
 """
 
-from __future__ import annotations
-
 import inspect
 import os
 import re
@@ -136,7 +134,7 @@ class GenerateTemplateAbstractBase(Controller):
             self._generate(source, dest)
 
 
-def setup_template_items(app: App) -> None:
+def setup_template_items(app: "App") -> None:
     template_dirs = []
     template_items = []
 
@@ -209,13 +207,13 @@ class Generate(Controller):
 
     _meta: Meta  # type: ignore
 
-    def _setup(self, app: App) -> None:
+    def _setup(self, app: "App") -> None:
         super()._setup(app)
 
     def _default(self) -> None:
         self._parser.print_help()
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(Generate)
     app.hook.register('pre_run', setup_template_items)

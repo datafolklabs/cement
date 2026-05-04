@@ -2,8 +2,6 @@
 Cement plugin extension module.
 """
 
-from __future__ import annotations
-
 import importlib.machinery
 import importlib.util
 import os
@@ -47,7 +45,7 @@ class CementPluginHandler(plugin.PluginHandler):
         self._enabled_plugins: list[str] = []
         self._disabled_plugins: list[str] = []
 
-    def _setup(self, app_obj: App) -> None:
+    def _setup(self, app_obj: "App") -> None:
         super()._setup(app_obj)
         self._enabled_plugins = []
         self._disabled_plugins = []
@@ -219,5 +217,5 @@ class CementPluginHandler(plugin.PluginHandler):
         return self._disabled_plugins
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(CementPluginHandler)

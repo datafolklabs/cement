@@ -82,6 +82,15 @@ Refactoring:
 - `[core]` Wrap long log/error messages introduced by UP032 f-string
   conversion to satisfy E501 (line-too-long); reorder imports
   introduced by UP006/UP035 to satisfy I001 (import sorting).
+- `[core]` Drop `from __future__ import annotations` from all 29
+  files in cement/ (Phase 1 D-14 deferral closed). PEP 604/585
+  syntax (UP006/UP007/UP045 from the prior wave) is native in
+  Python 3.10+; the future-import is no longer needed. Forward
+  references to TYPE_CHECKING-bound names (App, FrameType,
+  ModuleType, TracebackType, ArgparseArgumentType,
+  ArgparseController) converted to PEP 484 string annotations
+  where evaluated at class/function definition time. Closes the
+  cement/utils/fs.py self-flagged 2024-06-22 TODO.
 
 Misc:
 

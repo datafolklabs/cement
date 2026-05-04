@@ -11,8 +11,6 @@ extensions.
   dependencies.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from pystache.renderer import Renderer  # type: ignore
@@ -63,7 +61,7 @@ class MustacheOutputHandler(OutputHandler):
         super().__init__(*args, **kw)
         self.templater: MustacheTemplateHandler = None  # type: ignore
 
-    def _setup(self, app: App) -> None:
+    def _setup(self, app: "App") -> None:
         super()._setup(app)
         self.templater = self.app.handler.resolve('template', 'mustache',  # type: ignore
                                                   setup=True)
@@ -136,6 +134,6 @@ class MustacheTemplateHandler(TemplateHandler):
         return stache.render(content, data)  # type: ignore
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(MustacheOutputHandler)
     app.handler.register(MustacheTemplateHandler)

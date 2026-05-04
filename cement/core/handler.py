@@ -3,8 +3,6 @@ Cement core handler module.
 
 """
 
-from __future__ import annotations
-
 import builtins
 import re
 from abc import ABC
@@ -75,7 +73,7 @@ class Handler(ABC, MetaMixin):
 
         self.app: App = None  # type: ignore
 
-    def _setup(self, app: App) -> None:
+    def _setup(self, app: "App") -> None:
         """
         Called during application initialization and must ``setup`` the handler
         object making it ready for the framework or the application to make
@@ -114,7 +112,7 @@ class HandlerManager:
 
     """
 
-    def __init__(self, app: App):
+    def __init__(self, app: "App"):
         self.app = app
         self.__handlers__: dict[str, dict[str, type[Handler]]] = {}
 

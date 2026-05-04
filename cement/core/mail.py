@@ -1,7 +1,5 @@
 """Cement core mail module."""
 
-from __future__ import annotations
-
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Any
 
@@ -108,7 +106,7 @@ class MailHandler(MailInterface, Handler):
             'subject_prefix': '',
         }
 
-    def _setup(self, app_obj: App) -> None:
+    def _setup(self, app_obj: "App") -> None:
         super()._setup(app_obj)
         self._validate_config()
 

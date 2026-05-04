@@ -11,8 +11,6 @@ extensions.
   dependencies.
 """
 
-from __future__ import annotations
-
 import logging
 import os
 import sys
@@ -125,5 +123,5 @@ class ColorLogHandler(LoggingLogHandler):
         return formatter
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(ColorLogHandler)

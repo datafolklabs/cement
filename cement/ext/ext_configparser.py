@@ -2,8 +2,6 @@
 Cement configparser extension module.
 """
 
-from __future__ import annotations
-
 import os
 import re
 from configparser import RawConfigParser
@@ -205,5 +203,5 @@ class ConfigParserConfigHandler(config.ConfigHandler, RawConfigParser):
         RawConfigParser.set(self, section, key, value)
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(ConfigParserConfigHandler)

@@ -11,8 +11,6 @@ extensions.
   dependencies.
 """
 
-from __future__ import annotations
-
 import os
 from typing import TYPE_CHECKING, Any
 
@@ -40,7 +38,7 @@ class WatchdogEventHandler(FileSystemEventHandler):
 
     """
 
-    def __init__(self, app: App, *args: Any, **kw: Any) -> None:
+    def __init__(self, app: "App", *args: Any, **kw: Any) -> None:
         super().__init__(*args, **kw)
         self.app = app
 
@@ -72,7 +70,7 @@ class WatchdogManager(MetaMixin):
 
     _meta: Meta  # type: ignore
 
-    def __init__(self, app: App, *args: Any, **kw: Any) -> None:
+    def __init__(self, app: "App", *args: Any, **kw: Any) -> None:
         super().__init__(*args, **kw)
         self.app = app
         self.paths: list[str] = []
@@ -148,21 +146,21 @@ class WatchdogManager(MetaMixin):
             pass
 
 
-def watchdog_extend_app(app: App) -> None:
+def watchdog_extend_app(app: "App") -> None:
     app.extend('watchdog', WatchdogManager(app))
 
 
-def watchdog_start(app: App) -> None:
+def watchdog_start(app: "App") -> None:
     app.watchdog.start()
 
 
-def watchdog_cleanup(app: App) -> None:
+def watchdog_cleanup(app: "App") -> None:
     if app.watchdog.observer.is_alive():
         app.watchdog.stop()
         app.watchdog.join()
 
 
-def watchdog_add_paths(app: App) -> None:
+def watchdog_add_paths(app: "App") -> None:
     if hasattr(app._meta, 'watchdog_paths'):
         for path_spec in app._meta.watchdog_paths:
             # odd... if a tuple is a single item it ends up as a str?
@@ -178,7 +176,7 @@ def watchdog_add_paths(app: App) -> None:
                 )
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.hook.define('watchdog_pre_start')
     app.hook.define('watchdog_post_start')
     app.hook.define('watchdog_pre_stop')

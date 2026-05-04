@@ -2,8 +2,6 @@
 Cement print extension module.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from ..core import output
@@ -15,7 +13,7 @@ if TYPE_CHECKING:
 LOG = minimal_logger(__name__)
 
 
-def extend_print(app: App) -> None:
+def extend_print(app: "App") -> None:
     def _print(text: str) -> None:
         app.render({'out': text}, handler='print')
     app.extend('print', _print)
@@ -110,7 +108,7 @@ class PrintDictOutputHandler(output.OutputHandler):
         return out
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(PrintDictOutputHandler)
     app.handler.register(PrintOutputHandler)
     app.hook.register('pre_argument_parsing', extend_print)

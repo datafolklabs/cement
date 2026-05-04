@@ -1,6 +1,4 @@
 
-from __future__ import annotations
-
 from cement import App, CaughtSignal  # noqa: E402
 from cement.core.exc import FrameworkError
 
