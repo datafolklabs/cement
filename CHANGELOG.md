@@ -50,6 +50,20 @@ Bugs:
   `_attach_files` so the `MIMEImage`/`MIMEBase` branches type-check
   cleanly. Public-API surface byte-identical (`_BodyType` is private
   so `make audit-public-api` stays at exit 0)
+- `[utils.shell]` Correct `cmd` and `exec_cmd` return-type
+  annotations from `tuple[str, str, int]` to
+  `tuple[bytes, bytes, int]` (and `cmd`'s union return to
+  `tuple[bytes, bytes, int] | int`) — `subprocess.Popen` returns
+  `bytes` from `communicate()` by default, and the existing tests
+  already assert `out == b'KAPLA!\n'` (literal bytes). The prior
+  `str` annotation was a type/runtime mismatch that mypy could
+  not catch (the bytes return was bidirectionally compatible
+  with the declared `str` via `Any` upcasting in dependent
+  context). Docstrings updated to call out that `stdout`/
+  `stderr` are bytes and to point at `text=True` / `encoding=`
+  through `**kwargs` for callers wanting `str` output. Runtime
+  behavior unchanged; this is documentation/type honesty only,
+  not a behavior shift
 - `[utils.shell]` Correct `Prompt.Meta.options` annotation from
   `dict | None` to `list[str] | None` — the runtime treats
   `options` as a list of strings (iteration in
