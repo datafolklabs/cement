@@ -4,7 +4,7 @@ Cement dummy extension module.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from ..core.mail import MailHandler
 from ..core.output import OutputHandler
@@ -36,7 +36,7 @@ class DummyOutputHandler(OutputHandler):
         #: to override the ``output_handler`` via command line options.
         overridable = False
 
-    def render(self, data: Dict[str, Any], **kw: Any) -> None:
+    def render(self, data: dict[str, Any], **kw: Any) -> None:
         """
         This implementation does not actually render anything to output, but
         rather logs it to the debug facility.
@@ -70,7 +70,7 @@ class DummyTemplateHandler(TemplateHandler):
         #: The string identifier of this handler.
         label = 'dummy'
 
-    def render(self, content: Union[str, bytes], data: Dict[str, Any]) -> None:
+    def render(self, content: Union[str, bytes], data: dict[str, Any]) -> None:
         """
         This implementation does not actually render anything, but
         rather logs it to the debug facility.
@@ -87,10 +87,10 @@ class DummyTemplateHandler(TemplateHandler):
     def copy(self,
              src: str,
              dest: str,
-             data: Dict[str, Any],
+             data: dict[str, Any],
              force: bool = False,
-             exclude: Optional[List[str]] = None,
-             ignore: Optional[List[str]] = None) -> bool:
+             exclude: Optional[list[str]] = None,
+             ignore: Optional[list[str]] = None) -> bool:
         """
         This implementation does not actually copy anything, but rather logs it
         to the debug facility.
@@ -206,7 +206,7 @@ class DummyMailHandler(MailHandler):
         #: Unique identifier for this handler
         label = 'dummy'
 
-    def _get_params(self, **kw: Any) -> Dict[str, Any]:
+    def _get_params(self, **kw: Any) -> dict[str, Any]:
         params = dict()
         for item in ['to', 'from_addr', 'cc', 'bcc', 'subject']:
             config_item = self.app.config.get(self._meta.config_section, item)

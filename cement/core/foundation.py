@@ -13,12 +13,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
     Optional,
     TextIO,
-    Tuple,
-    Type,
     Union,
 )
 
@@ -48,7 +44,7 @@ if TYPE_CHECKING:
     from types import FrameType, ModuleType, TracebackType  # pragma: nocover
 
 
-ArgparseArgumentType = Tuple[List[str], Dict[str, Any]]
+ArgparseArgumentType = tuple[list[str], dict[str, Any]]
 
 join = os.path.join
 
@@ -346,7 +342,7 @@ class App(meta.MetaMixin):
         ``setup()``.
         """
 
-        _choo_type = Dict[str, ArgparseArgumentType]
+        _choo_type = dict[str, ArgparseArgumentType]
         core_handler_override_options: _choo_type = dict(
             output=(['-o'], dict(help='output handler')),
         )
@@ -357,7 +353,7 @@ class App(meta.MetaMixin):
         are merged together).
         """
 
-        handler_override_options: Dict[str, ArgparseArgumentType] = {}
+        handler_override_options: dict[str, ArgparseArgumentType] = {}
         """
         Dictionary of handler override options that will be added to the
         argument parser, and allow the end-user to override handlers.  Useful
@@ -393,10 +389,10 @@ class App(meta.MetaMixin):
         the name of the application).
         """
 
-        config_defaults: Dict[str, Any] = None  # type: ignore
+        config_defaults: dict[str, Any] = None  # type: ignore
         """Default configuration dictionary.  Must be of type ``dict``."""
 
-        meta_defaults: Dict[str, Any] = {}
+        meta_defaults: dict[str, Any] = {}
         """
         Default meta-data dictionary used to pass high level options from the
         application down to handlers at the point they are registered by the
@@ -478,7 +474,7 @@ class App(meta.MetaMixin):
         A handler class that implements the Cache interface.
         """
 
-        extensions: List[str] = []
+        extensions: list[str] = []
         """List of additional framework extensions to load."""
 
         bootstrap: Optional[str] = None
@@ -539,7 +535,7 @@ class App(meta.MetaMixin):
         ``App.Meta.meta_override``.
         """
 
-        meta_override: List[str] = []
+        meta_override: list[str] = []
         """
         List of meta options that can/will be overridden by config options
         of the ``base`` config section (where ``base`` is the
@@ -560,7 +556,7 @@ class App(meta.MetaMixin):
         ``template_dirs`` setting has presedence.
         """
 
-        template_dirs: List[str] = None  # type: ignore
+        template_dirs: list[str] = None  # type: ignore
         """
         A list of directory paths where template files can be loaded
         from (appended to the builtin list of directories defined by Cement).
@@ -613,7 +609,7 @@ class App(meta.MetaMixin):
         ``True``.
         """
 
-        define_hooks: List[str] = []
+        define_hooks: list[str] = []
         """
         List of hook definitions (labels).  Will be passed to
         ``self.hook.define(<hook_label>)``.  Must be a list of strings.
@@ -621,7 +617,7 @@ class App(meta.MetaMixin):
         I.e. ``['my_custom_hook', 'some_other_hook']``
         """
 
-        hooks: List[Tuple[str, Callable]] = []
+        hooks: list[tuple[str, Callable]] = []
         """
         List of hooks to register when the app is created.  Will be passed to
         ``self.hook.register(<hook_label>, <hook_func>)``.  Must be a list of
@@ -630,7 +626,7 @@ class App(meta.MetaMixin):
         I.e. ``[('post_argument_parsing', my_hook_func)]``.
         """
 
-        core_interfaces: List[Type[Interface]] = [
+        core_interfaces: list[type[Interface]] = [
             extension.ExtensionInterface,
             log.LogInterface,
             config.ConfigInterface,
@@ -649,7 +645,7 @@ class App(meta.MetaMixin):
         ``App.Meta.interfaces``.
         """
 
-        interfaces: List[Type[Interface]] = []
+        interfaces: list[type[Interface]] = []
         """
         List of interfaces to be defined.  Must be a list of
         uninstantiated interface base classes.
@@ -657,7 +653,7 @@ class App(meta.MetaMixin):
         I.e. ``[MyCustomInterface, SomeOtherInterface]``
         """
 
-        handlers: List[Type[Handler]] = []
+        handlers: list[type[Handler]] = []
         """
         List of handler classes to register.  Will be passed to
         ``handler.register(<handler_class>)``.  Must be a list of
@@ -666,7 +662,7 @@ class App(meta.MetaMixin):
         I.e. ``[MyCustomHandler, SomeOtherHandler]``
         """
 
-        alternative_module_mapping: Dict[str, str] = {}
+        alternative_module_mapping: dict[str, str] = {}
         """
         EXPERIMENTAL FEATURE: This is an experimental feature added in Cement
         2.9.x and may or may not be removed in future versions of Cement.
@@ -806,11 +802,11 @@ class App(meta.MetaMixin):
         self._validate_label()
         self._loaded_bootstrap = None
         self._parsed_args: Any = None
-        self._last_rendered: Optional[Tuple[Any, Optional[str]]] = None
-        self._extended_members: List[str] = []
+        self._last_rendered: Optional[tuple[Any, Optional[str]]] = None
+        self._extended_members: list[str] = []
         self.__saved_stdout__: TextIO = None  # type: ignore
         self.__saved_stderr__: TextIO = None  # type: ignore
-        self.__retry_hooks__: List[Tuple[str, Callable]] = []
+        self.__retry_hooks__: list[tuple[str, Callable]] = []
         self.handler: HandlerManager = None  # type: ignore
         self.interface: InterfaceManager = None  # type: ignore
         self.hook: HookManager = None  # type: ignore
@@ -868,7 +864,7 @@ class App(meta.MetaMixin):
         return self._meta.quiet
 
     @property
-    def argv(self) -> List[str]:
+    def argv(self) -> list[str]:
         """The arguments list that will be used when self.run() is called."""
         return self._meta.argv
 
@@ -1143,7 +1139,7 @@ class App(meta.MetaMixin):
         return out_text
 
     @property
-    def last_rendered(self) -> Optional[Tuple[Dict[str, Any], Optional[str]]]:
+    def last_rendered(self) -> Optional[tuple[dict[str, Any], Optional[str]]]:
         """
         Return the ``(data, output_text)`` tuple of the last time
         ``self.render()`` was called.
@@ -1288,7 +1284,7 @@ class App(meta.MetaMixin):
 
     def _resolve_handler(self,
                          handler_type: str,
-                         handler_def: Union[str, Type[Handler], Handler],
+                         handler_def: Union[str, type[Handler], Handler],
                          raise_error: bool = True) -> Handler:
         # meta_defaults = {}
         # if type(handler_def) == str:
@@ -1312,7 +1308,7 @@ class App(meta.MetaMixin):
         self.ext.load_extensions(self._meta.core_extensions)
         self.ext.load_extensions(self._meta.extensions)
 
-    def _find_config_files(self, path: str) -> List[str]:
+    def _find_config_files(self, path: str) -> list[str]:
         found_files = []
         if not os.path.isdir(path):
             return []
@@ -1794,16 +1790,16 @@ class TestApp(App):
 
     class Meta:
         label: str = f"app-{misc.rando()[:12]}"
-        argv: List[str] = []
-        core_system_config_files: List[str] = []
-        core_user_config_files: List[str] = []
-        config_files: List[str] = []
-        core_system_config_dirs: List[str] = []
-        core_user_config_dirs: List[str] = []
-        config_dirs: List[str] = []
-        core_system_template_dirs: List[str] = []
-        core_user_template_dirs: List[str] = []
-        core_system_plugin_dirs: List[str] = []
-        core_user_plugin_dirs: List[str] = []
-        plugin_dirs: List[str] = []
+        argv: list[str] = []
+        core_system_config_files: list[str] = []
+        core_user_config_files: list[str] = []
+        config_files: list[str] = []
+        core_system_config_dirs: list[str] = []
+        core_user_config_dirs: list[str] = []
+        config_dirs: list[str] = []
+        core_system_template_dirs: list[str] = []
+        core_user_template_dirs: list[str] = []
+        core_system_plugin_dirs: list[str] = []
+        core_user_plugin_dirs: list[str] = []
+        plugin_dirs: list[str] = []
         exit_on_close: bool = False

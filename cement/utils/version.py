@@ -41,12 +41,12 @@ import os
 import platform
 import subprocess
 import sys
-from typing import Optional, Tuple
+from typing import Optional
 
 from ..core.backend import VERSION
 
 
-def get_version(version: Tuple[int, int, int, str, int] = VERSION) -> str:
+def get_version(version: tuple[int, int, int, str, int] = VERSION) -> str:
     "Returns a PEP 386-compliant version number from VERSION."
     assert len(version) == 5
     assert version[3] in ('alpha', 'beta', 'rc', 'final')

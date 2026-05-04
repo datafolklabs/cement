@@ -5,7 +5,7 @@ Cement core interface module.
 from __future__ import annotations
 
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Dict, Optional, Type
+from typing import TYPE_CHECKING, Any, Optional
 
 from ..core import exc, meta
 from ..utils.misc import minimal_logger
@@ -54,7 +54,7 @@ class InterfaceManager(object):
 
     """
 
-    __interfaces__: Dict[str, Type[Interface]]
+    __interfaces__: dict[str, type[Interface]]
 
     def __init__(self, app: App) -> None:
         self.app = app
@@ -62,8 +62,8 @@ class InterfaceManager(object):
 
     def get(self,
             interface: str,
-            fallback: Optional[Type[Interface]] = None,
-            **kwargs: Any) -> Type[Interface]:
+            fallback: Optional[type[Interface]] = None,
+            **kwargs: Any) -> type[Interface]:
         """
         Get an interface class.
 
@@ -110,7 +110,7 @@ class InterfaceManager(object):
         """
         return list(self.__interfaces__.keys())
 
-    def define(self, ibc: Type[Interface]) -> None:
+    def define(self, ibc: type[Interface]) -> None:
         """
         Define an ``ibc`` (interface base class).
 

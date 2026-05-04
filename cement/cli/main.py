@@ -1,7 +1,7 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Optional
 
 from cement import App, CaughtSignal  # noqa: E402
 from cement.core.exc import FrameworkError
@@ -31,12 +31,12 @@ class CementApp(App):
 
 class CementTestApp(CementApp):
     class Meta:
-        argv: List[str] = []
-        config_files: List[str] = []
+        argv: list[str] = []
+        config_files: list[str] = []
         exit_on_close = False
 
 
-def main(argv: Optional[List[str]] = None) -> None:
+def main(argv: Optional[list[str]] = None) -> None:
     # Issue #679: https://github.com/datafolklabs/cement/issues/679
     try:
         import jinja2  # noqa: F401

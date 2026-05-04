@@ -9,7 +9,7 @@ import importlib.util
 import os
 import re
 import sys
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 
 from ..core import exc, plugin
 from ..utils.fs import abspath
@@ -43,9 +43,9 @@ class CementPluginHandler(plugin.PluginHandler):
 
     def __init__(self) -> None:
         super().__init__()
-        self._loaded_plugins: List[str] = []
-        self._enabled_plugins: List[str] = []
-        self._disabled_plugins: List[str] = []
+        self._loaded_plugins: list[str] = []
+        self._enabled_plugins: list[str] = []
+        self._disabled_plugins: list[str] = []
 
     def _setup(self, app_obj: App) -> None:
         super()._setup(app_obj)
@@ -194,7 +194,7 @@ class CementPluginHandler(plugin.PluginHandler):
         if plugin_name not in self._loaded_plugins:
             raise exc.FrameworkError(f"Unable to load plugin '{plugin_name}'.")
 
-    def load_plugins(self, plugin_list: List[str]) -> None:
+    def load_plugins(self, plugin_list: list[str]) -> None:
         """
         Load a list of plugins.  Each plugin name is passed to
         ``self.load_plugin()``.
@@ -206,15 +206,15 @@ class CementPluginHandler(plugin.PluginHandler):
         for plugin_name in plugin_list:
             self.load_plugin(plugin_name)
 
-    def get_loaded_plugins(self) -> List[str]:
+    def get_loaded_plugins(self) -> list[str]:
         """List of plugins that have been loaded."""
         return self._loaded_plugins
 
-    def get_enabled_plugins(self) -> List[str]:
+    def get_enabled_plugins(self) -> list[str]:
         """List of plugins that are enabled (not necessary loaded yet)."""
         return self._enabled_plugins
 
-    def get_disabled_plugins(self) -> List[str]:
+    def get_disabled_plugins(self) -> list[str]:
         """List of disabled plugins"""
         return self._disabled_plugins
 

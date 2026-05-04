@@ -8,7 +8,7 @@ import inspect
 import os
 import re
 import shutil
-from typing import TYPE_CHECKING, Any, Callable, Dict
+from typing import TYPE_CHECKING, Any, Callable
 
 import yaml  # type: ignore
 
@@ -30,7 +30,7 @@ class GenerateTemplateAbstractBase(Controller):
     def _generate(self, source: str, dest: str) -> None:
         msg = f'Generating {self.app._meta.label} {self._meta.label} in {dest}'
         self.app.log.info(msg)
-        data: Dict[str, Dict[str, Any]] = {}
+        data: dict[str, dict[str, Any]] = {}
 
         # builtin vars
         maj_min = float(f'{VERSION[0]}.{VERSION[1]}')
@@ -54,7 +54,7 @@ class GenerateTemplateAbstractBase(Controller):
                        self._meta.label
         ignore_list.append(g_config_yml)
 
-        var_defaults: Dict = {
+        var_defaults: dict = {
             'name': None,
             'prompt': None,
             'validate': None,

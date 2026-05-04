@@ -6,7 +6,7 @@ import os
 import sys
 from random import random
 from textwrap import TextWrapper
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from ..core.deprecations import deprecate
 
@@ -41,7 +41,7 @@ def rando(salt: Optional[str] = None) -> str:
     return hashlib.sha256(salt.encode()).hexdigest()[:32]
 
 
-def init_defaults(*sections: str) -> Dict[str, Any]:
+def init_defaults(*sections: str) -> dict[str, Any]:
     """
     Returns a standard dictionary object to use for application defaults.
     If sections are given, it will create a nested dict for each section name.
@@ -68,7 +68,7 @@ def init_defaults(*sections: str) -> Dict[str, Any]:
             app = App('myapp', config_defaults=defaults)
 
     """
-    defaults: Dict[str, Any] = dict()
+    defaults: dict[str, Any] = dict()
     for section in sections:
         defaults[section] = dict()
     return defaults
@@ -169,7 +169,7 @@ class MinimalLogger(object):
 
     def _get_logging_kwargs(self,
                             namespace: Optional[str],
-                            **kw: Any) -> Dict[Any, Any]:
+                            **kw: Any) -> dict[Any, Any]:
         if not namespace:
             namespace = self.namespace
 

@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import sys
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, List
+from typing import TYPE_CHECKING, Any
 
 from ..core import exc
 from ..core.handler import Handler
 from ..core.interface import Interface
 from ..utils.misc import minimal_logger
+import builtins
 
 LOG = minimal_logger(__name__)
 
@@ -47,7 +48,7 @@ class ExtensionInterface(Interface):
         pass    # pragma: no cover
 
     @abstractmethod
-    def load_extensions(self, ext_list: List[str]) -> None:
+    def load_extensions(self, ext_list: list[str]) -> None:
         """
         Load all extensions from ``ext_list``.
 
@@ -82,9 +83,9 @@ class ExtensionHandler(ExtensionInterface, Handler):
     def __init__(self, **kw: Any) -> None:
         super().__init__(**kw)
         self.app: App = None  # type: ignore
-        self._loaded_extensions: List[str] = []
+        self._loaded_extensions: list[str] = []
 
-    def get_loaded_extensions(self) -> List[str]:
+    def get_loaded_extensions(self) -> builtins.list[str]:
         """
         Get all loaded extensions.
 
@@ -94,7 +95,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
         """
         return self._loaded_extensions
 
-    def list(self) -> List[str]:
+    def list(self) -> builtins.list[str]:
         """
         Synonymous with ``get_loaded_extensions()``.
 
@@ -140,7 +141,7 @@ class ExtensionHandler(ExtensionInterface, Handler):
         except ImportError as e:
             raise exc.FrameworkError(e.args[0]) from e
 
-    def load_extensions(self, ext_list: List[str]) -> None:
+    def load_extensions(self, ext_list: builtins.list[str]) -> None:
         """
         Given a list of extension modules, iterate over the list and pass
         individually to ``self.load_extension()``.

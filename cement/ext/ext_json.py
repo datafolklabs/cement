@@ -4,7 +4,7 @@ Cement json extension module.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 from ..core import output
 from ..ext.ext_configparser import ConfigParserConfigHandler
@@ -100,7 +100,7 @@ class JsonOutputHandler(output.OutputHandler):
         self._json = __import__(self._meta.json_module,         # type: ignore
                                 globals(), locals(), [], 0)
 
-    def render(self, data: Dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
+    def render(self, data: dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
         """
         Take a data dictionary and render it as Json output.  Note that the
         template option is received here per the interface, however this

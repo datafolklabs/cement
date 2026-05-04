@@ -4,7 +4,7 @@ Cement yaml extension module.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable, Dict
+from typing import TYPE_CHECKING, Any, Callable
 
 import yaml  # type: ignore
 
@@ -32,7 +32,7 @@ def suppress_output_before_run(app: App) -> None:
         app._suppress_output()
 
 
-def unsuppress_output_before_render(app: App, data: Dict[str, Any]) -> None:
+def unsuppress_output_before_render(app: App, data: dict[str, Any]) -> None:
     """
     This is a ``pre_render`` that unsuppresses console output if
     the ``YamlOutputHandler`` is triggered via command line so that the Yaml
@@ -97,7 +97,7 @@ class YamlOutputHandler(output.OutputHandler):
     def _setup(self, app_obj: App) -> None:
         self.app = app_obj
 
-    def render(self, data: Dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
+    def render(self, data: dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
         """
         Take a data dictionary and render it as Yaml output.  Note that the
         template option is received here per the interface, however this

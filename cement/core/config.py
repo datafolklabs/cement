@@ -2,7 +2,7 @@
 
 import os
 from abc import abstractmethod
-from typing import Any, Dict, List
+from typing import Any
 
 from ..core.handler import Handler
 from ..core.interface import Interface
@@ -44,7 +44,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def keys(self, section: str) -> List[str]:
+    def keys(self, section: str) -> list[str]:
         """
         Return a list of configuration keys from ``section``.
 
@@ -58,7 +58,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def get_sections(self) -> List[str]:
+    def get_sections(self) -> list[str]:
         """
         Return a list of configuration sections.
 
@@ -69,7 +69,7 @@ class ConfigInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def get_dict(self) -> Dict[str, Any]:
+    def get_dict(self) -> dict[str, Any]:
         """
         Return a dict of the entire configuration.
 
@@ -79,7 +79,7 @@ class ConfigInterface(Interface):
         """
 
     @abstractmethod
-    def get_section_dict(self, section: str) -> Dict[str, Any]:
+    def get_section_dict(self, section: str) -> dict[str, Any]:
         """
         Return a dict of configuration parameters for ``section``.
 

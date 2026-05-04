@@ -13,7 +13,7 @@ extensions.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from jinja2 import Environment, FileSystemLoader, PackageLoader
 
@@ -56,7 +56,7 @@ class Jinja2OutputHandler(OutputHandler):
         super(Jinja2OutputHandler, self)._setup(app)
         self.templater = self.app.handler.resolve('template', self._meta.label, setup=True)  # type: ignore
 
-    def render(self, data: Dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
+    def render(self, data: dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
         """
         Take a data dictionary and render it using the given template file.
         Additional keyword arguments are ignored.
@@ -103,7 +103,7 @@ class Jinja2TemplateHandler(TemplateHandler):
         # higher in application code if necessary
         self.env = Environment(keep_trailing_newline=True)
 
-    def load(self, *args: Any, **kw: Any) -> Tuple[Union[str, bytes], str, Optional[str]]:
+    def load(self, *args: Any, **kw: Any) -> tuple[Union[str, bytes], str, Optional[str]]:
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
@@ -135,7 +135,7 @@ class Jinja2TemplateHandler(TemplateHandler):
 
     def render(self,
                content: Union[str, bytes],
-               data: Dict[str, Any],
+               data: dict[str, Any],
                *args: Any,
                **kw: Any) -> str:
         """

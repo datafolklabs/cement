@@ -26,7 +26,6 @@ cement.cli.main:CementTestApp.Meta.argv
 cement.cli.main:CementTestApp.Meta.config_files
 cement.cli.main:CementTestApp.Meta.exit_on_close
 cement.cli.main:FrameworkError
-cement.cli.main:List
 cement.cli.main:Optional
 cement.cli.main:main
 cement.core.arg:Any
@@ -40,7 +39,6 @@ cement.core.arg:ArgumentInterface.parse
 cement.core.arg:Handler
 cement.core.arg:Interface
 cement.core.arg:LOG
-cement.core.arg:List
 cement.core.arg:abstractmethod
 cement.core.arg:minimal_logger
 cement.core.backend:VERSION
@@ -77,11 +75,9 @@ cement.core.config:ConfigInterface.keys
 cement.core.config:ConfigInterface.merge
 cement.core.config:ConfigInterface.parse_file
 cement.core.config:ConfigInterface.set
-cement.core.config:Dict
 cement.core.config:Handler
 cement.core.config:Interface
 cement.core.config:LOG
-cement.core.config:List
 cement.core.config:abspath
 cement.core.config:abstractmethod
 cement.core.config:minimal_logger
@@ -121,9 +117,9 @@ cement.core.extension:ExtensionInterface.load_extensions
 cement.core.extension:Handler
 cement.core.extension:Interface
 cement.core.extension:LOG
-cement.core.extension:List
 cement.core.extension:TYPE_CHECKING
 cement.core.extension:abstractmethod
+cement.core.extension:builtins
 cement.core.extension:exc
 cement.core.extension:minimal_logger
 cement.core.extension:sys
@@ -210,7 +206,6 @@ cement.core.foundation:App.validate_config
 cement.core.foundation:ArgparseArgumentType
 cement.core.foundation:Callable
 cement.core.foundation:Controller
-cement.core.foundation:Dict
 cement.core.foundation:Handler
 cement.core.foundation:HandlerManager
 cement.core.foundation:HookManager
@@ -218,7 +213,6 @@ cement.core.foundation:IO
 cement.core.foundation:Interface
 cement.core.foundation:InterfaceManager
 cement.core.foundation:LOG
-cement.core.foundation:List
 cement.core.foundation:Optional
 cement.core.foundation:TYPE_CHECKING
 cement.core.foundation:TestApp
@@ -238,8 +232,6 @@ cement.core.foundation:TestApp.Meta.exit_on_close
 cement.core.foundation:TestApp.Meta.label
 cement.core.foundation:TestApp.Meta.plugin_dirs
 cement.core.foundation:TextIO
-cement.core.foundation:Tuple
-cement.core.foundation:Type
 cement.core.foundation:Union
 cement.core.foundation:add_handler_override_options
 cement.core.foundation:arg
@@ -270,7 +262,6 @@ cement.core.foundation:sys
 cement.core.foundation:template
 cement.core.handler:ABC
 cement.core.handler:Any
-cement.core.handler:Dict
 cement.core.handler:Handler
 cement.core.handler:Handler.Meta
 cement.core.handler:Handler.Meta.config_defaults
@@ -286,18 +277,16 @@ cement.core.handler:HandlerManager.registered
 cement.core.handler:HandlerManager.resolve
 cement.core.handler:HandlerManager.setup
 cement.core.handler:LOG
-cement.core.handler:List
 cement.core.handler:MetaMixin
 cement.core.handler:Optional
 cement.core.handler:TYPE_CHECKING
-cement.core.handler:Type
 cement.core.handler:Union
+cement.core.handler:builtins
 cement.core.handler:exc
 cement.core.handler:minimal_logger
 cement.core.handler:re
 cement.core.hook:Any
 cement.core.hook:Callable
-cement.core.hook:Dict
 cement.core.hook:Generator
 cement.core.hook:HookManager
 cement.core.hook:HookManager.define
@@ -306,15 +295,14 @@ cement.core.hook:HookManager.list
 cement.core.hook:HookManager.register
 cement.core.hook:HookManager.run
 cement.core.hook:LOG
-cement.core.hook:List
 cement.core.hook:TYPE_CHECKING
+cement.core.hook:builtins
 cement.core.hook:exc
 cement.core.hook:minimal_logger
 cement.core.hook:operator
 cement.core.hook:types
 cement.core.interface:ABC
 cement.core.interface:Any
-cement.core.interface:Dict
 cement.core.interface:Interface
 cement.core.interface:Interface.Meta
 cement.core.interface:Interface.Meta.interface
@@ -326,7 +314,6 @@ cement.core.interface:InterfaceManager.list
 cement.core.interface:LOG
 cement.core.interface:Optional
 cement.core.interface:TYPE_CHECKING
-cement.core.interface:Type
 cement.core.interface:exc
 cement.core.interface:meta
 cement.core.interface:minimal_logger
@@ -346,7 +333,6 @@ cement.core.log:LogInterface.set_level
 cement.core.log:LogInterface.warning
 cement.core.log:abstractmethod
 cement.core.mail:Any
-cement.core.mail:Dict
 cement.core.mail:Handler
 cement.core.mail:Interface
 cement.core.mail:LOG
@@ -361,11 +347,9 @@ cement.core.mail:TYPE_CHECKING
 cement.core.mail:abstractmethod
 cement.core.mail:minimal_logger
 cement.core.meta:Any
-cement.core.meta:Dict
 cement.core.meta:Meta
 cement.core.meta:MetaMixin
 cement.core.output:Any
-cement.core.output:Dict
 cement.core.output:Handler
 cement.core.output:Interface
 cement.core.output:LOG
@@ -381,7 +365,6 @@ cement.core.output:minimal_logger
 cement.core.plugin:Handler
 cement.core.plugin:Interface
 cement.core.plugin:LOG
-cement.core.plugin:List
 cement.core.plugin:PluginHandler
 cement.core.plugin:PluginHandler.Meta
 cement.core.plugin:PluginInterface
@@ -395,11 +378,9 @@ cement.core.plugin:PluginInterface.load_plugins
 cement.core.plugin:abstractmethod
 cement.core.plugin:minimal_logger
 cement.core.template:Any
-cement.core.template:Dict
 cement.core.template:Handler
 cement.core.template:Interface
 cement.core.template:LOG
-cement.core.template:List
 cement.core.template:LoadTemplateReturnType
 cement.core.template:Optional
 cement.core.template:TemplateHandler
@@ -417,7 +398,6 @@ cement.core.template:TemplateInterface.Meta.interface
 cement.core.template:TemplateInterface.copy
 cement.core.template:TemplateInterface.load
 cement.core.template:TemplateInterface.render
-cement.core.template:Tuple
 cement.core.template:Union
 cement.core.template:abstractmethod
 cement.core.template:exc
@@ -478,15 +458,12 @@ cement.ext.ext_argparse:CommandMeta.hide
 cement.ext.ext_argparse:CommandMeta.label
 cement.ext.ext_argparse:CommandMeta.parser_options
 cement.ext.ext_argparse:ControllerHandler
-cement.ext.ext_argparse:Dict
 cement.ext.ext_argparse:FrameworkError
 cement.ext.ext_argparse:LOG
-cement.ext.ext_argparse:List
 cement.ext.ext_argparse:Optional
 cement.ext.ext_argparse:RawDescriptionHelpFormatter
 cement.ext.ext_argparse:SUPPRESS
 cement.ext.ext_argparse:TYPE_CHECKING
-cement.ext.ext_argparse:Tuple
 cement.ext.ext_argparse:dataclass
 cement.ext.ext_argparse:ex
 cement.ext.ext_argparse:expose
@@ -521,9 +498,7 @@ cement.ext.ext_configparser:ConfigParserConfigHandler.has_section
 cement.ext.ext_configparser:ConfigParserConfigHandler.keys
 cement.ext.ext_configparser:ConfigParserConfigHandler.merge
 cement.ext.ext_configparser:ConfigParserConfigHandler.set
-cement.ext.ext_configparser:Dict
 cement.ext.ext_configparser:LOG
-cement.ext.ext_configparser:List
 cement.ext.ext_configparser:RawConfigParser
 cement.ext.ext_configparser:TYPE_CHECKING
 cement.ext.ext_configparser:config
@@ -534,7 +509,6 @@ cement.ext.ext_configparser:re
 cement.ext.ext_daemon:Any
 cement.ext.ext_daemon:CEMENT_DAEMON_APP
 cement.ext.ext_daemon:CEMENT_DAEMON_ENV
-cement.ext.ext_daemon:Dict
 cement.ext.ext_daemon:Environment
 cement.ext.ext_daemon:Environment.daemonize
 cement.ext.ext_daemon:Environment.switch
@@ -552,7 +526,6 @@ cement.ext.ext_daemon:os
 cement.ext.ext_daemon:pwd
 cement.ext.ext_daemon:sys
 cement.ext.ext_dummy:Any
-cement.ext.ext_dummy:Dict
 cement.ext.ext_dummy:DummyMailHandler
 cement.ext.ext_dummy:DummyMailHandler.Meta
 cement.ext.ext_dummy:DummyMailHandler.Meta.label
@@ -568,7 +541,6 @@ cement.ext.ext_dummy:DummyTemplateHandler.Meta.label
 cement.ext.ext_dummy:DummyTemplateHandler.copy
 cement.ext.ext_dummy:DummyTemplateHandler.render
 cement.ext.ext_dummy:LOG
-cement.ext.ext_dummy:List
 cement.ext.ext_dummy:MailHandler
 cement.ext.ext_dummy:Optional
 cement.ext.ext_dummy:OutputHandler
@@ -580,7 +552,6 @@ cement.ext.ext_dummy:minimal_logger
 cement.ext.ext_generate:Any
 cement.ext.ext_generate:Callable
 cement.ext.ext_generate:Controller
-cement.ext.ext_generate:Dict
 cement.ext.ext_generate:Generate
 cement.ext.ext_generate:Generate.Meta
 cement.ext.ext_generate:Generate.Meta.config_section
@@ -603,7 +574,6 @@ cement.ext.ext_generate:shell
 cement.ext.ext_generate:shutil
 cement.ext.ext_generate:yaml
 cement.ext.ext_jinja2:Any
-cement.ext.ext_jinja2:Dict
 cement.ext.ext_jinja2:Environment
 cement.ext.ext_jinja2:FileSystemLoader
 cement.ext.ext_jinja2:Jinja2OutputHandler
@@ -621,13 +591,11 @@ cement.ext.ext_jinja2:OutputHandler
 cement.ext.ext_jinja2:PackageLoader
 cement.ext.ext_jinja2:TYPE_CHECKING
 cement.ext.ext_jinja2:TemplateHandler
-cement.ext.ext_jinja2:Tuple
 cement.ext.ext_jinja2:Union
 cement.ext.ext_jinja2:load
 cement.ext.ext_jinja2:minimal_logger
 cement.ext.ext_json:Any
 cement.ext.ext_json:ConfigParserConfigHandler
-cement.ext.ext_json:Dict
 cement.ext.ext_json:JsonConfigHandler
 cement.ext.ext_json:JsonConfigHandler.Meta
 cement.ext.ext_json:JsonConfigHandler.Meta.json_module
@@ -647,9 +615,7 @@ cement.ext.ext_json:suppress_output_after_render
 cement.ext.ext_json:suppress_output_before_run
 cement.ext.ext_json:unsuppress_output_before_render
 cement.ext.ext_logging:Any
-cement.ext.ext_logging:Dict
 cement.ext.ext_logging:LOG
-cement.ext.ext_logging:List
 cement.ext.ext_logging:LoggingLogHandler
 cement.ext.ext_logging:LoggingLogHandler.Meta
 cement.ext.ext_logging:LoggingLogHandler.Meta.clear_loggers
@@ -676,7 +642,6 @@ cement.ext.ext_logging:LoggingLogHandler.warning
 cement.ext.ext_logging:Optional
 cement.ext.ext_logging:RotatingFileHandler
 cement.ext.ext_logging:TYPE_CHECKING
-cement.ext.ext_logging:Type
 cement.ext.ext_logging:Union
 cement.ext.ext_logging:add_logging_arguments
 cement.ext.ext_logging:deprecate
@@ -690,7 +655,6 @@ cement.ext.ext_logging:minimal_logger
 cement.ext.ext_logging:os
 cement.ext.ext_memcached:Any
 cement.ext.ext_memcached:LOG
-cement.ext.ext_memcached:List
 cement.ext.ext_memcached:MemcachedCacheHandler
 cement.ext.ext_memcached:MemcachedCacheHandler.Meta
 cement.ext.ext_memcached:MemcachedCacheHandler.Meta.config_defaults
@@ -706,7 +670,6 @@ cement.ext.ext_memcached:load
 cement.ext.ext_memcached:minimal_logger
 cement.ext.ext_memcached:pylibmc
 cement.ext.ext_mustache:Any
-cement.ext.ext_mustache:Dict
 cement.ext.ext_mustache:LOG
 cement.ext.ext_mustache:MustacheOutputHandler
 cement.ext.ext_mustache:MustacheOutputHandler.Meta
@@ -735,7 +698,6 @@ cement.ext.ext_plugin:CementPluginHandler.get_loaded_plugins
 cement.ext.ext_plugin:CementPluginHandler.load_plugin
 cement.ext.ext_plugin:CementPluginHandler.load_plugins
 cement.ext.ext_plugin:LOG
-cement.ext.ext_plugin:List
 cement.ext.ext_plugin:TYPE_CHECKING
 cement.ext.ext_plugin:abspath
 cement.ext.ext_plugin:exc
@@ -748,7 +710,6 @@ cement.ext.ext_plugin:plugin
 cement.ext.ext_plugin:re
 cement.ext.ext_plugin:sys
 cement.ext.ext_print:Any
-cement.ext.ext_print:Dict
 cement.ext.ext_print:LOG
 cement.ext.ext_print:PrintDictOutputHandler
 cement.ext.ext_print:PrintDictOutputHandler.Meta
@@ -800,7 +761,6 @@ cement.ext.ext_scrub:scrub_output
 cement.ext.ext_smtp:Any
 cement.ext.ext_smtp:BASE64
 cement.ext.ext_smtp:Charset
-cement.ext.ext_smtp:Dict
 cement.ext.ext_smtp:Header
 cement.ext.ext_smtp:LOG
 cement.ext.ext_smtp:MIMEBase
@@ -815,7 +775,6 @@ cement.ext.ext_smtp:SMTPMailHandler.Meta.config_defaults
 cement.ext.ext_smtp:SMTPMailHandler.Meta.label
 cement.ext.ext_smtp:SMTPMailHandler.send
 cement.ext.ext_smtp:TYPE_CHECKING
-cement.ext.ext_smtp:Tuple
 cement.ext.ext_smtp:Union
 cement.ext.ext_smtp:datetime
 cement.ext.ext_smtp:deprecate
@@ -831,9 +790,7 @@ cement.ext.ext_smtp:os
 cement.ext.ext_smtp:smtplib
 cement.ext.ext_smtp:timezone
 cement.ext.ext_tabulate:Any
-cement.ext.ext_tabulate:Dict
 cement.ext.ext_tabulate:LOG
-cement.ext.ext_tabulate:List
 cement.ext.ext_tabulate:TYPE_CHECKING
 cement.ext.ext_tabulate:TabulateOutputHandler
 cement.ext.ext_tabulate:TabulateOutputHandler.Meta
@@ -856,12 +813,10 @@ cement.ext.ext_watchdog:FileSystemEvent
 cement.ext.ext_watchdog:FileSystemEventHandler
 cement.ext.ext_watchdog:FrameworkError
 cement.ext.ext_watchdog:LOG
-cement.ext.ext_watchdog:List
 cement.ext.ext_watchdog:MetaMixin
 cement.ext.ext_watchdog:Observer
 cement.ext.ext_watchdog:Optional
 cement.ext.ext_watchdog:TYPE_CHECKING
-cement.ext.ext_watchdog:Type
 cement.ext.ext_watchdog:WatchdogEventHandler
 cement.ext.ext_watchdog:WatchdogEventHandler.on_any_event
 cement.ext.ext_watchdog:WatchdogManager
@@ -883,7 +838,6 @@ cement.ext.ext_watchdog:watchdog_start
 cement.ext.ext_yaml:Any
 cement.ext.ext_yaml:Callable
 cement.ext.ext_yaml:ConfigParserConfigHandler
-cement.ext.ext_yaml:Dict
 cement.ext.ext_yaml:LOG
 cement.ext.ext_yaml:TYPE_CHECKING
 cement.ext.ext_yaml:YamlConfigHandler
@@ -919,7 +873,6 @@ cement.utils.fs:os
 cement.utils.fs:shutil
 cement.utils.fs:tempfile
 cement.utils.misc:Any
-cement.utils.misc:Dict
 cement.utils.misc:MinimalLogger
 cement.utils.misc:MinimalLogger.debug
 cement.utils.misc:MinimalLogger.error
@@ -943,7 +896,6 @@ cement.utils.misc:wrap
 cement.utils.shell:Any
 cement.utils.shell:Callable
 cement.utils.shell:FrameworkError
-cement.utils.shell:List
 cement.utils.shell:MetaMixin
 cement.utils.shell:Optional
 cement.utils.shell:PIPE
@@ -967,7 +919,6 @@ cement.utils.shell:Prompt.Meta.text
 cement.utils.shell:Prompt.process_input
 cement.utils.shell:Prompt.prompt
 cement.utils.shell:Thread
-cement.utils.shell:Tuple
 cement.utils.shell:Union
 cement.utils.shell:builtins
 cement.utils.shell:cmd
@@ -987,7 +938,6 @@ cement.utils.test:shell
 cement.utils.test:shutil
 cement.utils.test:skip
 cement.utils.version:Optional
-cement.utils.version:Tuple
 cement.utils.version:VERSION
 cement.utils.version:datetime
 cement.utils.version:get_git_changeset

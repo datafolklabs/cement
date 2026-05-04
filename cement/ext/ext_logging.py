@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 import os
 from logging.handlers import RotatingFileHandler
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 from ..core import log
 from ..core.deprecations import deprecate
@@ -60,7 +60,7 @@ class LoggingLogHandler(log.LogHandler):
         namespace: str = None  # type: ignore
 
         #: Class to use as the formatter
-        formatter_class: Type = logging.Formatter
+        formatter_class: type = logging.Formatter
 
         #: The logging format for the file logger.
         file_format = "%(asctime)s (%(levelname)s) %(namespace)s : " + \
@@ -79,7 +79,7 @@ class LoggingLogHandler(log.LogHandler):
         #: Changes in Cement 2.1.3.  Previous versions only supported
         #: `clear_loggers` as a boolean, but did fully support clearing
         #: non-app logging namespaces.
-        clear_loggers: List[str] = []
+        clear_loggers: list[str] = []
 
         #: The default configuration dictionary to populate the ``log``
         #: section.
@@ -95,7 +95,7 @@ class LoggingLogHandler(log.LogHandler):
         #: List of arguments to use for the cli options
         #: (ex: [``-l``, ``--list``]).  If a log-level argument is not wanted,
         #: set to ``None`` (default).
-        log_level_argument: Optional[List[str]] = None
+        log_level_argument: Optional[list[str]] = None
 
         #: The help description for the log level argument
         log_level_argument_help = 'logging level'
@@ -268,7 +268,7 @@ class LoggingLogHandler(log.LogHandler):
 
         self.backend.addHandler(file_handler)
 
-    def _get_logging_kwargs(self, namespace: Optional[str], **kw: Any) -> Dict[str, Any]:
+    def _get_logging_kwargs(self, namespace: Optional[str], **kw: Any) -> dict[str, Any]:
         if namespace is None:
             namespace = self._meta.namespace
 
