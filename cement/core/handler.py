@@ -16,7 +16,7 @@ LOG = minimal_logger(__name__)
 
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 
 class Handler(ABC, MetaMixin):
@@ -107,7 +107,7 @@ class Handler(ABC, MetaMixin):
         """
         Perform any validation to ensure proper data, meta-data, etc.
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
 
 class HandlerManager:
