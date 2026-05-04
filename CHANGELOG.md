@@ -26,6 +26,12 @@ Bugs:
   `scripts/audit-public-api.py` so the
   `make audit-public-api` regression gate is portable across
   non-UTF-8 locales (Windows cp1252, locale-stripped Docker, etc.)
+- `[core.interface]` Widen `InterfaceManager.get` `fallback`
+  parameter to `Any` to match the documented public contract and
+  the existing test that passes a string fallback (the parameter
+  was mechanically narrowed to `type[Interface] | None` by the
+  Phase 03 UP045 sweep; the runtime always accepted arbitrary
+  fallback values per the `cache.get` sibling pattern)
 
 Features:
 

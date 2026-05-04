@@ -60,11 +60,14 @@ class InterfaceManager:
         self.app = app
         self.__interfaces__ = {}
 
-    # D-09: passthrough kwargs for the handler-resolution machinery; wide
-    # type is intentional. Public InterfaceManager API (D-12).
+    # D-09: fallback accepts user-arbitrary values per the public
+    # contract (matches cache.get pattern; tests verify string
+    # fallback). Passthrough kwargs for the handler-resolution
+    # machinery; wide type is intentional. Public InterfaceManager
+    # API (D-12).
     def get(self,
             interface: str,
-            fallback: type[Interface] | None = None,
+            fallback: Any = None,
             **kwargs: Any) -> type[Interface]:
         """
         Get an interface class.
@@ -92,7 +95,7 @@ class InterfaceManager:
         if interface in self.__interfaces__.keys():
             return self.__interfaces__[interface]
         elif fallback is not None:
-            return fallback
+            return fallback  # type: ignore[no-any-return]
         else:
             raise exc.InterfaceError(f"interface '{interface}' does not exist!")
 
