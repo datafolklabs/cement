@@ -23,7 +23,7 @@ CEMENT_DAEMON_ENV = None
 CEMENT_DAEMON_APP: App = None  # type: ignore
 
 
-class Environment(object):
+class Environment:
 
     """
     This class provides a mechanism for altering the running processes

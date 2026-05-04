@@ -11,12 +11,12 @@ from cement.core.plugin import PluginHandler, PluginInterface
 
 # module tests
 
-class TestPluginInterface(object):
+class TestPluginInterface:
     def test_interface(self):
         assert PluginInterface.Meta.interface == 'plugin'
 
 
-class TestPluginHandler(object):
+class TestPluginHandler:
     def test_subclassing(self):
 
         class MyPluginHandler(PluginHandler):

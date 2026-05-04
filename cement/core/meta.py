@@ -3,7 +3,7 @@
 from typing import Any
 
 
-class Meta(object):
+class Meta:
 
     """
     Container class for meta attributes of a larger class. Keyword arguments
@@ -19,7 +19,7 @@ class Meta(object):
             setattr(self, key, dict_obj[key])
 
 
-class MetaMixin(object):
+class MetaMixin:
 
     """
     Mixin that provides the meta class support to add settings to instances

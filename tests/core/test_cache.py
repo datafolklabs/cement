@@ -3,12 +3,12 @@ from cement.core.cache import CacheHandler, CacheInterface
 
 # module tests
 
-class TestCacheInterface(object):
+class TestCacheInterface:
     def test_interface(self):
         assert CacheInterface.Meta.interface == 'cache'
 
 
-class TestCacheHandler(object):
+class TestCacheHandler:
     def test_subclassing(self):
         class MyCacheHandler(CacheHandler):
             class Meta:

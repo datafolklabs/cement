@@ -11,7 +11,7 @@ from types import TracebackType
 from typing import Any
 
 
-class Tmp(object):
+class Tmp:
 
     """
     Provides creation and cleanup of a separate temporary directory, and file.

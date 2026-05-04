@@ -6,7 +6,7 @@ import warnings
 from cement.core.foundation import TestApp
 
 
-class TestDeprecations(object):
+class TestDeprecations:
     def test_3_0_8__1(self):
         os.environ['CEMENT_FRAMEWORK_LOGGING'] = '1'
 

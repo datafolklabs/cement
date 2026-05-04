@@ -58,6 +58,8 @@ Refactoring:
   `.format(**template_dict)` template-substitution callsites in
   cement/core/foundation.py preserved untouched per Phase 03 D-19.
   REFACTOR-04 closeout.
+- `[core]` Drop redundant `(object)` base class (UP004); Python 3
+  classes inherit from object implicitly.
 
 Misc:
 

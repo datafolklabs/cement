@@ -8,12 +8,12 @@ from cement.core.log import LogHandler, LogInterface
 
 # module tests
 
-class TestLogInterface(object):
+class TestLogInterface:
     def test_interface(self):
         assert LogInterface.Meta.interface == 'log'
 
 
-class TestLogHandler(object):
+class TestLogHandler:
 
     def test_subclassing(self):
 

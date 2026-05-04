@@ -107,7 +107,7 @@ class Handler(ABC, MetaMixin):
         pass    # pragma: nocover
 
 
-class HandlerManager(object):
+class HandlerManager:
     """
     Manages the handler system to define, get, resolve, etc handlers with
     the Cement Framework.

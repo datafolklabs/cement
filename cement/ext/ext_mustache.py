@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 LOG = minimal_logger(__name__)
 
 
-class PartialsLoader(object):
+class PartialsLoader:
 
     def __init__(self, handler: TemplateHandler) -> None:
         self.handler = handler

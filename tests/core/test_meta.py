@@ -2,14 +2,14 @@
 from cement.core.meta import Meta, MetaMixin
 
 
-class TestMeta(object):
+class TestMeta:
     def test_meta(self):
         m = Meta(key='value')
         assert hasattr(m, 'key')
         assert m.key == 'value'
 
 
-class TestMetaMixin(object):
+class TestMetaMixin:
     def test_metamixin(self):
         class SomeClass(MetaMixin):
             class Meta:

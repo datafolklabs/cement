@@ -8,14 +8,14 @@ from cement.core.output import OutputInterface
 
 # module tests
 
-class TestInterface(object):
+class TestInterface:
     def test_subclassing(self):
         class MyInterface(Interface):
             class Meta:
                 interface = 'test'
 
 
-class TestInterfaceManager(object):
+class TestInterfaceManager:
     pass
 
 

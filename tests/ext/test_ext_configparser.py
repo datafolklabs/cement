@@ -6,7 +6,7 @@ from cement.ext.ext_configparser import ConfigParserConfigHandler
 
 # module tests
 
-class TestConfigParserConfigHandler(object):
+class TestConfigParserConfigHandler:
     def test_subclassing(self):
         class MyConfigHandler(ConfigParserConfigHandler):
             class Meta:

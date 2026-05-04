@@ -10,7 +10,7 @@ from cement.ext.ext_dummy import DummyOutputHandler
 
 # module tests
 
-class TestHandler(object):
+class TestHandler:
     def test_subclassing(self):
         class MyHandler(Handler):
             class Meta:
@@ -22,7 +22,7 @@ class TestHandler(object):
         assert h._meta.label == 'my_handler'
 
 
-class TestHandlerManager(object):
+class TestHandlerManager:
     pass
 
 

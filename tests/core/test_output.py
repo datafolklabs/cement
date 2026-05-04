@@ -3,12 +3,12 @@ from cement.core.output import OutputHandler, OutputInterface
 
 # module tests
 
-class TestOutputInterface(object):
+class TestOutputInterface:
     def test_interface(self):
         assert OutputInterface.Meta.interface == 'output'
 
 
-class TestOutputHandler(object):
+class TestOutputHandler:
     def test_subclassing(self):
         class MyOutputHandler(OutputHandler):
             class Meta:
