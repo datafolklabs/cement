@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: "Phase 3 Plan 07 complete (Wave 7 — pragma:nocover audit with D-15 locked-vocabulary labels; D-24 conjunct #7 GREEN; 1 plan / 1 wave remaining — Plan 08 / Wave 8 is final acceptance gate)"
-last_updated: "2026-05-04T04:14:22Z"
+stopped_at: "Phase 3 COMPLETE. All 8 plans landed; all 9 D-24 conjuncts GREEN against fresh caches; REFACTOR-01..04 + COV-01..03 SATISFIED; ROADMAP marked Phase 3 [x] complete with date 2026-05-04. Phase 4 (Backlog Triage) and Phase 5 (Deprecations, Docs & Security Stubs) unblocked."
+last_updated: "2026-05-04T04:31:51Z"
 last_activity: 2026-05-04
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 21
-  completed_plans: 20
-  percent: 95
+  completed_plans: 21
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-24)
 
 **Core value:** Cement 3 stays solid, secure, performant, and bug-free under strict backward compatibility — while being continuously maintained against a modern Python and tooling ecosystem.
-**Current focus:** Phase 3 — Internal Refactor & Coverage Hardening
+**Current focus:** Phase 4 — Backlog Triage (or Phase 5 in parallel) — Phase 3 closed 2026-05-04.
 
 ## Current Position
 
-Phase: 3
-Plan: 07/08 complete (Wave 7 closed; Wave 8 unblocked — final acceptance gate)
-Status: Phase 3 Plan 07 (Wave 7 — pragma:nocover audit with D-15 locked-vocabulary category labels) complete. 39 per-file atomic source commits + 3 batch-summary docs(03) commits across 39 files / 141 sites: Batch A (cement/core/, 15 files / 58 sites — abstract method, TYPE_CHECKING import, platform-specific, defensive: unreachable, untestable: signal handler, version constant), Batch B (cement/ext/ ext_alarm-ext_logging, 10 files / 43 sites — TYPE_CHECKING import, defensive: unreachable, untestable: dynamic import, platform-specific), Batch C (cement/ext/ ext_memcached-ext_yaml, 10 files / 22 sites — TYPE_CHECKING import, defensive: unreachable, untestable: dynamic import), Batch D (cement/cli/ + cement/utils/, 4 files / 18 sites — defensive: unreachable, platform-specific). D-24 conjunct #7 GREEN: `grep -nE 'pragma:[[:space:]]*no[[:space:]]*cover' cement/ | grep -vE '# (<8 D-15 categories>)' | wc -l` returns 0. Per-category breakdown: defensive: unreachable=51, abstract method=45, TYPE_CHECKING import=26, platform-specific=13, untestable: dynamic import=4, version constant=1, untestable: signal handler=1, total=141. NO D-16 vocabulary expansion was triggered — every site fit one of the 8 D-15 categories without amending CONTEXT.md. 4 deviations auto-fixed inline (3 Rule 1 bugs — ruff I001 import-block reformat at foundation.py:41 + ext_argparse.py:17, E501 line-too-long after category-label append handled with alignment trim + targeted noqa siblings, cli/main.py:49 noqa expansion to T201,E501; 1 Rule 2 missing-critical for surface-preservation of an existing free-form annotation at ext_smtp.py:187 — category label inserted BETWEEN pragma and free-form note so audit grep still matches). 03-VERIFICATION.md updated with Wave 7 post-audit section + D-24 conjunct #7 GREEN + per-batch + per-category breakdown tables + D-17 verification grep result captured as evidence. All D-24 conjuncts through Wave 7 GREEN (#1-#9); Wave 8 (Plan 08) finalizes 03-VERIFICATION.md with full 9-conjunct evidence + REFACTOR-01 acceptance-via-coverage rationale + marks Phase 3 complete in ROADMAP.
+Phase: 3 COMPLETE (next: Phase 4 — Backlog Triage; Phase 5 — Deprecations, Docs & Security Stubs can run in parallel per ROADMAP)
+Plan: 08/08 complete (all 8 waves landed; final acceptance gate GREEN)
+Status: Phase 3 Plan 08 (Wave 8 — final acceptance gate) complete. 2 atomic commits: ee9cc01d (`docs(03): finalize phase verification + D-24 9-conjunct evidence` — 03-VERIFICATION.md 318 → 729 lines, status: in-progress → passed, score: 9/9 D-24 conjuncts GREEN; full per-conjunct evidence transcripts; REFACTOR-01 acceptance-via-coverage rationale per D-20 + D-21 risk acknowledgement; Behavioral Spot-Checks; Requirements Coverage table; ROADMAP SC mapping; Phase 3 Commit Audit; Defense-in-Depth Final Reset Transcript; Gaps Summary; Final Acceptance checklist; CHANGELOG.md [dev] entry); 38756c6f (`docs(roadmap): mark Phase 3 complete` — ROADMAP.md Phase 3 row [x] with 2026-05-04 date, Wave 8 sub-plan [x], progress table 4/8 In Progress → 8/8 Complete; REQUIREMENTS.md REFACTOR-01 [ ] → [x] with full D-20 rationale; CHANGELOG.md [dev] entry). Defense-in-depth final reset (make superclean && make init && make test && make comply-ruff && make comply-mypy && make audit-public-api) all exit 0 against fresh caches per RESEARCH.md Runtime State Inventory. All 9 D-24 conjuncts GREEN: #1 make test 100% (3241/3241; 316 passed); #2 ruff All checks passed; #3 mypy Success 51 source files; #4 audit-public-api silent diff (934-line baseline holds byte-for-byte); #5 coverage HTML 25733 bytes; #6 Any 41 → 40 (delta -1); #7 locked-vocab pragma grep empty; #8 os.path scoped untagged 0 (1 boundary-tagged survivor); #9 from __future__ 0 lines. REFACTOR-01..04 + COV-01..03 SATISFIED; ROADMAP Phase 3 SC #1-5 SATISFIED. 84 total Phase 3 commits on modernization-phase-3 branch. Phase 3 closed; Phase 4 + Phase 5 unblocked.
 Last activity: 2026-05-04
 
-Progress: [█████████▌] 95% (20/21 plans completed)
+Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
 
 ## Performance Metrics
 
@@ -65,6 +65,7 @@ Progress: [█████████▌] 95% (20/21 plans completed)
 | Phase 03-internal-refactor-coverage-hardening P05 | 17 min | 2 atomic commits | 16 files |
 | Phase 03-internal-refactor-coverage-hardening P06 | 16 min | 4 atomic commits | 5 files |
 | Phase 03-internal-refactor-coverage-hardening P07 | 75 min | 39 atomic commits + 3 batch-summary docs | 39 files |
+| Phase 03-internal-refactor-coverage-hardening P08 | 7 min | 2 atomic commits | 4 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,11 @@ Recent decisions affecting current work:
 - [Phase 03 Plan 07]: Multi-line import-block rewrite during pragma append (foundation.py:41 + ext_argparse.py:17) — ruff I001 isort auto-fix split single-line `from ... import A, B, C  # pragma: nocover` into multi-line `from ... import (...)` blocks because the appended `# TYPE_CHECKING import` label crossed the 100-char limit. Coverage exclusion behavior preserved (pragma applies to entire import statement). Pattern generalizable for future label-append work where the original import was at-or-near 100 chars pre-append.
 - [Phase 03 Plan 07]: Aligned trailing-comment compression for E501 — sites with aesthetic alignment padding before `# pragma` had alignment trimmed (5-10 char trim) to fit the post-append within 100 chars. A small subset (cli/main.py:49, ext_colorlog.py:106, ext_generate.py:162, ext_plugin.py:69/71/75/77) needed an additional `# noqa: E501` sibling AFTER the pragma + category label so the audit grep still matches.
 - [Phase 03 Plan 07]: Dual-spelling preservation — both `# pragma: nocover` and `# pragma: no cover` spellings preserved (NOT canonicalized) per RESEARCH.md state-of-the-art note. Audit regex matches both via `[[:space:]]*` quantifier between `no` and `cover`.
+- [Phase 03 Plan 08]: REFACTOR-01 accepted via D-20 (100% coverage gate) — NOT via vulture. Adding vulture purely for one acceptance gate would have violated Phase 03 D-13 strict-minimum dev-dep policy. The 100% coverage gate (`fail_under = 100` + `--cov-fail-under=100`) provides the strongest available signal at zero incremental dev-dep cost. D-21 risk acknowledged in 03-VERIFICATION.md: covered-but-functionally-dead code (executes in tests without meaningful asserts) and unused private helpers reachable only from tests remain undetected; future milestones (3.2.0 cleanup or dedicated audit milestone) may re-open with vulture if these gaps prove to bite.
+- [Phase 03 Plan 08]: Defense-in-depth final reset (make superclean && make init && full gate suite) executed BEFORE 03-VERIFICATION.md status flips to passed. Per RESEARCH.md Runtime State Inventory, annotation-syntax changes (UP006/007/045 + FA100 in Waves 3/4) invalidate `.mypy_cache/` AST analysis; running the full gate suite against fresh caches confirms no cache pollution is masking a regression. All 5 reset gates exit 0; 9-conjunct evidence captured against the freshly-rebuilt environment. Pattern generalizes for any multi-wave refactor phase touching annotation syntax or import structure.
+- [Phase 03 Plan 08]: Two atomic commits at phase close (verification artifact + ROADMAP/REQUIREMENTS/CHANGELOG roll-up), NOT one mega-commit. Preserves bisect granularity — the verification artifact change is independent of the milestone-tracking flip; either could be reverted alone if a downstream issue surfaces. REQUIREMENTS.md folded into the docs(roadmap): commit (not its own commit) because flipping REFACTOR-01 [ ] → [x] is itself a milestone-tracking change directly supported by the verification artifact.
+- [Phase 03 Plan 08]: Plan 08 D-24 9-Conjunct Acceptance evidence shape (# | Gate | Command | Expected | Result | Status) generalizes from Phase 1 + Phase 2 D-19 acceptance gate patterns — downstream phases (Phase 4, 5, 6) can reuse this exact table shape. Inline per-conjunct evidence transcripts (### subsection per conjunct with actual command + actual exit + actual stdout snippet) provide forensic-grade evidence vs. summary-only acceptance tables, favored when the phase has multiple acceptance gates with non-trivial output.
+- [Phase 03 Plan 08]: Phase 3 closed: 84 total commits on modernization-phase-3 branch across 8 waves (Wave 1: 3 / Wave 2: 2 / Wave 3: 18 / Wave 4: 2 / Wave 5: 4 / Wave 6: 6 / Wave 7: 43 / Wave 8: 4 — including planning artifacts and ad-hoc lint touch-ups). All 7 phase requirements (REFACTOR-01..04, COV-01..03) SATISFIED with traceability into 03-VERIFICATION.md. All 5 ROADMAP Phase 3 success criteria SATISFIED. 100% coverage gate held continuously across every commit. 03-PUBLIC-API-BASELINE.txt (934 lines) byte-identical with live AST walk. Permanent dev affordances (scripts/audit-public-api.py + Makefile target + ruff UP+FA family + locked-vocabulary pragma audit + D-15 categories + boundary-tag convention) retained for future regression checks across all subsequent 3.0.x patch work.
 
 ### Roadmap Evolution
 
@@ -152,6 +158,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-04T04:14:22Z
-Stopped at: Phase 3 Plan 07 complete (Wave 7 — pragma:nocover audit with D-15 locked-vocabulary labels; D-24 conjunct #7 GREEN; 1 plan / 1 wave remaining — Plan 08 is final acceptance gate)
+Last session: 2026-05-04T04:31:51Z
+Stopped at: Phase 3 COMPLETE. All 8 plans landed; all 9 D-24 conjuncts GREEN against fresh caches (defense-in-depth reset per RESEARCH.md Runtime State Inventory: make superclean && make init && make test && make comply-ruff && make comply-mypy && make audit-public-api all exit 0); REFACTOR-01..04 + COV-01..03 SATISFIED; ROADMAP marked Phase 3 [x] complete with date 2026-05-04 and 8/8 progress; 84 total Phase 3 commits on modernization-phase-3 branch. Phase 4 (Backlog Triage) and Phase 5 (Deprecations, Docs & Security Stubs) unblocked.
 Resume file: None
