@@ -68,6 +68,8 @@ Refactoring:
   cement/core/template.py — `IOError` is an alias since Python 3.3.
 - `[dev]` Drop legacy `u"..."` unicode literal prefix in test code
   (UP025) — Python 3 strings are already Unicode.
+- `[dev]` Replace deprecated `mock` import with `unittest.mock`
+  (UP026) in tests/ext/test_ext_smtp.py + tests/utils/test_shell.py.
 
 Misc:
 

@@ -1,7 +1,7 @@
 
 import time
 
-import mock
+from unittest import mock
 from pytest import raises
 
 from cement.core.exc import FrameworkError

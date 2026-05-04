@@ -4,7 +4,7 @@ import os
 import warnings
 from time import sleep
 
-import mock
+from unittest import mock
 import png
 import requests
 from pytest import raises
