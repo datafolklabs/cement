@@ -210,7 +210,7 @@ class Generate(Controller):
     _meta: Meta  # type: ignore
 
     def _setup(self, app: App) -> None:
-        super(Generate, self)._setup(app)
+        super()._setup(app)
 
     def _default(self) -> None:
         self._parser.print_help()

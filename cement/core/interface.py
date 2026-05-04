@@ -33,7 +33,7 @@ class Interface(ABC, meta.MetaMixin):
         """The string identifier of this interface."""
 
     def __init__(self, **kw: Any) -> None:
-        super(Interface, self).__init__(**kw)
+        super().__init__(**kw)
         try:
             assert self._meta.interface, \
                 f"{self.__class__.__name__}.Meta.interface undefined."

@@ -42,6 +42,6 @@ class CaughtSignal(FrameworkError):  # noqa: N818 - public exception name; addin
 
     def __init__(self, signum: int, frame: Any) -> None:
         msg = f'Caught signal {signum}'
-        super(CaughtSignal, self).__init__(msg)
+        super().__init__(msg)
         self.signum = signum
         self.frame = frame

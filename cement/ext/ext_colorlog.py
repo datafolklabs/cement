@@ -76,7 +76,7 @@ class ColorLogHandler(LoggingLogHandler):
     _meta: Meta
 
     def _get_console_format(self) -> str:
-        format = super(ColorLogHandler, self)._get_console_format()
+        format = super()._get_console_format()
         colorize = self.app.config.get(self._meta.config_section,
                                        'colorize_console_log')
         if sys.stdout.isatty() or 'CEMENT_TEST' in os.environ:
@@ -85,7 +85,7 @@ class ColorLogHandler(LoggingLogHandler):
         return format
 
     def _get_file_format(self) -> str:
-        format = super(ColorLogHandler, self)._get_file_format()
+        format = super()._get_file_format()
         colorize = self.app.config.get(self._meta.config_section,
                                        'colorize_file_log')
         if is_true(colorize):

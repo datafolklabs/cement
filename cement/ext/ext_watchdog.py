@@ -41,7 +41,7 @@ class WatchdogEventHandler(FileSystemEventHandler):
     """
 
     def __init__(self, app: App, *args: Any, **kw: Any) -> None:
-        super(WatchdogEventHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.app = app
 
     def on_any_event(self, event: FileSystemEvent) -> None:
@@ -73,7 +73,7 @@ class WatchdogManager(MetaMixin):
     _meta: Meta  # type: ignore
 
     def __init__(self, app: App, *args: Any, **kw: Any) -> None:
-        super(WatchdogManager, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.app = app
         self.paths: list[str] = []
         self.observer = self._meta.observer()

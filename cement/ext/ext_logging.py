@@ -116,11 +116,11 @@ class LoggingLogHandler(log.LogHandler):
     levels = ['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL', 'CRITICAL']
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(LoggingLogHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.app: App = None  # type: ignore
 
     def _setup(self, app_obj: App) -> None:
-        super(LoggingLogHandler, self)._setup(app_obj)
+        super()._setup(app_obj)
         if self._meta.namespace is None:
             self._meta.namespace = f"{self.app._meta.label}"
 

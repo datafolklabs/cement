@@ -92,7 +92,7 @@ class YamlOutputHandler(output.OutputHandler):
     _meta: Meta  # type: ignore
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(YamlOutputHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.config = None
 
     def _setup(self, app_obj: App) -> None:
@@ -147,7 +147,7 @@ class YamlConfigHandler(ConfigParserConfigHandler):
     _meta: Meta  # type: ignore
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(YamlConfigHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
     def _parse_file(self, file_path: str) -> bool:
         """

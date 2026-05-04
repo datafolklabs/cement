@@ -49,11 +49,11 @@ class RedisCacheHandler(cache.CacheHandler):
     _meta: Meta  # type: ignore
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(RedisCacheHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.mc = None
 
     def _setup(self, *args: Any, **kw: Any) -> None:
-        super(RedisCacheHandler, self)._setup(*args, **kw)
+        super()._setup(*args, **kw)
         self.r = redis.StrictRedis(
             host=self._config('host', default='127.0.0.1'),
             port=self._config('port', default=6379),
