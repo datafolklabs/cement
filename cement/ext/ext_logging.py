@@ -13,25 +13,25 @@ from ..utils import fs
 from ..utils.misc import is_true, minimal_logger
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 
 LOG = minimal_logger(__name__)
 
-try:                                                                 # pragma: no cover
-    NullHandler = logging.NullHandler                                # pragma: no cover
-except AttributeError:                                               # pragma: no cover
-    # Not supported on Python < 3.1/2.7                              # pragma: no cover
-    class NullHandler(logging.Handler):             # type: ignore   # pragma: no cover
+try:  # pragma: no cover  # platform-specific
+    NullHandler = logging.NullHandler  # pragma: no cover  # platform-specific
+except AttributeError:  # pragma: no cover  # platform-specific
+    # Not supported on Python < 3.1/2.7  # pragma: no cover  # platform-specific
+    class NullHandler(logging.Handler):  # type: ignore  # pragma: no cover  # platform-specific
 
-        def handle(self, record):                   # type: ignore   # pragma: no cover
-            pass                                                     # pragma: no cover
+        def handle(self, record):  # type: ignore  # pragma: no cover  # platform-specific
+            pass  # pragma: no cover  # platform-specific
 
-        def emit(self, record):                     # type: ignore   # pragma: no cover
-            pass                                                     # pragma: no cover
+        def emit(self, record):  # type: ignore  # pragma: no cover  # platform-specific
+            pass  # pragma: no cover  # platform-specific
 
-        def createLock(self):  # type: ignore  # pragma: no cover  # noqa: N802 - overrides logging.Handler.createLock (stdlib camelCase)
-            self.lock = None                                         # pragma: no cover
+        def createLock(self):  # type: ignore  # pragma: no cover  # platform-specific  # noqa: N802 - overrides logging.Handler.createLock (stdlib camelCase)
+            self.lock = None  # pragma: no cover  # platform-specific
 
 
 class LoggingLogHandler(log.LogHandler):
@@ -263,8 +263,8 @@ class LoggingLogHandler(log.LogHandler):
 
         # FIXME: self._clear_loggers() should be preventing this but it's not!
         for i in logging.getLogger(f"cement:app:{namespace}").handlers:
-            if isinstance(i, file_handler.__class__):   # pragma: nocover
-                self.backend.removeHandler(i)           # pragma: nocover
+            if isinstance(i, file_handler.__class__):   # pragma: nocover  # defensive: unreachable
+                self.backend.removeHandler(i)           # pragma: nocover  # defensive: unreachable
 
         self.backend.addHandler(file_handler)
 
