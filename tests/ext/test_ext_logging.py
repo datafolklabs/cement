@@ -73,7 +73,7 @@ def test_clear_loggers():
         Log = han()
         Log.clear_loggers(label)
 
-        handler = logging.getLogger("cement:app:%s" % label).handlers
+        handler = logging.getLogger("cement:app:{}".format(label)).handlers
         # Nullhandler remains
         assert len(handler) == 1
         assert isinstance(handler[0], logging.NullHandler)
@@ -82,8 +82,8 @@ def test_clear_loggers():
 def test_clear_loggers_via_keyword():
     with TestApp() as app:
         label = app._meta.label
-        han = logging.getLogger("cement:app:%s" % label).handlers
-        MyLog = LoggingLogHandler(clear_loggers=["%s:%s" % (label, label)])
+        han = logging.getLogger("cement:app:{}".format(label)).handlers
+        MyLog = LoggingLogHandler(clear_loggers=["{}:{}".format(label, label)])
         MyLog._setup(app)
         assert len(han) == 1
         assert isinstance(han[0], logging.NullHandler)
@@ -108,11 +108,11 @@ def test_rotate(tmp):
 
         # check that a second file was created, because this log is over 12
         # bytes.
-        assert os.path.exists("%s.1" % log_file)
-        assert os.path.exists("%s.2" % log_file)
+        assert os.path.exists("{}.1".format(log_file))
+        assert os.path.exists("{}.2".format(log_file))
 
         # this file should exist because of max files
-        assert os.path.exists("%s.3" % log_file) is False
+        assert os.path.exists("{}.3".format(log_file)) is False
 
 
 def test_missing_log_dir(tmp):

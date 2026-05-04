@@ -53,6 +53,11 @@ Refactoring:
   pruned
 - `[core]` Move `Callable` / `Generator` imports from `typing` to
   `collections.abc` (UP035 — deprecated-import path).
+- `[core]` Convert printf-style format strings to modern format
+  (UP031 — `'%s' % x` → `f"{x}"` / `"{}".format(x)`). Protected
+  `.format(**template_dict)` template-substitution callsites in
+  cement/core/foundation.py preserved untouched per Phase 03 D-19.
+  REFACTOR-04 closeout.
 
 Misc:
 

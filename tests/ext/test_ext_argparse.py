@@ -57,7 +57,7 @@ class Second(ArgparseController):
     )
     def cmd2(self):
         if self.app.pargs.cmd2_foo:
-            return "Inside Second.cmd2 : Foo > %s" % self.app.pargs.cmd2_foo
+            return "Inside Second.cmd2 : Foo > {}".format(self.app.pargs.cmd2_foo)
         else:
             return "Inside Second.cmd2"
 

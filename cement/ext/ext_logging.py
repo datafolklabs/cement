@@ -134,8 +134,7 @@ class LoggingLogHandler(log.LogHandler):
         self.set_level(level)
         self.backend.propagate = self._meta.propagate
 
-        LOG.debug("logging initialized for '%s' using %s" %
-                  (self._meta.namespace, self.__class__.__name__))
+        LOG.debug("logging initialized for '{}' using {}".format(self._meta.namespace, self.__class__.__name__))
 
     def set_level(self, level: str) -> None:
         """

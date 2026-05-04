@@ -61,7 +61,7 @@ def test_pid_exists(tmp):
 
 def test_bogus_user(rando):
     with raises(FrameworkError, match='Daemon user'):
-        env = ext_daemon.Environment(user='cement_test_user%s' % rando)
+        env = ext_daemon.Environment(user='cement_test_user{}'.format(rando))
 
     # reset
     env = ext_daemon.Environment()
@@ -72,7 +72,7 @@ def test_bogus_user(rando):
 
 def test_bogus_group(rando):
     with raises(FrameworkError, match='Daemon group'):
-        env = ext_daemon.Environment(group='cement_test_group%s' % rando)
+        env = ext_daemon.Environment(group='cement_test_group{}'.format(rando))
 
     # reset
     env = ext_daemon.Environment()
