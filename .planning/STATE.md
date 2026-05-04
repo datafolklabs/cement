@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Phase 3 Plan 05 complete (Wave 5 — Any-tightening pass; D-24 conjunct #6 GREEN; 3 plans / 3 waves remaining)
-last_updated: "2026-05-04T01:48:00.000Z"
+status: planning
+stopped_at: "Phase 3 Plan 06 complete (Wave 6 — pathlib migration; D-24 conjunct #8 GREEN; 2 plans / 2 waves remaining)"
+last_updated: "2026-05-04T02:49:16.373Z"
 last_activity: 2026-05-04
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 21
-  completed_plans: 19
-  percent: 90
+  completed_plans: 20
+  percent: 95
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 3
-Plan: 05/08 complete (Wave 5 closed; Wave 6 unblocked)
-Status: Phase 3 Plan 05 (Wave 5 — Any-tightening pass on cement/core/) complete. Two atomic commits: `2f3a063f` (docs(03): record Any-baseline + REFACTOR-01 verification — creates 03-VERIFICATION.md with pre-counts: Any=41, pragma=141, pathlib=33) and `6365a6c7` (refactor(core): tighten Any types in cement/core/ — 41 → 40, 2 substantive tightenings: `App.__import__(obj: Any)` → `obj: str` and `_dispatch() -> Any | None` → `-> Any`; inline D-09 justification comments added to all 40 surviving sites). Conservative tightening per D-12: only an UNDOCUMENTED experimental dunder + an internal underscore-prefixed abstract method were tightened; everything in `03-PUBLIC-API-BASELINE.txt` keeps its declared type. RESEARCH.md A3 "5-10 realistic" upper bound was the planning-time estimate; actual delta of 2 substantive sites reflects that the bulk of Any in cement/core/ is genuinely required by the public contract. Pre-baseline +1 drift recorded (RESEARCH.md verified 40 on 2026-05-03; live count 41 on 2026-05-04 — traced to grep visibility of the post-Wave-4 PEP 484 string-quoted signal-handler signature). 03-VERIFICATION.md is in-progress; Wave 8 (D-22 step 14) finalizes with post-counts and the full D-24 9-conjunct evidence. Deferred item logged inline at handler.py:332 (`Handler | Handler | None` duplicate union member from Wave 3 UP007 cascade — orthogonal to Any-tightening). All D-24 conjuncts evaluated through Wave 5 GREEN (#1, #2, #3, #4, #5, #6, #9). Wave 6 (pathlib migration) unblocked.
+Plan: 06/08 complete (Wave 6 closed; Wave 7 unblocked)
+Status: Phase 3 Plan 06 (Wave 6 — pathlib migration across cement/utils/fs.py + cement/core/{config,foundation,template}.py) complete. Four atomic commits, ordered per D-13: `6af95ee9` (refactor(utils.fs): migrate os.path to pathlib internals — foundational; 15 → 0 untagged os.path; A7 symlink pre-flight 0/0 → .resolve(strict=False); closes self-flagged TODO), `1f307f23` (refactor(core.config): migrate os.path to pathlib internals — 1 → 0 untagged; import os retained no-op # noqa: F401 # boundary: for public-baseline preservation), `41f27d9f` (refactor(core.foundation): migrate os.path to pathlib internals — 4 → 1 [tagged] os.path; the surviving site is the public alias `join = os.path.join` at line 48, retained per D-12/D-14 since it's in 03-PUBLIC-API-BASELINE.txt with stdlib semantics; D-19 14 protected `.format(**template_dict)` callsites verified untouched), `f2c181ac` (refactor(core.template): migrate os.path to pathlib internals — biggest single-file blast; 13 → 0 untagged os.path; os.walk(src) retained with # boundary: D-14 tag per Task 5 plan decision since pathlib has no triple-tuple equivalent for the (cur_dir, sub_dirs, files) yield shape). All four files use `from pathlib import Path as _Path` private alias to keep audit-public-api baseline byte-identical (a public Path import would have surfaced as `<module>:Path` in the public-API enumeration per D-01). D-24 conjunct #8 GREEN: `grep -rn 'os\.path' cement/utils/fs.py cement/core/foundation.py cement/core/template.py cement/core/config.py | grep -v '# boundary:' | wc -l` returns 0. Plus 03-VERIFICATION.md updated with Wave 6 post-count section + per-file delta tables + A7 finding + Wave 6 commit table; D-24 conjunct #6 + #8 marked GREEN. All D-24 conjuncts through Wave 6 GREEN (#1, #2, #3, #4, #5, #6, #8, #9); only #7 (pragma:nocover locked-vocab) deferred to Wave 7 (Plan 07). 5 deviations auto-fixed inline (3 Rule 1 bugs, 1 Rule 2 missing-critical for public-API preservation, 1 Rule 1 coverage drop) — all resolved before their respective commits landed; no scope creep.
 Last activity: 2026-05-04
 
-Progress: [█████████░] 90% (19/21 plans completed)
+Progress: [█████████▌] 95% (20/21 plans completed)
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [█████████░] 90% (19/21 plans completed)
 | Phase 03-internal-refactor-coverage-hardening P03 | 60 min | 16 commits | 73 files |
 | Phase 03-internal-refactor-coverage-hardening P04 | 7 min | 1 atomic commit (Rule 4) | 30 files |
 | Phase 03-internal-refactor-coverage-hardening P05 | 17 min | 2 atomic commits | 16 files |
+| Phase 03-internal-refactor-coverage-hardening P06 | 16 min | 4 atomic commits | 5 files |
 
 ## Accumulated Context
 
@@ -112,6 +113,10 @@ Recent decisions affecting current work:
 - [Phase 03 Plan 05]: Comment text MUST avoid the literal grep regex (`Any]`, `: Any`, `-> Any`) so justification prose doesn't pollute the post-count. Early drafts triggered 3 false-positive matches; reworded to use plain English. Pattern recorded for future inventory-style audits.
 - [Phase 03 Plan 05]: D-24 conjunct #6 GREEN (Any post < pre — 41 → 40, REFACTOR-02 acceptance). #1/#2/#3/#4/#5/#6/#9 GREEN through Wave 5; #7, #8 deferred to Plans 06/07.
 - [Phase 03 Plan 05]: Deferred item logged inline at handler.py:332 — `def resolve(...) -> Handler | Handler | None` carries a duplicate `Handler` union member (Wave 3 UP007 cascade artifact, semantically equivalent to `Handler | None`). Out-of-scope for D-09 Any-tightening; defer to a future tech-debt cleanup or Phase 5.
+- [Phase ?]: [Phase 03 Plan 06]: Pathlib migration completed across 4 named files (cement/utils/fs.py + cement/core/{config,foundation,template}.py). 33 -> 1 (tagged) os.path callsites; D-24 conjunct #8 GREEN. _Path private alias convention: from pathlib import Path as _Path keeps audit-public-api baseline byte-identical (a public Path import would surface as a new public symbol per D-01). Used in all 4 migrated files.
+- [Phase ?]: [Phase 03 Plan 06]: Surviving public alias join = os.path.join in cement/core/foundation.py:48 retained per D-12/D-14 with inline # boundary: tag — it is in 03-PUBLIC-API-BASELINE.txt (cement.core.foundation:join) with stdlib semantics that downstream callers depend on. os.walk(src) in cement/core/template.py:209 retained per Task 5 plan decision (pathlib has no triple-tuple equivalent; restructure too risky). Both decisions cement the # boundary: D-14 inline-tag pattern as the audit-grep-friendly convention.
+- [Phase ?]: [Phase 03 Plan 06]: import os retained in cement/core/config.py with # noqa: F401 # boundary: ... (D-12). cement.core.config:os is in the public-API baseline; removing the now-unused import would have shrunk the public surface (downstream code doing 'from cement.core.config import os' would have broken). Same surface-preservation discipline as the join alias decision; generalizable pattern for future migrations.
+- [Phase ?]: [Phase 03 Plan 06]: A7 symlink pre-flight executed (find tests/ -type l + find cement/ -type l) — 0 symlinks in scope. Decision: Path(p).expanduser().resolve(strict=False) — matches os.path.abspath(os.path.expanduser(p)) semantics for non-symlink paths per RESEARCH.md A7 decision tree. Recorded in cement/utils/fs.py commit body (6af95ee9) for auditability.
 
 ### Roadmap Evolution
 
@@ -140,6 +145,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-04T01:48:00.000Z
-Stopped at: Phase 3 Plan 05 complete (Wave 5 — Any-tightening pass; D-24 conjunct #6 GREEN; 3 plans / 3 waves remaining)
+Last session: 2026-05-04T02:49:16.368Z
+Stopped at: Phase 3 Plan 06 complete (Wave 6 — pathlib migration; D-24 conjunct #8 GREEN; 2 plans / 2 waves remaining)
 Resume file: None
