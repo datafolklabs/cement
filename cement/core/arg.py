@@ -62,7 +62,7 @@ class ArgumentInterface(Interface):
             None
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     @abstractmethod
     def parse(self, *args: list[str]) -> object:
@@ -80,7 +80,7 @@ class ArgumentInterface(Interface):
             arguments
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
 
 class ArgumentHandler(ArgumentInterface, Handler):
@@ -88,4 +88,4 @@ class ArgumentHandler(ArgumentInterface, Handler):
     """Argument handler implementation"""
 
     class Meta(Handler.Meta):
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
