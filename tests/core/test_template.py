@@ -6,12 +6,12 @@ from cement.utils.test import TestApp, raises
 
 # module tests
 
-class TestTemplateInterface(object):
+class TestTemplateInterface:
     def test_interface(self):
         assert TemplateInterface.Meta.interface == 'template'
 
 
-class TestTemplateHandler(object):
+class TestTemplateHandler:
     def test_subclassing(self):
         class MyTemplateHandler(TemplateHandler):
             class Meta:

@@ -20,7 +20,7 @@ def alarm_handler(app: App, signum: int, frame: Any) -> None:
         app.log.error(app.alarm.msg)
 
 
-class AlarmManager(object):
+class AlarmManager:
     """
     Lets the developer easily set and stop an alarm.  If the
     alarm exceeds the given time it will raise ``signal.SIGALRM``.

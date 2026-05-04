@@ -47,7 +47,7 @@ class Interface(ABC, meta.MetaMixin):
         pass
 
 
-class InterfaceManager(object):
+class InterfaceManager:
     """
     Manages the interface system to define, get, list interfaces with
     the Cement Framework.

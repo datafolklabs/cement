@@ -3,7 +3,7 @@ from cement.ext.ext_plugin import CementPluginHandler
 
 # module tests
 
-class TestCementPluginHandler(object):
+class TestCementPluginHandler:
     def test_subclassing(self):
         class MyPluginHandler(CementPluginHandler):
             class Meta:

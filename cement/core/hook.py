@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 LOG = minimal_logger(__name__)
 
 
-class HookManager(object):
+class HookManager:
     """
     Manages the hook system to define, get, run, etc hooks within the
     the Cement Framework and applications Built on Cement (tm).

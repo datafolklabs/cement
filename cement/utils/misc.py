@@ -132,7 +132,7 @@ def wrap(text: str,
     return wrapper.fill(text)
 
 
-class MinimalLogger(object):
+class MinimalLogger:
 
     def __init__(self,
                  namespace: str,

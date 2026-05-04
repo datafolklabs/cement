@@ -41,12 +41,12 @@ class MyConfigHandler(ConfigHandler):
         pass
 
 
-class TestConfigInterface(object):
+class TestConfigInterface:
     def test_interface(self):
         assert ConfigInterface.Meta.interface == 'config'
 
 
-class TestConfigHandler(object):
+class TestConfigHandler:
     def test_subclassing(self):
         h = MyConfigHandler()
         assert h._meta.interface == 'config'

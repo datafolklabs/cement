@@ -12,13 +12,13 @@ from cement.core.foundation import TestApp
 from cement.ext import ext_daemon
 
 
-class FakeUser(object):
+class FakeUser:
     def __init__(self):
         self.pw_uid = 'BogusId'
         self.pw_dir = 'BogusDir'
 
 
-class FakeGroup(object):
+class FakeGroup:
     def __init__(self):
         self.gr_gid = 'BogusGroupId'
 

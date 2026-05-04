@@ -9,7 +9,7 @@ from cement.core.foundation import TestApp
 
 # module tests
 
-class TestHookManager(object):
+class TestHookManager:
     pass
 
 

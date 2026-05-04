@@ -8,12 +8,12 @@ from cement.core.handler import Handler
 
 # module tests
 
-class TestExtensionInterface(object):
+class TestExtensionInterface:
     def test_interface(self):
         assert ExtensionInterface.Meta.interface == 'extension'
 
 
-class TestExtensionHandler(object):
+class TestExtensionHandler:
     def test_subclassing(self):
         class MyExtensionHandler(ExtensionHandler):
             class Meta:

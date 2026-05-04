@@ -4,7 +4,7 @@ from pytest import raises
 from cement.core.exc import CaughtSignal, FrameworkError, InterfaceError
 
 
-class TestExceptions(object):
+class TestExceptions:
     def test_frameworkerror(self):
         with raises(FrameworkError, match=".*framework exception.*"):
             raise FrameworkError("test framework exception message")

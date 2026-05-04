@@ -3,12 +3,12 @@ from cement.core.mail import MailHandler, MailInterface
 
 # module tests
 
-class TestMailInterface(object):
+class TestMailInterface:
     def test_interface(self):
         assert MailInterface.Meta.interface == 'mail'
 
 
-class TestMailHandler(object):
+class TestMailHandler:
     def test_subclassing(self):
         class MyMailHandler(MailHandler):
             class Meta:

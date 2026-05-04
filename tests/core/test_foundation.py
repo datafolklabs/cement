@@ -72,11 +72,11 @@ def test_add_handler_override_options_no_override():
 
 
 def test_handler_override():
-    class MetaStub(object):
+    class MetaStub:
         def __init__(self):
             self.handler_override_options = None
 
-    class AppStub(object):
+    class AppStub:
         def __init__(self, meta):
             self._meta = meta
 
@@ -252,7 +252,7 @@ def test_bootstrap():
 
 
 def test_resolve_bad_handler():
-    class Bogus(object):
+    class Bogus:
         pass
 
     with pytest.raises(FrameworkError, match="Unable to resolve handler"):

@@ -3,12 +3,12 @@ from cement.core.arg import ArgumentHandler, ArgumentInterface
 
 # module tests
 
-class TestArgumentInterface(object):
+class TestArgumentInterface:
     def test_interface(self):
         assert ArgumentInterface.Meta.interface == 'argument'
 
 
-class TestArgumentHandler(object):
+class TestArgumentHandler:
     def test_subclassing(self):
         class MyArgumentHandler(ArgumentHandler):
             class Meta:

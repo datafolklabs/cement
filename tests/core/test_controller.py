@@ -3,12 +3,12 @@ from cement.core.controller import ControllerHandler, ControllerInterface
 
 # module tests
 
-class TestControllerInterface(object):
+class TestControllerInterface:
     def test_interface(self):
         assert ControllerInterface.Meta.interface == 'controller'
 
 
-class TestControllerHandler(object):
+class TestControllerHandler:
     def test_subclassing(self):
         class MyControllerHandler(ControllerHandler):
             class Meta:
