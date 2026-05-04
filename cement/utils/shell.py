@@ -16,7 +16,7 @@ from ..core.meta import MetaMixin
 def cmd(command: str,
         capture: bool = True,
         *args: Any,
-        **kwargs: Any) -> tuple[str, str, int] | int:
+        **kwargs: Any) -> tuple[bytes, bytes, int] | int:
     """
     Wrapper around ``exec_cmd`` and ``exec_cmd2`` depending on whether
     capturing output is desired.  Defaults to setting the Popen ``shell``
@@ -33,7 +33,10 @@ def cmd(command: str,
 
     Returns:
         tuple: When ``capture==True``, returns the ``(stdout, stderror,
-            return_code)`` of the command.
+            return_code)`` of the command. ``stdout`` and ``stderror`` are
+            ``bytes`` (the ``Popen`` default); decode with the appropriate
+            encoding if string output is needed, or pass ``text=True`` /
+            ``encoding=...`` through ``**kwargs``.
         int: When ``capture==False``, returns only the ``exitcode`` of the
             command.
 
@@ -43,7 +46,7 @@ def cmd(command: str,
 
             from cement.utils import shell
 
-            # execute a command and capture output
+            # execute a command and capture output (bytes)
             stdout, stderr, exitcode = shell.cmd('echo helloworld')
 
             # execute a command but do not capture output
@@ -54,8 +57,8 @@ def cmd(command: str,
     exitcode: int
 
     if capture is True:
-        stdout: str
-        stderr: str
+        stdout: bytes
+        stderr: bytes
         (stdout, stderr, exitcode) = exec_cmd(command, *args, **kwargs)
         return (stdout, stderr, exitcode)
     else:
@@ -65,7 +68,7 @@ def cmd(command: str,
 
 def exec_cmd(cmd_args: str | list[str],
              *args: Any,
-             **kwargs: Any) -> tuple[str, str, int]:
+             **kwargs: Any) -> tuple[bytes, bytes, int]:
     """
     Execute a shell call using Subprocess.  All additional ``*args`` and
     ``**kwargs`` are passed directly to ``subprocess.Popen``.  See
@@ -82,6 +85,10 @@ def exec_cmd(cmd_args: str | list[str],
 
     Returns:
         tuple: The ``(stdout, stderror, return_code)`` of the command.
+            ``stdout`` and ``stderror`` are ``bytes`` (the ``Popen``
+            default); decode with the appropriate encoding if string
+            output is needed, or pass ``text=True`` / ``encoding=...``
+            through ``**kwargs``.
 
     Example:
 
@@ -89,6 +96,7 @@ def exec_cmd(cmd_args: str | list[str],
 
             from cement.utils import shell
 
+            # bytes by default
             stdout, stderr, exitcode = shell.exec_cmd(['echo', 'helloworld'])
 
     """
