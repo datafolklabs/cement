@@ -12,7 +12,7 @@ LOG = minimal_logger(__name__)
 
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 
 class Interface(ABC, meta.MetaMixin):
