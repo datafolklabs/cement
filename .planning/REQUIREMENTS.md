@@ -38,7 +38,7 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 ### Test Coverage
 
 - [x] **COV-01**: `make test` produces 100% coverage report; any drift from prior 100% baseline is closed before milestone completion — Validated in Phase 03 Plan 01 (audit gate installed; coverage at 100% with 316 passing tests)
-- [ ] **COV-02**: Coverage HTML report (`coverage-report/`) generates without warnings
+- [x] **COV-02**: Coverage HTML report (`coverage-report/`) generates without warnings — Verified mid-phase in Phase 03 Plan 03 (Wave 3 wave-end check: `coverage-report/index.html` exists; `pytest --cov=cement` exits 0 with 100% coverage 3290/3290 stmts)
 - [ ] **COV-03**: `pragma: no cover` exclusions audited — each remaining one has a code comment justifying it
 
 ### Documentation
@@ -60,7 +60,7 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 - [ ] **REFACTOR-01**: Dead code identified (vulture / coverage diff) and removed without affecting public API or test coverage
 - [ ] **REFACTOR-02**: Type hints tightened in `cement/core/` — fewer `Any`, more precise generics where mypy strict mode allows
 - [ ] **REFACTOR-03**: `os.path` usage in `cement/utils/fs.py` and core internals migrated to `pathlib` where it doesn't change public signatures
-- [ ] **REFACTOR-04**: Modern stdlib idioms applied where backward-compatible (f-strings everywhere, contextlib helpers, `functools.cached_property`)
+- [x] **REFACTOR-04**: Modern stdlib idioms applied where backward-compatible (f-strings everywhere, contextlib helpers, `functools.cached_property`) — Closed mechanically in Phase 03 Plan 03 (UP031 + UP032 cascade resolved all printf-style and `.format()` callsites; protected `.format(**template_dict)` template-substitution sites preserved per D-19; `cached_property` / `contextlib.suppress` adoption was opportunistic per D-19 — none surfaced as obvious wins)
 
 ### Deprecations
 
@@ -141,8 +141,8 @@ Populated by the roadmapper during phase mapping.
 | PYVER-01 | Phase 1 | Complete |
 | PYVER-02 | Phase 1 | Complete |
 | PYVER-03 | Phase 1 | Complete |
-| COV-01 | Phase 3 | Pending |
-| COV-02 | Phase 3 | Pending |
+| COV-01 | Phase 3 | Validated (Phase 03 Plan 01) |
+| COV-02 | Phase 3 | Verified mid-phase (Phase 03 Plan 03) |
 | COV-03 | Phase 3 | Pending |
 | DOCS-01 | Phase 5 | Pending |
 | DOCS-02 | Phase 5 | Pending |
@@ -155,7 +155,7 @@ Populated by the roadmapper during phase mapping.
 | REFACTOR-01 | Phase 3 | Pending |
 | REFACTOR-02 | Phase 3 | Pending |
 | REFACTOR-03 | Phase 3 | Pending |
-| REFACTOR-04 | Phase 3 | Pending |
+| REFACTOR-04 | Phase 3 | Closed (Phase 03 Plan 03 — UP031+UP032 cascade) |
 | DEPREC-01 | Phase 5 | Pending |
 | DEPREC-02 | Phase 5 | Pending |
 | DEPREC-03 | Phase 5 | Pending |
