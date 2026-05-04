@@ -13,7 +13,7 @@ from ..core import exc
 from ..utils.misc import minimal_logger
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 LOG = minimal_logger(__name__)
 LOG = minimal_logger(__name__)
@@ -105,7 +105,7 @@ class Environment:
         else:
             self._write_pid_file()
 
-    def daemonize(self) -> None:  # pragma: no cover
+    def daemonize(self) -> None:  # pragma: no cover  # defensive: unreachable
         """
         Fork the current process into a daemon.
 
@@ -178,7 +178,7 @@ class Environment:
         self._write_pid_file()
 
 
-def daemonize() -> None:  # pragma: no cover
+def daemonize() -> None:  # pragma: no cover  # defensive: unreachable
     """
     This function switches the running user/group to that configured in
     ``config['daemon']['user']`` and ``config['daemon']['group']``.  The
@@ -243,7 +243,7 @@ def extend_app(app: "App") -> None:
     app.extend('daemonize', daemonize)
 
 
-def cleanup(app: "App") -> None:  # pragma: no cover
+def cleanup(app: "App") -> None:  # pragma: no cover  # defensive: unreachable
     """
     After application run time, this hook just attempts to clean up the
     pid_file if one was set, and exists.
