@@ -23,7 +23,7 @@ from ..utils import fs
 from ..utils.misc import minimal_logger
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 LOG = minimal_logger(__name__)
 
@@ -43,7 +43,7 @@ class WatchdogEventHandler(FileSystemEventHandler):
         self.app = app
 
     def on_any_event(self, event: FileSystemEvent) -> None:
-        self.app.log.debug(f"Watchdog Event: {event}")  # pragma: nocover
+        self.app.log.debug(f"Watchdog Event: {event}")  # pragma: nocover  # defensive: unreachable
 
 
 class WatchdogManager(MetaMixin):
@@ -166,9 +166,9 @@ def watchdog_add_paths(app: "App") -> None:
             # odd... if a tuple is a single item it ends up as a str?
             # FIXME: coverage gets lots in testing
             if isinstance(path_spec, str):
-                app.watchdog.add(path_spec)  # pragma: nocover
+                app.watchdog.add(path_spec)  # pragma: nocover  # defensive: unreachable
             elif isinstance(path_spec, tuple):
-                app.watchdog.add(*path_spec)  # pragma: nocover
+                app.watchdog.add(*path_spec)  # pragma: nocover  # defensive: unreachable
             else:
                 raise FrameworkError(
                     f"Watchdog path spec must be a tuple, not "
