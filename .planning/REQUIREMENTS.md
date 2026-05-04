@@ -39,7 +39,7 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 
 - [x] **COV-01**: `make test` produces 100% coverage report; any drift from prior 100% baseline is closed before milestone completion — Validated in Phase 03 Plan 01 (audit gate installed; coverage at 100% with 316 passing tests)
 - [x] **COV-02**: Coverage HTML report (`coverage-report/`) generates without warnings — Verified mid-phase in Phase 03 Plan 03 (Wave 3 wave-end check: `coverage-report/index.html` exists; `pytest --cov=cement` exits 0 with 100% coverage 3290/3290 stmts)
-- [ ] **COV-03**: `pragma: no cover` exclusions audited — each remaining one has a code comment justifying it
+- [x] **COV-03**: `pragma: no cover` exclusions audited — each remaining one has a code comment justifying it — Validated in Phase 03 Plan 07 (Wave 7; 141 sites across 39 files all carry one of 8 D-15 locked-vocabulary category labels; D-24 conjunct #7 GREEN: locked-vocabulary inverse grep returns empty; D-17 verification command captured in 03-VERIFICATION.md as evidence)
 
 ### Documentation
 
@@ -143,7 +143,7 @@ Populated by the roadmapper during phase mapping.
 | PYVER-03 | Phase 1 | Complete |
 | COV-01 | Phase 3 | Validated (Phase 03 Plan 01) |
 | COV-02 | Phase 3 | Verified mid-phase (Phase 03 Plan 03) |
-| COV-03 | Phase 3 | Pending |
+| COV-03 | Phase 3 | Validated (Phase 03 Plan 07) |
 | DOCS-01 | Phase 5 | Pending |
 | DOCS-02 | Phase 5 | Pending |
 | DOCS-03 | Phase 6 | Pending |

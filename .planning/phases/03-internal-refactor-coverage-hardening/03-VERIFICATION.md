@@ -126,6 +126,65 @@ CONTEXT.md. Live count on 2026-05-04 matches: 141.
 Wave 7 will apply the locked-vocabulary D-15 labels. Wave 8 records the
 post-audit grep result (must be empty per D-17 / D-24 conjunct #7).
 
+### Wave 7 post-audit (this plan)
+
+**Post-audit count:** **141 sites** (live count unchanged across the
+sweep — comment-only annotation work; no source-logic changes).
+
+**Per-file pre/post deltas:** ZERO sites added, ZERO sites removed.
+Every existing pragma site received a D-15 locked-vocabulary category
+label appended after the existing pragma comment.
+
+**D-17 verification grep result (D-24 conjunct #7):**
+
+```
+$ grep -nE 'pragma:[[:space:]]*no[[:space:]]*cover' cement/ \
+    | grep -vE '# (abstract method|TYPE_CHECKING import|platform-specific|untestable: dynamic import|untestable: subprocess|untestable: signal handler|defensive: unreachable|version constant)' \
+    | wc -l
+0
+```
+
+**EMPTY → D-24 conjunct #7 GREEN ✓ (COV-03 acceptance closed).**
+
+**Per-category breakdown across all of cement/:**
+
+| Category | Sites |
+|----------|-------|
+| `defensive: unreachable` | 51 |
+| `abstract method` | 45 |
+| `TYPE_CHECKING import` | 26 |
+| `platform-specific` | 13 |
+| `untestable: dynamic import` | 4 |
+| `version constant` | 1 |
+| `untestable: signal handler` | 1 |
+| **TOTAL** | **141** |
+
+**Per-batch breakdown:**
+
+| Batch | Scope | Files | Sites | Per-file commits |
+|-------|-------|-------|-------|-------------------|
+| A | cement/core/ | 15 | 58 | 15 |
+| B | cement/ext/ first half (alpha) | 10 | 43 | 10 |
+| C | cement/ext/ second half (alpha) | 10 | 22 | 10 |
+| D | cement/cli/ + cement/utils/ | 4 | 18 | 4 |
+| **TOTAL** | **all of cement/** | **39** | **141** | **39** |
+
+(39 per-file source commits + 3 docs(03) CHANGELOG-batch-summary
+commits [Batches A, B, C] + 1 final docs(03) commit folding
+Batch D summary into the closing CHANGELOG block = 43 total
+commits in Wave 7. RESEARCH.md predicted ~39 files; actual was
+39 files with pragma sites — exact match.)
+
+**Wave 7 commits (39 per-file source + 4 docs(03) batch summaries):**
+recorded in `git log --oneline 9c9db680..HEAD` (Plan 06 anchor →
+Plan 07 final docs commit).
+
+**No D-16 vocabulary expansion was triggered.** Every pragma site fit
+into one of the 8 D-15 categories without reaching into a free-form
+label or amending CONTEXT.md.
+
+**D-24 conjunct #7 GREEN.**
+
 ## Pathlib boundary baseline (REFACTOR-03)
 
 **Pre-migration `os.path` callsites in scoped files (Wave 5
@@ -232,7 +291,7 @@ UP007/UP045 cleaning the import surface.
 | #4 | `make audit-public-api` exit 0 | **green** ✓ (Wave 3 baseline holds; this commit touches no source) |
 | #5 | `coverage-report/index.html` generates | **green** ✓ (COV-02 wave check) |
 | #6 | `Any` reduction strictly positive | **GREEN ✓** (Wave 5 closed; 41 → 40) |
-| #7 | pragma:nocover locked-vocab | pending — Plan 07 |
+| #7 | pragma:nocover locked-vocab | **GREEN ✓** (Wave 7 closed this plan; 141 sites all carry locked-vocabulary labels) |
 | #8 | `os.path` boundary scope | **GREEN ✓** (Wave 6 closed this plan; 33 → 1 surviving + tagged) |
 | #9 | `from __future__ import annotations` strip | **GREEN ✓** (Wave 4 closed) |
 
