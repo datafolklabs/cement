@@ -1,6 +1,7 @@
 
 import os
 import re
+import sys
 
 from pytest import raises
 
@@ -81,3 +82,45 @@ def test_backup_dir_trailing_slash(tmp):
 def test_backup_timestamp(tmp):
     bkfile = fs.backup(tmp.file, timestamp=True)
     assert re.match(r'(.*).bak-[\d]+-[\d]+-[\d]+(.*)', bkfile)  # noqa: W605
+
+
+def test_abspath_preserves_symlinks(tmp):
+    # Phase 03 Wave 9 (CR-01 regression test): fs.abspath() MUST
+    # NOT follow symlinks. Pre-Wave-6 used os.path.abspath which
+    # preserves symlink paths; Wave 6 briefly used Path.resolve
+    # which followed symlinks; Wave 9 restored os.path semantics.
+    # Skip on Windows where symlink creation needs admin.
+    if sys.platform == 'win32':
+        return  # pragma: nocover  # platform-specific
+
+    target_dir = os.path.join(tmp.dir, 'target')
+    link_path = os.path.join(tmp.dir, 'link')
+    os.makedirs(target_dir)
+    os.symlink(target_dir, link_path)
+
+    result = fs.abspath(link_path)
+
+    # The result MUST be the symlink path itself, not the
+    # resolved target. This is the BC contract the 3.0.x track
+    # requires (CLAUDE.md > Constraints: zero public-API
+    # breakage).
+    assert result == link_path
+    assert 'link' in result
+    assert 'target' not in os.path.basename(result)
+
+
+def test_abspath_unknown_user_does_not_raise(tmp):
+    # Phase 03 Wave 9 (CR-02 regression test): fs.abspath() with
+    # an unknown ~user prefix MUST silently fall through and
+    # return the input as-is (os.path.expanduser semantics),
+    # NOT raise RuntimeError (Path.expanduser semantics).
+    # Stale ~deleteduser/path entries in user config files
+    # otherwise crash App.setup() mid-flight.
+    bogus = '~nosuchuser_xyz_phase03_gap/foo'
+
+    # Must not raise
+    result = fs.abspath(bogus)
+
+    # Must match os.path semantics verbatim (silent fallthrough
+    # then absolute-path normalization)
+    assert result == os.path.abspath(bogus)
