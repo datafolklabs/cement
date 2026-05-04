@@ -32,7 +32,7 @@ def test_generate(tmp):
 
         # should have everything
         assert exists_join(tmp.dir, 'take-me')
-        res = open(os.path.join(tmp.dir, 'take-me'), 'r').read()
+        res = open(os.path.join(tmp.dir, 'take-me')).read()
         assert res.find('bar1') >= 0
         assert res.find('bar2') >= 0
         assert res.find('BAR3') >= 0
@@ -42,7 +42,7 @@ def test_generate(tmp):
 
         # copied but not rendered
         assert exists_join(tmp.dir, 'exclude-me')
-        res = open(os.path.join(tmp.dir, 'exclude-me'), 'r').read()
+        res = open(os.path.join(tmp.dir, 'exclude-me')).read()
         assert re.match(r'.*foo1 => \{\{ foo1 \}\}.*', res)
 
         # should not have been copied
@@ -71,7 +71,7 @@ def test_invalid_case(tmp):
         app.run()
 
         assert exists_join(tmp.dir, 'take-me')
-        with open(os.path.join(tmp.dir, 'take-me'), 'r') as f:
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
             res = f.read()
             # Assert that the case was not modified
             assert 'bar1' in res
@@ -92,7 +92,7 @@ def test_no_default(tmp):
 
         with GenerateApp(argv=argv) as app:
             app.run()
-            with open(os.path.join(tmp.dir, 'take-me'), 'r') as f:
+            with open(os.path.join(tmp.dir, 'take-me')) as f:
                 res = f.read()
                 assert 'Bogus' in res
 
@@ -127,7 +127,7 @@ def test_generate_from_template_dir(tmp):
         app.run()
 
         assert exists_join(tmp.dir, 'take-me')
-        res = open(os.path.join(tmp.dir, 'take-me'), 'r').read()
+        res = open(os.path.join(tmp.dir, 'take-me')).read()
         assert res.find('bar1') >= 0
 
 

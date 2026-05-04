@@ -153,7 +153,7 @@ class Environment:
             sys.exit(1)
 
         # Redirect standard file descriptors.
-        stdin = open(self.stdin, 'r')
+        stdin = open(self.stdin)
         stdout = open(self.stdout, 'a+')
         stderr = open(self.stderr, 'a+')
 
@@ -256,7 +256,7 @@ def cleanup(app: App) -> None:  # pragma: no cover
     if CEMENT_DAEMON_ENV and CEMENT_DAEMON_ENV.pid_file:
         if os.path.exists(CEMENT_DAEMON_ENV.pid_file):
             LOG.debug('Cleaning up pid_file...')
-            pid = open(CEMENT_DAEMON_ENV.pid_file, 'r').read().strip()
+            pid = open(CEMENT_DAEMON_ENV.pid_file).read().strip()
 
             # only remove it if we created it.
             if int(pid) == int(os.getpid()):

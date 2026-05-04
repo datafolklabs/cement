@@ -49,7 +49,7 @@ def test_alternate_namespaces(tmp):
         app.log.debug('TEST', __name__)
 
     assert os.path.exists(log_file)
-    with open(log_file, 'r') as f:
+    with open(log_file) as f:
         logs = f.readlines()
         for log in logs:
             assert __name__ in log
