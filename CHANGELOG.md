@@ -70,6 +70,8 @@ Refactoring:
   (UP025) — Python 3 strings are already Unicode.
 - `[dev]` Replace deprecated `mock` import with `unittest.mock`
   (UP026) in tests/ext/test_ext_smtp.py + tests/utils/test_shell.py.
+- `[core]` Replace `for x in iterable: yield x` with `yield from`
+  (UP028) in cement/core/hook.py + tests/core/test_hook.py.
 
 Misc:
 
