@@ -46,10 +46,10 @@ class ControllerInterface(Interface):
             ``None`` if no controller function is called.
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
 
 class ControllerHandler(ControllerInterface, Handler):
     """Controller handler implementation."""
     class Meta(Handler.Meta):
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
