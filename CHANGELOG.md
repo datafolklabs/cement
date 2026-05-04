@@ -106,6 +106,13 @@ Refactoring:
   module-level to avoid expanding the public surface
   (audit-public-api stays exit 0). Lays foundation for
   cement/core/* migrations.
+- `[core.config]` Migrate `cement/core/config.py` os.path.exists
+  callsite in `parse_file` to pathlib (Phase 03 D-11 scope
+  continuation). `import os` retained as a no-op (now `# noqa:
+  F401`) because `cement.core.config:os` is in
+  `03-PUBLIC-API-BASELINE.txt` — removing it would have shrunk
+  the public surface (D-12). Smallest of the four pathlib
+  commits (1 callsite); natural warm-up after fs.py per D-13.
 
 Misc:
 

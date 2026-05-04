@@ -1,7 +1,8 @@
 """Cement core config module."""
 
-import os
+import os  # noqa: F401  # boundary: retained as public-API surface (cement.core.config:os in 03-PUBLIC-API-BASELINE.txt; D-12)
 from abc import abstractmethod
+from pathlib import Path as _Path
 from typing import Any
 
 from ..core.handler import Handler
@@ -230,7 +231,7 @@ class ConfigHandler(ConfigInterface, Handler):
 
         """
         file_path = abspath(file_path)
-        if os.path.exists(file_path):
+        if _Path(file_path).exists():
             LOG.debug(f"config file '{file_path}' exists, loading settings...")
             return self._parse_file(file_path)
         else:
