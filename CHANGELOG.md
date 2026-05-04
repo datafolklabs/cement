@@ -32,6 +32,14 @@ Bugs:
   was mechanically narrowed to `type[Interface] | None` by the
   Phase 03 UP045 sweep; the runtime always accepted arbitrary
   fallback values per the `cache.get` sibling pattern)
+- `[core.template]` Replace fragile bare `assert` in
+  `TemplateHandler.copy()` source-path check with an explicit
+  `NotADirectoryError` raise — bare `assert` is stripped under
+  `python -O`/`-OO`, and `Path.exists()` returned True for files
+  too (silent no-op when `src` was a regular file, since
+  `os.walk` iterates nothing on a non-directory). The check now
+  uses `is_dir()` and raises consistently regardless of
+  optimization level
 
 Features:
 

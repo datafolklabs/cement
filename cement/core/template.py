@@ -172,8 +172,9 @@ class TemplateHandler(TemplateInterface, Handler):
             bool: Returns ``True`` if the copy completed successfully.
 
         Raises:
-            AssertionError: If the ``src`` template directory path does not
-                exists, and when a ``dest`` file already exists and
+            NotADirectoryError: If the ``src`` template path does not
+                exist or is not a directory.
+            AssertionError: When a ``dest`` file already exists and
                 ``force is not True``.
         """
 
@@ -192,7 +193,10 @@ class TemplateHandler(TemplateInterface, Handler):
         ignore_patterns = self._meta.ignore + ignore
         exclude_patterns = self._meta.exclude + exclude
 
-        assert _Path(src).exists(), f"Source path {src} does not exist!"
+        if not _Path(src).is_dir():
+            raise NotADirectoryError(
+                f"Source path is not a directory: {src}"
+            )
 
         dest_path = _Path(dest)
         if not dest_path.exists():
