@@ -6,7 +6,7 @@ import re
 import shutil
 import sys
 from abc import abstractmethod
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from ..core import exc
 from ..core.handler import Handler
@@ -16,7 +16,7 @@ from ..utils.misc import minimal_logger
 
 LOG = minimal_logger(__name__)
 
-LoadTemplateReturnType = tuple[Union[bytes, str, None], Union[str, None]]
+LoadTemplateReturnType = tuple[bytes | str | None, str | None]
 
 
 class TemplateInterface(Interface):
@@ -36,7 +36,7 @@ class TemplateInterface(Interface):
         interface = 'template'
 
     @abstractmethod
-    def render(self, content: str, data: dict[str, Any]) -> Union[str, None]:
+    def render(self, content: str, data: dict[str, Any]) -> str | None:
         """
         Render ``content`` as a template using the ``data`` dict.
 
@@ -68,7 +68,7 @@ class TemplateInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def load(self, path: str) -> tuple[Union[str, bytes], str, Optional[str]]:
+    def load(self, path: str) -> tuple[str | bytes, str, Optional[str]]:
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
@@ -117,7 +117,7 @@ class TemplateHandler(TemplateInterface, Handler):
         if self._meta.exclude is None:
             self._meta.exclude = []
 
-    def render(self, content: Union[str, bytes], data: dict[str, Any]) -> Union[str, None]:
+    def render(self, content: str | bytes, data: dict[str, Any]) -> str | None:
         """
         Render ``content`` as template using using the ``data`` dictionary.
 
@@ -351,7 +351,7 @@ class TemplateHandler(TemplateInterface, Handler):
                       (template_path, template_module))
             return (None, None)
 
-    def load(self, template_path: str) -> tuple[Union[str, bytes], str, Optional[str]]:
+    def load(self, template_path: str) -> tuple[str | bytes, str, Optional[str]]:
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
@@ -375,7 +375,7 @@ class TemplateHandler(TemplateInterface, Handler):
             raise exc.FrameworkError(f"Invalid template path '{template_path}'.")
 
         # first attempt to load from file
-        content: Union[str, bytes, None]
+        content: str | bytes | None
         content, path = self._load_template_from_file(template_path)
         if content is None:
             # second attempt to load from module

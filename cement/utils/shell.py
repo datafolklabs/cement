@@ -6,7 +6,7 @@ from getpass import getpass
 from multiprocessing import Process
 from subprocess import PIPE, Popen
 from threading import Thread
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional
 
 from ..core.exc import FrameworkError
 from ..core.meta import MetaMixin
@@ -15,7 +15,7 @@ from ..core.meta import MetaMixin
 def cmd(command: str,
         capture: bool = True,
         *args: Any,
-        **kwargs: Any) -> Union[tuple[str, str, int], int]:
+        **kwargs: Any) -> tuple[str, str, int] | int:
     """
     Wrapper around ``exec_cmd`` and ``exec_cmd2`` depending on whether
     capturing output is desired.  Defaults to setting the Popen ``shell``
@@ -62,7 +62,7 @@ def cmd(command: str,
         return exitcode
 
 
-def exec_cmd(cmd_args: Union[str, list[str]],
+def exec_cmd(cmd_args: str | list[str],
              *args: Any,
              **kwargs: Any) -> tuple[str, str, int]:
     """
@@ -102,7 +102,7 @@ def exec_cmd(cmd_args: Union[str, list[str]],
     return (stdout, stderr, proc.returncode)
 
 
-def exec_cmd2(cmd_args: Union[str, list[str]],
+def exec_cmd2(cmd_args: str | list[str],
               *args: Any,
               **kwargs: Any) -> int:
     """
@@ -141,7 +141,7 @@ def spawn(target: Callable,
           join: bool = False,
           thread: bool = False,
           *args: Any,
-          **kwargs: Any) -> Union[Process, Thread]:
+          **kwargs: Any) -> Process | Thread:
     """
     Wrapper around ``spawn_process`` and ``spawn_thread`` depending on
     desired execution model.

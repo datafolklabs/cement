@@ -4,7 +4,7 @@ Cement dummy extension module.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 from ..core.mail import MailHandler
 from ..core.output import OutputHandler
@@ -70,7 +70,7 @@ class DummyTemplateHandler(TemplateHandler):
         #: The string identifier of this handler.
         label = 'dummy'
 
-    def render(self, content: Union[str, bytes], data: dict[str, Any]) -> None:
+    def render(self, content: str | bytes, data: dict[str, Any]) -> None:
         """
         This implementation does not actually render anything, but
         rather logs it to the debug facility.

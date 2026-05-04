@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import re
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 from ..core import exc
 from ..core.meta import MetaMixin
@@ -122,7 +122,7 @@ class HandlerManager(object):
             interface: str,
             handler_label: str,
             fallback: Optional[type[Handler]] = None,
-            **kwargs: Any) -> Union[Handler, type[Handler]]:
+            **kwargs: Any) -> Handler | type[Handler]:
         """
         Get a handler object.
 
@@ -329,8 +329,8 @@ class HandlerManager(object):
 
     def resolve(self,
                 interface: str,
-                handler_def: Union[str, Handler, type[Handler]],
-                **kwargs: Any) -> Union[Handler, Optional[Handler]]:
+                handler_def: str | Handler | type[Handler],
+                **kwargs: Any) -> Handler | Optional[Handler]:
         """
         Resolves the actual handler, as it can be either a string identifying
         the handler to load from ``self.__handlers__``, or it can be an

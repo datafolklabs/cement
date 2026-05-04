@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Union
+from typing import Any
 
 from ..core.handler import Handler
 from ..core.interface import Interface
@@ -29,7 +29,7 @@ class ControllerInterface(Interface):
         interface = 'controller'
 
     @abstractmethod
-    def _dispatch(self) -> Union[Any | None]:
+    def _dispatch(self) -> Any | None:
         """
         Reads the application object's data to dispatch a command from this
         controller.  For example, reading ``self.app.pargs`` to determine what
