@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import re
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from ..core import exc
 from ..core.meta import MetaMixin
@@ -48,7 +48,7 @@ class Handler(ABC, MetaMixin):
         no section is set by the user/developer.
         """
 
-        config_defaults: Optional[dict[str, Any]] = None
+        config_defaults: dict[str, Any] | None = None
         """
         A config dictionary that is merged into the applications config
         in the ``[<config_section>]`` block.  These are defaults and do not
@@ -121,7 +121,7 @@ class HandlerManager(object):
     def get(self,
             interface: str,
             handler_label: str,
-            fallback: Optional[type[Handler]] = None,
+            fallback: type[Handler] | None = None,
             **kwargs: Any) -> Handler | type[Handler]:
         """
         Get a handler object.
@@ -330,7 +330,7 @@ class HandlerManager(object):
     def resolve(self,
                 interface: str,
                 handler_def: str | Handler | type[Handler],
-                **kwargs: Any) -> Handler | Optional[Handler]:
+                **kwargs: Any) -> Handler | Handler | None:
         """
         Resolves the actual handler, as it can be either a string identifying
         the handler to load from ``self.__handlers__``, or it can be an

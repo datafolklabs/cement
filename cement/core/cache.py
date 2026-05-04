@@ -1,7 +1,7 @@
 """Cement core cache module."""
 
 from abc import abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from ..core.handler import Handler
 from ..core.interface import Interface
@@ -49,7 +49,7 @@ class CacheInterface(Interface):
         pass    # pragma: nocover
 
     @abstractmethod
-    def set(self, key: str, value: Any, time: Optional[int] = None) -> None:
+    def set(self, key: str, value: Any, time: int | None = None) -> None:
         """
         Set the key/value in the cache for a set amount of ``time``.
 

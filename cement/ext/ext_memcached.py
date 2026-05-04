@@ -13,7 +13,7 @@ extensions.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 import pylibmc  # type: ignore
 
@@ -116,7 +116,7 @@ class MemcachedCacheHandler(cache.CacheHandler):
         """
         return self.app.config.get(self._meta.config_section, key)
 
-    def set(self, key: str, value: Any, time: Optional[int] = None, **kw: Any) -> None:
+    def set(self, key: str, value: Any, time: int | None = None, **kw: Any) -> None:
         """
         Set a value in the cache for the given ``key``.  Any additional
         keyword arguments will be passed directly to the `pylibmc` set

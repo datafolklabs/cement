@@ -6,7 +6,7 @@ import re
 import shutil
 import sys
 from abc import abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from ..core import exc
 from ..core.handler import Handler
@@ -68,7 +68,7 @@ class TemplateInterface(Interface):
         pass  # pragma: nocover
 
     @abstractmethod
-    def load(self, path: str) -> tuple[str | bytes, str, Optional[str]]:
+    def load(self, path: str) -> tuple[str | bytes, str, str | None]:
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The
@@ -143,8 +143,8 @@ class TemplateHandler(TemplateInterface, Handler):
              dest: str,
              data: dict[str, Any],
              force: bool = False,
-             exclude: Optional[list[str]] = None,
-             ignore: Optional[list[str]] = None) -> bool:
+             exclude: list[str] | None = None,
+             ignore: list[str] | None = None) -> bool:
         """
         Render ``src`` directory as template, including directory and file
         names, and copy to ``dest`` directory.
@@ -351,7 +351,7 @@ class TemplateHandler(TemplateInterface, Handler):
                       (template_path, template_module))
             return (None, None)
 
-    def load(self, template_path: str) -> tuple[str | bytes, str, Optional[str]]:
+    def load(self, template_path: str) -> tuple[str | bytes, str, str | None]:
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The

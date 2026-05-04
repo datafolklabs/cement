@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 import os
 from logging.handlers import RotatingFileHandler
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from ..core import log
 from ..core.deprecations import deprecate
@@ -95,7 +95,7 @@ class LoggingLogHandler(log.LogHandler):
         #: List of arguments to use for the cli options
         #: (ex: [``-l``, ``--list``]).  If a log-level argument is not wanted,
         #: set to ``None`` (default).
-        log_level_argument: Optional[list[str]] = None
+        log_level_argument: list[str] | None = None
 
         #: The help description for the log level argument
         log_level_argument_help = 'logging level'
@@ -268,7 +268,7 @@ class LoggingLogHandler(log.LogHandler):
 
         self.backend.addHandler(file_handler)
 
-    def _get_logging_kwargs(self, namespace: Optional[str], **kw: Any) -> dict[str, Any]:
+    def _get_logging_kwargs(self, namespace: str | None, **kw: Any) -> dict[str, Any]:
         if namespace is None:
             namespace = self._meta.namespace
 
@@ -281,7 +281,7 @@ class LoggingLogHandler(log.LogHandler):
 
         return kw
 
-    def info(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
+    def info(self, msg: str, namespace: str | None = None, **kw: Any) -> None:
         """
         Log to the INFO facility.
 
@@ -301,7 +301,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.info(msg, **kwargs)
 
-    def warning(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
+    def warning(self, msg: str, namespace: str | None = None, **kw: Any) -> None:
         """
         Log to the WARNING facility.
 
@@ -321,7 +321,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.warning(msg, **kwargs)
 
-    def error(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
+    def error(self, msg: str, namespace: str | None = None, **kw: Any) -> None:
         """
         Log to the ERROR facility.
 
@@ -341,7 +341,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.error(msg, **kwargs)
 
-    def critical(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
+    def critical(self, msg: str, namespace: str | None = None, **kw: Any) -> None:
         """
         Log to the CRITICAL facility.
 
@@ -361,7 +361,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.critical(msg, **kwargs)
 
-    def fatal(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
+    def fatal(self, msg: str, namespace: str | None = None, **kw: Any) -> None:
         """
         Log to the FATAL (aka CRITICAL) facility.
 
@@ -385,7 +385,7 @@ class LoggingLogHandler(log.LogHandler):
         kwargs = self._get_logging_kwargs(namespace, **kw)
         self.backend.fatal(msg, **kwargs)
 
-    def debug(self, msg: str, namespace: Optional[str] = None, **kw: Any) -> None:
+    def debug(self, msg: str, namespace: str | None = None, **kw: Any) -> None:
         """
         Log to the DEBUG facility.
 

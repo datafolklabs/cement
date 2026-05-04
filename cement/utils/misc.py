@@ -6,12 +6,12 @@ import os
 import sys
 from random import random
 from textwrap import TextWrapper
-from typing import Any, Optional
+from typing import Any
 
 from ..core.deprecations import deprecate
 
 
-def rando(salt: Optional[str] = None) -> str:
+def rando(salt: str | None = None) -> str:
     """
     Generate a random hash for whatever purpose.  Useful for testing
     or any other time that something random is required.
@@ -168,7 +168,7 @@ class MinimalLogger(object):
         self.backend.addHandler(console)
 
     def _get_logging_kwargs(self,
-                            namespace: Optional[str],
+                            namespace: str | None,
                             **kw: Any) -> dict[Any, Any]:
         if not namespace:
             namespace = self.namespace
@@ -200,7 +200,7 @@ class MinimalLogger(object):
 
     def info(self,
              msg: str,
-             namespace: Optional[str] = None,
+             namespace: str | None = None,
              **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
@@ -208,7 +208,7 @@ class MinimalLogger(object):
 
     def warning(self,
                 msg: str,
-                namespace: Optional[str] = None,
+                namespace: str | None = None,
                 **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
@@ -216,7 +216,7 @@ class MinimalLogger(object):
 
     def error(self,
               msg: str,
-              namespace: Optional[str] = None,
+              namespace: str | None = None,
               **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
@@ -224,7 +224,7 @@ class MinimalLogger(object):
 
     def fatal(self,
               msg: str,
-              namespace: Optional[str] = None,
+              namespace: str | None = None,
               **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)
@@ -232,7 +232,7 @@ class MinimalLogger(object):
 
     def debug(self,
               msg: str,
-              namespace: Optional[str] = None,
+              namespace: str | None = None,
               **kw: Any) -> None:
         if self.logging_is_enabled:
             kwargs = self._get_logging_kwargs(namespace, **kw)

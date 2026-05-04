@@ -7,7 +7,7 @@ from __future__ import annotations
 import re
 from argparse import SUPPRESS, ArgumentParser, RawDescriptionHelpFormatter
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Callable, Optional
+from typing import TYPE_CHECKING, Any, Callable
 
 from ..core.arg import ArgumentHandler
 from ..core.controller import ControllerHandler
@@ -24,7 +24,7 @@ def _clean_label(label: str) -> str:
     return re.sub('_', '-', label)
 
 
-def _clean_func(func: str) -> Optional[str]:
+def _clean_func(func: str) -> str | None:
     if func is None:
         return None
     else:
@@ -157,8 +157,8 @@ class expose(object):  # noqa: N801 - public decorator (used as @expose); renami
 
     def __init__(self,
                  hide: bool = False,
-                 arguments: Optional[list[ArgparseArgumentType]] = None,
-                 label: Optional[str] = None,
+                 arguments: list[ArgparseArgumentType] | None = None,
+                 label: str | None = None,
                  **parser_options: Any) -> None:
         self.hide = hide
         self.arguments = arguments if arguments is not None else []
@@ -293,11 +293,11 @@ class ArgparseController(ControllerHandler):
         hide = False
 
         #: The text that is displayed at the bottom when ``--help`` is passed.
-        epilog: Optional[str] = None
+        epilog: str | None = None
 
         #: The text that is displayed at the top when ``--help`` is passed.
         #: Defaults to Argparse standard usage.
-        usage: Optional[str] = None
+        usage: str | None = None
 
         #: The argument formatter class to use to display ``--help`` output.
         argument_formatter = RawDescriptionHelpFormatter

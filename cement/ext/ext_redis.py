@@ -13,7 +13,7 @@ extensions.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 import redis
 
@@ -97,7 +97,7 @@ class RedisCacheHandler(cache.CacheHandler):
         else:
             return res.decode('utf-8')  # type: ignore[union-attr]
 
-    def set(self, key: str, value: Any, time: Optional[int] = None, **kw: Any) -> None:
+    def set(self, key: str, value: Any, time: int | None = None, **kw: Any) -> None:
         """
         Set a value in the cache for the given ``key``.  Additional
         keyword arguments are ignored.

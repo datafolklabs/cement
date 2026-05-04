@@ -41,7 +41,6 @@ import os
 import platform
 import subprocess
 import sys
-from typing import Optional
 
 from ..core.backend import VERSION
 
@@ -86,7 +85,7 @@ def get_version_banner() -> str:
     return banner
 
 
-def get_git_changeset() -> Optional[str]:
+def get_git_changeset() -> str | None:
     """Returns a numeric identifier of the latest git changeset.
 
     The result is the UTC timestamp of the changeset in YYYYMMDDHHMMSS format.

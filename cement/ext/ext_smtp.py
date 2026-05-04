@@ -15,7 +15,7 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import format_datetime, make_msgid
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from ..core import mail
 from ..core.deprecations import deprecate
@@ -192,7 +192,7 @@ class SMTPMailHandler(mail.MailHandler):
         else:
             return True
 
-    def _header(self, value: Optional[str] = None, _charset: Optional[Charset] = None,
+    def _header(self, value: str | None = None, _charset: Charset | None = None,
                 **params: dict[str, Any]) -> Header:
         header = Header(value, charset=_charset) if params['header_encoding'] else value
         return header  # type: ignore
@@ -214,7 +214,7 @@ class SMTPMailHandler(mail.MailHandler):
         return cs_header, cs_body
 
     def _build_body_parts(self, body: str | tuple[str, str],
-                          cs_body: Charset) -> tuple[Optional[MIMEText], Optional[MIMEText]]:
+                          cs_body: Charset) -> tuple[MIMEText | None, MIMEText | None]:
         """Parse body into text and html MIME parts."""
         part_text = None
         part_html = None
@@ -246,8 +246,8 @@ class SMTPMailHandler(mail.MailHandler):
 
         return part_text, part_html
 
-    def _build_mime_structure(self, part_text: Optional[MIMEText],
-                              part_html: Optional[MIMEText],
+    def _build_mime_structure(self, part_text: MIMEText | None,
+                              part_html: MIMEText | None,
                               cs_body: Charset,
                               **params: dict[str, Any]) -> MIMEMultipart:
         """Select the correct MIME container based on content and attachments."""
@@ -310,8 +310,8 @@ class SMTPMailHandler(mail.MailHandler):
                                self._header(f'{params[item]}',  # type: ignore
                                             _charset=cs_header, **params))
 
-    def _attach_body(self, msg: MIMEMultipart, part_text: Optional[MIMEText],
-                     part_html: Optional[MIMEText], cs_body: Charset,
+    def _attach_body(self, msg: MIMEMultipart, part_text: MIMEText | None,
+                     part_html: MIMEText | None, cs_body: Charset,
                      **params: dict[str, Any]) -> None:
         """Attach body parts to the message with correct MIME structure."""
         if params['files']:

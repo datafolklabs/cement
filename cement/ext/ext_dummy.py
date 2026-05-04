@@ -4,7 +4,7 @@ Cement dummy extension module.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from ..core.mail import MailHandler
 from ..core.output import OutputHandler
@@ -89,8 +89,8 @@ class DummyTemplateHandler(TemplateHandler):
              dest: str,
              data: dict[str, Any],
              force: bool = False,
-             exclude: Optional[list[str]] = None,
-             ignore: Optional[list[str]] = None) -> bool:
+             exclude: list[str] | None = None,
+             ignore: list[str] | None = None) -> bool:
         """
         This implementation does not actually copy anything, but rather logs it
         to the debug facility.
