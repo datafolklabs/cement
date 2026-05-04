@@ -727,3 +727,220 @@ Stubs) are unblocked.
 *Baseline captured: 2026-05-04 (Wave 5)*
 *Finalized: 2026-05-04 (Wave 8 / D-22 step 14)*
 *All 9 D-24 conjuncts GREEN; status: passed.*
+
+
+## Verifier Audit (independent re-run)
+
+**Audited:** 2026-05-03T(see git)
+**Auditor:** Claude (gsd-verifier; goal-backward verification)
+**Mode:** independent re-run of Wave 8 evidence against live codebase
+**Conclusion:** **9/9 D-24 conjuncts confirmed GREEN at the gate level.**
+**Caveat:** **2 unresolved BC-breaking findings from 03-REVIEW.md (CR-01,
+CR-02) are not acknowledged in the Wave 8 deferral list.** These are
+behavioral-semantics regressions on the public `cement.utils.fs:abspath`
+surface that do NOT trip the audit-public-api signature gate (D-04 only
+diffs symbol/signature, not behavior) but DO conflict with the
+project-level `CLAUDE.md` constraint *"Zero public-API breakage on the
+3.0.x track — including subclass-exposed internals."*
+
+### Re-run gate results (live, post-Wave-8 branch HEAD)
+
+| # | Gate | Live Command | Result | Status |
+|---|------|--------------|--------|:------:|
+| 1 | `make test` 100% coverage | `make test` | exit 0; **3241/3241 stmts; 100.00%; 316 passed** | **GREEN ✓** |
+| 2 | `make comply-ruff` | `make comply-ruff` | exit 0; **All checks passed!** | **GREEN ✓** |
+| 3 | `make comply-mypy` | `make comply-mypy` | exit 0; **Success: no issues found in 51 source files** | **GREEN ✓** |
+| 4 | `make audit-public-api` | `make audit-public-api` | exit 0; silent; baseline still **934 lines** | **GREEN ✓** |
+| 5 | Coverage HTML present | `ls coverage-report/index.html` | **25733 bytes, present** | **GREEN ✓** |
+| 6 | `Any` post-count | `grep -nE ': Any\b\|-> Any\b\|Any\]' cement/core/*.py \| wc -l` | **40** (matches Wave 8 claim of 41 → 40) | **GREEN ✓** |
+| 7 | Locked-vocab pragma inverse-grep | (Wave 8 grep) | **0 lines** (141 total sites; categories spot-checked match) | **GREEN ✓** |
+| 8 | `os.path` in scoped files (untagged) | `grep -rn 'os\.path' cement/utils/fs.py cement/core/{foundation,template,config}.py \| grep -v '# boundary:' \| wc -l` | **0** (1 tagged survivor: `cement/core/foundation.py:53 join = os.path.join`) | **GREEN ✓** |
+| 9 | `from __future__ import annotations` | `grep -rn 'from __future__ import annotations' cement/` | **0 matches** | **GREEN ✓** |
+
+### Independently verified spot-checks
+
+  - **D-19 protected callsites preserved:** 14
+    `.format(**template_dict)` callsites in `cement/core/foundation.py`
+    (lines 1387, 1392, 1400, 1405, 1413, 1418, 1506, 1511, 1516, 1520,
+    1581, 1586, 1591, 1595) — confirmed intact. Matches the D-19
+    expected count of 14 protected sites; line numbers shifted from
+    original CONTEXT.md per `deferred-items.md` "D-19 line drift
+    recorded" disposition.
+  - **REQUIREMENTS.md traceability:** All 7 requirement IDs
+    (REFACTOR-01..04, COV-01..03) are marked `[x]` in
+    `.planning/REQUIREMENTS.md` with explicit Phase 03 Plan
+    references in the validation column. No orphans.
+  - **Baseline preservation across Wave 8 final reset:** rerunning
+    `make audit-public-api` produces empty diff vs. the 934-line
+    `03-PUBLIC-API-BASELINE.txt`. D-04 D-24 conjunct #4 holds.
+  - **`Any`-site inventory:** ran the `Any` grep myself; the 40 sites
+    enumerated in 03-VERIFICATION.md "Per-file post-count breakdown"
+    match the live grep output line-by-line. The Wave 5
+    `App.__import__(obj: Any)` → `obj: str` tightening is intact in
+    `cement/core/foundation.py` (verified at the `def __import__`
+    site).
+
+### Gap surfaced by goal-backward audit
+
+#### W-01 (Warning, advisory): Two REVIEW critical findings unresolved on the public `fs.abspath` surface
+
+**Severity:** WARNING — phase gates pass, but the project-level
+backward-compat constraint is partially violated.
+
+**Status of Wave 8 disposition:** Neither finding is in 03-REVIEW.md's
+"deferred-items" list, in 03-VERIFICATION.md's "Deferred items
+(intentional — NOT gaps)" section, in `deferred-items.md`, nor in any
+post-REVIEW commit. They appear to have been overlooked between
+review (2026-05-03) and Wave 8 finalization (2026-05-04).
+
+**CR-01 — `fs.abspath()` now resolves symlinks (BC-break)**
+
+Empirically reproduced on Python 3.14 against the live branch HEAD
+(`cement/utils/fs.py:102`):
+
+```
+input:  /tmp/<tmpdir>/link/sub  (where link -> target)
+old:    /tmp/<tmpdir>/link/sub        (os.path.abspath semantics)
+new:    /tmp/<tmpdir>/target/sub      (Path.resolve semantics — FOLLOWS symlink)
+```
+
+Public API surface: `cement.utils.fs:abspath` is in
+`03-PUBLIC-API-BASELINE.txt:839`. `fs.HOME_DIR` (line 252) is computed
+through `abspath` at module load and feeds every config-dir,
+plugin-dir, and template-dir resolution. Downstream apps using
+symlinked dotfiles (`~/.config` → repo) will see paths silently
+rewritten through the symlink target.
+
+**CR-02 — `fs.abspath()` raises `RuntimeError` on unknown `~user`**
+
+Empirically reproduced on Python 3.14 against the live branch HEAD:
+
+```
+input:  '~nosuchuser_xyz/foo'
+old:    '/Users/derks/.../~nosuchuser_xyz/foo'  (os.path.expanduser silent fallthrough)
+new:    RuntimeError: Could not determine home directory.   (Path.expanduser raises)
+```
+
+This is a hard regression. Every config-file / plugin-file /
+template-dir / `add_config_dir` / `add_plugin_dir` /
+`add_template_dir` callsite that used to silently no-op on a stale
+`~deleteduser/path` entry now raises an unhandled `RuntimeError`
+mid-`App.setup()`. Test suite does not cover this case (see
+`tests/utils/test_fs.py::test_abspath` — single-line `path.startswith('/')`
+assertion only).
+
+**Why the gates miss it:**
+`make audit-public-api` (D-24 conjunct #4) is a **signature** diff —
+parameter names + types + return type from AST. Behavioral
+semantics of return values are not part of the gate. ROADMAP Phase 3
+Success Criterion #3 ("diff of public symbols ... is empty — no
+signatures changed") is also signature-scoped. Both pass even with
+CR-01/CR-02 active.
+
+**Conflict with project constraint:** `CLAUDE.md` →
+**Constraints** → *"Zero public-API breakage on the 3.0.x track —
+including subclass-exposed internals that downstream extensions may
+rely on. Deprecation warnings OK; removals go to 3.2.0 at the
+earliest."* This is project-level (umbrella) and applies regardless
+of phase-specific Success Criteria scope. Behavioral semantics
+falls under "public-API breakage" by ordinary reading.
+
+**Why this is WARNING not BLOCKER:**
+  - All 9 D-24 conjuncts as defined in 03-CONTEXT.md pass.
+  - All 5 ROADMAP Phase 3 Success Criteria pass.
+  - All 7 phase requirements (REFACTOR-01..04, COV-01..03) are
+    independently SATISFIED.
+  - The phase deliverables (audit gate, modernization sweep, pragma
+    audit, baseline) are all real, complete, and durable.
+  - The CR-01/CR-02 issues are localized to a single function body
+    (`cement/utils/fs.py:102`) and have a 2-line fix, but resolving
+    them is **engineering work** for a follow-up patch, not a phase
+    re-do.
+
+**Recommended human disposition (one of):**
+  1. **Address now** before merging Phase 03 to `main` — apply
+     the REVIEW.md proposed fix (revert to `os.path.abspath
+     (os.path.expanduser(path))`) + add regression tests for
+     symlink preservation and unknown-`~user` handling. ~30 min.
+  2. **Defer formally** to Phase 5 (Deprecations / Security Stubs)
+     or to a hotfix on the 3.0.x branch — record CR-01/CR-02 in
+     03-VERIFICATION.md "Deferred items" with explicit
+     "BC-break-acknowledged" framing. The phase still ships; the
+     follow-up is tracked.
+  3. **Override** with a documented decision that the 3.0.x
+     compat constraint does NOT extend to symlink-resolution
+     semantics or to malformed `~user` strings (i.e., classify
+     the prior behavior as bug-shaped, not contract). This is an
+     architectural call that requires user authorization.
+
+The verifier surfaces this for human decision. The phase score
+remains 9/9 D-24 conjuncts GREEN; the 03-REVIEW.md's two critical
+findings are flagged here as a **deferred-decision-required**
+escalation, not a phase failure.
+
+#### W-02 (Warning, advisory): Audit script encoding fragility (REVIEW WR-02)
+
+**File:** `scripts/audit-public-api.py:181`
+**Issue:** `tree = ast.parse(py.read_text())` defaults to
+`locale.getpreferredencoding(False)`. Verified unfixed on live HEAD.
+On any non-UTF-8 locale (Windows cp1252, locale-stripped Docker), the
+audit gate crashes if cement source contains non-ASCII chars — and
+em-dashes are present in audit-point comments (e.g.,
+`cement/core/foundation.py`).
+**Severity:** WARNING — gate passes on Linux/macOS UTF-8 today, but
+the gate is the permanent regression check for 3.0.x→3.2.x. Latent
+fragility, not active failure.
+**Recommended:** trivial fix `py.read_text(encoding='utf-8')` —
+queue for the next ad-hoc patch.
+
+### Items confirmed correctly deferred
+
+  - **WR-05 / handler.py:332 `Handler | Handler | None`** — explicitly
+    deferred in 03-VERIFICATION.md. Comment block in source is
+    transparent. Confirmed live at `cement/core/handler.py:344`.
+    Disposition is sound.
+  - **D-19 line-number drift** — recorded in `deferred-items.md`. The
+    14 protected callsites are still present in source; only the
+    line numbers in CONTEXT.md text are stale. Not a verification
+    concern.
+  - **REFACTOR-01 D-21 risk** (covered-but-functionally-dead code,
+    private helpers reachable only from tests) — explicit deferral
+    with risk acknowledgement; aligned with D-13 strict-minimum
+    rule for new dev-deps. Disposition is sound.
+
+### Final verifier assessment
+
+  - **Phase deliverables:** all complete, all green at the
+    gate level.
+  - **Wave 8 evidence:** independently re-verified — all 9 D-24
+    conjuncts hold against the live tree.
+  - **Requirements:** all 7 IDs (REFACTOR-01..04, COV-01..03)
+    SATISFIED via traceable gate evidence.
+  - **ROADMAP SCs:** all 5 Phase 3 SCs SATISFIED.
+  - **Outstanding concerns:** 2 items from 03-REVIEW.md (CR-01,
+    CR-02) and 1 item (WR-02) NOT acknowledged in the Wave 8
+    deferral list. CR-01/CR-02 are real BC-breaking behavior
+    changes on a public surface (`cement.utils.fs:abspath`)
+    that the signature-only audit gate cannot detect. They do
+    not block the phase per the literal D-24 / ROADMAP SC
+    contract, but they DO conflict with the project-level
+    `CLAUDE.md` "Zero public-API breakage on the 3.0.x track"
+    constraint.
+
+**Recommendation:** Status **`human_needed`** (per goal-backward
+verifier decision tree, Step 9 rule "if human verification items
+exist, status MUST be human_needed"). The user should choose one
+of the three CR-01/CR-02 dispositions above before merging
+Phase 03 to `main`.
+
+If the user chooses **disposition 2 or 3** (defer or override),
+the existing Wave 8 `status: passed` stands and Phase 03 is
+ready to merge. If the user chooses **disposition 1** (fix
+now), CR-01/CR-02 should be addressed via a small follow-up
+plan (`/gsd-plan-phase --gaps`) before merge.
+
+---
+
+*Verifier Audit appended: independent re-run by gsd-verifier.*
+*All gate-level evidence confirmed; 2 advisory BC-break findings
+surfaced for human disposition.*
