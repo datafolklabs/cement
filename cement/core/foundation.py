@@ -12,9 +12,9 @@ from typing import (
     IO,
     TYPE_CHECKING,
     Any,
-    Callable,
     TextIO,
 )
+from collections.abc import Callable
 
 from ..core import (
     arg,

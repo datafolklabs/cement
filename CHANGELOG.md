@@ -51,6 +51,8 @@ Refactoring:
 - `[core]` Modernize Optional types to PEP 604 syntax (UP045:
   `Optional[X]` → `X | None`); orphaned `typing.Optional` imports
   pruned
+- `[core]` Move `Callable` / `Generator` imports from `typing` to
+  `collections.abc` (UP035 — deprecated-import path).
 
 Misc:
 

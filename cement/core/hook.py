@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import operator
 import types
-from typing import TYPE_CHECKING, Any, Callable, Generator
+from typing import TYPE_CHECKING, Any
+from collections.abc import Callable, Generator
 
 from ..core import exc
 from ..utils.misc import minimal_logger
