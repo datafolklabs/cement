@@ -141,7 +141,7 @@ def test_loaded_extensions():
 
     with MyApp() as app:
         for ext in ext_list:
-            assert 'cement.ext.ext_%s' % ext in app.ext._loaded_extensions
+            assert 'cement.ext.ext_{}'.format(ext) in app.ext._loaded_extensions
 
 
 def test_argv():
@@ -415,17 +415,17 @@ def test_config_files_is_none():
         user_home = fs.abspath(fs.HOME_DIR)
         if platform.system().lower() in ['windows']:
             files = [
-                os.path.join('C:\\', 'etc', app.label, '%s.conf' % app.label),
-                os.path.join(user_home, '.%s.conf' % app.label),
-                os.path.join(user_home, '.%s' % app.label, 'config',
-                             '%s.conf' % app.label),
+                os.path.join('C:\\', 'etc', app.label, '{}.conf'.format(app.label)),
+                os.path.join(user_home, '.{}.conf'.format(app.label)),
+                os.path.join(user_home, '.{}'.format(app.label), 'config',
+                             '{}.conf'.format(app.label)),
             ]
         else:
             files = [
-                os.path.join('/', 'etc', app.label, '%s.conf' % app.label),
-                os.path.join(user_home, '.%s.conf' % app.label),
-                os.path.join(user_home, '.%s' % app.label, 'config',
-                             '%s.conf' % app.label),
+                os.path.join('/', 'etc', app.label, '{}.conf'.format(app.label)),
+                os.path.join(user_home, '.{}.conf'.format(app.label)),
+                os.path.join(user_home, '.{}'.format(app.label), 'config',
+                             '{}.conf'.format(app.label)),
             ]
         for f in files:
             assert f in app._meta.config_files
@@ -467,7 +467,7 @@ def test_core_meta_override():
 
 
 def test_load_extensions_via_config(rando):
-    label = "app-%s" % rando
+    label = "app-{}".format(rando)
     defaults = init_defaults(label)
 
     # singular item
@@ -613,7 +613,7 @@ def test_alternative_module_mapping():
 
 
 def test_meta_defaults():
-    DEBUG_FORMAT = "TEST DEBUG FORMAT - %s" % misc.rando
+    DEBUG_FORMAT = "TEST DEBUG FORMAT - {}".format(misc.rando)
     META = {}
     META['log.logging'] = {}
     META['log.logging']['debug_format'] = DEBUG_FORMAT
@@ -698,9 +698,9 @@ def test_core_system_config_dirs(tmp, rando):
             core_system_config_dirs = [tmp.dir]
 
     conf = """
-    [%s]
-    foo = %s
-    """ % (rando, rando)
+    [{}]
+    foo = {}
+    """.format(rando, rando)
     with open(os.path.join(tmp.dir, 'test.conf'), 'w') as f:
         f.write(conf)
 
@@ -717,9 +717,9 @@ def test_core_user_config_dirs(tmp, rando):
             core_user_config_dirs = [tmp.dir]
 
     conf = """
-    [%s]
-    foo = %s
-    """ % (rando, rando)
+    [{}]
+    foo = {}
+    """.format(rando, rando)
     with open(os.path.join(tmp.dir, 'test.conf'), 'w') as f:
         f.write(conf)
 
@@ -736,9 +736,9 @@ def test_config_dirs(tmp, rando):
             config_dirs = [tmp.dir]
 
     conf = """
-    [%s]
-    foo = %s
-    """ % (rando, rando)
+    [{}]
+    foo = {}
+    """.format(rando, rando)
     with open(os.path.join(tmp.dir, 'test.conf'), 'w') as f:
         f.write(conf)
 

@@ -329,8 +329,7 @@ class TemplateHandler(TemplateInterface, Handler):
         template_path = template_path.lstrip('/')
         full_module_path = f"{template_module}.{re.sub('/', '.', template_path)}"
 
-        LOG.debug("attemping to load output template '%s' from module %s" %
-                  (template_path, template_module))
+        LOG.debug("attemping to load output template '{}' from module {}".format(template_path, template_module))
 
         # see if the module exists first
         if template_module not in sys.modules:
@@ -343,12 +342,10 @@ class TemplateHandler(TemplateInterface, Handler):
         # get the template content
         try:
             content = pkgutil.get_data(template_module, template_path)  # type: ignore
-            LOG.debug("loaded output template '%s' from module %s" %
-                      (template_path, template_module))
+            LOG.debug("loaded output template '{}' from module {}".format(template_path, template_module))
             return (content, full_module_path)
         except IOError:
-            LOG.debug("output template '%s' does not exist in module %s" %
-                      (template_path, template_module))
+            LOG.debug("output template '{}' does not exist in module {}".format(template_path, template_module))
             return (None, None)
 
     def load(self, template_path: str) -> tuple[str | bytes, str, str | None]:

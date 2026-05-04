@@ -11,7 +11,7 @@ from cement.utils.test import TestApp, raises
 class MyEventHandler(WatchdogEventHandler):
     def on_any_event(self, event):
         # do something with the ``event`` object
-        raise Exception("The modified path was: %s" % event.src_path)
+        raise Exception("The modified path was: {}".format(event.src_path))
 
 
 class WatchdogApp(TestApp):
