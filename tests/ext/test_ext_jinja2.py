@@ -28,7 +28,7 @@ def test_jinja2(rando):
 def test_jinja2_utf8(rando):
     with Jinja2App() as app:
         res = app.render(dict(foo=rando), 'test_template_utf8.jinja2')
-        jinja2_res = u"foo est égal à {}\n".format(rando)
+        jinja2_res = "foo est égal à {}\n".format(rando)
         assert res == jinja2_res
 
 
