@@ -21,7 +21,9 @@
 
 **Types:**
 - Use PascalCase for class names
-- Type annotations use full form: `Dict[str, Any]`, `Optional[str]`, `List[str]`, `Tuple[int, str]`
+- Use **PEP 585 builtin generics** (Python 3.10+): `dict[str, Any]`, `list[str]`, `tuple[int, str]`, `type[Handler]` — NOT `Dict[str, Any]`, `List[str]`, `Tuple[int, str]`, `Type[Handler]`
+- Use **PEP 604 union syntax** (Python 3.10+): `str | None`, `int | str`, `dict[str, Any] | None` — NOT `Optional[str]` or `Union[int, str]`
+- Phase 03 D-06 enabled ruff `UP` family enforcement; UP006/UP007/UP045 mechanically rewrite legacy syntax to the modern forms on every `make comply-ruff-fix`
 - Private Meta attribute annotations: `_meta: MetaClassName  # type: ignore` (see `cement/ext/ext_smtp.py` line 72)
 
 ## Code Style
@@ -88,14 +90,16 @@ if TYPE_CHECKING:
   - `warn_return_any = true`
 
 **Patterns:**
-- Always annotate function parameters and return types: `def send(self, msg: str, **kw: Any) -> Dict[str, Any]:`
+- Always annotate function parameters and return types: `def send(self, msg: str, **kw: Any) -> dict[str, Any]:`
+- Use **PEP 585 builtin generics** (Python 3.10+): `dict[str, Any]`, `list[str]`, `tuple[int, str]`, `type[Handler]` — NOT `Dict[str, Any]`, `List[str]`, `Tuple[int, str]`, `Type[Handler]`
+- Use **PEP 604 union syntax** (Python 3.10+): `str | None`, `int | str`, `dict[str, Any] | None` — NOT `Optional[str]` or `Union[int, str]`
 - Use `TYPE_CHECKING` block for deferred imports to prevent circular dependencies
 - Private Meta attributes require `# type: ignore` due to metaclass pattern (framework constraint)
-- Union types: `Union[str, int]` for multiple types
+- Phase 03 D-06 enabled ruff `UP` family enforcement; UP006/UP007/UP045 mechanically rewrite legacy syntax to the modern forms on every `make comply-ruff-fix`. Phase 03 plan 03 landed the bulk migration.
 
-**Example** from `cement/ext/ext_smtp.py`:
+**Example** from `cement/ext/ext_smtp.py` (post Phase 03):
 ```python
-def _get_params(self, **kw: Any) -> Dict[str, Any]:
+def _get_params(self, **kw: Any) -> dict[str, Any]:
     params = dict()
     # ...
     return params
