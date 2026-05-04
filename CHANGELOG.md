@@ -149,6 +149,14 @@ Refactoring:
   `untestable: signal handler`, `version constant`. Coverage
   exclusion behavior unchanged; pragma comments now carry
   audit-grep-friendly category labels per D-15.
+- `[dev]` Audit `pragma:nocover` sites in `cement/ext/` first
+  half (ext_alarm, ext_argparse, ext_colorlog, ext_configparser,
+  ext_daemon, ext_dummy, ext_generate, ext_jinja2, ext_json,
+  ext_logging) with D-15 locked-vocabulary category labels
+  (Phase 03 Wave 7 Batch B — 10 files / per-file atomic
+  commits). Categories applied: `TYPE_CHECKING import`,
+  `defensive: unreachable`, `untestable: dynamic import`,
+  `platform-specific`.
 
 Misc:
 
