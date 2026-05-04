@@ -1,6 +1,6 @@
 ---
 phase: 03-internal-refactor-coverage-hardening
-verified: 2026-05-04T04:26:40Z
+verified: 2026-05-04T05:34:56Z
 status: passed
 score: 9/9 D-24 conjuncts GREEN
 overrides_applied: 0
@@ -582,8 +582,9 @@ Sample size: 5 of 316 tests. The full 316-test suite passes at
 
 **Phase 3 commit range:** `main..HEAD` (branch
 `modernization-phase-3`).
-**Total commits:** **82** as of Wave 8 Task 1 capture (pre-Wave-8
-docs commits) — see `git log --oneline main..HEAD`.
+**Total commits:** **87** as of Wave 9 Task 5 (Wave 8 captured 82;
+Wave 9 added 5: 4 source/test/changelog + 1 docs verification
+update) — see `git log --oneline main..HEAD`.
 
 **Per-wave breakdown (per ROADMAP Phase 3 detail):**
 
@@ -597,6 +598,7 @@ docs commits) — see `git log --oneline main..HEAD`.
 | 6 | 03-06 | 4 | 2 | 4 atomic per-file pathlib migrations: `6af95ee9` fs.py, `1f307f23` config.py, `41f27d9f` foundation.py, `f2c181ac` template.py |
 | 7 | 03-07 | 39 | 4 | 39 per-file pragma:nocover audit commits + 3 batch-summary docs(03) commits + 1 Plan 07 SUMMARY |
 | 8 | 03-08 | 0 | 2 (this wave) | finalize 03-VERIFICATION.md + mark Phase 3 complete in ROADMAP |
+| 9 | 03-09 | 4 | 1 | gap closure: CR-01 + CR-02 (utils.fs:abspath BC restoration) + WR-02 (audit-script encoding); regression tests; CHANGELOG; verification update |
 
 (Per-wave totals are approximate — actual `git log` is the source of
 truth; planning artifact commits and ad-hoc lint touch-ups distribute
@@ -893,6 +895,17 @@ fragility, not active failure.
 **Recommended:** trivial fix `py.read_text(encoding='utf-8')` —
 queue for the next ad-hoc patch.
 
+**Resolution (Plan 09 / Wave 9):**
+
+Fixed in commit `cc50a3e3`
+(`fix(dev.audit-script): explicit UTF-8 encoding in audit script`).
+`scripts/audit-public-api.py:181` now reads source files with
+`py.read_text(encoding='utf-8')` per PEP 3120. The
+`make audit-public-api` gate continues to exit 0 with empty
+diff against the 934-line baseline.
+
+**W-02 STATUS: RESOLVED.**
+
 ### Items confirmed correctly deferred
 
   - **WR-05 / handler.py:332 `Handler | Handler | None`** — explicitly
@@ -938,6 +951,58 @@ the existing Wave 8 `status: passed` stands and Phase 03 is
 ready to merge. If the user chooses **disposition 1** (fix
 now), CR-01/CR-02 should be addressed via a small follow-up
 plan (`/gsd-plan-phase --gaps`) before merge.
+
+**Resolution (Plan 09 / Wave 9):**
+
+User chose disposition #1 (fix now). The Wave 9 gap-closure
+plan landed 5 atomic commits:
+
+| Commit | Subject |
+|--------|---------|
+| `52248e1d` | `fix(utils.fs): preserve symlinks and silent ~user fallthrough` |
+| `25983a57` | `test(utils.fs): cover symlink preservation and unknown-~user` |
+| `cc50a3e3` | `fix(dev.audit-script): explicit UTF-8 encoding in audit script` |
+| `e31f88d7` | `docs(changelog): record fs.abspath BC fix + audit script encoding` |
+| (this commit) | `docs(03): record Wave 9 gap closure (CR-01, CR-02, WR-02)` |
+
+`cement/utils/fs.py:abspath()` body restored to
+`os.path.abspath(os.path.expanduser(path))` (with `# boundary: D-14`
+inline tag per D-12 / D-14 — `os.path` retention on public
+surface is deliberate; pathlib semantics broke BC).
+
+**Empirical re-reproduction (post-fix):**
+
+CR-01 — symlink preservation:
+
+```
+input:   /tmp/tmp9vskqq8r/link  (link -> target)
+result:  /tmp/tmp9vskqq8r/link  (preserved — NOT resolved)
+PASS
+```
+
+CR-02 — unknown ~user silent fallthrough:
+
+```
+input:    ~nosuchuser_xyz_phase03_gap/foo
+result:   /Users/.../~nosuchuser_xyz_phase03_gap/foo  (no RuntimeError)
+expected: /Users/.../~nosuchuser_xyz_phase03_gap/foo
+PASS
+```
+
+**Regression tests pinning the BC contract:**
+
+- `tests/utils/test_fs.py::test_abspath_preserves_symlinks`
+- `tests/utils/test_fs.py::test_abspath_unknown_user_does_not_raise`
+
+Both pass against the restored body and FAIL against the Wave 6
+`_Path(path).expanduser().resolve(strict=False)` body (verified
+locally during Task 2 with a temporary revert sanity check).
+
+**Test count:** 316 → 318 passing at 100% coverage (3241/3241
+stmts); coverage gate held.
+
+**W-01 STATUS: RESOLVED.** CR-01 + CR-02 closed; 3.0.x BC
+contract on `cement.utils.fs:abspath` restored.
 
 ---
 
