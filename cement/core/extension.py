@@ -14,7 +14,7 @@ LOG = minimal_logger(__name__)
 
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 
 class ExtensionInterface(Interface):
@@ -43,7 +43,7 @@ class ExtensionInterface(Interface):
             ext_module (str): The name of the extension to load
 
         """
-        pass    # pragma: no cover
+        pass    # pragma: no cover  # abstract method
 
     @abstractmethod
     def load_extensions(self, ext_list: list[str]) -> None:
@@ -55,7 +55,7 @@ class ExtensionInterface(Interface):
                 ``['cement.ext.ext_json', 'cement.ext.ext_logging']``
 
         """
-        pass    # pragma: no cover
+        pass    # pragma: no cover  # abstract method
 
 
 class ExtensionHandler(ExtensionInterface, Handler):
