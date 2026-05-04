@@ -1,5 +1,6 @@
 
 # import os
+import logging
 from unittest.mock import PropertyMock, patch
 
 from pytest import raises
@@ -126,3 +127,21 @@ def test_wrap_non_str():
 
     with raises(TypeError):
         misc.wrap(None, width=5)
+
+
+def test_minimal_logger_does_not_duplicate_handlers():
+    # Regression: `logging.getLogger(namespace)` returns the same
+    # backend logger instance per name, so calling
+    # `minimal_logger(ns)` repeatedly would otherwise stack a fresh
+    # `StreamHandler` on each call (every log emit would print
+    # multiple times). The MinimalLogger.__init__ idempotency guard
+    # only attaches a handler when `self.backend.handlers` is empty.
+    ns = 'cement.test.minimal_logger_idempotency'
+    backend = logging.getLogger(ns)
+    backend.handlers = []  # isolate from any prior test pollution
+
+    misc.minimal_logger(ns)
+    assert len(backend.handlers) == 1
+
+    misc.minimal_logger(ns)
+    assert len(backend.handlers) == 1

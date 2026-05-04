@@ -32,6 +32,21 @@ Bugs:
   was mechanically narrowed to `type[Interface] | None` by the
   Phase 03 UP045 sweep; the runtime always accepted arbitrary
   fallback values per the `cache.get` sibling pattern)
+- `[utils.misc]` Make `MinimalLogger.__init__` idempotent — guard
+  the `self.backend.addHandler(console)` call on
+  `not self.backend.handlers` so a second `minimal_logger(ns)`
+  call for the same namespace does not stack a duplicate
+  `StreamHandler` on the shared backend logger
+  (`logging.getLogger(ns)` returns the same instance per name, so
+  the previous unconditional add produced as many handlers as
+  callers — every log emit would print N times)
+- `[ext.daemon]` Remove the duplicate
+  `LOG = minimal_logger(__name__)` assignment at module scope
+  (a back-to-back redundant rebind that, combined with the prior
+  `MinimalLogger.__init__` non-idempotency, attached a second
+  `StreamHandler` to the `cement.ext.ext_daemon` backend logger
+  on import — covered by the `[utils.misc]` hardening above but
+  the redundant line is dropped for clarity)
 - `[core.template]` Replace fragile bare `assert` in
   `TemplateHandler.copy()` source-path check with an explicit
   `NotADirectoryError` raise. The previous code had two failure
