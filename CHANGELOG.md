@@ -17,6 +17,15 @@ Bugs:
   redis 7 typing changes (sync client return-type unions)
 - `[ext.watchdog]` Drop now-unused `# type: ignore` comments on Observer
   schedule/start/stop calls — watchdog 6 ships precise type stubs
+- `[utils.fs]` Restore `os.path` semantics in `abspath()` —
+  preserves symlink paths and silently falls through on unknown
+  `~user` prefixes (regression introduced by the Phase 03 Wave 6
+  pathlib migration; restores 3.0.x BC contract on the public
+  `cement.utils.fs:abspath` surface)
+- `[dev]` Use explicit `encoding='utf-8'` in
+  `scripts/audit-public-api.py` so the
+  `make audit-public-api` regression gate is portable across
+  non-UTF-8 locales (Windows cp1252, locale-stripped Docker, etc.)
 
 Features:
 
