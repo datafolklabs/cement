@@ -46,6 +46,8 @@ Refactoring:
   (UP006: `List` → `list`, `Dict` → `dict`, `Tuple` → `tuple`,
   `Type` → `type`); orphaned `typing` re-export imports pruned in the
   same pass (F401)
+- `[core]` Modernize union types to PEP 604 syntax (UP007:
+  `Union[X, Y]` → `X | Y`); orphaned `typing.Union` imports pruned
 
 Misc:
 

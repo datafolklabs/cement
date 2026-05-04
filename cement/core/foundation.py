@@ -15,7 +15,6 @@ from typing import (
     Callable,
     Optional,
     TextIO,
-    Union,
 )
 
 from ..core import (
@@ -954,7 +953,7 @@ class App(meta.MetaMixin):
         for _res in self.hook.run('post_setup', self):
             pass
 
-    def run(self) -> Union[None, Any]:
+    def run(self) -> None | Any:
         """
         This function wraps everything together (after ``self._setup()`` is
         called) to run the application.
@@ -1284,7 +1283,7 @@ class App(meta.MetaMixin):
 
     def _resolve_handler(self,
                          handler_type: str,
-                         handler_def: Union[str, type[Handler], Handler],
+                         handler_def: str | type[Handler] | Handler,
                          raise_error: bool = True) -> Handler:
         # meta_defaults = {}
         # if type(handler_def) == str:

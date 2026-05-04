@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 import os
 from logging.handlers import RotatingFileHandler
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 from ..core import log
 from ..core.deprecations import deprecate
@@ -210,7 +210,7 @@ class LoggingLogHandler(log.LogHandler):
         namespace = self._meta.namespace
         to_console = self.app.config.get(self._meta.config_section,
                                          'to_console')
-        console_handler: Union[logging.StreamHandler, NullHandler]
+        console_handler: logging.StreamHandler | NullHandler
         if is_true(to_console):
             console_handler = logging.StreamHandler()
             format = self._get_console_format()
@@ -237,7 +237,7 @@ class LoggingLogHandler(log.LogHandler):
                                         'max_bytes')
         max_files = self.app.config.get(self._meta.config_section,
                                         'max_files')
-        file_handler: Union[logging.FileHandler, RotatingFileHandler, NullHandler]
+        file_handler: logging.FileHandler | RotatingFileHandler | NullHandler
 
         if file_path:
             file_path = fs.abspath(file_path)

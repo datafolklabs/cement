@@ -91,7 +91,6 @@ cement.core.controller:ControllerInterface.Meta.interface
 cement.core.controller:Handler
 cement.core.controller:Interface
 cement.core.controller:LOG
-cement.core.controller:Union
 cement.core.controller:abstractmethod
 cement.core.controller:minimal_logger
 cement.core.deprecations:DEPRECATIONS
@@ -232,7 +231,6 @@ cement.core.foundation:TestApp.Meta.exit_on_close
 cement.core.foundation:TestApp.Meta.label
 cement.core.foundation:TestApp.Meta.plugin_dirs
 cement.core.foundation:TextIO
-cement.core.foundation:Union
 cement.core.foundation:add_handler_override_options
 cement.core.foundation:arg
 cement.core.foundation:cache
@@ -280,7 +278,6 @@ cement.core.handler:LOG
 cement.core.handler:MetaMixin
 cement.core.handler:Optional
 cement.core.handler:TYPE_CHECKING
-cement.core.handler:Union
 cement.core.handler:builtins
 cement.core.handler:exc
 cement.core.handler:minimal_logger
@@ -359,7 +356,6 @@ cement.core.output:OutputInterface
 cement.core.output:OutputInterface.Meta
 cement.core.output:OutputInterface.Meta.interface
 cement.core.output:OutputInterface.render
-cement.core.output:Union
 cement.core.output:abstractmethod
 cement.core.output:minimal_logger
 cement.core.plugin:Handler
@@ -398,7 +394,6 @@ cement.core.template:TemplateInterface.Meta.interface
 cement.core.template:TemplateInterface.copy
 cement.core.template:TemplateInterface.load
 cement.core.template:TemplateInterface.render
-cement.core.template:Union
 cement.core.template:abstractmethod
 cement.core.template:exc
 cement.core.template:fs
@@ -546,7 +541,6 @@ cement.ext.ext_dummy:Optional
 cement.ext.ext_dummy:OutputHandler
 cement.ext.ext_dummy:TYPE_CHECKING
 cement.ext.ext_dummy:TemplateHandler
-cement.ext.ext_dummy:Union
 cement.ext.ext_dummy:load
 cement.ext.ext_dummy:minimal_logger
 cement.ext.ext_generate:Any
@@ -591,7 +585,6 @@ cement.ext.ext_jinja2:OutputHandler
 cement.ext.ext_jinja2:PackageLoader
 cement.ext.ext_jinja2:TYPE_CHECKING
 cement.ext.ext_jinja2:TemplateHandler
-cement.ext.ext_jinja2:Union
 cement.ext.ext_jinja2:load
 cement.ext.ext_jinja2:minimal_logger
 cement.ext.ext_json:Any
@@ -642,7 +635,6 @@ cement.ext.ext_logging:LoggingLogHandler.warning
 cement.ext.ext_logging:Optional
 cement.ext.ext_logging:RotatingFileHandler
 cement.ext.ext_logging:TYPE_CHECKING
-cement.ext.ext_logging:Union
 cement.ext.ext_logging:add_logging_arguments
 cement.ext.ext_logging:deprecate
 cement.ext.ext_logging:fs
@@ -686,7 +678,6 @@ cement.ext.ext_mustache:PartialsLoader.get
 cement.ext.ext_mustache:Renderer
 cement.ext.ext_mustache:TYPE_CHECKING
 cement.ext.ext_mustache:TemplateHandler
-cement.ext.ext_mustache:Union
 cement.ext.ext_mustache:load
 cement.ext.ext_mustache:minimal_logger
 cement.ext.ext_plugin:CementPluginHandler
@@ -722,7 +713,6 @@ cement.ext.ext_print:PrintOutputHandler.Meta.label
 cement.ext.ext_print:PrintOutputHandler.Meta.overridable
 cement.ext.ext_print:PrintOutputHandler.render
 cement.ext.ext_print:TYPE_CHECKING
-cement.ext.ext_print:Union
 cement.ext.ext_print:extend_print
 cement.ext.ext_print:load
 cement.ext.ext_print:minimal_logger
@@ -775,7 +765,6 @@ cement.ext.ext_smtp:SMTPMailHandler.Meta.config_defaults
 cement.ext.ext_smtp:SMTPMailHandler.Meta.label
 cement.ext.ext_smtp:SMTPMailHandler.send
 cement.ext.ext_smtp:TYPE_CHECKING
-cement.ext.ext_smtp:Union
 cement.ext.ext_smtp:datetime
 cement.ext.ext_smtp:deprecate
 cement.ext.ext_smtp:encoders
@@ -919,7 +908,6 @@ cement.utils.shell:Prompt.Meta.text
 cement.utils.shell:Prompt.process_input
 cement.utils.shell:Prompt.prompt
 cement.utils.shell:Thread
-cement.utils.shell:Union
 cement.utils.shell:builtins
 cement.utils.shell:cmd
 cement.utils.shell:exec_cmd

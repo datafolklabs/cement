@@ -15,7 +15,7 @@ from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import format_datetime, make_msgid
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 from ..core import mail
 from ..core.deprecations import deprecate
@@ -109,7 +109,7 @@ class SMTPMailHandler(mail.MailHandler):
 
         return params
 
-    def send(self, body: Union[str, tuple[str, str]], **kw: Any) -> bool:
+    def send(self, body: str | tuple[str, str], **kw: Any) -> bool:
         """
         Send an email message via SMTP.  Keyword arguments override
         configuration defaults (cc, bcc, etc).
@@ -213,7 +213,7 @@ class SMTPMailHandler(mail.MailHandler):
 
         return cs_header, cs_body
 
-    def _build_body_parts(self, body: Union[str, tuple[str, str]],
+    def _build_body_parts(self, body: str | tuple[str, str],
                           cs_body: Charset) -> tuple[Optional[MIMEText], Optional[MIMEText]]:
         """Parse body into text and html MIME parts."""
         part_text = None
@@ -397,7 +397,7 @@ class SMTPMailHandler(mail.MailHandler):
                 )
             msg.attach(part)
 
-    def _make_message(self, body: Union[str, tuple[str, str]], **params: dict[str, Any]) \
+    def _make_message(self, body: str | tuple[str, str], **params: dict[str, Any]) \
                       -> MIMEMultipart:
         cs_header, cs_body = self._build_charsets(**params)
         part_text, part_html = self._build_body_parts(body, cs_body)

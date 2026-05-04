@@ -13,7 +13,7 @@ extensions.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any
 
 from pystache.renderer import Renderer  # type: ignore
 
@@ -32,7 +32,7 @@ class PartialsLoader(object):
     def __init__(self, handler: TemplateHandler) -> None:
         self.handler = handler
 
-    def get(self, template: str) -> Union[str, bytes, None]:
+    def get(self, template: str) -> str | bytes | None:
         content, _type, _path = self.handler.load(template)
         return content
 
@@ -119,7 +119,7 @@ class MustacheTemplateHandler(TemplateHandler):
         super(MustacheTemplateHandler, self).__init__(*args, **kw)
         self._partials_loader = PartialsLoader(self)
 
-    def render(self, content: Union[str, bytes], data: dict[str, Any]) -> str:
+    def render(self, content: str | bytes, data: dict[str, Any]) -> str:
         """
         Render the given ``content`` as template with the ``data`` dictionary.
 
