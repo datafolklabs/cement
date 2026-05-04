@@ -2,8 +2,6 @@
 Cement core interface module.
 """
 
-from __future__ import annotations
-
 from abc import ABC
 from typing import TYPE_CHECKING, Any
 
@@ -56,7 +54,7 @@ class InterfaceManager:
 
     __interfaces__: dict[str, type[Interface]]
 
-    def __init__(self, app: App) -> None:
+    def __init__(self, app: "App") -> None:
         self.app = app
         self.__interfaces__ = {}
 

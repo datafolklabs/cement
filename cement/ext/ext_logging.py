@@ -2,8 +2,6 @@
 Cement logging extension module.
 """
 
-from __future__ import annotations
-
 import logging
 import os
 from logging.handlers import RotatingFileHandler
@@ -119,7 +117,7 @@ class LoggingLogHandler(log.LogHandler):
         super().__init__(*args, **kw)
         self.app: App = None  # type: ignore
 
-    def _setup(self, app_obj: App) -> None:
+    def _setup(self, app_obj: "App") -> None:
         super()._setup(app_obj)
         if self._meta.namespace is None:
             self._meta.namespace = f"{self.app._meta.label}"
@@ -408,7 +406,7 @@ class LoggingLogHandler(log.LogHandler):
         self.backend.debug(msg, **kwargs)
 
 
-def add_logging_arguments(app: App) -> None:
+def add_logging_arguments(app: "App") -> None:
     if app.log._meta.log_level_argument is not None:
         app.args.add_argument(*app.log._meta.log_level_argument,
                               dest='log_logging_level',
@@ -416,7 +414,7 @@ def add_logging_arguments(app: App) -> None:
                               choices=[x.lower() for x in app.log.levels])
 
 
-def handle_logging_arguments(app: App) -> None:
+def handle_logging_arguments(app: "App") -> None:
     if hasattr(app.pargs, 'log_logging_level'):
         if app.pargs.log_logging_level is not None:
             app.log.set_level(app.pargs.log_logging_level)
@@ -424,7 +422,7 @@ def handle_logging_arguments(app: App) -> None:
             app._meta.debug = True
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(LoggingLogHandler)
     app.hook.register('pre_argument_parsing', add_logging_arguments)
     app.hook.register('post_argument_parsing', handle_logging_arguments)

@@ -2,8 +2,6 @@
 Cement smtp extension module.
 """
 
-from __future__ import annotations
-
 import os
 import smtplib
 from datetime import datetime, timezone
@@ -408,5 +406,5 @@ class SMTPMailHandler(mail.MailHandler):
         return msg
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(SMTPMailHandler)

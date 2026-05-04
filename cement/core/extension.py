@@ -1,7 +1,5 @@
 """Cement core extensions module."""
 
-from __future__ import annotations
-
 import builtins
 import sys
 from abc import abstractmethod

@@ -1,8 +1,5 @@
 """Common File System Utilities."""
 
-# derks@2024-06-22: remove after 3.9 is EOL?
-from __future__ import annotations
-
 import os
 import shutil
 import tempfile

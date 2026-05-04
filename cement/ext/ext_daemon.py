@@ -2,8 +2,6 @@
 Cement daemon extension module.
 """
 
-from __future__ import annotations
-
 import grp
 import io
 import os
@@ -20,7 +18,7 @@ if TYPE_CHECKING:
 LOG = minimal_logger(__name__)
 LOG = minimal_logger(__name__)
 CEMENT_DAEMON_ENV = None
-CEMENT_DAEMON_APP: App = None  # type: ignore
+CEMENT_DAEMON_APP: "App" = None  # type: ignore
 
 
 class Environment:
@@ -218,7 +216,7 @@ def daemonize() -> None:  # pragma: no cover
         CEMENT_DAEMON_ENV.daemonize()
 
 
-def extend_app(app: App) -> None:
+def extend_app(app: "App") -> None:
     """
     Adds the ``--daemon`` argument to the argument object, and sets the
     default ``[daemon]`` config section options.
@@ -245,7 +243,7 @@ def extend_app(app: App) -> None:
     app.extend('daemonize', daemonize)
 
 
-def cleanup(app: App) -> None:  # pragma: no cover
+def cleanup(app: "App") -> None:  # pragma: no cover
     """
     After application run time, this hook just attempts to clean up the
     pid_file if one was set, and exists.
@@ -263,6 +261,6 @@ def cleanup(app: App) -> None:  # pragma: no cover
                 os.remove(CEMENT_DAEMON_ENV.pid_file)
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.hook.register('post_setup', extend_app)
     app.hook.register('pre_close', cleanup)

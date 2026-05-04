@@ -2,8 +2,6 @@
 Cement alarm extension module.
 """
 
-from __future__ import annotations
-
 import signal
 from typing import TYPE_CHECKING, Any
 
@@ -15,7 +13,7 @@ if TYPE_CHECKING:
 LOG = minimal_logger(__name__)
 
 
-def alarm_handler(app: App, signum: int, frame: Any) -> None:
+def alarm_handler(app: "App", signum: int, frame: Any) -> None:
     if signum == signal.SIGALRM:
         app.log.error(app.alarm.msg)
 
@@ -53,7 +51,7 @@ class AlarmManager:
         signal.alarm(0)
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.catch_signal(signal.SIGALRM)
     app.extend('alarm', AlarmManager())
     app.hook.register('signal', alarm_handler)

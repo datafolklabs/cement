@@ -1,7 +1,5 @@
 """Cement core hooks module."""
 
-from __future__ import annotations
-
 import builtins
 import operator
 import types
@@ -24,7 +22,7 @@ class HookManager:
 
     """
 
-    def __init__(self, app: App) -> None:
+    def __init__(self, app: "App") -> None:
         self.app = app
         self.__hooks__: dict[str, list] = {}
 

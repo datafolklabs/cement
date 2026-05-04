@@ -1,7 +1,5 @@
 """Cement core foundation module."""
 
-from __future__ import annotations
-
 import os
 import platform
 import signal
@@ -54,7 +52,7 @@ else:
     SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
 
 
-def add_handler_override_options(app: App) -> None:
+def add_handler_override_options(app: "App") -> None:
     """
     This is a ``post_setup`` hook that adds the handler override options to
     the argument parser
@@ -99,7 +97,7 @@ def add_handler_override_options(app: App) -> None:
             )
 
 
-def handler_override(app: App) -> None:
+def handler_override(app: "App") -> None:
     """
     This is a ``post_argument_parsing`` hook that overrides a configured
     handler if defined in ``App.Meta.handler_override_options`` and
@@ -126,7 +124,7 @@ def handler_override(app: App) -> None:
             getattr(app, f'_setup_{i}_handler')()
 
 
-def cement_signal_handler(signum: int, frame: FrameType | None) -> Any:
+def cement_signal_handler(signum: int, frame: "FrameType | None") -> Any:
     """
     Catch a signal, run the ``signal`` hook, and then raise an exception
     allowing the app to handle logic elsewhere.
@@ -1748,7 +1746,7 @@ class App(meta.MetaMixin):
         if path in self._meta.template_dirs:
             self._meta.template_dirs.remove(path)
 
-    def __import__(self, obj: Any, from_module: str | None = None) -> ModuleType:
+    def __import__(self, obj: Any, from_module: str | None = None) -> "ModuleType":
         # EXPERIMENTAL == UNDOCUMENTED
         mapping = self._meta.alternative_module_mapping
 
@@ -1762,14 +1760,14 @@ class App(meta.MetaMixin):
 
         return _loaded
 
-    def __enter__(self) -> App:
+    def __enter__(self) -> "App":
         self.setup()
         return self
 
     def __exit__(self,
                  exc_type: type[BaseException] | None,
                  exc_value: BaseException | None,
-                 exc_traceback: TracebackType | None) -> None:
+                 exc_traceback: "TracebackType | None") -> None:
         # only close the app if there are no unhandled exceptions
         if exc_type is None:
             self.close()

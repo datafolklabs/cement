@@ -11,8 +11,6 @@ extensions.
   dependencies.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 import redis
@@ -145,5 +143,5 @@ class RedisCacheHandler(cache.CacheHandler):
             self.r.delete(*keys)  # type: ignore[misc]
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(RedisCacheHandler)

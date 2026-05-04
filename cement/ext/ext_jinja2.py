@@ -11,8 +11,6 @@ extensions.
   dependencies.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from jinja2 import Environment, FileSystemLoader, PackageLoader
@@ -52,7 +50,7 @@ class Jinja2OutputHandler(OutputHandler):
         super().__init__(*args, **kw)
         self.templater: TemplateHandler = None  # type: ignore
 
-    def _setup(self, app: App) -> None:
+    def _setup(self, app: "App") -> None:
         super()._setup(app)
         self.templater = self.app.handler.resolve('template', self._meta.label, setup=True)  # type: ignore
 
@@ -159,6 +157,6 @@ class Jinja2TemplateHandler(TemplateHandler):
         return res
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(Jinja2OutputHandler)
     app.handler.register(Jinja2TemplateHandler)

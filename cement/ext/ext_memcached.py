@@ -11,8 +11,6 @@ extensions.
   dependencies.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 import pylibmc  # type: ignore
@@ -161,5 +159,5 @@ class MemcachedCacheHandler(cache.CacheHandler):
         self.mc.flush_all(**kw)
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(MemcachedCacheHandler)

@@ -2,8 +2,6 @@
 Cement dummy extension module.
 """
 
-from __future__ import annotations
-
 from typing import TYPE_CHECKING, Any
 
 from ..core.mail import MailHandler
@@ -277,7 +275,7 @@ class DummyMailHandler(MailHandler):
         return True
 
 
-def load(app: App) -> None:
+def load(app: "App") -> None:
     app.handler.register(DummyOutputHandler)
     app.handler.register(DummyTemplateHandler)
     app.handler.register(DummyMailHandler)
