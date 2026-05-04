@@ -8,8 +8,8 @@ import inspect
 import os
 import re
 import shutil
-from typing import TYPE_CHECKING, Any
 from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
 import yaml  # type: ignore
 

@@ -3,8 +3,8 @@ import json
 import os
 import warnings
 from time import sleep
-
 from unittest import mock
+
 import png
 import requests
 from pytest import raises
