@@ -64,6 +64,8 @@ Refactoring:
   self)` boilerplate; Python 3 zero-arg form).
 - `[core]` Drop redundant `'r'` mode argument from `open()` calls
   (UP015 — `'r'` is the default).
+- `[core]` Replace `IOError` alias with `OSError` (UP024) in
+  cement/core/template.py — `IOError` is an alias since Python 3.3.
 
 Misc:
 
