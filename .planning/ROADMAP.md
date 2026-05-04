@@ -117,7 +117,7 @@ Plans:
   - [x] 03-05-PLAN.md — Capture Any-baseline in 03-VERIFICATION.md + tighten Any in cement/core/ (D-09 — `2f3a063f` records pre-counts Any=41/pragma=141/pathlib=33; `6365a6c7` tightens 2 sites: `App.__import__(obj: Any)` → `obj: str` and `_dispatch() -> Any | None` → `-> Any`; 41 → 40 substantive delta; D-24 conjunct #6 GREEN; inline D-09 justifications added to all 40 surviving sites)
 
   **Wave 6** *(blocked on Wave 5; A7 symlink pre-flight first)*
-  - [ ] 03-06-PLAN.md — pathlib migration: utils/fs.py, core/config.py, core/foundation.py, core/template.py — atomic per-file per D-13; D-12 boundary preserved; D-19 protected callsites untouched
+  - [x] 03-06-PLAN.md — pathlib migration: utils/fs.py, core/config.py, core/foundation.py, core/template.py — atomic per-file per D-13; D-12 boundary preserved; D-19 protected callsites untouched
 
   **Wave 7** *(blocked on Wave 6)*
   - [ ] 03-07-PLAN.md — pragma:nocover audit with D-15 locked vocabulary (per-file commits across approx 39 files per RESEARCH.md A4: 141 sites, not 123)

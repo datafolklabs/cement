@@ -128,7 +128,8 @@ post-audit grep result (must be empty per D-17 / D-24 conjunct #7).
 
 ## Pathlib boundary baseline (REFACTOR-03)
 
-**Pre-migration `os.path` callsites in scoped files:**
+**Pre-migration `os.path` callsites in scoped files (Wave 5
+baseline):**
 
 ```
 $ grep -rn 'os\.path' cement/utils/fs.py cement/core/foundation.py \
@@ -138,17 +139,74 @@ $ grep -rn 'os\.path' cement/utils/fs.py cement/core/foundation.py \
 
 Per-file breakdown (2026-05-04 count, 33 callsites):
 
-| File | os.path callsites |
-|------|-------------------|
-| `cement/utils/fs.py` | (smallest, foundational — counted in Wave 6) |
-| `cement/core/foundation.py` | (counted in Wave 6) |
-| `cement/core/template.py` | (largest single-file blast per D-11) |
-| `cement/core/config.py` | (counted in Wave 6) |
+| File | Pre-migration callsites |
+|------|-------------------------|
+| `cement/utils/fs.py` | 15 (incl. 4 docstring/comment refs that the line-based grep matches) |
+| `cement/core/foundation.py` | 4 (1 real-code + 3 docstring example refs) |
+| `cement/core/template.py` | 13 |
+| `cement/core/config.py` | 1 |
 | **TOTAL** | **33** |
 
-Wave 6 migrates these 4 files; survivors carry `# boundary: str` per
-D-14. Acceptance is `grep -rn 'os\.path' cement/utils/fs.py cement/core/`
-returns only `# boundary:`-tagged callsites OR returns empty.
+### Wave 6 post-migration (this plan)
+
+**Post-migration `os.path` callsites in scoped files:**
+
+```
+$ grep -rn 'os\.path' cement/utils/fs.py cement/core/foundation.py \
+    cement/core/template.py cement/core/config.py | wc -l
+1
+$ grep -rn 'os\.path' cement/utils/fs.py cement/core/foundation.py \
+    cement/core/template.py cement/core/config.py | grep -v \
+    '# boundary:' | wc -l
+0
+```
+
+Per-file post-migration breakdown:
+
+| File | Post callsites | Tagged `# boundary:` | Untagged |
+|------|----------------|----------------------|----------|
+| `cement/utils/fs.py` | 0 | 0 | 0 |
+| `cement/core/foundation.py` | 1 | 1 | 0 |
+| `cement/core/template.py` | 0 | 0 | 0 |
+| `cement/core/config.py` | 0 | 0 | 0 |
+| **TOTAL** | **1** | **1** | **0** |
+
+The surviving site is the public alias `join = os.path.join` at
+`cement/core/foundation.py:49` — `cement.core.foundation:join` is in
+`03-PUBLIC-API-BASELINE.txt` with stdlib `os.path.join` semantics
+that downstream callers depend on. Migrating it would change the
+callable's behavior for every downstream user (no-breakage rule).
+Inline `# boundary:` tag documents the deliberate retention per
+D-12 / D-14.
+
+The `os.walk(src)` callsite at `cement/core/template.py:209` is
+also retained with a `# boundary: D-14` tag (separate gate — the
+`os\.path` regex doesn't match `os.walk`). Pathlib has no direct
+equivalent yielding the `(cur_dir, sub_dirs, files)` triple shape
+the template-render loop depends on; converting to
+`Path.rglob('*')` would require a wholesale loop restructure with
+higher regression risk than the boundary-tag accommodation.
+
+**A7 symlink pre-flight finding (Wave 6 Task 1):**
+
+| Check | Result |
+|-------|--------|
+| `find tests/ -type l 2>/dev/null` | 0 symlinks |
+| `find cement/ -type l 2>/dev/null` | 0 symlinks |
+| `find . -type l ...` (excl. .venv/.git/node_modules) | 3 symlinks under `.devbox/` only (tooling; never path-handled by cement) |
+| Decision | `Path(p).expanduser().resolve(strict=False)` — matches `os.path.abspath(os.path.expanduser(p))` semantics for non-symlink paths (per RESEARCH.md A7 decision tree) |
+
+**Wave 6 commits (4 atomic per-file):**
+
+| Hash | Subject |
+|------|---------|
+| `6af95ee9` | `refactor(utils.fs): migrate os.path to pathlib internals` |
+| `1f307f23` | `refactor(core.config): migrate os.path to pathlib internals` |
+| `41f27d9f` | `refactor(core.foundation): migrate os.path to pathlib internals` |
+| `f2c181ac` | `refactor(core.template): migrate os.path to pathlib internals` |
+
+**D-24 conjunct #8 GREEN ✓** — pathlib migration complete across
+all 4 named files; the lone survivor is `# boundary:`-tagged.
 
 ## Public API baseline (D-04)
 
@@ -173,9 +231,9 @@ UP007/UP045 cleaning the import surface.
 | #3 | `make comply-mypy` clean | **green** ✓ (held through Wave 4) |
 | #4 | `make audit-public-api` exit 0 | **green** ✓ (Wave 3 baseline holds; this commit touches no source) |
 | #5 | `coverage-report/index.html` generates | **green** ✓ (COV-02 wave check) |
-| #6 | `Any` reduction strictly positive | pending — Task 2 lands the tightening pass |
-| #7 | pragma:nocover locked-vocab | pending — Plan 06+ |
-| #8 | `os.path` boundary scope | pending — Plan 05/06 |
+| #6 | `Any` reduction strictly positive | **GREEN ✓** (Wave 5 closed; 41 → 40) |
+| #7 | pragma:nocover locked-vocab | pending — Plan 07 |
+| #8 | `os.path` boundary scope | **GREEN ✓** (Wave 6 closed this plan; 33 → 1 surviving + tagged) |
 | #9 | `from __future__ import annotations` strip | **GREEN ✓** (Wave 4 closed) |
 
 ## REFACTOR-01 acceptance via coverage gate (D-20)
