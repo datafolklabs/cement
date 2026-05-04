@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 LOG = minimal_logger(__name__)
-LOG = minimal_logger(__name__)
 CEMENT_DAEMON_ENV = None
 CEMENT_DAEMON_APP: "App" = None  # type: ignore
 

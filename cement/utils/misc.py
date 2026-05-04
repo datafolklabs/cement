@@ -165,7 +165,14 @@ class MinimalLogger:
             console.setLevel(logging.DEBUG)
             self.backend.setLevel(logging.DEBUG)
 
-        self.backend.addHandler(console)
+        # Idempotency guard: `logging.getLogger(namespace)` returns the
+        # same backend logger instance for a given namespace, so a
+        # second `minimal_logger(ns)` call would otherwise stack a
+        # duplicate StreamHandler on the shared backend (every
+        # subsequent log emit would print twice). Only attach when
+        # the backend has no handlers yet.
+        if not self.backend.handlers:
+            self.backend.addHandler(console)
 
     def _get_logging_kwargs(self,
                             namespace: str | None,
