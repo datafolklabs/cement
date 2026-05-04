@@ -120,7 +120,7 @@ Plans:
   - [x] 03-06-PLAN.md — pathlib migration: utils/fs.py, core/config.py, core/foundation.py, core/template.py — atomic per-file per D-13; D-12 boundary preserved; D-19 protected callsites untouched
 
   **Wave 7** *(blocked on Wave 6)*
-  - [ ] 03-07-PLAN.md — pragma:nocover audit with D-15 locked vocabulary (per-file commits across approx 39 files per RESEARCH.md A4: 141 sites, not 123)
+  - [x] 03-07-PLAN.md — pragma:nocover audit with D-15 locked vocabulary completed across 141 sites / 39 files. 39 per-file atomic source commits + 3 batch-summary docs(03) commits. Per-category breakdown: defensive: unreachable=51, abstract method=45, TYPE_CHECKING import=26, platform-specific=13, untestable: dynamic import=4, version constant=1, untestable: signal handler=1, total=141. D-24 conjunct #7 GREEN: locked-vocabulary inverse grep returns empty. NO D-16 vocabulary expansion triggered. 4 deviations auto-fixed inline (3 Rule 1, 1 Rule 2)
 
   **Wave 8** *(blocked on Wave 7 — final acceptance gate)*
   - [ ] 03-08-PLAN.md — Finalize 03-VERIFICATION.md with full D-24 9-conjunct evidence + mark Phase 3 complete in ROADMAP

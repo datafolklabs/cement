@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: "Phase 3 Plan 06 complete (Wave 6 — pathlib migration; D-24 conjunct #8 GREEN; 2 plans / 2 waves remaining)"
-last_updated: "2026-05-04T02:49:16.373Z"
+stopped_at: "Phase 3 Plan 07 complete (Wave 7 — pragma:nocover audit with D-15 locked-vocabulary labels; D-24 conjunct #7 GREEN; 1 plan / 1 wave remaining — Plan 08 / Wave 8 is final acceptance gate)"
+last_updated: "2026-05-04T04:14:22Z"
 last_activity: 2026-05-04
 progress:
   total_phases: 7
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 3
-Plan: 06/08 complete (Wave 6 closed; Wave 7 unblocked)
-Status: Phase 3 Plan 06 (Wave 6 — pathlib migration across cement/utils/fs.py + cement/core/{config,foundation,template}.py) complete. Four atomic commits, ordered per D-13: `6af95ee9` (refactor(utils.fs): migrate os.path to pathlib internals — foundational; 15 → 0 untagged os.path; A7 symlink pre-flight 0/0 → .resolve(strict=False); closes self-flagged TODO), `1f307f23` (refactor(core.config): migrate os.path to pathlib internals — 1 → 0 untagged; import os retained no-op # noqa: F401 # boundary: for public-baseline preservation), `41f27d9f` (refactor(core.foundation): migrate os.path to pathlib internals — 4 → 1 [tagged] os.path; the surviving site is the public alias `join = os.path.join` at line 48, retained per D-12/D-14 since it's in 03-PUBLIC-API-BASELINE.txt with stdlib semantics; D-19 14 protected `.format(**template_dict)` callsites verified untouched), `f2c181ac` (refactor(core.template): migrate os.path to pathlib internals — biggest single-file blast; 13 → 0 untagged os.path; os.walk(src) retained with # boundary: D-14 tag per Task 5 plan decision since pathlib has no triple-tuple equivalent for the (cur_dir, sub_dirs, files) yield shape). All four files use `from pathlib import Path as _Path` private alias to keep audit-public-api baseline byte-identical (a public Path import would have surfaced as `<module>:Path` in the public-API enumeration per D-01). D-24 conjunct #8 GREEN: `grep -rn 'os\.path' cement/utils/fs.py cement/core/foundation.py cement/core/template.py cement/core/config.py | grep -v '# boundary:' | wc -l` returns 0. Plus 03-VERIFICATION.md updated with Wave 6 post-count section + per-file delta tables + A7 finding + Wave 6 commit table; D-24 conjunct #6 + #8 marked GREEN. All D-24 conjuncts through Wave 6 GREEN (#1, #2, #3, #4, #5, #6, #8, #9); only #7 (pragma:nocover locked-vocab) deferred to Wave 7 (Plan 07). 5 deviations auto-fixed inline (3 Rule 1 bugs, 1 Rule 2 missing-critical for public-API preservation, 1 Rule 1 coverage drop) — all resolved before their respective commits landed; no scope creep.
+Plan: 07/08 complete (Wave 7 closed; Wave 8 unblocked — final acceptance gate)
+Status: Phase 3 Plan 07 (Wave 7 — pragma:nocover audit with D-15 locked-vocabulary category labels) complete. 39 per-file atomic source commits + 3 batch-summary docs(03) commits across 39 files / 141 sites: Batch A (cement/core/, 15 files / 58 sites — abstract method, TYPE_CHECKING import, platform-specific, defensive: unreachable, untestable: signal handler, version constant), Batch B (cement/ext/ ext_alarm-ext_logging, 10 files / 43 sites — TYPE_CHECKING import, defensive: unreachable, untestable: dynamic import, platform-specific), Batch C (cement/ext/ ext_memcached-ext_yaml, 10 files / 22 sites — TYPE_CHECKING import, defensive: unreachable, untestable: dynamic import), Batch D (cement/cli/ + cement/utils/, 4 files / 18 sites — defensive: unreachable, platform-specific). D-24 conjunct #7 GREEN: `grep -nE 'pragma:[[:space:]]*no[[:space:]]*cover' cement/ | grep -vE '# (<8 D-15 categories>)' | wc -l` returns 0. Per-category breakdown: defensive: unreachable=51, abstract method=45, TYPE_CHECKING import=26, platform-specific=13, untestable: dynamic import=4, version constant=1, untestable: signal handler=1, total=141. NO D-16 vocabulary expansion was triggered — every site fit one of the 8 D-15 categories without amending CONTEXT.md. 4 deviations auto-fixed inline (3 Rule 1 bugs — ruff I001 import-block reformat at foundation.py:41 + ext_argparse.py:17, E501 line-too-long after category-label append handled with alignment trim + targeted noqa siblings, cli/main.py:49 noqa expansion to T201,E501; 1 Rule 2 missing-critical for surface-preservation of an existing free-form annotation at ext_smtp.py:187 — category label inserted BETWEEN pragma and free-form note so audit grep still matches). 03-VERIFICATION.md updated with Wave 7 post-audit section + D-24 conjunct #7 GREEN + per-batch + per-category breakdown tables + D-17 verification grep result captured as evidence. All D-24 conjuncts through Wave 7 GREEN (#1-#9); Wave 8 (Plan 08) finalizes 03-VERIFICATION.md with full 9-conjunct evidence + REFACTOR-01 acceptance-via-coverage rationale + marks Phase 3 complete in ROADMAP.
 Last activity: 2026-05-04
 
 Progress: [█████████▌] 95% (20/21 plans completed)
@@ -64,6 +64,7 @@ Progress: [█████████▌] 95% (20/21 plans completed)
 | Phase 03-internal-refactor-coverage-hardening P04 | 7 min | 1 atomic commit (Rule 4) | 30 files |
 | Phase 03-internal-refactor-coverage-hardening P05 | 17 min | 2 atomic commits | 16 files |
 | Phase 03-internal-refactor-coverage-hardening P06 | 16 min | 4 atomic commits | 5 files |
+| Phase 03-internal-refactor-coverage-hardening P07 | 75 min | 39 atomic commits + 3 batch-summary docs | 39 files |
 
 ## Accumulated Context
 
@@ -117,6 +118,12 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 03 Plan 06]: Surviving public alias join = os.path.join in cement/core/foundation.py:48 retained per D-12/D-14 with inline # boundary: tag — it is in 03-PUBLIC-API-BASELINE.txt (cement.core.foundation:join) with stdlib semantics that downstream callers depend on. os.walk(src) in cement/core/template.py:209 retained per Task 5 plan decision (pathlib has no triple-tuple equivalent; restructure too risky). Both decisions cement the # boundary: D-14 inline-tag pattern as the audit-grep-friendly convention.
 - [Phase ?]: [Phase 03 Plan 06]: import os retained in cement/core/config.py with # noqa: F401 # boundary: ... (D-12). cement.core.config:os is in the public-API baseline; removing the now-unused import would have shrunk the public surface (downstream code doing 'from cement.core.config import os' would have broken). Same surface-preservation discipline as the join alias decision; generalizable pattern for future migrations.
 - [Phase ?]: [Phase 03 Plan 06]: A7 symlink pre-flight executed (find tests/ -type l + find cement/ -type l) — 0 symlinks in scope. Decision: Path(p).expanduser().resolve(strict=False) — matches os.path.abspath(os.path.expanduser(p)) semantics for non-symlink paths per RESEARCH.md A7 decision tree. Recorded in cement/utils/fs.py commit body (6af95ee9) for auditability.
+- [Phase 03 Plan 07]: D-15 locked-vocabulary pragma audit completed across 141 sites / 39 files in cement/. Per-file atomic commits per D-18 (39 source commits + 3 batch-summary docs commits). Per-category breakdown: defensive: unreachable=51, abstract method=45, TYPE_CHECKING import=26, platform-specific=13, untestable: dynamic import=4, version constant=1, untestable: signal handler=1, total=141. D-24 conjunct #7 GREEN.
+- [Phase 03 Plan 07]: NO D-16 vocabulary expansion triggered. Three borderline cases — ext_daemon FD ops (daemonize/cleanup function-level pragmas), interactive Prompt/getpass calls (cement/utils/shell.py + cement/ext/ext_generate.py:87), Mailpit-accepts-everything SMTP error branch (ext_smtp.py:187) — all resolved as `defensive: unreachable` via reasonable interpretation rather than expanding the locked vocabulary. The spirit of `defensive: unreachable` (paths coverage cannot prove unreachable but pragmatically never execute in tests) covers them adequately.
+- [Phase 03 Plan 07]: utils/version.py:104-105 labeled `defensive: unreachable` not `untestable: subprocess`. The actual subprocess.Popen call at lines 97-101 runs end-to-end in tests; only the post-subprocess `except ValueError` defensive parse fallback is pragma'd. RESEARCH.md A4's preliminary classification was a coarse line range; refined here.
+- [Phase 03 Plan 07]: Multi-line import-block rewrite during pragma append (foundation.py:41 + ext_argparse.py:17) — ruff I001 isort auto-fix split single-line `from ... import A, B, C  # pragma: nocover` into multi-line `from ... import (...)` blocks because the appended `# TYPE_CHECKING import` label crossed the 100-char limit. Coverage exclusion behavior preserved (pragma applies to entire import statement). Pattern generalizable for future label-append work where the original import was at-or-near 100 chars pre-append.
+- [Phase 03 Plan 07]: Aligned trailing-comment compression for E501 — sites with aesthetic alignment padding before `# pragma` had alignment trimmed (5-10 char trim) to fit the post-append within 100 chars. A small subset (cli/main.py:49, ext_colorlog.py:106, ext_generate.py:162, ext_plugin.py:69/71/75/77) needed an additional `# noqa: E501` sibling AFTER the pragma + category label so the audit grep still matches.
+- [Phase 03 Plan 07]: Dual-spelling preservation — both `# pragma: nocover` and `# pragma: no cover` spellings preserved (NOT canonicalized) per RESEARCH.md state-of-the-art note. Audit regex matches both via `[[:space:]]*` quantifier between `no` and `cover`.
 
 ### Roadmap Evolution
 
@@ -145,6 +152,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-04T02:49:16.368Z
-Stopped at: Phase 3 Plan 06 complete (Wave 6 — pathlib migration; D-24 conjunct #8 GREEN; 2 plans / 2 waves remaining)
+Last session: 2026-05-04T04:14:22Z
+Stopped at: Phase 3 Plan 07 complete (Wave 7 — pragma:nocover audit with D-15 locked-vocabulary labels; D-24 conjunct #7 GREEN; 1 plan / 1 wave remaining — Plan 08 is final acceptance gate)
 Resume file: None

@@ -164,6 +164,14 @@ Refactoring:
   (Phase 03 Wave 7 Batch C — 10 files / per-file atomic
   commits). Categories applied: `TYPE_CHECKING import`,
   `defensive: unreachable`, `untestable: dynamic import`.
+- `[dev]` Audit `pragma:nocover` sites in `cement/cli/` +
+  `cement/utils/` (cli/main.py, utils/fs.py, utils/shell.py,
+  utils/version.py) with D-15 locked-vocabulary category
+  labels (Phase 03 Wave 7 Batch D — 4 files / per-file
+  atomic commits). Closes COV-03 / D-24 conjunct #7 across
+  all of cement/: `grep -nE 'pragma:[[:space:]]*no[[:space:]]*cover' cement/ | grep -vE '# (<8 categories>)'`
+  returns empty (141 sites all carry locked-vocabulary
+  category labels).
 
 Misc:
 
