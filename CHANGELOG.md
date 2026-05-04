@@ -98,6 +98,14 @@ Refactoring:
   ArgparseController) converted to PEP 484 string annotations
   where evaluated at class/function definition time. Closes the
   cement/utils/fs.py self-flagged 2024-06-22 TODO.
+- `[utils.fs]` Migrate `cement/utils/fs.py` os.path internals to
+  pathlib (Phase 03 D-11). Public functions still return `str` via
+  `str(p)` at every boundary (D-12 boundary preservation);
+  `HOME_DIR` stays a `str` constant; `Tmp.dir` / `Tmp.file` stay
+  `str` instance attributes. `pathlib.Path` aliased as `_Path`
+  module-level to avoid expanding the public surface
+  (audit-public-api stays exit 0). Lays foundation for
+  cement/core/* migrations.
 
 Misc:
 
