@@ -45,7 +45,7 @@ class OutputInterface(Interface):
             rendered
 
         """
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
 
 class OutputHandler(OutputInterface, Handler):
@@ -53,4 +53,4 @@ class OutputHandler(OutputInterface, Handler):
     """Output handler implementation."""
 
     class Meta(Handler.Meta):
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
