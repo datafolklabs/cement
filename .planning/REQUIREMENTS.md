@@ -58,7 +58,7 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 ### Internal Refactor
 
 - [ ] **REFACTOR-01**: Dead code identified (vulture / coverage diff) and removed without affecting public API or test coverage
-- [ ] **REFACTOR-02**: Type hints tightened in `cement/core/` — fewer `Any`, more precise generics where mypy strict mode allows
+- [x] **REFACTOR-02**: Type hints tightened in `cement/core/` — fewer `Any`, more precise generics where mypy strict mode allows
 - [ ] **REFACTOR-03**: `os.path` usage in `cement/utils/fs.py` and core internals migrated to `pathlib` where it doesn't change public signatures
 - [x] **REFACTOR-04**: Modern stdlib idioms applied where backward-compatible (f-strings everywhere, contextlib helpers, `functools.cached_property`) — Closed mechanically in Phase 03 Plan 03 (UP031 + UP032 cascade resolved all printf-style and `.format()` callsites; protected `.format(**template_dict)` template-substitution sites preserved per D-19; `cached_property` / `contextlib.suppress` adoption was opportunistic per D-19 — none surfaced as obvious wins)
 
@@ -153,7 +153,7 @@ Populated by the roadmapper during phase mapping.
 | TRIAGE-03 | Phase 4 | Pending |
 | TRIAGE-04 | Phase 4 | Pending |
 | REFACTOR-01 | Phase 3 | Pending |
-| REFACTOR-02 | Phase 3 | Pending |
+| REFACTOR-02 | Phase 3 | Complete |
 | REFACTOR-03 | Phase 3 | Pending |
 | REFACTOR-04 | Phase 3 | Closed (Phase 03 Plan 03 — UP031+UP032 cascade) |
 | DEPREC-01 | Phase 5 | Pending |
