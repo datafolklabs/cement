@@ -49,11 +49,11 @@ class Jinja2OutputHandler(OutputHandler):
         label = 'jinja2'
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(Jinja2OutputHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.templater: TemplateHandler = None  # type: ignore
 
     def _setup(self, app: App) -> None:
-        super(Jinja2OutputHandler, self)._setup(app)
+        super()._setup(app)
         self.templater = self.app.handler.resolve('template', self._meta.label, setup=True)  # type: ignore
 
     def render(self, data: dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
@@ -97,7 +97,7 @@ class Jinja2TemplateHandler(TemplateHandler):
         label = 'jinja2'
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(Jinja2TemplateHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
         # expose Jinja2 Environment instance so that we can manipulate it
         # higher in application code if necessary
@@ -123,7 +123,7 @@ class Jinja2TemplateHandler(TemplateHandler):
             cement.core.exc.FrameworkError: If the template does not exist in
                 either the ``template_module`` or ``template_dirs``.
         """
-        content, _type, _path = super(Jinja2TemplateHandler, self).load(*args, **kw)
+        content, _type, _path = super().load(*args, **kw)
 
         if _type == 'directory':
             self.env.loader = FileSystemLoader(self.app._meta.template_dirs)

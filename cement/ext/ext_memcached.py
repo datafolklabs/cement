@@ -47,11 +47,11 @@ class MemcachedCacheHandler(cache.CacheHandler):
     _meta: Meta  # type: ignore
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(MemcachedCacheHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.mc = None
 
     def _setup(self, *args: Any, **kw: Any) -> None:
-        super(MemcachedCacheHandler, self)._setup(*args, **kw)
+        super()._setup(*args, **kw)
         self._fix_hosts()
         self.mc = pylibmc.Client(self._config('hosts'))
 

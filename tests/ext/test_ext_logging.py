@@ -16,7 +16,7 @@ class MyLog(LoggingLogHandler):
         level = 'INFO'
 
     def __init__(self, *args, **kw):
-        super(MyLog, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
 
 def test_alternate_namespaces(tmp):

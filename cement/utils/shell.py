@@ -433,7 +433,7 @@ class Prompt(MetaMixin):
                  **kw: Any) -> None:
         if text is not None:
             kw['text'] = text
-        super(Prompt, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
 
         self.input: str | None = None
         if self._meta.auto:

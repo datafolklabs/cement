@@ -60,11 +60,11 @@ class MustacheOutputHandler(OutputHandler):
     _meta: Meta  # type: ignore
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(MustacheOutputHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.templater: MustacheTemplateHandler = None  # type: ignore
 
     def _setup(self, app: App) -> None:
-        super(MustacheOutputHandler, self)._setup(app)
+        super()._setup(app)
         self.templater = self.app.handler.resolve('template', 'mustache',  # type: ignore
                                                   setup=True)
 
@@ -116,7 +116,7 @@ class MustacheTemplateHandler(TemplateHandler):
     _meta: Meta  # type: ignore
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(MustacheTemplateHandler, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self._partials_loader = PartialsLoader(self)
 
     def render(self, content: str | bytes, data: dict[str, Any]) -> str:

@@ -60,6 +60,8 @@ Refactoring:
   REFACTOR-04 closeout.
 - `[core]` Drop redundant `(object)` base class (UP004); Python 3
   classes inherit from object implicitly.
+- `[core]` Simplify `super()` calls (UP008 — drop `super(__class__,
+  self)` boilerplate; Python 3 zero-arg form).
 
 Misc:
 

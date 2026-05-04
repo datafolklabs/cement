@@ -47,4 +47,4 @@ class MetaMixin:
         self._meta = Meta(**final_meta)
 
         # FIX ME: object.__init__() doesn't take params without exception
-        super(MetaMixin, self).__init__()
+        super().__init__()

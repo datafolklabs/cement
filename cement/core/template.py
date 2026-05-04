@@ -111,7 +111,7 @@ class TemplateHandler(TemplateInterface, Handler):
         ignore: list[str] = None  # type: ignore
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super(TemplateHandler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self._meta.ignore is None:
             self._meta.ignore = []
         if self._meta.exclude is None:

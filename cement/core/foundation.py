@@ -764,7 +764,7 @@ class App(meta.MetaMixin):
     _meta: Meta  # type: ignore
 
     def __init__(self, label: str | None = None, **kw: Any) -> None:
-        super(App, self).__init__(**kw)
+        super().__init__(**kw)
 
         # enable framework logging from environment?
         if 'CEMENT_LOG' in os.environ.keys():

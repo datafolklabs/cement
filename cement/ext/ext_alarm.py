@@ -28,7 +28,7 @@ class AlarmManager:
     """
 
     def __init__(self, *args: Any, **kw: Any) -> None:
-        super(AlarmManager, self).__init__(*args, **kw)
+        super().__init__(*args, **kw)
         self.msg: str = None  # type: ignore
 
     def set(self, time: int, msg: str) -> None:

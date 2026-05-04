@@ -64,7 +64,7 @@ class Handler(ABC, MetaMixin):
         """
 
     def __init__(self, **kw: Any) -> None:
-        super(Handler, self).__init__(**kw)
+        super().__init__(**kw)
         try:
             assert self._meta.label, \
                 f"{self.__class__.__name__}.Meta.label undefined."
