@@ -14,7 +14,10 @@ from ..core.exc import FrameworkError
 from ..utils.misc import minimal_logger
 
 if TYPE_CHECKING:
-    from ..core.foundation import App, ArgparseArgumentType  # pragma: nocover
+    from ..core.foundation import (  # pragma: nocover  # TYPE_CHECKING import
+        App,
+        ArgparseArgumentType,
+    )
 
 LOG = minimal_logger(__name__)
 
@@ -557,7 +560,7 @@ class ArgparseController(ControllerHandler):
 
         # and if only base controller registered... go ahead and return
         if len(self.app.handler.list('controller')) <= 1:
-            return    # pragma: nocover
+            return    # pragma: nocover  # defensive: unreachable
 
         # note that the order of self._controllers was already organized by
         # stacking/embedding order in self._setup_controllers ... order is
@@ -826,11 +829,11 @@ class ArgparseController(ControllerHandler):
             # We never get here on Python < 3 as Argparse would have already
             # complained about too few arguments
             contr_label = self.app.pargs\
-                              .__controller_namespace__     # pragma: nocover
-            contr = self._controllers_map[contr_label]      # pragma: nocover
-            func_name = _clean_func(                        # pragma: nocover
-                contr._meta.default_func                    # pragma: nocover
-            )                                               # pragma: nocover
+                              .__controller_namespace__  # pragma: nocover  # defensive: unreachable
+            contr = self._controllers_map[contr_label]  # pragma: nocover  # defensive: unreachable
+            func_name = _clean_func(  # pragma: nocover  # defensive: unreachable
+                contr._meta.default_func  # pragma: nocover  # defensive: unreachable
+            )  # pragma: nocover  # defensive: unreachable
 
         if contr_label == 'base':
             contr = self
@@ -838,7 +841,7 @@ class ArgparseController(ControllerHandler):
             contr = self._controllers_map[contr_label]
 
         if func_name is None:
-            pass    # pragma: nocover
+            pass    # pragma: nocover  # defensive: unreachable
         elif hasattr(contr, func_name):
             func = getattr(contr, func_name)
             return func()
@@ -848,10 +851,10 @@ class ArgparseController(ControllerHandler):
             #
             # We never get here on Python < 3 as Argparse would have already
             # complained about too few arguments
-            raise FrameworkError(                           # pragma: nocover
+            raise FrameworkError(  # pragma: nocover  # defensive: unreachable
                 f"Controller function does not exist "
                 f"{contr.__class__.__name__}.{func_name}()"
-            )      # pragma: nocover
+            )  # pragma: nocover  # defensive: unreachable
 
 
 def load(app: "App") -> None:
