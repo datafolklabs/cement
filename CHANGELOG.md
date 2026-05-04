@@ -157,6 +157,13 @@ Refactoring:
   commits). Categories applied: `TYPE_CHECKING import`,
   `defensive: unreachable`, `untestable: dynamic import`,
   `platform-specific`.
+- `[dev]` Audit `pragma:nocover` sites in `cement/ext/` second
+  half (ext_memcached, ext_mustache, ext_plugin, ext_print,
+  ext_redis, ext_scrub, ext_smtp, ext_tabulate, ext_watchdog,
+  ext_yaml) with D-15 locked-vocabulary category labels
+  (Phase 03 Wave 7 Batch C — 10 files / per-file atomic
+  commits). Categories applied: `TYPE_CHECKING import`,
+  `defensive: unreachable`, `untestable: dynamic import`.
 
 Misc:
 
