@@ -77,6 +77,8 @@ Refactoring:
   template-substitution callsites in cement/core/foundation.py
   preserved untouched (verified by body-diff against pre-fix state).
   UP family fully clean after this commit.
+- `[dev]` Refresh CONVENTIONS.md type-annotation guidance to
+  PEP 585 / PEP 604 modern syntax (Phase 03 plan 03 landing point).
 
 Misc:
 
