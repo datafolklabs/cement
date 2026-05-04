@@ -22,7 +22,7 @@ from ..ext.ext_logging import LoggingLogHandler
 from ..utils.misc import is_true
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 
 class ColorLogHandler(LoggingLogHandler):
@@ -103,8 +103,8 @@ class ColorLogHandler(LoggingLogHandler):
             else:
                 formatter = self._meta.formatter_class_without_color(format)
         else:
-            klass = self._meta.formatter_class_without_color  # pragma: nocover
-            formatter = klass(format)                         # pragma: nocover
+            klass = self._meta.formatter_class_without_color  # pragma: nocover  # defensive: unreachable  # noqa: E501
+            formatter = klass(format)  # pragma: nocover  # defensive: unreachable
 
         return formatter
 
