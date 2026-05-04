@@ -5,7 +5,7 @@ Cement core interface module.
 from __future__ import annotations
 
 from abc import ABC
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from ..core import exc, meta
 from ..utils.misc import minimal_logger
@@ -62,7 +62,7 @@ class InterfaceManager(object):
 
     def get(self,
             interface: str,
-            fallback: Optional[type[Interface]] = None,
+            fallback: type[Interface] | None = None,
             **kwargs: Any) -> type[Interface]:
         """
         Get an interface class.

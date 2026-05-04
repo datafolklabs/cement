@@ -13,7 +13,7 @@ extensions.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from jinja2 import Environment, FileSystemLoader, PackageLoader
 
@@ -103,7 +103,7 @@ class Jinja2TemplateHandler(TemplateHandler):
         # higher in application code if necessary
         self.env = Environment(keep_trailing_newline=True)
 
-    def load(self, *args: Any, **kw: Any) -> tuple[str | bytes, str, Optional[str]]:
+    def load(self, *args: Any, **kw: Any) -> tuple[str | bytes, str, str | None]:
         """
         Loads a template file first from ``self.app._meta.template_dirs`` and
         secondly from ``self.app._meta.template_module``.  The

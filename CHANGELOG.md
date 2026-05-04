@@ -48,6 +48,9 @@ Refactoring:
   same pass (F401)
 - `[core]` Modernize union types to PEP 604 syntax (UP007:
   `Union[X, Y]` → `X | Y`); orphaned `typing.Union` imports pruned
+- `[core]` Modernize Optional types to PEP 604 syntax (UP045:
+  `Optional[X]` → `X | None`); orphaned `typing.Optional` imports
+  pruned
 
 Misc:
 

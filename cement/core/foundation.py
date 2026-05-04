@@ -13,7 +13,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Optional,
     TextIO,
 )
 
@@ -127,7 +126,7 @@ def handler_override(app: App) -> None:
             getattr(app, f'_setup_{i}_handler')()
 
 
-def cement_signal_handler(signum: int, frame: Optional[FrameType]) -> Any:
+def cement_signal_handler(signum: int, frame: FrameType | None) -> Any:
     """
     Catch a signal, run the ``signal`` hook, and then raise an exception
     allowing the app to handle logic elsewhere.
@@ -315,7 +314,7 @@ class App(meta.MetaMixin):
         first has precedence.
         """
 
-        plugin_dir: Optional[str] = None
+        plugin_dir: str | None = None
         """
         A directory path where plugin code (modules) can be loaded from.
         By default, this setting is also overridden by the
@@ -468,7 +467,7 @@ class App(meta.MetaMixin):
         A handler class that implements the Template interface.
         """
 
-        cache_handler: Optional[str] = None
+        cache_handler: str | None = None
         """
         A handler class that implements the Cache interface.
         """
@@ -476,7 +475,7 @@ class App(meta.MetaMixin):
         extensions: list[str] = []
         """List of additional framework extensions to load."""
 
-        bootstrap: Optional[str] = None
+        bootstrap: str | None = None
         """
         A bootstrapping module to load after app creation, and before
         ``app.setup()`` is called.  This is useful for larger applications
@@ -545,7 +544,7 @@ class App(meta.MetaMixin):
         ignore_deprecation_warnings = False
         """Disable deprecation warnings from being logged by Cement."""
 
-        template_module: Optional[str] = None
+        template_module: str | None = None
         """
         A python package (dotted import path) where template files can be
         loaded from.  This is generally something like ``myapp.templates``
@@ -577,7 +576,7 @@ class App(meta.MetaMixin):
         once a template is successfully loaded from a directory.
         """
 
-        template_dir: Optional[str] = None
+        template_dir: str | None = None
         """
         A directory path where template files can be loaded from.  By default,
         this setting is also overridden by the
@@ -764,7 +763,7 @@ class App(meta.MetaMixin):
 
     _meta: Meta  # type: ignore
 
-    def __init__(self, label: Optional[str] = None, **kw: Any) -> None:
+    def __init__(self, label: str | None = None, **kw: Any) -> None:
         super(App, self).__init__(**kw)
 
         # enable framework logging from environment?
@@ -801,7 +800,7 @@ class App(meta.MetaMixin):
         self._validate_label()
         self._loaded_bootstrap = None
         self._parsed_args: Any = None
-        self._last_rendered: Optional[tuple[Any, Optional[str]]] = None
+        self._last_rendered: tuple[Any, str | None] | None = None
         self._extended_members: list[str] = []
         self.__saved_stdout__: TextIO = None  # type: ignore
         self.__saved_stderr__: TextIO = None  # type: ignore
@@ -1032,7 +1031,7 @@ class App(meta.MetaMixin):
         self.handler.__handlers__ = {}
         self.hook.__hooks__ = {}
 
-    def close(self, code: Optional[int] = None) -> None:
+    def close(self, code: int | None = None) -> None:
         """
         Close the application.  This runs the ``pre_close`` and ``post_close``
         hooks allowing plugins/extensions/etc to cleanup at the end of
@@ -1070,9 +1069,9 @@ class App(meta.MetaMixin):
             sys.exit(self.exit_code)
 
     def render(self, data: Any,
-               template: Optional[str] = None,
+               template: str | None = None,
                out: IO = sys.stdout,
-               handler: Optional[str] = None,
+               handler: str | None = None,
                **kw: Any) -> str:
         """
         This is a simple wrapper around ``self.output.render()`` which simply
@@ -1138,7 +1137,7 @@ class App(meta.MetaMixin):
         return out_text
 
     @property
-    def last_rendered(self) -> Optional[tuple[dict[str, Any], Optional[str]]]:
+    def last_rendered(self) -> tuple[dict[str, Any], str | None] | None:
         """
         Return the ``(data, output_text)`` tuple of the last time
         ``self.render()`` was called.
@@ -1750,7 +1749,7 @@ class App(meta.MetaMixin):
         if path in self._meta.template_dirs:
             self._meta.template_dirs.remove(path)
 
-    def __import__(self, obj: Any, from_module: Optional[str] = None) -> ModuleType:
+    def __import__(self, obj: Any, from_module: str | None = None) -> ModuleType:
         # EXPERIMENTAL == UNDOCUMENTED
         mapping = self._meta.alternative_module_mapping
 

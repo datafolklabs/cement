@@ -8,7 +8,7 @@ import shutil
 import tempfile
 from datetime import datetime
 from types import TracebackType
-from typing import Any, Optional
+from typing import Any
 
 
 class Tmp(object):
@@ -183,7 +183,7 @@ def ensure_parent_dir_exists(path: str) -> None:
     return ensure_dir_exists(parent_dir)
 
 
-def backup(path: str, suffix: str = '.bak', **kwargs: Any) -> Optional[str]:
+def backup(path: str, suffix: str = '.bak', **kwargs: Any) -> str | None:
     """
     Rename a file or directory safely without overwriting an existing
     backup of the same name.

@@ -6,7 +6,7 @@ from getpass import getpass
 from multiprocessing import Process
 from subprocess import PIPE, Popen
 from threading import Thread
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 from ..core.exc import FrameworkError
 from ..core.meta import MetaMixin
@@ -384,11 +384,11 @@ class Prompt(MetaMixin):
         text: str = "Tell me someting interesting:"
 
         #: A default value to use if the user doesn't provide any input
-        default: Optional[str] = None
+        default: str | None = None
 
         #: Options to provide to the user.  If set, the input must match one
         #: of the items in the options selection.
-        options: Optional[dict] = None
+        options: dict | None = None
 
         #: Separator to use within the option selection (non-numbered)
         options_separator: str = ','
@@ -427,14 +427,14 @@ class Prompt(MetaMixin):
         suppress: bool = False
 
     def __init__(self,
-                 text: Optional[str] = None,
+                 text: str | None = None,
                  *args: Any,
                  **kw: Any) -> None:
         if text is not None:
             kw['text'] = text
         super(Prompt, self).__init__(*args, **kw)
 
-        self.input: Optional[str] = None
+        self.input: str | None = None
         if self._meta.auto:
             self.prompt()
 
@@ -480,7 +480,7 @@ class Prompt(MetaMixin):
         elif self.input == '':
             self.input = None
 
-    def prompt(self) -> Optional[str]:
+    def prompt(self) -> str | None:
         """
         Prompt the user, and store their input as ``self.input``.
         """
