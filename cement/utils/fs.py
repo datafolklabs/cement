@@ -99,7 +99,7 @@ def abspath(path: str, strip_trailing_slash: bool = True) -> str:
 
     """
 
-    return str(_Path(path).expanduser().resolve(strict=False))
+    return os.path.abspath(os.path.expanduser(path))  # boundary: D-14 (CR-01/CR-02)
 
 
 def join(*args: str, **kwargs: Any) -> str:
