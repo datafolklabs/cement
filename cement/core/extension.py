@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import builtins
 import sys
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Any
@@ -10,7 +11,6 @@ from ..core import exc
 from ..core.handler import Handler
 from ..core.interface import Interface
 from ..utils.misc import minimal_logger
-import builtins
 
 LOG = minimal_logger(__name__)
 

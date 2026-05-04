@@ -329,7 +329,10 @@ class TemplateHandler(TemplateInterface, Handler):
         template_path = template_path.lstrip('/')
         full_module_path = f"{template_module}.{re.sub('/', '.', template_path)}"
 
-        LOG.debug(f"attemping to load output template '{template_path}' from module {template_module}")
+        LOG.debug(
+            f"attemping to load output template '{template_path}' "
+            f"from module {template_module}"
+        )
 
         # see if the module exists first
         if template_module not in sys.modules:
@@ -345,7 +348,10 @@ class TemplateHandler(TemplateInterface, Handler):
             LOG.debug(f"loaded output template '{template_path}' from module {template_module}")
             return (content, full_module_path)
         except OSError:
-            LOG.debug(f"output template '{template_path}' does not exist in module {template_module}")
+            LOG.debug(
+                f"output template '{template_path}' does not exist "
+                f"in module {template_module}"
+            )
             return (None, None)
 
     def load(self, template_path: str) -> tuple[str | bytes, str, str | None]:

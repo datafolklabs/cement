@@ -79,6 +79,9 @@ Refactoring:
   UP family fully clean after this commit.
 - `[dev]` Refresh CONVENTIONS.md type-annotation guidance to
   PEP 585 / PEP 604 modern syntax (Phase 03 plan 03 landing point).
+- `[core]` Wrap long log/error messages introduced by UP032 f-string
+  conversion to satisfy E501 (line-too-long); reorder imports
+  introduced by UP006/UP035 to satisfy I001 (import sorting).
 
 Misc:
 

@@ -6,6 +6,7 @@ import os
 import platform
 import signal
 import sys
+from collections.abc import Callable
 from importlib import reload as reload_module
 from time import sleep
 from typing import (
@@ -14,7 +15,6 @@ from typing import (
     Any,
     TextIO,
 )
-from collections.abc import Callable
 
 from ..core import (
     arg,

@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
+import builtins
 import operator
 import types
-from typing import TYPE_CHECKING, Any
 from collections.abc import Callable, Generator
+from typing import TYPE_CHECKING, Any
 
 from ..core import exc
 from ..utils.misc import minimal_logger
-import builtins
 
 if TYPE_CHECKING:
     from ..core.foundation import App  # pragma: nocover

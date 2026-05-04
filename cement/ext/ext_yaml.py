@@ -4,8 +4,8 @@ Cement yaml extension module.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
 from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
 import yaml  # type: ignore
 

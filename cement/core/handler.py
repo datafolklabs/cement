@@ -5,6 +5,7 @@ Cement core handler module.
 
 from __future__ import annotations
 
+import builtins
 import re
 from abc import ABC
 from typing import TYPE_CHECKING, Any
@@ -12,7 +13,6 @@ from typing import TYPE_CHECKING, Any
 from ..core import exc
 from ..core.meta import MetaMixin
 from ..utils.misc import minimal_logger
-import builtins
 
 LOG = minimal_logger(__name__)
 
@@ -251,7 +251,10 @@ class HandlerManager:
         obj._meta.label = re.sub('-', '_', obj._meta.label)
 
         interface = obj._meta.interface
-        LOG.debug(f"registering handler '{handler_class}' into handlers['{interface}']['{obj._meta.label}']")
+        LOG.debug(
+            f"registering handler '{handler_class}' into "
+            f"handlers['{interface}']['{obj._meta.label}']"
+        )
 
         if interface not in self.app.interface.list():
             raise exc.InterfaceError(f"Handler interface '{interface}' doesn't exist.")
