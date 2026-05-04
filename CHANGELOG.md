@@ -196,6 +196,9 @@ Misc:
 - `[dev]` Add `make audit-public-api` target + AST-walk public surface enumerator + baseline snapshot (Phase 03 D-02..D-05).
 - `[dev]` Enable ruff `UP` (pyupgrade) and `FA` (flake8-future-annotations) families in extend-select with refreshed AUDIT POINT comment (Phase 03 D-06).
 - `[dev]` Capture Phase 03 Any-in-core baseline (D-09) + pragma + pathlib pre-counts in `03-VERIFICATION.md` (in-progress; finalized in Wave 8).
+- `[dev]` Phase 03 verification finalized: all 9 D-24 conjuncts GREEN;
+  REFACTOR-01..04 + COV-01..03 satisfied; record in
+  `03-VERIFICATION.md`.
 
 Deprecations:
 
