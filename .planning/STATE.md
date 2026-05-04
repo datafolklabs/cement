@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Phase 3 Plan 03 complete (Wave 3 — UP family fully clean; REFACTOR-04 closed; 5 plans / 5 waves remaining)
-last_updated: "2026-05-04T01:24:15.313Z"
+stopped_at: Phase 3 Plan 05 complete (Wave 5 — Any-tightening pass; D-24 conjunct #6 GREEN; 3 plans / 3 waves remaining)
+last_updated: "2026-05-04T01:48:00.000Z"
 last_activity: 2026-05-04
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 21
-  completed_plans: 17
-  percent: 81
+  completed_plans: 19
+  percent: 90
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 3
-Plan: 04/08 complete (Wave 4 closed; Wave 5 unblocked)
-Status: Phase 3 Plan 04 (Wave 4 — drop `from __future__ import annotations` across cement/) complete. Single atomic commit `722e7bc7` per user-approved Rule 4 architectural decision: plan body's ruff FA100 --fix mechanism does NOT work (FA100 only adds, never removes); hand-strip + targeted PEP 484 string-quoting was the only correct path. 29 files stripped, 76 forward-reference sites quoted at definition-time-evaluated annotation positions (parameters, return types, class-level attributes, module-level annotations). Local annotations inside method bodies left unquoted per PEP 526; ruff UP037 auto-fix confirmed redundancy. Phase 1 D-14 deferral closed. cement/utils/fs.py self-flagged 2024-06-22 TODO removed. D-24 conjunct #9 GREEN. RESEARCH.md A2 'HIGH confidence safe' claim corrected: TYPE_CHECKING import safety and annotation runtime-evaluation safety are orthogonal — A2 verified the former; the latter required string-quoting. All D-24 conjuncts evaluated through Wave 4 GREEN (#1, #2, #3, #4, #5, #9). Wave 5 unblocked.
+Plan: 05/08 complete (Wave 5 closed; Wave 6 unblocked)
+Status: Phase 3 Plan 05 (Wave 5 — Any-tightening pass on cement/core/) complete. Two atomic commits: `2f3a063f` (docs(03): record Any-baseline + REFACTOR-01 verification — creates 03-VERIFICATION.md with pre-counts: Any=41, pragma=141, pathlib=33) and `6365a6c7` (refactor(core): tighten Any types in cement/core/ — 41 → 40, 2 substantive tightenings: `App.__import__(obj: Any)` → `obj: str` and `_dispatch() -> Any | None` → `-> Any`; inline D-09 justification comments added to all 40 surviving sites). Conservative tightening per D-12: only an UNDOCUMENTED experimental dunder + an internal underscore-prefixed abstract method were tightened; everything in `03-PUBLIC-API-BASELINE.txt` keeps its declared type. RESEARCH.md A3 "5-10 realistic" upper bound was the planning-time estimate; actual delta of 2 substantive sites reflects that the bulk of Any in cement/core/ is genuinely required by the public contract. Pre-baseline +1 drift recorded (RESEARCH.md verified 40 on 2026-05-03; live count 41 on 2026-05-04 — traced to grep visibility of the post-Wave-4 PEP 484 string-quoted signal-handler signature). 03-VERIFICATION.md is in-progress; Wave 8 (D-22 step 14) finalizes with post-counts and the full D-24 9-conjunct evidence. Deferred item logged inline at handler.py:332 (`Handler | Handler | None` duplicate union member from Wave 3 UP007 cascade — orthogonal to Any-tightening). All D-24 conjuncts evaluated through Wave 5 GREEN (#1, #2, #3, #4, #5, #6, #9). Wave 6 (pathlib migration) unblocked.
 Last activity: 2026-05-04
 
-Progress: [████████░░] 86% (18/21 plans completed)
+Progress: [█████████░] 90% (19/21 plans completed)
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Progress: [████████░░] 86% (18/21 plans completed)
 | Phase 03-internal-refactor-coverage-hardening P02 | 5 min | 1 tasks tasks | 2 files files |
 | Phase 03-internal-refactor-coverage-hardening P03 | 60 min | 16 commits | 73 files |
 | Phase 03-internal-refactor-coverage-hardening P04 | 7 min | 1 atomic commit (Rule 4) | 30 files |
+| Phase 03-internal-refactor-coverage-hardening P05 | 17 min | 2 atomic commits | 16 files |
 
 ## Accumulated Context
 
@@ -105,6 +106,12 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 03 Plan 04]: Plan body's ruff FA100 --fix mechanism does NOT remove from __future__ import annotations — FA100 only adds. User-approved Rule 4: hand-strip + targeted PEP 484 string-quoting in one atomic commit. 76 forward-reference sites quoted (App, FrameType, ModuleType, TracebackType, ArgparseArgumentType, ArgparseController) at definition-time-evaluated annotation positions only. Local annotations in method bodies left unquoted per PEP 526; ruff UP037 confirms via auto-fix.
 - [Phase ?]: [Phase 03 Plan 04]: RESEARCH.md A2 'HIGH confidence safe' claim was incomplete — TYPE_CHECKING import safety and annotation-runtime-evaluation safety are orthogonal concerns. A2 verified the former; the latter required PEP 484 string-quoting at definition-time-evaluated sites once the future import was removed.
 - [Phase ?]: [Phase 03 Plan 04]: D-24 conjunct #9 GREEN; Phase 1 D-14 deferral closed; cement/utils/fs.py self-flagged 2024-06-22 TODO removed. D-24 conjuncts #1/#2/#3/#4/#5/#9 GREEN through Wave 4; #6, #7, #8 deferred to Plans 05+.
+- [Phase 03 Plan 05]: Conservative D-09 tightening discipline applied — only `App.__import__` (dunder, EXPERIMENTAL UNDOCUMENTED, not in 03-PUBLIC-API-BASELINE.txt) and `_dispatch` (internal underscore-prefixed abstract method) tightened. Everything in the public-API baseline keeps its declared type per D-12. RESEARCH.md A3's "5-10 realistic" upper bound was the planning-time estimate; actual delta of 2 substantive sites reflects that the bulk of Any in cement/core/ is required by the public contract (handler-contract pluggable kwargs, user-arbitrary config/template/render/cache data, argparse opacity, signal-frame opacity).
+- [Phase 03 Plan 05]: Pre-baseline +1 drift recorded (RESEARCH.md verified 40 on 2026-05-03; live count 41 on 2026-05-04). Drift traced to grep visibility of the post-Wave-4 PEP 484 string-quoted signal-handler signature at foundation.py:127 — substantive Any surface unchanged.
+- [Phase 03 Plan 05]: D-09 inline justification convention established — every surviving Any in cement/core/ (40 sites) carries a `# D-09: ...` comment placed at the function definition (or class-level attribute) tagging it as handler-contract / user-arbitrary / argparse-opacity / signal-frame-opacity / UNDOCUMENTED. Mirrors COV-03 pragma policy and Phase 1 D-08 AUDIT POINT pattern.
+- [Phase 03 Plan 05]: Comment text MUST avoid the literal grep regex (`Any]`, `: Any`, `-> Any`) so justification prose doesn't pollute the post-count. Early drafts triggered 3 false-positive matches; reworded to use plain English. Pattern recorded for future inventory-style audits.
+- [Phase 03 Plan 05]: D-24 conjunct #6 GREEN (Any post < pre — 41 → 40, REFACTOR-02 acceptance). #1/#2/#3/#4/#5/#6/#9 GREEN through Wave 5; #7, #8 deferred to Plans 06/07.
+- [Phase 03 Plan 05]: Deferred item logged inline at handler.py:332 — `def resolve(...) -> Handler | Handler | None` carries a duplicate `Handler` union member (Wave 3 UP007 cascade artifact, semantically equivalent to `Handler | None`). Out-of-scope for D-09 Any-tightening; defer to a future tech-debt cleanup or Phase 5.
 
 ### Roadmap Evolution
 
@@ -133,6 +140,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-04T01:22:54.168Z
-Stopped at: Phase 3 Plan 03 complete (Wave 3 — UP family fully clean; REFACTOR-04 closed; 5 plans / 5 waves remaining)
+Last session: 2026-05-04T01:48:00.000Z
+Stopped at: Phase 3 Plan 05 complete (Wave 5 — Any-tightening pass; D-24 conjunct #6 GREEN; 3 plans / 3 waves remaining)
 Resume file: None
