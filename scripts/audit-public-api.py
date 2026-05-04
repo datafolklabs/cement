@@ -178,7 +178,7 @@ def main() -> int:
             continue
         mod_name = module_name_for(py, cement_root)
         try:
-            tree = ast.parse(py.read_text())
+            tree = ast.parse(py.read_text(encoding='utf-8'))
         except SyntaxError as e:
             print(f"SYNTAX ERROR in {py}: {e}", file=sys.stderr)
             return 2
