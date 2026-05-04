@@ -7,7 +7,8 @@ from __future__ import annotations
 import re
 from argparse import SUPPRESS, ArgumentParser, RawDescriptionHelpFormatter
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
+from collections.abc import Callable
 
 from ..core.arg import ArgumentHandler
 from ..core.controller import ControllerHandler

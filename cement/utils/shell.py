@@ -6,7 +6,8 @@ from getpass import getpass
 from multiprocessing import Process
 from subprocess import PIPE, Popen
 from threading import Thread
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
 from ..core.exc import FrameworkError
 from ..core.meta import MetaMixin
