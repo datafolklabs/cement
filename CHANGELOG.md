@@ -66,6 +66,8 @@ Refactoring:
   (UP015 — `'r'` is the default).
 - `[core]` Replace `IOError` alias with `OSError` (UP024) in
   cement/core/template.py — `IOError` is an alias since Python 3.3.
+- `[dev]` Drop legacy `u"..."` unicode literal prefix in test code
+  (UP025) — Python 3 strings are already Unicode.
 
 Misc:
 
