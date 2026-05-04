@@ -8,7 +8,7 @@ from ..core.interface import Interface
 from ..utils.misc import minimal_logger
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 LOG = minimal_logger(__name__)
 
@@ -68,7 +68,7 @@ class MailInterface(Interface):
                     )
 
         """
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
 
 class MailHandler(MailInterface, Handler):
