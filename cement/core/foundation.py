@@ -38,7 +38,11 @@ from ..utils import fs, misc
 from ..utils.misc import is_true, minimal_logger
 
 if TYPE_CHECKING:
-    from types import FrameType, ModuleType, TracebackType  # pragma: nocover
+    from types import (  # pragma: nocover  # TYPE_CHECKING import
+        FrameType,
+        ModuleType,
+        TracebackType,
+    )
 
 
 # D-09: argparse `add_argument(*args, **kwargs)` kwargs are arbitrary
@@ -51,7 +55,7 @@ join = os.path.join  # boundary: public alias `cement.core.foundation:join` (bas
 
 LOG = minimal_logger(__name__)
 if platform.system() == 'Windows':
-    SIGNALS = [signal.SIGTERM, signal.SIGINT]   # pragma: nocover
+    SIGNALS = [signal.SIGTERM, signal.SIGINT]   # pragma: nocover  # platform-specific
 else:
     SIGNALS = [signal.SIGTERM, signal.SIGINT, signal.SIGHUP]
 
@@ -116,9 +120,9 @@ def handler_override(app: "App") -> None:
 
     for i in app._meta.handler_override_options.keys():
         if not hasattr(app.pargs, f'{i}_handler_override'):
-            continue  # pragma: nocover
+            continue  # pragma: nocover  # defensive: unreachable
         elif getattr(app.pargs, f'{i}_handler_override') is None:
-            continue  # pragma: nocover
+            continue  # pragma: nocover  # defensive: unreachable
         else:
             # get the argument value from command line
             argument = getattr(app.pargs, f'{i}_handler_override')
@@ -156,7 +160,7 @@ def cement_signal_handler(signum: int, frame: "FrameType | None") -> Any:
             if isinstance(f_global, App):
                 app = f_global
                 for _res in app.hook.run('signal', app, signum, frame):
-                    pass  # pragma: nocover
+                    pass  # pragma: nocover  # untestable: signal handler
     raise exc.CaughtSignal(signum, frame)
 
 
@@ -994,7 +998,7 @@ class App(meta.MetaMixin):
         if self.controller:
             return_val = self.controller._dispatch()
         else:
-            self._parse_args()  # pragma: nocover
+            self._parse_args()  # pragma: nocover  # defensive: unreachable
 
         LOG.debug('running post_run hook')
         for _res in self.hook.run('post_run', self):
