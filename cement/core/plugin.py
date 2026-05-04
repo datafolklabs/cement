@@ -32,7 +32,7 @@ class PluginInterface(Interface):
             plugin_name (str): The name of the plugin to load.
 
         """
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
     @abstractmethod
     def load_plugins(self, plugins: list[str]) -> None:
@@ -43,22 +43,22 @@ class PluginInterface(Interface):
             plugins (list): A list of plugin names to load.
 
         """
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
     @abstractmethod
     def get_loaded_plugins(self) -> list[str]:
         """Returns a list of plugins that have been loaded."""
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
     @abstractmethod
     def get_enabled_plugins(self) -> list[str]:
         """Returns a list of plugins that are enabled in the config."""
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
     @abstractmethod
     def get_disabled_plugins(self) -> list[str]:
         """Returns a list of plugins that are disabled in the config."""
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
 
 class PluginHandler(PluginInterface, Handler):
@@ -69,4 +69,4 @@ class PluginHandler(PluginInterface, Handler):
     """
 
     class Meta(Handler.Meta):
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
