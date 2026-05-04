@@ -29,6 +29,9 @@ class ArgumentInterface(Interface):
         #: The string identifier of the interface.
         interface = 'argument'
 
+    # D-09: argparse passthrough — `**kw` carries argparse `add_argument`
+    # kwargs which are documented as arbitrary (action, type, default, help,
+    # nargs, etc.). Handler-contract pluggable kwargs by design.
     @abstractmethod
     def add_argument(self, *args: str, **kw: Any) -> None:
         """Add arguments to the parser.

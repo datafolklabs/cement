@@ -11,9 +11,14 @@ class Meta:
 
     """
 
+    # D-09: Meta classes carry user-arbitrary attributes by design
+    # (config_defaults, extensions, handlers, hooks, ...). The wide kwargs
+    # type IS the public Meta contract (D-12). `_merge` is internal but the
+    # dict it merges has the same arbitrary-value contract.
     def __init__(self, **kwargs: Any) -> None:
         self._merge(kwargs)
 
+    # D-09: same arbitrary-value contract as `__init__` above.
     def _merge(self, dict_obj: dict[str, Any]) -> None:
         for key in dict_obj.keys():
             setattr(self, key, dict_obj[key])
@@ -27,6 +32,8 @@ class MetaMixin:
 
     """
 
+    # D-09: same Meta arbitrary-attribute contract — `*args` accepts any
+    # positional cooperative-multi-inheritance super() chain payload.
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         # Get a List of all the Classes we in our MRO, find any attribute named
         #     Meta on them, and then merge them together in order of MRO

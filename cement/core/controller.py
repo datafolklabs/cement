@@ -26,8 +26,12 @@ class ControllerInterface(Interface):
         #: The string identifier of the interface.
         interface = 'controller'
 
+    # D-09: `_dispatch` returns whatever the user's command function returns
+    # so the type contract is intentionally wide. The Wave 3 UP007 cascade
+    # left a redundant `| None` member on this annotation; dropped in the
+    # Wave 5 tightening pass since the wide type already covers None.
     @abstractmethod
-    def _dispatch(self) -> Any | None:
+    def _dispatch(self) -> Any:
         """
         Reads the application object's data to dispatch a command from this
         controller.  For example, reading ``self.app.pargs`` to determine what

@@ -40,6 +40,9 @@ if TYPE_CHECKING:
     from types import FrameType, ModuleType, TracebackType  # pragma: nocover
 
 
+# D-09: argparse `add_argument(*args, **kwargs)` kwargs are arbitrary
+# (action, type, default, help, choices, ...). Public type alias used by
+# Controller subclasses as the type of `Meta.arguments` entries (D-12).
 ArgparseArgumentType = tuple[list[str], dict[str, Any]]
 
 join = os.path.join
@@ -124,6 +127,11 @@ def handler_override(app: "App") -> None:
             getattr(app, f'_setup_{i}_handler')()
 
 
+# D-09: the wide return type matches Python's `signal.signal` callable
+# protocol (the stdlib accepts handlers returning anything). The function
+# always raises CaughtSignal so the body never reaches a return statement;
+# `NoReturn` would diverge from the stdlib protocol. Public framework
+# symbol (D-12).
 def cement_signal_handler(signum: int, frame: "FrameType | None") -> Any:
     """
     Catch a signal, run the ``signal`` hook, and then raise an exception
@@ -385,9 +393,13 @@ class App(meta.MetaMixin):
         the name of the application).
         """
 
+        # D-09: app config defaults are user-arbitrary (str/int/list/dict
+        # values across user sections). Public Meta attribute (D-12).
         config_defaults: dict[str, Any] = None  # type: ignore
         """Default configuration dictionary.  Must be of type ``dict``."""
 
+        # D-09: meta_defaults carries arbitrary high-level options pushed
+        # to handlers at registration time. Public Meta attribute (D-12).
         meta_defaults: dict[str, Any] = {}
         """
         Default meta-data dictionary used to pass high level options from the
@@ -761,6 +773,8 @@ class App(meta.MetaMixin):
 
     _meta: Meta  # type: ignore
 
+    # D-09: handler-contract pluggable kwargs by design (Meta merging via
+    # MetaMixin upchain). Public App constructor API (D-12).
     def __init__(self, label: str | None = None, **kw: Any) -> None:
         super().__init__(**kw)
 
@@ -797,7 +811,11 @@ class App(meta.MetaMixin):
 
         self._validate_label()
         self._loaded_bootstrap = None
+        # D-09: argparse Namespace is opaque per-attr-access; Cement does
+        # not bind to argparse's internal Namespace type. Internal state.
         self._parsed_args: Any = None
+        # D-09: render data dict is user-arbitrary (matches `App.render`
+        # public signature below). Internal cache of last render.
         self._last_rendered: tuple[Any, str | None] | None = None
         self._extended_members: list[str] = []
         self.__saved_stdout__: TextIO = None  # type: ignore
@@ -864,6 +882,9 @@ class App(meta.MetaMixin):
         """The arguments list that will be used when self.run() is called."""
         return self._meta.argv
 
+    # D-09: `extend` adds arbitrary functions/classes to the App instance
+    # per docstring contract — caller passes any function/class/object.
+    # Public App API (D-12).
     def extend(self, member_name: str, member_object: Any) -> None:
         """
         Extend the ``App()`` object with additional functions/classes such
@@ -1066,6 +1087,10 @@ class App(meta.MetaMixin):
         if self._meta.exit_on_close is True:
             sys.exit(self.exit_code)
 
+    # D-09: `data` is user-arbitrary (apps render dicts, lists, dataclasses,
+    # etc. — output handlers decide what to accept). `**kw` is passthrough
+    # to mix output handlers with different feature sets per OutputInterface.
+    # Public App API (D-12).
     def render(self, data: Any,
                template: str | None = None,
                out: IO = sys.stdout,
@@ -1134,6 +1159,8 @@ class App(meta.MetaMixin):
         self._last_rendered = (data, out_text)
         return out_text
 
+    # D-09: render data is user-arbitrary (matches the `render` signature
+    # above). Public App property (D-12).
     @property
     def last_rendered(self) -> tuple[dict[str, Any], str | None] | None:
         """
@@ -1146,6 +1173,8 @@ class App(meta.MetaMixin):
         """
         return self._last_rendered
 
+    # D-09: argparse Namespace opacity (per `_parsed_args` field). Public
+    # App property (D-12).
     @property
     def pargs(self) -> Any:
         """
@@ -1154,6 +1183,9 @@ class App(meta.MetaMixin):
         """
         return self._parsed_args
 
+    # D-09: argparse `add_argument` passthrough — `*args` are name-or-flags
+    # strings and `**kw` are arbitrary argparse kwargs (action, type,
+    # default, ...). Public App API (D-12).
     def add_arg(self, *args: Any, **kw: Any) -> None:
         """A shortcut for ``self.args.add_argument``."""
         self.args.add_argument(*args, **kw)
@@ -1746,8 +1778,13 @@ class App(meta.MetaMixin):
         if path in self._meta.template_dirs:
             self._meta.template_dirs.remove(path)
 
-    def __import__(self, obj: Any, from_module: str | None = None) -> "ModuleType":
+    def __import__(self, obj: str, from_module: str | None = None) -> "ModuleType":
         # EXPERIMENTAL == UNDOCUMENTED
+        # D-09: `obj` parameter tightened from the wide type to `str` in the
+        # Wave 5 pass. The body always passes `obj` to stdlib `__import__()`
+        # (which takes a name string) and uses `mapping.get(obj, obj)` against
+        # `alternative_module_mapping: dict[str, str]` (foundation.py:661).
+        # Not in 03-PUBLIC-API-BASELINE.txt (dunder; UNDOCUMENTED experimental).
         mapping = self._meta.alternative_module_mapping
 
         if from_module is not None:
