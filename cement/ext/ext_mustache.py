@@ -66,7 +66,7 @@ class MustacheOutputHandler(OutputHandler):
         self.templater = self.app.handler.resolve('template', 'mustache',  # type: ignore
                                                   setup=True)
 
-    def render(self, data: dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
+    def render(self, data: dict[str, Any], template: str | None = None, **kw: Any) -> str:
         """
         Take a data dictionary and render it using the given template file.
         Additional keyword arguments passed to ``stache.render()``.
@@ -85,7 +85,11 @@ class MustacheOutputHandler(OutputHandler):
         """
 
         LOG.debug(f"rendering content using '{template}' as a template.")
-        content, _type, _path = self.templater.load(template)
+        # `template=None` is well-defined at runtime: TemplateHandler.load
+        # guards `if not template_path:` and raises FrameworkError. The
+        # arg-type narrowing here documents that we accept the None default
+        # but rely on the load() guard for the actual rejection.
+        content, _type, _path = self.templater.load(template)  # type: ignore[arg-type]
         return self.templater.render(content, data)
 
 

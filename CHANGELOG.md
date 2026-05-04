@@ -32,6 +32,19 @@ Bugs:
   was mechanically narrowed to `type[Interface] | None` by the
   Phase 03 UP045 sweep; the runtime always accepted arbitrary
   fallback values per the `cache.get` sibling pattern)
+- `[ext.mustache]` Replace implicit-Optional `template: str = None`
+  on `MustacheOutputHandler.render()` with the explicit
+  `template: str | None = None` (PEP 484 / ruff RUF013). The
+  `# type: ignore` previously placed at the signature line is
+  removed (the implicit-Optional violation it was suppressing no
+  longer fires) and a scoped `# type: ignore[arg-type]` is added
+  at the `self.templater.load(template)` callsite to document
+  that the `None` default is well-defined at runtime
+  (`TemplateHandler.load` guards `if not template_path:` and
+  raises `FrameworkError`). Public signature byte-identical from
+  the audit-public-api perspective. Sister handlers
+  (`ext.jinja2`, `ext.yaml`, `ext.json`) carry the same pattern
+  and remain on the implicit-Optional form pending a follow-up
 - `[utils.misc]` Make `MinimalLogger.__init__` idempotent — guard
   the `self.backend.addHandler(console)` call on
   `not self.backend.handlers` so a second `minimal_logger(ns)`
