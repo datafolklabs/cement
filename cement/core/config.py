@@ -42,7 +42,7 @@ class ConfigInterface(Interface):
             bool: ``True`` if the file was parsed, ``False`` otherwise.
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     @abstractmethod
     def keys(self, section: str) -> list[str]:
@@ -56,7 +56,7 @@ class ConfigInterface(Interface):
             list: A list of keys in ``section``.
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     @abstractmethod
     def get_sections(self) -> list[str]:
@@ -67,7 +67,7 @@ class ConfigInterface(Interface):
             list: A list of config sections.
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     # D-09: config values are user-arbitrary; cement supports apps storing
     # strings, ints, floats, bools, lists, nested dicts, etc. Tightening
@@ -97,7 +97,7 @@ class ConfigInterface(Interface):
             dict: A dictionary of the config section.
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     @abstractmethod
     def add_section(self, section: str) -> None:
@@ -111,7 +111,7 @@ class ConfigInterface(Interface):
             None
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     # D-09: same user-arbitrary config-value contract as `get_dict`.
     @abstractmethod
@@ -135,7 +135,7 @@ class ConfigInterface(Interface):
             unknown: The value of the ``key`` in ``section``.
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     # D-09: same user-arbitrary config-value contract as `get_dict`.
     @abstractmethod
@@ -153,7 +153,7 @@ class ConfigInterface(Interface):
             None
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     @abstractmethod
     def merge(self, dict_obj: dict, override: bool = True) -> None:
@@ -168,7 +168,7 @@ class ConfigInterface(Interface):
             None
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     @abstractmethod
     def has_section(self, section: str) -> bool:
@@ -183,7 +183,7 @@ class ConfigInterface(Interface):
                 otherwise.
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
 
 class ConfigHandler(ConfigInterface, Handler):
@@ -194,7 +194,7 @@ class ConfigHandler(ConfigInterface, Handler):
     """
 
     class Meta(Handler.Meta):
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
     @abstractmethod
     def _parse_file(self, file_path: str) -> bool:
@@ -210,7 +210,7 @@ class ConfigHandler(ConfigInterface, Handler):
             bool: ``True`` if file was read properly, ``False`` otherwise
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     def parse_file(self, file_path: str) -> bool:
         """
