@@ -141,6 +141,14 @@ Refactoring:
   across all 4 named files; D-24 conjunct #8 GREEN
   (`grep -rn 'os\.path' cement/utils/fs.py cement/core/* | grep
   -v '# boundary:' | wc -l` returns 0).
+- `[dev]` Audit `pragma:nocover` sites in `cement/core/` with
+  D-15 locked-vocabulary category labels (Phase 03 Wave 7
+  Batch A — 16 files / per-file atomic commits). Categories
+  applied: `abstract method`, `TYPE_CHECKING import`,
+  `platform-specific`, `defensive: unreachable`,
+  `untestable: signal handler`, `version constant`. Coverage
+  exclusion behavior unchanged; pragma comments now carry
+  audit-grep-friendly category labels per D-15.
 
 Misc:
 
