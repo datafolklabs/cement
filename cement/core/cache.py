@@ -26,6 +26,9 @@ class CacheInterface(Interface):
         #: The string identifier of the interface.
         interface = 'cache'
 
+    # D-09: cache values are user-arbitrary; the wide types on `value`,
+    # `fallback`, and the return are part of the public CacheInterface
+    # contract. Tightening would break apps caching dicts/lists/objects.
     @abstractmethod
     def get(self, key: str, fallback: Any = None) -> Any:
         """
@@ -48,6 +51,7 @@ class CacheInterface(Interface):
         """
         pass    # pragma: nocover
 
+    # D-09: same user-arbitrary cache value contract as `get` above.
     @abstractmethod
     def set(self, key: str, value: Any, time: int | None = None) -> None:
         """

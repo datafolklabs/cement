@@ -35,6 +35,8 @@ class TemplateInterface(Interface):
         #: The string identifier of the interface
         interface = 'template'
 
+    # D-09: template `data` is user-arbitrary — apps render templates with
+    # any shape of context dict. Public TemplateInterface (D-12).
     @abstractmethod
     def render(self, content: str, data: dict[str, Any]) -> str | None:
         """
@@ -50,6 +52,7 @@ class TemplateInterface(Interface):
         """
         pass  # pragma: nocover
 
+    # D-09: same user-arbitrary template-data contract as `render` above.
     @abstractmethod
     def copy(self, src: str, dest: str, data: dict[str, Any]) -> bool:
         """
@@ -110,6 +113,8 @@ class TemplateHandler(TemplateInterface, Handler):
         #: List of file patterns to ignore completely (not copy at all)
         ignore: list[str] = None  # type: ignore
 
+    # D-09: handler-contract pluggable kwargs (super() chain feeds Meta).
+    # Public TemplateHandler (D-12).
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         if self._meta.ignore is None:
@@ -117,6 +122,8 @@ class TemplateHandler(TemplateInterface, Handler):
         if self._meta.exclude is None:
             self._meta.exclude = []
 
+    # D-09: same user-arbitrary template-data contract as the abstract
+    # `render` above (this is the concrete-handler-side declaration).
     def render(self, content: str | bytes, data: dict[str, Any]) -> str | None:
         """
         Render ``content`` as template using using the ``data`` dictionary.
@@ -138,6 +145,7 @@ class TemplateHandler(TemplateInterface, Handler):
                 return True
         return False
 
+    # D-09: same user-arbitrary template-data contract as `render` above.
     def copy(self,
              src: str,
              dest: str,

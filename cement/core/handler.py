@@ -46,6 +46,9 @@ class Handler(ABC, MetaMixin):
         no section is set by the user/developer.
         """
 
+        # D-09: handler config defaults are user-arbitrary by Meta contract;
+        # subclasses set this to whatever shape their config block uses.
+        # Public Meta attribute (D-12).
         config_defaults: dict[str, Any] | None = None
         """
         A config dictionary that is merged into the applications config
@@ -61,6 +64,8 @@ class Handler(ABC, MetaMixin):
         ``App.Meta.output_handler``, etc).
         """
 
+    # D-09: handler-contract pluggable kwargs by design (Meta merging via
+    # MetaMixin upchain). Public Handler base API (D-12).
     def __init__(self, **kw: Any) -> None:
         super().__init__(**kw)
         try:
@@ -116,6 +121,8 @@ class HandlerManager:
         self.app = app
         self.__handlers__: dict[str, dict[str, type[Handler]]] = {}
 
+    # D-09: passthrough kwargs for handler-resolution machinery; wide type
+    # is intentional. Public HandlerManager API (D-12).
     def get(self,
             interface: str,
             handler_label: str,
@@ -326,6 +333,11 @@ class HandlerManager:
         h._setup(self.app)
         return h
 
+    # D-09: same passthrough-kwargs contract as `get` above. Public
+    # HandlerManager API (D-12). Note: the `Handler | Handler | None`
+    # return type is a Wave 3 UP007 cascade artifact (duplicate union
+    # member, semantically equivalent to `Handler | None`); deferred to a
+    # future tech-debt cleanup since it's not an `Any`-tightening issue.
     def resolve(self,
                 interface: str,
                 handler_def: str | Handler | type[Handler],

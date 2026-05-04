@@ -40,6 +40,10 @@ class CaughtSignal(FrameworkError):  # noqa: N818 - public exception name; addin
 
     """
 
+    # D-09: signal frame is Python-runtime opaque (`FrameType | None` per
+    # stdlib but cement intentionally does not bind to that internal type
+    # to keep the exception lightweight and stdlib-import-free). Public
+    # exception API — wide type is the contract (D-12).
     def __init__(self, signum: int, frame: Any) -> None:
         msg = f'Caught signal {signum}'
         super().__init__(msg)

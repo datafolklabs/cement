@@ -78,6 +78,9 @@ class ExtensionHandler(ExtensionInterface, Handler):
         #: The string identifier of the handler.
         label: str = 'cement'
 
+    # D-09: handler-contract pluggable kwargs by design (Meta merging via
+    # MetaMixin upchain). Wide type is part of the public ExtensionHandler
+    # contract.
     def __init__(self, **kw: Any) -> None:
         super().__init__(**kw)
         self.app: App = None  # type: ignore

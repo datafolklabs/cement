@@ -77,6 +77,13 @@ Refactoring:
   template-substitution callsites in cement/core/foundation.py
   preserved untouched (verified by body-diff against pre-fix state).
   UP family fully clean after this commit.
+- `[core]` Tighten `Any` types in cement/core/ where narrower types are
+  provably correct; surviving Any carries inline justification per D-09
+  (delta: 41 → 40, 2 substantive tightenings — `App.__import__(obj: Any)`
+  → `obj: str` since the body always passes `obj` to stdlib `__import__`
+  against `alternative_module_mapping: dict[str, str]`; and
+  `ControllerInterface._dispatch() -> Any | None` → `-> Any` dropping
+  the redundant `| None` Wave 3 UP007 cascade artifact).
 - `[dev]` Refresh CONVENTIONS.md type-annotation guidance to
   PEP 585 / PEP 604 modern syntax (Phase 03 plan 03 landing point).
 - `[core]` Wrap long log/error messages introduced by UP032 f-string

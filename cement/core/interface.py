@@ -30,6 +30,8 @@ class Interface(ABC, meta.MetaMixin):
         interface: str = NotImplemented
         """The string identifier of this interface."""
 
+    # D-09: handler-contract pluggable kwargs by design (Meta merging via
+    # MetaMixin upchain). Wide type is part of the public Interface contract.
     def __init__(self, **kw: Any) -> None:
         super().__init__(**kw)
         try:
@@ -58,6 +60,8 @@ class InterfaceManager:
         self.app = app
         self.__interfaces__ = {}
 
+    # D-09: passthrough kwargs for the handler-resolution machinery; wide
+    # type is intentional. Public InterfaceManager API (D-12).
     def get(self,
             interface: str,
             fallback: type[Interface] | None = None,

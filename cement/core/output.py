@@ -26,6 +26,9 @@ class OutputInterface(Interface):
         #: The string identifier of the interface
         interface = 'output'
 
+    # D-09: render data is user-arbitrary (apps render dicts of any shape);
+    # the *args/**kwargs are passthrough to mix output handlers with
+    # different feature sets per the docstring. Public OutputInterface (D-12).
     @abstractmethod
     def render(self, data: dict[str, Any], *args: Any, **kwargs: Any) -> str | None:
         """

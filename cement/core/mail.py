@@ -29,6 +29,9 @@ class MailInterface(Interface):
         interface = 'mail'
         """The label identifier of the interface."""
 
+    # D-09: mail kwargs are arbitrary by docstring contract (to, from, cc,
+    # bcc, subject, headers, files, ...). Public MailInterface — wide type
+    # is the API surface (D-12).
     @abstractmethod
     def send(self, body: str, **kwargs: Any) -> bool:
         """
@@ -97,6 +100,8 @@ class MailHandler(MailInterface, Handler):
         """
 
         #: Configuration default values
+        # D-09: handler `config_defaults` carries arbitrary value types by
+        # Meta contract (str / list / int / etc). Public Meta attribute (D-12).
         config_defaults: dict[str, Any] = {
             'to': [],
             'from_addr': 'noreply@example.com',

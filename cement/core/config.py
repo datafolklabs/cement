@@ -68,6 +68,10 @@ class ConfigInterface(Interface):
         """
         pass    # pragma: nocover
 
+    # D-09: config values are user-arbitrary; cement supports apps storing
+    # strings, ints, floats, bools, lists, nested dicts, etc. Tightening
+    # the value type would break that contract. Public ConfigInterface —
+    # wide type is the API surface (D-12).
     @abstractmethod
     def get_dict(self) -> dict[str, Any]:
         """
@@ -78,6 +82,7 @@ class ConfigInterface(Interface):
 
         """
 
+    # D-09: same user-arbitrary config-value contract as `get_dict`.
     @abstractmethod
     def get_section_dict(self, section: str) -> dict[str, Any]:
         """
@@ -107,6 +112,7 @@ class ConfigInterface(Interface):
         """
         pass    # pragma: nocover
 
+    # D-09: same user-arbitrary config-value contract as `get_dict`.
     @abstractmethod
     def get(self, section: str, key: str) -> Any:
         """
@@ -130,6 +136,7 @@ class ConfigInterface(Interface):
         """
         pass    # pragma: nocover
 
+    # D-09: same user-arbitrary config-value contract as `get_dict`.
     @abstractmethod
     def set(self, section: str, key: str, value: Any) -> None:
         """

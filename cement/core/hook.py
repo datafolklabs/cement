@@ -132,6 +132,9 @@ class HookManager:
         self.__hooks__[name].append((int(weight), func.__name__, func))
         return True
 
+    # D-09: hook payload is user-arbitrary by design — extensions register
+    # callbacks that receive whatever the framework passes at the hook site.
+    # Public HookManager API — wide types are the contract (D-12).
     def run(self, name: str, *args: Any, **kwargs: Any) -> Generator:
         """
         Run all defined hooks in the namespace.
