@@ -57,7 +57,7 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 
 ### Internal Refactor
 
-- [ ] **REFACTOR-01**: Dead code identified (vulture / coverage diff) and removed without affecting public API or test coverage
+- [x] **REFACTOR-01**: Dead code identified (vulture / coverage diff) and removed without affecting public API or test coverage — Validated in Phase 03 Plan 08 (Wave 8 — D-20 acceptance via 100% coverage gate; the post-refactor `make test` passes at 100.00% coverage with `[tool.coverage.report] fail_under = 100` + `--cov-fail-under=100`, which by construction implies zero unreachable code at the statement level. D-21 risk acknowledged: covered-but-functionally-dead code and unused private helpers reachable only from tests are deferrals to a future milestone — `vulture` was deliberately not added to the dev-dep set per D-13 strict-minimum.)
 - [x] **REFACTOR-02**: Type hints tightened in `cement/core/` — fewer `Any`, more precise generics where mypy strict mode allows
 - [x] **REFACTOR-03**: `os.path` usage in `cement/utils/fs.py` and core internals migrated to `pathlib` where it doesn't change public signatures — Closed in Phase 03 Plan 06 (Wave 6 — pathlib migration). 33 → 1 (tagged) os.path callsites across the 4 named files (cement/utils/fs.py, cement/core/config.py, cement/core/foundation.py, cement/core/template.py); the 1 surviving site is the public alias `join = os.path.join` in cement/core/foundation.py:48 (in 03-PUBLIC-API-BASELINE.txt with stdlib semantics — retained per D-12/D-14 with inline `# boundary:` tag). os.walk(src) in cement/core/template.py also retained with `# boundary: D-14` (no pathlib equivalent for triple-tuple yield). D-24 conjunct #8 GREEN.
 - [x] **REFACTOR-04**: Modern stdlib idioms applied where backward-compatible (f-strings everywhere, contextlib helpers, `functools.cached_property`) — Closed mechanically in Phase 03 Plan 03 (UP031 + UP032 cascade resolved all printf-style and `.format()` callsites; protected `.format(**template_dict)` template-substitution sites preserved per D-19; `cached_property` / `contextlib.suppress` adoption was opportunistic per D-19 — none surfaced as obvious wins)
@@ -152,8 +152,8 @@ Populated by the roadmapper during phase mapping.
 | TRIAGE-02 | Phase 4 | Pending |
 | TRIAGE-03 | Phase 4 | Pending |
 | TRIAGE-04 | Phase 4 | Pending |
-| REFACTOR-01 | Phase 3 | Pending |
-| REFACTOR-02 | Phase 3 | Complete |
+| REFACTOR-01 | Phase 3 | Validated (Phase 03 Plan 08 — D-20 acceptance via 100% coverage gate) |
+| REFACTOR-02 | Phase 3 | Validated (Phase 03 Plan 05 — D-09 Any-tightening; 41 → 40; D-24 #6) |
 | REFACTOR-03 | Phase 3 | Validated (Phase 03 Plan 06) |
 | REFACTOR-04 | Phase 3 | Closed (Phase 03 Plan 03 — UP031+UP032 cascade) |
 | DEPREC-01 | Phase 5 | Pending |

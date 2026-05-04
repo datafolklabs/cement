@@ -199,6 +199,8 @@ Misc:
 - `[dev]` Phase 03 verification finalized: all 9 D-24 conjuncts GREEN;
   REFACTOR-01..04 + COV-01..03 satisfied; record in
   `03-VERIFICATION.md`.
+- `[dev]` Phase 03 (Internal Refactor & Coverage Hardening) complete:
+  REFACTOR-01..04 + COV-01..03 satisfied; ROADMAP updated.
 
 Deprecations:
 
