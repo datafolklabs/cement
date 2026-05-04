@@ -6,6 +6,7 @@ import signal
 import sys
 from collections.abc import Callable
 from importlib import reload as reload_module
+from pathlib import Path as _Path
 from time import sleep
 from typing import (
     IO,
@@ -45,7 +46,7 @@ if TYPE_CHECKING:
 # Controller subclasses as the type of `Meta.arguments` entries (D-12).
 ArgparseArgumentType = tuple[list[str], dict[str, Any]]
 
-join = os.path.join
+join = os.path.join  # boundary: public alias `cement.core.foundation:join` (baseline; D-12 / D-14)
 
 
 LOG = minimal_logger(__name__)
@@ -1337,7 +1338,7 @@ class App(meta.MetaMixin):
 
     def _find_config_files(self, path: str) -> list[str]:
         found_files = []
-        if not os.path.isdir(path):
+        if not _Path(path).is_dir():
             return []
         files = os.listdir(path)
         files.sort()
@@ -1676,10 +1677,11 @@ class App(meta.MetaMixin):
                     super(MyApp, self).validate_config()
 
                     # test that the log file directory exist, if not create it
-                    logdir = os.path.dirname(self.config.get('log', 'file'))
+                    from pathlib import Path
+                    logdir = Path(self.config.get('log', 'file')).parent
 
-                    if not os.path.exists(logdir):
-                        os.makedirs(logdir)
+                    if not logdir.exists():
+                        logdir.mkdir(parents=True)
 
         """
         pass

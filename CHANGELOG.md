@@ -113,6 +113,17 @@ Refactoring:
   `03-PUBLIC-API-BASELINE.txt` — removing it would have shrunk
   the public surface (D-12). Smallest of the four pathlib
   commits (1 callsite); natural warm-up after fs.py per D-13.
+- `[core.foundation]` Migrate `cement/core/foundation.py`
+  os.path.isdir callsite in `_find_config_files` to pathlib
+  (Phase 03 D-11). The public alias `join = os.path.join` (line
+  48) retained per D-12/D-14 with `# boundary:` tag — it is part
+  of the public-API baseline (`cement.core.foundation:join`)
+  with stdlib semantics that downstream callers depend on.
+  D-19 protected `.format(**template_dict)` callsites at lines
+  1383, 1388, 1396, 1401, 1409, 1414, 1502, 1507, 1512, 1516,
+  1577, 1582, 1587, 1591 (14 total) untouched. A docstring
+  example referencing `os.path.dirname` / `os.path.exists` /
+  `os.makedirs` updated to pathlib idioms for consistency.
 
 Misc:
 
