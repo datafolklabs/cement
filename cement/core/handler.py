@@ -168,7 +168,7 @@ class HandlerManager:
         elif fallback is not None:
             return fallback
         else:
-            raise exc.InterfaceError("handlers['{}']['{}'] does not exist!".format(interface, handler_label))
+            raise exc.InterfaceError(f"handlers['{interface}']['{handler_label}'] does not exist!")
 
     def list(self, interface: str) -> builtins.list[type[Handler]]:
         """
@@ -251,7 +251,7 @@ class HandlerManager:
         obj._meta.label = re.sub('-', '_', obj._meta.label)
 
         interface = obj._meta.interface
-        LOG.debug("registering handler '{}' into handlers['{}']['{}']".format(handler_class, interface, obj._meta.label))
+        LOG.debug(f"registering handler '{handler_class}' into handlers['{interface}']['{obj._meta.label}']")
 
         if interface not in self.app.interface.list():
             raise exc.InterfaceError(f"Handler interface '{interface}' doesn't exist.")

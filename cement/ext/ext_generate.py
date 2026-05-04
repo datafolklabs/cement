@@ -51,7 +51,7 @@ class GenerateTemplateAbstractBase(Controller):
         ignore_list = g_config.get('ignore', [])
 
         # default ignore the .generate.yml config
-        g_config_yml = r'^(.*)[\/\\\\]{}[\/\\\\]\.generate\.yml$'.format(self._meta.label)
+        g_config_yml = rf'^(.*)[\/\\\\]{self._meta.label}[\/\\\\]\.generate\.yml$'
         ignore_list.append(g_config_yml)
 
         var_defaults: dict = {

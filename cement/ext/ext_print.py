@@ -63,7 +63,7 @@ class PrintOutputHandler(output.OutputHandler):
             return data['out'] + '\n'  # type: ignore
         else:
             LOG.debug("no 'out' key found in data dict. "
-                      "not rendering content via {}".format(self.__module__))
+                      f"not rendering content via {self.__module__}")
             return None
 
 

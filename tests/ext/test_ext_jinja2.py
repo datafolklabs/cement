@@ -21,14 +21,14 @@ class Jinja2App(TestApp):
 def test_jinja2(rando):
     with Jinja2App() as app:
         res = app.render(dict(foo=rando), 'test_template.jinja2')
-        jinja2_res = "foo equals {}\n".format(rando)
+        jinja2_res = f"foo equals {rando}\n"
         assert res == jinja2_res
 
 
 def test_jinja2_utf8(rando):
     with Jinja2App() as app:
         res = app.render(dict(foo=rando), 'test_template_utf8.jinja2')
-        jinja2_res = "foo est égal à {}\n".format(rando)
+        jinja2_res = f"foo est égal à {rando}\n"
         assert res == jinja2_res
 
 
@@ -52,7 +52,7 @@ def test_jinja2_filesystemloader(tmp, rando):
         copyfile(from_file, to_file)
 
         res = app.render(dict(foo=rando), 'test_template_child.jinja2')
-        jinja2_res = "foo equals {}\n".format(rando)
+        jinja2_res = f"foo equals {rando}\n"
         assert res == jinja2_res
 
 
@@ -61,7 +61,7 @@ def test_jinja2_packageloader(rando):
         app._meta.template_module = 'tests.data.templates'
         app._meta.template_dirs = []
         res = app.render(dict(foo=rando), 'test_template_child.jinja2')
-        jinja2_res = "foo equals {}\n".format(rando)
+        jinja2_res = f"foo equals {rando}\n"
         assert res == jinja2_res
 
 

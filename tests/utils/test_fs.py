@@ -58,24 +58,24 @@ def test_tmp(tmp, rando):
 
 def test_backup(tmp):
     bkfile = fs.backup(tmp.file)
-    assert "{}.bak".format(os.path.basename(tmp.file)) == os.path.basename(bkfile)
+    assert f"{os.path.basename(tmp.file)}.bak" == os.path.basename(bkfile)
 
     bkfile = fs.backup(tmp.file)
-    assert "{}.bak.0".format(os.path.basename(tmp.file)) == os.path.basename(bkfile)
+    assert f"{os.path.basename(tmp.file)}.bak.0" == os.path.basename(bkfile)
 
     bkfile = fs.backup(tmp.file)
-    assert "{}.bak.1".format(os.path.basename(tmp.file)) == os.path.basename(bkfile)
+    assert f"{os.path.basename(tmp.file)}.bak.1" == os.path.basename(bkfile)
 
     bkdir = fs.backup(tmp.dir)
-    assert "{}.bak".format(os.path.basename(tmp.dir)) == os.path.basename(bkdir)
+    assert f"{os.path.basename(tmp.dir)}.bak" == os.path.basename(bkdir)
 
     assert fs.backup('someboguspath') is None
 
 
 def test_backup_dir_trailing_slash(tmp):
     # https://github.com/datafolklabs/cement/issues/610
-    bkdir = fs.backup("{}/".format(tmp.dir))
-    assert "{}.bak".format(os.path.basename(tmp.dir)) == os.path.basename(bkdir)
+    bkdir = fs.backup(f"{tmp.dir}/")
+    assert f"{os.path.basename(tmp.dir)}.bak" == os.path.basename(bkdir)
 
 
 def test_backup_timestamp(tmp):

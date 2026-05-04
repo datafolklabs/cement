@@ -402,8 +402,7 @@ class ArgparseController(ControllerHandler):
                     else:
                         resolved_child_controllers.insert(0, contr)
                     unresolved_controllers.remove(contr)
-                    LOG.debug('resolved controller {} {} on {}'.format(contr, contr._meta.stacked_type,
-                               current_parent))
+                    LOG.debug(f'resolved controller {contr} {contr._meta.stacked_type} on {current_parent}')
 
                 # if not, fall back on whether the stacked_on parent is
                 # already resolved
@@ -411,8 +410,7 @@ class ArgparseController(ControllerHandler):
                     resolved_controllers.append(contr)
                     resolved_controllers_map[contr._meta.label] = contr
                     unresolved_controllers.remove(contr)
-                    LOG.debug('resolved controller {} {} on {}'.format(contr, contr._meta.stacked_type,
-                               contr._meta.stacked_on))
+                    LOG.debug(f'resolved controller {contr} {contr._meta.stacked_type} on {contr._meta.stacked_on}')
 
             resolved_controllers.extend(resolved_child_controllers)
             for contr in resolved_child_controllers:
@@ -430,8 +428,7 @@ class ArgparseController(ControllerHandler):
                             resolved_child_controllers.insert(0, contr)
 
                         unresolved_controllers.remove(contr)
-                        LOG.debug('resolved controller {} {} on {}'.format(contr, contr._meta.stacked_type,
-                                   child_contr._meta.label))
+                        LOG.debug(f'resolved controller {contr} {contr._meta.stacked_type} on {child_contr._meta.label}')
 
             resolved_controllers.extend(resolved_child_controllers)
             for contr in resolved_child_controllers:
@@ -656,8 +653,7 @@ class ArgparseController(ControllerHandler):
 
             # add an invisible dispatch option so we can figure out what to
             # call later in self._dispatch
-            default_contr_func = "{}.{}".format(command.controller._meta.label,
-                                            command.func_name)
+            default_contr_func = f"{command.controller._meta.label}.{command.func_name}"
             command_parser.add_argument(self._dispatch_option,
                                         action='store',
                                         default=default_contr_func,
@@ -679,12 +675,12 @@ class ArgparseController(ControllerHandler):
 
     def _collect_arguments(self) -> list[ArgparseArgumentType]:
         LOG.debug(f"collecting arguments from {self} " +
-                  "(stacked_on='{}', stacked_type='{}')".format(self._meta.stacked_on, self._meta.stacked_type))
+                  f"(stacked_on='{self._meta.stacked_on}', stacked_type='{self._meta.stacked_type}')")
         return self._meta.arguments  # type: ignore
 
     def _collect_commands(self) -> list[CommandMeta]:
         LOG.debug(f"collecting commands from {self} " +
-                  "(stacked_on='{}', stacked_type='{}')".format(self._meta.stacked_on, self._meta.stacked_type))
+                  f"(stacked_on='{self._meta.stacked_on}', stacked_type='{self._meta.stacked_type}')")
 
         commands = []
         for member in dir(self.__class__):
@@ -838,7 +834,7 @@ class ArgparseController(ControllerHandler):
             # We never get here on Python < 3 as Argparse would have already
             # complained about too few arguments
             raise FrameworkError(                           # pragma: nocover
-                "Controller function does not exist {}.{}()".format(contr.__class__.__name__, func_name))      # pragma: nocover
+                f"Controller function does not exist {contr.__class__.__name__}.{func_name}()")      # pragma: nocover
 
 
 def load(app: App) -> None:
