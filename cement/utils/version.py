@@ -101,6 +101,6 @@ def get_git_changeset() -> str | None:
     ts = git_log.communicate()[0]
     try:
         timestamp = datetime.datetime.fromtimestamp(int(ts), datetime.timezone.utc)
-    except ValueError: 	# pragma: nocover
-        return None  	# pragma: nocover
+    except ValueError: 	# pragma: nocover  # defensive: unreachable
+        return None  	# pragma: nocover  # defensive: unreachable
     return timestamp.strftime('%Y%m%d%H%M%S')
