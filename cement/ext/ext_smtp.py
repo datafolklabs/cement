@@ -21,7 +21,7 @@ from ..utils import fs
 from ..utils.misc import is_true, minimal_logger
 
 if TYPE_CHECKING:
-    from ..core.foundation import App  # pragma: nocover
+    from ..core.foundation import App  # pragma: nocover  # TYPE_CHECKING import
 
 LOG = minimal_logger(__name__)
 
@@ -184,7 +184,7 @@ class SMTPMailHandler(mail.MailHandler):
         # https://github.com/python/cpython/blob/3.13/Lib/smtplib.py#L899
         deprecate('3.0.16-1')
 
-        if len(res) > 0:  # pragma: nocover - Mailpit accepts everything
+        if len(res) > 0:  # pragma: nocover  # defensive: unreachable - Mailpit accepts everything
             self.app.log.error(f"SMTPHandler Errors: {res}")
             return False
         else:
@@ -329,7 +329,7 @@ class SMTPMailHandler(mail.MailHandler):
                 if part_text:
                     msg.attach(part_text)
                 else:
-                    pass  # pragma: no cover
+                    pass  # pragma: no cover  # defensive: unreachable
         else:
             if part_text and part_html:
                 msg.attach(part_text)
@@ -340,7 +340,7 @@ class SMTPMailHandler(mail.MailHandler):
                 elif part_html:
                     msg.set_payload(part_html.get_payload(), charset=cs_body)
                 else:
-                    pass  # pragma: no cover
+                    pass  # pragma: no cover  # defensive: unreachable
 
     def _attach_files(self, msg: MIMEMultipart, **params: dict[str, Any]) -> None:
         """Attach file attachments to the message."""
