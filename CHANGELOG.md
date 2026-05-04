@@ -32,6 +32,24 @@ Bugs:
   was mechanically narrowed to `type[Interface] | None` by the
   Phase 03 UP045 sweep; the runtime always accepted arbitrary
   fallback values per the `cache.get` sibling pattern)
+- `[ext.smtp]` Type the message body and `**params` correctly across
+  `SMTPMailHandler.send`, `_build_body_parts`, `_make_message`, and
+  the related private helpers (`_header`, `_build_charsets`,
+  `_build_mime_structure`, `_set_headers`, `_attach_body`,
+  `_attach_files`). Introduce a private `_BodyType =
+  str | tuple[str, str] | dict[str, str]` alias so the dict body
+  shape (`{'text': ..., 'html': ...}`), already supported at runtime
+  by `_build_body_parts`, is now reflected in the static type.
+  Convert seven `**params: dict[str, Any]` annotations to
+  `**params: Any` (the prior form declared each kwarg VALUE as a
+  dict, the wrong meta-type for var-kwargs); this lets callers pass
+  arbitrary keyword values per the documented contract. As a
+  follow-on cleanup, drop nine now-unused `# type: ignore`
+  suppressions at `params[...]` callsites that were papering over
+  the wrong meta-typing, and add a `part: MIMEBase` annotation in
+  `_attach_files` so the `MIMEImage`/`MIMEBase` branches type-check
+  cleanly. Public-API surface byte-identical (`_BodyType` is private
+  so `make audit-public-api` stays at exit 0)
 - `[ext.mustache]` Replace implicit-Optional `template: str = None`
   on `MustacheOutputHandler.render()` with the explicit
   `template: str | None = None` (PEP 484 / ruff RUF013). The
