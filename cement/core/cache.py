@@ -49,7 +49,7 @@ class CacheInterface(Interface):
             Unknown: Whatever the value is in the cache, or the ``fallback``
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     # D-09: same user-arbitrary cache value contract as `get` above.
     @abstractmethod
@@ -69,7 +69,7 @@ class CacheInterface(Interface):
         Returns: None
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     @abstractmethod
     def delete(self, key: str) -> bool:
@@ -84,7 +84,7 @@ class CacheInterface(Interface):
             otherwise
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
     @abstractmethod
     def purge(self) -> None:
@@ -92,7 +92,7 @@ class CacheInterface(Interface):
         Clears all data from the cache.
 
         """
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
 
 
 class CacheHandler(CacheInterface, Handler):
@@ -102,4 +102,4 @@ class CacheHandler(CacheInterface, Handler):
 
     """
     class Meta(Handler.Meta):
-        pass    # pragma: nocover
+        pass    # pragma: nocover  # abstract method
