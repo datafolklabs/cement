@@ -105,6 +105,27 @@ def test_copy(tmp, rando):
                           force=True)
 
 
+def test_copy_source_not_a_directory(tmp):
+    # `template.copy()` requires `src` to be an existing directory; passing
+    # a regular file (or a non-existent path) must raise NotADirectoryError
+    # rather than silently produce no output (the old bare `assert` was
+    # stripped under `python -O`, leaving a quiet failure mode).
+    src_file = os.path.join(tmp.dir, 'not-a-dir.txt')
+    with open(src_file, 'w') as f:
+        f.write('hello')
+
+    with TestApp(extensions=['jinja2'], template_handler='jinja2') as app:
+        with raises(NotADirectoryError, match='not a directory'):
+            app.template.copy(src_file,
+                              os.path.join(tmp.dir, 'dest'),
+                              {})
+
+        with raises(NotADirectoryError, match='not a directory'):
+            app.template.copy(os.path.join(tmp.dir, 'does-not-exist'),
+                              os.path.join(tmp.dir, 'dest'),
+                              {})
+
+
 def test_load_template_from_file_does_not_exist(tmp):
     class ThisApp(TestApp):
         class Meta:
