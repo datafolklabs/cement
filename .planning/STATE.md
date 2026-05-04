@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: "Phase 3 Plan 03 (Wave 3 — UP family per-rule sweep) complete. 16 atomic Wave 3 commits (12 UP-rule + 1 CONVENTIONS refresh + 1 fallout cleanup + 1 deferred-items + 1 SUMMARY). UP family fully resolved (494 findings → 0). REFACTOR-04 closed (printf-style modernization). D-19 protected `.format(**template_dict)` callsites (14 sites in foundation.py) verified untouched via body-diff. 03-PUBLIC-API-BASELINE.txt re-baselined per UP commit when needed (UP006/UP007/UP045 only — orphaned typing re-exports were tooling artifacts, not genuine API; user-approved Rule 4 mid-execution). All D-24 conjuncts (#1-#5) green. Wave 4 unblocked."
+status: verifying
 stopped_at: Phase 3 Plan 03 complete (Wave 3 — UP family fully clean; REFACTOR-04 closed; 5 plans / 5 waves remaining)
-last_updated: "2026-05-04T01:30:00.000Z"
-last_activity: 2026-05-03
+last_updated: "2026-05-04T01:24:15.313Z"
+last_activity: 2026-05-04
 progress:
   total_phases: 7
   completed_phases: 3
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 3
-Plan: 03/08 complete (Wave 3 closed; Wave 4 unblocked)
-Status: Phase 3 Plan 03 (Wave 3 — UP family per-rule sweep) complete. 16 atomic Wave 3 commits (12 UP-rule + 1 CONVENTIONS refresh + 1 fallout cleanup + 1 deferred-items + 1 SUMMARY). UP family fully resolved (494 findings → 0). REFACTOR-04 closed (printf-style modernization). D-19 protected `.format(**template_dict)` callsites (14 sites in foundation.py) verified untouched via body-diff. 03-PUBLIC-API-BASELINE.txt re-baselined per UP commit when needed (UP006/UP007/UP045 only — orphaned typing re-exports were tooling artifacts, not genuine API; user-approved Rule 4 mid-execution). All D-24 conjuncts (#1-#5) green. Wave 4 unblocked.
-Last activity: 2026-05-03
+Plan: 04/08 complete (Wave 4 closed; Wave 5 unblocked)
+Status: Phase 3 Plan 04 (Wave 4 — drop `from __future__ import annotations` across cement/) complete. Single atomic commit `722e7bc7` per user-approved Rule 4 architectural decision: plan body's ruff FA100 --fix mechanism does NOT work (FA100 only adds, never removes); hand-strip + targeted PEP 484 string-quoting was the only correct path. 29 files stripped, 76 forward-reference sites quoted at definition-time-evaluated annotation positions (parameters, return types, class-level attributes, module-level annotations). Local annotations inside method bodies left unquoted per PEP 526; ruff UP037 auto-fix confirmed redundancy. Phase 1 D-14 deferral closed. cement/utils/fs.py self-flagged 2024-06-22 TODO removed. D-24 conjunct #9 GREEN. RESEARCH.md A2 'HIGH confidence safe' claim corrected: TYPE_CHECKING import safety and annotation runtime-evaluation safety are orthogonal — A2 verified the former; the latter required string-quoting. All D-24 conjuncts evaluated through Wave 4 GREEN (#1, #2, #3, #4, #5, #9). Wave 5 unblocked.
+Last activity: 2026-05-04
 
-Progress: [████████░░] 81% (17/21 plans completed)
+Progress: [████████░░] 86% (18/21 plans completed)
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Progress: [████████░░] 81% (17/21 plans completed)
 | Phase 03-internal-refactor-coverage-hardening P01 | 4 min | 3 tasks | 4 files |
 | Phase 03-internal-refactor-coverage-hardening P02 | 5 min | 1 tasks tasks | 2 files files |
 | Phase 03-internal-refactor-coverage-hardening P03 | 60 min | 16 commits | 73 files |
+| Phase 03-internal-refactor-coverage-hardening P04 | 7 min | 1 atomic commit (Rule 4) | 30 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,9 @@ Recent decisions affecting current work:
 - [Phase 03 Plan 03]: User-approved mid-execution Rule 4 architectural decision: re-baseline `03-PUBLIC-API-BASELINE.txt` per UP commit when the rule prunes orphaned typing re-exports. Phase 03 IS the intentional API change window per D-04 reinterpretation. The 51+ orphaned `typing.{List,Dict,Tuple,Type,Union,Optional}` re-exports being pruned were never genuine public API — they were tooling artifacts of the pre-PEP-585 era. Applied to UP006/UP007/UP045 commits (1014 → 934 baseline lines); UP035 / UP031 / UP004 / UP008 / UP015 / UP024 / UP025 / UP026 / UP028 / UP032 left audit byte-for-byte green and required no rebase (preserves audit signal).
 - [Phase 03 Plan 03]: D-19 protected `.format(**template_dict)` callsite line numbers (CONTEXT.md cites 1359..1567) drifted by 1-7 lines during Wave 3 due to UP006/UP007/UP045/UP032 line-length changes. Verified protection via body-diff (line numbers stripped) rather than literal line-number diff. All 14 sites byte-for-byte preserved at lines 1352, 1357, 1365, 1370, 1378, 1383, 1471, 1476, 1481, 1485, 1546, 1551, 1556, 1560 (post Wave 3). Recorded in deferred-items.md.
 - [Phase 03 Plan 03]: REFACTOR-04 mechanically closed. UP031 (printf → modern format) + UP032 cascade (.format → f-string) together resolved all 114 printf/format-style sites. UP family fully clean end-to-end. FA family still ZERO findings — Wave 4 may have minimal work.
+- [Phase ?]: [Phase 03 Plan 04]: Plan body's ruff FA100 --fix mechanism does NOT remove from __future__ import annotations — FA100 only adds. User-approved Rule 4: hand-strip + targeted PEP 484 string-quoting in one atomic commit. 76 forward-reference sites quoted (App, FrameType, ModuleType, TracebackType, ArgparseArgumentType, ArgparseController) at definition-time-evaluated annotation positions only. Local annotations in method bodies left unquoted per PEP 526; ruff UP037 confirms via auto-fix.
+- [Phase ?]: [Phase 03 Plan 04]: RESEARCH.md A2 'HIGH confidence safe' claim was incomplete — TYPE_CHECKING import safety and annotation-runtime-evaluation safety are orthogonal concerns. A2 verified the former; the latter required PEP 484 string-quoting at definition-time-evaluated sites once the future import was removed.
+- [Phase ?]: [Phase 03 Plan 04]: D-24 conjunct #9 GREEN; Phase 1 D-14 deferral closed; cement/utils/fs.py self-flagged 2024-06-22 TODO removed. D-24 conjuncts #1/#2/#3/#4/#5/#9 GREEN through Wave 4; #6, #7, #8 deferred to Plans 05+.
 
 ### Roadmap Evolution
 
@@ -129,6 +133,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-04T01:30:00.000Z
+Last session: 2026-05-04T01:22:54.168Z
 Stopped at: Phase 3 Plan 03 complete (Wave 3 — UP family fully clean; REFACTOR-04 closed; 5 plans / 5 waves remaining)
-Resume file: .planning/phases/03-internal-refactor-coverage-hardening/03-04-PLAN.md (or next plan in sequence)
+Resume file: None
