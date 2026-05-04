@@ -34,12 +34,23 @@ Bugs:
   fallback values per the `cache.get` sibling pattern)
 - `[core.template]` Replace fragile bare `assert` in
   `TemplateHandler.copy()` source-path check with an explicit
-  `NotADirectoryError` raise — bare `assert` is stripped under
-  `python -O`/`-OO`, and `Path.exists()` returned True for files
-  too (silent no-op when `src` was a regular file, since
-  `os.walk` iterates nothing on a non-directory). The check now
-  uses `is_dir()` and raises consistently regardless of
-  optimization level
+  `NotADirectoryError` raise. The previous code had two failure
+  modes: (1) bare `assert` is stripped under `python -O`/`-OO`,
+  so apps running cement under optimization lost the runtime check
+  entirely and `os.walk` would silently iterate over a
+  non-existent path; and (2) `Path.exists()` returned True for
+  files too, so passing a regular file as `src` made the assert
+  pass and `os.walk` yield nothing — silent no-op with no
+  diagnostic. The new check uses `is_dir()` (covers both missing
+  paths and non-directories in one branch) and raises
+  unconditionally regardless of optimization level.
+  **Behavioral compatibility note:** the exception type changes
+  from `AssertionError` to `NotADirectoryError`. Downstream code
+  catching `AssertionError` to detect a missing/invalid `src`
+  must switch to catching `NotADirectoryError` (or a parent like
+  `OSError`). Gating runtime contracts on `AssertionError` was
+  already fragile under `-O`, so this is a robustness fix
+  rather than a contract regression on a load-bearing surface.
 
 Features:
 
