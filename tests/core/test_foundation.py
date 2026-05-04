@@ -333,7 +333,7 @@ def test_render(tmp):
         app.render(dict(foo='bar'), out=f)
         f.close()
 
-        f = open(tmp.file, 'r')
+        f = open(tmp.file)
         data = json.load(f)
         f.close()
 

@@ -293,7 +293,7 @@ class TemplateHandler(TemplateInterface, Handler):
 
                 else:
                     LOG.debug(f'rendering file as template: {_file}')
-                    f = open(_file, 'r')
+                    f = open(_file)
                     content = f.read()
                     f.close()
 
@@ -314,7 +314,7 @@ class TemplateHandler(TemplateInterface, Handler):
             LOG.debug(
                 f"attemping to load output template from file {full_path}")
             if os.path.exists(full_path):
-                content = open(full_path, 'r').read()
+                content = open(full_path).read()
                 LOG.debug(f"loaded output template from file {full_path}")
                 return (content, full_path)
             else:

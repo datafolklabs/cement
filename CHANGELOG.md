@@ -62,6 +62,8 @@ Refactoring:
   classes inherit from object implicitly.
 - `[core]` Simplify `super()` calls (UP008 — drop `super(__class__,
   self)` boilerplate; Python 3 zero-arg form).
+- `[core]` Drop redundant `'r'` mode argument from `open()` calls
+  (UP015 — `'r'` is the default).
 
 Misc:
 

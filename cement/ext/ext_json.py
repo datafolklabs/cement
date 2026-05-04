@@ -163,7 +163,7 @@ class JsonConfigHandler(ConfigParserConfigHandler):
             bool
 
         """
-        with open(file_path, 'r') as f:
+        with open(file_path) as f:
             content = f.read()
             if content is not None and len(content) > 0:
                 self.merge(self._json.loads(content))

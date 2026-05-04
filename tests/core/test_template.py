@@ -69,12 +69,12 @@ def test_copy(tmp, rando):
 
         # assert variables are interpolated
 
-        with open(os.path.join(tmp.dir, 'dest', 'take-me'), 'r') as f:
+        with open(os.path.join(tmp.dir, 'dest', 'take-me')) as f:
             assert f.read() == rando
 
         # assert files are ignored/excluded
 
-        with open(os.path.join(tmp.dir, 'dest', 'exclude-me'), 'r') as f:
+        with open(os.path.join(tmp.dir, 'dest', 'exclude-me')) as f:
             assert f.read() == '{{ rando }}'
 
         assert not os.path.exists(os.path.join(tmp.dir, 'dest', 'ignore-me'))
