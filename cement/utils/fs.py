@@ -243,7 +243,7 @@ def backup(path: str, suffix: str = '.bak', **kwargs: Any) -> str | None:
                     shutil.copytree(path, new_path)
                 break
         else:
-            break  # pragma: nocover
+            break  # pragma: nocover  # defensive: unreachable
     return new_path
 
 
@@ -251,4 +251,4 @@ def backup(path: str, suffix: str = '.bak', **kwargs: Any) -> str | None:
 if 'HOME' in os.environ:
     HOME_DIR = abspath(os.environ['HOME'])
 else:
-    HOME_DIR = abspath('~')  # pragma: nocover
+    HOME_DIR = abspath('~')  # pragma: nocover  # platform-specific
