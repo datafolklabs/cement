@@ -125,6 +125,9 @@ Plans:
   **Wave 8** *(blocked on Wave 7 — final acceptance gate)*
   - [x] 03-08-PLAN.md — Finalize 03-VERIFICATION.md with full D-24 9-conjunct evidence + mark Phase 3 complete in ROADMAP — 03-VERIFICATION.md status: passed (9/9 GREEN); REFACTOR-01..04 + COV-01..03 SATISFIED; defense-in-depth reset (make superclean+init+test+comply+audit) all exit 0 against fresh caches
 
+  **Wave 9** *(post-Wave-8 gap closure — verifier audit follow-up)*
+  - [x] 03-09-PLAN.md — Close CR-01 + CR-02 (`cement.utils.fs:abspath` BC restoration: revert body to `os.path.abspath(os.path.expanduser(path))` with inline `# boundary: D-14 (CR-01/CR-02)` tag; +2 regression tests in `tests/utils/test_fs.py`) and WR-02 (`scripts/audit-public-api.py` `encoding='utf-8'`). 5 atomic commits; 9/9 D-24 conjuncts re-verified GREEN; test count 316 → 318 at 100.00% coverage; public-API baseline byte-identical; W-01/W-02 marked RESOLVED in 03-VERIFICATION.md
+
   **Cross-cutting constraints** *(applies to every plan)*
   - 100% coverage gate must remain green after each commit (Phase 2 D-10/D-11/D-12)
   - All commits follow Conventional Commits + 78-char wrap (CLAUDE.md)
