@@ -344,7 +344,7 @@ class TemplateHandler(TemplateInterface, Handler):
             content = pkgutil.get_data(template_module, template_path)  # type: ignore
             LOG.debug("loaded output template '{}' from module {}".format(template_path, template_module))
             return (content, full_module_path)
-        except IOError:
+        except OSError:
             LOG.debug("output template '{}' does not exist in module {}".format(template_path, template_module))
             return (None, None)
 
