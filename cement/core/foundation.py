@@ -1267,8 +1267,7 @@ class App(meta.MetaMixin):
                 :py:mod:`signal library <python:signal>`.
         """
 
-        LOG.debug("adding signal handler {} for signal {}".format(
-            self._meta.signal_handler, signum)
+        LOG.debug(f"adding signal handler {self._meta.signal_handler} for signal {signum}"
         )
         signal.signal(signum, self._meta.signal_handler)
 

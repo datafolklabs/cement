@@ -72,6 +72,11 @@ Refactoring:
   (UP026) in tests/ext/test_ext_smtp.py + tests/utils/test_shell.py.
 - `[core]` Replace `for x in iterable: yield x` with `yield from`
   (UP028) in cement/core/hook.py + tests/core/test_hook.py.
+- `[core]` Convert `.format()` calls to f-strings (UP032 cascade
+  surfaced after UP031). Protected `.format(**template_dict)`
+  template-substitution callsites in cement/core/foundation.py
+  preserved untouched (verified by body-diff against pre-fix state).
+  UP family fully clean after this commit.
 
 Misc:
 

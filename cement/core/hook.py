@@ -128,7 +128,7 @@ class HookManager:
             LOG.debug(f"hook name '{name}' is not defined! ignoring...")
             return False
 
-        LOG.debug("registering hook '{}' from {} into hooks['{}']".format(func.__name__, func.__module__, name))
+        LOG.debug(f"registering hook '{func.__name__}' from {func.__module__} into hooks['{name}']")
 
         # Hooks are as follows: (weight, name, func)
         self.__hooks__[name].append((int(weight), func.__name__, func))

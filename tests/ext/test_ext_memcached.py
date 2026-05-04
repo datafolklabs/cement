@@ -32,8 +32,7 @@ def test_memcache_list_type_config():
 
 def test_memcache_str_type_config():
     defaults = init_defaults('tests', 'cache.memcached')
-    defaults['cache.memcached']['hosts'] = "{},{}".format(memcached_host,
-                                                      memcached_host)
+    defaults['cache.memcached']['hosts'] = f"{memcached_host},{memcached_host}"
     with MemcachedApp(config_defaults=defaults) as app:
         assert app.config.get('cache.memcached', 'hosts') == \
             [memcached_host, memcached_host]

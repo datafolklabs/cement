@@ -173,7 +173,7 @@ def watchdog_add_paths(app: App) -> None:
                 app.watchdog.add(*path_spec)  # pragma: nocover
             else:
                 raise FrameworkError(
-                    "Watchdog path spec must be a tuple, not '{}' in: {}".format(type(path_spec).__name__, path_spec)
+                    f"Watchdog path spec must be a tuple, not '{type(path_spec).__name__}' in: {path_spec}"
                 )
 
 

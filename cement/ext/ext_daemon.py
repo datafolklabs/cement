@@ -97,7 +97,7 @@ class Environment:
         current pid out to ``self.pid_file``.
         """
         # set the running uid/gid
-        LOG.debug('setting process uid({}) and gid({})'.format(self.user.pw_uid, self.group.gr_gid))
+        LOG.debug(f'setting process uid({self.user.pw_uid}) and gid({self.group.gr_gid})')
         os.setgid(self.group.gr_gid)
         os.setuid(self.user.pw_uid)
         os.environ['HOME'] = self.user.pw_dir

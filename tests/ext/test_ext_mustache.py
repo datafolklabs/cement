@@ -15,14 +15,14 @@ class MustacheApp(TestApp):
 def test_mustache(rando):
     with MustacheApp() as app:
         res = app.render(dict(foo=rando), 'test_template.mustache')
-        mustache_res = "foo equals {}\n".format(rando)
+        mustache_res = f"foo equals {rando}\n"
         assert res == mustache_res
 
 
 def test_mustache_partials(rando):
     with MustacheApp() as app:
         res = app.render(dict(foo=rando), 'test_base_template.mustache')
-        mustache_res = "Inside partial > foo equals {}\n".format(rando)
+        mustache_res = f"Inside partial > foo equals {rando}\n"
         assert res == mustache_res
 
 # derks@20180116: FIXME > Mustache is no longer raising a SyntaxError?
