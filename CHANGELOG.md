@@ -124,6 +124,23 @@ Refactoring:
   1577, 1582, 1587, 1591 (14 total) untouched. A docstring
   example referencing `os.path.dirname` / `os.path.exists` /
   `os.makedirs` updated to pathlib idioms for consistency.
+- `[core.template]` Migrate `cement/core/template.py` os.path
+  internals to pathlib (Phase 03 D-11; ~13 callsites — biggest
+  single-file blast in the pathlib scope). Boundary-preservation
+  rule (D-12) held; internal locals are Path; values crossing
+  the loop iteration go back through `str()` because the
+  surrounding loop variables (`cur_dir_dest`, `sub_dir_dest`,
+  `_file`, `_file_dest`, `full_path`) are passed to legacy
+  string-typed APIs (`fs.abspath`, `self.render`, `open`). The
+  `os.walk(src)` callsite is retained with an inline `# boundary:`
+  comment per D-14 — pathlib has no direct equivalent yielding
+  the `(cur_dir, sub_dirs, files)` triple shape this loop
+  depends on; converting to `Path.rglob('*')` would require a
+  wholesale loop restructure with higher regression risk than
+  the boundary-tag accommodation. Closes the D-11 pathlib scope
+  across all 4 named files; D-24 conjunct #8 GREEN
+  (`grep -rn 'os\.path' cement/utils/fs.py cement/core/* | grep
+  -v '# boundary:' | wc -l` returns 0).
 
 Misc:
 

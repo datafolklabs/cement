@@ -6,6 +6,7 @@ import re
 import shutil
 import sys
 from abc import abstractmethod
+from pathlib import Path as _Path
 from typing import Any
 
 from ..core import exc
@@ -191,15 +192,21 @@ class TemplateHandler(TemplateInterface, Handler):
         ignore_patterns = self._meta.ignore + ignore
         exclude_patterns = self._meta.exclude + exclude
 
-        assert os.path.exists(src), f"Source path {src} does not exist!"
+        assert _Path(src).exists(), f"Source path {src} does not exist!"
 
-        if not os.path.exists(dest):
-            os.makedirs(dest)
+        dest_path = _Path(dest)
+        if not dest_path.exists():
+            dest_path.mkdir(parents=True)
 
         LOG.debug(f'copying source template {src} -> {dest}')
 
         # here's the fun
-        for cur_dir, sub_dirs, files in os.walk(src):
+        # os.walk retained — pathlib has no direct equivalent that yields
+        # the (cur_dir, sub_dirs, files) triple shape this loop depends
+        # on. Path.rglob('*') would require a wholesale loop restructure
+        # with higher regression risk than the boundary-tag accommodation
+        # (Phase 03 D-14 / Task 5 decision).
+        for cur_dir, sub_dirs, files in os.walk(src):  # boundary: D-14
             escaped_cur_dir = cur_dir.encode('unicode-escape').decode('utf-8')
 
             cur_dir_stub: str
@@ -224,7 +231,7 @@ class TemplateHandler(TemplateInterface, Handler):
                 cur_dir_stub = cur_dir_stub.lstrip('/')
                 cur_dir_stub = cur_dir_stub.lstrip('\\\\')  # noqa: B005 - intentional redundant strip preserved for behavioral parity (D-13)
                 cur_dir_stub = cur_dir_stub.lstrip('\\')
-                cur_dir_dest = os.path.join(dest, cur_dir_stub)
+                cur_dir_dest = str(_Path(dest) / cur_dir_stub)
             else:
                 # render the cur dir
                 LOG.debug(
@@ -237,14 +244,14 @@ class TemplateHandler(TemplateInterface, Handler):
                 cur_dir_stub = cur_dir_stub.lstrip('/')
                 cur_dir_stub = cur_dir_stub.lstrip('\\\\')  # noqa: B005 - intentional redundant strip preserved for behavioral parity (D-13)
                 cur_dir_stub = cur_dir_stub.lstrip('\\')
-                cur_dir_dest = os.path.join(dest, cur_dir_stub)
+                cur_dir_dest = str(_Path(dest) / cur_dir_stub)
 
             # render sub-dirs
             for sub_dir in sub_dirs:
                 encoded_sub_dir = sub_dir.encode('unicode-escape')
                 escaped_sub_dir = encoded_sub_dir.decode('utf-8')
 
-                full_path = os.path.join(cur_dir, sub_dir)
+                full_path = str(_Path(cur_dir) / sub_dir)
 
                 if self._match_patterns(full_path, ignore_patterns):
                     LOG.debug(
@@ -255,7 +262,7 @@ class TemplateHandler(TemplateInterface, Handler):
                     LOG.debug(
                         'not rendering excluded sub-directory as template: ' +
                         f'{full_path}')
-                    sub_dir_dest = os.path.join(cur_dir_dest, sub_dir)
+                    sub_dir_dest = str(_Path(cur_dir_dest) / sub_dir)
                 else:
                     LOG.debug(
                         f'rendering sub-directory as template: {full_path}')
@@ -263,22 +270,23 @@ class TemplateHandler(TemplateInterface, Handler):
                     new_sub_dir = re.sub(escaped_src_pattern,
                                          '',
                                          self.render(escaped_sub_dir, data))  # type: ignore
-                    sub_dir_dest = os.path.join(cur_dir_dest, new_sub_dir)
+                    sub_dir_dest = str(_Path(cur_dir_dest) / new_sub_dir)
 
-                if not os.path.exists(sub_dir_dest):
+                sub_dir_dest_p = _Path(sub_dir_dest)
+                if not sub_dir_dest_p.exists():
                     LOG.debug(f'creating sub-directory {sub_dir_dest}')
-                    os.makedirs(sub_dir_dest)
+                    sub_dir_dest_p.mkdir(parents=True)
 
             for _file in files:
                 _rendered = self.render(_file, data)
                 new_file = re.sub(escaped_src_pattern, '', _rendered)  # type: ignore
 
-                _file = fs.abspath(os.path.join(cur_dir, _file))
-                _file_dest = fs.abspath(os.path.join(cur_dir_dest, new_file))
+                _file = fs.abspath(str(_Path(cur_dir) / _file))
+                _file_dest = fs.abspath(str(_Path(cur_dir_dest) / new_file))
 
                 # handle if destination path already exists
 
-                if os.path.exists(_file_dest):
+                if _Path(_file_dest).exists():
                     if force is True:
                         LOG.debug(
                             f'overwriting existing file: {_file_dest} ')
@@ -317,11 +325,11 @@ class TemplateHandler(TemplateInterface, Handler):
         for template_dir in self.app._meta.template_dirs:
             template_prefix = template_dir.rstrip('/')
             template_path = template_path.lstrip('/')
-            full_path = fs.abspath(os.path.join(template_prefix,
-                                                template_path))
+            full_path = fs.abspath(str(_Path(template_prefix) /
+                                       template_path))
             LOG.debug(
                 f"attemping to load output template from file {full_path}")
-            if os.path.exists(full_path):
+            if _Path(full_path).exists():
                 content = open(full_path).read()
                 LOG.debug(f"loaded output template from file {full_path}")
                 return (content, full_path)
