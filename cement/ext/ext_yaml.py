@@ -96,7 +96,7 @@ class YamlOutputHandler(output.OutputHandler):
     def _setup(self, app_obj: "App") -> None:
         self.app = app_obj
 
-    def render(self, data: dict[str, Any], template: str = None, **kw: Any) -> str:  # type: ignore
+    def render(self, data: dict[str, Any], template: str | None = None, **kw: Any) -> str:
         """
         Take a data dictionary and render it as Yaml output.  Note that the
         template option is received here per the interface, however this

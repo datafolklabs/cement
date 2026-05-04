@@ -50,6 +50,17 @@ Bugs:
   `_attach_files` so the `MIMEImage`/`MIMEBase` branches type-check
   cleanly. Public-API surface byte-identical (`_BodyType` is private
   so `make audit-public-api` stays at exit 0)
+- `[ext.yaml]` Replace implicit-Optional `template: str = None` on
+  `YamlOutputHandler.render()` with the explicit
+  `template: str | None = None` (PEP 484 / ruff RUF013), mirroring
+  the `[ext.mustache]` fix above. The handler ignores the
+  `template` parameter at runtime (per docstring), so no
+  follow-on `# type: ignore[arg-type]` was needed — the prior
+  signature-line `# type: ignore` is removed entirely. Public
+  signature byte-identical from the audit-public-api perspective.
+  Sister handlers (`ext.jinja2`, `ext.json`) carry the same
+  pattern and remain on the implicit-Optional form pending a
+  follow-up
 - `[ext.mustache]` Replace implicit-Optional `template: str = None`
   on `MustacheOutputHandler.render()` with the explicit
   `template: str | None = None` (PEP 484 / ruff RUF013). The
