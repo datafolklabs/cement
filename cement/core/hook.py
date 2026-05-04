@@ -182,7 +182,6 @@ class HookManager:
             # Check if result is a nested generator - needed to support e.g.
             # asyncio
             if isinstance(res, types.GeneratorType):
-                for _res in res:
-                    yield _res
+                yield from res
             else:
                 yield res

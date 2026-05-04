@@ -118,8 +118,7 @@ def test_framework_hooks():
 
 def test_generate_type_hook():
     def my_generator():
-        for i in [1, 1, 1]:
-            yield i
+        yield from [1, 1, 1]
 
     with TestApp() as app:
         app.hook.define('test_hook')
