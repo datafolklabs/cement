@@ -51,7 +51,7 @@ class TemplateInterface(Interface):
             str, None: The rendered template string, or ``None`` if nothing is rendered.
 
         """
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
     # D-09: same user-arbitrary template-data contract as `render` above.
     @abstractmethod
@@ -69,7 +69,7 @@ class TemplateInterface(Interface):
         Returns:
             bool: Returns ``True`` if the copy completed successfully.
         """
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
     @abstractmethod
     def load(self, path: str) -> tuple[str | bytes, str, str | None]:
@@ -92,7 +92,7 @@ class TemplateInterface(Interface):
             cement.core.exc.FrameworkError: If the template does not exist in
                 either the ``template_module`` or ``template_dirs``.
         """
-        pass  # pragma: nocover
+        pass  # pragma: nocover  # abstract method
 
 
 class TemplateHandler(TemplateInterface, Handler):
@@ -138,7 +138,7 @@ class TemplateHandler(TemplateInterface, Handler):
         """
 
         # must be provided by a subclass
-        raise NotImplementedError  # pragma: nocover
+        raise NotImplementedError  # pragma: nocover  # abstract method
 
     def _match_patterns(self, item: str, patterns: list[str]) -> bool:
         for pattern in patterns:
@@ -211,7 +211,7 @@ class TemplateHandler(TemplateInterface, Handler):
 
             cur_dir_stub: str
             if cur_dir == '.':
-                continue    # pragma: nocover
+                continue    # pragma: nocover  # defensive: unreachable
             elif cur_dir == src:
                 # don't render the source base dir (because we are telling it
                 # where to go as `dest`)
