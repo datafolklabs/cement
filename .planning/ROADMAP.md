@@ -17,7 +17,7 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
 - [x] **Phase 1: Tooling Baseline & Python Matrix** - Bump ruff/mypy/pytest, drop 3.9, fix the lint/type fallout (completed 2026-04-30)
 - [x] **Phase 2: Dependencies & CI Pipeline** - Refresh deps, unblock the `pdm update` Action, get the matrix green (completed 2026-05-02; D-19 #1 PR-CI-green and #3 post-merge workflow_dispatch deferred to live-CI verification — see 02-VERIFICATION.md)
 - [x] **Phase 3: Internal Refactor & Coverage Hardening** - Cleanup-only refactor under the 100% coverage gate (completed 2026-05-04; all 9 D-24 conjuncts GREEN — see 03-VERIFICATION.md)
-- [ ] **Phase 4: Backlog Triage** - Bulk-close stale issues with user approval, label and prioritize survivors
+- [x] **Phase 4: Backlog Triage** - Bulk-close stale issues with user approval, label and prioritize survivors (completed 2026-05-05 via manual pass outside GSD; see 04-NOTE.md)
 - [ ] **Phase 5: Deprecations, Docs & Security Stubs** - Add warn-only deprecations, refresh docs, capture audit-tooling backlog
 - [ ] **Phase 6: Release Cut 3.0.16** - Changelog, TestPyPI smoke test, tag, GitHub release, PyPI publish, bump to 3.0.17
 
@@ -138,12 +138,13 @@ Plans:
 **Goal**: Bring the GitHub issue backlog to a known clean state via user-approved bulk triage, with surviving issues consistently labeled and any real bugs surfaced as either in-milestone fixes or explicitly deferred backlog items.
 **Depends on**: Phase 2 (CI green so triage decisions are not contaminated by tooling noise; can run in parallel with Phase 3)
 **Requirements**: TRIAGE-01, TRIAGE-02, TRIAGE-03, TRIAGE-04
+**Status**: Complete via manual pass (2026-05-05). Maintainer triaged the backlog directly against `github.com/datafolklabs/cement` outside the GSD workflow rather than producing CONTEXT/PLAN/VERIFICATION artifacts. See `.planning/phases/04-backlog-triage/04-NOTE.md` for the closure comment template used and per-requirement disposition.
 **Success Criteria** (what must be TRUE):
-  1. A snapshot CSV/JSON of pre-triage open issues is committed to the planning artifacts and bucketed (close-stale, close-wontfix, close-duplicate, real-bug, feature-request, question)
-  2. Batch closures applied to user-approved buckets carry a consistent comment template that names the policy (e.g., "closing per Cement 3.0.16 stale-issue policy")
-  3. Every surviving open issue carries at least one of: `bug`, `cement-3-fix`, `cement-4-candidate`, `docs`, `help-wanted`
-  4. Real bugs identified during triage are either fixed in this milestone (with PR linked) or recorded as a backlog item with explicit deferral rationale
-**Plans**: TBD
+  1. A snapshot CSV/JSON of pre-triage open issues is committed to the planning artifacts and bucketed (close-stale, close-wontfix, close-duplicate, real-bug, feature-request, question) — not produced; manual pass substituted
+  2. Batch closures applied to user-approved buckets carry a consistent comment template that names the policy (e.g., "closing per Cement 3.0.16 stale-issue policy") — satisfied; template recorded in 04-NOTE.md
+  3. Every surviving open issue carries at least one of: `bug`, `cement-3-fix`, `cement-4-candidate`, `docs`, `help-wanted` — handled in-place by maintainer during manual pass
+  4. Real bugs identified during triage are either fixed in this milestone (with PR linked) or recorded as a backlog item with explicit deferral rationale — handled in-place during manual pass
+**Plans**: None (manual completion)
 
 ### Phase 5: Deprecations, Docs & Security Stubs
 **Goal**: Land warn-only `DeprecationWarning` surfaces flagged for removal in 3.2.0 / Cement 4, refresh user-facing documentation (excluding the changelog cut, which lives in Phase 6), and record the security audit-tooling stubs as backlog items so the next milestone has a phase-shaped starting point.
@@ -179,7 +180,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6. Phases 3 and 4
 | 1. Tooling Baseline & Python Matrix | 4/4 | Complete   | 2026-04-30 |
 | 2. Dependencies & CI Pipeline | 0/TBD | Not started | - |
 | 3. Internal Refactor & Coverage Hardening | 8/8 | Complete   | 2026-05-04 |
-| 4. Backlog Triage | 0/TBD | Not started | - |
+| 4. Backlog Triage | manual | Complete   | 2026-05-05 |
 | 5. Deprecations, Docs & Security Stubs | 0/TBD | Not started | - |
 | 6. Release Cut 3.0.16 | 0/TBD | Not started | - |
 
