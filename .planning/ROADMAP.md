@@ -159,7 +159,7 @@ Plans:
 **Plans**: 6 plans across 6 waves (linearized — CHANGELOG.md file conflicts force serial waves; matches Phase 2 precedent)
 
   **Wave 1**
-  - [ ] 05-01-PLAN.md — Tighten DEPRECATIONS registry + adjacent docstring sweep (commits 1, 2, 3 of D-16)
+  - [x] 05-01-PLAN.md — Tighten DEPRECATIONS registry + adjacent docstring sweep (commits 1, 2, 3 of D-16)
 
   **Wave 2** *(blocked on Wave 1 completion)*
   - [ ] 05-02-PLAN.md — Resolve all 4 known sphinx warnings (commits 5, 6, 7, 8 of D-16)
