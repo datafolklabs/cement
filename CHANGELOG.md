@@ -328,6 +328,7 @@ Misc:
 - `[docs]` Rename `display_version` theme option to `version_selector`
   (sphinx_rtd_theme 3.x rename)
 - `[docs]` Fix inline-literal RST in shell.cmd() docstring
+- `[docs]` Add top-level DEPRECATIONS.md mirroring GitBook narrative
 
 Deprecations:
 
