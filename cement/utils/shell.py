@@ -32,11 +32,11 @@ def cmd(command: str,
         kwargs: Additional keyword arguments are passed to ``Popen()``.
 
     Returns:
-        tuple: When ``capture==True``, returns the ``(stdout, stderror,
-            return_code)`` of the command. ``stdout`` and ``stderror`` are
-            ``bytes`` (the ``Popen`` default); decode with the appropriate
-            encoding if string output is needed, or pass ``text=True`` /
-            ``encoding=...`` through ``**kwargs``.
+        tuple: When ``capture==True``, returns ``(stdout, stderror, return_code)``
+            of the command. ``stdout`` and ``stderror`` are ``bytes`` (the
+            ``Popen`` default); decode with the appropriate encoding if string
+            output is needed, or pass ``text=True`` or ``encoding=...`` through
+            ``**kwargs``.
         int: When ``capture==False``, returns only the ``exitcode`` of the
             command.
 

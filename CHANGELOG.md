@@ -327,6 +327,7 @@ Misc:
 - `[docs]` Wire api/index into top-level toctree
 - `[docs]` Rename `display_version` theme option to `version_selector`
   (sphinx_rtd_theme 3.x rename)
+- `[docs]` Fix inline-literal RST in shell.cmd() docstring
 
 Deprecations:
 
