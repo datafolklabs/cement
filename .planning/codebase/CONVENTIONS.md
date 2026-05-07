@@ -21,8 +21,8 @@
 
 **Types:**
 - Use PascalCase for class names
-- Use **PEP 585 builtin generics** (Python 3.10+): `dict[str, Any]`, `list[str]`, `tuple[int, str]`, `type[Handler]` — NOT `Dict[str, Any]`, `List[str]`, `Tuple[int, str]`, `Type[Handler]`
-- Use **PEP 604 union syntax** (Python 3.10+): `str | None`, `int | str`, `dict[str, Any] | None` — NOT `Optional[str]` or `Union[int, str]`
+- Use **PEP 585 builtin generics** (Python 3.10+): `dict[str, Any]`, `list[str]`, `tuple[int, str]`, `type[Handler]`
+- Use **PEP 604 union syntax** (Python 3.10+): `str | None`, `int | str`, `dict[str, Any] | None`
 - Phase 03 D-06 enabled ruff `UP` family enforcement; UP006/UP007/UP045 mechanically rewrite legacy syntax to the modern forms on every `make comply-ruff-fix`
 - Private Meta attribute annotations: `_meta: MetaClassName  # type: ignore` (see `cement/ext/ext_smtp.py` line 72)
 
@@ -36,7 +36,7 @@
 
 **Ruff Configuration** (`pyproject.toml` [tool.ruff]):
 ```
-target-version = "py39"
+target-version = "py310"
 line-length = 100
 indent-width = 4
 preview = true
@@ -91,8 +91,8 @@ if TYPE_CHECKING:
 
 **Patterns:**
 - Always annotate function parameters and return types: `def send(self, msg: str, **kw: Any) -> dict[str, Any]:`
-- Use **PEP 585 builtin generics** (Python 3.10+): `dict[str, Any]`, `list[str]`, `tuple[int, str]`, `type[Handler]` — NOT `Dict[str, Any]`, `List[str]`, `Tuple[int, str]`, `Type[Handler]`
-- Use **PEP 604 union syntax** (Python 3.10+): `str | None`, `int | str`, `dict[str, Any] | None` — NOT `Optional[str]` or `Union[int, str]`
+- Use **PEP 585 builtin generics** (Python 3.10+): `dict[str, Any]`, `list[str]`, `tuple[int, str]`, `type[Handler]`
+- Use **PEP 604 union syntax** (Python 3.10+): `str | None`, `int | str`, `dict[str, Any] | None`
 - Use `TYPE_CHECKING` block for deferred imports to prevent circular dependencies
 - Private Meta attributes require `# type: ignore` due to metaclass pattern (framework constraint)
 - Phase 03 D-06 enabled ruff `UP` family enforcement; UP006/UP007/UP045 mechanically rewrite legacy syntax to the modern forms on every `make comply-ruff-fix`. Phase 03 plan 03 landed the bulk migration.
@@ -243,7 +243,7 @@ class ConfigHandler(ConfigInterface, Handler):
 **Return Values:**
 - Return types must be explicit (no `-> Any` without reason)
 - Boolean returns for success/failure (parse_file returns `bool`)
-- Dict/List returns should be typed: `-> Dict[str, Any]`, `-> List[str]`
+- Dict/list returns should be typed: `-> dict[str, Any]`, `-> list[str]`
 
 ## Module Design
 
