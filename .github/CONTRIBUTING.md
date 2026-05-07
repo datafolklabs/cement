@@ -35,51 +35,48 @@ The ideal feature request would include:
 All contributors should attempt to abide by the following:
 
 - Contributors fork the project on GitHub onto their own account
-- All changes should be commited, and pushed to their repository
-- All pull requests are from a topic branch, not an existing Cement branch
+- All changes should be committed and pushed to their repository
+- All pull requests are from a topic branch, not an existing Cement
+  branch
 - Contributors make every effort to comply with [PEP8]
-- Before starting on a new feature, or bug fix, always do the following:
+- Before starting on a new feature or bug fix, do the following:
     - `git pull --rebase` to get latest changes from upstream
-    - Checkout a new branch.  For example:
+    - Checkout a new branch. For example:
         - `git checkout -b feature/slug-name`
         - `git checkout -b bug/github-issue-number`
 - Code must include the following:
-    - All tests pass successfully
-    - Coverage reports 100% code coverage when running tests
-    - New features are documented in the appropriate section of the doc
-    - Significant changes are mentioned in the ChangeLog
-- All contributions must be associated with at least one issue in GitHub.  If the issue does not exist, create one (per the guidelines above).
-- Commit comments must include something like the following:
-    - Resolves Issue #1127
-    - Partially Resolves Issue #9873
-- A single commit per issue.
-- Contributors should add their full name, or handle, to the CONTRIBUTORS file.
+    - All tests pass successfully (`make test`)
+    - Coverage reports 100% code coverage (`make test`)
+    - Compliance passes (`make comply` — runs `ruff` and `mypy`)
+    - New features are documented in the appropriate API docstring
+    - User-visible changes are recorded in `CHANGELOG.md` under the
+      active development section, in one of the standard buckets
+      (`Bugs`, `Features`, `Refactoring`, `Misc`, `Deprecations`)
+- All contributions should be associated with at least one issue in
+  GitHub. If the issue does not exist, create one (per the
+  guidelines above).
+- Contributors should add their full name or handle to the
+  `CONTRIBUTORS` file.
 
-Regarding git commit messages, please read the following:
+### Commit Conventions
 
-* [Commit Guidelines]
+Cement follows [Conventional Commits] for all commit messages.
+Commits are atomic per concern — one logical change per commit, not
+"a single commit per issue" (which often lumps unrelated edits).
 
-The majority of commits only require a single line commit message.  That said, for more complex commits, please use the following as an example (as outlined in the ProGit link above):
+- **Subject line:** `<type>(<area>): <imperative summary>`
+  (max 78 chars)
+- **Type:** `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `ci`
+- **Body:** wrap at 78 chars; explain the *why*, not just the *what*
+- **Authoring:** Run `make commit` to use the project's
+  `commitizen` (`cz`) interactive prompt. It enforces the format and
+  the wrap.
 
-```
-Short (50 chars or less) summary of changes
-
-More detailed explanatory text, if necessary.  Wrap it to about 72
-characters or so.  In some contexts, the first line is treated as the
-subject of an email and the rest of the text as the body.  The blank
-line separating the summary from the body is critical (unless you omit
-the body entirely); tools like rebase can get confused if you run the
-two together.
-
-Further paragraphs come after blank lines.
-
- - Bullet points are okay, too
-
- - Typically a hyphen or asterisk is used for the bullet, preceded by a
-   single space, with blank lines in between, but conventions vary here
-```
+See [`CLAUDE.md`](../CLAUDE.md) §"Commit Conventions" for the
+canonical commit-shape doc.
 
 [Open Source Initiative]: http://www.opensource.org
 [issue tracker]: http://github.com/datafolklabs/cement/issues
 [PEP8]: http://www.python.org/dev/peps/pep-0008/
 [Commit Guidelines]: http://git-scm.com/book/en/Distributed-Git-Contributing-to-a-Project#Commit-Guidelines
+[Conventional Commits]: https://www.conventionalcommits.org/
