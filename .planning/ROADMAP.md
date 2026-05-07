@@ -174,7 +174,7 @@ Plans:
   - [x] 05-05-PLAN.md — Drop Travis from README + align CONTRIBUTING with Conventional Commits + DOCS-04 sweep (commits 10, 11, optional 12 of D-16)
 
   **Wave 6** *(blocked on Wave 5 completion — final planning-artifact wave)*
-  - [ ] 05-06-PLAN.md — Sync CONVENTIONS.md ruff target-version + expand SECv2-01..03 with phase-shaped scope notes (commits 13, 14 of D-16; planning-artifact, NO CHANGELOG entries)
+  - [x] 05-06-PLAN.md — Sync CONVENTIONS.md ruff target-version + expand SECv2-01..03 with phase-shaped scope notes (commits 13, 14 of D-16; planning-artifact, NO CHANGELOG entries)
 
   **Cross-cutting constraints** *(applies to every plan)*
   - 100% coverage gate must remain green after each commit (Phase 2 D-10/D-11)
