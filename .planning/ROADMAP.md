@@ -165,7 +165,7 @@ Plans:
   - [x] 05-02-PLAN.md — Resolve all 4 known sphinx warnings (commits 5, 6, 7, 8 of D-16)
 
   **Wave 3** *(blocked on Wave 2 completion)*
-  - [ ] 05-03-PLAN.md — Add top-level DEPRECATIONS.md mirroring GitBook narrative (commit 4 of D-16)
+  - [x] 05-03-PLAN.md — Add top-level DEPRECATIONS.md mirroring GitBook narrative (commit 4 of D-16)
 
   **Wave 4** *(blocked on Waves 2 + 3 completion — sphinx clean is prerequisite for -W flip)*
   - [ ] 05-04-PLAN.md — Wire -W into make docs + AUDIT POINT comment (commit 9 of D-16)
