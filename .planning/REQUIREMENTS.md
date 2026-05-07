@@ -89,8 +89,55 @@ Deferred to a later milestone (likely the 3.2.0 breakage-allowed cycle or a dedi
 ### Security Audit Tooling Implementation
 
 - **SECv2-01**: `pip-audit` integrated into CI on every PR
+    - **Tool:** `pdm run pip-audit` (read deps from `pdm.lock`)
+    - **Make target:** `make audit-deps` — independent target, NOT
+      chained into `make test` or `make comply` (matches Phase 03
+      D-03 `audit-public-api` discipline)
+    - **CI placement:** new dedicated workflow file
+      `.github/workflows/security.yml`, triggers on `pull_request`
+      + weekly `cron`. NOT serialized into `build_and_test.yml`
+      (mirrors Phase 02 D-16 fail-fast vs feedback-time tradeoff)
+    - **Config:** none initially; `pip-audit --skip` for accepted
+      CVEs documented inline if any surface
+    - **New dev-dep:** `pip-audit` (PyPI; latest stable)
+    - **Exit behavior:** advisory on first run (Phase 02 D-03
+      one-shot precedent — capture accepted CVEs in an in-repo
+      artifact mirroring `02-PIP-AUDIT.md`); flip to blocking once
+      baseline is clean
+    - **Anchor:** `.planning/phases/02-dependencies-ci-pipeline/02-CONTEXT.md`
+      D-03 + `02-PIP-AUDIT.md` capture artifact
+
 - **SECv2-02**: `bandit` integrated into CI on every PR with project-tuned ruleset
+    - **Tool:** `pdm run bandit -r cement/`
+    - **Make target:** `make audit-bandit` — independent target
+    - **CI placement:** same `.github/workflows/security.yml` lane
+      as SECv2-01 (one workflow, three jobs)
+    - **Config:** `.bandit` allowlist file at repo root —
+      project-tuned to skip false positives on framework-intentional
+      patterns (e.g., `subprocess` call sites in `cement/utils/shell.py`
+      that are deliberate per the public API contract)
+    - **New dev-dep:** `bandit` (PyPI; latest stable)
+    - **Exit behavior:** advisory on first run; flip to blocking
+      once `.bandit` allowlist is curated
+    - **Anchor:** `02-CONTEXT.md` D-03 (same one-shot precedent)
+
 - **SECv2-03**: SAST tool (CodeQL or Semgrep) selected and integrated into CI
+    - **Tool:** TBD per evaluation; candidates are CodeQL (GitHub-
+      native, free for public repos, deeper Python rules) and
+      Semgrep (rule customization, more permissive licensing)
+    - **Make target:** `make audit-sast` (only if CLI-runnable;
+      CodeQL is GitHub-Actions-only)
+    - **CI placement:** dedicated job in `security.yml`; weekly
+      cron preferred over per-PR (run-time cost)
+    - **Config:** `.semgrep.yml` (Semgrep) OR
+      `.github/codeql/codeql-config.yml` (CodeQL) — rule selection
+      pinned to Python OWASP top-N + cement-specific patterns
+    - **New dev-dep:** `semgrep` if Semgrep selected; none if
+      CodeQL (GitHub-hosted)
+    - **Exit behavior:** advisory on first run; per-finding triage
+      before any blocking flip
+    - **Anchor:** `02-CONTEXT.md` D-03
+
 - **SECv2-04**: Documented security disclosure process (`SECURITY.md`)
 
 ### Performance Pass
