@@ -134,6 +134,8 @@ Bugs:
   `OSError`). Gating runtime contracts on `AssertionError` was
   already fragile under `-O`, so this is a robustness fix
   rather than a contract regression on a load-bearing surface.
+- `[core.interface]` String-quote list[str] return annotation for
+  autodoc compatibility
 
 Features:
 
