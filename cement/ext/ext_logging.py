@@ -144,7 +144,7 @@ class LoggingLogHandler(log.LogHandler):
         ``['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL', 'CRITICAL]``.
 
         As of Cement 3.0.10, the FATAL facility is deprecated and will be
-        removed in future versions of Cement. Please us `CRITICAL` instead.
+        removed in Cement v3.2.0. Please use ``CRITICAL`` instead.
 
         :param level: The log level to set.
 
@@ -366,7 +366,7 @@ class LoggingLogHandler(log.LogHandler):
         Log to the FATAL (aka CRITICAL) facility.
 
         As of Cement 3.0.10, this method is deprecated and will be removed in
-        future versions of Cement. Please us `critical()` instead.
+        Cement v3.2.0. Please use ``critical()`` instead.
 
         Args:
             msg (str): The message to log.
