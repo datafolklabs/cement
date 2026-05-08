@@ -34,24 +34,38 @@ class GenerateTemplateAbstractBase(Controller):
                           data: dict[str, Any]) -> None:
         # validate up front so misconfigurations fail fast and consistently
         # under `python -O` (asserts get stripped, ValueError does not).
-        feature_names: set[str] = set()
+        feature_by_name: dict[str, dict[str, Any]] = {}
         for feature in features:
             if feature.get('name') is None:
                 raise ValueError(
                     "Required feature config key missing: name")
-            feature_names.add(feature['name'])
+            feature_by_name[feature['name']] = feature
         for feature in features:
             for req in feature.get('requires', []):
-                if req not in feature_names:
+                if req not in feature_by_name:
                     raise ValueError(
                         f"Feature '{feature['name']}' requires unknown "
                         f"feature '{req}'")
 
-        # pass 1: compute tentative enabled-state per feature from default /
-        # prompt, ignoring requires. Order-independent.
+        # Resolve features lazily and recursively so that:
+        #   1. resolution is order-independent — a feature may declare
+        #      `requires` against another feature defined later in the YAML;
+        #   2. interactive runs do not nag the user for a feature whose
+        #      `requires` already resolved to False (the prompt is reached
+        #      only after every prerequisite returned True).
         feature_states: dict[str, bool] = {}
-        for feature in features:
-            name = feature['name']
+
+        def _resolve(name: str) -> bool:
+            if name in feature_states:
+                return feature_states[name]
+            feature = feature_by_name[name]
+            for req in feature.get('requires', []):
+                if not _resolve(req):
+                    self.app.log.warning(
+                        f"Feature '{name}' disabled (requires: {req})"
+                    )
+                    feature_states[name] = False
+                    return False
             default = bool(feature.get('default', False))
             if self.app.pargs.defaults:
                 feature_states[name] = default
@@ -67,26 +81,10 @@ class GenerateTemplateAbstractBase(Controller):
                 p = FeaturePrompt(auto=False)  # pragma: nocover
                 val: str = p.prompt() or default_val  # pragma: nocover
                 feature_states[name] = val.lower() == 'y'  # pragma: nocover
+            return feature_states[name]
 
-        # pass 2: cascade-disable features whose requires are unsatisfied;
-        # iterate to a fixpoint so transitive chains resolve regardless of
-        # YAML ordering (a feature can declare a `requires` against another
-        # feature defined later in the list).
-        changed = True
-        while changed:
-            changed = False
-            for feature in features:
-                name = feature['name']
-                if not feature_states[name]:
-                    continue
-                for req in feature.get('requires', []):
-                    if not feature_states[req]:
-                        self.app.log.warning(
-                            f"Feature '{name}' disabled (requires: {req})"
-                        )
-                        feature_states[name] = False
-                        changed = True
-                        break
+        for feature in features:
+            _resolve(feature['name'])
 
         # merge enabled/disabled configs
         if 'features' not in data:
