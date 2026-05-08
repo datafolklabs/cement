@@ -332,7 +332,9 @@ Misc:
 - `[dev]` Phase 03 (Internal Refactor & Coverage Hardening) complete:
   REFACTOR-01..04 + COV-01..03 satisfied; ROADMAP updated.
 - `[docs]` Drop unsupported 'logo' theme option from sphinx conf
-- `[docs]` Wire api/index into top-level toctree
+- `[docs]` Remove orphan `docs/source/api/index.rst`; the top-level
+  `docs/source/index.rst` toctree references `api/core/index`,
+  `api/utils/index`, and `api/ext/index` directly
 - `[docs]` Rename `display_version` theme option to `version_selector`
   (sphinx_rtd_theme 3.x rename)
 - `[docs]` Fix inline-literal RST in shell.cmd() docstring
