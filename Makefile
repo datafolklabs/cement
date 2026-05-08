@@ -64,7 +64,7 @@ docs:
 	# If a future warning is acceptable, suppress it explicitly via
 	# conf.py suppress_warnings rather than reverting -W. Mirrors
 	# Phase 1 D-08 / Phase 2 D-10/D-11 (no implicit drift).
-	cd docs; pdm run sphinx-build -W ./source ./build; cd ..
+	cd docs && pdm run sphinx-build -W ./source ./build
 	@echo
 	@echo DOC: "file://"$$(echo `pwd`/docs/build/html/index.html)
 	@echo
