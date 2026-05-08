@@ -139,6 +139,7 @@ Recent decisions affecting current work:
 ### Pending Todos
 
 - [`2026-05-08-resolve-issue-777-extensions-config-section`](./todos/pending/2026-05-08-resolve-issue-777-extensions-config-section.md) — analyze and resolve [#777](https://github.com/datafolklabs/cement/issues/777) (extensions config-override uses `Meta.label` instead of `Meta.config_section`; pickup after #760 merges)
+- [`2026-05-08-analyze-and-review-pr-768-generate-optional-features`](./todos/pending/2026-05-08-analyze-and-review-pr-768-generate-optional-features.md) — analyze and review [PR #768](https://github.com/datafolklabs/cement/pull/768) (`feat(ext.generate): add optional features support for templates`; resolves #743) — evaluate LOE to update vs. rewrite
 
 ### Plan-Phase Gate Overrides
 
