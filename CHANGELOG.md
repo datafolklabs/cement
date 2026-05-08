@@ -330,6 +330,7 @@ Misc:
 - `[docs]` Fix inline-literal RST in shell.cmd() docstring
 - `[docs]` Add top-level DEPRECATIONS.md mirroring GitBook narrative
 - `[dev]` Wire -W into make docs (zero-warnings gate)
+- `[docs]` Drop Travis CI link/badge (CI moved to GitHub Actions)
 
 Deprecations:
 
