@@ -291,6 +291,7 @@ Refactoring:
   category labels).
 - `[core.deprecations]` Pin 3.0.10-1 and 3.0.16-1 removal version to v3.2.0
 - `[ext.logging]` Tighten FATAL deprecation removal version in docstrings
+- `[ext.smtp]` Document send() bool-return removal in v3.2.0
 
 Misc:
 

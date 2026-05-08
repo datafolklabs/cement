@@ -138,7 +138,12 @@ class SMTPMailHandler(mail.MailHandler):
                 ``[ ('alt-name.ext', '/path/to/file.ext'), ...]``
 
         Returns:
-            bool:``True`` if message is sent successfully, ``False`` otherwise
+            bool: ``True`` if message is sent successfully, ``False`` otherwise
+
+        .. deprecated:: 3.0.16
+            The ``bool`` return is deprecated and will change to the
+            ``smtplib`` senderrs ``dict`` in Cement v3.2.0. See
+            ``DEPRECATIONS['3.0.16-1']``.
 
         Example:
 
