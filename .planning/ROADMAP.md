@@ -171,7 +171,7 @@ Plans:
   - [x] 05-04-PLAN.md — Wire -W into make docs + AUDIT POINT comment (commit 9 of D-16)
 
   **Wave 5** *(blocked on Wave 4 completion)*
-  - [ ] 05-05-PLAN.md — Drop Travis from README + align CONTRIBUTING with Conventional Commits + DOCS-04 sweep (commits 10, 11, optional 12 of D-16)
+  - [x] 05-05-PLAN.md — Drop Travis from README + align CONTRIBUTING with Conventional Commits + DOCS-04 sweep (commits 10, 11, optional 12 of D-16)
 
   **Wave 6** *(blocked on Wave 5 completion — final planning-artifact wave)*
   - [ ] 05-06-PLAN.md — Sync CONVENTIONS.md ruff target-version + expand SECv2-01..03 with phase-shaped scope notes (commits 13, 14 of D-16; planning-artifact, NO CHANGELOG entries)
