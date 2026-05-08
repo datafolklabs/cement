@@ -162,7 +162,7 @@ Plans:
   - [x] 05-01-PLAN.md — Tighten DEPRECATIONS registry + adjacent docstring sweep (commits 1, 2, 3 of D-16)
 
   **Wave 2** *(blocked on Wave 1 completion)*
-  - [ ] 05-02-PLAN.md — Resolve all 4 known sphinx warnings (commits 5, 6, 7, 8 of D-16)
+  - [x] 05-02-PLAN.md — Resolve all 4 known sphinx warnings (commits 5, 6, 7, 8 of D-16)
 
   **Wave 3** *(blocked on Wave 2 completion)*
   - [ ] 05-03-PLAN.md — Add top-level DEPRECATIONS.md mirroring GitBook narrative (commit 4 of D-16)
