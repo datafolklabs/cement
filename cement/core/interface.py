@@ -99,7 +99,7 @@ class InterfaceManager:
         else:
             raise exc.InterfaceError(f"interface '{interface}' does not exist!")
 
-    def list(self) -> list[str]:
+    def list(self) -> "list[str]":  # autodoc: PEP 585 + method-name-shadow workaround
         """
         Return a list of defined interfaces.
 
