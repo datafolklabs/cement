@@ -119,9 +119,12 @@ class GenerateTemplateAbstractBase(Controller):
         g_config = yaml_load(f)
         f.close()
 
-        vars = g_config.get('variables', [])
-        exclude_list = g_config.get('exclude', [])
-        ignore_list = g_config.get('ignore', [])
+        # Use `or []` (not the .get default) so explicit `key: null` in the
+        # YAML coalesces to an empty list — otherwise the subsequent
+        # `for ... in vars` / `ignore_list.append(...)` would crash on None.
+        vars = g_config.get('variables') or []
+        exclude_list = g_config.get('exclude') or []
+        ignore_list = g_config.get('ignore') or []
 
         # default ignore the .generate.yml config
         g_config_yml = rf'^(.*)[\/\\\\]{self._meta.label}[\/\\\\]\.generate\.yml$'
