@@ -10,6 +10,7 @@ Core Modules
   cache
   config
   controller
+  deprecations
   exc
   extension
   foundation
