@@ -341,6 +341,11 @@ Misc:
 - `[docs]` Drop Travis CI link/badge (CI moved to GitHub Actions)
 - `[docs]` Align CONTRIBUTING with Conventional Commits +
   atomic-per-concern
+- `[docs]` Expose `cement.core.deprecations` in the Sphinx API
+  reference (was missing) — adds `docs/source/api/core/deprecations.rst`
+  + toctree entry, plus minimal docstrings on the module,
+  `DEPRECATIONS` dict, and `deprecate()` so the autodoc page renders
+  meaningful content rather than an empty stub
 
 Deprecations:
 
