@@ -138,7 +138,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet.
+- [`2026-05-08-resolve-issue-777-extensions-config-section`](./todos/pending/2026-05-08-resolve-issue-777-extensions-config-section.md) — analyze and resolve [#777](https://github.com/datafolklabs/cement/issues/777) (extensions config-override uses `Meta.label` instead of `Meta.config_section`; pickup after #760 merges)
 
 ### Plan-Phase Gate Overrides
 
