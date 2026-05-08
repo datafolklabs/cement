@@ -348,6 +348,12 @@ Misc:
   + toctree entry, plus minimal docstrings on the module,
   `DEPRECATIONS` dict, and `deprecate()` so the autodoc page renders
   meaningful content rather than an empty stub
+- `[docs]` Fix `stderror` → `stderr` typo in `cement.utils.shell:cmd()`
+  and `exec_cmd()` Returns docstrings (4 occurrences). Example
+  variables and runtime code already used the correct spelling
+- `[docs]` Remove orphaned `[Commit Guidelines]` reference-link
+  definition from `.github/CONTRIBUTING.md` (no body callsites
+  remained after the Plan 05-05 Conventional Commits rewrite)
 
 Deprecations:
 
