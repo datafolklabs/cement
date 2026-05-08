@@ -531,6 +531,7 @@ class App(meta.MetaMixin):
             'plugin_dir',
             'ignore_deprecation_warnings',
             'template_dir',
+            'template_dirs',
             'mail_handler',
             'cache_handler',
             'log_handler',
@@ -589,6 +590,15 @@ class App(meta.MetaMixin):
 
         Templates are attempted to be loaded in order, and will stop loading
         once a template is successfully loaded from a directory.
+
+        This setting can also be overridden by the ``myapp.template_dirs``
+        config setting parsed from any of the application configuration
+        files. The config value may be a list (when using a config
+        handler that supports native lists, e.g. ``ext_yaml`` or
+        ``ext_json``) or a comma-separated string (required when using
+        the default ``ext_configparser`` / INI handler, since INI has no
+        native list syntax — the string form is split and
+        whitespace-trimmed).
         """
 
         template_dir: str | None = None
@@ -1451,6 +1461,30 @@ class App(meta.MetaMixin):
                     setattr(self._meta, key, is_true(base_dict[key]))
                 else:
                     setattr(self._meta, key, base_dict[key])
+
+        # convert template_dirs to a list if it is a comma-separated string
+        # (the core_meta_override loop above blindly setattr's the raw config
+        # value onto self._meta, so without this _setup_template_handler would
+        # iterate characters of a string rather than a list of paths).
+        if 'template_dirs' in self.config.keys(self._meta.config_section):
+            dirs = self.config.get(self._meta.config_section, 'template_dirs')
+
+            # convert a comma-separated string to a list
+            if type(dirs) is str:
+                # strip whitespace and drop empty tokens (trailing or
+                # repeated commas would otherwise leave '' in the list,
+                # which _setup_template_handler would silently resolve
+                # as the empty path).
+                dir_list = [x.strip() for x in dirs.split(',') if x.strip()]
+
+                # set the new template_dirs value in the config
+                self.config.set(
+                    self._meta.config_section, 'template_dirs', dir_list
+                )
+
+                # also update _meta.template_dirs which the override loop
+                # above set to the raw string
+                self._meta.template_dirs = dir_list
 
         # load extensions from configuraton file
         if 'extensions' in self.config.keys(self._meta.config_section):

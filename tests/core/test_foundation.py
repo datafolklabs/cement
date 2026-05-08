@@ -781,6 +781,103 @@ def test_template_dirs(tmp, rando):
         assert tmp.dir in app._meta.template_dirs
 
 
+def test_template_dirs_via_config(tmp, rando):
+    # config-supplied template_dirs (as a list) should land in
+    # app._meta.template_dirs after setup, mirroring the existing
+    # ``extensions`` config-override pattern.
+    label = f"app-{rando}"
+    defaults = init_defaults(label)
+    defaults[label]['template_dirs'] = [tmp.dir, '/another/path']
+
+    with TestApp(label=label, config_defaults=defaults) as app:
+        app.run()
+        assert tmp.dir in app._meta.template_dirs
+        assert '/another/path' in app._meta.template_dirs
+
+
+def test_template_dirs_via_config_string(tmp, rando):
+    # comma-separated string from config should be split + stripped
+    # into a list (parallel to the ``extensions`` string handling).
+    label = f"app-{rando}"
+    defaults = init_defaults(label)
+    defaults[label]['template_dirs'] = f'{tmp.dir}, /path/two , /path/three'
+
+    with TestApp(label=label, config_defaults=defaults) as app:
+        app.run()
+        assert tmp.dir in app._meta.template_dirs
+        assert '/path/two' in app._meta.template_dirs
+        assert '/path/three' in app._meta.template_dirs
+
+
+def test_template_dirs_via_config_string_drops_empty_tokens(rando):
+    # malformed comma-separated input (trailing comma, repeated commas,
+    # whitespace-only tokens) must not leave '' in the resolved list,
+    # which would silently resolve to the empty path inside
+    # _setup_template_handler.
+    label = f"app-{rando}"
+    defaults = init_defaults(label)
+    defaults[label]['template_dirs'] = '/path/a,,/path/b, ,/path/c,'
+
+    with TestApp(label=label, config_defaults=defaults) as app:
+        app.run()
+        assert '/path/a' in app._meta.template_dirs
+        assert '/path/b' in app._meta.template_dirs
+        assert '/path/c' in app._meta.template_dirs
+        assert '' not in app._meta.template_dirs
+
+
+def test_template_dirs_via_config_substitution(rando):
+    # config-supplied dirs go through the unchanged
+    # _setup_template_handler precedence loop, which means
+    # ``{label}`` and ``{home_dir}`` placeholders must expand
+    # the same way they do for ``Meta.template_dirs``.
+    label = f"app-{rando}"
+    defaults = init_defaults(label)
+    defaults[label]['template_dirs'] = [
+        '/etc/{label}/templates',
+        '{home_dir}/.{label}/templates',
+    ]
+
+    with TestApp(label=label, config_defaults=defaults) as app:
+        app.run()
+        assert f'/etc/{label}/templates' in app._meta.template_dirs
+        assert (
+            f'{fs.HOME_DIR}/.{label}/templates'
+            in app._meta.template_dirs
+        )
+
+
+def test_template_dirs_via_config_precedence(rando):
+    # config-supplied template_dirs replaces ``Meta.template_dirs``
+    # and sits in that same precedence slot — between
+    # ``core_system_template_dirs`` and ``template_dir`` /
+    # ``core_user_template_dirs``.
+    label = f"app-{rando}"
+    defaults = init_defaults(label)
+    defaults[label]['template_dirs'] = ['/cfg/dir']
+
+    class ThisTestApp(TestApp):
+        class Meta:
+            core_system_template_dirs = ['/sys/dir']
+            core_user_template_dirs = ['/usr/dir']
+            template_dir = '/single/dir'
+            template_dirs = ['/meta/dir/should/be/replaced']
+
+    with ThisTestApp(label=label, config_defaults=defaults) as app:
+        app.run()
+        dirs = app._meta.template_dirs
+
+        # config replaced the Meta value entirely
+        assert '/meta/dir/should/be/replaced' not in dirs
+
+        # precedence chain (lower index = higher precedence after
+        # the final reverse in _setup_template_handler):
+        # core_user > template_dir > template_dirs (from config) > core_system
+        assert dirs.index('/usr/dir') < dirs.index('/single/dir')
+        assert dirs.index('/single/dir') < dirs.index('/cfg/dir')
+        assert dirs.index('/cfg/dir') < dirs.index('/sys/dir')
+
+
 def test_core_system_plugin_dirs(tmp, rando):
     class ThisTestApp(TestApp):
         class Meta:

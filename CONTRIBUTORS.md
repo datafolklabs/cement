@@ -23,3 +23,4 @@ documentation, or testing:
 - Christian Hengl (rednar)
 - sigma67
 - Blake Jameson (blakejameson)
+- Tom Freudenberg (TomFreudenberg)

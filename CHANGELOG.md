@@ -147,7 +147,13 @@ Bugs:
 
 Features:
 
-- None
+- `[core.foundation]` Support config override of `App.Meta.template_dirs`
+  via the `[<app>]` section. Accepts a list (under config handlers with
+  native list support, e.g. `ext_yaml` or `ext_json`) or a comma-separated
+  string (required for the default `ext_configparser` / INI handler).
+  String form is split + whitespace-trimmed, parallel to the existing
+  `extensions` config handling.
+  - [Issue #746](https://github.com/datafolklabs/cement/issues/746)
 
 Refactoring:
 
