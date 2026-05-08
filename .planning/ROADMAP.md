@@ -18,7 +18,7 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
 - [x] **Phase 2: Dependencies & CI Pipeline** - Refresh deps, unblock the `pdm update` Action, get the matrix green (completed 2026-05-02; D-19 #1 PR-CI-green and #3 post-merge workflow_dispatch deferred to live-CI verification — see 02-VERIFICATION.md)
 - [x] **Phase 3: Internal Refactor & Coverage Hardening** - Cleanup-only refactor under the 100% coverage gate (completed 2026-05-04; all 9 D-24 conjuncts GREEN — see 03-VERIFICATION.md)
 - [x] **Phase 4: Backlog Triage** - Bulk-close stale issues with user approval, label and prioritize survivors (completed 2026-05-05 via manual pass outside GSD; see 04-NOTE.md)
-- [ ] **Phase 5: Deprecations, Docs & Security Stubs** - Add warn-only deprecations, refresh docs, capture audit-tooling backlog
+- [x] **Phase 5: Deprecations, Docs & Security Stubs** - Add warn-only deprecations, refresh docs, capture audit-tooling backlog (completed 2026-05-08; 12/12 must-haves verified — see 05-VERIFICATION.md)
 - [ ] **Phase 6: Release Cut 3.0.16** - Changelog, TestPyPI smoke test, tag, GitHub release, PyPI publish, bump to 3.0.17
 
 ## Phase Details
@@ -206,7 +206,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6. Phases 3 and 4
 | 2. Dependencies & CI Pipeline | 0/TBD | Not started | - |
 | 3. Internal Refactor & Coverage Hardening | 8/8 | Complete   | 2026-05-04 |
 | 4. Backlog Triage | manual | Complete   | 2026-05-05 |
-| 5. Deprecations, Docs & Security Stubs | 0/6 | Not started | - |
+| 5. Deprecations, Docs & Security Stubs | 6/6 | Complete   | 2026-05-08 |
 | 6. Release Cut 3.0.16 | 0/TBD | Not started | - |
 
 ---
