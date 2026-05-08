@@ -325,6 +325,8 @@ Misc:
   REFACTOR-01..04 + COV-01..03 satisfied; ROADMAP updated.
 - `[docs]` Drop unsupported 'logo' theme option from sphinx conf
 - `[docs]` Wire api/index into top-level toctree
+- `[docs]` Rename `display_version` theme option to `version_selector`
+  (sphinx_rtd_theme 3.x rename)
 
 Deprecations:
 

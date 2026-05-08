@@ -20,7 +20,7 @@ html_theme_options = {
     'canonical_url': '',
     'analytics_id': '',
     'logo_only': False,
-    'display_version': True,
+    'version_selector': True,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
     'vcs_pageview_mode': '',
