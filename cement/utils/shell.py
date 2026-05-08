@@ -32,8 +32,8 @@ def cmd(command: str,
         kwargs: Additional keyword arguments are passed to ``Popen()``.
 
     Returns:
-        tuple: When ``capture==True``, returns ``(stdout, stderror, return_code)``
-            of the command. ``stdout`` and ``stderror`` are ``bytes`` (the
+        tuple: When ``capture==True``, returns ``(stdout, stderr, return_code)``
+            of the command. ``stdout`` and ``stderr`` are ``bytes`` (the
             ``Popen`` default); decode with the appropriate encoding if string
             output is needed, or pass ``text=True`` or ``encoding=...`` through
             ``**kwargs``.
@@ -84,8 +84,8 @@ def exec_cmd(cmd_args: str | list[str],
         kwargs: Additional keyword arguments are passed to ``Popen()``.
 
     Returns:
-        tuple: The ``(stdout, stderror, return_code)`` of the command.
-            ``stdout`` and ``stderror`` are ``bytes`` (the ``Popen``
+        tuple: The ``(stdout, stderr, return_code)`` of the command.
+            ``stdout`` and ``stderr`` are ``bytes`` (the ``Popen``
             default); decode with the appropriate encoding if string
             output is needed, or pass ``text=True`` / ``encoding=...``
             through ``**kwargs``.
