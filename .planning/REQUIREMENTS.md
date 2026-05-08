@@ -50,10 +50,10 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 
 ### Issue Backlog Triage
 
-- [ ] **TRIAGE-01**: Open GitHub issues exported and bucketed (close-stale, close-wontfix, close-duplicate, real-bug, feature-request, question)
-- [ ] **TRIAGE-02**: User-approved batch closures applied with consistent comment template explaining policy
-- [ ] **TRIAGE-03**: Surviving issues labeled (`bug`, `cement-3-fix`, `cement-4-candidate`, `docs`, `help-wanted`) and prioritized
-- [ ] **TRIAGE-04**: Real bugs discovered during triage either fixed in this milestone or recorded as backlog items with explicit deferral rationale
+- [x] **TRIAGE-01**: Open GitHub issues exported and bucketed (close-stale, close-wontfix, close-duplicate, real-bug, feature-request, question) — Closed via manual pass (Phase 04, 2026-05-05); no formal snapshot artifact produced — maintainer reviewed in-place against the live backlog (see 04-NOTE.md)
+- [x] **TRIAGE-02**: User-approved batch closures applied with consistent comment template explaining policy — Closed via manual pass (Phase 04, 2026-05-05); closure comment template recorded in 04-NOTE.md
+- [x] **TRIAGE-03**: Surviving issues labeled (`bug`, `cement-3-fix`, `cement-4-candidate`, `docs`, `help-wanted`) and prioritized — Closed via manual pass (Phase 04, 2026-05-05); handled in-place by maintainer
+- [x] **TRIAGE-04**: Real bugs discovered during triage either fixed in this milestone or recorded as backlog items with explicit deferral rationale — Closed via manual pass (Phase 04, 2026-05-05); handled in-place by maintainer
 
 ### Internal Refactor
 
@@ -148,10 +148,10 @@ Populated by the roadmapper during phase mapping.
 | DOCS-02 | Phase 5 | Pending |
 | DOCS-03 | Phase 6 | Pending |
 | DOCS-04 | Phase 5 | Pending |
-| TRIAGE-01 | Phase 4 | Pending |
-| TRIAGE-02 | Phase 4 | Pending |
-| TRIAGE-03 | Phase 4 | Pending |
-| TRIAGE-04 | Phase 4 | Pending |
+| TRIAGE-01 | Phase 4 | Closed (manual, 04-NOTE.md) |
+| TRIAGE-02 | Phase 4 | Closed (manual, 04-NOTE.md) |
+| TRIAGE-03 | Phase 4 | Closed (manual, 04-NOTE.md) |
+| TRIAGE-04 | Phase 4 | Closed (manual, 04-NOTE.md) |
 | REFACTOR-01 | Phase 3 | Validated (Phase 03 Plan 08 — D-20 acceptance via 100% coverage gate) |
 | REFACTOR-02 | Phase 3 | Validated (Phase 03 Plan 05 — D-09 Any-tightening; 41 → 40; D-24 #6) |
 | REFACTOR-03 | Phase 3 | Validated (Phase 03 Plan 06) |
@@ -175,4 +175,4 @@ Populated by the roadmapper during phase mapping.
 
 ---
 *Requirements defined: 2026-04-24*
-*Last updated: 2026-04-24 after roadmap mapping*
+*Last updated: 2026-05-05 after Phase 04 manual completion (TRIAGE-01..04 closed)*
