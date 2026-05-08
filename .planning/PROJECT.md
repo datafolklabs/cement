@@ -40,11 +40,11 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - [ ] **CI pipeline green**: all matrix jobs passing across supported Python versions; PDM auto-update resumes without drowning in lint
 - [x] **Python 3.9 dropped per EOL policy**: floor raised to 3.10; Python matrix = 3.10–3.14 — Validated in Phase 01
 - [ ] **Test coverage held at 100%**: every change lands with tests; coverage gate remains absolute
-- [ ] **Docs build healthy**: Sphinx builds cleanly; no broken refs; contributor docs accurate
+- [x] **Docs build healthy**: Sphinx builds cleanly; no broken refs; contributor docs accurate — Validated in Phase 05 (4+1 warnings cleared; `make docs -W` enforces zero-warnings; CONTRIBUTING aligned with Conventional Commits)
 - [ ] **GitHub issue backlog triaged**: batch close stale/wontfix/duplicate with user approval; label survivors; spin real bugs into fix-phases
 - [ ] **Internal-only refactor**: dead code removed, type hints tightened, modern stdlib idioms (pathlib, contextlib helpers, `cached_property`) — no public API changes, no architectural shifts. Cement 4 is unscoped and stays that way during this milestone.
-- [ ] **Deprecation warnings added (warn-only)**: surfaces emit `DeprecationWarning` now; actual removals are scheduled for 3.2.0
-- [ ] **Audit-tooling stub**: backlog item captured for pip-audit / bandit / SAST — spec'd but not implemented this milestone
+- [x] **Deprecation warnings added (warn-only)**: surfaces emit `DeprecationWarning` now; actual removals are scheduled for 3.2.0 — Validated in Phase 05 (DEPRECATIONS dict pinned to v3.2.0; repo-root `DEPRECATIONS.md` added; runtime warning formatting fixed)
+- [x] **Audit-tooling stub**: backlog item captured for pip-audit / bandit / SAST — spec'd but not implemented this milestone — Validated in Phase 05 (REQUIREMENTS.md SECv2-01..03 expanded with phase-shaped scope notes)
 - [ ] **Release cut: Cement 3.0.16**: tagged release, changelog, PyPI publish
 
 ### Out of Scope
@@ -118,4 +118,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-30 after Phase 01 completion (tooling-baseline-python-matrix)*
+*Last updated: 2026-05-08 after Phase 05 completion (deprecations-docs-security-stubs)*
