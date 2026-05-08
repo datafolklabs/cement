@@ -156,7 +156,32 @@ Plans:
   3. `make docs` builds Sphinx docs with zero warnings and no broken cross-references; README and CONTRIBUTING walkthroughs run end-to-end against the 3.0.16 development tree without errors
   4. Public API docstrings have been swept for staleness — examples that don't run are corrected or removed (a sampling round-trip on representative examples passes)
   5. SEC-01/02/03 backlog items exist (issues or planning entries) with phase-shaped scope notes for `pip-audit`, `bandit`, and CodeQL/Semgrep — sufficient for a future milestone to pick up without re-discovery
-**Plans**: TBD
+**Plans**: 6 plans across 6 waves (linearized — CHANGELOG.md file conflicts force serial waves; matches Phase 2 precedent)
+
+  **Wave 1**
+  - [ ] 05-01-PLAN.md — Tighten DEPRECATIONS registry + adjacent docstring sweep (commits 1, 2, 3 of D-16)
+
+  **Wave 2** *(blocked on Wave 1 completion)*
+  - [ ] 05-02-PLAN.md — Resolve all 4 known sphinx warnings (commits 5, 6, 7, 8 of D-16)
+
+  **Wave 3** *(blocked on Wave 2 completion)*
+  - [ ] 05-03-PLAN.md — Add top-level DEPRECATIONS.md mirroring GitBook narrative (commit 4 of D-16)
+
+  **Wave 4** *(blocked on Waves 2 + 3 completion — sphinx clean is prerequisite for -W flip)*
+  - [ ] 05-04-PLAN.md — Wire -W into make docs + AUDIT POINT comment (commit 9 of D-16)
+
+  **Wave 5** *(blocked on Wave 4 completion)*
+  - [ ] 05-05-PLAN.md — Drop Travis from README + align CONTRIBUTING with Conventional Commits + DOCS-04 sweep (commits 10, 11, optional 12 of D-16)
+
+  **Wave 6** *(blocked on Wave 5 completion — final planning-artifact wave)*
+  - [ ] 05-06-PLAN.md — Sync CONVENTIONS.md ruff target-version + expand SECv2-01..03 with phase-shaped scope notes (commits 13, 14 of D-16; planning-artifact, NO CHANGELOG entries)
+
+  **Cross-cutting constraints** *(applies to every plan)*
+  - 100% coverage gate must remain green after each commit (Phase 2 D-10/D-11)
+  - All commits follow Conventional Commits + 78-char wrap (CLAUDE.md)
+  - CHANGELOG.md `## 3.0.15 - DEVELOPMENT` updated phase-by-phase per CLAUDE.md (commits 13 + 14 are planning-artifact and get NO CHANGELOG entry per RESEARCH.md Pitfall 7)
+  - `make audit-public-api` exit 0 enforced byte-for-byte across every commit (Phase 3 D-04 / Phase 5 D-18 #3)
+  - `make docs` (post-Wave 4) must exit 0 with -W enabled — zero warnings (Phase 5 D-09)
 
 ### Phase 6: Release Cut 3.0.16
 **Goal**: Cut the 3.0.16 release: finalize the changelog, validate the release workflow against TestPyPI, tag, publish to PyPI, and bump the dev version to 3.0.17 per odd/even convention.
@@ -181,7 +206,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6. Phases 3 and 4
 | 2. Dependencies & CI Pipeline | 0/TBD | Not started | - |
 | 3. Internal Refactor & Coverage Hardening | 8/8 | Complete   | 2026-05-04 |
 | 4. Backlog Triage | manual | Complete   | 2026-05-05 |
-| 5. Deprecations, Docs & Security Stubs | 0/TBD | Not started | - |
+| 5. Deprecations, Docs & Security Stubs | 0/6 | Not started | - |
 | 6. Release Cut 3.0.16 | 0/TBD | Not started | - |
 
 ---
