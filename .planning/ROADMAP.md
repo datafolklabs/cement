@@ -168,7 +168,7 @@ Plans:
   - [x] 05-03-PLAN.md — Add top-level DEPRECATIONS.md mirroring GitBook narrative (commit 4 of D-16)
 
   **Wave 4** *(blocked on Waves 2 + 3 completion — sphinx clean is prerequisite for -W flip)*
-  - [ ] 05-04-PLAN.md — Wire -W into make docs + AUDIT POINT comment (commit 9 of D-16)
+  - [x] 05-04-PLAN.md — Wire -W into make docs + AUDIT POINT comment (commit 9 of D-16)
 
   **Wave 5** *(blocked on Wave 4 completion)*
   - [ ] 05-05-PLAN.md — Drop Travis from README + align CONTRIBUTING with Conventional Commits + DOCS-04 sweep (commits 10, 11, optional 12 of D-16)
