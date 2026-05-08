@@ -78,5 +78,4 @@ canonical commit-shape doc.
 [Open Source Initiative]: http://www.opensource.org
 [issue tracker]: http://github.com/datafolklabs/cement/issues
 [PEP8]: http://www.python.org/dev/peps/pep-0008/
-[Commit Guidelines]: http://git-scm.com/book/en/Distributed-Git-Contributing-to-a-Project#Commit-Guidelines
 [Conventional Commits]: https://www.conventionalcommits.org/
