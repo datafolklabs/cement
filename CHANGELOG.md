@@ -136,6 +136,14 @@ Bugs:
   rather than a contract regression on a load-bearing surface.
 - `[core.interface]` String-quote list[str] return annotation for
   autodoc compatibility
+- `[core.deprecations]` Drop trailing period from the `3.0.10-1`
+  deprecation message — `deprecate()` appends `". See: ..."`, so a
+  pre-existing trailing period rendered as `..` in the runtime
+  warning. The other three entries already follow the implicit
+  no-trailing-period invariant
+- `[dev]` `make docs` zero-warnings gate now uses `&&` (was `;`),
+  so the recipe correctly fails on Sphinx warnings instead of
+  silently succeeding via the trailing `cd ..` exit code
 
 Features:
 
