@@ -48,9 +48,6 @@ html_theme_options = {
 #     ]
 # }
 #
-html_theme_options = {
-    'logo': 'logo-text.png',
-}
 
 # html_theme_path = guzzle_sphinx_theme.html_theme_path()
 # html_theme = 'alabaster'

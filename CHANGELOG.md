@@ -321,6 +321,7 @@ Misc:
   `03-VERIFICATION.md`.
 - `[dev]` Phase 03 (Internal Refactor & Coverage Hardening) complete:
   REFACTOR-01..04 + COV-01..03 satisfied; ROADMAP updated.
+- `[docs]` Drop unsupported 'logo' theme option from sphinx conf
 
 Deprecations:
 
