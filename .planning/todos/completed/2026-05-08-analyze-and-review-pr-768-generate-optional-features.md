@@ -1,10 +1,13 @@
 ---
 created: 2026-05-08T18:32:34.201Z
+completed: 2026-05-09T00:56:29.589Z
 title: Analyze and review GitHub PR #768
 area: ext.generate
 files:
   - cement/ext/ext_generate.py
   - cement/cli/templates/generate/
+outcome: PR #768 merged (update-in-place — rebased onto main, applied 3 CR bug fixes + lazy-prompt refactor + null-safe YAML keys)
+followup: docs TODO captured for post-3.0.16 GitBook guide (see issue #778)
 ---
 
 ## Problem
