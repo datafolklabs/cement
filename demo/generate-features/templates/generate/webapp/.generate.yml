@@ -8,6 +8,7 @@ variables:
 
 features:
     -   name: docker
+        prompt_mode: boolean
         default: true
         enabled:
             variables:
@@ -20,9 +21,37 @@ features:
                 - '.*\.dockerignore.*'
 
     -   name: docker_compose
+        prompt_mode: boolean
         default: true
         requires:
             - docker
         disabled:
             ignore:
                 - '.*docker-compose.*'
+
+    -   name: web_framework
+        prompt_mode: select
+        prompt: "Web Framework"
+        default: "none"
+        options:
+            -   value: "none"
+                prompt: "None — no web framework"
+                ignore:
+                    - '.*requirements\.txt.*'
+                    - '.*wsgi\.py.*'
+            -   value: "flask"
+                prompt: "Flask Web Framework"
+                variables:
+                    -   name: framework_version
+                        prompt: false
+                        default: "3.0"
+                ignore:
+                    - '.*fastapi.*'
+            -   value: "fastapi"
+                prompt: "FastAPI Web Framework"
+                variables:
+                    -   name: framework_version
+                        prompt: false
+                        default: "0.115"
+                ignore:
+                    - '.*flask.*'
