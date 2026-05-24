@@ -1,0 +1,9 @@
+---
+
+variables:
+    -   name: app_name
+        prompt: App Name
+        default: myapp
+    -   name: silent_top
+        prompt: false
+        default: "top_level_silent_value"

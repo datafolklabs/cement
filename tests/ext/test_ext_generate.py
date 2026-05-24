@@ -364,3 +364,193 @@ def test_generate_template_module_transitive_import_error(tmp):
         with TransitiveBadApp(argv=argv,
                               template_dir='tests/data/templates') as app:
             app.run()
+
+
+# ─── #779: prompt_mode: select multi-valued feature prompts ─────────────
+
+
+def test_generate_features_select_defaults(tmp):
+    # test16: prompt_mode: select with three options; --defaults
+    # dispatches to the feature default ("N") and applies that
+    # branch's ignore patterns (suppresses branch-1-only,
+    # branch-2-only); branch-N-file and take-me remain.
+    argv = ['generate', 'test16', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        assert exists_join(tmp.dir, 'branch-N-file')
+        assert not exists_join(tmp.dir, 'branch-1-only')
+        assert not exists_join(tmp.dir, 'branch-2-only')
+
+
+def test_generate_features_select_collision(tmp):
+    # test17: prompt_mode: select + enabled:/disabled: blocks on the
+    # same feature → ValueError at config validation.
+    argv = ['generate', 'test17', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError,
+                    match="'enabled'/'disabled' blocks are not allowed"):
+            app.run()
+
+
+def test_generate_features_select_invalid_prompt_mode(tmp):
+    # test18: prompt_mode: bogus → ValueError (whitelist enforced).
+    argv = ['generate', 'test18', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="invalid prompt_mode 'bogus'"):
+            app.run()
+
+
+def test_generate_features_select_silent_variable(tmp):
+    # test19: prompt_mode: select; --defaults dispatches into the "1"
+    # branch which carries a silent variable `chosen_version: v1-silent`
+    # (prompt: false). The silent variable's default lands verbatim in
+    # the rendered output.
+    argv = ['generate', 'test19', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            assert 'v1-silent' in f.read()
+
+
+def test_generate_features_select_default_not_in_values(tmp):
+    # test20: feature default "X" but options only contains "Y" →
+    # ValueError at config validation.
+    argv = ['generate', 'test20', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="is not in options values"):
+            app.run()
+
+
+def test_generate_features_select_missing_value(tmp):
+    # test21: an options branch missing value: → ValueError.
+    argv = ['generate', 'test21', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="missing required key: value"):
+            app.run()
+
+
+def test_generate_features_top_level_silent_variable(tmp):
+    # test22: top-level variable with `prompt: false` — silent
+    # sentinel works outside select-mode features too. The default
+    # lands verbatim in the rendered output.
+    argv = ['generate', 'test22', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me-silent')
+        with open(os.path.join(tmp.dir, 'take-me-silent')) as f:
+            res = f.read()
+            assert 'myapp' in res
+            assert 'top_level_silent_value' in res
+
+
+def test_generate_features_legacy_null_variables(tmp):
+    # test23: regression — legacy boolean feature with
+    # `enabled: { variables: null, exclude: null, ignore: null }`
+    # must coalesce safely via the `block.get(...) or []` form on
+    # the legacy merge path.
+    argv = ['generate', 'test23', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+
+
+def test_generate_features_select_null_variables(tmp):
+    # test24: regression — select-mode options branch with
+    # `variables: null, exclude: null, ignore: null` must coalesce
+    # safely via the same `block.get(...) or []` form on the select
+    # merge path.
+    argv = ['generate', 'test24', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+
+
+def test_generate_features_select_requires_cascade(tmp):
+    # test25: select-mode feature has `requires: [bool_prereq]` where
+    # bool_prereq defaults to false. The cascade returns False for
+    # the select feature, the merge falls into the legacy
+    # `state is bool` branch with no `disabled:` block (not allowed
+    # in select mode), and the options-branch ignore patterns DO NOT
+    # fire — `should-not-appear-1` remains in the rendered tree.
+    argv = ['generate', 'test25', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        assert exists_join(tmp.dir, 'should-not-appear-1')
+
+
+def test_generate_features_select_empty_options(tmp):
+    # test26: prompt_mode: select with `options: []` → ValueError.
+    argv = ['generate', 'test26', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="no 'options' branches"):
+            app.run()
+
+
+def test_generate_features_silent_variable_no_default(tmp):
+    # test27: top-level `prompt: false` variable with no `default:` →
+    # AssertionError from the silent-variable short-circuit.
+    argv = ['generate', 'test27', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(AssertionError,
+                    match="prompt: false but no default"):
+            app.run()
+
+
+def test_generate_features_select_missing_default(tmp):
+    # test28: prompt_mode: select feature with no `default:` →
+    # ValueError. Without `default`, --defaults dispatch would
+    # silently no-op (str(None) matches no option); fail-fast at
+    # validation per CONTEXT.md Decision F.
+    argv = ['generate', 'test28', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="has no 'default' value"):
+            app.run()
+
+
+def test_generate_features_silent_variable_non_str_default(tmp):
+    # test29: silent variable with a YAML-decoded non-string default
+    # (`default: false` → Python bool) + `case: upper`. The silent
+    # short-circuit must coerce to str BEFORE the case operation runs;
+    # otherwise `False.upper()` raises AttributeError.
+    argv = ['generate', 'test29', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            # `case: upper` applied to str(False) → "FALSE".
+            assert 'silent_flag=FALSE' in f.read()
+
+
+def test_generate_features_select_duplicate_labels(tmp):
+    # test30: two options with the same effective display label
+    # ("Same Label") → ValueError. The numbered list would be
+    # ambiguous so we reject at config-validation time.
+    argv = ['generate', 'test30', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="duplicate option labels"):
+            app.run()

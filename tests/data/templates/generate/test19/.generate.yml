@@ -1,0 +1,25 @@
+---
+
+variables:
+    -   name: app_name
+        prompt: App Name
+        default: myapp
+
+features:
+    -   name: feature_choice
+        prompt_mode: select
+        prompt: "Pick a version"
+        default: "1"
+        options:
+            -   value: "1"
+                prompt: "Version One"
+                variables:
+                    -   name: chosen_version
+                        prompt: false
+                        default: "v1-silent"
+            -   value: "2"
+                prompt: "Version Two"
+                variables:
+                    -   name: chosen_version
+                        prompt: false
+                        default: "v2-silent"
