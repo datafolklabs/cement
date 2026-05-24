@@ -4,7 +4,7 @@ ifneq ($(CURDIR),$(patsubst %/,%,$(ROOT_DIR)))
 $(error Must run make from the project root: $(ROOT_DIR))
 endif
 
-.PHONY: init dev up down test test-core cli-smoke-test audit-public-api comply-fix commit docs clean superclean dist dist-upload docker docker-push
+.PHONY: init dev up down test test-core cli-smoke-test audit-public-api comply-fix commit diff docs clean superclean dist dist-upload docker docker-push
 
 init:
 	devbox install
@@ -58,6 +58,9 @@ comply-mypy:
 
 commit:
 	pdm run cz commit
+
+diff:
+	@git diff main...HEAD -- . ':!.planning'
 
 docs:
 	# AUDIT POINT (Phase 5 D-09): -W enforces zero docs warnings.
