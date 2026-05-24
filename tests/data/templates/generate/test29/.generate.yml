@@ -1,0 +1,10 @@
+---
+
+variables:
+    -   name: app_name
+        prompt: App Name
+        default: myapp
+    -   name: silent_flag
+        prompt: false
+        default: false
+        case: upper

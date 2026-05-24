@@ -47,15 +47,75 @@ class GenerateTemplateAbstractBase(Controller):
                         f"Feature '{feature['name']}' requires unknown "
                         f"feature '{req}'")
 
+        # `prompt_mode` whitelist + select-mode schema validation. Runs
+        # up front so misconfigurations surface before any prompt is
+        # shown (matches the existing `requires` validation discipline).
+        # Default is 'boolean' (legacy semantics, byte-identical to the
+        # pre-#779 code path); 'select' opts in to the multi-valued
+        # numbered-list flow built on shell.Prompt.
+        for feature in features:
+            mode = feature.get('prompt_mode', 'boolean')
+            if mode not in ('boolean', 'select'):
+                raise ValueError(
+                    f"Feature '{feature['name']}' has invalid "
+                    f"prompt_mode '{mode}' "
+                    f"(must be 'boolean' or 'select')")
+            if mode == 'boolean':
+                continue
+            if 'enabled' in feature or 'disabled' in feature:
+                raise ValueError(
+                    f"Feature '{feature['name']}' uses prompt_mode: "
+                    f"select; 'enabled'/'disabled' blocks are not "
+                    f"allowed in this mode")
+            options = feature.get('options') or []
+            if not options:
+                raise ValueError(
+                    f"Feature '{feature['name']}' uses prompt_mode: "
+                    f"select but has no 'options' branches")
+            values: list[str] = []
+            labels: list[str] = []
+            for opt in options:
+                if opt.get('value') is None:
+                    raise ValueError(
+                        f"Feature '{feature['name']}' has an 'options' "
+                        f"branch missing required key: value")
+                # YAML may decode unquoted `1` as int; coerce so both
+                # `value: 1` and `value: "1"` compare uniformly against
+                # the resolved feature state (always a str).
+                values.append(str(opt['value']))
+                labels.append(opt.get('prompt') or str(opt['value']))
+            if len(set(labels)) != len(labels):
+                raise ValueError(
+                    f"Feature '{feature['name']}' has duplicate option "
+                    f"labels {labels} — each option's effective display "
+                    f"label (prompt: or str(value)) must be unique so "
+                    f"the numbered selection is unambiguous")
+            # `default` is required for prompt_mode: select. It's the
+            # prompt's default value AND the value `--defaults` dispatches
+            # to without prompting; must itself appear in `options`.
+            if feature.get('default') is None:
+                raise ValueError(
+                    f"Feature '{feature['name']}' uses prompt_mode: "
+                    f"select but has no 'default' value")
+            if str(feature['default']) not in values:
+                raise ValueError(
+                    f"Feature '{feature['name']}' default "
+                    f"'{feature['default']}' is not in options "
+                    f"values {values}")
+
         # Resolve features lazily and recursively so that:
         #   1. resolution is order-independent — a feature may declare
         #      `requires` against another feature defined later in the YAML;
         #   2. interactive runs do not nag the user for a feature whose
         #      `requires` already resolved to False (the prompt is reached
         #      only after every prerequisite returned True).
-        feature_states: dict[str, bool] = {}
+        #
+        # For prompt_mode: select features the state is the chosen
+        # option's `value` (str); for legacy boolean features it is a
+        # bool.
+        feature_states: dict[str, bool | str] = {}
 
-        def _resolve(name: str) -> bool:
+        def _resolve(name: str) -> bool | str:
             if name in feature_states:
                 return feature_states[name]
             feature = feature_by_name[name]
@@ -66,40 +126,98 @@ class GenerateTemplateAbstractBase(Controller):
                     )
                     feature_states[name] = False
                     return False
-            default = bool(feature.get('default', False))
-            if self.app.pargs.defaults:
-                feature_states[name] = default
+            mode = feature.get('prompt_mode', 'boolean')
+            if mode == 'select':
+                # Validation above guarantees `default` is set, is in
+                # `options` values, and that all labels are unique. The
+                # --defaults dispatch is direct; the interactive path
+                # delegates to shell.Prompt for numbered display,
+                # whitelist enforcement, case-insensitive matching,
+                # default fallback, and retry/abort semantics.
+                default = str(feature['default'])
+                if self.app.pargs.defaults:
+                    feature_states[name] = default
+                else:
+                    options = feature['options']  # pragma: nocover
+                    values = [  # pragma: nocover
+                        str(opt['value']) for opt in options
+                    ]
+                    labels = [  # pragma: nocover
+                        opt.get('prompt') or str(opt['value'])
+                        for opt in options
+                    ]
+                    default_label = (  # pragma: nocover
+                        labels[values.index(default)]
+                    )
+                    prompt_text = (  # pragma: nocover
+                        feature.get('prompt') or f"Select Feature: {name}"
+                    )
+
+                    class SelectPrompt(shell.Prompt):  # pragma: nocover
+                        class Meta:
+                            text = prompt_text
+                            options = labels
+                            numbered = True
+                            case_insensitive = True
+                            default = default_label
+
+                    chosen_label = SelectPrompt().prompt()  # pragma: nocover
+                    feature_states[name] = (  # pragma: nocover
+                        values[labels.index(chosen_label)]
+                    )
             else:
-                default_hint = 'Y/n' if default else 'y/N'  # pragma: nocover
-                default_val = 'y' if default else 'n'  # pragma: nocover
+                bool_default = bool(feature.get('default', False))
+                if self.app.pargs.defaults:
+                    feature_states[name] = bool_default
+                else:
+                    default_hint = 'Y/n' if bool_default else 'y/N'  # pragma: nocover
+                    default_val = 'y' if bool_default else 'n'  # pragma: nocover
 
-                class FeaturePrompt(shell.Prompt):  # pragma: nocover
-                    class Meta:
-                        text = f"Enable Feature: {name} [{default_hint}]:"
-                        default = default_val
+                    class BoolFeaturePrompt(shell.Prompt):  # pragma: nocover
+                        class Meta:
+                            text = f"Enable Feature: {name} [{default_hint}]:"
+                            default = default_val
 
-                p = FeaturePrompt(auto=False)  # pragma: nocover
-                val: str = p.prompt() or default_val  # pragma: nocover
-                feature_states[name] = val.lower() == 'y'  # pragma: nocover
+                    bp = BoolFeaturePrompt(auto=False)  # pragma: nocover
+                    bval: str = bp.prompt() or default_val  # pragma: nocover
+                    feature_states[name] = bval.lower() == 'y'  # pragma: nocover
             return feature_states[name]
 
         for feature in features:
             _resolve(feature['name'])
 
-        # merge enabled/disabled configs
+        # merge enabled/disabled/options configs into vars/exclude/ignore
         if 'features' not in data:
             data['features'] = {}
         for feature in features:
             name = feature['name']
-            enabled = feature_states[name]
-            data['features'][name] = enabled
+            state = feature_states[name]
+            data['features'][name] = state
 
-            block_key = 'enabled' if enabled else 'disabled'
-            block = feature.get(block_key) or {}
+            if isinstance(state, bool):
+                # Legacy boolean path — byte-identical to pre-#779.
+                # A select-mode feature disabled via `requires` also
+                # lands here (state == False) — its `options` branches
+                # contribute nothing, matching boolean-`disabled`
+                # semantics for a disabled feature.
+                block_key = 'enabled' if state else 'disabled'
+                block = feature.get(block_key) or {}
+            else:
+                # prompt_mode: select — look up the matched option by
+                # value. Validation guarantees a match exists.
+                block = {}
+                for opt in feature.get('options') or []:
+                    if str(opt['value']) == state:
+                        block = opt
+                        break
 
-            vars.extend(block.get('variables', []))
-            exclude_list.extend(block.get('exclude', []))
-            ignore_list.extend(block.get('ignore', []))
+            # Generalize commit 6895aa52's `or []` idiom from the
+            # top-level YAML keys to the per-block keys so a template
+            # author writing `variables: null` (etc.) inside any block
+            # coalesces safely.
+            vars.extend(block.get('variables') or [])
+            exclude_list.extend(block.get('exclude') or [])
+            ignore_list.extend(block.get('ignore') or [])
 
     def _generate(self, source: str, dest: str) -> None:
         msg = f'Generating {self.app._meta.label} {self._meta.label} in {dest}'
@@ -152,7 +270,19 @@ class GenerateTemplateAbstractBase(Controller):
                     f"Required generate config key missing: {key}"
 
             val: Any = None
-            if var['default'] is not None and self.app.pargs.defaults:
+            if var['prompt'] is False:
+                # Silent variable: `prompt: false` sentinel uses `default`
+                # directly without prompting. case+validate still apply
+                # via the shared block below. str() because the prompted
+                # path always returns str from p.prompt() — the silent
+                # path matches the invariant so YAML-decoded non-string
+                # defaults (bool, int, etc.) don't crash the downstream
+                # case/validate operations (e.g. False.upper()).
+                assert var['default'] is not None, \
+                    f"Variable '{var['name']}' has prompt: false " \
+                    f"but no default"
+                val = str(var['default'])
+            elif var['default'] is not None and self.app.pargs.defaults:
                 val = var['default']
 
             elif var['default'] is not None:

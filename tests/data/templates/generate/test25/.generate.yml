@@ -1,0 +1,21 @@
+---
+
+variables:
+    -   name: app_name
+        prompt: App Name
+        default: myapp
+
+features:
+    -   name: bool_prereq
+        default: false
+
+    -   name: select_dependent
+        prompt_mode: select
+        prompt: "Dependent"
+        default: "X"
+        requires:
+            - bool_prereq
+        options:
+            -   value: "X"
+                ignore:
+                    - '.*should-not-appear.*'

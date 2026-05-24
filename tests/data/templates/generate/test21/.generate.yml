@@ -1,0 +1,14 @@
+---
+
+variables:
+    -   name: app_name
+        prompt: App Name
+        default: myapp
+
+features:
+    -   name: feature_choice
+        prompt_mode: select
+        prompt: "Pick"
+        default: "A"
+        options:
+            -   prompt: "A label with no value key"
