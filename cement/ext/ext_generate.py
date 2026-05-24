@@ -149,9 +149,18 @@ class GenerateTemplateAbstractBase(Controller):
                     default_label = (  # pragma: nocover
                         labels[values.index(default)]
                     )
+                    # Format: leading \n visually separates the
+                    # numbered list from any prior prompt's output;
+                    # trailing ':' matches the boolean feature prompt
+                    # (line 175) and variable prompt (line 296) which
+                    # both hardcode `:` at the end of their format
+                    # strings. Template authors should NOT include
+                    # trailing punctuation in their `prompt:` field
+                    # (same convention as variables).
                     prompt_text = (  # pragma: nocover
                         feature.get('prompt') or f"Select Feature: {name}"
                     )
+                    prompt_text = f"\n{prompt_text}:"  # pragma: nocover
 
                     class SelectPrompt(shell.Prompt):  # pragma: nocover
                         class Meta:
