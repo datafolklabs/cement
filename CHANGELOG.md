@@ -169,6 +169,14 @@ Features:
   feature is disabled). Resolution is order-independent — features may
   declare `requires` against features defined later in the YAML.
   - [Issue #743](https://github.com/datafolklabs/cement/issues/743)
+- `[ext.generate]` Add `prompt_mode: select` for multi-valued feature
+  prompts. A select-mode feature presents a numbered picker (delegated
+  to `cement.utils.shell.Prompt`) and dispatches the chosen value into
+  one of N `options` branches — each branch may declare its own
+  `ignore` / `exclude` / `variables` (incl. silent `prompt: false`
+  variables). `prompt_mode` defaults to `boolean` (legacy behavior,
+  byte-identical when key absent).
+  - [Issue #779](https://github.com/datafolklabs/cement/issues/779)
 
 Refactoring:
 
