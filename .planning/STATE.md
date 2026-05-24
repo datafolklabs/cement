@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 Phase: 6
 Plan: Not started
 Status: Executing Phase 05
-Last activity: 2026-05-08 - Completed quick task 260507-to4: rewrite PR #760 (template_dirs config override)
+Last activity: 2026-05-24 - Completed quick task 260524-g47: prompt_mode: select for ext.generate features (resolves #779)
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
 
@@ -153,11 +153,12 @@ Recent decisions affecting current work:
 
 ### Quick Tasks Completed
 
-| # | Description | Date | Commit | Directory |
-|---|-------------|------|--------|-----------|
-| 260430-3b0 | fix scripts/cli-smoke-test.sh — drop py3.9 default and modernize generated-project install path (phase-1 gap closure) | 2026-04-30 | 020ec7b7 | [260430-3b0-fix-scripts-cli-smoke-test-sh-drop-py3-9](./quick/260430-3b0-fix-scripts-cli-smoke-test-sh-drop-py3-9/) |
-| 260430-i7q | add cli-smoke-test Makefile target wiring scripts/cli-smoke-test.sh | 2026-04-30 | 786a440e | [260430-i7q-add-cli-smoke-test-target-to-makefile-th](./quick/260430-i7q-add-cli-smoke-test-target-to-makefile-th/) |
-| 260507-to4 | rewrite PR #760 — template_dirs config override via core_meta_override (resolves #746) | 2026-05-08 | c25562d5 | [260507-to4-rewrite-pr-760-template-dirs-config-over](./quick/260507-to4-rewrite-pr-760-template-dirs-config-over/) |
+| # | Description | Date | Commit | Status | Directory |
+|---|-------------|------|--------|--------|-----------|
+| 260430-3b0 | fix scripts/cli-smoke-test.sh — drop py3.9 default and modernize generated-project install path (phase-1 gap closure) | 2026-04-30 | 020ec7b7 | | [260430-3b0-fix-scripts-cli-smoke-test-sh-drop-py3-9](./quick/260430-3b0-fix-scripts-cli-smoke-test-sh-drop-py3-9/) |
+| 260430-i7q | add cli-smoke-test Makefile target wiring scripts/cli-smoke-test.sh | 2026-04-30 | 786a440e | | [260430-i7q-add-cli-smoke-test-target-to-makefile-th](./quick/260430-i7q-add-cli-smoke-test-target-to-makefile-th/) |
+| 260507-to4 | rewrite PR #760 — template_dirs config override via core_meta_override (resolves #746) | 2026-05-08 | c25562d5 | | [260507-to4-rewrite-pr-760-template-dirs-config-over](./quick/260507-to4-rewrite-pr-760-template-dirs-config-over/) |
+| 260524-g47 | prompt_mode: select for ext.generate features — multi-valued prompts via shell.Prompt (resolves #779) | 2026-05-24 | 0a8ffcb0 | Complete | [260524-g47-generate-feature-should-support-multiple](./quick/260524-g47-generate-feature-should-support-multiple/) |
 
 ## Session Continuity
 
