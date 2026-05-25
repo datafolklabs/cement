@@ -4,6 +4,10 @@
 
 Bugs:
 
+- `[core.foundation]` Fix `extensions` config-override to honor
+  `Meta.config_section` when it differs from `Meta.label` (was silently
+  using `label`, mirroring the `template_dirs` fix from PR #760) —
+  resolves #777
 - `[ext.smtp]` Fix `timeout` passed as `local_hostname` in SMTP constructors
 - `[ext.smtp]` Fix stale variable reference in `_get_params` for per-message headers
 - `[ext.smtp]` Fix SMTP connection leak when send fails with an exception

@@ -1488,7 +1488,7 @@ class App(meta.MetaMixin):
 
         # load extensions from configuraton file
         if 'extensions' in self.config.keys(self._meta.config_section):
-            exts = self.config.get(label, 'extensions')
+            exts = self.config.get(self._meta.config_section, 'extensions')
 
             # convert a comma-separated string to a list
             if type(exts) is str:
@@ -1498,7 +1498,9 @@ class App(meta.MetaMixin):
                 ext_list = [x.strip() for x in ext_list]
 
                 # set the new extensions value in the config
-                self.config.set(label, 'extensions', ext_list)
+                self.config.set(
+                    self._meta.config_section, 'extensions', ext_list
+                )
 
             # otherwise, if it's a list
             elif type(exts) is list:

@@ -491,6 +491,34 @@ def test_load_extensions_via_config(rando):
         assert 'tabulate' in app._meta.extensions
 
 
+def test_load_extensions_via_config_with_custom_config_section(rando):
+    # regression for #777: when Meta.config_section diverges from
+    # Meta.label, the `extensions` config-override block must read/write
+    # against config_section (mirrors the template_dirs fix from PR #760).
+    # Pre-fix, get/set used `label` while the guard used config_section,
+    # so extensions defined in the divergent section were silently dropped.
+    label = f"app-{rando}"
+    section = f"cfg-{rando}"
+
+    # comma-separated str list (section keyed on config_section, not label)
+    defaults = init_defaults(section)
+    defaults[section]['extensions'] = 'json,yaml'
+    with TestApp(label=label, config_section=section,
+                 config_defaults=defaults) as app:
+        app.run()
+        assert 'json' in app._meta.extensions
+        assert 'yaml' in app._meta.extensions
+
+    # list
+    defaults = init_defaults(section)
+    defaults[section]['extensions'] = ['jinja2', 'tabulate']
+    with TestApp(label=label, config_section=section,
+                 config_defaults=defaults) as app:
+        app.run()
+        assert 'jinja2' in app._meta.extensions
+        assert 'tabulate' in app._meta.extensions
+
+
 def test_define_hooks_via_meta():
     with TestApp(define_hooks=['my_custom_hook']) as app:
         assert app.hook.defined('my_custom_hook') is True
