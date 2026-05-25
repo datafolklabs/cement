@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 Phase: 6
 Plan: Not started
 Status: Executing Phase 05
-Last activity: 2026-05-24 - Completed quick task 260524-g47: prompt_mode: select for ext.generate features (resolves #779)
+Last activity: 2026-05-25 - Completed quick task 260524-re9: extensions config-override honors Meta.config_section (resolves #777)
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
 
@@ -138,7 +138,6 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- [`2026-05-08-resolve-issue-777-extensions-config-section`](./todos/pending/2026-05-08-resolve-issue-777-extensions-config-section.md) — analyze and resolve [#777](https://github.com/datafolklabs/cement/issues/777) (extensions config-override uses `Meta.label` instead of `Meta.config_section`; pickup after #760 merges)
 - [`2026-05-09-document-optional-features-in-gitbook-post-3-0-16`](./todos/pending/2026-05-09-document-optional-features-in-gitbook-post-3-0-16.md) — author GitBook developer guide for `ext.generate` optional features ([#778](https://github.com/datafolklabs/cement/issues/778)); **blocked on 3.0.16 release cut**
 
 ### Plan-Phase Gate Overrides
@@ -159,9 +158,10 @@ Recent decisions affecting current work:
 | 260430-i7q | add cli-smoke-test Makefile target wiring scripts/cli-smoke-test.sh | 2026-04-30 | 786a440e | | [260430-i7q-add-cli-smoke-test-target-to-makefile-th](./quick/260430-i7q-add-cli-smoke-test-target-to-makefile-th/) |
 | 260507-to4 | rewrite PR #760 — template_dirs config override via core_meta_override (resolves #746) | 2026-05-08 | c25562d5 | | [260507-to4-rewrite-pr-760-template-dirs-config-over](./quick/260507-to4-rewrite-pr-760-template-dirs-config-over/) |
 | 260524-g47 | prompt_mode: select for ext.generate features — multi-valued prompts via shell.Prompt (resolves #779) | 2026-05-24 | 0a8ffcb0 | Complete | [260524-g47-generate-feature-should-support-multiple](./quick/260524-g47-generate-feature-should-support-multiple/) |
+| 260524-re9 | fix extensions config-override to honor Meta.config_section (mirrors PR #760 template_dirs fix; resolves #777) | 2026-05-25 | f8a62e98 | Complete | [260524-re9-resolve-issue-777-fix-extensions-config-](./quick/260524-re9-resolve-issue-777-fix-extensions-config-/) |
 
 ## Session Continuity
 
-Last session: 2026-05-07T19:57:50.715Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-deprecations-docs-security-stubs/05-CONTEXT.md
+Last session: 2026-05-25
+Stopped at: Completed quick task 260524-re9 (#777 extensions config-section parity) — commit f8a62e98
+Resume file: .planning/STATE.md
