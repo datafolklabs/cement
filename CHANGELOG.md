@@ -187,6 +187,23 @@ Features:
   variables). `prompt_mode` defaults to `boolean` (legacy behavior,
   byte-identical when key absent).
   - [Issue #779](https://github.com/datafolklabs/cement/issues/779)
+- `[ext.generate]` Add `type: choice` template variables — a numbered
+  `cement.utils.shell.Prompt` picker that emits the chosen option string
+  at the top level of the render context. `options:` accepts a scalar
+  list or per-option `{value, prompt}` objects; per-option effects live
+  in `extend:` rules keyed by `when: <value>`. Misconfig (empty options,
+  option missing `value`, default not in options, duplicate labels) is
+  fail-fast `ValueError`.
+- `[ext.generate]` `type: boolean` `prompt:` is now polymorphic —
+  in addition to the framework-owned string form and the silent
+  `prompt: false` form, an object form `{text, accept, reject}` lets the
+  template author own the full prompt text and supply case-insensitive
+  `accept:`/`reject:` token lists that map input to a real bool. Input
+  matching neither asserts and aborts (`Invalid Response`), mirroring
+  `validate:`. A bool-like `accept:`/`reject:` token that YAML 1.1
+  coerced to a Python bool raises `ValueError` telling the author to
+  quote it.
+  - [Issue #782](https://github.com/datafolklabs/cement/issues/782)
 
 Refactoring:
 
