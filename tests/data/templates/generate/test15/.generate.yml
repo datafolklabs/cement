@@ -1,30 +1,30 @@
 ---
 
+# Out-of-order requires: feature_b requires feature_a, but feature_b is
+# declared FIRST in the YAML. Both default to true. The lazy recursive
+# resolver resolves feature_a on demand when feature_b's requires gate is
+# checked, so resolution is order-independent and both stay enabled.
+
 variables:
 
 -   name: app_name
     prompt: App Name
     default: myapp
 
-# Out-of-order requires: feature_b requires feature_a, but feature_b is
-# declared FIRST in the YAML. Both default to true. The buggy single-pass
-# resolver would auto-disable feature_b because feature_a's state has not
-# been computed when feature_b is processed. The two-pass / fixpoint
-# resolver computes all states first, then cascades, so feature_b stays
-# enabled here.
-
-features:
-
 -   name: feature_b
+    type: boolean
     default: true
     requires:
         - feature_a
-    disabled:
-        ignore:
-            - '.*feature_b-only.*'
+    extend:
+        -   when: false
+            ignore:
+                - '.*feature_b-only.*'
 
 -   name: feature_a
+    type: boolean
     default: true
-    disabled:
-        ignore:
-            - '.*feature_a-only.*'
+    extend:
+        -   when: false
+            ignore:
+                - '.*feature_a-only.*'

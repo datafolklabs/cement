@@ -1,31 +1,41 @@
 ---
 
+# Transitive requires: feature1 (false) gates feature2, which gates
+# feature3. Each gated-out variable renders as its own `default` (Q1).
+# feature2/feature3 default to false so the cascade propagates: a
+# gated-out var's resolved value is its default, and a falsy default
+# means downstream `requires` against it also fail.
+
 variables:
 
 -   name: app_name
     prompt: App Name
     default: myapp
 
-features:
-
 -   name: feature1
+    type: boolean
     default: false
-    disabled:
-        ignore:
-            - '.*feature1-only.*'
+    extend:
+        -   when: false
+            ignore:
+                - '.*feature1-only.*'
 
 -   name: feature2
-    default: true
+    type: boolean
+    default: false
     requires:
         - feature1
-    disabled:
-        ignore:
-            - '.*feature2-only.*'
+    extend:
+        -   when: true
+            ignore:
+                - '.*feature2-only.*'
 
 -   name: feature3
-    default: true
+    type: boolean
+    default: false
     requires:
         - feature2
-    disabled:
-        ignore:
-            - '.*feature3-only.*'
+    extend:
+        -   when: true
+            ignore:
+                - '.*feature3-only.*'

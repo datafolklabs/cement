@@ -1,0 +1,26 @@
+---
+
+# Q1: a requires-gated-out variable is set to its `default` at
+# data[name] (so {{ dependent }} renders "fallback" and never
+# KeyErrors), AND its extend rules do NOT fire (should-be-kept
+# survives even though the `when` would match the default value).
+
+variables:
+    -   name: app_name
+        prompt: App Name
+        default: myapp
+
+    -   name: prereq
+        type: boolean
+        default: false
+
+    -   name: dependent
+        type: string
+        prompt: false
+        default: "fallback"
+        requires:
+            - prereq
+        extend:
+            -   when: "fallback"
+                ignore:
+                    - '.*should-be-kept.*'

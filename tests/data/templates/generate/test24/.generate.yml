@@ -5,13 +5,13 @@ variables:
         prompt: App Name
         default: myapp
 
-features:
     -   name: feature_choice
-        prompt_mode: select
+        type: choice
         prompt: "Pick"
         default: "A"
-        options:
-            -   value: "A"
+        options: ["A"]
+        extend:
+            -   when: "A"
                 variables: null
                 exclude: null
                 ignore: null

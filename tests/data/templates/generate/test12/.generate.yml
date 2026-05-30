@@ -6,8 +6,11 @@ variables:
     prompt: App Name
     default: myapp
 
-features:
-
 -   name: feature1
+    type: boolean
     default: true
-    enabled:
+    extend:
+        -   when: true
+            variables:
+            exclude:
+            ignore:

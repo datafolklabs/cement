@@ -6,6 +6,5 @@ variables:
     prompt: App Name
     default: myapp
 
-features:
-
 -   default: true
+    type: boolean

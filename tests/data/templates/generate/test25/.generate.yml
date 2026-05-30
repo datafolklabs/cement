@@ -5,17 +5,18 @@ variables:
         prompt: App Name
         default: myapp
 
-features:
     -   name: bool_prereq
+        type: boolean
         default: false
 
     -   name: select_dependent
-        prompt_mode: select
+        type: choice
         prompt: "Dependent"
         default: "X"
+        options: ["X"]
         requires:
             - bool_prereq
-        options:
-            -   value: "X"
+        extend:
+            -   when: "X"
                 ignore:
                     - '.*should-not-appear.*'
