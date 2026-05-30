@@ -436,11 +436,12 @@ def test_generate_template_module_transitive_import_error(tmp):
 # ─── #779: prompt_mode: select multi-valued feature prompts ─────────────
 
 
-def test_generate_features_select_defaults(tmp):
-    # test16: prompt_mode: select with three options; --defaults
-    # dispatches to the feature default ("N") and applies that
-    # branch's ignore patterns (suppresses branch-1-only,
-    # branch-2-only); branch-N-file and take-me remain.
+def test_generate_choice_defaults(tmp):
+    # test16: type: choice with three options; --defaults dispatches to
+    # the variable default ("N"). The migrated fixture carries an
+    # `extend.when: "N"` rule whose ignore patterns (branch-1-only,
+    # branch-2-only) must FIRE via scalar str()-coerced equality;
+    # branch-N-file and take-me remain.
     argv = ['generate', 'test16', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -472,11 +473,12 @@ def test_generate_features_select_invalid_prompt_mode(tmp):
             app.run()
 
 
-def test_generate_features_select_silent_variable(tmp):
-    # test19: prompt_mode: select; --defaults dispatches into the "1"
-    # branch which carries a silent variable `chosen_version: v1-silent`
-    # (prompt: false). The silent variable's default lands verbatim in
-    # the rendered output.
+def test_generate_choice_silent_variable_via_extend(tmp):
+    # test19: type: choice with a SCALAR options list (["1", "2"]);
+    # --defaults dispatches to the default ("1"). The migrated fixture's
+    # `extend.when: "1"` rule fires via scalar str()-coerced equality and
+    # contributes a silent variable `chosen_version: v1-silent`
+    # (prompt: false). The silent variable's default lands verbatim.
     argv = ['generate', 'test19', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -487,8 +489,8 @@ def test_generate_features_select_silent_variable(tmp):
             assert 'v1-silent' in f.read()
 
 
-def test_generate_features_select_default_not_in_values(tmp):
-    # test20: feature default "X" but options only contains "Y" →
+def test_generate_choice_default_not_in_values(tmp):
+    # test20: choice default "X" but options only contains "Y" →
     # ValueError at config validation.
     argv = ['generate', 'test20', tmp.dir, '--defaults']
 
@@ -497,8 +499,8 @@ def test_generate_features_select_default_not_in_values(tmp):
             app.run()
 
 
-def test_generate_features_select_missing_value(tmp):
-    # test21: an options branch missing value: → ValueError.
+def test_generate_choice_missing_value(tmp):
+    # test21: a choice options branch object missing value: → ValueError.
     argv = ['generate', 'test21', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -564,12 +566,12 @@ def test_generate_features_select_requires_cascade(tmp):
         assert exists_join(tmp.dir, 'should-not-appear-1')
 
 
-def test_generate_features_select_empty_options(tmp):
-    # test26: prompt_mode: select with `options: []` → ValueError.
+def test_generate_choice_empty_options(tmp):
+    # test26: type: choice with `options: []` → ValueError.
     argv = ['generate', 'test26', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
-        with raises(ValueError, match="no 'options' branches"):
+        with raises(ValueError, match="no 'options'"):
             app.run()
 
 
@@ -584,15 +586,15 @@ def test_generate_features_silent_variable_no_default(tmp):
             app.run()
 
 
-def test_generate_features_select_missing_default(tmp):
-    # test28: prompt_mode: select feature with no `default:` →
-    # ValueError. Without `default`, --defaults dispatch would
-    # silently no-op (str(None) matches no option); fail-fast at
-    # validation per CONTEXT.md Decision F.
+def test_generate_choice_missing_default(tmp):
+    # test28: type: choice with no `default:` → ValueError. Without
+    # `default`, --defaults dispatch would silently no-op (str(None)
+    # matches no option); fail-fast at validation per CONTEXT.md
+    # Decision F.
     argv = ['generate', 'test28', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
-        with raises(ValueError, match="has no 'default' value"):
+        with raises(ValueError, match="has no 'default'"):
             app.run()
 
 
@@ -612,12 +614,97 @@ def test_generate_features_silent_variable_non_str_default(tmp):
             assert 'silent_flag=FALSE' in f.read()
 
 
-def test_generate_features_select_duplicate_labels(tmp):
-    # test30: two options with the same effective display label
-    # ("Same Label") → ValueError. The numbered list would be
-    # ambiguous so we reject at config-validation time.
+def test_generate_choice_duplicate_labels(tmp):
+    # test30: two choice options with the same effective display label
+    # ("Same Label") → ValueError. The numbered list would be ambiguous
+    # so we reject at config-validation time.
     argv = ['generate', 'test30', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
         with raises(ValueError, match="duplicate option labels"):
+            app.run()
+
+
+# ─── #782 Plan 02: type: choice picker + object-form boolean prompt ──────
+
+
+def test_generate_choice_picker_maps_label_to_value(tmp):
+    # test16 (interactive): patch shell.Prompt.prompt to return the
+    # numbered-picker label for the "2" option ("Branch Two"). The
+    # picker maps the chosen label → option value "2", and the
+    # extend.when: "2" rule fires (ignores branch-N-file + branch-1-only;
+    # branch-2-only survives).
+    with patch.object(shell.Prompt, 'prompt', return_value='Branch Two'):
+        argv = ['generate', 'test16', tmp.dir]
+        with GenerateApp(argv=argv) as app:
+            app.run()
+
+            assert exists_join(tmp.dir, 'take-me')
+            assert exists_join(tmp.dir, 'branch-2-only')
+            assert not exists_join(tmp.dir, 'branch-N-file')
+            assert not exists_join(tmp.dir, 'branch-1-only')
+
+
+def test_generate_boolean_object_prompt_accept(tmp):
+    # test35: object-form bool prompt {text, accept, reject}. A member
+    # of accept (case-insensitive) → data[name] True → enabled branch.
+    with patch.object(shell.Prompt, 'prompt', return_value='YAY'):
+        argv = ['generate', 'test35', tmp.dir]
+        with GenerateApp(argv=argv) as app:
+            app.run()
+            with open(os.path.join(tmp.dir, 'take-me')) as f:
+                assert 'enabled' in f.read()
+
+
+def test_generate_boolean_object_prompt_reject(tmp):
+    # test35: a member of reject → data[name] False → disabled branch.
+    with patch.object(shell.Prompt, 'prompt', return_value='No'):
+        argv = ['generate', 'test35', tmp.dir]
+        with GenerateApp(argv=argv) as app:
+            app.run()
+            with open(os.path.join(tmp.dir, 'take-me')) as f:
+                assert 'disabled' in f.read()
+
+
+def test_generate_boolean_object_prompt_empty_uses_default(tmp):
+    # test35: empty input falls through to the var's bool default
+    # (false) → disabled branch.
+    with patch.object(shell.Prompt, 'prompt', return_value=''):
+        argv = ['generate', 'test35', tmp.dir]
+        with GenerateApp(argv=argv) as app:
+            app.run()
+            with open(os.path.join(tmp.dir, 'take-me')) as f:
+                assert 'disabled' in f.read()
+
+
+def test_generate_boolean_object_prompt_junk_aborts(tmp):
+    # test35: junk input matching NEITHER accept nor reject → assert +
+    # abort with an "Invalid Response"-style message (D-14, mirrors
+    # validate:). No silent coercion to False.
+    with patch.object(shell.Prompt, 'prompt', return_value='maybe'):
+        argv = ['generate', 'test35', tmp.dir]
+        with GenerateApp(argv=argv) as app:
+            with raises(AssertionError, match="Invalid Response.*"):
+                app.run()
+
+
+def test_generate_boolean_object_prompt_yaml_bool_coercion_guard(tmp):
+    # test36: an accept:/reject: member that loaded as a Python bool
+    # (YAML 1.1 coercion of bare `yes`) → ValueError at config load,
+    # instructing the author to quote the bool-like token.
+    argv = ['generate', 'test36', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="quote"):
+            app.run()
+
+
+def test_generate_choice_case_is_string_only(tmp):
+    # test37: a type: choice variable that ALSO declares case: →
+    # ValueError (D-17: case:/validate: are string-only; declaring
+    # either on a choice is a fail-fast schema misconfig).
+    argv = ['generate', 'test37', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="case.*string-only"):
             app.run()

@@ -1,28 +1,32 @@
 ---
 
 variables:
-    -   name: app_name
-        prompt: App Name
-        default: myapp
 
-features:
-    -   name: feature_choice
-        prompt_mode: select
-        prompt: "Pick a flavor"
-        default: "N"
-        options:
-            -   value: "N"
-                prompt: "None — vanilla"
-                ignore:
-                    - '.*branch-1-only.*'
-                    - '.*branch-2-only.*'
-            -   value: "1"
-                prompt: "Branch One"
-                ignore:
-                    - '.*branch-N-file.*'
-                    - '.*branch-2-only.*'
-            -   value: "2"
-                prompt: "Branch Two"
-                ignore:
-                    - '.*branch-N-file.*'
-                    - '.*branch-1-only.*'
+-   name: app_name
+    prompt: App Name
+    default: myapp
+
+-   name: feature_choice
+    type: choice
+    prompt: "Pick a flavor"
+    default: "N"
+    options:
+        -   value: "N"
+            prompt: "None — vanilla"
+        -   value: "1"
+            prompt: "Branch One"
+        -   value: "2"
+            prompt: "Branch Two"
+    extend:
+        -   when: "N"
+            ignore:
+                - '.*branch-1-only.*'
+                - '.*branch-2-only.*'
+        -   when: "1"
+            ignore:
+                - '.*branch-N-file.*'
+                - '.*branch-2-only.*'
+        -   when: "2"
+            ignore:
+                - '.*branch-N-file.*'
+                - '.*branch-1-only.*'

@@ -1,0 +1,11 @@
+---
+
+variables:
+
+-   name: enable_thing
+    type: boolean
+    default: false
+    prompt:
+        text: "Do you want the thing? (y/yes/yay vs n/no/nay)"
+        accept: [y, "yes", yay]
+        reject: [n, "no", nay]

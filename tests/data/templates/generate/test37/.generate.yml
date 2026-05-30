@@ -1,0 +1,10 @@
+---
+
+variables:
+
+-   name: feature_choice
+    type: choice
+    prompt: "Pick"
+    default: "a"
+    case: upper
+    options: ["a", "b"]
