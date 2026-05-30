@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: "Completed quick task 260524-re9 (#777 extensions config-section parity) — commit f8a62e98"
-last_updated: "2026-05-29T15:30:02.640Z"
+status: verifying
+stopped_at: Phase 05.1 plans verified (iter 2 PASSED); ready for /gsd-execute-phase
+last_updated: "2026-05-30T02:25:48.428Z"
 last_activity: "2026-05-29 - Inserted Phase 05.1 (#782 ext.generate select-mode UX + Jinja boolean fixes)"
 progress:
   total_phases: 8
   completed_phases: 5
-  total_plans: 28
+  total_plans: 33
   completed_plans: 28
   percent: 63
 ---
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 05.1
-Plan: Not started
-Status: Phase 05.1 inserted — ready to plan
+Plan: 5 plans across 5 waves (sequential)
+Status: Phase 05.1 planned + verified (5 plans, VERIFICATION PASSED) — ready to execute
 Last activity: 2026-05-29 - Inserted Phase 05.1 (#782 ext.generate select-mode UX + Jinja boolean fixes)
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
@@ -163,6 +163,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-25
-Stopped at: Completed quick task 260524-re9 (#777 extensions config-section parity) — commit f8a62e98
-Resume file: .planning/STATE.md
+Last session: 2026-05-30T02:25:48.424Z
+Stopped at: Phase 05.1 plans verified (iter 2 PASSED); ready for /gsd-execute-phase
+Resume file: .planning/phases/05.1-ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean/05.1-01-PLAN.md
