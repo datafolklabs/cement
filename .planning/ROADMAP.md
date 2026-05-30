@@ -228,10 +228,18 @@ Plans:
 
 ### Phase 05.1: ext.generate select-mode feature prompt UX and Jinja boolean fixes (#782) (INSERTED)
 
-**Goal:** [Urgent work - to be planned]
-**Requirements**: TBD
+**Goal:** Merge the unreleased `ext.generate` `features:` mechanism into the template `variables:` schema so optional features behave consistently with variables — prompted in declaration order, exposed at the top level of the template context, with a default-but-overridable boolean prompt — resolving Tom Freudenberg's feedback on closed PR #780 (#782). All changes are additive to the *released* `variables:` schema; the *unreleased* `features:` schema is removed.
+**Requirements**: GEN-01, GEN-02, GEN-03, GEN-04, GEN-05, GEN-06 (phase-local; see 05.1-CONTEXT.md)
 **Depends on:** Phase 5
 **Plans:** 0 plans
+
+**Success Criteria** (what must be TRUE):
+  1. The `features:` top-level key (and `prompt_mode`, `enabled:`/`disabled:`, select `options:`-effects) no longer exists; all former feature behavior is expressed under `variables:` via `type:` + `extend:` + `requires:`.
+  2. A variable supports `type: string | boolean | choice` (default `string`); `boolean` resolves to a real Python `bool`, `choice` to the chosen `str`, and all values are exposed at the top level of the template context (`{% if feature_x %}` works) — fixing #782 point 4.
+  3. Former features prompt in declaration order alongside variables (not before them) — fixing #782 point 1.
+  4. A `type: boolean` variable renders a default `[(Y)es/(N)o] [default]:` prompt with no author-supplied `validate`/`case`, and accepts a custom prompt — string label (framework owns the hint) or object `{text, accept, reject}` (author owns text; non-matching input aborts like a failed `validate:`) — fixing #782 points 2 and 3.
+  5. Conditional effects (`extend:` rules with `when` value/list/regex matching, composing and nesting) and dependencies (nesting + top-level `requires:`) inject `variables`/`exclude`/`ignore` correctly.
+  6. A variable with none of the new keys behaves byte-identically to the released `variables:` schema (additive-only on the released surface); all in-repo cli templates, the `demo/generate-features/` template, and the ~22 generate test fixtures are migrated to the new schema; 100% coverage, ruff, and mypy stay green.
 
 Plans:
 

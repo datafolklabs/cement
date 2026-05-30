@@ -74,6 +74,21 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 - [ ] **SEC-02**: Backlog item recorded for adding `bandit` static analysis — phase-shaped specification, not implemented this milestone
 - [ ] **SEC-03**: Backlog item recorded for evaluating CodeQL or Semgrep SAST coverage — phase-shaped specification, not implemented this milestone
 
+### Generate Optional Features (Phase 05.1)
+
+Inserted phase resolving #782 (Tom Freudenberg's feedback on closed PR #780).
+The full design contract is `.planning/phases/05.1-.../05.1-CONTEXT.md`
+(decisions D-01..D-19). The `ext.generate` feature mechanism is entirely
+unreleased, so the `features:` schema may be reshaped freely; the *released*
+`variables:` schema is compat-locked and all changes to it are additive.
+
+- [ ] **GEN-01**: Remove the unreleased `features:` top-level key, `prompt_mode`, boolean `enabled:`/`disabled:` blocks, and select `options:`-effects; all former feature behavior is expressed under `variables:` (D-01, D-02)
+- [ ] **GEN-02**: Variables gain `type: string | boolean | choice` (default `string`); `boolean→bool`, `choice→str`, all exposed at top level of the template context so `{% if feature_x %}` works (#782 pt 4; D-04, D-05)
+- [ ] **GEN-03**: Former features prompt in declaration order alongside variables, single pass (#782 pt 1; D-06)
+- [ ] **GEN-04**: `type: boolean` renders a default `[(Y)es/(N)o] [default]:` prompt (no author `validate`/`case`); `prompt:` is polymorphic — string label, `false` (silent), or object `{text, accept, reject}` where non-matching input aborts like a failed `validate:` (#782 pts 2-3; D-12..D-15)
+- [ ] **GEN-05**: Conditional effects via `extend:` rule-list (`when` value/list/regex, composing + nesting) and dependencies via nesting + top-level `requires:` inject `variables`/`exclude`/`ignore` correctly (D-07..D-11)
+- [ ] **GEN-06**: A variable with none of the new keys behaves byte-identically to the released `variables:` schema; all in-repo cli templates, `demo/generate-features/`, and the ~22 generate test fixtures migrated; 100% coverage + ruff + mypy stay green (D-03, D-19)
+
 ### Release
 
 - [ ] **REL-01**: Version bumped to `3.0.16` across `cement/__init__.py`, `pyproject.toml`, and any other version-of-record locations
@@ -214,11 +229,18 @@ Populated by the roadmapper during phase mapping.
 | REL-03 | Phase 6 | Pending |
 | REL-04 | Phase 6 | Pending |
 | REL-05 | Phase 6 | Pending |
+| GEN-01 | Phase 05.1 | Pending |
+| GEN-02 | Phase 05.1 | Pending |
+| GEN-03 | Phase 05.1 | Pending |
+| GEN-04 | Phase 05.1 | Pending |
+| GEN-05 | Phase 05.1 | Pending |
+| GEN-06 | Phase 05.1 | Pending |
 
 **Coverage:**
 - v1 requirements: 42 total
 - Mapped to phases: 42
 - Unmapped: 0
+- Inserted-phase requirements: GEN-01..06 (Phase 05.1, #782)
 
 ---
 *Requirements defined: 2026-04-24*
