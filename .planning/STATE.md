@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed quick task 260524-re9 (#777 extensions config-section parity)
-last_updated: "2026-05-25T00:43:31.098Z"
-last_activity: 2026-05-25
+status: planning
+stopped_at: "Completed quick task 260524-re9 (#777 extensions config-section parity) — commit f8a62e98"
+last_updated: "2026-05-29T15:30:02.640Z"
+last_activity: "2026-05-29 - Inserted Phase 05.1 (#782 ext.generate select-mode UX + Jinja boolean fixes)"
 progress:
-  total_phases: 7
+  total_phases: 8
   completed_phases: 5
   total_plans: 28
   completed_plans: 28
-  percent: 100
+  percent: 63
 ---
 
 # Project State
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 
 ## Current Position
 
-Phase: 6
+Phase: 05.1
 Plan: Not started
-Status: Executing Phase 05
-Last activity: 2026-05-25 - Completed quick task 260524-re9: extensions config-override honors Meta.config_section (resolves #777)
+Status: Phase 05.1 inserted — ready to plan
+Last activity: 2026-05-29 - Inserted Phase 05.1 (#782 ext.generate select-mode UX + Jinja boolean fixes)
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
 
@@ -135,6 +135,7 @@ Recent decisions affecting current work:
 ### Roadmap Evolution
 
 - Phase 01.1 inserted after Phase 1: Generated Project Template Build Modernization (URGENT) — PEP 517 build isolation fails because the generated `cement generate project` template imports cement at build time via setup.py → version.py. Blocks Phase 2 CI-green goal; smoke test cannot pass on the matrix until template no longer requires cement (or any runtime dep) at build time.
+- Phase 05.1 inserted after Phase 5: ext.generate select-mode feature prompt UX and Jinja boolean fixes (#782) (URGENT) — follow-up to quick task 260524-g47 (#779 `prompt_mode: select`). Tom Freudenberg's feedback on closed PR #780: (1) prompt features AFTER vars, (2) custom per-feature prompt text, (3) vars-style input format instead of "Enable Feature: <name> [y/N]", (4) Jinja boolean feature flags so `{% if feature_x %}` works. Pre-3.0.16 release work; Phase 6 release cut gates on this being closed.
 
 ### Pending Todos
 
