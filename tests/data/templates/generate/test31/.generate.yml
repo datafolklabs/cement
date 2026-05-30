@@ -1,0 +1,8 @@
+---
+
+variables:
+
+-   name: enable_thing
+    type: boolean
+    prompt: Enable Thing
+    default: false

@@ -283,6 +283,51 @@ def test_generate_features_minimal(tmp):
             assert 'myapp' in res
 
 
+def test_generate_boolean_prompt_yes(tmp):
+    # test31: type: boolean with a string-form prompt, run interactively
+    # (no --defaults). Patch shell.Prompt.prompt to return "yes" → the
+    # y/yes→True mapping runs and data[name] is True (jinja renders the
+    # enabled branch).
+    with patch.object(shell.Prompt, 'prompt', return_value='yes'):
+        argv = ['generate', 'test31', tmp.dir]
+        with GenerateApp(argv=argv) as app:
+            app.run()
+            with open(os.path.join(tmp.dir, 'take-me')) as f:
+                assert 'enabled' in f.read()
+
+
+def test_generate_boolean_prompt_no(tmp):
+    # test31: prompt returns "n" → n/no→False mapping; data[name] False.
+    with patch.object(shell.Prompt, 'prompt', return_value='n'):
+        argv = ['generate', 'test31', tmp.dir]
+        with GenerateApp(argv=argv) as app:
+            app.run()
+            with open(os.path.join(tmp.dir, 'take-me')) as f:
+                assert 'disabled' in f.read()
+
+
+def test_generate_boolean_prompt_empty_uses_default(tmp):
+    # test31: prompt returns "" (empty) → falls through to the var's bool
+    # default (false) → data[name] False.
+    with patch.object(shell.Prompt, 'prompt', return_value=''):
+        argv = ['generate', 'test31', tmp.dir]
+        with GenerateApp(argv=argv) as app:
+            app.run()
+            with open(os.path.join(tmp.dir, 'take-me')) as f:
+                assert 'disabled' in f.read()
+
+
+def test_generate_boolean_case_is_string_only(tmp):
+    # test32: a type: boolean variable that ALSO declares case: → ValueError
+    # (D-17: case:/validate: are string-only semantics; declaring either on
+    # a boolean is a fail-fast schema misconfig).
+    argv = ['generate', 'test32', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="case.*string-only"):
+            app.run()
+
+
 def test_generate_features_transitive_requires(tmp):
     # test14: feature1=false, feature2=true requires feature1,
     # feature3=true requires feature2
