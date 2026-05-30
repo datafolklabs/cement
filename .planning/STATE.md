@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
+status: verifying
 stopped_at: "Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)"
-last_updated: "2026-05-30T03:41:45.648Z"
+last_updated: "2026-05-30T03:52:00.937Z"
 last_activity: 2026-05-30
 progress:
   total_phases: 8
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 33
-  completed_plans: 32
-  percent: 63
+  completed_plans: 33
+  percent: 75
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 
 Phase: 05.1 (ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean) — EXECUTING
 Plan: 5 of 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-05-30
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
@@ -71,6 +71,7 @@ Progress: [██████████] 100% (21/21 plans completed across Ph
 | Phase 05.1 P02 | 8min | 2 tasks | 16 files |
 | Phase 05.1 P03 | ~10min | 2 tasks | 16 files |
 | Phase 05.1 P04 | ~12min | 2 tasks | 5 files |
+| Phase 05.1 P05 | ~8min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -140,6 +141,7 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 05.1 Plan 03]: Legacy features: bridge DELETED — GEN-01 fully true; engine no longer reads a top-level features: key. extend.when composes scalar/in-list/string-regex; requires: gates with full vocab AND-ed order-independently; a gated-out var renders its typed default (Q1) and its extend rules do not fire.
 - [Phase ?]: Demo generate-features migrated to unified type:/extend:/requires: schema; #782 demonstrated via top-level {% if docker %}
 - [Phase ?]: All 5 cli generate templates verified byte-identical (zero feature usage) and still generate under --defaults
+- [Phase 05.1 Plan 05]: Phase 05.1 CLOSED — full `make test` GREEN at 100% coverage (369 passed) with redis+memcached up, ruff + mypy clean across the refactored ext.generate surface. Pulled the type:choice picker label->value mapping out from under four bare unlabeled `# pragma: nocover` markers into real patched-prompt coverage (test_generate_choice_picker_maps_label_to_value / test16); ext_generate.py rose 259->269 measured stmts at 0 miss. Every surviving pragma carries a locked-vocabulary label (inverse audit grep empty). CHANGELOG documents the unified type:/extend:/requires: schema + all four #782/#780 points (Tom's feedback: features-after-vars / custom prompt text / vars-style input / top-level Jinja boolean).
 
 ### Roadmap Evolution
 
@@ -172,6 +174,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-30T03:41:32.295Z
+Last session: 2026-05-30T03:51:29.664Z
 Stopped at: Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)
 Resume file: None
