@@ -128,12 +128,35 @@ The released default. A plain `{name, prompt, default}` variable with optional
 
 ### `type: boolean`
 
-A single y/N prompt. The resolved value is a real Python `bool`, so it lands
-at the **top level** of the context. Use it in a conditional:
+A single y/N prompt rendered as `<prompt> [(Y)es/(N)o] [<default>]:` — e.g.
+`Enable docker [(Y)es/(N)o] [Y]:`. With no `prompt:` key the label defaults to
+`Enable <name>`; an explicit `prompt:` overrides it. Input `y`/`yes` → `True`,
+`n`/`no` → `False`, empty → `default`. The resolved value is a real Python
+`bool`, so it lands at the **top level** of the context. Use it in a
+conditional:
 
 ```jinja
 {% if docker %}...Dockerfile-only content...{% endif %}
 ```
+
+For full control of the wording and accepted tokens, give `prompt:` an object
+instead of a string — the author owns the text, and `accept:` / `reject:` are
+case-insensitive token lists that map the answer to a `bool` (input matching
+neither aborts, like a failed `validate:`):
+
+```yaml
+    -   name: docker
+        type: boolean
+        default: true
+        prompt:
+            text: "Use Docker? [(Y)ay/(N)ay]"
+            accept: [y, yay]
+            reject: [n, nay]
+```
+
+> Quote bool-like tokens (`"yes"`, `"no"`, `"on"`, `"off"`) inside
+> `accept:` / `reject:` — under YAML 1.1 they otherwise decode to a Python
+> `bool` and the loader rejects them with a clear error.
 
 > **`{{ bool }}` interpolation gotcha:** a boolean rendered as *text*
 > (`{{ docker }}`) interpolates the **capitalized Python repr** — `True` or
@@ -188,9 +211,13 @@ declaration order — including silent `prompt: false` metadata like
 
 A variable may declare `requires:` on other top-level variables:
 
-- `requires: [docker]` — `docker` must be truthy.
-- `requires: [{name: web_framework, value: flask}]` — equality.
-- `requires: [{name: web_framework, value: [flask, fastapi]}]` — in-list.
+- `requires: [docker]` — list of bare names; each must be truthy.
+- `requires: {web_framework: flask}` — map form; equality.
+- `requires: {web_framework: [flask, fastapi]}` — map form; in-list.
+
+`requires:` resolves **top-level** variables only (nested `extend.variables`
+are not addressable by name). The map form reuses the same matcher as
+`extend.when`, so a string-typed prerequisite also accepts a regex.
 
 Multiple entries are AND-ed and resolved order-independently. If a `requires:`
 gate fails, the variable is set to its (typed) **default** at the top level
