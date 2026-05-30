@@ -677,6 +677,16 @@ def test_generate_boolean_object_prompt_empty_uses_default(tmp):
                 assert 'disabled' in f.read()
 
 
+def test_generate_boolean_object_prompt_defaults(tmp):
+    # test35 with --defaults: the object-form bool short-circuits to
+    # bool(default) (false) without prompting → disabled branch.
+    argv = ['generate', 'test35', tmp.dir, '--defaults']
+    with GenerateApp(argv=argv) as app:
+        app.run()
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            assert 'disabled' in f.read()
+
+
 def test_generate_boolean_object_prompt_junk_aborts(tmp):
     # test35: junk input matching NEITHER accept nor reject → assert +
     # abort with an "Invalid Response"-style message (D-14, mirrors
