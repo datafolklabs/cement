@@ -159,11 +159,16 @@ class GenerateTemplateAbstractBase(Controller):
 
             # Interactive string-form prompt — Tom's #782 pt 2/3: replace
             # the old "Enable Feature:" text with a vars-style boolean prompt.
+            # No explicit `prompt:` → default the label to "Enable {name}"
+            # (D-12), mirroring the choice path's `or f"Select: {name}"`
+            # fallback — otherwise `var['prompt']` is None and the prompt
+            # renders the literal "None [(Y)es/(N)o] ...".
             hint = 'Y' if default else 'N'
+            label = prompt or f"Enable {var['name']}"
 
             class BoolPrompt(shell.Prompt):
                 class Meta:
-                    text = f"{prompt} [(Y)es/(N)o] [{hint}]:"
+                    text = f"{label} [(Y)es/(N)o] [{hint}]:"
                     default = hint
 
             answer = BoolPrompt().prompt()  # pragma: nocover  # defensive: unreachable

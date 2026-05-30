@@ -1,0 +1,18 @@
+---
+
+# test42: type: boolean string-form with NO `prompt:` key. The
+# framework must default the label to "Enable {name}" (D-12) so the
+# rendered prompt reads "Enable enable_thing [(Y)es/(N)o] [N]:" — NOT
+# the literal "None [(Y)es/(N)o] [N]:". A second var declares an
+# explicit `prompt:` to prove the author label still overrides.
+
+variables:
+
+-   name: enable_thing
+    type: boolean
+    default: false
+
+-   name: enable_other
+    type: boolean
+    prompt: Use Other
+    default: false

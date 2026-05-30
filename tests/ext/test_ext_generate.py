@@ -325,6 +325,32 @@ def test_generate_boolean_prompt_empty_uses_default(tmp):
                 assert 'disabled' in f.read()
 
 
+def test_generate_boolean_prompt_no_label_defaults_to_enable(tmp):
+    # test42: type: boolean string-form with NO `prompt:` key. The
+    # framework must default the label to "Enable {name}" (D-12) — the
+    # rendered prompt text reads "Enable enable_thing [(Y)es/(N)o] [N]:",
+    # NOT the literal "None [(Y)es/(N)o] [N]:". An explicit `prompt:` on
+    # the second var ("Use Other") still wins. Capture each prompt's
+    # bound Meta.text via a recorder patched onto shell.Prompt.prompt
+    # (mirrors the test31 patched-prompt pattern), then assert the labels.
+    seen = []
+
+    def record(self):
+        seen.append(self._meta.text)
+        return ''
+
+    with patch.object(shell.Prompt, 'prompt', record):
+        argv = ['generate', 'test42', tmp.dir]
+        with GenerateApp(argv=argv) as app:
+            app.run()
+
+    assert 'Enable enable_thing [(Y)es/(N)o] [N]:' in seen
+    # explicit prompt: still overrides — never decorated with the label.
+    assert 'Use Other [(Y)es/(N)o] [N]:' in seen
+    # and the broken literal must NOT appear.
+    assert 'None [(Y)es/(N)o] [N]:' not in seen
+
+
 def test_generate_boolean_case_is_string_only(tmp):
     # test32: a type: boolean variable that ALSO declares case: → ValueError
     # (D-17: case:/validate: are string-only semantics; declaring either on

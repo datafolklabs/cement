@@ -1,0 +1,2 @@
+{% if enable_thing %}enabled{% else %}disabled{% endif %}
+{% if enable_other %}other-on{% else %}other-off{% endif %}
