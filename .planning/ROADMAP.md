@@ -231,9 +231,10 @@ Plans:
 **Goal:** Merge the unreleased `ext.generate` `features:` mechanism into the template `variables:` schema so optional features behave consistently with variables — prompted in declaration order, exposed at the top level of the template context, with a default-but-overridable boolean prompt — resolving Tom Freudenberg's feedback on closed PR #780 (#782). All changes are additive to the *released* `variables:` schema; the *unreleased* `features:` schema is removed.
 **Requirements**: GEN-01, GEN-02, GEN-03, GEN-04, GEN-05, GEN-06 (phase-local; see 05.1-CONTEXT.md)
 **Depends on:** Phase 5
-**Plans:** 5 plans across 5 waves (sequential — single-file engine refactor in `ext_generate.py`; each wave's fixture migration must land alongside the engine change it exercises so the 100% coverage gate holds at every commit)
+**Plans:** 1/5 plans executed
 
 **Success Criteria** (what must be TRUE):
+
   1. The `features:` top-level key (and `prompt_mode`, `enabled:`/`disabled:`, select `options:`-effects) no longer exists; all former feature behavior is expressed under `variables:` via `type:` + `extend:` + `requires:`.
   2. A variable supports `type: string | boolean | choice` (default `string`); `boolean` resolves to a real Python `bool`, `choice` to the chosen `str`, and all values are exposed at the top level of the template context (`{% if feature_x %}` works) — fixing #782 point 4.
   3. Former features prompt in declaration order alongside variables (not before them) — fixing #782 point 1.
@@ -245,7 +246,7 @@ Plans:
 
   **Wave 1**
 
-  - [ ] 05.1-01-PLAN.md — Unified ordered resolver + `type:` key + top-level `data[name]` emit + `type: boolean` string-form prompt (migrate test6/7/13)
+  - [x] 05.1-01-PLAN.md — Unified ordered resolver + `type:` key + top-level `data[name]` emit + `type: boolean` string-form prompt (migrate test6/7/13)
 
   **Wave 2** *(blocked on Wave 1)*
 

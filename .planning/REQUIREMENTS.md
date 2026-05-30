@@ -82,12 +82,12 @@ The full design contract is `.planning/phases/05.1-.../05.1-CONTEXT.md`
 unreleased, so the `features:` schema may be reshaped freely; the *released*
 `variables:` schema is compat-locked and all changes to it are additive.
 
-- [ ] **GEN-01**: Remove the unreleased `features:` top-level key, `prompt_mode`, boolean `enabled:`/`disabled:` blocks, and select `options:`-effects; all former feature behavior is expressed under `variables:` (D-01, D-02)
-- [ ] **GEN-02**: Variables gain `type: string | boolean | choice` (default `string`); `boolean→bool`, `choice→str`, all exposed at top level of the template context so `{% if feature_x %}` works (#782 pt 4; D-04, D-05)
-- [ ] **GEN-03**: Former features prompt in declaration order alongside variables, single pass (#782 pt 1; D-06)
+- [x] **GEN-01**: Remove the unreleased `features:` top-level key, `prompt_mode`, boolean `enabled:`/`disabled:` blocks, and select `options:`-effects; all former feature behavior is expressed under `variables:` (D-01, D-02)
+- [x] **GEN-02**: Variables gain `type: string | boolean | choice` (default `string`); `boolean→bool`, `choice→str`, all exposed at top level of the template context so `{% if feature_x %}` works (#782 pt 4; D-04, D-05)
+- [x] **GEN-03**: Former features prompt in declaration order alongside variables, single pass (#782 pt 1; D-06)
 - [ ] **GEN-04**: `type: boolean` renders a default `[(Y)es/(N)o] [default]:` prompt (no author `validate`/`case`); `prompt:` is polymorphic — string label, `false` (silent), or object `{text, accept, reject}` where non-matching input aborts like a failed `validate:` (#782 pts 2-3; D-12..D-15)
 - [ ] **GEN-05**: Conditional effects via `extend:` rule-list (`when` value/list/regex, composing + nesting) and dependencies via nesting + top-level `requires:` inject `variables`/`exclude`/`ignore` correctly (D-07..D-11)
-- [ ] **GEN-06**: A variable with none of the new keys behaves byte-identically to the released `variables:` schema; all in-repo cli templates, `demo/generate-features/`, and the ~22 generate test fixtures migrated; 100% coverage + ruff + mypy stay green (D-03, D-19)
+- [x] **GEN-06**: A variable with none of the new keys behaves byte-identically to the released `variables:` schema; all in-repo cli templates, `demo/generate-features/`, and the ~22 generate test fixtures migrated; 100% coverage + ruff + mypy stay green (D-03, D-19)
 
 ### Release
 
@@ -108,17 +108,22 @@ Deferred to a later milestone (likely the 3.2.0 breakage-allowed cycle or a dedi
     - **Make target:** `make audit-deps` — independent target, NOT
       chained into `make test` or `make comply` (matches Phase 03
       D-03 `audit-public-api` discipline)
+
     - **CI placement:** new dedicated workflow file
       `.github/workflows/security.yml`, triggers on `pull_request`
+
       + weekly `cron`. NOT serialized into `build_and_test.yml`
       (mirrors Phase 02 D-16 fail-fast vs feedback-time tradeoff)
+
     - **Config:** none initially; `pip-audit --skip` for accepted
       CVEs documented inline if any surface
+
     - **New dev-dep:** `pip-audit` (PyPI; latest stable)
     - **Exit behavior:** advisory on first run (Phase 02 D-03
       one-shot precedent — capture accepted CVEs in an in-repo
       artifact mirroring `02-PIP-AUDIT.md`); flip to blocking once
       baseline is clean
+
     - **Anchor:** `.planning/phases/02-dependencies-ci-pipeline/02-CONTEXT.md`
       D-03 + `02-PIP-AUDIT.md` capture artifact
 
@@ -127,30 +132,39 @@ Deferred to a later milestone (likely the 3.2.0 breakage-allowed cycle or a dedi
     - **Make target:** `make audit-bandit` — independent target
     - **CI placement:** same `.github/workflows/security.yml` lane
       as SECv2-01 (one workflow, three jobs)
+
     - **Config:** `.bandit` allowlist file at repo root —
       project-tuned to skip false positives on framework-intentional
       patterns (e.g., `subprocess` call sites in `cement/utils/shell.py`
       that are deliberate per the public API contract)
+
     - **New dev-dep:** `bandit` (PyPI; latest stable)
     - **Exit behavior:** advisory on first run; flip to blocking
       once `.bandit` allowlist is curated
+
     - **Anchor:** `02-CONTEXT.md` D-03 (same one-shot precedent)
 
 - **SECv2-03**: SAST tool (CodeQL or Semgrep) selected and integrated into CI
     - **Tool:** TBD per evaluation; candidates are CodeQL (GitHub-
       native, free for public repos, deeper Python rules) and
       Semgrep (rule customization, more permissive licensing)
+
     - **Make target:** `make audit-sast` (only if CLI-runnable;
       CodeQL is GitHub-Actions-only)
+
     - **CI placement:** dedicated job in `security.yml`; weekly
       cron preferred over per-PR (run-time cost)
+
     - **Config:** `.semgrep.yml` (Semgrep) OR
       `.github/codeql/codeql-config.yml` (CodeQL) — rule selection
       pinned to Python OWASP top-N + cement-specific patterns
+
     - **New dev-dep:** `semgrep` if Semgrep selected; none if
       CodeQL (GitHub-hosted)
+
     - **Exit behavior:** advisory on first run; per-finding triage
       before any blocking flip
+
     - **Anchor:** `02-CONTEXT.md` D-03
 
 - **SECv2-04**: Documented security disclosure process (`SECURITY.md`)
@@ -229,14 +243,15 @@ Populated by the roadmapper during phase mapping.
 | REL-03 | Phase 6 | Pending |
 | REL-04 | Phase 6 | Pending |
 | REL-05 | Phase 6 | Pending |
-| GEN-01 | Phase 05.1 | Pending |
-| GEN-02 | Phase 05.1 | Pending |
-| GEN-03 | Phase 05.1 | Pending |
+| GEN-01 | Phase 05.1 | Complete |
+| GEN-02 | Phase 05.1 | Complete |
+| GEN-03 | Phase 05.1 | Complete |
 | GEN-04 | Phase 05.1 | Pending |
 | GEN-05 | Phase 05.1 | Pending |
-| GEN-06 | Phase 05.1 | Pending |
+| GEN-06 | Phase 05.1 | Complete |
 
 **Coverage:**
+
 - v1 requirements: 42 total
 - Mapped to phases: 42
 - Unmapped: 0

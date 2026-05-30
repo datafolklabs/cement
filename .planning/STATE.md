@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 05.1 plans verified (iter 2 PASSED); ready for /gsd-execute-phase
-last_updated: "2026-05-30T02:26:42.742Z"
-last_activity: 2026-05-30 -- Phase 05.1 execution started
+stopped_at: "Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)"
+last_updated: "2026-05-30T03:08:28.351Z"
+last_activity: 2026-05-30
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 33
-  completed_plans: 28
+  completed_plans: 29
   percent: 63
 ---
 
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 05.1 (ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean) — EXECUTING
-Plan: 1 of 5
-Status: Executing Phase 05.1
-Last activity: 2026-05-30 -- Phase 05.1 execution started
+Plan: 2 of 5
+Status: Ready to execute
+Last activity: 2026-05-30
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
 
@@ -67,6 +67,7 @@ Progress: [██████████] 100% (21/21 plans completed across Ph
 | Phase 03-internal-refactor-coverage-hardening P06 | 16 min | 4 atomic commits | 5 files |
 | Phase 03-internal-refactor-coverage-hardening P07 | 75 min | 39 atomic commits + 3 batch-summary docs | 39 files |
 | Phase 03-internal-refactor-coverage-hardening P08 | 7 min | 2 atomic commits | 4 files |
+| Phase 05.1 P01 | 35 min | 2 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -131,6 +132,8 @@ Recent decisions affecting current work:
 - [Phase 03 Plan 08]: Two atomic commits at phase close (verification artifact + ROADMAP/REQUIREMENTS/CHANGELOG roll-up), NOT one mega-commit. Preserves bisect granularity — the verification artifact change is independent of the milestone-tracking flip; either could be reverted alone if a downstream issue surfaces. REQUIREMENTS.md folded into the docs(roadmap): commit (not its own commit) because flipping REFACTOR-01 [ ] → [x] is itself a milestone-tracking change directly supported by the verification artifact.
 - [Phase 03 Plan 08]: Plan 08 D-24 9-Conjunct Acceptance evidence shape (# | Gate | Command | Expected | Result | Status) generalizes from Phase 1 + Phase 2 D-19 acceptance gate patterns — downstream phases (Phase 4, 5, 6) can reuse this exact table shape. Inline per-conjunct evidence transcripts (### subsection per conjunct with actual command + actual exit + actual stdout snippet) provide forensic-grade evidence vs. summary-only acceptance tables, favored when the phase has multiple acceptance gates with non-trivial output.
 - [Phase 03 Plan 08]: Phase 3 closed: 84 total commits on modernization-phase-3 branch across 8 waves (Wave 1: 3 / Wave 2: 2 / Wave 3: 18 / Wave 4: 2 / Wave 5: 4 / Wave 6: 6 / Wave 7: 43 / Wave 8: 4 — including planning artifacts and ad-hoc lint touch-ups). All 7 phase requirements (REFACTOR-01..04, COV-01..03) SATISFIED with traceability into 03-VERIFICATION.md. All 5 ROADMAP Phase 3 success criteria SATISFIED. 100% coverage gate held continuously across every commit. 03-PUBLIC-API-BASELINE.txt (934 lines) byte-identical with live AST walk. Permanent dev affordances (scripts/audit-public-api.py + Makefile target + ruff UP+FA family + locked-vocabulary pragma audit + D-15 categories + boundary-tag convention) retained for future regression checks across all subsequent 3.0.x patch work.
+- [Phase ?]: [Phase 05.1 Plan 01]: User-approved Rule 4 branch-by-abstraction bridge — ship the new typed resolver (type:boolean top-level bool emit, single declaration-order pass, data['features'] namespace removed = #782 bug-4 fix, vars-style boolean prompt, D-17 guard) while KEEPING a thin legacy features: reader folding into the unified accumulation so test8-30 stay green at 100% coverage. Bridge removed in Plan 03; the 'features: gone' must_have relaxed to phase-end.
+- [Phase ?]: [Phase 05.1 Plan 01]: Patched-prompt coverage pattern — the y/n->bool mapping is unit-tested via patch.object(shell.Prompt,'prompt',...) returning 'yes'/'n'/'' (test31), so the bug-prone mapping has real coverage; only the raw .prompt() input read is pragma'd 'defensive: unreachable'.
 
 ### Roadmap Evolution
 
@@ -163,6 +166,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-30T02:25:48.424Z
-Stopped at: Phase 05.1 plans verified (iter 2 PASSED); ready for /gsd-execute-phase
-Resume file: .planning/phases/05.1-ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean/05.1-01-PLAN.md
+Last session: 2026-05-30T03:08:28.347Z
+Stopped at: Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)
+Resume file: None
