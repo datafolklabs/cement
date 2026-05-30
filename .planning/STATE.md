@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
+status: executing
 stopped_at: Phase 05.1 plans verified (iter 2 PASSED); ready for /gsd-execute-phase
-last_updated: "2026-05-30T02:25:48.428Z"
-last_activity: "2026-05-29 - Inserted Phase 05.1 (#782 ext.generate select-mode UX + Jinja boolean fixes)"
+last_updated: "2026-05-30T02:26:42.742Z"
+last_activity: 2026-05-30 -- Phase 05.1 execution started
 progress:
   total_phases: 8
   completed_phases: 5
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-24)
 
 **Core value:** Cement 3 stays solid, secure, performant, and bug-free under strict backward compatibility — while being continuously maintained against a modern Python and tooling ecosystem.
-**Current focus:** Phase 05 — deprecations-docs-security-stubs
+**Current focus:** Phase 05.1 — ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean
 
 ## Current Position
 
-Phase: 05.1
-Plan: 5 plans across 5 waves (sequential)
-Status: Phase 05.1 planned + verified (5 plans, VERIFICATION PASSED) — ready to execute
-Last activity: 2026-05-29 - Inserted Phase 05.1 (#782 ext.generate select-mode UX + Jinja boolean fixes)
+Phase: 05.1 (ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean) — EXECUTING
+Plan: 1 of 5
+Status: Executing Phase 05.1
+Last activity: 2026-05-30 -- Phase 05.1 execution started
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
 
