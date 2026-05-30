@@ -328,6 +328,28 @@ def test_generate_boolean_case_is_string_only(tmp):
             app.run()
 
 
+def test_generate_boolean_silent(tmp):
+    # test33: type: boolean with `prompt: false` (silent) emits bool(default)
+    # at data[name] — a real Python bool, NOT str(default). jinja renders the
+    # enabled branch because the default is true.
+    argv = ['generate', 'test33', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            assert 'flag-on' in f.read()
+
+
+def test_generate_invalid_type(tmp):
+    # test34: a variable declaring an unknown `type:` → ValueError (T-05.1-01
+    # input-validation mitigation; fail-fast, survives `python -O`).
+    argv = ['generate', 'test34', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="invalid type 'bogus'"):
+            app.run()
+
+
 def test_generate_features_transitive_requires(tmp):
     # test14: feature1=false, feature2=true requires feature1,
     # feature3=true requires feature2

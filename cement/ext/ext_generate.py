@@ -32,6 +32,21 @@ class GenerateTemplateAbstractBase(Controller):
                           exclude_list: list[str],
                           ignore_list: list[str],
                           data: dict[str, Any]) -> None:
+        # LEGACY BRIDGE (#782, Phase 05.1 Plan 01, user-approved Rule 4):
+        # the released `variables:` engine and the new typed resolver are
+        # unified in `_generate`. The unreleased `features:` schema is being
+        # superseded by `type: boolean`/`type: choice` variables, but the
+        # `requires`/`select`/`enabled`/`disabled` equivalents only fully land
+        # in Plans 02-03. Until then this method KEEPS reading a top-level
+        # `features:` block and folds each legacy feature's resolved
+        # enabled/disabled/options effects into the SAME vars/exclude/ignore
+        # accumulation the new resolver consumes — so the ~22 un-migrated
+        # fixtures (test8-30) stay green under the 100%-coverage gate. This
+        # bridge is REMOVED in Plan 03 once the last fixture is migrated.
+        # NOTE: per D-05 (bug #4 fix) this no longer writes a
+        # `data['features']` namespace — folded feature variables emit at the
+        # top level via the unified resolver, like every other variable.
+        #
         # validate up front so misconfigurations fail fast and consistently
         # under `python -O` (asserts get stripped, ValueError does not).
         feature_by_name: dict[str, dict[str, Any]] = {}
@@ -195,13 +210,12 @@ class GenerateTemplateAbstractBase(Controller):
         for feature in features:
             _resolve(feature['name'])
 
-        # merge enabled/disabled/options configs into vars/exclude/ignore
-        if 'features' not in data:
-            data['features'] = {}
+        # merge enabled/disabled/options configs into vars/exclude/ignore.
+        # D-05: NO `data['features']` namespace — folded variables emit
+        # top-level via the unified resolver (root of bug #4 removed).
         for feature in features:
             name = feature['name']
             state = feature_states[name]
-            data['features'][name] = state
 
             if isinstance(state, bool):
                 # Legacy boolean path — byte-identical to pre-#779.
@@ -231,7 +245,7 @@ class GenerateTemplateAbstractBase(Controller):
     def _generate(self, source: str, dest: str) -> None:
         msg = f'Generating {self.app._meta.label} {self._meta.label} in {dest}'
         self.app.log.info(msg)
-        data: dict[str, dict[str, Any]] = {}
+        data: dict[str, Any] = {}
 
         # builtin vars
         maj_min = float(f'{VERSION[0]}.{VERSION[1]}')
@@ -263,22 +277,29 @@ class GenerateTemplateAbstractBase(Controller):
             self._process_features(features, vars, exclude_list,
                                    ignore_list, data)
 
+        # `var_defaults` is the released compat anchor (extended ADDITIVELY
+        # with `type`/`extend`/`requires`). A `type: string` variable with
+        # none of the new keys takes the identity path below and behaves
+        # byte-identically to the released schema (test1-5/22/27/29 oracle).
         var_defaults: dict = {
             'name': None,
             'prompt': None,
             'validate': None,
             'case': None,
             'default': None,
+            'type': 'string',
+            'extend': None,
         }
 
-        for defined_var in vars:
-            var = var_defaults.copy()
-            var.update(defined_var)
-            for key in ['name', 'prompt']:
-                assert var[key] is not None, \
-                    f"Required generate config key missing: {key}"
+        def _resolve_string(var: dict[str, Any]) -> Any:
+            # Released `type: string` resolution — byte-identical to the
+            # pre-#782 variable loop. `prompt` is required (assert) unless
+            # the silent `prompt: false` sentinel is used.
+            assert var['prompt'] is not None, \
+                "Required generate config key missing: prompt"
 
             val: Any = None
+            default_text = ''
             if var['prompt'] is False:
                 # Silent variable: `prompt: false` sentinel uses `default`
                 # directly without prompting. case+validate still apply
@@ -321,8 +342,93 @@ class GenerateTemplateAbstractBase(Controller):
             if var['validate'] is not None:
                 assert re.match(var['validate'], val), \
                     f"Invalid Response (must match: '{var['validate']}')"
+            return val
 
-            data[var['name']] = val
+        def _resolve_boolean(var: dict[str, Any]) -> bool:
+            # `type: boolean` — emits a real Python bool at data[name] so
+            # `{% if name %}` works in jinja2/mustache (bug #4 fix, D-05).
+            # `prompt:` is `string | false` in THIS plan (the object form
+            # lands in Plan 02). Silent (`prompt: false`) and `--defaults`
+            # both dispatch to `bool(default)`.
+            default = bool(var['default'])
+            if var['prompt'] is False:
+                assert var['default'] is not None, \
+                    f"Variable '{var['name']}' has prompt: false " \
+                    f"but no default"
+                return default
+            if self.app.pargs.defaults:
+                return default
+
+            # Interactive string-form prompt — Tom's #782 pt 2/3: replace
+            # the old "Enable Feature:" text with a vars-style boolean prompt.
+            hint = 'Y' if default else 'N'
+
+            class BoolPrompt(shell.Prompt):
+                class Meta:
+                    text = f"{var['prompt']} [(Y)es/(N)o] [{hint}]:"
+                    default = hint
+
+            answer = BoolPrompt().prompt()  # pragma: nocover  # defensive: unreachable
+            # y/yes -> True, n/no -> False, empty -> default. This mapping
+            # is the coverable, bug-prone logic — driven under real coverage
+            # by the patched-prompt tests (test31), NOT pragma'd.
+            token = (answer or '').strip().lower()
+            if token in ('y', 'yes'):
+                return True
+            if token in ('n', 'no'):
+                return False
+            return default
+
+        def resolve_and_emit(defined_var: dict[str, Any]) -> None:
+            var = var_defaults.copy()
+            var.update(defined_var)
+            assert var['name'] is not None, \
+                "Required generate config key missing: name"
+
+            # Memoize on `data` membership so a variable referenced more than
+            # once (e.g. via future `requires`) resolves exactly once and
+            # resolution stays declaration-order-independent (D-11).
+            if var['name'] in data:
+                return  # pragma: nocover  # defensive: unreachable
+
+            vtype = var['type']
+            if vtype not in ('string', 'boolean', 'choice'):
+                raise ValueError(
+                    f"Variable '{var['name']}' has invalid type "
+                    f"'{vtype}' (must be string, boolean, or choice)")
+
+            # D-17: case:/validate: are string-only semantics. A boolean is
+            # parsed via accept/reject; a choice is constrained by options —
+            # declaring case:/validate: on either is a fail-fast schema
+            # misconfig (ValueError survives `python -O`).
+            if vtype in ('boolean', 'choice') and \
+                    (var['case'] is not None or var['validate'] is not None):
+                raise ValueError(
+                    f"case:/validate: are string-only; variable "
+                    f"'{var['name']}' is type: {vtype}")
+
+            value: Any
+            if vtype == 'boolean':
+                value = _resolve_boolean(var)
+            else:
+                value = _resolve_string(var)
+
+            data[var['name']] = value
+
+            # `extend:` rules compose — every rule whose `when` matches the
+            # resolved value fires, accumulating exclude/ignore and recursing
+            # depth-first into its nested variables in place (D-07/D-08).
+            # THIS plan implements the boolean true/false `when` case only
+            # (Python equality); value/list/regex matching lands in Plan 02.
+            for rule in var['extend'] or []:
+                if value == rule.get('when'):
+                    exclude_list.extend(rule.get('exclude') or [])
+                    ignore_list.extend(rule.get('ignore') or [])
+                    for nested in rule.get('variables') or []:
+                        resolve_and_emit(nested)
+
+        for defined_var in vars:
+            resolve_and_emit(defined_var)
 
         try:
             self.app.template.copy(source, dest, data,

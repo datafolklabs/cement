@@ -1,0 +1,8 @@
+---
+
+variables:
+
+-   name: silent_flag
+    type: boolean
+    prompt: false
+    default: true
