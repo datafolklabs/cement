@@ -231,7 +231,7 @@ Plans:
 **Goal:** Merge the unreleased `ext.generate` `features:` mechanism into the template `variables:` schema so optional features behave consistently with variables — prompted in declaration order, exposed at the top level of the template context, with a default-but-overridable boolean prompt — resolving Tom Freudenberg's feedback on closed PR #780 (#782). All changes are additive to the *released* `variables:` schema; the *unreleased* `features:` schema is removed.
 **Requirements**: GEN-01, GEN-02, GEN-03, GEN-04, GEN-05, GEN-06 (phase-local; see 05.1-CONTEXT.md)
 **Depends on:** Phase 5
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 
 **Success Criteria** (what must be TRUE):
 
@@ -258,7 +258,7 @@ Plans:
 
   **Wave 4** *(blocked on Wave 3)*
 
-  - [ ] 05.1-04-PLAN.md — Migrate `demo/generate-features/` to the unified schema + verify 5 cli templates generate unchanged
+  - [x] 05.1-04-PLAN.md — Migrate `demo/generate-features/` to the unified schema + verify 5 cli templates generate unchanged
 
   **Wave 5** *(blocked on Wave 4 — acceptance)*
 

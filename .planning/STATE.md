@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: "Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)"
-last_updated: "2026-05-30T03:34:10.692Z"
+last_updated: "2026-05-30T03:41:45.648Z"
 last_activity: 2026-05-30
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 33
-  completed_plans: 31
+  completed_plans: 32
   percent: 63
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 05.1 (ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-05-30
 
@@ -70,6 +70,7 @@ Progress: [██████████] 100% (21/21 plans completed across Ph
 | Phase 05.1 P01 | 35 min | 2 tasks | 14 files |
 | Phase 05.1 P02 | 8min | 2 tasks | 16 files |
 | Phase 05.1 P03 | ~10min | 2 tasks | 16 files |
+| Phase 05.1 P04 | ~12min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -137,6 +138,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 05.1 Plan 01]: User-approved Rule 4 branch-by-abstraction bridge — ship the new typed resolver (type:boolean top-level bool emit, single declaration-order pass, data['features'] namespace removed = #782 bug-4 fix, vars-style boolean prompt, D-17 guard) while KEEPING a thin legacy features: reader folding into the unified accumulation so test8-30 stay green at 100% coverage. Bridge removed in Plan 03; the 'features: gone' must_have relaxed to phase-end.
 - [Phase ?]: [Phase 05.1 Plan 01]: Patched-prompt coverage pattern — the y/n->bool mapping is unit-tested via patch.object(shell.Prompt,'prompt',...) returning 'yes'/'n'/'' (test31), so the bug-prone mapping has real coverage; only the raw .prompt() input read is pragma'd 'defensive: unreachable'.
 - [Phase ?]: [Phase 05.1 Plan 03]: Legacy features: bridge DELETED — GEN-01 fully true; engine no longer reads a top-level features: key. extend.when composes scalar/in-list/string-regex; requires: gates with full vocab AND-ed order-independently; a gated-out var renders its typed default (Q1) and its extend rules do not fire.
+- [Phase ?]: Demo generate-features migrated to unified type:/extend:/requires: schema; #782 demonstrated via top-level {% if docker %}
+- [Phase ?]: All 5 cli generate templates verified byte-identical (zero feature usage) and still generate under --defaults
 
 ### Roadmap Evolution
 
@@ -169,6 +172,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-30T03:33:51.779Z
+Last session: 2026-05-30T03:41:32.295Z
 Stopped at: Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)
 Resume file: None
