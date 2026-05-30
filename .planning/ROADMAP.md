@@ -231,7 +231,7 @@ Plans:
 **Goal:** Merge the unreleased `ext.generate` `features:` mechanism into the template `variables:` schema so optional features behave consistently with variables — prompted in declaration order, exposed at the top level of the template context, with a default-but-overridable boolean prompt — resolving Tom Freudenberg's feedback on closed PR #780 (#782). All changes are additive to the *released* `variables:` schema; the *unreleased* `features:` schema is removed.
 **Requirements**: GEN-01, GEN-02, GEN-03, GEN-04, GEN-05, GEN-06 (phase-local; see 05.1-CONTEXT.md)
 **Depends on:** Phase 5
-**Plans:** 0 plans
+**Plans:** 5 plans across 5 waves (sequential — single-file engine refactor in `ext_generate.py`; each wave's fixture migration must land alongside the engine change it exercises so the 100% coverage gate holds at every commit)
 
 **Success Criteria** (what must be TRUE):
   1. The `features:` top-level key (and `prompt_mode`, `enabled:`/`disabled:`, select `options:`-effects) no longer exists; all former feature behavior is expressed under `variables:` via `type:` + `extend:` + `requires:`.
@@ -243,7 +243,25 @@ Plans:
 
 Plans:
 
-- [ ] TBD (run /gsd-plan-phase 05.1 to break down)
+  **Wave 1**
+
+  - [ ] 05.1-01-PLAN.md — Unified ordered resolver + `type:` key + top-level `data[name]` emit + `type: boolean` string-form prompt (migrate test6/7/13)
+
+  **Wave 2** *(blocked on Wave 1)*
+
+  - [ ] 05.1-02-PLAN.md — `type: choice` numbered picker + polymorphic boolean object-form `prompt:` + accept/reject mapping + YAML bool-coercion guard (migrate select fixtures)
+
+  **Wave 3** *(blocked on Wave 2)*
+
+  - [ ] 05.1-03-PLAN.md — `extend.when` value/list/regex matching + depth-first nesting + top-level `requires:` (migrate requires/nesting fixtures; remove/repurpose test17/18)
+
+  **Wave 4** *(blocked on Wave 3)*
+
+  - [ ] 05.1-04-PLAN.md — Migrate `demo/generate-features/` to the unified schema + verify 5 cli templates generate unchanged
+
+  **Wave 5** *(blocked on Wave 4 — acceptance)*
+
+  - [ ] 05.1-05-PLAN.md — Coverage audit (pragma vocabulary + real mapping coverage) + CHANGELOG entries for the #782 fixes
 
 ### Phase 6: Release Cut 3.0.16
 
