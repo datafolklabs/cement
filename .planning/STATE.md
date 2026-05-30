@@ -4,13 +4,13 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: "Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)"
-last_updated: "2026-05-30T03:20:11.499Z"
+last_updated: "2026-05-30T03:34:10.692Z"
 last_activity: 2026-05-30
 progress:
   total_phases: 8
   completed_phases: 5
   total_plans: 33
-  completed_plans: 30
+  completed_plans: 31
   percent: 63
 ---
 
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 ## Current Position
 
 Phase: 05.1 (ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-05-30
 
@@ -69,6 +69,7 @@ Progress: [██████████] 100% (21/21 plans completed across Ph
 | Phase 03-internal-refactor-coverage-hardening P08 | 7 min | 2 atomic commits | 4 files |
 | Phase 05.1 P01 | 35 min | 2 tasks | 14 files |
 | Phase 05.1 P02 | 8min | 2 tasks | 16 files |
+| Phase 05.1 P03 | ~10min | 2 tasks | 16 files |
 
 ## Accumulated Context
 
@@ -135,6 +136,7 @@ Recent decisions affecting current work:
 - [Phase 03 Plan 08]: Phase 3 closed: 84 total commits on modernization-phase-3 branch across 8 waves (Wave 1: 3 / Wave 2: 2 / Wave 3: 18 / Wave 4: 2 / Wave 5: 4 / Wave 6: 6 / Wave 7: 43 / Wave 8: 4 — including planning artifacts and ad-hoc lint touch-ups). All 7 phase requirements (REFACTOR-01..04, COV-01..03) SATISFIED with traceability into 03-VERIFICATION.md. All 5 ROADMAP Phase 3 success criteria SATISFIED. 100% coverage gate held continuously across every commit. 03-PUBLIC-API-BASELINE.txt (934 lines) byte-identical with live AST walk. Permanent dev affordances (scripts/audit-public-api.py + Makefile target + ruff UP+FA family + locked-vocabulary pragma audit + D-15 categories + boundary-tag convention) retained for future regression checks across all subsequent 3.0.x patch work.
 - [Phase ?]: [Phase 05.1 Plan 01]: User-approved Rule 4 branch-by-abstraction bridge — ship the new typed resolver (type:boolean top-level bool emit, single declaration-order pass, data['features'] namespace removed = #782 bug-4 fix, vars-style boolean prompt, D-17 guard) while KEEPING a thin legacy features: reader folding into the unified accumulation so test8-30 stay green at 100% coverage. Bridge removed in Plan 03; the 'features: gone' must_have relaxed to phase-end.
 - [Phase ?]: [Phase 05.1 Plan 01]: Patched-prompt coverage pattern — the y/n->bool mapping is unit-tested via patch.object(shell.Prompt,'prompt',...) returning 'yes'/'n'/'' (test31), so the bug-prone mapping has real coverage; only the raw .prompt() input read is pragma'd 'defensive: unreachable'.
+- [Phase ?]: [Phase 05.1 Plan 03]: Legacy features: bridge DELETED — GEN-01 fully true; engine no longer reads a top-level features: key. extend.when composes scalar/in-list/string-regex; requires: gates with full vocab AND-ed order-independently; a gated-out var renders its typed default (Q1) and its extend rules do not fire.
 
 ### Roadmap Evolution
 
@@ -167,6 +169,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-05-30T03:20:05.906Z
+Last session: 2026-05-30T03:33:51.779Z
 Stopped at: Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)
 Resume file: None

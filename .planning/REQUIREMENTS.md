@@ -86,7 +86,7 @@ unreleased, so the `features:` schema may be reshaped freely; the *released*
 - [x] **GEN-02**: Variables gain `type: string | boolean | choice` (default `string`); `boolean→bool`, `choice→str`, all exposed at top level of the template context so `{% if feature_x %}` works (#782 pt 4; D-04, D-05)
 - [x] **GEN-03**: Former features prompt in declaration order alongside variables, single pass (#782 pt 1; D-06)
 - [x] **GEN-04**: `type: boolean` renders a default `[(Y)es/(N)o] [default]:` prompt (no author `validate`/`case`); `prompt:` is polymorphic — string label, `false` (silent), or object `{text, accept, reject}` where non-matching input aborts like a failed `validate:` (#782 pts 2-3; D-12..D-15)
-- [ ] **GEN-05**: Conditional effects via `extend:` rule-list (`when` value/list/regex, composing + nesting) and dependencies via nesting + top-level `requires:` inject `variables`/`exclude`/`ignore` correctly (D-07..D-11)
+- [x] **GEN-05**: Conditional effects via `extend:` rule-list (`when` value/list/regex, composing + nesting) and dependencies via nesting + top-level `requires:` inject `variables`/`exclude`/`ignore` correctly (D-07..D-11)
 - [x] **GEN-06**: A variable with none of the new keys behaves byte-identically to the released `variables:` schema; all in-repo cli templates, `demo/generate-features/`, and the ~22 generate test fixtures migrated; 100% coverage + ruff + mypy stay green (D-03, D-19)
 
 ### Release
@@ -247,7 +247,7 @@ Populated by the roadmapper during phase mapping.
 | GEN-02 | Phase 05.1 | Complete |
 | GEN-03 | Phase 05.1 | Complete |
 | GEN-04 | Phase 05.1 | Complete |
-| GEN-05 | Phase 05.1 | Pending |
+| GEN-05 | Phase 05.1 | Complete |
 | GEN-06 | Phase 05.1 | Complete |
 
 **Coverage:**
