@@ -1,13 +1,13 @@
 ---
 
 variables:
-    -   name: app_name
-        prompt: App Name
-        default: myapp
 
-features:
-    -   name: feature_choice
-        prompt_mode: select
-        prompt: "Pick"
-        default: "A"
-        options: []
+-   name: app_name
+    prompt: App Name
+    default: myapp
+
+-   name: feature_choice
+    type: choice
+    prompt: "Pick"
+    default: "A"
+    options: []

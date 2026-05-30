@@ -1,0 +1,11 @@
+---
+
+variables:
+
+-   name: enable_thing
+    type: boolean
+    default: false
+    prompt:
+        text: "Bare bool-like token in accept (YAML 1.1 coercion landmine)"
+        accept: [y, yes]
+        reject: [n, "no"]
