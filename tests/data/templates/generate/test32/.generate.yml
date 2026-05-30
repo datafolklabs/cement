@@ -1,0 +1,8 @@
+---
+
+variables:
+
+-   name: bad_bool
+    type: boolean
+    default: true
+    case: upper

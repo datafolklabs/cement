@@ -1,0 +1,1 @@
+{% if enable_thing %}enabled{% else %}disabled{% endif %}
