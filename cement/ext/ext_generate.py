@@ -26,233 +26,6 @@ class GenerateTemplateAbstractBase(Controller):
 
     _meta: Meta  # type: ignore
 
-    def _process_features(self,
-                          features: list[dict[str, Any]],
-                          vars: list[dict[str, Any]],
-                          exclude_list: list[str],
-                          ignore_list: list[str],
-                          data: dict[str, Any]) -> None:
-        # LEGACY BRIDGE (#782, Phase 05.1 Plan 01, user-approved Rule 4):
-        # the released `variables:` engine and the new typed resolver are
-        # unified in `_generate`. The unreleased `features:` schema is being
-        # superseded by `type: boolean`/`type: choice` variables, but the
-        # `requires`/`select`/`enabled`/`disabled` equivalents only fully land
-        # in Plans 02-03. Until then this method KEEPS reading a top-level
-        # `features:` block and folds each legacy feature's resolved
-        # enabled/disabled/options effects into the SAME vars/exclude/ignore
-        # accumulation the new resolver consumes — so the ~22 un-migrated
-        # fixtures (test8-30) stay green under the 100%-coverage gate. This
-        # bridge is REMOVED in Plan 03 once the last fixture is migrated.
-        # NOTE: per D-05 (bug #4 fix) this no longer writes a
-        # `data['features']` namespace — folded feature variables emit at the
-        # top level via the unified resolver, like every other variable.
-        #
-        # validate up front so misconfigurations fail fast and consistently
-        # under `python -O` (asserts get stripped, ValueError does not).
-        feature_by_name: dict[str, dict[str, Any]] = {}
-        for feature in features:
-            if feature.get('name') is None:
-                raise ValueError(
-                    "Required feature config key missing: name")
-            feature_by_name[feature['name']] = feature
-        for feature in features:
-            for req in feature.get('requires', []):
-                if req not in feature_by_name:
-                    raise ValueError(
-                        f"Feature '{feature['name']}' requires unknown "
-                        f"feature '{req}'")
-
-        # `prompt_mode` whitelist + select-mode schema validation. Runs
-        # up front so misconfigurations surface before any prompt is
-        # shown (matches the existing `requires` validation discipline).
-        # Default is 'boolean' (legacy semantics, byte-identical to the
-        # pre-#779 code path); 'select' opts in to the multi-valued
-        # numbered-list flow built on shell.Prompt.
-        for feature in features:
-            mode = feature.get('prompt_mode', 'boolean')
-            if mode not in ('boolean', 'select'):
-                raise ValueError(
-                    f"Feature '{feature['name']}' has invalid "
-                    f"prompt_mode '{mode}' "
-                    f"(must be 'boolean' or 'select')")
-            if mode == 'boolean':
-                continue
-            if 'enabled' in feature or 'disabled' in feature:
-                raise ValueError(
-                    f"Feature '{feature['name']}' uses prompt_mode: "
-                    f"select; 'enabled'/'disabled' blocks are not "
-                    f"allowed in this mode")
-            # LEGACY-BRIDGE select-schema validation. The per-error
-            # `raise` branches below are now DEAD: every fixture that used
-            # to trigger them (empty options / option missing value /
-            # duplicate labels / missing default / default-not-in-values)
-            # migrated to `type: choice` in Plan 02, where `_resolve_choice`
-            # owns the same fail-fast ValueError validation under real
-            # coverage (test20/21/26/28/30). Only valid select fixtures
-            # (test24/test25) still flow through here via the bridge; the
-            # whole bridge is removed in Plan 03. The dead raises are
-            # pragma'd rather than deleted to keep the bridge's shape intact
-            # for the Plan-03 removal.
-            options = feature.get('options') or []
-            if not options:
-                raise ValueError(  # pragma: nocover  # defensive: unreachable
-                    f"Feature '{feature['name']}' uses prompt_mode: "
-                    f"select but has no 'options' branches")
-            values: list[str] = []
-            labels: list[str] = []
-            for opt in options:
-                if opt.get('value') is None:
-                    raise ValueError(  # pragma: nocover  # defensive: unreachable
-                        f"Feature '{feature['name']}' has an 'options' "
-                        f"branch missing required key: value")
-                # YAML may decode unquoted `1` as int; coerce so both
-                # `value: 1` and `value: "1"` compare uniformly against
-                # the resolved feature state (always a str).
-                values.append(str(opt['value']))
-                labels.append(opt.get('prompt') or str(opt['value']))
-            if len(set(labels)) != len(labels):
-                raise ValueError(  # pragma: nocover  # defensive: unreachable
-                    f"Feature '{feature['name']}' has duplicate option "
-                    f"labels {labels} — each option's effective display "
-                    f"label (prompt: or str(value)) must be unique so "
-                    f"the numbered selection is unambiguous")
-            # `default` is required for prompt_mode: select. It's the
-            # prompt's default value AND the value `--defaults` dispatches
-            # to without prompting; must itself appear in `options`.
-            if feature.get('default') is None:
-                raise ValueError(  # pragma: nocover  # defensive: unreachable
-                    f"Feature '{feature['name']}' uses prompt_mode: "
-                    f"select but has no 'default' value")
-            if str(feature['default']) not in values:
-                raise ValueError(  # pragma: nocover  # defensive: unreachable
-                    f"Feature '{feature['name']}' default "
-                    f"'{feature['default']}' is not in options "
-                    f"values {values}")
-
-        # Resolve features lazily and recursively so that:
-        #   1. resolution is order-independent — a feature may declare
-        #      `requires` against another feature defined later in the YAML;
-        #   2. interactive runs do not nag the user for a feature whose
-        #      `requires` already resolved to False (the prompt is reached
-        #      only after every prerequisite returned True).
-        #
-        # For prompt_mode: select features the state is the chosen
-        # option's `value` (str); for legacy boolean features it is a
-        # bool.
-        feature_states: dict[str, bool | str] = {}
-
-        def _resolve(name: str) -> bool | str:
-            if name in feature_states:
-                return feature_states[name]
-            feature = feature_by_name[name]
-            for req in feature.get('requires', []):
-                if not _resolve(req):
-                    self.app.log.warning(
-                        f"Feature '{name}' disabled (requires: {req})"
-                    )
-                    feature_states[name] = False
-                    return False
-            mode = feature.get('prompt_mode', 'boolean')
-            if mode == 'select':
-                # Validation above guarantees `default` is set, is in
-                # `options` values, and that all labels are unique. The
-                # --defaults dispatch is direct; the interactive path
-                # delegates to shell.Prompt for numbered display,
-                # whitelist enforcement, case-insensitive matching,
-                # default fallback, and retry/abort semantics.
-                default = str(feature['default'])
-                if self.app.pargs.defaults:
-                    feature_states[name] = default
-                else:
-                    options = feature['options']  # pragma: nocover
-                    values = [  # pragma: nocover
-                        str(opt['value']) for opt in options
-                    ]
-                    labels = [  # pragma: nocover
-                        opt.get('prompt') or str(opt['value'])
-                        for opt in options
-                    ]
-                    default_label = (  # pragma: nocover
-                        labels[values.index(default)]
-                    )
-                    # Format: leading \n visually separates the
-                    # numbered list from any prior prompt's output;
-                    # trailing ':' matches the boolean feature prompt
-                    # (line 175) and variable prompt (line 296) which
-                    # both hardcode `:` at the end of their format
-                    # strings. Template authors should NOT include
-                    # trailing punctuation in their `prompt:` field
-                    # (same convention as variables).
-                    prompt_text = (  # pragma: nocover
-                        feature.get('prompt') or f"Select Feature: {name}"
-                    )
-                    prompt_text = f"\n{prompt_text}:"  # pragma: nocover
-
-                    class SelectPrompt(shell.Prompt):  # pragma: nocover
-                        class Meta:
-                            text = prompt_text
-                            options = labels
-                            numbered = True
-                            case_insensitive = True
-                            default = default_label
-
-                    chosen_label = SelectPrompt().prompt()  # pragma: nocover
-                    feature_states[name] = (  # pragma: nocover
-                        values[labels.index(chosen_label)]
-                    )
-            else:
-                bool_default = bool(feature.get('default', False))
-                if self.app.pargs.defaults:
-                    feature_states[name] = bool_default
-                else:
-                    default_hint = 'Y/n' if bool_default else 'y/N'  # pragma: nocover
-                    default_val = 'y' if bool_default else 'n'  # pragma: nocover
-
-                    class BoolFeaturePrompt(shell.Prompt):  # pragma: nocover
-                        class Meta:
-                            text = f"Enable Feature: {name} [{default_hint}]:"
-                            default = default_val
-
-                    bp = BoolFeaturePrompt(auto=False)  # pragma: nocover
-                    bval: str = bp.prompt() or default_val  # pragma: nocover
-                    feature_states[name] = bval.lower() == 'y'  # pragma: nocover
-            return feature_states[name]
-
-        for feature in features:
-            _resolve(feature['name'])
-
-        # merge enabled/disabled/options configs into vars/exclude/ignore.
-        # D-05: NO `data['features']` namespace — folded variables emit
-        # top-level via the unified resolver (root of bug #4 removed).
-        for feature in features:
-            name = feature['name']
-            state = feature_states[name]
-
-            if isinstance(state, bool):
-                # Legacy boolean path — byte-identical to pre-#779.
-                # A select-mode feature disabled via `requires` also
-                # lands here (state == False) — its `options` branches
-                # contribute nothing, matching boolean-`disabled`
-                # semantics for a disabled feature.
-                block_key = 'enabled' if state else 'disabled'
-                block = feature.get(block_key) or {}
-            else:
-                # prompt_mode: select — look up the matched option by
-                # value. Validation guarantees a match exists.
-                block = {}
-                for opt in feature.get('options') or []:
-                    if str(opt['value']) == state:
-                        block = opt
-                        break
-
-            # Generalize commit 6895aa52's `or []` idiom from the
-            # top-level YAML keys to the per-block keys so a template
-            # author writing `variables: null` (etc.) inside any block
-            # coalesces safely.
-            vars.extend(block.get('variables') or [])
-            exclude_list.extend(block.get('exclude') or [])
-            ignore_list.extend(block.get('ignore') or [])
-
     def _generate(self, source: str, dest: str) -> None:
         msg = f'Generating {self.app._meta.label} {self._meta.label} in {dest}'
         self.app.log.info(msg)
@@ -282,12 +55,6 @@ class GenerateTemplateAbstractBase(Controller):
         g_config_yml = rf'^(.*)[\/\\\\]{self._meta.label}[\/\\\\]\.generate\.yml$'
         ignore_list.append(g_config_yml)
 
-        # process features (merge enabled/disabled config into vars/exclude/ignore)
-        features = g_config.get('features', [])
-        if features:
-            self._process_features(features, vars, exclude_list,
-                                   ignore_list, data)
-
         # `var_defaults` is the released compat anchor (extended ADDITIVELY
         # with `type`/`extend`/`requires`). A `type: string` variable with
         # none of the new keys takes the identity path below and behaves
@@ -300,7 +67,17 @@ class GenerateTemplateAbstractBase(Controller):
             'default': None,
             'type': 'string',
             'extend': None,
+            'requires': None,
         }
+
+        # Index the top-level variables by name so `requires:` can resolve
+        # a referenced variable on demand (D-09/D-11). Only top-level
+        # variables are addressable by `requires`; nested
+        # `extend.variables` are gated by their parent rule (D-10).
+        var_by_name: dict[str, dict[str, Any]] = {}
+        for defined_var in vars:
+            if defined_var.get('name') is not None:
+                var_by_name[defined_var['name']] = defined_var
 
         def _resolve_string(var: dict[str, Any]) -> Any:
             # Released `type: string` resolution — byte-identical to the
@@ -523,17 +300,87 @@ class GenerateTemplateAbstractBase(Controller):
             # a label).
             return values[labels.index(str(chosen_label))]
 
+        def _when_matches(value: Any, when: Any, vtype: str) -> bool:
+            # Compose the three `extend.when` / `requires` match forms
+            # (D-07), dispatching on the carrying variable's `type` (Q2):
+            #   - list   -> in-list membership. Booleans compare by Python
+            #     `==`; choice/string members str()-coerce both sides.
+            #   - regex  -> `re.match(when, value)` — STRING type only
+            #     (mirrors `validate:`); a non-string `when` on a string
+            #     var still falls through to scalar equality below.
+            #   - scalar -> equality. Booleans by Python `==` (so
+            #     `when: true` matches `True`, not the string "True");
+            #     choice/string by str()-coerced equality (so `when: 1`
+            #     matches a "1" option value; per the L219 discipline).
+            if isinstance(when, list):
+                if vtype == 'boolean':
+                    return value in when
+                return str(value) in [str(w) for w in when]
+            if vtype == 'string' and isinstance(when, str):
+                return re.match(when, value) is not None
+            if vtype == 'boolean':
+                return bool(value == when)
+            return str(when) == str(value)
+
+        def _gated_default(var: dict[str, Any], vtype: str) -> Any:
+            # Value emitted for a `requires`-gated-out variable (Q1): its
+            # own `default`, typed like a fully-resolved value, so the
+            # template never KeyErrors. boolean -> Python bool;
+            # choice/string -> str(default) (matching the resolved-path
+            # str invariant). A gated-out var's extend rules do NOT fire.
+            if vtype == 'boolean':
+                return bool(var['default'])
+            return str(var['default'])
+
+        def _requires_satisfied(var: dict[str, Any]) -> bool:
+            # Evaluate top-level `requires:` (D-09/D-11), AND-ed across
+            # keys. Each referenced variable is resolved ON DEMAND (lazy
+            # recursion + memoize-on-`data`), so a prerequisite declared
+            # LATER still resolves first — resolution is order-independent.
+            # Vocab forms (matching `extend.when`):
+            #   - `requires: [name]`        -> `name` must be truthy
+            #   - `requires: {name: value}` -> equality / regex / in-list
+            #     via `_when_matches`
+            requires = var['requires']
+            if requires is None:
+                return True
+
+            if isinstance(requires, dict):
+                items = list(requires.items())
+            else:
+                # list/sugar form: each entry is a bare name -> truthy
+                items = [(name, None) for name in requires]
+
+            for req_name, expected in items:
+                if req_name not in var_by_name:
+                    raise ValueError(
+                        f"Variable '{var['name']}' requires unknown "
+                        f"variable '{req_name}'")
+                resolve_and_emit(var_by_name[req_name])
+                req_value = data[req_name]
+                req_var = var_by_name[req_name]
+                if expected is None:
+                    # truthy sugar
+                    if not req_value:
+                        return False
+                else:
+                    if not _when_matches(req_value, expected,
+                                         req_var.get('type', 'string')):
+                        return False
+            return True
+
         def resolve_and_emit(defined_var: dict[str, Any]) -> None:
             var = var_defaults.copy()
             var.update(defined_var)
-            assert var['name'] is not None, \
-                "Required generate config key missing: name"
+            if var['name'] is None:
+                raise ValueError(
+                    "Required generate config key missing: name")
 
             # Memoize on `data` membership so a variable referenced more than
-            # once (e.g. via future `requires`) resolves exactly once and
-            # resolution stays declaration-order-independent (D-11).
+            # once (e.g. via `requires`) resolves exactly once and resolution
+            # stays declaration-order-independent (D-11).
             if var['name'] in data:
-                return  # pragma: nocover  # defensive: unreachable
+                return
 
             vtype = var['type']
             if vtype not in ('string', 'boolean', 'choice'):
@@ -551,6 +398,14 @@ class GenerateTemplateAbstractBase(Controller):
                     f"case:/validate: are string-only; variable "
                     f"'{var['name']}' is type: {vtype}")
 
+            # `requires:` gate (D-09/D-11). If any prerequisite fails, the
+            # var is GATED OUT: set to its `default` at data[name] (Q1) and
+            # its `extend` rules do NOT fire. Resolved BEFORE prompting so an
+            # interactive run never nags for a gated-out variable.
+            if not _requires_satisfied(var):
+                data[var['name']] = _gated_default(var, vtype)
+                return
+
             value: Any
             if vtype == 'boolean':
                 value = _resolve_boolean(var)
@@ -564,22 +419,11 @@ class GenerateTemplateAbstractBase(Controller):
             # `extend:` rules compose — every rule whose `when` matches the
             # resolved value fires, accumulating exclude/ignore and recursing
             # depth-first into its nested variables in place (D-07/D-08).
-            # Match semantics dispatch on the variable `type` (Q2):
-            #   - boolean -> Python `==` (so `when: true` matches `True`,
-            #     NOT str-coerce, which would also match "True");
-            #   - choice/string scalar -> str()-coerced equality (so
-            #     `when: 1` matches a "1" option value and `when: flask`
-            #     matches "flask"; per RESEARCH L219 discipline).
-            # LIST-form (`when: [a, b]`) and STRING-type regex `when` matching
-            # remain deferred to Plan 03; the migrated fixtures use scalar
-            # `when` only.
+            # `_when_matches` composes scalar equality, in-list membership,
+            # and (string-type) regex; multiple matching rules all fire.
             for rule in var['extend'] or []:
                 when = rule.get('when')
-                if vtype == 'boolean':
-                    matched = value == when
-                else:
-                    matched = str(when) == str(value)
-                if matched:
+                if _when_matches(value, when, vtype):
                     exclude_list.extend(rule.get('exclude') or [])
                     ignore_list.extend(rule.get('ignore') or [])
                     for nested in rule.get('variables') or []:

@@ -203,9 +203,27 @@ Features:
   `validate:`. A bool-like `accept:`/`reject:` token that YAML 1.1
   coerced to a Python bool raises `ValueError` telling the author to
   quote it.
+- `[ext.generate]` `extend.when` now composes three match forms — a
+  scalar value (equality), an in-list membership (`when: [a, b]`), and a
+  string-type regex (`re.match`, string variables only) — and multiple
+  matching rules all fire, accumulating their `variables`/`exclude`/
+  `ignore`. `extend.variables` are nested and prompted depth-first in
+  place only when their parent rule fires. A new top-level `requires:`
+  key gates a variable using the same match vocabulary (`[name]` →
+  truthy, `{name: value}` → equality, `{name: [v1, v2]}` → in-list),
+  AND-ed across keys and resolved order-independently via lazy
+  recursion. A requires-gated-out variable is set to its `default` (so
+  templates never `KeyError`) and its `extend` rules do not fire.
   - [Issue #782](https://github.com/datafolklabs/cement/issues/782)
 
 Refactoring:
+
+- `[ext.generate]` Remove the unreleased `features:` schema
+  (`prompt_mode`, `enabled:`/`disabled:` blocks, select `options:`
+  effects) wholesale — everything it expressed is now a `type:
+  boolean`/`type: choice` variable carrying `extend:`/`requires:`. The
+  legacy compatibility bridge is deleted; `features:` is no longer read
+  by the engine (#782).
 
 - `[ext.smtp]` PEP 8 naming, idiomatic string methods, and cleaner type validation
 - `[ext.smtp]` Refactor `_make_message` into focused private methods

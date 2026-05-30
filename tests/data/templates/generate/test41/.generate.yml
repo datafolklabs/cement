@@ -1,0 +1,35 @@
+---
+
+# Dict-form requires: {name: value} equality (D-09). `dep_ok` requires
+# mode == "advanced" (satisfied → resolves to its default and its extend
+# fires); `dep_no` requires mode == "basic" (NOT satisfied → gated out,
+# renders its default, extend does not fire).
+
+variables:
+    -   name: mode
+        type: choice
+        prompt: "Mode"
+        default: "advanced"
+        options: ["basic", "advanced"]
+
+    -   name: dep_ok
+        type: string
+        prompt: false
+        default: "ok"
+        requires:
+            mode: advanced
+        extend:
+            -   when: "ok"
+                ignore:
+                    - '.*dep-ok-ignored.*'
+
+    -   name: dep_no
+        type: string
+        prompt: false
+        default: "no"
+        requires:
+            mode: basic
+        extend:
+            -   when: "no"
+                ignore:
+                    - '.*dep-no-kept.*'
