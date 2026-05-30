@@ -279,11 +279,11 @@ class GenerateTemplateAbstractBase(Controller):
             if self.app.pargs.defaults:
                 return default
 
-            default_label = labels[values.index(default)]  # pragma: nocover
-            prompt_text = var['prompt'] or f"Select: {var['name']}"  # pragma: nocover
-            prompt_text = f"\n{prompt_text}:"  # pragma: nocover
+            default_label = labels[values.index(default)]
+            prompt_text = var['prompt'] or f"Select: {var['name']}"
+            prompt_text = f"\n{prompt_text}:"
 
-            class SelectPrompt(shell.Prompt):  # pragma: nocover
+            class SelectPrompt(shell.Prompt):
                 class Meta:
                     text = prompt_text
                     options = labels
@@ -489,7 +489,7 @@ def setup_template_items(app: "App") -> None:
 
         # FIXME: AttributeError can fire if the imported module lacks
         # __file__ (e.g., built-in / namespace packages); not testable
-        # from cement, so keep pragma: nocover on this branch.
+        # from cement, so the branch below is excluded from coverage.
         except AttributeError:  # pragma: nocover  # untestable: dynamic import
             msg = ('unable to load template module '
                    f"'{mod_name}' from '{'.'.join(mod_parts)}'")
