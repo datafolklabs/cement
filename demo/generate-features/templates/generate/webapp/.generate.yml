@@ -6,49 +6,54 @@ variables:
         default: "myproject"
         case: lower
 
-features:
     -   name: docker
-        prompt_mode: boolean
+        type: boolean
         default: true
-        enabled:
-            variables:
-                -   name: python_version
-                    prompt: "Python Version (for Docker)"
-                    default: "3.13"
-        disabled:
-            ignore:
-                - '.*Dockerfile.*'
-                - '.*\.dockerignore.*'
+        extend:
+            -   when: true
+                variables:
+                    -   name: python_version
+                        prompt: "Python Version (for Docker)"
+                        default: "3.13"
+            -   when: false
+                ignore:
+                    - '.*Dockerfile.*'
+                    - '.*\.dockerignore.*'
 
     -   name: docker_compose
-        prompt_mode: boolean
+        type: boolean
         default: true
         requires:
             - docker
-        disabled:
-            ignore:
-                - '.*docker-compose.*'
+        extend:
+            -   when: false
+                ignore:
+                    - '.*docker-compose.*'
 
     -   name: web_framework
-        prompt_mode: select
+        type: choice
         prompt: "Web Framework"
         default: "none"
         options:
             -   value: "none"
                 prompt: "None — no web framework"
+            -   value: "flask"
+                prompt: "Flask Web Framework"
+            -   value: "fastapi"
+                prompt: "FastAPI Web Framework"
+        extend:
+            -   when: "none"
                 ignore:
                     - '.*requirements\.txt.*'
                     - '.*wsgi\.py.*'
-            -   value: "flask"
-                prompt: "Flask Web Framework"
+            -   when: "flask"
                 variables:
                     -   name: framework_version
                         prompt: false
                         default: "3.0"
                 ignore:
                     - '.*fastapi.*'
-            -   value: "fastapi"
-                prompt: "FastAPI Web Framework"
+            -   when: "fastapi"
                 variables:
                     -   name: framework_version
                         prompt: false
