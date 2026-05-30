@@ -213,8 +213,12 @@ Features:
   truthy, `{name: value}` → equality, `{name: [v1, v2]}` → in-list),
   AND-ed across keys and resolved order-independently via lazy
   recursion. A requires-gated-out variable is set to its `default` (so
-  templates never `KeyError`) and its `extend` rules do not fire.
+  templates never `KeyError`) and its `extend` rules do not fire. The
+  unified schema also addresses the PR #780 review feedback: features
+  prompt after vars in declaration order, with custom per-feature
+  prompt text and vars-style input.
   - [Issue #782](https://github.com/datafolklabs/cement/issues/782)
+  - [PR #780](https://github.com/datafolklabs/cement/pull/780)
 
 Refactoring:
 
@@ -225,10 +229,11 @@ Refactoring:
   legacy compatibility bridge is deleted; `features:` is no longer read
   by the engine (#782).
 
-- `[dev]` Migrate the `demo/generate-features/` webapp template to the unified
-  `type:`/`extend:`/`requires:` schema (off the removed `features:` schema) and
-  demonstrate the #782 fix — `{% if docker %}` / `{% if web_framework == ... %}`
-  now render against top-level bool/choice exposure
+- `[dev]` Migrate the `demo/generate-features/` webapp template to the
+  unified `type:`/`extend:`/`requires:` schema (off the removed
+  `features:` schema) and demonstrate the #782 fix — `{% if docker %}`
+  and `{% if web_framework == ... %}` now render against the top-level
+  bool/choice exposure
 - `[ext.smtp]` PEP 8 naming, idiomatic string methods, and cleaner type validation
 - `[ext.smtp]` Refactor `_make_message` into focused private methods
 - `[ext.smtp]` Simplify X-header normalization and preserve original casing
