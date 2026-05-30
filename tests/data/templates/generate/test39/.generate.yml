@@ -1,0 +1,22 @@
+---
+
+# extend.when STRING-type regex (re.match, string vars only): the
+# resolved value "v2.1" matches `^v2` so that rule fires; `^v3` does
+# not match so its rule does not fire.
+
+variables:
+    -   name: app_name
+        prompt: App Name
+        default: myapp
+
+    -   name: version
+        type: string
+        prompt: false
+        default: "v2.1"
+        extend:
+            -   when: "^v2"
+                ignore:
+                    - '.*not-v2.*'
+            -   when: "^v3"
+                ignore:
+                    - '.*v3-only.*'

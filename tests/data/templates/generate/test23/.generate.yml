@@ -5,13 +5,14 @@ variables:
         prompt: App Name
         default: myapp
 
-features:
     -   name: legacy_bool_feature
+        type: boolean
         default: true
-        enabled:
-            variables: null
-            exclude: null
-            ignore: null
-        disabled:
-            ignore:
-                - '.*nonexistent.*'
+        extend:
+            -   when: true
+                variables: null
+                exclude: null
+                ignore: null
+            -   when: false
+                ignore:
+                    - '.*nonexistent.*'

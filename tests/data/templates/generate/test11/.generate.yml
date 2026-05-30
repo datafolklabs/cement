@@ -6,18 +6,20 @@ variables:
     prompt: App Name
     default: myapp
 
-features:
-
 -   name: feature1
+    type: boolean
     default: false
-    disabled:
-        ignore:
-            - '.*feature1-only.*'
+    extend:
+        -   when: false
+            ignore:
+                - '.*feature1-only.*'
 
 -   name: feature2
+    type: boolean
     default: true
     requires:
         - feature1
-    disabled:
-        ignore:
-            - '.*feature2-only.*'
+    extend:
+        -   when: true
+            ignore:
+                - '.*feature2-only.*'

@@ -1,0 +1,23 @@
+---
+
+# extend.when LIST-form membership: `when: [flask, fastapi]` fires
+# because the resolved value "flask" is a member; `when: [fastapi]`
+# does NOT fire because "flask" is not a member.
+
+variables:
+    -   name: app_name
+        prompt: App Name
+        default: myapp
+
+    -   name: web_framework
+        type: choice
+        prompt: "Web Framework"
+        default: "flask"
+        options: ["none", "flask", "fastapi"]
+        extend:
+            -   when: ["flask", "fastapi"]
+                ignore:
+                    - '.*not-web.*'
+            -   when: ["fastapi"]
+                ignore:
+                    - '.*fastapi-only.*'

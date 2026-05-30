@@ -224,15 +224,19 @@ def test_generate_features_disabled(tmp):
 
 
 def test_generate_features_missing_name(tmp):
+    # test8: a variable missing the required `name` key → ValueError
+    # (config schema error, fail-fast, survives `python -O`).
     argv = ['generate', 'test8', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
-        with raises(ValueError, match='Required feature config key missing: name'):
+        with raises(ValueError, match='Required generate config key missing: name'):
             app.run()
 
 
 def test_generate_features_requires_satisfied(tmp):
-    # test9: feature1=true (default), feature2=true (default), feature2 requires feature1
+    # test9: feature1=true (default), feature2=true (default) requires
+    # feature1. Both gates pass, neither `when: false` ignore fires, so
+    # both feature1-only and feature2-only stay.
     argv = ['generate', 'test9', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -245,8 +249,11 @@ def test_generate_features_requires_satisfied(tmp):
 
 
 def test_generate_features_requires_not_satisfied(tmp):
-    # test11: feature1=false (default), feature2=true (default) but requires feature1
-    # feature2 should be auto-disabled because feature1 is off
+    # test11: feature1=false (default) → its `when: false` ignores
+    # feature1-only. feature2=true requires feature1, so feature2 is
+    # GATED OUT: set to its default and its `when: true` extend rule does
+    # NOT fire (Q1). feature2-only therefore STAYS (the gated-out var's
+    # effects are omitted, not inverted into a disabled block).
     argv = ['generate', 'test11', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -254,19 +261,20 @@ def test_generate_features_requires_not_satisfied(tmp):
 
         assert exists_join(tmp.dir, 'take-me')
 
-        # feature1 disabled: feature1-only ignored
+        # feature1 false: its when:false rule fires, feature1-only ignored
         assert not exists_join(tmp.dir, 'feature1-only')
 
-        # feature2 auto-disabled via requires: feature2-only ignored
-        assert not exists_join(tmp.dir, 'feature2-only')
+        # feature2 gated out via requires: its extend rule does NOT fire,
+        # so feature2-only is kept (Q1 — effects omitted, not disabled)
+        assert exists_join(tmp.dir, 'feature2-only')
 
 
 def test_generate_features_requires_unknown(tmp):
-    # test10: feature requires a nonexistent feature
+    # test10: a variable requires a nonexistent variable → ValueError.
     argv = ['generate', 'test10', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
-        with raises(ValueError, match="requires unknown feature"):
+        with raises(ValueError, match="requires unknown variable"):
             app.run()
 
 
@@ -351,29 +359,39 @@ def test_generate_invalid_type(tmp):
 
 
 def test_generate_features_transitive_requires(tmp):
-    # test14: feature1=false, feature2=true requires feature1,
-    # feature3=true requires feature2
-    # disabling feature1 should cascade: feature2 disabled, then feature3 disabled
+    # test14: feature1=false gates feature2 (default false), which gates
+    # feature3 (default false). Each gated-out variable resolves to its
+    # own falsy default (Q1), so the cascade propagates: a downstream
+    # `requires` against a gated-out var also fails. The resolved bool
+    # values render into take-me; all three end up False.
     argv = ['generate', 'test14', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
         app.run()
 
         assert exists_join(tmp.dir, 'take-me')
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            res = f.read()
+            # transitive cascade: all three gated-out to their False default
+            assert 'feature1=False' in res
+            assert 'feature2=False' in res
+            assert 'feature3=False' in res
 
-        # all three features should be disabled via transitive requires
+        # feature1 false: its when:false rule fires, feature1-only ignored
         assert not exists_join(tmp.dir, 'feature1-only')
-        assert not exists_join(tmp.dir, 'feature2-only')
-        assert not exists_join(tmp.dir, 'feature3-only')
+
+        # feature2/feature3 gated out: their extend rules do NOT fire (Q1),
+        # so their -only files stay
+        assert exists_join(tmp.dir, 'feature2-only')
+        assert exists_join(tmp.dir, 'feature3-only')
 
 
 def test_generate_features_requires_out_of_order(tmp):
     # test15: feature_b (requires feature_a) is declared BEFORE feature_a.
-    # Both default to true. With the legacy single-pass resolver feature_b
-    # would be auto-disabled because feature_a's state has not been
-    # computed yet. The two-pass / fixpoint resolver evaluates all states
-    # first, then cascades, so both end up enabled regardless of the
-    # YAML declaration order.
+    # Both default to true. The lazy recursive resolver resolves
+    # feature_a on demand when feature_b's requires gate is checked, so
+    # resolution is order-independent and both stay enabled regardless of
+    # the YAML declaration order.
     argv = ['generate', 'test15', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -387,7 +405,9 @@ def test_generate_features_requires_out_of_order(tmp):
 
 
 def test_generate_features_null_block(tmp):
-    # test12: feature with enabled: null (no block defined)
+    # test12: a type: boolean variable with an extend rule whose
+    # variables/exclude/ignore sub-keys are all null → coalesce to empty
+    # lists via the `... or []` idiom (no crash).
     argv = ['generate', 'test12', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -453,24 +473,12 @@ def test_generate_choice_defaults(tmp):
         assert not exists_join(tmp.dir, 'branch-2-only')
 
 
-def test_generate_features_select_collision(tmp):
-    # test17: prompt_mode: select + enabled:/disabled: blocks on the
-    # same feature → ValueError at config validation.
-    argv = ['generate', 'test17', tmp.dir, '--defaults']
-
-    with GenerateApp(argv=argv) as app:
-        with raises(ValueError,
-                    match="'enabled'/'disabled' blocks are not allowed"):
-            app.run()
-
-
-def test_generate_features_select_invalid_prompt_mode(tmp):
-    # test18: prompt_mode: bogus → ValueError (whitelist enforced).
-    argv = ['generate', 'test18', tmp.dir, '--defaults']
-
-    with GenerateApp(argv=argv) as app:
-        with raises(ValueError, match="invalid prompt_mode 'bogus'"):
-            app.run()
+# test17 (select_collision) and test18 (invalid_prompt_mode) were
+# REMOVED in Plan 03: they asserted on the `prompt_mode`/`enabled`/
+# `disabled` schema that ceases to exist once the legacy `features:`
+# bridge is deleted. The `type:` whitelist they would have repurposed to
+# is already covered by test_generate_invalid_type (test34, `type:
+# bogus` → ValueError).
 
 
 def test_generate_choice_silent_variable_via_extend(tmp):
@@ -525,10 +533,9 @@ def test_generate_features_top_level_silent_variable(tmp):
 
 
 def test_generate_features_legacy_null_variables(tmp):
-    # test23: regression — legacy boolean feature with
-    # `enabled: { variables: null, exclude: null, ignore: null }`
-    # must coalesce safely via the `block.get(...) or []` form on
-    # the legacy merge path.
+    # test23: a type: boolean extend rule with
+    # `variables: null, exclude: null, ignore: null` must coalesce
+    # safely via the `rule.get(...) or []` idiom (no crash).
     argv = ['generate', 'test23', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -538,10 +545,9 @@ def test_generate_features_legacy_null_variables(tmp):
 
 
 def test_generate_features_select_null_variables(tmp):
-    # test24: regression — select-mode options branch with
+    # test24: a type: choice extend rule with
     # `variables: null, exclude: null, ignore: null` must coalesce
-    # safely via the same `block.get(...) or []` form on the select
-    # merge path.
+    # safely via the same `rule.get(...) or []` idiom.
     argv = ['generate', 'test24', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -551,12 +557,11 @@ def test_generate_features_select_null_variables(tmp):
 
 
 def test_generate_features_select_requires_cascade(tmp):
-    # test25: select-mode feature has `requires: [bool_prereq]` where
-    # bool_prereq defaults to false. The cascade returns False for
-    # the select feature, the merge falls into the legacy
-    # `state is bool` branch with no `disabled:` block (not allowed
-    # in select mode), and the options-branch ignore patterns DO NOT
-    # fire — `should-not-appear-1` remains in the rendered tree.
+    # test25: a type: choice variable has `requires: [bool_prereq]`
+    # where bool_prereq defaults to false. The choice is GATED OUT: set
+    # to its default and its extend rules do NOT fire (Q1), so the
+    # options-branch ignore patterns never apply — `should-not-appear-1`
+    # remains in the rendered tree.
     argv = ['generate', 'test25', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
@@ -718,3 +723,58 @@ def test_generate_choice_case_is_string_only(tmp):
     with GenerateApp(argv=argv) as app:
         with raises(ValueError, match="case.*string-only"):
             app.run()
+
+
+# ─── #782 Plan 03: extend.when list/regex, nesting, requires: ────────────
+
+
+def test_generate_extend_when_list_membership(tmp):
+    # test38: choice value "flask" (default). The `when: [flask, fastapi]`
+    # rule fires via in-list membership (ignores not-web); the
+    # `when: [fastapi]` rule does NOT fire ("flask" not a member) so
+    # fastapi-only is kept. Rules compose independently.
+    argv = ['generate', 'test38', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        # when: [flask, fastapi] matched → not-web ignored
+        assert not exists_join(tmp.dir, 'not-web')
+        # when: [fastapi] did NOT match → fastapi-only kept
+        assert exists_join(tmp.dir, 'fastapi-only')
+
+
+def test_generate_extend_when_string_regex(tmp):
+    # test39: a type: string variable resolving to "v2.1". The
+    # `when: "^v2"` rule fires via re.match (string-type regex; ignores
+    # not-v2); the `when: "^v3"` rule does NOT match so v3-only is kept.
+    argv = ['generate', 'test39', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        assert exists_join(tmp.dir, 'take-me')
+        # ^v2 matched "v2.1" → not-v2 ignored
+        assert not exists_join(tmp.dir, 'not-v2')
+        # ^v3 did NOT match → v3-only kept
+        assert exists_join(tmp.dir, 'v3-only')
+
+
+def test_generate_requires_gated_out_renders_default(tmp):
+    # test40 (Q1): prereq=false gates `dependent`. The gated-out var is
+    # set to its `default` at data[name] (renders "fallback", never
+    # KeyErrors) AND its extend rule does NOT fire — even though
+    # `when: "fallback"` would match the default value — so
+    # should-be-kept survives.
+    argv = ['generate', 'test40', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            # gated-out dependent renders as its default (Q1)
+            assert 'fallback' in f.read()
+
+        # the gated-out var's extend rule did NOT fire (Q1)
+        assert exists_join(tmp.dir, 'should-be-kept')
