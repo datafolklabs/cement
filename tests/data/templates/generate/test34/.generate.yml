@@ -1,0 +1,7 @@
+---
+
+variables:
+
+-   name: bad_type_var
+    type: bogus
+    default: x
