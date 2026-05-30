@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: verifying
 stopped_at: "Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)"
-last_updated: "2026-05-30T03:52:00.937Z"
+last_updated: "2026-05-30T04:09:01.287Z"
 last_activity: 2026-05-30
 progress:
   total_phases: 8
@@ -25,9 +25,9 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 
 ## Current Position
 
-Phase: 05.1 (ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean) — EXECUTING
+Phase: 05.1 complete; next: Phase 6 (Release Cut) or merge branch
 Plan: 5 of 5
-Status: Phase complete — ready for verification
+Status: Phase 05.1 COMPLETE — verified passed (6/6), full make test 100% green
 Last activity: 2026-05-30
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
