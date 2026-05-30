@@ -231,7 +231,7 @@ Plans:
 **Goal:** Merge the unreleased `ext.generate` `features:` mechanism into the template `variables:` schema so optional features behave consistently with variables — prompted in declaration order, exposed at the top level of the template context, with a default-but-overridable boolean prompt — resolving Tom Freudenberg's feedback on closed PR #780 (#782). All changes are additive to the *released* `variables:` schema; the *unreleased* `features:` schema is removed.
 **Requirements**: GEN-01, GEN-02, GEN-03, GEN-04, GEN-05, GEN-06 (phase-local; see 05.1-CONTEXT.md)
 **Depends on:** Phase 5
-**Plans:** 1/5 plans executed
+**Plans:** 2/5 plans executed
 
 **Success Criteria** (what must be TRUE):
 
@@ -250,7 +250,7 @@ Plans:
 
   **Wave 2** *(blocked on Wave 1)*
 
-  - [ ] 05.1-02-PLAN.md — `type: choice` numbered picker + polymorphic boolean object-form `prompt:` + accept/reject mapping + YAML bool-coercion guard (migrate select fixtures)
+  - [x] 05.1-02-PLAN.md — `type: choice` numbered picker + polymorphic boolean object-form `prompt:` + accept/reject mapping + YAML bool-coercion guard (migrate select fixtures)
 
   **Wave 3** *(blocked on Wave 2)*
 
