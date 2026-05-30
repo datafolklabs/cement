@@ -157,6 +157,12 @@ Bugs:
   with a `name`-match guard, so transitive `ModuleNotFoundError`s
   raised inside the user's template module propagate normally
   instead of being silently swallowed as "module not found"
+- `[ext.generate]` `type: boolean` template variables now emit a real
+  Python bool at the top level of the render context (`data[name]`),
+  so `{% if feature_x %}` works in jinja2/mustache; the boolean prompt
+  uses a vars-style `[(Y)es/(N)o] [default]:` format and all variables
+  prompt in a single declaration-order pass — resolves #782 (the
+  former `features:` namespace and pre-pass are removed)
 
 Features:
 
