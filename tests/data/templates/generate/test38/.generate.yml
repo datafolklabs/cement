@@ -21,3 +21,12 @@ variables:
             -   when: ["fastapi"]
                 ignore:
                     - '.*fastapi-only.*'
+
+    # boolean list-form when: value True is a member of [true] -> fires
+    -   name: enable_extra
+        type: boolean
+        default: true
+        extend:
+            -   when: [true]
+                ignore:
+                    - '.*bool-list-ignored.*'

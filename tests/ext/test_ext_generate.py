@@ -743,6 +743,32 @@ def test_generate_extend_when_list_membership(tmp):
         assert not exists_join(tmp.dir, 'not-web')
         # when: [fastapi] did NOT match → fastapi-only kept
         assert exists_join(tmp.dir, 'fastapi-only')
+        # boolean list-form: True is a member of [true] → fires
+        assert not exists_join(tmp.dir, 'bool-list-ignored')
+
+
+def test_generate_requires_dict_equality(tmp):
+    # test41: dict-form `requires: {name: value}` equality. dep_ok
+    # requires mode == "advanced" (satisfied → its extend fires,
+    # dep-ok-ignored removed); dep_no requires mode == "basic" (NOT
+    # satisfied → gated out, renders its default "no", extend does NOT
+    # fire so dep-no-kept survives).
+    argv = ['generate', 'test41', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        app.run()
+
+        with open(os.path.join(tmp.dir, 'take-me')) as f:
+            res = f.read()
+            assert 'mode=advanced' in res
+            assert 'dep_ok=ok' in res
+            # gated-out dep_no still renders its default (Q1)
+            assert 'dep_no=no' in res
+
+        # dep_ok requires satisfied → its extend fired
+        assert not exists_join(tmp.dir, 'dep-ok-ignored')
+        # dep_no gated out → its extend did NOT fire
+        assert exists_join(tmp.dir, 'dep-no-kept')
 
 
 def test_generate_extend_when_string_regex(tmp):
