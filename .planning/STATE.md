@@ -171,9 +171,10 @@ Recent decisions affecting current work:
 | 260507-to4 | rewrite PR #760 — template_dirs config override via core_meta_override (resolves #746) | 2026-05-08 | c25562d5 | | [260507-to4-rewrite-pr-760-template-dirs-config-over](./quick/260507-to4-rewrite-pr-760-template-dirs-config-over/) |
 | 260524-g47 | prompt_mode: select for ext.generate features — multi-valued prompts via shell.Prompt (resolves #779) | 2026-05-24 | 0a8ffcb0 | Complete | [260524-g47-generate-feature-should-support-multiple](./quick/260524-g47-generate-feature-should-support-multiple/) |
 | 260524-re9 | fix extensions config-override to honor Meta.config_section (mirrors PR #760 template_dirs fix; resolves #777) | 2026-05-25 | f8a62e98 | Complete | [260524-re9-resolve-issue-777-fix-extensions-config-](./quick/260524-re9-resolve-issue-777-fix-extensions-config-/) |
+| 260624-fme | apply CodeRabbit follow-ups on PR #783 — requires gated-no-default + cycle guards, strengthened silent-bool test + coverage, README MD028/#779 | 2026-06-24 | 29e41bc9 | Complete | [260624-fme-apply-coderabbit-follow-ups-on-pr-783](./quick/260624-fme-apply-coderabbit-follow-ups-on-pr-783/) |
 
 ## Session Continuity
 
-Last session: 2026-05-30T03:51:29.664Z
-Stopped at: Completed 05.1-01-PLAN.md (unified typed resolver + type:boolean + bridge)
+Last session: 2026-06-24
+Stopped at: Completed quick task 260624-fme (PR #783 CodeRabbit follow-ups) — commits ee0a4ccb, 29e41bc9
 Resume file: None
