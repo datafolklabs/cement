@@ -9,7 +9,7 @@ jobs:
   update-dependencies:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
 
       - name: Update dependencies
         uses: pdm-project/update-deps-action@v1.12

@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
       - uses: ConorMacBride/install-package@v1.1.0
         with:
           apt: libmemcached-dev
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
       - uses: ConorMacBride/install-package@v1.1.0
         with:
           apt: libmemcached-dev
@@ -66,7 +66,7 @@ jobs:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.10", "pypy3.11"]
 
     steps:
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
       - uses: ConorMacBride/install-package@v1.1.0
         with:
           apt: libmemcached-dev
@@ -85,7 +85,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
       - uses: hoverkraft-tech/compose-action@v2.6.0
         with:
           compose-file: "./docker-compose.yml"
