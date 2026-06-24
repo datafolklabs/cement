@@ -364,14 +364,16 @@ def test_generate_boolean_case_is_string_only(tmp):
 
 def test_generate_boolean_silent(tmp):
     # test33: type: boolean with `prompt: false` (silent) emits bool(default)
-    # at data[name] — a real Python bool, NOT str(default). jinja renders the
-    # enabled branch because the default is true.
+    # at data[name] — a real Python bool, NOT str(default). The fixture uses
+    # `default: false`, so a correctly-typed False renders the else branch
+    # (flag-off). A regressed impl emitting the string 'False' would be
+    # truthy → render flag-on → fail here, guarding the typed-output contract.
     argv = ['generate', 'test33', tmp.dir, '--defaults']
 
     with GenerateApp(argv=argv) as app:
         app.run()
         with open(os.path.join(tmp.dir, 'take-me')) as f:
-            assert 'flag-on' in f.read()
+            assert 'flag-off' in f.read()
 
 
 def test_generate_invalid_type(tmp):
