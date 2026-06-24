@@ -47,7 +47,7 @@ jobs:
         with:
           python-version: "3.x"
           architecture: "x64"
-      - uses: hoverkraft-tech/compose-action@v2.6.0
+      - uses: hoverkraft-tech/compose-action@v3.0.0
         with:
           compose-file: "./docker/compose-services-only.yml"
       - name: Setup PDM
@@ -70,7 +70,7 @@ jobs:
       - uses: ConorMacBride/install-package@v1.1.0
         with:
           apt: libmemcached-dev
-      - uses: hoverkraft-tech/compose-action@v2.6.0
+      - uses: hoverkraft-tech/compose-action@v3.0.0
         with:
           compose-file: "./docker/compose-services-only.yml"
       - name: Setup PDM
@@ -86,7 +86,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7.0.0
-      - uses: hoverkraft-tech/compose-action@v2.6.0
+      - uses: hoverkraft-tech/compose-action@v3.0.0
         with:
           compose-file: "./docker-compose.yml"
       - name: CLI Smoke Tests
