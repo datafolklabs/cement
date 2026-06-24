@@ -1,0 +1,15 @@
+---
+
+variables:
+
+-   name: alpha
+    type: boolean
+    default: true
+    requires:
+        - beta
+
+-   name: beta
+    type: boolean
+    default: true
+    requires:
+        - alpha

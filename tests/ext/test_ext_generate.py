@@ -278,6 +278,29 @@ def test_generate_features_requires_unknown(tmp):
             app.run()
 
 
+def test_generate_requires_gated_no_default(tmp):
+    # test43: `dependent` (a string var) is gated out by `requires: feature1`
+    # (feature1 defaults false) but declares no `default`. Emitting it would
+    # otherwise leak the literal string "None" into the context; instead
+    # _gated_default fail-fasts with a clear ValueError.
+    argv = ['generate', 'test43', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="requires: but has no default"):
+            app.run()
+
+
+def test_generate_requires_cycle(tmp):
+    # test44: alpha requires beta and beta requires alpha — a dependency
+    # cycle. resolve_and_emit's in-flight guard raises a clear ValueError
+    # rather than recursing until Python raises RecursionError.
+    argv = ['generate', 'test44', tmp.dir, '--defaults']
+
+    with GenerateApp(argv=argv) as app:
+        with raises(ValueError, match="Cyclic variable dependency"):
+            app.run()
+
+
 def test_generate_features_minimal(tmp):
     # test13: feature with only name and default, no enabled/disabled blocks
     argv = ['generate', 'test13', tmp.dir, '--defaults']
