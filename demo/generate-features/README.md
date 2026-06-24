@@ -157,7 +157,7 @@ neither aborts, like a failed `validate:`):
 > Quote bool-like tokens (`"yes"`, `"no"`, `"on"`, `"off"`) inside
 > `accept:` / `reject:` — under YAML 1.1 they otherwise decode to a Python
 > `bool` and the loader rejects them with a clear error.
-
+>
 > **`{{ bool }}` interpolation gotcha:** a boolean rendered as *text*
 > (`{{ docker }}`) interpolates the **capitalized Python repr** — `True` or
 > `False` — **not** `true`/`false` and **not** `yes`/`no`. This is true for
@@ -269,5 +269,4 @@ No Dockerfile, no docker-compose.yml — gating off `docker` cascades to
 `requirements.txt` substitutes `fastapi==0.115` from the silent
 `framework_version` variable on the fastapi branch.
 
-[779]: https://github.com/datafolklabs/cement/issues/779
 [782]: https://github.com/datafolklabs/cement/issues/782
