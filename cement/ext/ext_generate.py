@@ -333,6 +333,13 @@ class GenerateTemplateAbstractBase(Controller):
             # template never KeyErrors. boolean -> Python bool;
             # choice/string -> str(default) (matching the resolved-path
             # str invariant). A gated-out var's extend rules do NOT fire.
+            # Fail-fast (ValueError survives `python -O`, matching the D-17
+            # guard style): a gated-out var with no default would otherwise
+            # leak the literal string "None" into the template context.
+            if var['default'] is None:
+                raise ValueError(
+                    f"Variable '{var['name']}' uses requires: but has "
+                    f"no default")
             if vtype == 'boolean':
                 return bool(var['default'])
             return str(var['default'])
