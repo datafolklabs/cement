@@ -1,0 +1,15 @@
+---
+
+variables:
+
+-   name: app_name
+    prompt: App Name
+    default: myapp
+
+-   name: feature1
+    type: boolean
+    default: false
+
+-   name: dependent
+    requires:
+        - feature1

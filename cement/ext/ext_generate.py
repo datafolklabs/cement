@@ -79,6 +79,13 @@ class GenerateTemplateAbstractBase(Controller):
             if defined_var.get('name') is not None:
                 var_by_name[defined_var['name']] = defined_var
 
+        # In-flight guard for `requires:` recursion. A variable is added to
+        # `resolving` while its prerequisites resolve and removed in a
+        # `finally`; re-entering for a name still in flight (e.g. A requires
+        # B + B requires A) is a cycle -> fail-fast ValueError instead of
+        # recursing to RecursionError.
+        resolving: set[str] = set()
+
         def _resolve_string(var: dict[str, Any]) -> Any:
             # Released `type: string` resolution — byte-identical to the
             # pre-#782 variable loop. `prompt` is required (assert) unless
@@ -333,6 +340,13 @@ class GenerateTemplateAbstractBase(Controller):
             # template never KeyErrors. boolean -> Python bool;
             # choice/string -> str(default) (matching the resolved-path
             # str invariant). A gated-out var's extend rules do NOT fire.
+            # Fail-fast (ValueError survives `python -O`, matching the D-17
+            # guard style): a gated-out var with no default would otherwise
+            # leak the literal string "None" into the template context.
+            if var['default'] is None:
+                raise ValueError(
+                    f"Variable '{var['name']}' uses requires: but has "
+                    f"no default")
             if vtype == 'boolean':
                 return bool(var['default'])
             return str(var['default'])
@@ -387,52 +401,65 @@ class GenerateTemplateAbstractBase(Controller):
             if var['name'] in data:
                 return
 
-            vtype = var['type']
-            if vtype not in ('string', 'boolean', 'choice'):
+            # Cycle guard: a name re-entered while still in flight (its
+            # prerequisites haven't finished resolving) means `requires:`
+            # forms a loop (A requires B + B requires A). Fail fast.
+            if var['name'] in resolving:
                 raise ValueError(
-                    f"Variable '{var['name']}' has invalid type "
-                    f"'{vtype}' (must be string, boolean, or choice)")
+                    f"Cyclic variable dependency detected for "
+                    f"'{var['name']}'")
+            resolving.add(var['name'])
+            try:
+                vtype = var['type']
+                if vtype not in ('string', 'boolean', 'choice'):
+                    raise ValueError(
+                        f"Variable '{var['name']}' has invalid type "
+                        f"'{vtype}' (must be string, boolean, or choice)")
 
-            # D-17: case:/validate: are string-only semantics. A boolean is
-            # parsed via accept/reject; a choice is constrained by options —
-            # declaring case:/validate: on either is a fail-fast schema
-            # misconfig (ValueError survives `python -O`).
-            if vtype in ('boolean', 'choice') and \
-                    (var['case'] is not None or var['validate'] is not None):
-                raise ValueError(
-                    f"case:/validate: are string-only; variable "
-                    f"'{var['name']}' is type: {vtype}")
+                # D-17: case:/validate: are string-only semantics. A boolean
+                # is parsed via accept/reject; a choice is constrained by
+                # options — declaring case:/validate: on either is a
+                # fail-fast schema misconfig (ValueError survives `python -O`).
+                if vtype in ('boolean', 'choice') and \
+                        (var['case'] is not None or
+                         var['validate'] is not None):
+                    raise ValueError(
+                        f"case:/validate: are string-only; variable "
+                        f"'{var['name']}' is type: {vtype}")
 
-            # `requires:` gate (D-09/D-11). If any prerequisite fails, the
-            # var is GATED OUT: set to its `default` at data[name] (Q1) and
-            # its `extend` rules do NOT fire. Resolved BEFORE prompting so an
-            # interactive run never nags for a gated-out variable.
-            if not _requires_satisfied(var):
-                data[var['name']] = _gated_default(var, vtype)
-                return
+                # `requires:` gate (D-09/D-11). If any prerequisite fails, the
+                # var is GATED OUT: set to its `default` at data[name] (Q1)
+                # and its `extend` rules do NOT fire. Resolved BEFORE prompting
+                # so an interactive run never nags for a gated-out variable.
+                if not _requires_satisfied(var):
+                    data[var['name']] = _gated_default(var, vtype)
+                    return
 
-            value: Any
-            if vtype == 'boolean':
-                value = _resolve_boolean(var)
-            elif vtype == 'choice':
-                value = _resolve_choice(var)
-            else:
-                value = _resolve_string(var)
+                value: Any
+                if vtype == 'boolean':
+                    value = _resolve_boolean(var)
+                elif vtype == 'choice':
+                    value = _resolve_choice(var)
+                else:
+                    value = _resolve_string(var)
 
-            data[var['name']] = value
+                data[var['name']] = value
 
-            # `extend:` rules compose — every rule whose `when` matches the
-            # resolved value fires, accumulating exclude/ignore and recursing
-            # depth-first into its nested variables in place (D-07/D-08).
-            # `_when_matches` composes scalar equality, in-list membership,
-            # and (string-type) regex; multiple matching rules all fire.
-            for rule in var['extend'] or []:
-                when = rule.get('when')
-                if _when_matches(value, when, vtype):
-                    exclude_list.extend(rule.get('exclude') or [])
-                    ignore_list.extend(rule.get('ignore') or [])
-                    for nested in rule.get('variables') or []:
-                        resolve_and_emit(nested)
+                # `extend:` rules compose — every rule whose `when` matches
+                # the resolved value fires, accumulating exclude/ignore and
+                # recursing depth-first into its nested variables in place
+                # (D-07/D-08). `_when_matches` composes scalar equality,
+                # in-list membership, and (string-type) regex; multiple
+                # matching rules all fire.
+                for rule in var['extend'] or []:
+                    when = rule.get('when')
+                    if _when_matches(value, when, vtype):
+                        exclude_list.extend(rule.get('exclude') or [])
+                        ignore_list.extend(rule.get('ignore') or [])
+                        for nested in rule.get('variables') or []:
+                            resolve_and_emit(nested)
+            finally:
+                resolving.discard(var['name'])
 
         for defined_var in vars:
             resolve_and_emit(defined_var)
