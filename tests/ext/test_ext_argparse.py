@@ -303,6 +303,27 @@ def test_command_meta_none_outside_dispatch():
         assert res == "Inside Base.default : meta > None"
 
 
+def test_command_meta_non_owning_controller_returns_none():
+    # WR-01 hardening: _command_meta also runs on controllers that do NOT own
+    # the dispatched command (e.g. via _post_argument_parsing).  When such a
+    # controller's class carries a same-named, non-command attribute, the
+    # property must return None -- not raise AttributeError on __cement_meta__.
+    class Foreign(ArgparseController):
+        class Meta:
+            label = 'foreign'
+
+        # collides by name with Base.command_meta_cmd but is not an @expose
+        # command, so it has no __cement_meta__ marker
+        def command_meta_cmd(self):  # pragma: nocover - never invoked
+            return "not a cement command"
+
+    with ArgparseApp(argv=['command-meta-cmd']) as app:
+        app.run()
+        foreign = Foreign()
+        foreign.app = app
+        assert foreign._command_meta is None
+
+
 def test_controller_commands():
     with ArgparseApp(argv=['cmd2']) as app:
         res = app.run()

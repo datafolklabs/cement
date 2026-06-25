@@ -382,9 +382,14 @@ class ArgparseController(ControllerHandler):
         if not hasattr(self.app.pargs, '__dispatch__'):
             return None
         func_name = self.app.pargs.__dispatch__.split('.')[1]
-        if not hasattr(self.__class__, func_name):
-            return None  # pragma: nocover  # defensive: unreachable
-        meta: CommandMeta = getattr(self.__class__, func_name).__cement_meta__
+        # Resolve the class-level command function and read its CommandMeta.
+        # Guarding on the __cement_meta__ marker (rather than mere attribute
+        # existence) keeps the never-raises contract: this property can also
+        # run on a non-owning controller (e.g. via _post_argument_parsing),
+        # whose class may carry a same-named, non-command attribute -- that
+        # yields None here instead of an AttributeError (WR-01).
+        member = getattr(self.__class__, func_name, None)
+        meta: CommandMeta | None = getattr(member, '__cement_meta__', None)
         return meta
 
     def _validate(self) -> None:
