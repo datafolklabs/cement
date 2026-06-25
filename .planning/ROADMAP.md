@@ -226,6 +226,17 @@ Plans:
   - `make audit-public-api` exit 0 enforced byte-for-byte across every commit (Phase 3 D-04 / Phase 5 D-18 #3)
   - `make docs` (post-Wave 4) must exit 0 with -W enabled — zero warnings (Phase 5 D-09)
 
+### Phase 05.2: ext.argparse command self-meta accessor (#670) (INSERTED)
+
+**Goal:** Add a single additive, read-only accessor on `ArgparseController` (proposed `self._command_meta`) that returns the currently-dispatched command's `CommandMeta` (label, `parser_options['help']`, etc.), so exposed `@ex`/`@expose` commands can read their own decorator meta without the brittle `getattr(self, self.app.pargs.__dispatch__.split('.')[1]).__cement_meta__` dance — resolving [#670](https://github.com/datafolklabs/cement/issues/670). Purely additive: the `func()` dispatch signature is unchanged (the issue's literal `func(func_name, func_meta)` proposal is rejected as BC-breaking on the released 3.0.x surface). See 05.2-CONTEXT.md for locked decisions.
+**Requirements**: phase-local (see 05.2-CONTEXT.md decisions D-01..D-07)
+**Depends on:** Phase 05
+**Plans:** 0 plans
+
+Plans:
+
+- [ ] TBD (run /gsd-plan-phase 05.2 to break down)
+
 ### Phase 05.1: ext.generate select-mode feature prompt UX and Jinja boolean fixes (#782) (INSERTED)
 
 **Goal:** Merge the unreleased `ext.generate` `features:` mechanism into the template `variables:` schema so optional features behave consistently with variables — prompted in declaration order, exposed at the top level of the template context, with a default-but-overridable boolean prompt — resolving Tom Freudenberg's feedback on closed PR #780 (#782). All changes are additive to the *released* `variables:` schema; the *unreleased* `features:` schema is removed.
