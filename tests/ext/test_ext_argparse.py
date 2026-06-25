@@ -28,11 +28,20 @@ class Base(ArgparseController):
 
     @expose(hide=True, help="this help doesn't get seen")
     def _default(self):
-        return "Inside Base.default"
+        # the no-sub-command path: __dispatch__ is not set on pargs, so the
+        # _command_meta accessor must return None here (D-03).
+        return f"Inside Base.default : meta > {self._command_meta}"
 
     @expose()
     def cmd1(self):
         return "Inside Base.cmd1"
+
+    @expose(help='help for command_meta_cmd')
+    def command_meta_cmd(self):
+        # the #670 ergonomic call site: a command reads its own @expose meta
+        # from inside its body via self._command_meta (D-01, D-02, D-04).
+        meta = self._command_meta
+        return f"{meta.label} : {meta.parser_options['help']}"
 
     @expose()
     def command_with_dashes(self):
@@ -262,7 +271,7 @@ def test_base_default():
 
     with ArgparseApp() as app:
         res = app.run()
-        assert res == "Inside Base.default"
+        assert res == "Inside Base.default : meta > None"
 
 
 def test_base_cmd1():
@@ -275,6 +284,23 @@ def test_base_command_with_dashes():
     with ArgparseApp(argv=['command-with-dashes']) as app:
         res = app.run()
         assert res == "Inside Base.command_with_dashes"
+
+
+def test_command_meta_dispatched():
+    # dispatched-command branch: the command reads its own CommandMeta from
+    # inside its body and returns its label + @expose(help=...) string (the
+    # #670 ergonomic call site, D-02/D-04).
+    with ArgparseApp(argv=['command-meta-cmd']) as app:
+        res = app.run()
+        assert res == "command-meta-cmd : help for command_meta_cmd"
+
+
+def test_command_meta_none_outside_dispatch():
+    # None branch (D-03): the default/no-sub-command path has no __dispatch__
+    # on pargs, so _command_meta returns None and does not raise.
+    with ArgparseApp() as app:
+        res = app.run()
+        assert res == "Inside Base.default : meta > None"
 
 
 def test_controller_commands():
