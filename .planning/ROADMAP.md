@@ -231,11 +231,10 @@ Plans:
 **Goal:** Add a single additive, read-only accessor on `ArgparseController` (proposed `self._command_meta`) that returns the currently-dispatched command's `CommandMeta` (label, `parser_options['help']`, etc.), so exposed `@ex`/`@expose` commands can read their own decorator meta without the brittle `getattr(self, self.app.pargs.__dispatch__.split('.')[1]).__cement_meta__` dance — resolving [#670](https://github.com/datafolklabs/cement/issues/670). Purely additive: the `func()` dispatch signature is unchanged (the issue's literal `func(func_name, func_meta)` proposal is rejected as BC-breaking on the released 3.0.x surface). See 05.2-CONTEXT.md for locked decisions.
 **Requirements**: phase-local (see 05.2-CONTEXT.md decisions D-01..D-07)
 **Depends on:** Phase 05
-**Plans:** 0 plans
-
+**Plans:** 1 plan
 Plans:
 
-- [ ] TBD (run /gsd-plan-phase 05.2 to break down)
+- [ ] 05.2-01-PLAN.md — Add read-only `_command_meta` accessor to `ArgparseController` (+ tests at 100% coverage, CHANGELOG); resolves #670 additively
 
 ### Phase 05.1: ext.generate select-mode feature prompt UX and Jinja boolean fixes (#782) (INSERTED)
 
