@@ -219,6 +219,14 @@ Features:
   prompt text and vars-style input.
   - [Issue #782](https://github.com/datafolklabs/cement/issues/782)
   - [PR #780](https://github.com/datafolklabs/cement/pull/780)
+- `[ext.argparse]` Add a read-only `_command_meta` property on
+  `ArgparseController` so an exposed command can read its own `CommandMeta`
+  (label, `parser_options['help']`, etc.) from inside its body via
+  `self._command_meta`, replacing the brittle
+  `getattr(self, ...).__cement_meta__` dance. Returns `None` outside a
+  dispatched command and never raises. Additive — the `func()` dispatch
+  signature is unchanged.
+  - [Issue #670](https://github.com/datafolklabs/cement/issues/670)
 
 Refactoring:
 
