@@ -348,6 +348,50 @@ class ArgparseController(ControllerHandler):
     def _default(self) -> None:
         self._parser.print_help()
 
+    @property
+    def _command_meta(self) -> "CommandMeta | None":
+        """
+        Read-only accessor for the currently-dispatched command's meta.
+
+        This centralizes the otherwise repetitive lookup of a command's own
+        ``CommandMeta`` (label, func_name, hide, arguments, and the
+        ``parser_options`` dict holding ``help``/``aliases``/etc.) so an
+        exposed command can read its own ``@ex``/``@expose`` decorator data
+        from inside its body, e.g.
+        ``self._command_meta.parser_options['help']``.
+
+        Note:
+            The returned object is the shared, class-level ``CommandMeta``
+            attached to the command function (its ``.controller`` field is
+            mutated to ``self`` during ``_collect_commands``).  It is not a
+            per-invocation copy; do not mutate it or stash per-call state on
+            it.
+
+        Returns:
+            CommandMeta | None: The meta for the running command, or ``None``
+            when accessed outside a dispatched command (no ``__dispatch__``
+            on ``self.app.pargs`` -- e.g. the default/no-sub-command path).
+
+        """
+        # FIXME: Cement 4 may introduce opt-in func-signature injection
+        # (e.g. ``def cmd(self, func_name, func_meta)``) as the ergonomic
+        # default.  That form is backward-incompatible for 3.0.x (it would
+        # change the released ``func()`` dispatch signature), so for now we
+        # ship this additive read-only accessor only and leave dispatch as
+        # ``return func()`` (see ``_dispatch`` below).
+        if not hasattr(self.app.pargs, '__dispatch__'):
+            return None
+        func_name = self.app.pargs.__dispatch__.split('.')[1]
+        # Resolve the class-level command function and read its CommandMeta.
+        # Guarding on the __cement_meta__ marker (rather than mere attribute
+        # existence) keeps the never-raises contract: this property can also
+        # run on a non-owning controller (e.g. via _post_argument_parsing),
+        # whose class may carry a same-named, non-command attribute -- that
+        # yields None here instead of an AttributeError (WR-01).
+        member = getattr(self.__class__, func_name, None)
+        meta: CommandMeta | None = getattr(member, '__cement_meta__', None)
+        return meta
+
     def _validate(self) -> None:
         try:
             assert self._meta.stacked_type in ['embedded', 'nested'], \
@@ -818,6 +862,10 @@ class ArgparseController(ControllerHandler):
         if hasattr(self.app.pargs, '__dispatch__'):
             # if __dispatch__ is set that means that we have hit a sub-command
             # of a controller.
+            #
+            # FIXME: dispatch stays ``return func()`` (additive-only, 3.0.x
+            # BC).  A command reads its own meta via ``self._command_meta``;
+            # opt-in func-signature injection is deferred to Cement 4.
             contr_label = self.app.pargs.__dispatch__.split('.')[0]
             func_name = self.app.pargs.__dispatch__.split('.')[1]
         else:
