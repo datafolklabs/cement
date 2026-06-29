@@ -93,6 +93,26 @@ When working with extensions:
 - Body lines: max 78 characters (wrap longer prose at 78)
 - Use `make commit` (runs `pdm run cz commit`) to author commits interactively
 
+## Branching Policy
+
+- **NEVER commit directly to `main` without explicit consent.** This includes
+  implementation, tests, docs, AND planning artifacts (`docs(NN.N):`,
+  `docs(state):`, etc.) — planning commits are work too.
+- **Branch immediately when work begins** — at the start of planning a phase or
+  task, not at execution time. The branch is the unit of consent; everything for
+  a phase (plan + execute) belongs on it.
+- Branch naming: `gsd/phase-{phase}-{slug}` for phase work; otherwise a short,
+  descriptive `feat/...`, `fix/...`, or `docs/...` slug.
+- If you discover you are on `main` with uncommitted or committed work that was
+  not consented to, STOP and surface it: create a branch capturing the work,
+  then propose restoring `main` before doing anything else.
+- The GSD `branching_strategy` config defaults to `none`, which keeps work on
+  the current branch — do NOT rely on it to branch for you. Branching is a
+  standing requirement regardless of that setting; if it is `none`, branch
+  manually before the first commit.
+- Merging branches into `main` is the user's call (typically via PR) — do not
+  fast-forward or merge to `main` without being asked.
+
 ## Changelog Maintenance
 
 - Update `CHANGELOG.md` phase-by-phase as work lands; do not defer to release-cut time
