@@ -227,6 +227,13 @@ Features:
   dispatched command and never raises. Additive — the `func()` dispatch
   signature is unchanged.
   - [Issue #670](https://github.com/datafolklabs/cement/issues/670)
+- `[ext.argparse]` Add a companion read-only `_default_command_meta`
+  property on `ArgparseController` that resolves the controller's default
+  sub-command meta (via `Meta.default_func`), since `_command_meta` is
+  `None` while the default function runs (argparse has no native default
+  sub-command). Returns `None` when `default_func` is `None` or points to a
+  non-exposed function (e.g. the stock `_default`); never raises.
+  - [Issue #670](https://github.com/datafolklabs/cement/issues/670)
 
 Refactoring:
 

@@ -392,6 +392,35 @@ class ArgparseController(ControllerHandler):
         meta: CommandMeta | None = getattr(member, '__cement_meta__', None)
         return meta
 
+    @property
+    def _default_command_meta(self) -> "CommandMeta | None":
+        """
+        Read-only accessor for this controller's default sub-command meta.
+
+        Companion to :attr:`_command_meta` for the default-function path.
+        Argparse has no native default sub-command, so Cement reaches the
+        default via ``Meta.default_func`` rather than the ``__dispatch__``
+        token that exposed commands flow through -- which is why
+        ``_command_meta`` is ``None`` while the default function runs.  This
+        accessor resolves the default function's ``CommandMeta`` directly so a
+        default command can still read its own ``@ex``/``@expose`` meta, e.g.
+        ``self._default_command_meta.parser_options['help']``.
+
+        Returns:
+            CommandMeta | None: The meta for the controller's default
+            sub-command, or ``None`` when ``Meta.default_func`` is ``None`` or
+            points to a function that is not an exposed (``@ex``/``@expose``)
+            command -- e.g. the framework's stock ``_default`` (``print_help``)
+            carries no meta.  Never raises.
+
+        """
+        func_name = _clean_func(self._meta.default_func)
+        if func_name is None:
+            return None
+        member = getattr(self.__class__, func_name, None)
+        meta: CommandMeta | None = getattr(member, '__cement_meta__', None)
+        return meta
+
     def _validate(self) -> None:
         try:
             assert self._meta.stacked_type in ['embedded', 'nested'], \

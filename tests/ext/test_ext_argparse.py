@@ -324,6 +324,38 @@ def test_command_meta_non_owning_controller_returns_none():
         assert foreign._command_meta is None
 
 
+def test_default_command_meta_decorated():
+    # _default_command_meta resolves the default sub-command's meta directly
+    # (no __dispatch__ needed).  Third._default is @expose(hide=True), so its
+    # CommandMeta is reachable.
+    meta = Third()._default_command_meta
+    assert meta is not None
+    assert meta.func_name == '_default'
+    assert meta.hide is True
+
+
+def test_default_command_meta_undecorated_returns_none():
+    # A controller using the framework's stock _default (print_help) -- which
+    # is NOT @expose-decorated and carries no __cement_meta__ -- yields None
+    # rather than raising AttributeError.
+    class PlainDefault(ArgparseController):
+        class Meta:
+            label = 'plaindefault'
+
+    assert PlainDefault()._default_command_meta is None
+
+
+def test_default_command_meta_none_default_func_returns_none():
+    # Meta.default_func = None ("pass and exit 0") -> _clean_func(None) is None
+    # -> the accessor returns None without touching getattr.
+    class NoDefault(ArgparseController):
+        class Meta:
+            label = 'nodefault'
+            default_func = None
+
+    assert NoDefault()._default_command_meta is None
+
+
 def test_controller_commands():
     with ArgparseApp(argv=['cmd2']) as app:
         res = app.run()
