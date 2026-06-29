@@ -22,7 +22,7 @@ jobs:
         with:
           apt: libmemcached-dev
       - name: Set up Python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
         with:
           python-version: "3.x"
           architecture: "x64"
@@ -43,7 +43,7 @@ jobs:
         with:
           apt: libmemcached-dev
       - name: Set up Python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v6.3.0
         with:
           python-version: "3.x"
           architecture: "x64"
