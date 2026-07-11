@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-04-24)
 Phase: 6
 Plan: Not started
 Status: Phase complete — ready for verification
-Last activity: 2026-06-25
+Last activity: 2026-07-11 - Completed quick task 260711-fjb: add optional CEMENT_FRAMEWORK_LOG_FILE file logging to MinimalLogger (#593)
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
 
@@ -175,6 +175,7 @@ Recent decisions affecting current work:
 | 260524-g47 | prompt_mode: select for ext.generate features — multi-valued prompts via shell.Prompt (resolves #779) | 2026-05-24 | 0a8ffcb0 | Complete | [260524-g47-generate-feature-should-support-multiple](./quick/260524-g47-generate-feature-should-support-multiple/) |
 | 260524-re9 | fix extensions config-override to honor Meta.config_section (mirrors PR #760 template_dirs fix; resolves #777) | 2026-05-25 | f8a62e98 | Complete | [260524-re9-resolve-issue-777-fix-extensions-config-](./quick/260524-re9-resolve-issue-777-fix-extensions-config-/) |
 | 260624-fme | apply CodeRabbit follow-ups on PR #783 — requires gated-no-default + cycle guards, strengthened silent-bool test + coverage, README MD028/#779 | 2026-06-24 | 29e41bc9 | Complete | [260624-fme-apply-coderabbit-follow-ups-on-pr-783](./quick/260624-fme-apply-coderabbit-follow-ups-on-pr-783/) |
+| 260711-fjb | add optional CEMENT_FRAMEWORK_LOG_FILE file logging to MinimalLogger (resolves #593) | 2026-07-11 | 3671a5e1 | Complete | [260711-fjb-framework-log-file](./quick/260711-fjb-framework-log-file/) |
 
 ## Session Continuity
 
