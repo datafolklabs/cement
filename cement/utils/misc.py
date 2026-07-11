@@ -174,6 +174,37 @@ class MinimalLogger:
         if not self.backend.handlers:
             self.backend.addHandler(console)
 
+        # issue-593: Optionally also route framework/extension debug
+        # output to a file when CEMENT_FRAMEWORK_LOG_FILE is set. This is
+        # purely additive: the emit methods still gate on
+        # `logging_is_enabled`, so nothing is written unless framework
+        # logging is enabled via an existing switch (CEMENT_LOG /
+        # debug=True / --debug / CEMENT_FRAMEWORK_LOGGING). The handler
+        # level and formatter mirror the console handler.
+        log_file = os.environ.get('CEMENT_FRAMEWORK_LOG_FILE', None)
+        if log_file:
+            path = os.path.abspath(os.path.expanduser(log_file))
+            # Idempotency guard mirroring the StreamHandler one above: a
+            # repeated minimal_logger() call for the same namespace + path
+            # must not stack a duplicate FileHandler (double-writes).
+            already_attached = any(
+                isinstance(h, logging.FileHandler)
+                and h.baseFilename == path
+                for h in self.backend.handlers
+            )
+            if not already_attached:
+                try:
+                    file_handler = logging.FileHandler(path)
+                except OSError:
+                    # Framework logging is a dev aid and must never crash
+                    # the host app; on an unwritable/invalid path we simply
+                    # attach nothing and leave the console handler intact.
+                    pass
+                else:
+                    file_handler.setFormatter(formatter)
+                    file_handler.setLevel(console.level)
+                    self.backend.addHandler(file_handler)
+
     def _get_logging_kwargs(self,
                             namespace: str | None,
                             **kw: Any) -> dict[Any, Any]:
@@ -252,6 +283,14 @@ def minimal_logger(namespace: str, debug: bool = False) -> MinimalLogger:
     logger used by the Cement framework, which is setup and accessed before
     the application is functional (and more importantly before the
     applications log handler is usable).
+
+    Framework logging is toggled by the usual switches (``CEMENT_LOG``,
+    ``debug=True``, ``--debug``, or the deprecated
+    ``CEMENT_FRAMEWORK_LOGGING``).  When framework logging is enabled, setting
+    the ``CEMENT_FRAMEWORK_LOG_FILE`` environment variable to a path *also*
+    writes that output to the given file (in addition to the console).
+    Setting the variable alone does not enable logging, and an
+    unwritable/invalid path is ignored rather than raising.
 
     Args:
         namespace (str): The logging namespace.  This is generally
