@@ -132,6 +132,30 @@ def wrap(text: str,
     return wrapper.fill(text)
 
 
+class _SafeFileHandler(logging.FileHandler):
+    """
+    A ``logging.FileHandler`` that never lets a file I/O failure reach the
+    host application.
+
+    Framework logging (see :func:`minimal_logger`) is a silent development
+    aid enabled via ``CEMENT_FRAMEWORK_LOG_FILE``.  A misconfigured or
+    unwritable path -- a directory, an existing read-only file, a disk that
+    fills up mid-run, a path removed while running -- must not crash the
+    application or spam its stderr.  Any error raised while opening or
+    writing the log file is swallowed.
+    """
+
+    def emit(self, record: logging.LogRecord) -> None:
+        try:
+            super().emit(record)
+        except Exception:  # noqa: BLE001 - dev aid must never crash the app
+            self.handleError(record)
+
+    def handleError(self, record: logging.LogRecord) -> None:  # noqa: N802
+        # name mirrors logging.Handler.handleError (framework override)
+        pass
+
+
 class MinimalLogger:
 
     def __init__(self,
@@ -192,10 +216,12 @@ class MinimalLogger:
                 and h.baseFilename == path
                 for h in self.backend.handlers
             )
-            # Only attach when the target directory exists and is writable.
-            # Framework logging is a silent dev aid and must never crash the
-            # host app nor spam its stderr; an unwritable/invalid path is
-            # simply ignored and the console handler is left intact.
+            # Attach when the target directory exists and is writable. Any
+            # failure that slips past this check -- the path is itself a
+            # directory, an existing but unwritable file, a disk that later
+            # fills up, etc. -- is contained by _SafeFileHandler, which never
+            # lets a logging failure crash the host app or spam its stderr
+            # (framework logging is a silent development aid).
             parent = os.path.dirname(path)
             if (not already_attached
                     and os.path.isdir(parent)
@@ -205,7 +231,7 @@ class MinimalLogger:
                 # `logging_is_enabled` gate on every emit method, this means
                 # no empty log file is created unless framework logging is
                 # enabled AND something is actually logged.
-                file_handler = logging.FileHandler(path, delay=True)
+                file_handler = _SafeFileHandler(path, delay=True)
                 file_handler.setFormatter(formatter)
                 file_handler.setLevel(console.level)
                 self.backend.addHandler(file_handler)

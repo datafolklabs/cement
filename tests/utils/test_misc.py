@@ -229,6 +229,46 @@ def test_minimal_logger_framework_log_file_invalid_path(tmp_path, monkeypatch):
     backend.handlers = []
 
 
+def test_minimal_logger_framework_log_file_directory_path(tmp_path, monkeypatch):
+    # issue-593: pointing the var at an existing directory must NOT crash the
+    # host app. _SafeFileHandler swallows the open failure when the first
+    # record is emitted (the file can't be opened because it's a directory).
+    ns = 'cement.test.framework_log_file_dir'
+    backend = logging.getLogger(ns)
+    backend.handlers = []
+
+    monkeypatch.setenv('CEMENT_LOG', '1')
+    monkeypatch.setenv('CEMENT_FRAMEWORK_LOG_FILE', str(tmp_path))
+
+    log = misc.minimal_logger(ns)
+    # emitting must not raise even though the path is a directory
+    log.debug('should not crash')
+
+    backend.handlers = []
+
+
+def test_minimal_logger_framework_log_file_unwritable_file(tmp_path, monkeypatch):
+    # issue-593: an existing read-only file must NOT crash the host app on
+    # emit -- _SafeFileHandler contains the PermissionError.
+    ns = 'cement.test.framework_log_file_readonly'
+    backend = logging.getLogger(ns)
+    backend.handlers = []
+
+    ro_file = tmp_path / 'readonly.log'
+    ro_file.write_text('')
+    ro_file.chmod(0o444)
+
+    monkeypatch.setenv('CEMENT_LOG', '1')
+    monkeypatch.setenv('CEMENT_FRAMEWORK_LOG_FILE', str(ro_file))
+
+    log = misc.minimal_logger(ns)
+    # must not raise despite the file being unwritable
+    log.debug('should not crash')
+
+    ro_file.chmod(0o644)  # restore so tmp cleanup can remove it
+    backend.handlers = []
+
+
 def test_minimal_logger_framework_log_file_not_created_until_write(
         tmp_path, monkeypatch):
     # issue-593: setting CEMENT_FRAMEWORK_LOG_FILE without enabling
