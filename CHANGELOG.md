@@ -234,6 +234,13 @@ Features:
   sub-command). Returns `None` when `default_func` is `None` or points to a
   non-exposed function (e.g. the stock `_default`); never raises.
   - [Issue #670](https://github.com/datafolklabs/cement/issues/670)
+- `[utils.misc]` Add optional `CEMENT_FRAMEWORK_LOG_FILE` env var — when
+  framework logging is enabled, framework/extension debug output is also
+  written to the given file (in addition to the console). Purely additive:
+  the variable alone does not enable logging, repeated calls do not stack
+  duplicate handlers, and an unwritable/invalid path is ignored rather
+  than raising.
+  - [Issue #593](https://github.com/datafolklabs/cement/issues/593)
 
 Refactoring:
 

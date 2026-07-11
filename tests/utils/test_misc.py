@@ -145,3 +145,85 @@ def test_minimal_logger_does_not_duplicate_handlers():
 
     misc.minimal_logger(ns)
     assert len(backend.handlers) == 1
+
+
+def _file_handlers(backend):
+    return [h for h in backend.handlers
+            if isinstance(h, logging.FileHandler)]
+
+
+def test_minimal_logger_framework_log_file(tmp_path, monkeypatch):
+    # issue-593: when CEMENT_FRAMEWORK_LOG_FILE is set and framework
+    # logging is enabled, framework output is *also* written to the file.
+    ns = 'cement.test.framework_log_file'
+    backend = logging.getLogger(ns)
+    backend.handlers = []  # isolate from any prior test pollution
+
+    log_file = tmp_path / 'framework.log'
+    monkeypatch.setenv('CEMENT_LOG', '1')
+    monkeypatch.setenv('CEMENT_FRAMEWORK_LOG_FILE', str(log_file))
+
+    log = misc.minimal_logger(ns)
+    log.debug('debug to file')
+
+    # exactly one FileHandler on the shared backend
+    handlers = _file_handlers(backend)
+    assert len(handlers) == 1
+    handlers[0].flush()
+
+    contents = log_file.read_text()
+    assert 'debug to file' in contents
+    assert ns in contents
+
+    backend.handlers = []  # cleanup shared backend state
+
+
+def test_minimal_logger_no_framework_log_file(monkeypatch):
+    # issue-593: env unset => behavior unchanged, no FileHandler attached.
+    ns = 'cement.test.framework_log_file_unset'
+    backend = logging.getLogger(ns)
+    backend.handlers = []
+
+    monkeypatch.delenv('CEMENT_FRAMEWORK_LOG_FILE', raising=False)
+
+    misc.minimal_logger(ns)
+    assert _file_handlers(backend) == []
+
+    backend.handlers = []
+
+
+def test_minimal_logger_framework_log_file_idempotent(tmp_path, monkeypatch):
+    # issue-593: repeated calls for the same namespace + path must not
+    # stack a duplicate FileHandler (no double-writes).
+    ns = 'cement.test.framework_log_file_idempotent'
+    backend = logging.getLogger(ns)
+    backend.handlers = []
+
+    log_file = tmp_path / 'idempotent.log'
+    monkeypatch.setenv('CEMENT_FRAMEWORK_LOG_FILE', str(log_file))
+
+    misc.minimal_logger(ns)
+    assert len(_file_handlers(backend)) == 1
+
+    misc.minimal_logger(ns)
+    assert len(_file_handlers(backend)) == 1
+
+    backend.handlers = []
+
+
+def test_minimal_logger_framework_log_file_invalid_path(tmp_path, monkeypatch):
+    # issue-593: an unwritable/invalid path (parent dir missing) makes
+    # logging.FileHandler raise OSError; MinimalLogger swallows it and
+    # attaches nothing rather than crashing the host app.
+    ns = 'cement.test.framework_log_file_invalid'
+    backend = logging.getLogger(ns)
+    backend.handlers = []
+
+    bad_path = tmp_path / 'no' / 'such' / 'dir.log'
+    monkeypatch.setenv('CEMENT_FRAMEWORK_LOG_FILE', str(bad_path))
+
+    # must not raise
+    misc.minimal_logger(ns)
+    assert _file_handlers(backend) == []
+
+    backend.handlers = []
