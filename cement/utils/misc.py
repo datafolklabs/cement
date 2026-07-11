@@ -132,6 +132,30 @@ def wrap(text: str,
     return wrapper.fill(text)
 
 
+class _SafeFileHandler(logging.FileHandler):
+    """
+    A ``logging.FileHandler`` that never lets a file I/O failure reach the
+    host application.
+
+    Framework logging (see :func:`minimal_logger`) is a silent development
+    aid enabled via ``CEMENT_FRAMEWORK_LOG_FILE``.  A misconfigured or
+    unwritable path -- a directory, an existing read-only file, a disk that
+    fills up mid-run, a path removed while running -- must not crash the
+    application or spam its stderr.  Any error raised while opening or
+    writing the log file is swallowed.
+    """
+
+    def emit(self, record: logging.LogRecord) -> None:
+        try:
+            super().emit(record)
+        except Exception:  # noqa: BLE001 - dev aid must never crash the app
+            self.handleError(record)
+
+    def handleError(self, record: logging.LogRecord) -> None:  # noqa: N802
+        # name mirrors logging.Handler.handleError (framework override)
+        pass
+
+
 class MinimalLogger:
 
     def __init__(self,
@@ -173,6 +197,44 @@ class MinimalLogger:
         # the backend has no handlers yet.
         if not self.backend.handlers:
             self.backend.addHandler(console)
+
+        # issue-593: Optionally also route framework/extension debug
+        # output to a file when CEMENT_FRAMEWORK_LOG_FILE is set. This is
+        # purely additive: the emit methods still gate on
+        # `logging_is_enabled`, so nothing is written unless framework
+        # logging is enabled via an existing switch (CEMENT_LOG /
+        # debug=True / --debug / CEMENT_FRAMEWORK_LOGGING). The handler
+        # level and formatter mirror the console handler.
+        log_file = os.environ.get('CEMENT_FRAMEWORK_LOG_FILE', None)
+        if log_file:
+            path = os.path.abspath(os.path.expanduser(log_file))
+            # Idempotency guard mirroring the StreamHandler one above: a
+            # repeated minimal_logger() call for the same namespace + path
+            # must not stack a duplicate FileHandler (double-writes).
+            already_attached = any(
+                isinstance(h, logging.FileHandler)
+                and h.baseFilename == path
+                for h in self.backend.handlers
+            )
+            # Attach when the target directory exists and is writable. Any
+            # failure that slips past this check -- the path is itself a
+            # directory, an existing but unwritable file, a disk that later
+            # fills up, etc. -- is contained by _SafeFileHandler, which never
+            # lets a logging failure crash the host app or spam its stderr
+            # (framework logging is a silent development aid).
+            parent = os.path.dirname(path)
+            if (not already_attached
+                    and os.path.isdir(parent)
+                    and os.access(parent, os.W_OK)):
+                # delay=True defers opening (and creating) the file until the
+                # first record is actually emitted. Combined with the
+                # `logging_is_enabled` gate on every emit method, this means
+                # no empty log file is created unless framework logging is
+                # enabled AND something is actually logged.
+                file_handler = _SafeFileHandler(path, delay=True)
+                file_handler.setFormatter(formatter)
+                file_handler.setLevel(console.level)
+                self.backend.addHandler(file_handler)
 
     def _get_logging_kwargs(self,
                             namespace: str | None,
@@ -252,6 +314,14 @@ def minimal_logger(namespace: str, debug: bool = False) -> MinimalLogger:
     logger used by the Cement framework, which is setup and accessed before
     the application is functional (and more importantly before the
     applications log handler is usable).
+
+    Framework logging is toggled by the usual switches (``CEMENT_LOG``,
+    ``debug=True``, ``--debug``, or the deprecated
+    ``CEMENT_FRAMEWORK_LOGGING``).  When framework logging is enabled, setting
+    the ``CEMENT_FRAMEWORK_LOG_FILE`` environment variable to a path *also*
+    writes that output to the given file (in addition to the console).
+    Setting the variable alone does not enable logging, and an
+    unwritable/invalid path is ignored rather than raising.
 
     Args:
         namespace (str): The logging namespace.  This is generally
