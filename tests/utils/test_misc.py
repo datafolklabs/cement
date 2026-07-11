@@ -212,9 +212,9 @@ def test_minimal_logger_framework_log_file_idempotent(tmp_path, monkeypatch):
 
 
 def test_minimal_logger_framework_log_file_invalid_path(tmp_path, monkeypatch):
-    # issue-593: an unwritable/invalid path (parent dir missing) makes
-    # logging.FileHandler raise OSError; MinimalLogger swallows it and
-    # attaches nothing rather than crashing the host app.
+    # issue-593: an invalid/unwritable path (parent dir missing) is
+    # silently ignored — no FileHandler attached, no crash, no stderr
+    # spam — framework logging is a silent dev aid.
     ns = 'cement.test.framework_log_file_invalid'
     backend = logging.getLogger(ns)
     backend.handlers = []
@@ -225,5 +225,34 @@ def test_minimal_logger_framework_log_file_invalid_path(tmp_path, monkeypatch):
     # must not raise
     misc.minimal_logger(ns)
     assert _file_handlers(backend) == []
+
+    backend.handlers = []
+
+
+def test_minimal_logger_framework_log_file_not_created_until_write(
+        tmp_path, monkeypatch):
+    # issue-593: setting CEMENT_FRAMEWORK_LOG_FILE without enabling
+    # framework logging must NOT create a phantom empty file. delay=True
+    # plus the logging_is_enabled emit gate means the file only appears
+    # once something is actually logged.
+    ns = 'cement.test.framework_log_file_no_phantom'
+    backend = logging.getLogger(ns)
+    backend.handlers = []
+
+    log_file = tmp_path / 'phantom.log'
+    monkeypatch.delenv('CEMENT_LOG', raising=False)
+    monkeypatch.delenv('CEMENT_FRAMEWORK_LOGGING', raising=False)
+    monkeypatch.setenv('CEMENT_FRAMEWORK_LOG_FILE', str(log_file))
+
+    log = misc.minimal_logger(ns)
+
+    # handler is attached (path is valid + writable) but the file is not
+    # opened/created yet (delay=True)
+    assert len(_file_handlers(backend)) == 1
+    assert not log_file.exists()
+
+    # logging is disabled, so an emit writes nothing and no file appears
+    log.debug('should not be written')
+    assert not log_file.exists()
 
     backend.handlers = []

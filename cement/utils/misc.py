@@ -192,18 +192,23 @@ class MinimalLogger:
                 and h.baseFilename == path
                 for h in self.backend.handlers
             )
-            if not already_attached:
-                try:
-                    file_handler = logging.FileHandler(path)
-                except OSError:
-                    # Framework logging is a dev aid and must never crash
-                    # the host app; on an unwritable/invalid path we simply
-                    # attach nothing and leave the console handler intact.
-                    pass
-                else:
-                    file_handler.setFormatter(formatter)
-                    file_handler.setLevel(console.level)
-                    self.backend.addHandler(file_handler)
+            # Only attach when the target directory exists and is writable.
+            # Framework logging is a silent dev aid and must never crash the
+            # host app nor spam its stderr; an unwritable/invalid path is
+            # simply ignored and the console handler is left intact.
+            parent = os.path.dirname(path)
+            if (not already_attached
+                    and os.path.isdir(parent)
+                    and os.access(parent, os.W_OK)):
+                # delay=True defers opening (and creating) the file until the
+                # first record is actually emitted. Combined with the
+                # `logging_is_enabled` gate on every emit method, this means
+                # no empty log file is created unless framework logging is
+                # enabled AND something is actually logged.
+                file_handler = logging.FileHandler(path, delay=True)
+                file_handler.setFormatter(formatter)
+                file_handler.setLevel(console.level)
+                self.backend.addHandler(file_handler)
 
     def _get_logging_kwargs(self,
                             namespace: str | None,
