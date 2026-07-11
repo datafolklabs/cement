@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
+status: verifying
 stopped_at: "Phase 05.2 context gathered (#670 command self-meta accessor)"
-last_updated: "2026-06-25T18:22:37.624Z"
-last_activity: 2026-06-25 -- Phase 05.2 planning complete
+last_updated: "2026-06-25T20:27:22.954Z"
+last_activity: 2026-06-25
 progress:
   total_phases: 9
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 34
-  completed_plans: 33
-  percent: 67
+  completed_plans: 34
+  percent: 78
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-24)
 
 **Core value:** Cement 3 stays solid, secure, performant, and bug-free under strict backward compatibility — while being continuously maintained against a modern Python and tooling ecosystem.
-**Current focus:** Phase 05.1 — ext-generate-select-mode-feature-prompt-ux-and-jinja-boolean
+**Current focus:** Phase 05.2 — ext-argparse-command-self-meta-accessor-670
 
 ## Current Position
 
-Phase: 05.1 complete; next: Phase 6 (Release Cut) or merge branch
-Plan: 5 of 5
-Status: Ready to execute
-Last activity: 2026-06-25 -- Phase 05.2 planning complete
+Phase: 6
+Plan: Not started
+Status: Phase complete — ready for verification
+Last activity: 2026-06-25
 
 Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
 
@@ -36,7 +36,7 @@ Progress: [██████████] 100% (21/21 plans completed across Ph
 
 **Velocity:**
 
-- Total plans completed: 12
+- Total plans completed: 13
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -47,6 +47,7 @@ Progress: [██████████] 100% (21/21 plans completed across Ph
 | 01 | 4 | - | - |
 | 01.1 | 1 | - | - |
 | 05 | 6 | - | - |
+| 05.2 | 1 | - | - |
 
 **Recent Trend:**
 
@@ -72,6 +73,7 @@ Progress: [██████████] 100% (21/21 plans completed across Ph
 | Phase 05.1 P03 | ~10min | 2 tasks | 16 files |
 | Phase 05.1 P04 | ~12min | 2 tasks | 5 files |
 | Phase 05.1 P05 | ~8min | 2 tasks | 3 files |
+| Phase 05.2 P01 | 92 min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -142,6 +144,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Demo generate-features migrated to unified type:/extend:/requires: schema; #782 demonstrated via top-level {% if docker %}
 - [Phase ?]: All 5 cli generate templates verified byte-identical (zero feature usage) and still generate under --defaults
 - [Phase 05.1 Plan 05]: Phase 05.1 CLOSED — full `make test` GREEN at 100% coverage (369 passed) with redis+memcached up, ruff + mypy clean across the refactored ext.generate surface. Pulled the type:choice picker label->value mapping out from under four bare unlabeled `# pragma: nocover` markers into real patched-prompt coverage (test_generate_choice_picker_maps_label_to_value / test16); ext_generate.py rose 259->269 measured stmts at 0 miss. Every surviving pragma carries a locked-vocabulary label (inverse audit grep empty). CHANGELOG documents the unified type:/extend:/requires: schema + all four #782/#780 points (Tom's feedback: features-after-vars / custom prompt text / vars-style input / top-level Jinja boolean).
+- [Phase 05.2 Plan 01]: `_command_meta` ships as an additive read-only `@property` on `ArgparseController`; the released `func()` dispatch signature is unchanged (3.0.x BC, D-06). mypy `no-any-return` on the dynamic `__cement_meta__` attr cleared via an explicit local `meta: CommandMeta = getattr(self.__class__, func_name).__cement_meta__` mirroring `_collect_commands` (the PATTERNS bare-`return getattr(...)` sketch would not pass mypy). None-branch (D-03) covered by reusing `Base._default`'s no-sub-command run path — no new fixture controller needed. Cement-4 func-signature-injection deferral recorded as a comment only (D-07). Resolves #670; full `make test` GREEN at 100% (374 passed), ruff + mypy clean.
 
 ### Roadmap Evolution
 
@@ -175,6 +178,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-25T17:18:01.045Z
+Last session: 2026-06-25T20:07:09.236Z
 Stopped at: Phase 05.2 context gathered (#670 command self-meta accessor)
-Resume file: .planning/phases/05.2-ext-argparse-command-self-meta-accessor-670/05.2-CONTEXT.md
+Resume file: None
