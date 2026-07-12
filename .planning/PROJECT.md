@@ -119,4 +119,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-12 after Phase 05.3 completion (modernize-project-template-packaging-and-type-all-cli-generated-templates; resolves #735)*
+*Last updated: 2026-07-12 after Phase 05.4 completion (github-actions-release-workflow; automates issue #791's manual release checklist — release machinery built and dry-run-validated end-to-end against TestPyPI; requirement IDs CI-04/CI-05/REL-02..05/DOCS-03 flip in Phase 6, which runs the real release)*

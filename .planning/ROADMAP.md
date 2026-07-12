@@ -240,7 +240,7 @@ Plans:
   4. The `stable/X.Y` version branch is created/fast-forwarded automatically and documentation builds (Read The Docs) are triggered for the release version
   5. A GitHub Release is published with the changelog body, and the remaining human steps (GitBook narrative docs, mailing list / Slack notifications) are reduced to an explicit, short post-release checklist emitted by the workflow — nothing else in issue #791's checklist requires manual execution
 
-**Plans:** 4/5 plans executed
+**Plans:** 5/5 plans complete
 
 Plans:
 
@@ -262,7 +262,7 @@ Plans:
 
   **Wave 5** *(blocked on Waves 2-4 — provisioning + acceptance)*
 
-- [ ] 05.4-05-PLAN.md — Provisioning runbook + human-verify (GitHub Environment, PyPI/TestPyPI trusted publishers, Docker Hub secrets, RTD) + workflow_dispatch dry-run validation (CI-04)
+- [x] 05.4-05-PLAN.md — Provisioning runbook + human-verify (GitHub Environment, PyPI/TestPyPI trusted publishers, Docker Hub secrets, RTD) + workflow_dispatch dry-run validation (CI-04)
 
 ### Phase 05.3: Modernize project template packaging and type all CLI-generated templates (INSERTED)
 
@@ -367,7 +367,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6, with inserted 
 | 05.1. ext.generate select-mode prompt UX + Jinja booleans (INSERTED) | 5/5 | Complete   | 2026-05-29 |
 | 05.2. ext.argparse command self-meta accessor (INSERTED) | 1/1 | Complete   | 2026-06-25 |
 | 05.3. Template packaging modernization + typed templates (INSERTED) | 6/6 | Complete   | 2026-07-11 |
-| 05.4. GitHub Actions Release Workflow (INSERTED) | 4/5 | In Progress|  |
+| 05.4. GitHub Actions Release Workflow (INSERTED) | 5/5 | Complete    | 2026-07-12 |
 | 6. Release Cut 3.0.16 | 0/TBD | Not started | - |
 
 ## Backlog
