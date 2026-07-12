@@ -1,10 +1,18 @@
-.PHONY: clean setup test docker dist dist-upload
+.PHONY: clean setup test comply comply-ruff comply-mypy docker dist dist-upload
 
 clean:
 	find . -name '*.py[co]' -delete
 
 setup:
 	pdm install
+
+comply: comply-ruff comply-mypy
+
+comply-ruff:
+	pdm run ruff check .
+
+comply-mypy:
+	pdm run mypy
 
 test:
 	pdm run pytest \

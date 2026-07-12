@@ -1,12 +1,13 @@
 
 from cement import Controller, ex
 from cement.utils.version import get_version_banner
+
 from ..core.version import get_version
 
-VERSION_BANNER = """
-{{ description }} %s
-%s
-""" % (get_version(), get_version_banner())
+VERSION_BANNER = f"""
+{{ description }} {get_version()}
+{get_version_banner()}
+"""
 
 
 class Base(Controller):
@@ -28,7 +29,7 @@ class Base(Controller):
         ]
 
 
-    def _default(self):
+    def _default(self) -> None:
         """Default action if no sub-command is passed."""
 
         self.app.args.print_help()
@@ -46,7 +47,7 @@ class Base(Controller):
                 'dest' : 'foo' } ),
         ],
     )
-    def command1(self):
+    def command1(self) -> None:
         """Example sub-command."""
 
         data = {
