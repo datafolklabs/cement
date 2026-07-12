@@ -88,6 +88,11 @@ def main(argv: list[str]) -> int:
         class Meta:
             label = "smoke"
             exit_on_close = False
+            # Do NOT inherit this wrapper script's sys.argv — App.run() parses
+            # argv[1:] by default, and the version argument passed to THIS
+            # script ('3.0.15') would be rejected by the app's argparse
+            # ("unrecognized arguments").
+            argv: list[str] = []
 
     with SmokeApp() as app:
         app.run()
