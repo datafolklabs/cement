@@ -36,6 +36,15 @@ from __future__ import annotations  # script-internal; doesn't affect cement/
 
 import subprocess
 import sys
+import time
+
+# Per-attempt pip timeout (seconds): fail fast instead of hanging until the
+# GitHub Actions job-level timeout on a stalled network / unresponsive index.
+INSTALL_TIMEOUT = 300
+# TestPyPI index propagation can lag the publish by a short window; retry the
+# install a few times before declaring the smoke failed.
+INSTALL_ATTEMPTS = 3
+RETRY_DELAY = 30
 
 
 def main(argv: list[str]) -> int:
@@ -48,14 +57,27 @@ def main(argv: list[str]) -> int:
     # from TestPyPI alone; do NOT install the [cli] extra (its jinja2/pyyaml
     # deps live only on real PyPI and would force an extra real-PyPI index,
     # widening the dependency-confusion surface — Pitfall 2 / T-05.4-01).
-    subprocess.run(
-        [
-            sys.executable, "-m", "pip", "install",
-            "-i", "https://test.pypi.org/simple/",
-            f"cement=={version}",
-        ],
-        check=True,
-    )
+    for attempt in range(1, INSTALL_ATTEMPTS + 1):
+        try:
+            subprocess.run(
+                [
+                    sys.executable, "-m", "pip", "install",
+                    "-i", "https://test.pypi.org/simple/",
+                    f"cement=={version}",
+                ],
+                check=True,
+                timeout=INSTALL_TIMEOUT,
+            )
+            break
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            if attempt == INSTALL_ATTEMPTS:
+                raise
+            print(  # noqa: T201
+                f"install attempt {attempt}/{INSTALL_ATTEMPTS} failed "
+                f"(index propagation?); retrying in {RETRY_DELAY}s",
+                file=sys.stderr,
+            )
+            time.sleep(RETRY_DELAY)
 
     # (2) Import proof + minimal round-trip. Import inside main() so the
     # freshly-installed cement is exactly what we exercise.
