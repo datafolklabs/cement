@@ -1,18 +1,21 @@
-.PHONY: clean virtualenv test docker dist dist-upload
+.PHONY: clean setup test comply comply-ruff comply-mypy docker dist dist-upload
 
 clean:
 	find . -name '*.py[co]' -delete
 
-virtualenv:
-	virtualenv --prompt '|> todo <| ' env
-	env/bin/pip install -r requirements-dev.txt
-	env/bin/python setup.py develop
-	@echo
-	@echo "VirtualENV Setup Complete. Now run: source env/bin/activate"
-	@echo
+setup:
+	pdm install
+
+comply: comply-ruff comply-mypy
+
+comply-ruff:
+	pdm run ruff check .
+
+comply-mypy:
+	pdm run mypy
 
 test:
-	python -m pytest \
+	pdm run pytest \
 		-v \
 		--cov=todo \
 		--cov-report=term \
@@ -24,8 +27,7 @@ docker: clean
 
 dist: clean
 	rm -rf dist/*
-	python setup.py sdist
-	python setup.py bdist_wheel
+	pdm build
 
 dist-upload:
 	twine upload dist/*

@@ -1,5 +1,6 @@
 
 from time import strftime
+
 from cement import Controller, ex
 
 
@@ -10,7 +11,7 @@ class Items(Controller):
         stacked_on = 'base'
 
     @ex(help='list items')
-    def list(self):
+    def list(self) -> None:
         data = {}
         data['items'] = self.app.db.all()
         self.app.render(data, 'items/list.jinja2')
@@ -23,7 +24,7 @@ class Items(Controller):
                'action': 'store' } )
         ],
     )
-    def create(self):
+    def create(self) -> None:
         text = self.app.pargs.item_text
         now = strftime("%Y-%m-%d %H:%M:%S")
         self.app.log.info(f'creating todo item: {text}')
@@ -48,7 +49,7 @@ class Items(Controller):
                'dest': 'item_text' } ),
         ],
     )
-    def update(self):
+    def update(self) -> None:
         id = int(self.app.pargs.item_id)
         text = self.app.pargs.item_text
         now = strftime("%Y-%m-%d %H:%M:%S")
@@ -69,7 +70,7 @@ class Items(Controller):
               'action': 'store' } ),
         ],
     )
-    def complete(self):
+    def complete(self) -> None:
         id = int(self.app.pargs.item_id)
         now = strftime("%Y-%m-%d %H:%M:%S")
         item = self.app.db.get(doc_id=id)
@@ -99,7 +100,7 @@ class Items(Controller):
               'action': 'store' } ),
         ],
     )
-    def delete(self):
+    def delete(self) -> None:
         id = int(self.app.pargs.item_id)
         self.app.log.info(f'deleting todo item id: {id}')
         self.app.db.remove(doc_ids=[id])
