@@ -3,12 +3,15 @@
 ## Installation
 
 ```
-$ pip install -r requirements.txt
-
-$ python setup.py install
+$ pip install .
 ```
 
 ## Development
+
+This project uses [pdm-backend](https://backend.pdm-project.org/) packaging: all
+build, metadata, runtime, and dev dependencies live in `pyproject.toml` — the
+legacy setuptools packaging files are gone. See the `todo-tutorial` walkthrough on
+[builtoncement.com](https://builtoncement.com) for the full narrative.
 
 This project includes a number of helpers in the `Makefile` to streamline common development tasks.
 
@@ -17,11 +20,9 @@ This project includes a number of helpers in the `Makefile` to streamline common
 The following demonstrates setting up and working with a development environment:
 
 ```
-### create a virtualenv for development
+### install project + dev dependencies
 
-$ make virtualenv
-
-$ source env/bin/activate
+$ make setup    # or: pdm install
 
 
 ### run todo cli application
@@ -47,7 +48,7 @@ username = YOUR_USERNAME
 password = YOUR_PASSWORD
 ```
 
-Then use the included helper function via the `Makefile`:
+Then use the included helper function via the `Makefile` (builds with `pdm build`):
 
 ```
 $ make dist

@@ -1,13 +1,14 @@
 
 import os
-from tinydb import TinyDB
+
 from cement import App, TestApp, init_defaults
 from cement.core.exc import CaughtSignal
 from cement.utils import fs
-from .core.exc import TodoError
+from tinydb import TinyDB
+
 from .controllers.base import Base
 from .controllers.items import Items
-
+from .core.exc import TodoError
 
 # configuration defaults
 CONFIG = init_defaults('todo')
@@ -16,7 +17,7 @@ CONFIG['todo']['db_file'] = '~/.todo/db.json'
 CONFIG['todo']['email'] = 'you@yourdomain.com'
 
 
-def extend_tinydb(app):
+def extend_tinydb(app: App) -> None:
     app.log.info('extending todo application with tinydb')
     db_file = app.config.get('todo', 'db_file')
 
@@ -82,7 +83,7 @@ class TodoTest(TestApp,Todo):
         label = 'todo'
 
 
-def main():
+def main() -> None:
     with Todo() as app:
         try:
             app.run()
@@ -95,7 +96,7 @@ def main():
                 import traceback
                 traceback.print_exc()
 
-        except TodoError:
+        except TodoError as e:
             print(f'TodoError > {e.args[0]}')
             app.exit_code = 1
 

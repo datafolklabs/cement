@@ -1,0 +1,88 @@
+# Generated todo application — pdm-backend toolchain.
+# Single source of truth for build, metadata, runtime deps, and dev deps.
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "todo"
+description = "A Simple TODO Application"
+authors = [{name = "Your Name", email = "you@yourdomain.com"}]
+license = {text = "unlicensed"}
+readme = "README.md"
+requires-python = ">=3.10"
+dynamic = ["version"]
+dependencies = [
+    # NOTE: the todo-tutorial template is copied verbatim (its `.generate.yml`
+    # has `exclude: ['(.*)']`, so the generated app's own runtime .jinja2
+    # templates survive un-rendered). Jinja vars like {{ cement.version }} do
+    # NOT render here — keep this a literal PEP 508 string. Cap within the
+    # backward-compatible 3.0.x stable line.
+    "cement[jinja2,yaml,colorlog]>=3.0,<3.1",
+    "tinydb",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourname/todo"
+
+[project.scripts]
+todo = "todo.main:main"
+
+[tool.pdm.version]
+source = "file"
+path = "todo/core/version.py"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "coverage",
+    "twine>=1.11.0",
+    "ruff~=0.15.12",
+    "mypy~=1.20.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov=todo --cov-report=term --cov-report=html:coverage-report tests/"
+python_files = "test_*.py"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+indent-width = 4
+# Scope to the package only (mirrors the mypy ``files = ["todo/"]`` scope): the
+# tutorial tests intentionally raise Exception and use a hand-rolled conftest
+# with pre-existing lint quirks, so the ruff gate does not run over todo tests.
+extend-exclude = ["tests"]
+
+[tool.ruff.lint]
+extend-select = [
+    "E",   # pycodestyle errors
+    "F",   # Pyflakes
+    "W",   # pycodestyle warnings
+    "B",   # flake8-bugbear
+    "I",   # isort
+    "UP",  # pyupgrade
+    "FA",  # flake8-future-annotations
+]
+
+[tool.mypy]
+python_version = "3.10"
+disallow_untyped_defs = true
+check_untyped_defs = true
+show_error_codes = true
+# The Cement handler/Meta pattern exposes attributes dynamically (e.g.
+# ``self.app.args.print_help()`` / ``self.app.pargs.foo`` resolve to the
+# concrete argparse handler, not the ArgumentHandler interface). Cement's own
+# config disables this code for the same reason.
+disable_error_code = ["attr-defined"]
+# Scope to the package only: the tutorial tests intentionally raise Exception
+# and use a hand-rolled conftest, so mypy does not run over todo tests.
+files = ["todo/"]
+
+[[tool.mypy.overrides]]
+# tinydb ships no type stubs.
+module = "tinydb.*"
+ignore_missing_imports = true
