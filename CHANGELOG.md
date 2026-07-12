@@ -30,6 +30,22 @@ Bugs:
   `scripts/audit-public-api.py` so the
   `make audit-public-api` regression gate is portable across
   non-UTF-8 locales (Windows cp1252, locale-stripped Docker, etc.)
+- `[dev]` Fix `scripts/cli-smoke-test.sh` capturing the container's
+  `mktemp -d` path via `docker exec -t` — the pseudo-TTY made Docker
+  emit CRLF, and command substitution kept the trailing `\r`, so
+  every derived `$tmp/...` path carried an embedded carriage return
+  (`/tmp/tmp.XXXX\r/myapp/...`) and broke pdm/venv on the first
+  Python version. Drop `-t` on that one capture (the other `-t`
+  execs only feed `grep`, where a trailing `\r` is harmless)
+- `[dev]` Fix `scripts/cli-smoke-test.sh` `pdm install` of the
+  generated project failing to resolve the dev cement pin
+  (`cement==<unreleased>`) — `pdm install` resolves in a fresh
+  isolated venv against PyPI, where the in-development version is not
+  yet published, so it could not satisfy the exact pin. Inject a
+  find_links `[[tool.pdm.source]]` pointing at the mounted
+  `/src/dist` so the locally-built cement resolves. Harness-only
+  shim (real users install a published cement from PyPI); ruff/mypy/
+  pytest ignore the source table so the project gates are unaffected
 - `[core.interface]` Widen `InterfaceManager.get` `fallback`
   parameter to `Any` to match the documented public contract and
   the existing test that passes a string fallback (the parameter
@@ -163,6 +179,32 @@ Bugs:
   uses a vars-style `[(Y)es/(N)o] [default]:` format and all variables
   prompt in a single declaration-order pass — resolves #782 (the
   former `features:` namespace and pre-pass are removed)
+- `[cli]` Generated `cement generate todo-tutorial` output now builds
+  under pip's default PEP 517 isolation on Python 3.10+ — the legacy
+  `setup.py` self-imported the package being built, which fails inside
+  isolated build envs (mirrors the `generate project` fix; #735)
+- `[cli]` Fix `NameError` in generated `todo/main.py` — the `TodoError`
+  handler referenced an undefined name; now `except TodoError as e:`
+  (#735)
+- `[cli]` Fix false-green assertion in the generated project test
+  template — `assert output.find(...)` (str.find() returns -1, which is
+  truthy, so it never fails) is now membership `assert '...' in output`,
+  so the test genuinely fails on wrong or empty rendered output (#735)
+- `[cli]` Generated todo-tutorial imports are now isort-clean and its
+  `[tool.ruff]` is scoped to the `todo/` package, so the shipped
+  `make comply` (ruff) is green out of the box (#735)
+- `[cli]` Constrain the cement dependency in generated `project` and
+  `todo-tutorial` templates to the backward-compatible 3.0.x stable line.
+  `project` previously used an exact `cement==<generating version>` pin,
+  which made a freshly generated project uninstallable whenever the
+  generating cement was an unreleased dev version (`pdm install` could not
+  resolve it from PyPI); it now renders a compatible-release range
+  (`cement[...]~={{ cement.major_version }}.{{ cement.minor_version }}.0`,
+  e.g. `~=3.0.0` → `>=3.0.0,<3.1`). `todo-tutorial` previously used an
+  uncapped `>=3.0`; it is now capped to a literal `>=3.0,<3.1` (that
+  template is copied verbatim, so it cannot use rendered version vars).
+  Both install any backward-compatible patch on the same stable minor
+  line (#735)
 
 Features:
 
@@ -407,6 +449,15 @@ Refactoring:
 - `[core.deprecations]` Pin 3.0.10-1 and 3.0.16-1 removal version to v3.2.0
 - `[ext.logging]` Tighten FATAL deprecation removal version in docstrings
 - `[ext.smtp]` Document send() bool-return removal in v3.2.0
+- `[cli]` Migrate `cement generate todo-tutorial` template from
+  setup.py/setup.cfg/requirements*.txt/MANIFEST.in to pdm-backend with
+  full PEP 621 metadata and a PEP 735 dev group (mirrors the `generate
+  project` migration; #735)
+- `[cli]` Ship `[tool.ruff]` / `[tool.mypy]` / `[tool.pytest]` gate
+  config in the generated project and todo-tutorial `pyproject.toml` so
+  `make comply` and `make test` are green out of the box (#735)
+- `[cli]` Type-annotate all generated templates (project/script/
+  extension/plugin/todo) and modernize idioms to f-strings (#735)
 
 Misc:
 
@@ -459,6 +510,12 @@ Misc:
 - `[docs]` Remove orphaned `[Commit Guidelines]` reference-link
   definition from `.github/CONTRIBUTING.md` (no body callsites
   remained after the Plan 05-05 Conventional Commits rewrite)
+- `[dev]` Extend the CI `cli-smoke-test` to gate the generated
+  project's own `make comply` + `make test` and to build/install the
+  generated todo-tutorial (#735)
+- `[dev]` Add a generated-todo ruff-clean regression guard to cement's
+  test suite (`test_generate_todo_ruff_clean`) — generates
+  todo-tutorial and re-runs ruff against the rendered output (#735)
 
 Deprecations:
 
