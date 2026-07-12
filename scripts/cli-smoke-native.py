@@ -68,8 +68,14 @@ def _resolve(name: str) -> str:
 
 
 def _run(cmd: list[str], cwd: str | None = None) -> str:
-    """Run a command, fail loud on non-zero, return combined stdout+stderr."""
-    proc = subprocess.run(cmd, check=True, capture_output=True, text=True, cwd=cwd)
+    """Run a command, fail loud on non-zero, return combined stdout+stderr.
+
+    timeout: fail fast if a subprocess hangs (e.g. waiting on stdin) instead
+    of blocking until the CI job-level timeout.
+    """
+    proc = subprocess.run(
+        cmd, check=True, capture_output=True, text=True, cwd=cwd, timeout=300
+    )
     return proc.stdout + proc.stderr
 
 
