@@ -37,6 +37,7 @@ from __future__ import annotations  # script-internal; doesn't affect cement/
 import subprocess
 import sys
 import time
+from typing import ClassVar
 
 # Per-attempt pip timeout (seconds): fail fast instead of hanging until the
 # GitHub Actions job-level timeout on a stalled network / unresponsive index.
@@ -92,7 +93,7 @@ def main(argv: list[str]) -> int:
             # argv[1:] by default, and the version argument passed to THIS
             # script ('3.0.15') would be rejected by the app's argparse
             # ("unrecognized arguments").
-            argv: list[str] = []
+            argv: ClassVar[list[str]] = []
 
     with SmokeApp() as app:
         app.run()
