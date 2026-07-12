@@ -3,9 +3,9 @@ from cement import App, CaughtSignal, Controller, ex, get_version
 
 VERSION = (0, 0, 1, 'alpha', 0)
 
-VERSION_BANNER = """
-{{ label }} v%s
-""" % get_version(VERSION)
+VERSION_BANNER = f"""
+{{ label }} v{get_version(VERSION)}
+"""
 
 
 class Base(Controller):
@@ -20,7 +20,7 @@ class Base(Controller):
         ]
 
 
-    def _default(self):
+    def _default(self) -> None:
         """Default action if no sub-command is passed."""
 
         self.app.args.print_help()
@@ -36,7 +36,7 @@ class Base(Controller):
                 'dest' : 'foo' } ),
         ],
     )
-    def command1(self):
+    def command1(self) -> None:
         """Example sub-command."""
 
         print('Inside Base.command1')
@@ -61,7 +61,7 @@ class MyApp(App):
         close_on_exit = True
 
 
-def main():
+def main() -> None:
     with MyApp() as app:
         try:
             app.run()

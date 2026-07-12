@@ -9,7 +9,7 @@ class {{ class_name }}(Controller):
         stacked_on = 'base'
         stacked_type = 'nested'
 
-    def _default(self):
+    def _default(self) -> None:
         self._parser.print_help()
 
     @ex(
@@ -22,7 +22,7 @@ class {{ class_name }}(Controller):
                 'dest' : 'foo' } ),
         ],
     )
-    def command1(self):
+    def command1(self) -> None:
         """Example sub-command."""
 
         data = {
