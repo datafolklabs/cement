@@ -106,12 +106,20 @@ jobs:
         uses: actions/setup-python@v6.3.0
         with:
           python-version: "3.x"
-      - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4.5
-      - name: Install dependencies
-        run: pdm install
+      # NOT `pdm install`: pdm.lock selects all extras, including pylibmc,
+      # which needs libmemcached headers and cannot build on Windows/macOS.
+      # tests/core skips the memcached/redis/alarm/daemon extensions on
+      # Windows, so only these extras are required.
+      - name: Install cement + core test deps (no service extras)
+        run: python -m pip install ".[cli,colorlog,mustache,tabulate,watchdog]" pytest mock
+      # addopts override: the repo-level addopts appends `tests/` (the full
+      # suite — needs docker services) and `--cov-fail-under=100` (a
+      # whole-suite gate). Keep `--capture=sys` — test_quiet closes streams
+      # and fd-capture breaks without it. Coverage is enforced by the Linux
+      # full-suite gate, not here.
       - name: Core Tests (Windows, no docker services)
-        run: pdm run pytest --cov=cement.core tests/core
+        shell: bash
+        run: python -m pytest -o addopts="--capture=sys" tests/core
 
   cli-smoke-native:
     if: ${{ inputs.full-os-matrix }}
@@ -127,11 +135,12 @@ jobs:
         uses: actions/setup-python@v6.3.0
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4.5
-      - name: Install dependencies
-        run: pdm install
-      - name: Build distribution
-        run: pdm build
+      # The smoke script resolves the `cement` console script from PATH and
+      # generates+installs a project with pip — it never touches dist/ or a
+      # PDM venv. A plain pip install of the [cli] extra is the entire
+      # environment it needs (and avoids pdm.lock's all-extras selection,
+      # which cannot build pylibmc on these runners).
+      - name: Install cement[cli]
+        run: python -m pip install ".[cli]"
       - name: Native CLI Smoke
         run: python scripts/cli-smoke-native.py
