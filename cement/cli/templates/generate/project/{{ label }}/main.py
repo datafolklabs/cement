@@ -1,8 +1,9 @@
 
 from cement import App, TestApp, init_defaults
 from cement.core.exc import CaughtSignal
-from .core.exc import {{ class_name }}Error
+
 from .controllers.base import Base
+from .core.exc import {{ class_name }}Error
 
 # configuration defaults
 CONFIG = init_defaults('{{ label }}')
@@ -53,13 +54,13 @@ class {{ class_name }}Test(TestApp,{{ class_name }}):
         label = '{{ label }}'
 
 
-def main():
+def main() -> None:
     with {{ class_name }}() as app:
         try:
             app.run()
 
         except AssertionError as e:
-            print('AssertionError > %s' % e.args[0])
+            print(f'AssertionError > {e.args[0]}')
             app.exit_code = 1
 
             if app.debug is True:
@@ -67,7 +68,7 @@ def main():
                 traceback.print_exc()
 
         except {{ class_name }}Error as e:
-            print('{{ class_name }}Error > %s' % e.args[0])
+            print(f'{{ class_name }}Error > {e.args[0]}')
             app.exit_code = 1
 
             if app.debug is True:
@@ -76,7 +77,7 @@ def main():
 
         except CaughtSignal as e:
             # Default Cement signals are SIGINT and SIGTERM, exit 0 (non-error)
-            print('\n%s' % e)
+            print(f'\n{e}')
             app.exit_code = 0
 
 

@@ -14,7 +14,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dynamic = ["version"]
 dependencies = [
-    "cement[jinja2,yaml,colorlog]=={{ cement.version }}",
+    "cement[jinja2,yaml,colorlog]~={{ cement.major_version }}.{{ cement.minor_version }}.0",
 ]
 
 [project.urls]
@@ -33,4 +33,39 @@ dev = [
     "pytest-cov",
     "coverage",
     "twine>=1.11.0",
+    "ruff~=0.15.12",
+    "mypy~=1.20.2",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov={{ label }} --cov-report=term --cov-report=html:coverage-report tests/"
+python_files = "test_*.py"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+indent-width = 4
+
+[tool.ruff.lint]
+extend-select = [
+    "E",   # pycodestyle errors
+    "F",   # Pyflakes
+    "W",   # pycodestyle warnings
+    "B",   # flake8-bugbear
+    "I",   # isort
+    "UP",  # pyupgrade
+    "FA",  # flake8-future-annotations
+]
+
+[tool.mypy]
+python_version = "3.10"
+disallow_untyped_defs = true
+check_untyped_defs = true
+show_error_codes = true
+# The Cement handler/Meta pattern exposes attributes dynamically (e.g.
+# ``self.app.args.print_help()`` resolves to the concrete argparse handler,
+# not the ArgumentHandler interface). Cement's own config disables this code
+# for the same reason.
+disable_error_code = ["attr-defined"]
+files = ["{{ label }}/", "tests/"]
