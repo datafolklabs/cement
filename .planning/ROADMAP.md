@@ -226,6 +226,44 @@ Plans:
   - `make audit-public-api` exit 0 enforced byte-for-byte across every commit (Phase 3 D-04 / Phase 5 D-18 #3)
   - `make docs` (post-Wave 4) must exit 0 with -W enabled — zero warnings (Phase 5 D-09)
 
+### Phase 05.4: GitHub Actions Release Workflow (INSERTED)
+
+**Goal:** Replace the manual release checklist (issue #791) with a GitHub Actions–driven release workflow so that cutting a release becomes a tag push (or `workflow_dispatch`) instead of a cumbersome multi-day manual process that blocks active development. The workflow automates the full checklist: release gates (test matrix, coverage, compliance, Windows core tests, CLI smoke tests on Linux/macOS/Windows), PyPI distribution, Docker Hub multi-arch image builds, `stable/X.Y` version-branch sync, docs builds, GitHub Release publication, and release notifications. Pre-requisite for Phase 6 — the 3.0.16 Release Cut runs this workflow.
+**Requirements**: CI-04, CI-05, REL-02, REL-03, REL-04, REL-05, DOCS-03 (this phase BUILDS the machinery; the requirement IDs themselves flip to complete in Phase 6, which RUNS the workflow)
+**Depends on:** Phase 5
+**Source:** https://github.com/datafolklabs/cement/issues/791 (3.0.16 Stable Release Tracker — the recurring manual checklist this phase automates)
+**Success Criteria** (what must be TRUE):
+
+  1. Pushing a release tag (or dispatching the workflow manually) runs all release gates automatically — full Python test matrix with 100% coverage, ruff/mypy compliance, core tests on Windows, and cement CLI smoke tests on Linux, macOS, and Windows — and the release hard-stops if any gate fails
+  2. A gated run builds sdist + wheel and publishes to PyPI (with a TestPyPI validation path), with no credentials stored as long-lived secrets where OIDC/trusted publishing is available
+  3. Docker Hub images build for linux/amd64 and linux/arm64 and push with `X`, `X.Y`, and `X.Y.Z` tags (`datafolklabs/cement`)
+  4. The `stable/X.Y` version branch is created/fast-forwarded automatically and documentation builds (Read The Docs) are triggered for the release version
+  5. A GitHub Release is published with the changelog body, and the remaining human steps (GitBook narrative docs, mailing list / Slack notifications) are reduced to an explicit, short post-release checklist emitted by the workflow — nothing else in issue #791's checklist requires manual execution
+
+**Plans:** 4/5 plans executed
+
+Plans:
+
+  **Wave 1**
+
+- [x] 05.4-01-PLAN.md — Dev-tooling scripts: testpypi-smoke.py (REL-02), cli-smoke-native.py (D-14), bump_dev_version.py (REL-05)
+
+  **Wave 2** *(blocked on Wave 1)*
+
+- [x] 05.4-02-PLAN.md — gates.yml reusable workflow (D-13) + Windows/macOS OS jobs (D-14) + build_and_test.yml thin caller (CI-05)
+
+  **Wave 3** *(blocked on Waves 1-2)*
+
+- [x] 05.4-03-PLAN.md — release.yml dry-run pipeline: preflight (D-02/D-09) → gates → build → TestPyPI publish + smoke (D-05/D-07/D-08); workflow_dispatch dry-run (D-06/CI-04)
+
+  **Wave 4** *(blocked on Wave 3 — same file)*
+
+- [x] 05.4-04-PLAN.md — release.yml publish side: single-approval OIDC publish-pypi (D-03/D-04/REL-04), Docker buildx (D-11), stable/3.0.x sync (D-10), gh-release (REL-03/DOCS-03), dev-bump PR (D-12/REL-05), checklist issue (D-16)
+
+  **Wave 5** *(blocked on Waves 2-4 — provisioning + acceptance)*
+
+- [ ] 05.4-05-PLAN.md — Provisioning runbook + human-verify (GitHub Environment, PyPI/TestPyPI trusted publishers, Docker Hub secrets, RTD) + workflow_dispatch dry-run validation (CI-04)
+
 ### Phase 05.3: Modernize project template packaging and type all CLI-generated templates (INSERTED)
 
 **Goal:** Modernize the packaging/setup of all 5 `cement generate` templates and make every generated file fully typed and idiomatically clean. Extends Phase 01.1 (which modernized only the `project` build) to `script`, `extension`, `plugin`, and `todo-tutorial`; migrates `todo-tutorial` off setup.py to pdm-backend; ships ruff/mypy/pytest config so a freshly generated project is `make comply` + `make test` green out of the box, enforced via the CI cli-smoke-test. Resolves #735.
@@ -301,7 +339,7 @@ Plans:
 ### Phase 6: Release Cut 3.0.16
 
 **Goal**: Cut the 3.0.16 release: finalize the changelog, validate the release workflow against TestPyPI, tag, publish to PyPI, and bump the dev version to 3.0.17 per odd/even convention.
-**Depends on**: Phase 5 (and gates on Phases 1–4 being complete; release does not cut while any prior phase is open)
+**Depends on**: Phase 5 and Phase 05.4 (and gates on Phases 1–4 being complete; release does not cut while any prior phase is open — Phase 05.4 provides the release workflow this phase runs)
 **Requirements**: DOCS-03, CI-04, REL-01, REL-02, REL-03, REL-04, REL-05
 **Success Criteria** (what must be TRUE):
 
@@ -316,15 +354,20 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6. Phases 3 and 4 are independent and parallelization-eligible once Phase 2 completes; Phase 5 can begin in parallel with Phase 4 once Phase 3 lands.
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6, with inserted decimal phases (05.1–05.4) executing between Phase 5 and Phase 6. Phase 05.4 is a hard pre-requisite for Phase 6 (the release cut runs the workflow it builds). Phases 3 and 4 are independent and parallelization-eligible once Phase 2 completes; Phase 5 can begin in parallel with Phase 4 once Phase 3 lands.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Tooling Baseline & Python Matrix | 4/4 | Complete   | 2026-04-30 |
-| 2. Dependencies & CI Pipeline | 0/TBD | Not started | - |
+| 01.1. Generated Project Template Build Modernization (INSERTED) | 1/1 | Complete   | 2026-05-01 |
+| 2. Dependencies & CI Pipeline | 8/8 | Complete   | 2026-05-02 |
 | 3. Internal Refactor & Coverage Hardening | 8/8 | Complete   | 2026-05-04 |
 | 4. Backlog Triage | manual | Complete   | 2026-05-05 |
 | 5. Deprecations, Docs & Security Stubs | 6/6 | Complete   | 2026-05-08 |
+| 05.1. ext.generate select-mode prompt UX + Jinja booleans (INSERTED) | 5/5 | Complete   | 2026-05-29 |
+| 05.2. ext.argparse command self-meta accessor (INSERTED) | 1/1 | Complete   | 2026-06-25 |
+| 05.3. Template packaging modernization + typed templates (INSERTED) | 6/6 | Complete   | 2026-07-11 |
+| 05.4. GitHub Actions Release Workflow (INSERTED) | 4/5 | In Progress|  |
 | 6. Release Cut 3.0.16 | 0/TBD | Not started | - |
 
 ## Backlog
@@ -355,6 +398,7 @@ Cement") is satisfied by Phases 05.x. Additive and BC-safe, so it fits a future
 for technical shape and open design questions.
 
 Plans:
+
 - [ ] TBD (promote with /gsd-review-backlog when ready)
 
 ---
