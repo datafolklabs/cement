@@ -30,6 +30,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - ✓ Python 3.10–3.14 support matrix (3.9 dropped per EOL policy) — Validated in Phase 01: tooling-baseline-python-matrix
 - ✓ Tooling baseline at current pins (ruff ~=0.15.12, mypy ~=1.20.2, pytest>=9.0.3, pytest-cov>=7.1.0, coverage>=7.13.5) — Validated in Phase 01: tooling-baseline-python-matrix
 - ✓ No-implicit-drift codification (AUDIT POINT comments in pyproject.toml; explicit ruff `extend-select` + `preview = false`; mypy strictness knobs enumerated) — Validated in Phase 01: tooling-baseline-python-matrix
+- ✓ All 5 `cement generate` templates (project, script, extension, plugin, todo-tutorial) modernized to pdm-backend packaging, fully typed, and `make comply` + `make test` green out of the box; enforced by the CI cli-smoke-test matrix — Validated in Phase 05.3 (resolves #735)
 
 ### Active
 
@@ -118,4 +119,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-08 after Phase 05 completion (deprecations-docs-security-stubs)*
+*Last updated: 2026-07-12 after Phase 05.3 completion (modernize-project-template-packaging-and-type-all-cli-generated-templates; resolves #735)*

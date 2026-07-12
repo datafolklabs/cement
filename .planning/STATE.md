@@ -2,41 +2,44 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: "Phase 05.2 context gathered (#670 command self-meta accessor)"
-last_updated: "2026-06-25T20:27:22.954Z"
-last_activity: 2026-06-25
+current_phase: 6
+current_phase_name: Release Cut 3.0.16
+status: executing
+stopped_at: "Phase 05.3 complete (#735 resolved); ready to plan Phase 6 release-cut-3.0.16"
+last_updated: "2026-07-12T01:24:51.878Z"
+last_activity: 2026-07-12
+last_activity_desc: Phase 05.3 complete, transitioned to Phase 6
 progress:
-  total_phases: 9
-  completed_phases: 7
-  total_plans: 34
-  completed_plans: 34
-  percent: 78
+  total_phases: 10
+  completed_phases: 8
+  total_plans: 40
+  completed_plans: 40
+  percent: 80
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-24)
+See: .planning/PROJECT.md (updated 2026-07-12)
 
 **Core value:** Cement 3 stays solid, secure, performant, and bug-free under strict backward compatibility — while being continuously maintained against a modern Python and tooling ecosystem.
-**Current focus:** Phase 05.2 — ext-argparse-command-self-meta-accessor-670
+**Current focus:** Phase 6 — release-cut-3.0.16
 
 ## Current Position
 
-Phase: 6
+Phase: 6 — Release Cut 3.0.16
 Plan: Not started
-Status: Phase complete — ready for verification
-Last activity: 2026-07-11 - Completed quick task 260711-fjb: add optional CEMENT_FRAMEWORK_LOG_FILE file logging to MinimalLogger (#593)
+Status: Ready to execute
+Last activity: 2026-07-12 — Phase 05.3 complete, transitioned to Phase 6
 
-Progress: [██████████] 100% (21/21 plans completed across Phases 1, 01.1, 2, 3 — Phases 4-6 plan counts TBD)
+Progress: [████████████████████] 40/40 plans (100%) — 8/10 phases complete (Phase 6 release-cut remaining)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 13
+- Total plans completed: 18
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -48,6 +51,7 @@ Progress: [██████████] 100% (21/21 plans completed across Ph
 | 01.1 | 1 | - | - |
 | 05 | 6 | - | - |
 | 05.2 | 1 | - | - |
+| 05.3 | 6 | - | - |
 
 **Recent Trend:**
 
@@ -74,6 +78,12 @@ Progress: [██████████] 100% (21/21 plans completed across Ph
 | Phase 05.1 P04 | ~12min | 2 tasks | 5 files |
 | Phase 05.1 P05 | ~8min | 2 tasks | 3 files |
 | Phase 05.2 P01 | 92 min | 3 tasks | 3 files |
+| Phase 05.3 P01 | 8 min | 3 tasks | 7 files |
+| Phase 05.3 P02 | 5min | 3 tasks | 3 files |
+| Phase 05.3 P03 | 5 min | 3 tasks | 12 files |
+| Phase 05.3 P04 | 2min | 2 tasks | 4 files |
+| Phase 05.3 P05 | 2 min | 2 tasks | 1 files |
+| Phase 05.3 P06 | 35m | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -145,11 +155,19 @@ Recent decisions affecting current work:
 - [Phase ?]: All 5 cli generate templates verified byte-identical (zero feature usage) and still generate under --defaults
 - [Phase 05.1 Plan 05]: Phase 05.1 CLOSED — full `make test` GREEN at 100% coverage (369 passed) with redis+memcached up, ruff + mypy clean across the refactored ext.generate surface. Pulled the type:choice picker label->value mapping out from under four bare unlabeled `# pragma: nocover` markers into real patched-prompt coverage (test_generate_choice_picker_maps_label_to_value / test16); ext_generate.py rose 259->269 measured stmts at 0 miss. Every surviving pragma carries a locked-vocabulary label (inverse audit grep empty). CHANGELOG documents the unified type:/extend:/requires: schema + all four #782/#780 points (Tom's feedback: features-after-vars / custom prompt text / vars-style input / top-level Jinja boolean).
 - [Phase 05.2 Plan 01]: `_command_meta` ships as an additive read-only `@property` on `ArgparseController`; the released `func()` dispatch signature is unchanged (3.0.x BC, D-06). mypy `no-any-return` on the dynamic `__cement_meta__` attr cleared via an explicit local `meta: CommandMeta = getattr(self.__class__, func_name).__cement_meta__` mirroring `_collect_commands` (the PATTERNS bare-`return getattr(...)` sketch would not pass mypy). None-branch (D-03) covered by reusing `Base._default`'s no-sub-command run path — no new fixture controller needed. Cement-4 func-signature-injection deferral recorded as a comment only (D-07). Resolves #670; full `make test` GREEN at 100% (374 passed), ruff + mypy clean.
+- [Phase ?]: [Phase 05.3 Plan 03]: todo-tutorial migrated to pdm-backend [project]-table pyproject with source="file" version read — closes D-03 PEP 517 build isolation (no build-time cement import); 5 legacy setuptools files deleted, version.py to Shape B literal __version__.
+- [Phase ?]: [Phase 05.3 Plan 03]: Rule 2 added mypy disable_error_code=["attr-defined"] to todo pyproject — todo uses the Cement handler/Meta dynamic-attr pattern (self.app.args/pargs), matching the project template; required to keep make comply green. cement dep is a literal >=3.0 floor (verbatim template, no Jinja).
+- [Phase ?]: 05.3-04: typed generated todo/core/exc.py beyond the plan file list so mypy over todo/ is clean (D-05 gate = whole-package pass)
+- [Phase 05.3-05]: cli-smoke-test now runs the generated project's own make comply + make test inside each matrix container (pip install pdm + pdm install first, since the generated Makefile drives pdm run); set -e makes non-green fail the build. Regression guard for D-04/D-05/D-07.
+- [Phase 05.3-05]: todo-tutorial gate is build/install ONLY (cement generate + pip install .) proving D-02/D-03 pdm-backend PEP 517 isolation; NO make test/comply because todo's test_todo deliberately raises as a tutorial stub.
+- [Phase ?]: 05.3-06: Scoped todo-tutorial [tool.ruff] with extend-exclude=[tests] (mirrors mypy Option-B) so pre-existing conftest lint bugs stay off the comply gate without modifying them
+- [Phase ?]: 05.3-06: Added ruff-on-rendered-output regression guard (test_generate_todo_ruff_clean) since CI todo smoke block is build/install-only per D-07
 
 ### Roadmap Evolution
 
 - Phase 01.1 inserted after Phase 1: Generated Project Template Build Modernization (URGENT) — PEP 517 build isolation fails because the generated `cement generate project` template imports cement at build time via setup.py → version.py. Blocks Phase 2 CI-green goal; smoke test cannot pass on the matrix until template no longer requires cement (or any runtime dep) at build time.
 - Phase 05.1 inserted after Phase 5: ext.generate select-mode feature prompt UX and Jinja boolean fixes (#782) (URGENT) — follow-up to quick task 260524-g47 (#779 `prompt_mode: select`). Tom Freudenberg's feedback on closed PR #780: (1) prompt features AFTER vars, (2) custom per-feature prompt text, (3) vars-style input format instead of "Enable Feature: <name> [y/N]", (4) Jinja boolean feature flags so `{% if feature_x %}` works. Pre-3.0.16 release work; Phase 6 release cut gates on this being closed.
+- Phase 05.3 inserted after Phase 5: Modernize project template packaging (cement generate project) building on Phase 01.1 pdm-backend migration, and ensure ALL CLI-generated templates are fully typed and cleaned up (#735). Pre-3.0.16 release work; Phase 6 release cut gates on this. (URGENT)
 
 ### Pending Todos
 
@@ -179,6 +197,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-06-25T20:07:09.236Z
-Stopped at: Phase 05.2 context gathered (#670 command self-meta accessor)
+Last session: 2026-07-12T01:00:00Z
+Stopped at: Phase 05.3 complete (all 6 plans + UAT green; #735 resolved), ready to plan Phase 6
 Resume file: None

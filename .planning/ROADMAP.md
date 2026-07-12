@@ -226,6 +226,30 @@ Plans:
   - `make audit-public-api` exit 0 enforced byte-for-byte across every commit (Phase 3 D-04 / Phase 5 D-18 #3)
   - `make docs` (post-Wave 4) must exit 0 with -W enabled — zero warnings (Phase 5 D-09)
 
+### Phase 05.3: Modernize project template packaging and type all CLI-generated templates (INSERTED)
+
+**Goal:** Modernize the packaging/setup of all 5 `cement generate` templates and make every generated file fully typed and idiomatically clean. Extends Phase 01.1 (which modernized only the `project` build) to `script`, `extension`, `plugin`, and `todo-tutorial`; migrates `todo-tutorial` off setup.py to pdm-backend; ships ruff/mypy/pytest config so a freshly generated project is `make comply` + `make test` green out of the box, enforced via the CI cli-smoke-test. Resolves #735.
+**Requirements**: Phase-local — coverage by decisions D-01..D-08 (05.3-CONTEXT.md); no REQ-IDs assigned
+**Depends on:** Phase 5
+**Plans:** 6/6 plans complete
+
+Plans:
+
+  **Wave 1** *(independent per-template work — no file overlap)*
+
+- [x] 05.3-01-PLAN.md — project template: ship ruff/mypy/pytest gate config + Makefile comply targets + type/f-string source & tests (green out of the box; D-04, D-05, D-06)
+- [x] 05.3-02-PLAN.md — script/extension/plugin templates: type all defs + f-string banners; keep script VERSION tuple (D-05, D-06, D-08)
+- [x] 05.3-03-PLAN.md — todo-tutorial packaging migration to pdm-backend: create pyproject (literal cement floor + gate config), delete legacy setup.py/setup.cfg/requirements*.txt/MANIFEST.in, version.py Shape B, rewrite Makefile/Dockerfile, README/CHANGELOG note (D-01, D-02, D-03)
+
+  **Wave 2** *(blocked on Wave 1)*
+
+- [x] 05.3-04-PLAN.md — todo-tutorial code typing + fix main.py TodoError NameError (depends 05.3-03; D-05)
+- [x] 05.3-05-PLAN.md — extend cli-smoke-test: generated project make comply + make test gate + todo build/install (depends 05.3-01, 05.3-03; D-07)
+
+  **Wave 1 (gap closure)** *(closes 05.3-VERIFICATION.md blockers)*
+
+- [x] 05.3-06-PLAN.md — gap closure: todo-tutorial ruff comply green out of the box (isort fix + tests-excluded scope + regression guard), fix project test false-green `.find()` assertion, add CHANGELOG [cli] entries (gaps 1/2/3)
+
 ### Phase 05.2: ext.argparse command self-meta accessor (#670) (INSERTED)
 
 **Goal:** Add a single additive, read-only accessor on `ArgparseController` (proposed `self._command_meta`) that returns the currently-dispatched command's `CommandMeta` (label, `parser_options['help']`, etc.), so exposed `@ex`/`@expose` commands can read their own decorator meta without the brittle `getattr(self, self.app.pargs.__dispatch__.split('.')[1]).__cement_meta__` dance — resolving [#670](https://github.com/datafolklabs/cement/issues/670). Purely additive: the `func()` dispatch signature is unchanged (the issue's literal `func(func_name, func_meta)` proposal is rejected as BC-breaking on the released 3.0.x surface). See 05.2-CONTEXT.md for locked decisions.
