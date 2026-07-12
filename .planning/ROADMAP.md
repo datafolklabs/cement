@@ -401,6 +401,30 @@ Plans:
 
 - [ ] TBD (promote with /gsd-review-backlog when ready)
 
+### Phase 999.2: Cross-OS CI gates — Windows/macOS test portability (BACKLOG)
+
+**Goal:** Re-enable the two cross-OS gate jobs shipped (commented out) in
+`gates.yml` during Phase 05.4 — `test-core-windows` and `cli-smoke-native` —
+and make `tests/core` pass on Windows. `cli-smoke-native` was verified GREEN
+on all four legs (macOS/Windows × Python 3.10/3.14) before being parked;
+`test-core-windows` surfaced ~6 genuine portability failures in
+`tests/core/test_foundation.py` (assertions hardcode POSIX paths like
+`/another/path` that Windows normalizes to `D:\another\path`). Fix the test
+assertions to be platform-aware, uncomment both jobs, and confirm green on PR
+CI. The repo has never had Windows/macOS CI, so this is a strict coverage
+addition — deliberately deferred so the first automated release doesn't gate
+on a brand-new OS matrix.
+**Requirements:** extends D-14 (deferred from Phase 05.4)
+**Plans:** 0 plans
+**Source:** Phase 05.4 PR #792 debut CI run (2026-07-12)
+**Scope note:** Also consider here: authenticated Docker Hub pulls (or GHCR
+mirrors) for the `test-all` compose services if the anonymous-pull flake
+recurs (one occurrence 2026-07-12, passed on retry).
+
+Plans:
+
+- [ ] TBD (promote with /gsd-review-backlog when ready)
+
 ---
 *Roadmap created: 2026-04-24*
 *Coverage: 42/42 v1 requirements mapped*
