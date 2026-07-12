@@ -461,6 +461,19 @@ Refactoring:
 
 Misc:
 
+- `[ci]` Add automated release workflow (`release.yml`) — tag-triggered
+  pipeline: preflight guard → full gate suite → isolated build → TestPyPI
+  publish + 5-Python install smoke → environment-gated OIDC PyPI publish
+  (single human approval) → post-approval fan-out (Docker Hub multi-arch
+  images, `stable/3.0.x` fast-forward, RTD docs-tag re-point, GitHub
+  Release from changelog, dev-version-bump PR, post-release checklist
+  issue); `workflow_dispatch` runs the same pipeline as a dry run
+- `[ci]` Refactor PR gate chain into reusable `gates.yml`
+  (`workflow_call`) shared by PR CI and the release workflow; add new
+  Windows core-test and macOS/Windows native CLI smoke gates
+- `[dev]` Add release dev-tooling scripts: `testpypi-smoke.py`
+  (TestPyPI install round-trip), `cli-smoke-native.py` (cross-platform
+  CLI smoke), `bump_dev_version.py` (post-release dev-cycle bump)
 - `[ext.smtp]` Isolate test defaults to prevent cross-test state pollution
 - `[dev]` Bump ruff to 0.15.x; codify rule sets explicitly; resolve all
   surfacing lint findings (I001, B*, A*, C901, N*, PT*, T201, YTT203)
