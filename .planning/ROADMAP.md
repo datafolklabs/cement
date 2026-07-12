@@ -327,6 +327,36 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6. Phases 3 and 4
 | 5. Deprecations, Docs & Security Stubs | 6/6 | Complete   | 2026-05-08 |
 | 6. Release Cut 3.0.16 | 0/TBD | Not started | - |
 
+## Backlog
+
+Parking lot for post-3.0.16 (next-milestone) work. Items use `999.x` numbering,
+are unsequenced, and stay out of the active phase sequence until promoted via
+`/gsd-review-backlog`.
+
+### Phase 999.1: Pydantic Settings config handler (#674) (BACKLOG)
+
+**Goal:** Add a new **additive, optional** config handler extension backed by
+[Pydantic Settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
+(`cement/ext/ext_pydantic.py`), implementing `ConfigInterface` and registered as
+a `config` handler alongside the existing configparser (default) / yaml / json
+handlers. Gated behind a new optional extra (`pydantic = ["pydantic-settings"]`)
+so the core stays zero-dependency. Fully typed (mypy strict), 100% test coverage,
+ruff-clean, with Sphinx API docs, a GitBook narrative note, and a `[ext.pydantic]`
+CHANGELOG entry.
+**Requirements:** TBD (promote to derive REQ IDs)
+**Plans:** 0 plans
+**Source:** https://github.com/datafolklabs/cement/issues/674 (open; author derks; low priority by design)
+**Scope note:** NEW feature — out of scope for the v1.0 "Clean & Green"
+maintenance milestone (PROJECT.md Out of Scope: "New features beyond maintenance
+… defers to later milestones"); Phase 6 is the release cut. Deferred to the next
+milestone. The issue's stated prerequisite ("effort toward adding typing across
+Cement") is satisfied by Phases 05.x. Additive and BC-safe, so it fits a future
+3.0.x or 3.2.x line. See `.planning/phases/999.1-pydantic-settings-config-handler-674/999.1-NOTE.md`
+for technical shape and open design questions.
+
+Plans:
+- [ ] TBD (promote with /gsd-review-backlog when ready)
+
 ---
 *Roadmap created: 2026-04-24*
 *Coverage: 42/42 v1 requirements mapped*
