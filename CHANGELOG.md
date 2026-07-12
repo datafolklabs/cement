@@ -469,8 +469,11 @@ Misc:
   Release from changelog, dev-version-bump PR, post-release checklist
   issue); `workflow_dispatch` runs the same pipeline as a dry run
 - `[ci]` Refactor PR gate chain into reusable `gates.yml`
-  (`workflow_call`) shared by PR CI and the release workflow; add new
-  Windows core-test and macOS/Windows native CLI smoke gates
+  (`workflow_call`) shared by PR CI and the release workflow; wire the
+  test matrix Python versions (previously every leg ran the default
+  interpreter); new Windows core-test and macOS/Windows native CLI
+  smoke gates authored but disabled pending test portability work
+  (backlog 999.2)
 - `[dev]` Add release dev-tooling scripts: `testpypi-smoke.py`
   (TestPyPI install round-trip), `cli-smoke-native.py` (cross-platform
   CLI smoke), `bump_dev_version.py` (post-release dev-cycle bump)
