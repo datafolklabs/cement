@@ -1,0 +1,137 @@
+name: Gates
+
+on:
+  workflow_call:
+    inputs:
+      full-os-matrix:
+        type: boolean
+        default: true   # release always true; PR true per D-14
+
+env:
+  SMTP_HOST: localhost
+  SMTP_PORT: 1025
+  MEMCACHED_HOST: localhost
+  REDIS_HOST: localhost
+
+jobs:
+  comply:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: ConorMacBride/install-package@v1.1.0
+        with:
+          apt: libmemcached-dev
+      - name: Set up Python
+        uses: actions/setup-python@v6.3.0
+        with:
+          python-version: "3.x"
+          architecture: "x64"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4.5
+      - name: Install dependencies
+        run: pdm install
+      - name: Make Comply
+        run: make comply
+
+  test:
+    needs: comply
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: ConorMacBride/install-package@v1.1.0
+        with:
+          apt: libmemcached-dev
+      - name: Set up Python
+        uses: actions/setup-python@v6.3.0
+        with:
+          python-version: "3.x"
+          architecture: "x64"
+      - uses: hoverkraft-tech/compose-action@v3.0.0
+        with:
+          compose-file: "./docker/compose-services-only.yml"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4.5
+      - name: Install dependencies
+        run: pdm install
+      - name: Make Test
+        run: make test
+
+  test-all:
+    needs: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.10", "pypy3.11"]
+
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: ConorMacBride/install-package@v1.1.0
+        with:
+          apt: libmemcached-dev
+      - uses: hoverkraft-tech/compose-action@v3.0.0
+        with:
+          compose-file: "./docker/compose-services-only.yml"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4.5
+      - name: Install dependencies
+        run: pdm install
+      - name: Make Test
+        run: make test
+
+  cli-smoke-test:
+    needs: test-all
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - uses: hoverkraft-tech/compose-action@v3.0.0
+        with:
+          compose-file: "./docker-compose.yml"
+      - name: CLI Smoke Tests
+        run: ./scripts/cli-smoke-test.sh
+      - if: always()
+        name: Review Output
+        run: cat ./tmp/cli-smoke-test.out
+
+  test-core-windows:
+    if: ${{ inputs.full-os-matrix }}
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - name: Set up Python
+        uses: actions/setup-python@v6.3.0
+        with:
+          python-version: "3.x"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4.5
+      - name: Install dependencies
+        run: pdm install
+      - name: Core Tests (Windows, no docker services)
+        run: pdm run pytest --cov=cement.core tests/core
+
+  cli-smoke-native:
+    if: ${{ inputs.full-os-matrix }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+        python-version: ["3.10", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - name: Set up Python
+        uses: actions/setup-python@v6.3.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4.5
+      - name: Install dependencies
+        run: pdm install
+      - name: Build distribution
+        run: pdm build
+      - name: Native CLI Smoke
+        run: python scripts/cli-smoke-native.py
