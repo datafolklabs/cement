@@ -26,8 +26,8 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 - [ ] **CI-01**: GitHub Actions test matrix runs Python 3.10, 3.11, 3.12, 3.13, 3.14 — all green
 - [ ] **CI-02**: Compliance jobs (ruff, mypy) run on every PR and pass
 - [ ] **CI-03**: Coverage job enforces 100% coverage gate on every PR — fails build below 100%
-- [ ] **CI-04**: Release workflow validated end-to-end against TestPyPI before the 3.0.16 cut
-- [ ] **CI-05**: Action versions (checkout, setup-python, etc.) pinned to current and updated where outdated
+- [x] **CI-04**: Release workflow validated end-to-end against TestPyPI before the 3.0.16 cut
+- [x] **CI-05**: Action versions (checkout, setup-python, etc.) pinned to current and updated where outdated
 
 ### Python Version Policy
 
@@ -45,7 +45,7 @@ Requirements for the Clean & Green milestone (releases as Cement 3.0.16). Each m
 
 - [ ] **DOCS-01**: `make docs` builds Sphinx docs without warnings or broken cross-references
 - [ ] **DOCS-02**: README, CONTRIBUTING, and getting-started examples accurate against the 3.0.16 release
-- [ ] **DOCS-03**: Changelog updated for 3.0.16 with all user-visible changes (deprecations, dep bumps, Python matrix)
+- [x] **DOCS-03**: Changelog updated for 3.0.16 with all user-visible changes (deprecations, dep bumps, Python matrix)
 - [ ] **DOCS-04**: Public API docstrings reviewed for staleness; broken/outdated examples corrected
 
 ### Issue Backlog Triage
@@ -92,10 +92,10 @@ unreleased, so the `features:` schema may be reshaped freely; the *released*
 ### Release
 
 - [ ] **REL-01**: Version bumped to `3.0.16` across `cement/__init__.py`, `pyproject.toml`, and any other version-of-record locations
-- [ ] **REL-02**: Pre-release smoke-test on TestPyPI passes (install + import + minimal app round-trip on each supported Python)
-- [ ] **REL-03**: `3.0.16` git tag created, GitHub release notes published with changelog
-- [ ] **REL-04**: PyPI publish completed; version installs cleanly on Python 3.10–3.14
-- [ ] **REL-05**: Post-release version bumped to `3.0.17` (odd = next dev cycle)
+- [x] **REL-02**: Pre-release smoke-test on TestPyPI passes (install + import + minimal app round-trip on each supported Python)
+- [x] **REL-03**: `3.0.16` git tag created, GitHub release notes published with changelog
+- [x] **REL-04**: PyPI publish completed; version installs cleanly on Python 3.10–3.14
+- [x] **REL-05**: Post-release version bumped to `3.0.17` (odd = next dev cycle)
 
 ## v2 Requirements
 
@@ -212,8 +212,8 @@ Populated by the roadmapper during phase mapping.
 | CI-01 | Phase 2 | Pending |
 | CI-02 | Phase 2 | Pending |
 | CI-03 | Phase 2 | Pending |
-| CI-04 | Phase 6 | Pending |
-| CI-05 | Phase 2 | Pending |
+| CI-04 | Phase 6 | Complete |
+| CI-05 | Phase 2 | Complete |
 | PYVER-01 | Phase 1 | Complete |
 | PYVER-02 | Phase 1 | Complete |
 | PYVER-03 | Phase 1 | Complete |
@@ -222,7 +222,7 @@ Populated by the roadmapper during phase mapping.
 | COV-03 | Phase 3 | Validated (Phase 03 Plan 07) |
 | DOCS-01 | Phase 5 | Pending |
 | DOCS-02 | Phase 5 | Pending |
-| DOCS-03 | Phase 6 | Pending |
+| DOCS-03 | Phase 6 | Complete |
 | DOCS-04 | Phase 5 | Pending |
 | TRIAGE-01 | Phase 4 | Closed (manual, 04-NOTE.md) |
 | TRIAGE-02 | Phase 4 | Closed (manual, 04-NOTE.md) |
@@ -239,10 +239,10 @@ Populated by the roadmapper during phase mapping.
 | SEC-02 | Phase 5 | Pending |
 | SEC-03 | Phase 5 | Pending |
 | REL-01 | Phase 6 | Pending |
-| REL-02 | Phase 6 | Pending |
-| REL-03 | Phase 6 | Pending |
-| REL-04 | Phase 6 | Pending |
-| REL-05 | Phase 6 | Pending |
+| REL-02 | Phase 6 | Complete |
+| REL-03 | Phase 6 | Complete |
+| REL-04 | Phase 6 | Complete |
+| REL-05 | Phase 6 | Complete |
 | GEN-01 | Phase 05.1 | Complete |
 | GEN-02 | Phase 05.1 | Complete |
 | GEN-03 | Phase 05.1 | Complete |

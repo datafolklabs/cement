@@ -2,19 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 6
-current_phase_name: Release Cut 3.0.16
+current_phase: 05.4
+current_phase_name: github-actions-release-workflow
 status: executing
-stopped_at: "Phase 05.3 complete (#735 resolved); ready to plan Phase 6 release-cut-3.0.16"
-last_updated: "2026-07-12T01:24:51.878Z"
+stopped_at: Phase 05.4 planned — ready to execute
+last_updated: "2026-07-12T17:25:07.696Z"
 last_activity: 2026-07-12
-last_activity_desc: Phase 05.3 complete, transitioned to Phase 6
+last_activity_desc: Phase 05.4 execution started
 progress:
-  total_phases: 10
+  total_phases: 11
   completed_phases: 8
-  total_plans: 40
-  completed_plans: 40
-  percent: 80
+  total_plans: 45
+  completed_plans: 44
+  percent: 73
 ---
 
 # Project State
@@ -24,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-12)
 
 **Core value:** Cement 3 stays solid, secure, performant, and bug-free under strict backward compatibility — while being continuously maintained against a modern Python and tooling ecosystem.
-**Current focus:** Phase 6 — release-cut-3.0.16
+**Current focus:** Phase 05.4 — github-actions-release-workflow
 
 ## Current Position
 
-Phase: 6 — Release Cut 3.0.16
-Plan: Not started
+Phase: 05.4 (github-actions-release-workflow) — EXECUTING
+Plan: 5 of 5
 Status: Ready to execute
-Last activity: 2026-07-12 — Phase 05.3 complete, transitioned to Phase 6
+Last activity: 2026-07-12 — Phase 05.4 execution started
 
 Progress: [████████████████████] 40/40 plans (100%) — 8/10 phases complete (Phase 6 release-cut remaining)
 
@@ -84,6 +84,9 @@ Progress: [████████████████████] 40/40 p
 | Phase 05.3 P04 | 2min | 2 tasks | 4 files |
 | Phase 05.3 P05 | 2 min | 2 tasks | 1 files |
 | Phase 05.3 P06 | 35m | 3 tasks | 7 files |
+| Phase 05.4 P01 | 6 min | 3 tasks | 3 files |
+| Phase 05.4 P02 | 2 min | 2 tasks tasks | 2 files files |
+| Phase 05.4 P04 | 5 min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -162,12 +165,16 @@ Recent decisions affecting current work:
 - [Phase 05.3-05]: todo-tutorial gate is build/install ONLY (cement generate + pip install .) proving D-02/D-03 pdm-backend PEP 517 isolation; NO make test/comply because todo's test_todo deliberately raises as a tutorial stub.
 - [Phase ?]: 05.3-06: Scoped todo-tutorial [tool.ruff] with extend-exclude=[tests] (mirrors mypy Option-B) so pre-existing conftest lint bugs stay off the comply gate without modifying them
 - [Phase ?]: 05.3-06: Added ruff-on-rendered-output regression guard (test_generate_todo_ruff_clean) since CI todo smoke block is build/install-only per D-07
+- [Phase ?]: [Phase 05.4 Plan 01]: dev scripts print by design; T201 suppressed with local # noqa rather than editing shared ruff config. ruff include filters scripts/ so directory-mode ruff check scripts/ passes but is not a real gate — later waves must pin explicit per-file paths.
+- [Phase ?]: [Phase 05.4 Plan 01]: cli-smoke-native banner accepts macOS plus Linux/Darwin/Windows (platform.platform() emits 'macOS-...' on modern Darwin runners). bump_dev_version targets backend.py VERSION, pyproject untouched via [tool.pdm.version] source=call.
+- [Phase 05.4]: gates.yml holds ONLY gate jobs (no publish/OIDC surface, T-05.4-04); publish stays in release.yml. full-os-matrix defaults true so PR CI (D-14) and release both exercise the new Windows core-test and macOS/Windows native-smoke gates. PR caller omits secrets: inherit (gates need none).
 
 ### Roadmap Evolution
 
 - Phase 01.1 inserted after Phase 1: Generated Project Template Build Modernization (URGENT) — PEP 517 build isolation fails because the generated `cement generate project` template imports cement at build time via setup.py → version.py. Blocks Phase 2 CI-green goal; smoke test cannot pass on the matrix until template no longer requires cement (or any runtime dep) at build time.
 - Phase 05.1 inserted after Phase 5: ext.generate select-mode feature prompt UX and Jinja boolean fixes (#782) (URGENT) — follow-up to quick task 260524-g47 (#779 `prompt_mode: select`). Tom Freudenberg's feedback on closed PR #780: (1) prompt features AFTER vars, (2) custom per-feature prompt text, (3) vars-style input format instead of "Enable Feature: <name> [y/N]", (4) Jinja boolean feature flags so `{% if feature_x %}` works. Pre-3.0.16 release work; Phase 6 release cut gates on this being closed.
 - Phase 05.3 inserted after Phase 5: Modernize project template packaging (cement generate project) building on Phase 01.1 pdm-backend migration, and ensure ALL CLI-generated templates are fully typed and cleaned up (#735). Pre-3.0.16 release work; Phase 6 release cut gates on this. (URGENT)
+- Phase 05.4 inserted after Phase 5: GitHub Actions Release Workflow — automate the manual release checklist ([#791](https://github.com/datafolklabs/cement/issues/791)): release gates (test matrix, coverage, Windows core tests, CLI smoke tests), PyPI publish, Docker Hub multi-arch images, stable/X.Y branch sync, docs builds, GitHub Release, notifications. Hard pre-requisite for Phase 6 (Release Cut) — the cut's success criteria require the workflow to run end-to-end; Phase 6's Depends-on includes Phase 05.4. (Originally added as Phase 7, renumbered to 05.4 per user decision to make it pre-3.0.16 work.)
 
 ### Pending Todos
 
@@ -197,6 +204,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-12T01:00:00Z
-Stopped at: Phase 05.3 complete (all 6 plans + UAT green; #735 resolved), ready to plan Phase 6
-Resume file: None
+Last session: 2026-07-12T17:24:58.299Z
+Stopped at: Phase 05.4 context gathered
+Resume file: .planning/phases/05.4-github-actions-release-workflow/05.4-CONTEXT.md
