@@ -1,0 +1,328 @@
+name: Release
+
+# Release pipeline (Phase 05.4). Canonical trigger is a strict 3-part numeric
+# tag push (D-01); workflow_dispatch runs the same pipeline as a DRY RUN from any
+# branch (D-06) and STOPS before any publish. The strict `[0-9]+.[0-9]+.[0-9]+`
+# tag filter ensures the moving tags `3` / `3.0` never fire this workflow
+# (Pitfall 7); the preflight job (D-02/D-09) adds a semver + tag==version +
+# finalized-changelog guard as defense-in-depth.
+on:
+  push:
+    tags: ['[0-9]+.[0-9]+.[0-9]+']
+  workflow_dispatch:
+
+# Least privilege: default read-only at the workflow level; individual jobs
+# elevate their own scope (e.g. `id-token: write` on the publish jobs) — V14.
+permissions:
+  contents: read
+
+# Never interrupt an in-flight release: serialize per ref but do NOT cancel a
+# running release when a new run is queued (RESEARCH anti-pattern).
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # Fail-fast guard (D-02/D-09): on a tag push, assert the tag is strict semver
+  # and equals the package version; on both events, assert CHANGELOG.md has a
+  # finalized `## <ver>` section (NOT still marked DEVELOPMENT). Exports the
+  # resolved version to downstream jobs.
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.guards.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - name: Set up Python
+        uses: actions/setup-python@v6.3.0
+        with:
+          python-version: "3.x"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4.5
+      - name: Install dependencies
+        run: pdm install
+      - name: Resolve version + guards
+        id: guards
+        run: |
+          set -euo pipefail
+          TAG="${{ github.ref_name }}"                       # e.g. 3.0.16 (branch name on dispatch)
+          # Package version is the single source of truth (cement.utils.version:get_version).
+          PKG=$(pdm run python -c "from cement.utils.version import get_version; print(get_version())")
+          if [ "${{ github.event_name }}" = "push" ]; then
+            [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::tag '$TAG' not strict semver"; exit 1; }
+            [ "$TAG" = "$PKG" ] || { echo "::error::tag $TAG != package version $PKG"; exit 1; }
+            VER="$TAG"
+          else
+            # workflow_dispatch dry-run: derive the version from the package.
+            VER="$PKG"
+          fi
+          # CHANGELOG must carry a finalized section for this version, not the
+          # "- DEVELOPMENT (will be released as ...)" placeholder (DOCS-03/D-02).
+          grep -qE "^## +${VER}( |$)" CHANGELOG.md || { echo "::error::no '## $VER' section in CHANGELOG.md"; exit 1; }
+          if grep -qE "^## +${VER}.*DEVELOPMENT" CHANGELOG.md; then
+            echo "::error::CHANGELOG $VER still marked DEVELOPMENT"; exit 1
+          fi
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+
+  # Shared CI gates (D-13): calls the SAME reusable workflow the PR CI
+  # (build_and_test.yml) calls. `full-os-matrix: true` — release always runs the
+  # complete OS/Python matrix.
+  gates:
+    needs: preflight
+    uses: ./.github/workflows/gates.yml
+    with:
+      full-os-matrix: true
+
+  # Isolated build (RESEARCH Open Question 2): produce sdist+wheel with NO
+  # publish credentials in scope, then hand the identical bytes to every publish
+  # job via artifacts. This keeps credential blast radius off the build step.
+  build:
+    needs: [preflight, gates]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - name: Set up Python
+        uses: actions/setup-python@v6.3.0
+        with:
+          python-version: "3.x"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4.5
+      - name: Build distribution
+        run: pdm build
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: dist
+          path: dist/
+
+  # TestPyPI publish via OIDC (D-05/D-08). Only THIS job elevates to
+  # `id-token: write`; `skip-existing: true` makes dry-run re-runs idempotent.
+  # Uploads the exact bytes produced by the isolated build job.
+  testpypi-publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: testpypi
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: dist
+          path: dist
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@v1.14.0
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
+
+  # Install-smoke matrix (D-07/REL-02): install PLAIN zero-dep cement==X.Y.Z from
+  # TestPyPI on each supported Python, import, round-trip, assert version.
+  testpypi-smoke:
+    needs: testpypi-publish
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - name: Set up Python
+        uses: actions/setup-python@v6.3.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: TestPyPI install smoke
+        run: python scripts/testpypi-smoke.py ${{ needs.preflight.outputs.version }}
+
+  # DRY-RUN terminus (D-06): on workflow_dispatch the pipeline stops here and
+  # NEVER reaches any publish. Real-PyPI publish + downstream jobs are added in
+  # plan 05.4-04 and gate on `github.event_name == 'push'`.
+  dry-run-summary:
+    needs: testpypi-smoke
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summarize dry run
+        run: |
+          echo "## Release dry run passed :rocket:" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Version \`${{ needs.preflight.outputs.version }}\` passed preflight, gates, isolated build, and the TestPyPI publish + 5-Python install smoke." >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "This was a **workflow_dispatch dry run** — nothing was published to real PyPI." >> "$GITHUB_STEP_SUMMARY"
+
+  # ===========================================================================
+  # PUBLISH SIDE (plan 05.4-04) — reached ONLY on a real tag push. The single
+  # env-scoped OIDC PyPI publish is the ONE human approval stop (D-04); every
+  # downstream job `needs: publish-pypi` so nothing fans out before approval.
+  # ===========================================================================
+
+  # The ONE approval stop AND the OIDC env-claim source (D-03/D-04/REL-04).
+  # The `release` environment declaration below does BOTH: it pauses for the
+  # required-reviewer approval and emits the environment claim PyPI's trusted
+  # publisher verifies (Pitfall 1). `if: github.event_name == 'push'` means a
+  # workflow_dispatch dry run NEVER reaches this job (D-06). Publishes to REAL
+  # PyPI (no repository-url) with NO skip-existing — a duplicate version fails
+  # LOUD (RESEARCH anti-pattern). This is the ONLY job that names the `release`
+  # environment and the ONLY one with `id-token: write`.
+  publish-pypi:
+    needs: [testpypi-smoke]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: dist
+          path: dist
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.14.0
+
+  # Docker Hub multi-arch images (D-11). Fans out only after the single
+  # approval (`needs: publish-pypi`). buildx builds linux/amd64 + linux/arm64
+  # (arm64 under QEMU) in one push. Docker Hub has NO OIDC, so login uses a
+  # scoped access token secret (never the account password — T-05.4-13).
+  # Literal tag set per D-11 (NOT metadata-action).
+  docker:
+    needs: publish-pypi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4.2.0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4.2.0
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4.4.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push multi-arch images
+        uses: docker/build-push-action@v7.3.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            datafolklabs/cement:${{ github.ref_name }}
+            datafolklabs/cement:3.0
+            datafolklabs/cement:3
+            datafolklabs/cement:latest
+
+  # Fast-forward stable/3.0.x to the released tag (D-10). Fast-forward ONLY:
+  # `git push origin <sha>:refs/heads/stable/3.0.x` fails (non-fast-forward)
+  # if the tag does not descend from the branch tip — that is desired
+  # (Pitfall 6). Scoped to `contents: write` only (least privilege, T-05.4-14).
+  branch-sync:
+    needs: publish-pypi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.0
+        with:
+          fetch-depth: 0
+      - name: Fast-forward stable/3.0.x to the release tag
+        run: git push origin "${{ github.sha }}:refs/heads/stable/3.0.x"
+
+  # Re-point the moving git tags `3` and `3.0` to the released commit (force
+  # push) — the repo's long-standing moving-tag pattern. The `3.0` push also
+  # fires RTD's webhook and rebuilds /en/3.0/ (RTD builds only from `3.0`;
+  # `3` is convention, not a docs source). The Docker `3`/`3.0` above are
+  # IMAGE tags (separate namespace). Neither moving tag can re-trigger this
+  # workflow (the trigger requires three numeric parts). Scoped to
+  # `contents: write` only.
+  tag-sync:
+    needs: publish-pypi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.0
+        with:
+          fetch-depth: 0
+      - name: Re-point moving tags 3 and 3.0 to the release commit
+        run: |
+          git push --force origin "${{ github.sha }}:refs/tags/3.0"
+          git push --force origin "${{ github.sha }}:refs/tags/3"
+
+  # GitHub Release with the changelog section as the body (REL-03/DOCS-03).
+  # awk extracts the `## <tag>` CHANGELOG section, then the built-in `gh` CLI
+  # publishes — zero third-party action (supply-chain, T-05.4-SC). Scoped to
+  # `contents: write`.
+  gh-release:
+    needs: publish-pypi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.0
+      - name: Extract changelog section
+        run: |
+          VER="${{ github.ref_name }}"
+          awk -v v="## $VER" '
+            $0 ~ "^"v { grab=1; next }
+            grab && /^## / { exit }
+            grab { print }
+          ' CHANGELOG.md > RELEASE_BODY.md
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" --title "${{ github.ref_name }}" --notes-file RELEASE_BODY.md
+
+  # Post-release dev-version bump PR to 3.0.17 (D-12/REL-05). Runs the Wave 1
+  # helper (targets cement/core/backend.py VERSION + prepends a fresh CHANGELOG
+  # section) on main, then opens a PR via the vetted create-pull-request action.
+  # NOTE: a GITHUB_TOKEN-authored PR does NOT trigger PR CI (Pitfall 4) —
+  # accepted for the first release; the maintainer merges it. Scoped to
+  # `contents: write` + `pull-requests: write` (least privilege).
+  dev-bump:
+    needs: publish-pypi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7.0.0
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@v6.3.0
+        with:
+          python-version: "3.x"
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4.5
+      - name: Install dependencies
+        run: pdm install
+      - name: Bump VERSION + open dev changelog
+        run: pdm run python scripts/bump_dev_version.py 3.0.17
+      - name: Open dev-bump PR
+        uses: peter-evans/create-pull-request@v8.1.1
+        with:
+          branch: chore/dev-bump-3.0.17
+          title: "chore: bump to 3.0.17 development cycle"
+          commit-message: "chore: bump VERSION to 3.0.17 and open dev changelog"
+          body: "Automated post-release dev bump (D-12 / REL-05). Merge to resume dev on 3.0.17."
+
+  # Emit the remaining HUMAN steps as a checklist issue (D-15/D-16) and echo
+  # the same to the job summary. Scoped to `issues: write` only.
+  post-release-checklist:
+    needs: publish-pypi
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Emit post-release checklist issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          BODY=$'- [ ] GitBook: update Change Log / Release Notes / Deprecations\n- [ ] GitBook: stable/X.Y developer docs\n- [ ] Notify mailing list\n- [ ] Notify Slack channel\n- [ ] Merge the dev-bump PR (3.0.17)'
+          gh issue create --title "${{ github.ref_name }} post-release checklist" \
+            --assignee derks \
+            --body "$BODY"
+          {
+            echo "## ${{ github.ref_name }} post-release checklist"
+            echo ""
+            echo "$BODY"
+          } >> "$GITHUB_STEP_SUMMARY"
