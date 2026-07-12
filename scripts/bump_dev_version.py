@@ -64,14 +64,15 @@ VERSION_RE = re.compile(
 CHANGELOG_HEADER_RE = re.compile(r"\A(# ChangeLog\n\n)")
 
 
-def _fail(message: str) -> int:
+def _fail(message: str) -> None:
     print(f"error: {message}", file=sys.stderr)  # noqa: T201
-    return 3
 
 
-def _bump_backend(major: int, minor: int, patch: int) -> int:
+def _render_backend(major: int, minor: int, patch: int) -> str | None:
+    """Return the rewritten backend.py text, or None (with error printed)."""
     if not BACKEND_PATH.is_file():
-        return _fail(f"{BACKEND_PATH} not found")
+        _fail(f"{BACKEND_PATH} not found")
+        return None
     text = BACKEND_PATH.read_text(encoding="utf-8")
 
     def _repl(match: re.Match[str]) -> str:
@@ -79,20 +80,21 @@ def _bump_backend(major: int, minor: int, patch: int) -> int:
 
     new_text, count = VERSION_RE.subn(_repl, text)
     if count != 1:
-        return _fail(
-            f"{BACKEND_PATH}: expected exactly one VERSION tuple, found {count}"
-        )
-    BACKEND_PATH.write_text(new_text, encoding="utf-8")
-    return 0
+        _fail(f"{BACKEND_PATH}: expected exactly one VERSION tuple, found {count}")
+        return None
+    return new_text
 
 
-def _prepend_changelog(version: str) -> int:
+def _render_changelog(version: str) -> str | None:
+    """Return the rewritten CHANGELOG.md text, or None (with error printed)."""
     if not CHANGELOG_PATH.is_file():
-        return _fail(f"{CHANGELOG_PATH} not found")
+        _fail(f"{CHANGELOG_PATH} not found")
+        return None
     text = CHANGELOG_PATH.read_text(encoding="utf-8")
 
     if re.search(rf"^## +{re.escape(version)}( |$)", text, re.MULTILINE):
-        return _fail(f"{CHANGELOG_PATH}: a '## {version}' section already exists")
+        _fail(f"{CHANGELOG_PATH}: a '## {version}' section already exists")
+        return None
 
     section = (
         f"## {version} - DEVELOPMENT\n\n"
@@ -107,9 +109,9 @@ def _prepend_changelog(version: str) -> int:
         lambda m: m.group(1) + section, text
     )
     if count != 1:
-        return _fail(f"{CHANGELOG_PATH}: could not locate '# ChangeLog' header")
-    CHANGELOG_PATH.write_text(new_text, encoding="utf-8")
-    return 0
+        _fail(f"{CHANGELOG_PATH}: could not locate '# ChangeLog' header")
+        return None
+    return new_text
 
 
 def main(argv: list[str]) -> int:
@@ -123,12 +125,18 @@ def main(argv: list[str]) -> int:
         return 2
     major, minor, patch = int(match.group(1)), int(match.group(2)), int(match.group(3))
 
-    rc = _bump_backend(major, minor, patch)
-    if rc != 0:
-        return rc
-    rc = _prepend_changelog(version)
-    if rc != 0:
-        return rc
+    # Prepare BOTH rewrites in memory before writing EITHER file, so an exit-3
+    # validation failure can never leave the repo half-bumped (the documented
+    # "nothing written" contract).
+    new_backend = _render_backend(major, minor, patch)
+    if new_backend is None:
+        return 3
+    new_changelog = _render_changelog(version)
+    if new_changelog is None:
+        return 3
+
+    BACKEND_PATH.write_text(new_backend, encoding="utf-8")
+    CHANGELOG_PATH.write_text(new_changelog, encoding="utf-8")
 
     print(f"bumped dev cycle to {version} (backend VERSION + CHANGELOG)")  # noqa: T201
     return 0
