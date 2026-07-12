@@ -87,8 +87,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pdm install
-      - name: Make Test
-        run: make test
+      # pytest directly, NOT `make test`: make test depends on comply, whose
+      # mypy hard-fails on PyPy ("Running mypy on PyPy is not supported yet").
+      # Lint/type-checking already ran once in the comply gate upstream —
+      # re-running it per matrix leg added nothing but the PyPy breakage.
+      - name: Test (full suite + coverage)
+        run: pdm run pytest --cov=cement tests
 
   cli-smoke-test:
     needs: test-all
