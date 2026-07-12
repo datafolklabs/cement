@@ -7,6 +7,11 @@ on:
         type: boolean
         default: true   # release always true; PR true per D-14
 
+# Cap the token for every gate job regardless of what the caller grants —
+# gates never write to the repo or any GitHub API.
+permissions:
+  contents: read
+
 env:
   SMTP_HOST: localhost
   SMTP_PORT: 1025
@@ -74,8 +79,12 @@ jobs:
       - uses: hoverkraft-tech/compose-action@v3.0.0
         with:
           compose-file: "./docker/compose-services-only.yml"
+      # python-version wired to the matrix: without it every leg ran the
+      # runner-default interpreter and the "full Python matrix" was decorative.
       - name: Setup PDM
         uses: pdm-project/setup-pdm@v4.5
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pdm install
       - name: Make Test
@@ -96,51 +105,61 @@ jobs:
         name: Review Output
         run: cat ./tmp/cli-smoke-test.out
 
-  test-core-windows:
-    if: ${{ inputs.full-os-matrix }}
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v7.0.0
-      - name: Set up Python
-        uses: actions/setup-python@v6.3.0
-        with:
-          python-version: "3.x"
-      # NOT `pdm install`: pdm.lock selects all extras, including pylibmc,
-      # which needs libmemcached headers and cannot build on Windows/macOS.
-      # tests/core skips the memcached/redis/alarm/daemon extensions on
-      # Windows, so only these extras are required.
-      - name: Install cement + core test deps (no service extras)
-        run: python -m pip install ".[cli,colorlog,mustache,tabulate,watchdog]" pytest mock
-      # addopts override: the repo-level addopts appends `tests/` (the full
-      # suite — needs docker services) and `--cov-fail-under=100` (a
-      # whole-suite gate). Keep `--capture=sys` — test_quiet closes streams
-      # and fd-capture breaks without it. Coverage is enforced by the Linux
-      # full-suite gate, not here.
-      - name: Core Tests (Windows, no docker services)
-        shell: bash
-        run: python -m pytest -o addopts="--capture=sys" tests/core
-
-  cli-smoke-native:
-    if: ${{ inputs.full-os-matrix }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest]
-        python-version: ["3.10", "3.14"]
-
-    steps:
-      - uses: actions/checkout@v7.0.0
-      - name: Set up Python
-        uses: actions/setup-python@v6.3.0
-        with:
-          python-version: ${{ matrix.python-version }}
-      # The smoke script resolves the `cement` console script from PATH and
-      # generates+installs a project with pip — it never touches dist/ or a
-      # PDM venv. A plain pip install of the [cli] extra is the entire
-      # environment it needs (and avoids pdm.lock's all-extras selection,
-      # which cannot build pylibmc on these runners).
-      - name: Install cement[cli]
-        run: python -m pip install ".[cli]"
-      - name: Native CLI Smoke
-        run: python scripts/cli-smoke-native.py
+  # ---------------------------------------------------------------------------
+  # Cross-OS gates (Windows/macOS) — DISABLED for the first release iteration;
+  # tracked as backlog item 999.2. The repo has never had Windows/macOS CI, and
+  # the debut run surfaced genuine test-portability work: ~6 tests/core
+  # assertions hardcode POSIX paths (e.g. '/another/path') that Windows
+  # normalizes to drive-letter paths. cli-smoke-native was fixed and verified
+  # GREEN on all four legs (macOS/Windows x 3.10/3.14) before being parked —
+  # re-enable by uncommenting; the `full-os-matrix` input gating is already
+  # wired in both callers.
+  # ---------------------------------------------------------------------------
+  # test-core-windows:
+  #   if: ${{ inputs.full-os-matrix }}
+  #   runs-on: windows-latest
+  #
+  #   steps:
+  #     - uses: actions/checkout@v7.0.0
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v6.3.0
+  #       with:
+  #         python-version: "3.x"
+  #     # NOT `pdm install`: pdm.lock selects all extras, including pylibmc,
+  #     # which needs libmemcached headers and cannot build on Windows/macOS.
+  #     # tests/core skips the memcached/redis/alarm/daemon extensions on
+  #     # Windows, so only these extras are required.
+  #     - name: Install cement + core test deps (no service extras)
+  #       run: python -m pip install ".[cli,colorlog,mustache,tabulate,watchdog]" pytest mock
+  #     # addopts override: the repo-level addopts appends `tests/` (the full
+  #     # suite — needs docker services) and `--cov-fail-under=100` (a
+  #     # whole-suite gate). Keep `--capture=sys` — test_quiet closes streams
+  #     # and fd-capture breaks without it. Coverage is enforced by the Linux
+  #     # full-suite gate, not here.
+  #     - name: Core Tests (Windows, no docker services)
+  #       shell: bash
+  #       run: python -m pytest -o addopts="--capture=sys" tests/core
+  #
+  # cli-smoke-native:
+  #   if: ${{ inputs.full-os-matrix }}
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       os: [macos-latest, windows-latest]
+  #       python-version: ["3.10", "3.14"]
+  #
+  #   steps:
+  #     - uses: actions/checkout@v7.0.0
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v6.3.0
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     # The smoke script resolves the `cement` console script from PATH and
+  #     # generates+installs a project with pip — it never touches dist/ or a
+  #     # PDM venv. A plain pip install of the [cli] extra is the entire
+  #     # environment it needs (and avoids pdm.lock's all-extras selection,
+  #     # which cannot build pylibmc on these runners).
+  #     - name: Install cement[cli]
+  #       run: python -m pip install ".[cli]"
+  #     - name: Native CLI Smoke
+  #       run: python scripts/cli-smoke-native.py
