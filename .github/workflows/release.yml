@@ -16,10 +16,12 @@ on:
 permissions:
   contents: read
 
-# Never interrupt an in-flight release: serialize per ref but do NOT cancel a
+# Never interrupt an in-flight release: serialize the WHOLE pipeline (not
+# per-ref) so two release tags pushed close together cannot run their fan-outs
+# (tag-sync, branch-sync, Docker `latest`) concurrently; do NOT cancel a
 # running release when a new run is queued (RESEARCH anti-pattern).
 concurrency:
-  group: release-${{ github.workflow }}-${{ github.ref }}
+  group: release-pipeline
   cancel-in-progress: false
 
 jobs:
@@ -33,6 +35,8 @@ jobs:
       version: ${{ steps.guards.outputs.version }}
     steps:
       - uses: actions/checkout@v7.0.0
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v6.3.0
         with:
@@ -41,14 +45,20 @@ jobs:
         uses: pdm-project/setup-pdm@v4.5
       - name: Install dependencies
         run: pdm install
+      # `github.ref_name` is passed via env, never spliced into script text:
+      # on dispatch it is an arbitrary branch name (shell-metacharacter-capable),
+      # and inline `${{ }}` expansion would be a template-injection vector.
       - name: Resolve version + guards
         id: guards
+        env:
+          TAG_REF: ${{ github.ref_name }}
+          EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
-          TAG="${{ github.ref_name }}"                       # e.g. 3.0.16 (branch name on dispatch)
+          TAG="$TAG_REF"                                     # e.g. 3.0.16 (branch name on dispatch)
           # Package version is the single source of truth (cement.utils.version:get_version).
           PKG=$(pdm run python -c "from cement.utils.version import get_version; print(get_version())")
-          if [ "${{ github.event_name }}" = "push" ]; then
+          if [ "$EVENT" = "push" ]; then
             [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::tag '$TAG' not strict semver"; exit 1; }
             [ "$TAG" = "$PKG" ] || { echo "::error::tag $TAG != package version $PKG"; exit 1; }
             VER="$TAG"
@@ -56,10 +66,13 @@ jobs:
             # workflow_dispatch dry-run: derive the version from the package.
             VER="$PKG"
           fi
-          # CHANGELOG must carry a finalized section for this version, not the
-          # "- DEVELOPMENT (will be released as ...)" placeholder (DOCS-03/D-02).
-          grep -qE "^## +${VER}( |$)" CHANGELOG.md || { echo "::error::no '## $VER' section in CHANGELOG.md"; exit 1; }
-          if grep -qE "^## +${VER}.*DEVELOPMENT" CHANGELOG.md; then
+          VER_RE=$(printf '%s' "$VER" | sed 's/\./\\./g')    # anchor dots for grep
+          # A `## <ver>` section must exist on both event types.
+          grep -qE "^## +${VER_RE}( |\$)" CHANGELOG.md || { echo "::error::no '## $VER' section in CHANGELOG.md"; exit 1; }
+          # Finalized-changelog guard is PUSH-ONLY: a dispatch dry-run happens
+          # mid-dev-cycle where "## X.Y.Z - DEVELOPMENT" is the expected state
+          # (DOCS-03/D-02); only a real tagged release requires finalization.
+          if [ "$EVENT" = "push" ] && grep -qE "^## +${VER_RE}.*DEVELOPMENT" CHANGELOG.md; then
             echo "::error::CHANGELOG $VER still marked DEVELOPMENT"; exit 1
           fi
           echo "version=$VER" >> "$GITHUB_OUTPUT"
@@ -81,6 +94,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.0
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v6.3.0
         with:
@@ -119,33 +134,41 @@ jobs:
   # Install-smoke matrix (D-07/REL-02): install PLAIN zero-dep cement==X.Y.Z from
   # TestPyPI on each supported Python, import, round-trip, assert version.
   testpypi-smoke:
-    needs: testpypi-publish
+    # preflight must be a DIRECT dependency: `needs.<job>` outputs are only in
+    # scope for jobs named in `needs:` — transitive deps expose nothing.
+    needs: [preflight, testpypi-publish]
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v7.0.0
+        with:
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v6.3.0
         with:
           python-version: ${{ matrix.python-version }}
       - name: TestPyPI install smoke
-        run: python scripts/testpypi-smoke.py ${{ needs.preflight.outputs.version }}
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: python scripts/testpypi-smoke.py "$VERSION"
 
   # DRY-RUN terminus (D-06): on workflow_dispatch the pipeline stops here and
   # NEVER reaches any publish. Real-PyPI publish + downstream jobs are added in
   # plan 05.4-04 and gate on `github.event_name == 'push'`.
   dry-run-summary:
-    needs: testpypi-smoke
+    needs: [preflight, testpypi-smoke]
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Summarize dry run
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
         run: |
           echo "## Release dry run passed :rocket:" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "Version \`${{ needs.preflight.outputs.version }}\` passed preflight, gates, isolated build, and the TestPyPI publish + 5-Python install smoke." >> "$GITHUB_STEP_SUMMARY"
+          echo "Version \`$VERSION\` passed preflight, gates, isolated build, and the TestPyPI publish + 5-Python install smoke." >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "This was a **workflow_dispatch dry run** — nothing was published to real PyPI." >> "$GITHUB_STEP_SUMMARY"
 
@@ -189,6 +212,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.0
+        with:
+          persist-credentials: false
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4.2.0
       - name: Set up Docker Buildx
@@ -258,27 +283,36 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v7.0.0
+        with:
+          persist-credentials: false
+      # ref_name via env (not inline splice) + regex-escaped dots + a hard
+      # section boundary so `## 3.0.16` cannot also match `## 3.0.160`.
       - name: Extract changelog section
+        env:
+          VER: ${{ github.ref_name }}
         run: |
-          VER="${{ github.ref_name }}"
-          awk -v v="## $VER" '
-            $0 ~ "^"v { grab=1; next }
+          VER_RE=$(printf '%s' "$VER" | sed 's/\./\\./g')
+          awk -v hdr="^## ${VER_RE}( |$)" '
+            $0 ~ hdr { grab=1; next }
             grab && /^## / { exit }
             grab { print }
           ' CHANGELOG.md > RELEASE_BODY.md
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "${{ github.ref_name }}" --title "${{ github.ref_name }}" --notes-file RELEASE_BODY.md
+          VER: ${{ github.ref_name }}
+        run: gh release create "$VER" --title "$VER" --notes-file RELEASE_BODY.md
 
-  # Post-release dev-version bump PR to 3.0.17 (D-12/REL-05). Runs the Wave 1
+  # Post-release dev-version bump PR (D-12/REL-05). Computes the next dev
+  # version (released patch + 1) from preflight's output — NOT hardcoded, so
+  # the pipeline is repeatable for every future release. Runs the Wave 1
   # helper (targets cement/core/backend.py VERSION + prepends a fresh CHANGELOG
   # section) on main, then opens a PR via the vetted create-pull-request action.
   # NOTE: a GITHUB_TOKEN-authored PR does NOT trigger PR CI (Pitfall 4) —
   # accepted for the first release; the maintainer merges it. Scoped to
   # `contents: write` + `pull-requests: write` (least privilege).
   dev-bump:
-    needs: publish-pypi
+    needs: [preflight, publish-pypi]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -295,20 +329,29 @@ jobs:
         uses: pdm-project/setup-pdm@v4.5
       - name: Install dependencies
         run: pdm install
+      - name: Compute next dev version
+        id: next
+        env:
+          RELEASED: ${{ needs.preflight.outputs.version }}
+        run: |
+          IFS='.' read -r MA MI PA <<< "$RELEASED"
+          echo "version=$MA.$MI.$((PA + 1))" >> "$GITHUB_OUTPUT"
       - name: Bump VERSION + open dev changelog
-        run: pdm run python scripts/bump_dev_version.py 3.0.17
+        env:
+          NEXT: ${{ steps.next.outputs.version }}
+        run: pdm run python scripts/bump_dev_version.py "$NEXT"
       - name: Open dev-bump PR
         uses: peter-evans/create-pull-request@v8.1.1
         with:
-          branch: chore/dev-bump-3.0.17
-          title: "chore: bump to 3.0.17 development cycle"
-          commit-message: "chore: bump VERSION to 3.0.17 and open dev changelog"
-          body: "Automated post-release dev bump (D-12 / REL-05). Merge to resume dev on 3.0.17."
+          branch: chore/dev-bump-${{ steps.next.outputs.version }}
+          title: "chore: bump to ${{ steps.next.outputs.version }} development cycle"
+          commit-message: "chore: bump VERSION to ${{ steps.next.outputs.version }} and open dev changelog"
+          body: "Automated post-release dev bump (D-12 / REL-05). Merge to resume dev on ${{ steps.next.outputs.version }}."
 
   # Emit the remaining HUMAN steps as a checklist issue (D-15/D-16) and echo
   # the same to the job summary. Scoped to `issues: write` only.
   post-release-checklist:
-    needs: publish-pypi
+    needs: [preflight, publish-pypi]
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -316,13 +359,17 @@ jobs:
       - name: Emit post-release checklist issue
         env:
           GH_TOKEN: ${{ github.token }}
+          REF: ${{ github.ref_name }}
+          RELEASED: ${{ needs.preflight.outputs.version }}
         run: |
-          BODY=$'- [ ] GitBook: update Change Log / Release Notes / Deprecations\n- [ ] GitBook: stable/X.Y developer docs\n- [ ] Notify mailing list\n- [ ] Notify Slack channel\n- [ ] Merge the dev-bump PR (3.0.17)'
-          gh issue create --title "${{ github.ref_name }} post-release checklist" \
+          IFS='.' read -r MA MI PA <<< "$RELEASED"
+          NEXT="$MA.$MI.$((PA + 1))"
+          BODY=$'- [ ] GitBook: update Change Log / Release Notes / Deprecations\n- [ ] GitBook: stable/X.Y developer docs\n- [ ] Notify mailing list\n- [ ] Notify Slack channel\n- [ ] Merge the dev-bump PR ('"$NEXT"$')'
+          gh issue create --title "$REF post-release checklist" \
             --assignee derks \
             --body "$BODY"
           {
-            echo "## ${{ github.ref_name }} post-release checklist"
+            echo "## $REF post-release checklist"
             echo ""
             echo "$BODY"
           } >> "$GITHUB_STEP_SUMMARY"
