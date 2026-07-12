@@ -41,10 +41,12 @@ jobs:
         uses: actions/setup-python@v6.3.0
         with:
           python-version: "3.x"
-      - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4.5
-      - name: Install dependencies
-        run: pdm install
+      # NOT `pdm install`: the lock's all-extras selection builds pylibmc,
+      # which needs libmemcached headers this job doesn't have (and shouldn't
+      # need). cement core is zero-dependency — a plain pip install of the
+      # checkout is everything get_version() requires.
+      - name: Install cement (zero-dep core)
+        run: python -m pip install .
       # `github.ref_name` is passed via env, never spliced into script text:
       # on dispatch it is an arbitrary branch name (shell-metacharacter-capable),
       # and inline `${{ }}` expansion would be a template-injection vector.
@@ -57,7 +59,7 @@ jobs:
           set -euo pipefail
           TAG="$TAG_REF"                                     # e.g. 3.0.16 (branch name on dispatch)
           # Package version is the single source of truth (cement.utils.version:get_version).
-          PKG=$(pdm run python -c "from cement.utils.version import get_version; print(get_version())")
+          PKG=$(python -c "from cement.utils.version import get_version; print(get_version())")
           if [ "$EVENT" = "push" ]; then
             [[ "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::tag '$TAG' not strict semver"; exit 1; }
             [ "$TAG" = "$PKG" ] || { echo "::error::tag $TAG != package version $PKG"; exit 1; }
@@ -325,10 +327,9 @@ jobs:
         uses: actions/setup-python@v6.3.0
         with:
           python-version: "3.x"
-      - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4.5
-      - name: Install dependencies
-        run: pdm install
+      # No dependency install: bump_dev_version.py is pure stdlib — the full
+      # `pdm install` here would rebuild pylibmc without libmemcached headers
+      # (the same failure preflight had) for zero benefit.
       - name: Compute next dev version
         id: next
         env:
@@ -339,7 +340,7 @@ jobs:
       - name: Bump VERSION + open dev changelog
         env:
           NEXT: ${{ steps.next.outputs.version }}
-        run: pdm run python scripts/bump_dev_version.py "$NEXT"
+        run: python scripts/bump_dev_version.py "$NEXT"
       - name: Open dev-bump PR
         uses: peter-evans/create-pull-request@v8.1.1
         with:
