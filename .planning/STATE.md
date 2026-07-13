@@ -6,14 +6,14 @@ current_phase: 06
 current_phase_name: release-cut-3-0-16
 status: executing
 stopped_at: Phase 6 context gathered
-last_updated: "2026-07-13T14:16:59.051Z"
+last_updated: "2026-07-13T14:50:33.911Z"
 last_activity: 2026-07-13
 last_activity_desc: Phase 06 execution started
 progress:
   total_phases: 11
   completed_phases: 9
   total_plans: 50
-  completed_plans: 45
+  completed_plans: 46
   percent: 82
 ---
 
@@ -29,8 +29,8 @@ See: .planning/PROJECT.md (updated 2026-07-12)
 ## Current Position
 
 Phase: 06 (release-cut-3-0-16) — EXECUTING
-Plan: 1 of 5
-Status: Executing Phase 06
+Plan: 2 of 5
+Status: Ready to execute
 Last activity: 2026-07-13 — Phase 06 execution started
 
 Progress: [███████████████████░] 44/45 plans (98%) — 9/11 phases complete (Phase 05.4 in progress, Phase 6 release-cut remaining)
@@ -88,6 +88,7 @@ Progress: [███████████████████░] 44/45 p
 | Phase 05.4 P01 | 6 min | 3 tasks | 3 files |
 | Phase 05.4 P02 | 2 min | 2 tasks | 2 files |
 | Phase 05.4 P04 | 5 min | 2 tasks | 1 files |
+| Phase 06-release-cut-3-0-16 P01 | ~35min | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -169,6 +170,7 @@ Recent decisions affecting current work:
 - [Phase 05.4]: [Phase 05.4 Plan 01]: dev scripts print by design; T201 suppressed with local # noqa rather than editing shared ruff config. ruff include filters scripts/ so directory-mode ruff check scripts/ passes but is not a real gate — later waves must pin explicit per-file paths.
 - [Phase 05.4]: [Phase 05.4 Plan 01]: cli-smoke-native banner accepts macOS plus Linux/Darwin/Windows (platform.platform() emits 'macOS-...' on modern Darwin runners). bump_dev_version targets backend.py VERSION, pyproject untouched via [tool.pdm.version] source=call.
 - [Phase 05.4]: gates.yml holds ONLY gate jobs (no publish/OIDC surface, T-05.4-04); publish stays in release.yml. full-os-matrix defaults true so PR CI (D-14) and release both exercise the new Windows core-test and macOS/Windows native-smoke gates. PR caller omits secrets: inherit (gates need none).
+- [Phase 06 Plan 01]: Docker Hub creds via org OAT at REPOSITORY scope (env-scope rejected: docker job declares no environment); stable/3.0.x ancestry recorded via user-run -s ours merge 8978b395 on main (D-10, real merge commit, zero drift)
 
 ### Roadmap Evolution
 
@@ -205,6 +207,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-13T00:28:55.578Z
+Last session: 2026-07-13T14:49:54.551Z
 Stopped at: Phase 6 context gathered
 Resume file: .planning/phases/06-release-cut-3-0-16/06-CONTEXT.md

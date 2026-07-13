@@ -349,11 +349,11 @@ Plans:
   4. The `3.0.16` git tag exists, the GitHub release page is published with the changelog body, and `pip install cement==3.0.16` from PyPI succeeds on a clean venv
   5. The release workflow itself (not just the artifacts) ran end-to-end without manual intervention beyond the user-approved publish step
 
-**Plans**: 5 plans across 5 waves (strictly sequential — provisioning-first is locked by D-09, and each stage gates the next: merged release-prep commit → final dry-run → human tag push + live run → post-release verification)
+**Plans**: 1/5 plans executed
 
   **Wave 1**
 
-  - [ ] 06-01-PLAN.md — Provisioning checkpoint: close Docker secrets (D-11) + confirm PyPI/RTD/release-env + one-time stable/3.0.x `-s ours` ancestry merge (D-09, D-10)
+  - [x] 06-01-PLAN.md — Provisioning checkpoint: close Docker secrets (D-11) + confirm PyPI/RTD/release-env + one-time stable/3.0.x `-s ours` ancestry merge (D-09, D-10)
 
   **Wave 2** *(blocked on Wave 1)*
 
@@ -388,7 +388,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6, with inserted 
 | 05.2. ext.argparse command self-meta accessor (INSERTED) | 1/1 | Complete   | 2026-06-25 |
 | 05.3. Template packaging modernization + typed templates (INSERTED) | 6/6 | Complete   | 2026-07-11 |
 | 05.4. GitHub Actions Release Workflow (INSERTED) | 5/5 | Complete    | 2026-07-12 |
-| 6. Release Cut 3.0.16 | 0/5 | Planned | - |
+| 6. Release Cut 3.0.16 | 1/5 | In Progress|  |
 
 ## Backlog
 
