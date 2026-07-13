@@ -1,541 +1,326 @@
 # ChangeLog
 
-## 3.0.15 - DEVELOPMENT (will be released as stable/3.0.16)
+## 3.0.16 - July 13, 2026
+
+This release modernizes Cement against the current Python ecosystem while
+holding the 3.0.x public API stable. Python 3.8 and 3.9 are dropped (EOL) and
+the supported matrix is now Python 3.10–3.14. Every deprecation in this release
+is warn-only, with removals signposted for 3.2.0 so downstream apps have a clear
+upgrade window. A new automated GitHub Actions release workflow replaces the
+manual release checklist, and the `cement generate` project and todo-tutorial
+templates are now fully typed, PEP 517-buildable, and green under `make comply`
+and `make test` out of the box.
 
 Bugs:
 
-- `[core.foundation]` Fix `extensions` config-override to honor
-  `Meta.config_section` when it differs from `Meta.label` (was silently
-  using `label`, mirroring the `template_dirs` fix from PR #760) —
-  resolves #777
-- `[ext.smtp]` Fix `timeout` passed as `local_hostname` in SMTP constructors
-- `[ext.smtp]` Fix stale variable reference in `_get_params` for per-message headers
-- `[ext.smtp]` Fix SMTP connection leak when send fails with an exception
-- `[ext.smtp]` Fix unconditional error log on every send (now only logs on errors)
-- `[ext.smtp]` Fix header encoding incorrectly affected by `body_encoding` setting
+- `[core]` Add an explicit `__all__` to `cement/__init__.py` so
+  `from cement import *` exports only the intended public surface (App,
+  TestApp, Interface, Handler, Controller, the framework exceptions, and
+  the documented helpers) instead of leaking every transitively imported
+  name — #756
+- `[core.foundation]` Honor `Meta.config_section` (not `Meta.label`) when
+  applying the `extensions` config override, mirroring the `template_dirs`
+  fix — resolves #777
+- `[ext.smtp]` Fix `timeout` being passed as `local_hostname` in the SMTP
+  constructors
+- `[ext.smtp]` Fix a stale variable reference in `_get_params` for
+  per-message headers
+- `[ext.smtp]` Fix an SMTP connection leak when a send fails with an
+  exception
+- `[ext.smtp]` Only log on send errors (was logging unconditionally on
+  every send)
+- `[ext.smtp]` Fix header encoding being incorrectly affected by the
+  `body_encoding` setting
 - `[cli]` Generated `cement generate project` output now builds under pip's
-  default PEP 517 isolation on Python 3.10+ — the legacy `setup.py` self-imported
-  the package being built, which fails inside isolated build envs
-- `[core.handler]` Resolve mypy union-attr false-positive in handler resolution
+  default PEP 517 isolation on Python 3.10+ (the legacy `setup.py`
+  self-imported the package being built, which fails in isolated build
+  envs)
+- `[core.handler]` Resolve a mypy union-attr false-positive in handler
+  resolution
 - `[ext.redis]` Resolve mypy union-attr/arg-type/misc errors surfaced by
-  redis 7 typing changes (sync client return-type unions)
-- `[ext.watchdog]` Drop now-unused `# type: ignore` comments on Observer
-  schedule/start/stop calls — watchdog 6 ships precise type stubs
-- `[utils.fs]` Restore `os.path` semantics in `abspath()` —
-  preserves symlink paths and silently falls through on unknown
-  `~user` prefixes (regression introduced by the Phase 03 Wave 6
-  pathlib migration; restores 3.0.x BC contract on the public
-  `cement.utils.fs:abspath` surface)
-- `[dev]` Use explicit `encoding='utf-8'` in
-  `scripts/audit-public-api.py` so the
-  `make audit-public-api` regression gate is portable across
-  non-UTF-8 locales (Windows cp1252, locale-stripped Docker, etc.)
-- `[dev]` Fix `scripts/cli-smoke-test.sh` capturing the container's
-  `mktemp -d` path via `docker exec -t` — the pseudo-TTY made Docker
-  emit CRLF, and command substitution kept the trailing `\r`, so
-  every derived `$tmp/...` path carried an embedded carriage return
-  (`/tmp/tmp.XXXX\r/myapp/...`) and broke pdm/venv on the first
-  Python version. Drop `-t` on that one capture (the other `-t`
-  execs only feed `grep`, where a trailing `\r` is harmless)
-- `[dev]` Fix `scripts/cli-smoke-test.sh` `pdm install` of the
-  generated project failing to resolve the dev cement pin
-  (`cement==<unreleased>`) — `pdm install` resolves in a fresh
-  isolated venv against PyPI, where the in-development version is not
-  yet published, so it could not satisfy the exact pin. Inject a
-  find_links `[[tool.pdm.source]]` pointing at the mounted
-  `/src/dist` so the locally-built cement resolves. Harness-only
-  shim (real users install a published cement from PyPI); ruff/mypy/
-  pytest ignore the source table so the project gates are unaffected
-- `[core.interface]` Widen `InterfaceManager.get` `fallback`
-  parameter to `Any` to match the documented public contract and
-  the existing test that passes a string fallback (the parameter
-  was mechanically narrowed to `type[Interface] | None` by the
-  Phase 03 UP045 sweep; the runtime always accepted arbitrary
-  fallback values per the `cache.get` sibling pattern)
+  redis 7 typing changes
+- `[ext.watchdog]` Drop now-unused `# type: ignore` comments on the
+  Observer calls — watchdog 6 ships precise type stubs
+- `[utils.fs]` Restore `os.path` semantics in `abspath()` — preserve
+  symlink paths and fall through on unknown `~user` prefixes (regression
+  from the Phase 03 pathlib migration; restores the 3.0.x BC contract)
+- `[dev]` Use explicit `encoding='utf-8'` in `scripts/audit-public-api.py`
+  so the `make audit-public-api` gate is portable across non-UTF-8 locales
+- `[dev]` Fix `scripts/cli-smoke-test.sh` capturing a CRLF-tainted temp
+  path from `docker exec -t` that broke pdm/venv on the first Python
+  version (drop `-t` on that one capture)
+- `[dev]` Fix `scripts/cli-smoke-test.sh` `pdm install` failing to resolve
+  the unreleased dev cement pin by injecting a local find_links source
+  (`/src/dist`); harness-only, the project gates are unaffected
+- `[core.interface]` Widen the `InterfaceManager.get` `fallback` parameter
+  back to `Any` to match the documented contract (it was mechanically
+  narrowed by the Phase 03 UP045 sweep; the runtime always accepted
+  arbitrary fallback values)
 - `[ext.smtp]` Type the message body and `**params` correctly across
-  `SMTPMailHandler.send`, `_build_body_parts`, `_make_message`, and
-  the related private helpers (`_header`, `_build_charsets`,
-  `_build_mime_structure`, `_set_headers`, `_attach_body`,
-  `_attach_files`). Introduce a private `_BodyType =
-  str | tuple[str, str] | dict[str, str]` alias so the dict body
-  shape (`{'text': ..., 'html': ...}`), already supported at runtime
-  by `_build_body_parts`, is now reflected in the static type.
-  Convert seven `**params: dict[str, Any]` annotations to
-  `**params: Any` (the prior form declared each kwarg VALUE as a
-  dict, the wrong meta-type for var-kwargs); this lets callers pass
-  arbitrary keyword values per the documented contract. As a
-  follow-on cleanup, drop nine now-unused `# type: ignore`
-  suppressions at `params[...]` callsites that were papering over
-  the wrong meta-typing, and add a `part: MIMEBase` annotation in
-  `_attach_files` so the `MIMEImage`/`MIMEBase` branches type-check
-  cleanly. Public-API surface byte-identical (`_BodyType` is private
-  so `make audit-public-api` stays at exit 0)
-- `[utils.shell]` Correct `cmd` and `exec_cmd` return-type
-  annotations from `tuple[str, str, int]` to
-  `tuple[bytes, bytes, int]` (and `cmd`'s union return to
-  `tuple[bytes, bytes, int] | int`) — `subprocess.Popen` returns
-  `bytes` from `communicate()` by default, and the existing tests
-  already assert `out == b'KAPLA!\n'` (literal bytes). The prior
-  `str` annotation was a type/runtime mismatch that mypy could
-  not catch (the bytes return was bidirectionally compatible
-  with the declared `str` via `Any` upcasting in dependent
-  context). Docstrings updated to call out that `stdout`/
-  `stderr` are bytes and to point at `text=True` / `encoding=`
-  through `**kwargs` for callers wanting `str` output. Runtime
-  behavior unchanged; this is documentation/type honesty only,
-  not a behavior shift
-- `[utils.shell]` Correct `Prompt.Meta.options` annotation from
-  `dict | None` to `list[str] | None` — the runtime treats
-  `options` as a list of strings (iteration in
-  `Prompt._prompt`, `str.join` in the non-numbered branch,
-  integer indexing via `options[int(...) - 1]` in the numbered
-  branch, `in`-membership checks in the case-insensitive and
-  case-sensitive branches), all of which the prior `dict`
-  annotation actively misled. mypy didn't flag this previously
-  because `dict` without parameters resolves to
-  `dict[Any, Any]`, and `Any` silenced the type errors at every
-  callsite. All existing tests pass `options=['y', 'n']`-style
-  list literals, so the new concrete type matches actual usage
-- `[ext.yaml]` Replace implicit-Optional `template: str = None` on
-  `YamlOutputHandler.render()` with the explicit
-  `template: str | None = None` (PEP 484 / ruff RUF013), mirroring
-  the `[ext.mustache]` fix above. The handler ignores the
-  `template` parameter at runtime (per docstring), so no
-  follow-on `# type: ignore[arg-type]` was needed — the prior
-  signature-line `# type: ignore` is removed entirely. Public
-  signature byte-identical from the audit-public-api perspective.
-  Sister handlers (`ext.jinja2`, `ext.json`) carry the same
-  pattern and remain on the implicit-Optional form pending a
-  follow-up
-- `[ext.mustache]` Replace implicit-Optional `template: str = None`
-  on `MustacheOutputHandler.render()` with the explicit
-  `template: str | None = None` (PEP 484 / ruff RUF013). The
-  `# type: ignore` previously placed at the signature line is
-  removed (the implicit-Optional violation it was suppressing no
-  longer fires) and a scoped `# type: ignore[arg-type]` is added
-  at the `self.templater.load(template)` callsite to document
-  that the `None` default is well-defined at runtime
-  (`TemplateHandler.load` guards `if not template_path:` and
-  raises `FrameworkError`). Public signature byte-identical from
-  the audit-public-api perspective. Sister handlers
-  (`ext.jinja2`, `ext.yaml`, `ext.json`) carry the same pattern
-  and remain on the implicit-Optional form pending a follow-up
-- `[utils.misc]` Make `MinimalLogger.__init__` idempotent — guard
-  the `self.backend.addHandler(console)` call on
-  `not self.backend.handlers` so a second `minimal_logger(ns)`
-  call for the same namespace does not stack a duplicate
-  `StreamHandler` on the shared backend logger
-  (`logging.getLogger(ns)` returns the same instance per name, so
-  the previous unconditional add produced as many handlers as
-  callers — every log emit would print N times)
-- `[ext.daemon]` Remove the duplicate
-  `LOG = minimal_logger(__name__)` assignment at module scope
-  (a back-to-back redundant rebind that, combined with the prior
-  `MinimalLogger.__init__` non-idempotency, attached a second
-  `StreamHandler` to the `cement.ext.ext_daemon` backend logger
-  on import — covered by the `[utils.misc]` hardening above but
-  the redundant line is dropped for clarity)
-- `[core.template]` Replace fragile bare `assert` in
-  `TemplateHandler.copy()` source-path check with an explicit
-  `NotADirectoryError` raise. The previous code had two failure
-  modes: (1) bare `assert` is stripped under `python -O`/`-OO`,
-  so apps running cement under optimization lost the runtime check
-  entirely and `os.walk` would silently iterate over a
-  non-existent path; and (2) `Path.exists()` returned True for
-  files too, so passing a regular file as `src` made the assert
-  pass and `os.walk` yield nothing — silent no-op with no
-  diagnostic. The new check uses `is_dir()` (covers both missing
-  paths and non-directories in one branch) and raises
-  unconditionally regardless of optimization level.
-  **Behavioral compatibility note:** the exception type changes
-  from `AssertionError` to `NotADirectoryError`. Downstream code
-  catching `AssertionError` to detect a missing/invalid `src`
-  must switch to catching `NotADirectoryError` (or a parent like
-  `OSError`). Gating runtime contracts on `AssertionError` was
-  already fragile under `-O`, so this is a robustness fix
-  rather than a contract regression on a load-bearing surface.
-- `[core.interface]` String-quote list[str] return annotation for
+  `send`/`_make_message` and the related private helpers (new private
+  `_BodyType` alias reflects the dict body shape); drop nine now-unused
+  `# type: ignore` suppressions. Public API byte-identical
+- `[utils.shell]` Correct the `cmd`/`exec_cmd` return annotations from
+  `str` to `bytes` — `subprocess.Popen` returns bytes by default and the
+  existing tests assert byte literals; docstrings now point at
+  `text=True`/`encoding=` for `str` output (runtime unchanged)
+- `[utils.shell]` Correct the `Prompt.Meta.options` annotation from
+  `dict | None` to `list[str] | None` to match actual runtime usage
+- `[ext.yaml]` Use explicit `template: str | None = None` (PEP 484 /
+  RUF013) in `render()` and drop the signature-line `# type: ignore`
+- `[ext.mustache]` Use explicit `template: str | None = None` (PEP 484 /
+  RUF013) in `render()`; scope the remaining `# type: ignore` to the load
+  callsite
+- `[utils.misc]` Make `MinimalLogger.__init__` idempotent — guard the
+  console-handler add on `not self.backend.handlers` so repeated
+  `minimal_logger(ns)` calls no longer stack duplicate handlers (which
+  caused log output to repeat N times)
+- `[ext.daemon]` Remove a duplicate module-scope
+  `LOG = minimal_logger(__name__)` rebind
+- `[core.template]` Replace the fragile bare `assert` in
+  `TemplateHandler.copy()` with an explicit `NotADirectoryError` (the
+  assert was stripped under `python -O` and passed for regular files).
+  **Compatibility note:** the raised exception type changes from
+  `AssertionError` to `NotADirectoryError`
+- `[core.interface]` String-quote a `list[str]` return annotation for
   autodoc compatibility
-- `[core.deprecations]` Drop trailing period from the `3.0.10-1`
-  deprecation message — `deprecate()` appends `". See: ..."`, so a
-  pre-existing trailing period rendered as `..` in the runtime
-  warning. The other three entries already follow the implicit
-  no-trailing-period invariant
-- `[dev]` `make docs` zero-warnings gate now uses `&&` (was `;`),
-  so the recipe correctly fails on Sphinx warnings instead of
-  silently succeeding via the trailing `cd ..` exit code
-- `[ext.generate]` Fix `variables` default from `{}` to `[]` — the
-  generate flow iterates `variables` as a list of dicts, so the dict
-  default would have produced an empty key-iteration on templates
-  that omit the key
-- `[ext.generate]` Narrow the dynamic-template-module `except` from
-  bare `AttributeError` to `(AttributeError, ModuleNotFoundError)`
-  with a `name`-match guard, so transitive `ModuleNotFoundError`s
-  raised inside the user's template module propagate normally
-  instead of being silently swallowed as "module not found"
-- `[ext.generate]` `type: boolean` template variables now emit a real
-  Python bool at the top level of the render context (`data[name]`),
-  so `{% if feature_x %}` works in jinja2/mustache; the boolean prompt
-  uses a vars-style `[(Y)es/(N)o] [default]:` format and all variables
-  prompt in a single declaration-order pass — resolves #782 (the
-  former `features:` namespace and pre-pass are removed)
-- `[cli]` Generated `cement generate todo-tutorial` output now builds
-  under pip's default PEP 517 isolation on Python 3.10+ — the legacy
-  `setup.py` self-imported the package being built, which fails inside
-  isolated build envs (mirrors the `generate project` fix; #735)
-- `[cli]` Fix `NameError` in generated `todo/main.py` — the `TodoError`
-  handler referenced an undefined name; now `except TodoError as e:`
-  (#735)
-- `[cli]` Fix false-green assertion in the generated project test
-  template — `assert output.find(...)` (str.find() returns -1, which is
-  truthy, so it never fails) is now membership `assert '...' in output`,
-  so the test genuinely fails on wrong or empty rendered output (#735)
-- `[cli]` Generated todo-tutorial imports are now isort-clean and its
-  `[tool.ruff]` is scoped to the `todo/` package, so the shipped
-  `make comply` (ruff) is green out of the box (#735)
+- `[core.deprecations]` Drop a trailing period from the `3.0.10-1`
+  deprecation message (it rendered as `..` once `deprecate()` appended
+  its suffix)
+- `[dev]` `make docs` zero-warnings gate now uses `&&` (was `;`) so it
+  fails on Sphinx warnings
+- `[ext.generate]` Fix the `variables` default from `{}` to `[]` — the
+  generate flow iterates `variables` as a list of dicts
+- `[ext.generate]` Narrow the dynamic-template-module `except` to
+  `(AttributeError, ModuleNotFoundError)` with a name guard so transitive
+  import errors in a user's template module propagate normally
+- `[ext.generate]` `type: boolean` variables now emit a real Python bool
+  at the top level (`data[name]`) so `{% if feature_x %}` works; boolean
+  prompts use a vars-style `[(Y)es/(N)o]` format in a single
+  declaration-order pass — resolves #782 (the `features:` namespace is
+  removed)
+- `[cli]` Generated `cement generate todo-tutorial` output now builds under
+  PEP 517 isolation on Python 3.10+ (mirrors the `generate project` fix) —
+  #735
+- `[cli]` Fix a `NameError` in generated `todo/main.py` (now
+  `except TodoError as e:`) — #735
+- `[cli]` Fix a false-green assertion in the generated project test
+  template — a membership check replaces `str.find()`, which returned a
+  truthy `-1` and never failed — #735
+- `[cli]` Generated todo-tutorial imports are isort-clean and its
+  `[tool.ruff]` is scoped to `todo/`, so the shipped `make comply` is green
+  out of the box — #735
 - `[cli]` Constrain the cement dependency in generated `project` and
-  `todo-tutorial` templates to the backward-compatible 3.0.x stable line.
-  `project` previously used an exact `cement==<generating version>` pin,
-  which made a freshly generated project uninstallable whenever the
-  generating cement was an unreleased dev version (`pdm install` could not
-  resolve it from PyPI); it now renders a compatible-release range
-  (`cement[...]~={{ cement.major_version }}.{{ cement.minor_version }}.0`,
-  e.g. `~=3.0.0` → `>=3.0.0,<3.1`). `todo-tutorial` previously used an
-  uncapped `>=3.0`; it is now capped to a literal `>=3.0,<3.1` (that
-  template is copied verbatim, so it cannot use rendered version vars).
-  Both install any backward-compatible patch on the same stable minor
-  line (#735)
+  `todo-tutorial` templates to a compatible 3.0.x range (`~=3.0.0` /
+  `>=3.0,<3.1`) so freshly generated projects install even when generated
+  by an unreleased dev cement — #735
 
 Features:
 
 - `[core.foundation]` Support config override of `App.Meta.template_dirs`
-  via the `[<app>]` section. Accepts a list (under config handlers with
-  native list support, e.g. `ext_yaml` or `ext_json`) or a comma-separated
-  string (required for the default `ext_configparser` / INI handler).
-  String form is split + whitespace-trimmed, parallel to the existing
-  `extensions` config handling.
+  via the `[<app>]` section — accepts a list (native-list config handlers)
+  or a comma-separated string (the INI handler), parallel to the existing
+  `extensions` handling.
   - [Issue #746](https://github.com/datafolklabs/cement/issues/746)
-- `[ext.generate]` Add optional features support to generate templates
-  with conditional variables, exclude/ignore patterns, and dependency
-  resolution via `requires` (with transitive cascade when a required
-  feature is disabled). Resolution is order-independent — features may
-  declare `requires` against features defined later in the YAML.
+- `[ext.generate]` Add optional features support to generate templates —
+  conditional variables, exclude/ignore patterns, and order-independent
+  `requires` dependency resolution (with transitive cascade).
   - [Issue #743](https://github.com/datafolklabs/cement/issues/743)
 - `[ext.generate]` Add `prompt_mode: select` for multi-valued feature
-  prompts. A select-mode feature presents a numbered picker (delegated
-  to `cement.utils.shell.Prompt`) and dispatches the chosen value into
-  one of N `options` branches — each branch may declare its own
-  `ignore` / `exclude` / `variables` (incl. silent `prompt: false`
-  variables). `prompt_mode` defaults to `boolean` (legacy behavior,
-  byte-identical when key absent).
+  prompts — a numbered picker dispatching the chosen value into one of N
+  `options` branches, each with its own `ignore`/`exclude`/`variables`;
+  defaults to `boolean` (byte-identical when absent).
   - [Issue #779](https://github.com/datafolklabs/cement/issues/779)
 - `[ext.generate]` Add `type: choice` template variables — a numbered
-  `cement.utils.shell.Prompt` picker that emits the chosen option string
-  at the top level of the render context. `options:` accepts a scalar
-  list or per-option `{value, prompt}` objects; per-option effects live
-  in `extend:` rules keyed by `when: <value>`. Misconfig (empty options,
-  option missing `value`, default not in options, duplicate labels) is
-  fail-fast `ValueError`.
-- `[ext.generate]` `type: boolean` `prompt:` is now polymorphic —
-  in addition to the framework-owned string form and the silent
-  `prompt: false` form, an object form `{text, accept, reject}` lets the
-  template author own the full prompt text and supply case-insensitive
-  `accept:`/`reject:` token lists that map input to a real bool. Input
-  matching neither asserts and aborts (`Invalid Response`), mirroring
-  `validate:`. A bool-like `accept:`/`reject:` token that YAML 1.1
-  coerced to a Python bool raises `ValueError` telling the author to
-  quote it.
-- `[ext.generate]` `extend.when` now composes three match forms — a
-  scalar value (equality), an in-list membership (`when: [a, b]`), and a
-  string-type regex (`re.match`, string variables only) — and multiple
-  matching rules all fire, accumulating their `variables`/`exclude`/
-  `ignore`. `extend.variables` are nested and prompted depth-first in
-  place only when their parent rule fires. A new top-level `requires:`
-  key gates a variable using the same match vocabulary (`[name]` →
-  truthy, `{name: value}` → equality, `{name: [v1, v2]}` → in-list),
-  AND-ed across keys and resolved order-independently via lazy
-  recursion. A requires-gated-out variable is set to its `default` (so
-  templates never `KeyError`) and its `extend` rules do not fire. The
-  unified schema also addresses the PR #780 review feedback: features
-  prompt after vars in declaration order, with custom per-feature
-  prompt text and vars-style input.
+  picker that emits the chosen option string at the top level; `options:`
+  accepts scalars or `{value, prompt}` objects with per-option effects in
+  `extend:` rules; misconfig is fail-fast `ValueError`.
+- `[ext.generate]` `type: boolean` `prompt:` is now polymorphic — an object
+  form `{text, accept, reject}` lets the template author own the prompt
+  text and supply the token lists that map input to a real bool; unmatched
+  input aborts with `Invalid Response`.
+- `[ext.generate]` `extend.when` now composes scalar-equality, in-list
+  membership, and string-regex match forms (all matching rules fire) with
+  nested depth-first `extend.variables`; a new top-level `requires:` key
+  gates variables using the same vocabulary, AND-ed and resolved
+  order-independently, defaulting gated-out variables so templates never
+  `KeyError`. Also addresses the PR #780 review feedback (features prompt
+  after vars, custom prompt text, vars-style input).
   - [Issue #782](https://github.com/datafolklabs/cement/issues/782)
   - [PR #780](https://github.com/datafolklabs/cement/pull/780)
 - `[ext.argparse]` Add a read-only `_command_meta` property on
   `ArgparseController` so an exposed command can read its own `CommandMeta`
-  (label, `parser_options['help']`, etc.) from inside its body via
-  `self._command_meta`, replacing the brittle
-  `getattr(self, ...).__cement_meta__` dance. Returns `None` outside a
-  dispatched command and never raises. Additive — the `func()` dispatch
-  signature is unchanged.
+  from inside its body; returns `None` outside a dispatched command and
+  never raises. Additive — the `func()` dispatch signature is unchanged.
   - [Issue #670](https://github.com/datafolklabs/cement/issues/670)
 - `[ext.argparse]` Add a companion read-only `_default_command_meta`
-  property on `ArgparseController` that resolves the controller's default
-  sub-command meta (via `Meta.default_func`), since `_command_meta` is
-  `None` while the default function runs (argparse has no native default
-  sub-command). Returns `None` when `default_func` is `None` or points to a
-  non-exposed function (e.g. the stock `_default`); never raises.
+  property that resolves the controller's default sub-command meta (via
+  `Meta.default_func`); returns `None` when there is no exposed default and
+  never raises.
   - [Issue #670](https://github.com/datafolklabs/cement/issues/670)
-- `[utils.misc]` Add optional `CEMENT_FRAMEWORK_LOG_FILE` env var — when
-  framework logging is enabled, framework/extension debug output is also
-  written to the given file (in addition to the console). Purely additive:
-  the variable alone does not enable logging, repeated calls do not stack
-  duplicate handlers, and an unwritable/invalid path is ignored rather
-  than raising.
+- `[utils.misc]` Add an optional `CEMENT_FRAMEWORK_LOG_FILE` env var — when
+  framework logging is enabled, debug output is also written to the given
+  file. Purely additive: no duplicate handlers on repeat calls, and an
+  invalid path is ignored rather than raising.
   - [Issue #593](https://github.com/datafolklabs/cement/issues/593)
 
 Refactoring:
 
-- `[ext.generate]` Remove the unreleased `features:` schema
-  (`prompt_mode`, `enabled:`/`disabled:` blocks, select `options:`
-  effects) wholesale — everything it expressed is now a `type:
-  boolean`/`type: choice` variable carrying `extend:`/`requires:`. The
-  legacy compatibility bridge is deleted; `features:` is no longer read
-  by the engine (#782).
-
+- `[ext.generate]` Remove the unreleased `features:` schema wholesale —
+  everything it expressed is now a `type: boolean`/`type: choice` variable
+  carrying `extend:`/`requires:`; the legacy compatibility bridge is
+  deleted (#782)
 - `[dev]` Migrate the `demo/generate-features/` webapp template to the
-  unified `type:`/`extend:`/`requires:` schema (off the removed
-  `features:` schema) and demonstrate the #782 fix — `{% if docker %}`
-  and `{% if web_framework == ... %}` now render against the top-level
-  bool/choice exposure
-- `[ext.smtp]` PEP 8 naming, idiomatic string methods, and cleaner type validation
+  unified `type:`/`extend:`/`requires:` schema and demonstrate the #782 fix
+  (top-level `{% if docker %}` / `{% if web_framework == ... %}`)
+- `[ext.smtp]` PEP 8 naming, idiomatic string methods, and cleaner type
+  validation
 - `[ext.smtp]` Refactor `_make_message` into focused private methods
 - `[ext.smtp]` Simplify X-header normalization and preserve original casing
-- `[dev]` Python 3.14 Default Development Target
-- `[dev]` Remove Support for Python 3.8 (EOL)
-- `[dev]` Remove Support for Python 3.9 (EOL)
-- `[cli]` Migrate `cement generate project` template from setuptools+setup.py
-  to pdm-backend with full PEP 621 metadata; deps moved to
-  `[project].dependencies` and `[dependency-groups].dev` (PEP 735); generated
-  `version.py` simplified to literal `__version__` + wrapper (no build-time
-  cement import)
-- `[cli]` Generated project `README.md` now documents system requirements
-  (Python 3.10+); end-user install uses `pip install .` / `pip install
-  <label>`; development section calls out PDM as an additional requirement
-  and uses `make setup` + `pdm run <label>`; generated `Makefile`
-  `virtualenv` target renamed to `setup` and reduced to `pdm install`
-  (drops redundant `pdm venv create` and the manual `eval $(pdm venv
-  activate)` hint)
-- `[core]` Modernize type annotations to PEP 585 builtin generics
-  (UP006: `List` → `list`, `Dict` → `dict`, `Tuple` → `tuple`,
-  `Type` → `type`); orphaned `typing` re-export imports pruned in the
-  same pass (F401)
-- `[core]` Modernize union types to PEP 604 syntax (UP007:
-  `Union[X, Y]` → `X | Y`); orphaned `typing.Union` imports pruned
+- `[dev]` Python 3.14 default development target
+- `[dev]` Remove support for Python 3.8 (EOL)
+- `[dev]` Remove support for Python 3.9 (EOL)
+- `[cli]` Migrate the `cement generate project` template from
+  setuptools+`setup.py` to pdm-backend with full PEP 621 metadata and PEP
+  735 dev deps; generated `version.py` no longer imports cement at build
+  time
+- `[cli]` Generated project `README.md`/`Makefile` now document Python
+  3.10+ and PDM, use `pip install .` for end users, and rename the
+  `virtualenv` target to `setup` (`pdm install`)
+- `[core]` Modernize type annotations to PEP 585 builtin generics (UP006:
+  `List`→`list`, `Dict`→`dict`, `Tuple`→`tuple`, `Type`→`type`); prune
+  orphaned `typing` re-exports
+- `[core]` Modernize union types to PEP 604 syntax (UP007: `Union[X, Y]`→
+  `X | Y`); prune orphaned `typing.Union` imports
 - `[core]` Modernize Optional types to PEP 604 syntax (UP045:
-  `Optional[X]` → `X | None`); orphaned `typing.Optional` imports
-  pruned
-- `[core]` Move `Callable` / `Generator` imports from `typing` to
-  `collections.abc` (UP035 — deprecated-import path).
-- `[core]` Convert printf-style format strings to modern format
-  (UP031 — `'%s' % x` → `f"{x}"` / `"{}".format(x)`). Protected
-  `.format(**template_dict)` template-substitution callsites in
-  cement/core/foundation.py preserved untouched per Phase 03 D-19.
-  REFACTOR-04 closeout.
-- `[core]` Drop redundant `(object)` base class (UP004); Python 3
-  classes inherit from object implicitly.
-- `[core]` Simplify `super()` calls (UP008 — drop `super(__class__,
-  self)` boilerplate; Python 3 zero-arg form).
-- `[core]` Drop redundant `'r'` mode argument from `open()` calls
-  (UP015 — `'r'` is the default).
-- `[core]` Replace `IOError` alias with `OSError` (UP024) in
-  cement/core/template.py — `IOError` is an alias since Python 3.3.
-- `[dev]` Drop legacy `u"..."` unicode literal prefix in test code
-  (UP025) — Python 3 strings are already Unicode.
-- `[dev]` Replace deprecated `mock` import with `unittest.mock`
-  (UP026) in tests/ext/test_ext_smtp.py + tests/utils/test_shell.py.
-- `[core]` Replace `for x in iterable: yield x` with `yield from`
-  (UP028) in cement/core/hook.py + tests/core/test_hook.py.
-- `[core]` Convert `.format()` calls to f-strings (UP032 cascade
-  surfaced after UP031). Protected `.format(**template_dict)`
-  template-substitution callsites in cement/core/foundation.py
-  preserved untouched (verified by body-diff against pre-fix state).
-  UP family fully clean after this commit.
-- `[core]` Tighten `Any` types in cement/core/ where narrower types are
-  provably correct; surviving Any carries inline justification per D-09
-  (delta: 41 → 40, 2 substantive tightenings — `App.__import__(obj: Any)`
-  → `obj: str` since the body always passes `obj` to stdlib `__import__`
-  against `alternative_module_mapping: dict[str, str]`; and
-  `ControllerInterface._dispatch() -> Any | None` → `-> Any` dropping
-  the redundant `| None` Wave 3 UP007 cascade artifact).
-- `[dev]` Refresh CONVENTIONS.md type-annotation guidance to
-  PEP 585 / PEP 604 modern syntax (Phase 03 plan 03 landing point).
-- `[core]` Wrap long log/error messages introduced by UP032 f-string
-  conversion to satisfy E501 (line-too-long); reorder imports
-  introduced by UP006/UP035 to satisfy I001 (import sorting).
-- `[core]` Drop `from __future__ import annotations` from all 29
-  files in cement/ (Phase 1 D-14 deferral closed). PEP 604/585
-  syntax (UP006/UP007/UP045 from the prior wave) is native in
-  Python 3.10+; the future-import is no longer needed. Forward
-  references to TYPE_CHECKING-bound names (App, FrameType,
-  ModuleType, TracebackType, ArgparseArgumentType,
-  ArgparseController) converted to PEP 484 string annotations
-  where evaluated at class/function definition time. Closes the
-  cement/utils/fs.py self-flagged 2024-06-22 TODO.
-- `[utils.fs]` Migrate `cement/utils/fs.py` os.path internals to
-  pathlib (Phase 03 D-11). Public functions still return `str` via
-  `str(p)` at every boundary (D-12 boundary preservation);
-  `HOME_DIR` stays a `str` constant; `Tmp.dir` / `Tmp.file` stay
-  `str` instance attributes. `pathlib.Path` aliased as `_Path`
-  module-level to avoid expanding the public surface
-  (audit-public-api stays exit 0). Lays foundation for
-  cement/core/* migrations.
-- `[core.config]` Migrate `cement/core/config.py` os.path.exists
-  callsite in `parse_file` to pathlib (Phase 03 D-11 scope
-  continuation). `import os` retained as a no-op (now `# noqa:
-  F401`) because `cement.core.config:os` is in
-  `03-PUBLIC-API-BASELINE.txt` — removing it would have shrunk
-  the public surface (D-12). Smallest of the four pathlib
-  commits (1 callsite); natural warm-up after fs.py per D-13.
-- `[core.foundation]` Migrate `cement/core/foundation.py`
-  os.path.isdir callsite in `_find_config_files` to pathlib
-  (Phase 03 D-11). The public alias `join = os.path.join` (line
-  48) retained per D-12/D-14 with `# boundary:` tag — it is part
-  of the public-API baseline (`cement.core.foundation:join`)
-  with stdlib semantics that downstream callers depend on.
-  D-19 protected `.format(**template_dict)` callsites at lines
-  1383, 1388, 1396, 1401, 1409, 1414, 1502, 1507, 1512, 1516,
-  1577, 1582, 1587, 1591 (14 total) untouched. A docstring
-  example referencing `os.path.dirname` / `os.path.exists` /
-  `os.makedirs` updated to pathlib idioms for consistency.
-- `[core.template]` Migrate `cement/core/template.py` os.path
-  internals to pathlib (Phase 03 D-11; ~13 callsites — biggest
-  single-file blast in the pathlib scope). Boundary-preservation
-  rule (D-12) held; internal locals are Path; values crossing
-  the loop iteration go back through `str()` because the
-  surrounding loop variables (`cur_dir_dest`, `sub_dir_dest`,
-  `_file`, `_file_dest`, `full_path`) are passed to legacy
-  string-typed APIs (`fs.abspath`, `self.render`, `open`). The
-  `os.walk(src)` callsite is retained with an inline `# boundary:`
-  comment per D-14 — pathlib has no direct equivalent yielding
-  the `(cur_dir, sub_dirs, files)` triple shape this loop
-  depends on; converting to `Path.rglob('*')` would require a
-  wholesale loop restructure with higher regression risk than
-  the boundary-tag accommodation. Closes the D-11 pathlib scope
-  across all 4 named files; D-24 conjunct #8 GREEN
-  (`grep -rn 'os\.path' cement/utils/fs.py cement/core/* | grep
-  -v '# boundary:' | wc -l` returns 0).
-- `[dev]` Audit `pragma:nocover` sites in `cement/core/` with
-  D-15 locked-vocabulary category labels (Phase 03 Wave 7
-  Batch A — 16 files / per-file atomic commits). Categories
-  applied: `abstract method`, `TYPE_CHECKING import`,
-  `platform-specific`, `defensive: unreachable`,
-  `untestable: signal handler`, `version constant`. Coverage
-  exclusion behavior unchanged; pragma comments now carry
-  audit-grep-friendly category labels per D-15.
-- `[dev]` Audit `pragma:nocover` sites in `cement/ext/` first
-  half (ext_alarm, ext_argparse, ext_colorlog, ext_configparser,
-  ext_daemon, ext_dummy, ext_generate, ext_jinja2, ext_json,
-  ext_logging) with D-15 locked-vocabulary category labels
-  (Phase 03 Wave 7 Batch B — 10 files / per-file atomic
-  commits). Categories applied: `TYPE_CHECKING import`,
-  `defensive: unreachable`, `untestable: dynamic import`,
-  `platform-specific`.
-- `[dev]` Audit `pragma:nocover` sites in `cement/ext/` second
-  half (ext_memcached, ext_mustache, ext_plugin, ext_print,
-  ext_redis, ext_scrub, ext_smtp, ext_tabulate, ext_watchdog,
-  ext_yaml) with D-15 locked-vocabulary category labels
-  (Phase 03 Wave 7 Batch C — 10 files / per-file atomic
-  commits). Categories applied: `TYPE_CHECKING import`,
-  `defensive: unreachable`, `untestable: dynamic import`.
-- `[dev]` Audit `pragma:nocover` sites in `cement/cli/` +
-  `cement/utils/` (cli/main.py, utils/fs.py, utils/shell.py,
-  utils/version.py) with D-15 locked-vocabulary category
-  labels (Phase 03 Wave 7 Batch D — 4 files / per-file
-  atomic commits). Closes COV-03 / D-24 conjunct #7 across
-  all of cement/: `grep -nE 'pragma:[[:space:]]*no[[:space:]]*cover' cement/ | grep -vE '# (<8 categories>)'`
-  returns empty (141 sites all carry locked-vocabulary
-  category labels).
-- `[core.deprecations]` Pin 3.0.10-1 and 3.0.16-1 removal version to v3.2.0
-- `[ext.logging]` Tighten FATAL deprecation removal version in docstrings
-- `[ext.smtp]` Document send() bool-return removal in v3.2.0
-- `[cli]` Migrate `cement generate todo-tutorial` template from
-  setup.py/setup.cfg/requirements*.txt/MANIFEST.in to pdm-backend with
-  full PEP 621 metadata and a PEP 735 dev group (mirrors the `generate
-  project` migration; #735)
-- `[cli]` Ship `[tool.ruff]` / `[tool.mypy]` / `[tool.pytest]` gate
-  config in the generated project and todo-tutorial `pyproject.toml` so
-  `make comply` and `make test` are green out of the box (#735)
-- `[cli]` Type-annotate all generated templates (project/script/
-  extension/plugin/todo) and modernize idioms to f-strings (#735)
+  `Optional[X]`→`X | None`); prune orphaned `typing.Optional` imports
+- `[core]` Move `Callable`/`Generator` imports from `typing` to
+  `collections.abc` (UP035)
+- `[core]` Convert printf-style format strings to modern format (UP031);
+  protected `.format(**template_dict)` template callsites preserved
+- `[core]` Drop redundant `(object)` base classes (UP004)
+- `[core]` Simplify `super()` calls to the zero-arg form (UP008)
+- `[core]` Drop the redundant `'r'` mode argument from `open()` calls
+  (UP015)
+- `[core]` Replace the `IOError` alias with `OSError` (UP024)
+- `[dev]` Drop the legacy `u"..."` unicode literal prefix in test code
+  (UP025)
+- `[dev]` Replace the deprecated `mock` import with `unittest.mock` (UP026)
+- `[core]` Replace `for x in iterable: yield x` with `yield from` (UP028)
+- `[core]` Convert `.format()` calls to f-strings (UP032); protected
+  template callsites preserved
+- `[core]` Tighten `Any` types in `cement/core/` where narrower types are
+  provably correct; surviving `Any` carries inline justification
+- `[dev]` Refresh CONVENTIONS.md type-annotation guidance to PEP 585 / PEP
+  604 syntax
+- `[core]` Wrap long log/error messages (E501) and reorder imports (I001)
+  surfaced by the UP sweeps
+- `[core]` Drop `from __future__ import annotations` from all 29 `cement/`
+  files (native on 3.10+); convert affected forward references to PEP 484
+  string annotations
+- `[utils.fs]` Migrate `cement/utils/fs.py` internals to pathlib while
+  preserving `str` return boundaries (public surface unchanged)
+- `[core.config]` Migrate the `config.py` `parse_file` os.path callsite to
+  pathlib; retain `import os` as a no-op to keep the public surface intact
+- `[core.foundation]` Migrate the `foundation.py` `_find_config_files`
+  os.path callsite to pathlib; retain the public `join = os.path.join`
+  alias and leave protected template callsites untouched
+- `[core.template]` Migrate `template.py` os.path internals to pathlib;
+  retain the `os.walk(src)` callsite (no direct pathlib equivalent for the
+  triple-tuple loop)
+- `[dev]` Audit `pragma: nocover` sites in `cement/core/` with
+  locked-vocabulary category labels
+- `[dev]` Audit `pragma: nocover` sites in `cement/ext/` (first half) with
+  locked-vocabulary category labels
+- `[dev]` Audit `pragma: nocover` sites in `cement/ext/` (second half) with
+  locked-vocabulary category labels
+- `[dev]` Audit `pragma: nocover` sites in `cement/cli/` and
+  `cement/utils/` with locked-vocabulary category labels
+- `[core.deprecations]` Pin the `3.0.10-1` and `3.0.16-1` deprecation
+  removal versions to v3.2.0
+- `[ext.logging]` Tighten the FATAL deprecation removal version in
+  docstrings
+- `[ext.smtp]` Document the `send()` bool-return removal in v3.2.0
+- `[cli]` Migrate the `cement generate todo-tutorial` template to
+  pdm-backend with full PEP 621 metadata and a PEP 735 dev group (mirrors
+  `generate project`; #735)
+- `[cli]` Ship `[tool.ruff]`/`[tool.mypy]`/`[tool.pytest]` gate config in
+  the generated project and todo-tutorial so `make comply`/`make test` are
+  green out of the box (#735)
+- `[cli]` Type-annotate all generated templates
+  (project/script/extension/plugin/todo) and modernize idioms to f-strings
+  (#735)
 
 Misc:
 
-- `[ci]` Add automated release workflow (`release.yml`) — tag-triggered
-  pipeline: preflight guard → full gate suite → isolated build → TestPyPI
-  publish + 5-Python install smoke → environment-gated OIDC PyPI publish
-  (single human approval) → post-approval fan-out (Docker Hub multi-arch
-  images, `stable/3.0.x` fast-forward, RTD docs-tag re-point, GitHub
-  Release from changelog, dev-version-bump PR, post-release checklist
-  issue); `workflow_dispatch` runs the same pipeline as a dry run
-- `[ci]` Refactor PR gate chain into reusable `gates.yml`
-  (`workflow_call`) shared by PR CI and the release workflow; wire the
-  test matrix Python versions (previously every leg ran the default
-  interpreter); new Windows core-test and macOS/Windows native CLI
-  smoke gates authored but disabled pending test portability work
-  (backlog 999.2)
-- `[dev]` Add release dev-tooling scripts: `testpypi-smoke.py`
-  (TestPyPI install round-trip), `cli-smoke-native.py` (cross-platform
-  CLI smoke), `bump_dev_version.py` (post-release dev-cycle bump)
+- `[ci]` Add GitHub Actions PR CI (`build_and_test.yml`) running the test
+  suite on pull requests with minimal permissions — #757
+- `[ci]` Add an automated release workflow (`release.yml`) — tag-triggered:
+  preflight guard → gate suite → isolated build → TestPyPI publish +
+  5-Python install smoke → environment-gated OIDC PyPI publish →
+  post-approval fan-out (Docker Hub multi-arch, `stable/3.0.x` sync, RTD
+  re-point, GitHub Release, dev-bump PR, checklist issue);
+  `workflow_dispatch` runs it as a dry run
+- `[ci]` Refactor the PR gate chain into a reusable `gates.yml`
+  (`workflow_call`) shared by PR CI and release; wire the matrix Python
+  versions; add (disabled) Windows core-test and macOS/Windows native smoke
+  gates
+- `[dev]` Add release dev-tooling scripts: `testpypi-smoke.py`,
+  `cli-smoke-native.py`, `bump_dev_version.py`
+- `[dev]` Add devbox/direnv development-environment configuration for
+  reproducible local setup
 - `[ext.smtp]` Isolate test defaults to prevent cross-test state pollution
-- `[dev]` Bump ruff to 0.15.x; codify rule sets explicitly; resolve all
-  surfacing lint findings (I001, B*, A*, C901, N*, PT*, T201, YTT203)
-- `[dev]` Bump mypy to ~=1.20.2; codify type-check surface (audit-point comment)
+- `[dev]` Bump ruff to 0.15.x; codify rule sets explicitly and resolve all
+  surfacing lint findings
+- `[dev]` Bump mypy to ~=1.20.2 and codify the type-check surface
 - `[dev]` Bump pytest 9.0.3, pytest-cov 7.1.0, coverage 7.13.5
-- `[dev]` Add `make cli-smoke-test` target — runs generated-project install
-  smoke test across Python 3.10–3.14 in Docker
-- `[dev]` Bump dev/extras lockfile to current non-breaking versions (redis
-  7.4, watchdog 6.0, tabulate 0.10, sphinx 8.1, requests 2.33, others)
-- `[dev]` Wire 100% coverage gate via `[tool.coverage.report]`
-  `fail_under` + `--cov-fail-under` addopts; explicit
-  `[tool.coverage.run] source/omit`
-- `[ci]` Pin GitHub Actions to exact tags (checkout v6.0.2,
-  setup-python v6.2.0, setup-pdm v4.4, install-package v1.1.0,
-  compose-action v2.6.0, update-deps-action v1.12)
-- `[ci]` Add PyPy 3.11 to CI test matrix (alongside existing PyPy 3.10)
-- `[ci]` Enable Dependabot for github-actions ecosystem (weekly)
-- `[ci]` Add workflow_dispatch trigger to pdm.yml
-- `[dev]` Add `make audit-public-api` target + AST-walk public surface enumerator + baseline snapshot (Phase 03 D-02..D-05).
-- `[dev]` Enable ruff `UP` (pyupgrade) and `FA` (flake8-future-annotations) families in extend-select with refreshed AUDIT POINT comment (Phase 03 D-06).
-- `[dev]` Capture Phase 03 Any-in-core baseline (D-09) + pragma + pathlib pre-counts in `03-VERIFICATION.md` (in-progress; finalized in Wave 8).
-- `[dev]` Phase 03 verification finalized: all 9 D-24 conjuncts GREEN;
-  REFACTOR-01..04 + COV-01..03 satisfied; record in
-  `03-VERIFICATION.md`.
-- `[dev]` Phase 03 (Internal Refactor & Coverage Hardening) complete:
-  REFACTOR-01..04 + COV-01..03 satisfied; ROADMAP updated.
-- `[docs]` Drop unsupported 'logo' theme option from sphinx conf
-- `[docs]` Remove orphan `docs/source/api/index.rst`; the top-level
-  `docs/source/index.rst` toctree references `api/core/index`,
-  `api/utils/index`, and `api/ext/index` directly
-- `[docs]` Rename `display_version` theme option to `version_selector`
-  (sphinx_rtd_theme 3.x rename)
-- `[docs]` Fix inline-literal RST in shell.cmd() docstring
-- `[docs]` Add top-level DEPRECATIONS.md mirroring GitBook narrative
-- `[dev]` Wire -W into make docs (zero-warnings gate)
-- `[docs]` Drop Travis CI link/badge (CI moved to GitHub Actions)
-- `[docs]` Align CONTRIBUTING with Conventional Commits +
-  atomic-per-concern
-- `[docs]` Expose `cement.core.deprecations` in the Sphinx API
-  reference (was missing) — adds `docs/source/api/core/deprecations.rst`
-  + toctree entry, plus minimal docstrings on the module,
-  `DEPRECATIONS` dict, and `deprecate()` so the autodoc page renders
-  meaningful content rather than an empty stub
-- `[docs]` Fix `stderror` → `stderr` typo in `cement.utils.shell:cmd()`
-  and `exec_cmd()` Returns docstrings (4 occurrences). Example
-  variables and runtime code already used the correct spelling
-- `[docs]` Remove orphaned `[Commit Guidelines]` reference-link
-  definition from `.github/CONTRIBUTING.md` (no body callsites
-  remained after the Plan 05-05 Conventional Commits rewrite)
-- `[dev]` Extend the CI `cli-smoke-test` to gate the generated
-  project's own `make comply` + `make test` and to build/install the
-  generated todo-tutorial (#735)
-- `[dev]` Add a generated-todo ruff-clean regression guard to cement's
-  test suite (`test_generate_todo_ruff_clean`) — generates
-  todo-tutorial and re-runs ruff against the rendered output (#735)
+- `[dev]` Add a `make cli-smoke-test` target — generated-project install
+  smoke across Python 3.10–3.14 in Docker
+- `[dev]` Bump the dev/extras lockfile to current non-breaking versions
+  (redis 7.4, watchdog 6.0, tabulate 0.10, sphinx 8.1, requests 2.33,
+  others)
+- `[dev]` Wire the 100% coverage gate via `[tool.coverage.report]`
+  `fail_under` + `--cov-fail-under`
+- `[ci]` Pin GitHub Actions to exact tags
+- `[ci]` Add PyPy 3.11 to the CI test matrix (alongside PyPy 3.10)
+- `[ci]` Enable Dependabot for the github-actions ecosystem (weekly)
+- `[ci]` Add a `workflow_dispatch` trigger to `pdm.yml`
+- `[dev]` Add a `make audit-public-api` target + AST-walk public-surface
+  enumerator + baseline snapshot
+- `[dev]` Enable ruff `UP` (pyupgrade) and `FA` (flake8-future-annotations)
+  families
+- `[dev]` Capture the Phase 03 Any-in-core / pragma / pathlib baselines in
+  `03-VERIFICATION.md`
+- `[dev]` Finalize Phase 03 verification (all D-24 conjuncts green;
+  REFACTOR-01..04 + COV-01..03 satisfied)
+- `[dev]` Complete Phase 03 (Internal Refactor & Coverage Hardening);
+  ROADMAP updated
+- `[docs]` Drop the unsupported `logo` theme option from the Sphinx config
+- `[docs]` Remove the orphan `docs/source/api/index.rst`
+- `[docs]` Rename `display_version` to `version_selector` (sphinx_rtd_theme
+  3.x)
+- `[docs]` Fix inline-literal RST in the `shell.cmd()` docstring
+- `[docs]` Add a top-level DEPRECATIONS.md mirroring the GitBook narrative
+- `[dev]` Wire `-W` into `make docs` (zero-warnings gate)
+- `[docs]` Drop the Travis CI link/badge (CI moved to GitHub Actions)
+- `[docs]` Align CONTRIBUTING with Conventional Commits + atomic-per-concern
+- `[docs]` Expose `cement.core.deprecations` in the Sphinx API reference
+  (was missing)
+- `[docs]` Fix a `stderror` → `stderr` typo in the `cement.utils.shell`
+  `cmd()`/`exec_cmd()` Returns docstrings
+- `[docs]` Remove an orphaned `[Commit Guidelines]` reference-link
+  definition from `.github/CONTRIBUTING.md`
+- `[dev]` Extend the CI `cli-smoke-test` to gate the generated project's own
+  `make comply`/`make test` and to build/install the generated todo-tutorial
+  (#735)
+- `[dev]` Add a generated-todo ruff-clean regression guard
+  (`test_generate_todo_ruff_clean`) (#735)
 
 Deprecations:
 
-- `[ext.smtp]` `SMTPMailHandler.send()` returning `bool` is deprecated; will return `senderrs` dict in a future version
+- `[ext.smtp]` `SMTPMailHandler.send()` returning `bool` is deprecated
+  (warn-only); it will return a `senderrs` dict, with removal targeted for
+  v3.2.0
 
 
 ## 3.0.14 - May 5, 2025
