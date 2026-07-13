@@ -2,38 +2,47 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 999.1
-current_phase_name: "#674"
-status: verifying
+current_phase: 3.0.16
+status: Awaiting next milestone
 stopped_at: Phase 6 context gathered
-last_updated: "2026-07-13T19:06:45.441Z"
+last_updated: "2026-07-13T21:10:22.671Z"
 last_activity: 2026-07-13
-last_activity_desc: Phase 06 complete, transitioned to Phase 999.1
+last_activity_desc: Milestone 3.0.16 completed and archived
 progress:
   total_phases: 11
   completed_phases: 10
   total_plans: 50
   completed_plans: 50
   percent: 91
+current_phase_name: "Awaiting next milestone"
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-12)
+See: .planning/PROJECT.md (updated 2026-07-13)
 
 **Core value:** Cement 3 stays solid, secure, performant, and bug-free under strict backward compatibility — while being continuously maintained against a modern Python and tooling ecosystem.
-**Current focus:** Phase 06 — release-cut-3-0-16
+**Current focus:** Milestone 3.0.16 shipped (2026-07-13) — awaiting next milestone
 
 ## Current Position
 
-Phase: 999.1 — Pydantic Settings config handler (#674) (BACKLOG)
-Plan: Not started
-Status: Phase complete — ready for verification
-Last activity: 2026-07-13 — Phase 06 complete, transitioned to Phase 999.1
+Phase: Milestone 3.0.16 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-07-13 — Milestone 3.0.16 completed and archived
 
-Progress: [███████████████████░] 44/45 plans (98%) — 9/11 phases complete (Phase 05.4 in progress, Phase 6 release-cut remaining)
+## Deferred Items
+
+Items acknowledged and deferred at milestone close on 2026-07-13:
+
+| Category | Item | Status |
+|----------|------|--------|
+| todo | 2026-07-11-update-gitbook-todo-tutorial-for-pdm-backend | pending — docs-sweep candidate for next milestone |
+| phase-6 | release.yml post-release-checklist job fix (add -R "$GITHUB_REPOSITORY") | deferred-items.md item 1 |
+| phase-6 | RTD force-tag rebuild trigger check (manual build was needed for 3.0.16) | deferred-items.md item 2 |
+| release | Post-release notifications (mailing list, Slack, GitBook changelog) | open on issue #797 |
 
 ## Performance Metrics
 
@@ -220,3 +229,7 @@ Recent decisions affecting current work:
 Last session: 2026-07-13T18:59:20.497Z
 Stopped at: Phase 6 context gathered
 Resume file: .planning/phases/06-release-cut-3-0-16/06-CONTEXT.md
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone

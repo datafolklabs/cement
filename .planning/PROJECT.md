@@ -32,21 +32,26 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - ✓ No-implicit-drift codification (AUDIT POINT comments in pyproject.toml; explicit ruff `extend-select` + `preview = false`; mypy strictness knobs enumerated) — Validated in Phase 01: tooling-baseline-python-matrix
 - ✓ All 5 `cement generate` templates (project, script, extension, plugin, todo-tutorial) modernized to pdm-backend packaging, fully typed, and `make comply` + `make test` green out of the box; enforced by the CI cli-smoke-test matrix — Validated in Phase 05.3 (resolves #735)
 
+- ✓ Tooling baseline current (ruff ~=0.15.12, mypy ~=1.20.2, pytest 9.x); all lint + type errors resolved — 3.0.16
+- ✓ Dependencies current: lockfile regenerated, PDM auto-update unblocked, 11 CVEs dispositioned (all accepted dev/docs transitives) — 3.0.16
+- ✓ CI pipeline green across the full matrix (3.10–3.14 + pypy3.10/3.11), Actions pinned + Dependabot backstop — 3.0.16
+- ✓ Python 3.9 dropped per EOL policy; floor 3.10 — 3.0.16
+- ✓ Test coverage held at 100% through every phase; gate absolute — 3.0.16
+- ✓ Docs build healthy; `make docs -W` strict; CONTRIBUTING aligned — 3.0.16
+- ✓ GitHub issue backlog triaged (manual batch pass, Phase 4) — 3.0.16
+- ✓ Internal-only refactor under byte-for-byte public-API audit gate (pathlib, typing, pragma vocabulary) — 3.0.16
+- ✓ Deprecation warnings added (warn-only), removals signposted for 3.2.0 — 3.0.16
+- ✓ Audit-tooling stub captured as phase-shaped backlog (SECv2-01..03) — 3.0.16
+- ✓ Release cut Cement 3.0.16: automated pipeline, PyPI/Docker/GitHub Release live, dev cycle advanced to 3.0.17 — 3.0.16
+
 ### Active
 
-<!-- v1 = Milestone 1: "Clean & Green" — ships as Cement 3.0.16 (dev = 3.0.15 in git). -->
+<!-- Next milestone not yet defined — run /gsd-new-milestone. Candidates: -->
 
-- [x] **Tooling baseline current**: latest ruff, mypy, pytest, pytest-cov; all lint + type errors resolved — Validated in Phase 01
-- [ ] **Dependencies current**: unblock the stalled PDM auto-update pipeline; pin/resolve CVEs if any
-- [ ] **CI pipeline green**: all matrix jobs passing across supported Python versions; PDM auto-update resumes without drowning in lint
-- [x] **Python 3.9 dropped per EOL policy**: floor raised to 3.10; Python matrix = 3.10–3.14 — Validated in Phase 01
-- [ ] **Test coverage held at 100%**: every change lands with tests; coverage gate remains absolute
-- [x] **Docs build healthy**: Sphinx builds cleanly; no broken refs; contributor docs accurate — Validated in Phase 05 (4+1 warnings cleared; `make docs -W` enforces zero-warnings; CONTRIBUTING aligned with Conventional Commits)
-- [ ] **GitHub issue backlog triaged**: batch close stale/wontfix/duplicate with user approval; label survivors; spin real bugs into fix-phases
-- [ ] **Internal-only refactor**: dead code removed, type hints tightened, modern stdlib idioms (pathlib, contextlib helpers, `cached_property`) — no public API changes, no architectural shifts. Cement 4 is unscoped and stays that way during this milestone.
-- [x] **Deprecation warnings added (warn-only)**: surfaces emit `DeprecationWarning` now; actual removals are scheduled for 3.2.0 — Validated in Phase 05 (DEPRECATIONS dict pinned to v3.2.0; repo-root `DEPRECATIONS.md` added; runtime warning formatting fixed)
-- [x] **Audit-tooling stub**: backlog item captured for pip-audit / bandit / SAST — spec'd but not implemented this milestone — Validated in Phase 05 (REQUIREMENTS.md SECv2-01..03 expanded with phase-shaped scope notes)
-- [ ] **Release cut: Cement 3.0.16**: tagged release, changelog, PyPI publish
+- [ ] Docs sweep: audit GitBook + Sphinx + repo/demo/template docs against shipped 3.0.16 behavior (known seeds: demo/generate-features README gating tree, GitBook todo-tutorial pdm-backend update)
+- [ ] release.yml post-release-checklist job fix + RTD force-tag trigger check (phase 6 deferred-items.md)
+- [ ] Backlog 999.1: Pydantic Settings config handler (#674)
+- [ ] Backlog 999.2: Cross-OS CI gates (Windows/macOS test portability)
 
 ### Out of Scope
 
@@ -60,7 +65,9 @@ Cement is a mature, extensible Python CLI application framework built around a h
 
 ## Context
 
-**Codebase posture:** Cement 3 is mature. A codebase map already exists in `.planning/codebase/` (ARCHITECTURE, STACK, STRUCTURE, CONVENTIONS, TESTING, INTEGRATIONS, CONCERNS) and should be treated as authoritative for current-state facts.
+**Current state (post-3.0.16, 2026-07-13):** Cement 3.0.16 is live on PyPI, Docker Hub (multi-arch), and GitHub Releases; `main` is on the 3.0.17 dev cycle. ~17.4k LOC Python (cement/ + tests/) at 100% coverage, ruff/mypy clean, with a byte-for-byte public-API audit gate (`make audit-public-api`). Releases are now automated via `gates.yml` + `release.yml` (OIDC trusted publishing, TestPyPI dry-run path, single approval gate). Known post-release follow-ups: notification checklist (issue #797), release.yml checklist-job fix, RTD force-tag trigger check.
+
+**Codebase posture:** Cement 3 is mature. A codebase map already exists in `.planning/codebase/` (ARCHITECTURE, STACK, STRUCTURE, CONVENTIONS, TESTING, INTEGRATIONS, CONCERNS) and should be treated as authoritative for current-state facts (note: map predates the 3.0.16 refactor phases; verify hot spots before relying on line-level claims).
 
 **What sparked this milestone:**
 - Growing backlog of stale GitHub issues with no triage capacity.
@@ -92,14 +99,14 @@ Cement is a mature, extensible Python CLI application framework built around a h
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Anchor priority: Clean & Green first (lint/types/deps/CI/coverage) | Stalled update pipeline is blocking everything else; unblock the baseline before chasing security/performance pillars | — Pending |
-| Deprecations OK in 3.0.x; removals move to 3.2.0 | Preserves strict no-breakage on stable track while still communicating Cement 4 intent to users | — Pending |
-| Internal refactor is cleanup-only — no Cement 4 architectural seams | Cement 4 is unscoped; introducing seams for an undefined target risks locking in premature decisions and constitutes architectural change, which is out of bounds on 3.0.x. A future Cement 4 milestone gets a clean slate. | — Pending |
-| GitHub issues triaged in batch-approve mode | User-reviewed bulk triage balances throughput against accuracy on issues that may have real signal buried in the pile | — Pending |
+| Anchor priority: Clean & Green first (lint/types/deps/CI/coverage) | Stalled update pipeline is blocking everything else; unblock the baseline before chasing security/performance pillars | ✓ Good — baseline unblocked in Phases 1–2; every later phase built on green |
+| Deprecations OK in 3.0.x; removals move to 3.2.0 | Preserves strict no-breakage on stable track while still communicating Cement 4 intent to users | ✓ Good — warn-only surfaces shipped in 3.0.16, all pinned to v3.2.0 |
+| Internal refactor is cleanup-only — no Cement 4 architectural seams | Cement 4 is unscoped; introducing seams for an undefined target risks locking in premature decisions and constitutes architectural change, which is out of bounds on 3.0.x. A future Cement 4 milestone gets a clean slate. | ✓ Good — public-API audit gate proved byte-for-byte stability through the whole refactor |
+| GitHub issues triaged in batch-approve mode | User-reviewed bulk triage balances throughput against accuracy on issues that may have real signal buried in the pile | ✓ Good — done via manual pass (Phase 4); backlog at known clean state for release gating |
 | Python 3.9 dropped this milestone (EOL Oct 2025) | Standing project policy: drop at upstream EOL. Internal/dev matrix change, not treated as public-API breakage | ✓ Done — Phase 01 |
 | Release cut as Cement 3.0.16 | Even-patch convention for stable release; current dev in git = 3.0.15 (odd) | ✓ Validated (Phase 6 — 3.0.16 live on PyPI 2026-07-13; main on 3.0.17 dev cycle) |
-| Security audit tooling (pip-audit/bandit/SAST) stubbed, not implemented | Adding tooling while the lint baseline is already red would multiply noise; revisit once CI is green | — Pending |
-| 100% coverage gate stays absolute | Non-negotiable for a framework; relaxing the gate erodes downstream confidence | — Pending |
+| Security audit tooling (pip-audit/bandit/SAST) stubbed, not implemented | Adding tooling while the lint baseline is already red would multiply noise; revisit once CI is green | ✓ Good — one-shot pip-audit run recorded (02-PIP-AUDIT.md); rollout stubbed as SECv2-01..03 for a future milestone |
+| 100% coverage gate stays absolute | Non-negotiable for a framework; relaxing the gate erodes downstream confidence | ✓ Good — held at 100% through all 11 phases and the release cut |
 
 ## Evolution
 
@@ -119,4 +126,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-13 after Phase 6 completion (release-cut-3-0-16; 3.0.16 shipped live — PyPI/Docker/GitHub Release published, stable/3.0.x + moving tags synced, main advanced to 3.0.17 dev cycle; REL-01..05/CI-04/DOCS-03 all Complete; remaining human follow-ups on checklist issue #797, milestone completion deferred to /gsd-complete-milestone per D-15)*
+*Last updated: 2026-07-13 after 3.0.16 "Clean & Green" milestone completion (shipped 2026-07-13; archives in .planning/milestones/; next milestone not yet defined — run /gsd-new-milestone)*
