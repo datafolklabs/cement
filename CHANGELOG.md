@@ -1,5 +1,17 @@
 # ChangeLog
 
+## 3.0.17 - DEVELOPMENT
+
+Bugs:
+
+Features:
+
+Refactoring:
+
+Misc:
+
+Deprecations:
+
 ## 3.0.16 - July 13, 2026
 
 This release modernizes Cement against the current Python ecosystem while
