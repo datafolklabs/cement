@@ -2,19 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 06
-current_phase_name: release-cut-3-0-16
-status: executing
+current_phase: 999.1
+current_phase_name: "#674"
+status: verifying
 stopped_at: Phase 6 context gathered
-last_updated: "2026-07-13T14:50:33.911Z"
+last_updated: "2026-07-13T19:06:45.441Z"
 last_activity: 2026-07-13
-last_activity_desc: Phase 06 execution started
+last_activity_desc: Phase 06 complete, transitioned to Phase 999.1
 progress:
   total_phases: 11
-  completed_phases: 9
+  completed_phases: 10
   total_plans: 50
-  completed_plans: 46
-  percent: 82
+  completed_plans: 50
+  percent: 91
 ---
 
 # Project State
@@ -28,10 +28,10 @@ See: .planning/PROJECT.md (updated 2026-07-12)
 
 ## Current Position
 
-Phase: 06 (release-cut-3-0-16) — EXECUTING
-Plan: 2 of 5
-Status: Ready to execute
-Last activity: 2026-07-13 — Phase 06 execution started
+Phase: 999.1 — Pydantic Settings config handler (#674) (BACKLOG)
+Plan: Not started
+Status: Phase complete — ready for verification
+Last activity: 2026-07-13 — Phase 06 complete, transitioned to Phase 999.1
 
 Progress: [███████████████████░] 44/45 plans (98%) — 9/11 phases complete (Phase 05.4 in progress, Phase 6 release-cut remaining)
 
@@ -39,7 +39,7 @@ Progress: [███████████████████░] 44/45 p
 
 **Velocity:**
 
-- Total plans completed: 23
+- Total plans completed: 28
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -53,6 +53,7 @@ Progress: [███████████████████░] 44/45 p
 | 05.2 | 1 | - | - |
 | 05.3 | 6 | - | - |
 | 05.4 | 5 | - | - |
+| 06 | 5 | - | - |
 
 **Recent Trend:**
 
@@ -89,6 +90,10 @@ Progress: [███████████████████░] 44/45 p
 | Phase 05.4 P02 | 2 min | 2 tasks | 2 files |
 | Phase 05.4 P04 | 5 min | 2 tasks | 1 files |
 | Phase 06-release-cut-3-0-16 P01 | ~35min | 3 tasks | 2 files |
+| Phase 06-release-cut-3-0-16 P02 | 30 min + review window | 3 tasks tasks | 3 files files |
+| Phase 06-release-cut-3-0-16 P03 | 18 min + checkpoint window | 2 tasks | 1 files |
+| Phase 06-release-cut-3-0-16 P04 | ~2h45m | 3 tasks | 0 files |
+| Phase 06-release-cut-3-0-16 P05 | ~25min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -171,6 +176,11 @@ Recent decisions affecting current work:
 - [Phase 05.4]: [Phase 05.4 Plan 01]: cli-smoke-native banner accepts macOS plus Linux/Darwin/Windows (platform.platform() emits 'macOS-...' on modern Darwin runners). bump_dev_version targets backend.py VERSION, pyproject untouched via [tool.pdm.version] source=call.
 - [Phase 05.4]: gates.yml holds ONLY gate jobs (no publish/OIDC surface, T-05.4-04); publish stays in release.yml. full-os-matrix defaults true so PR CI (D-14) and release both exercise the new Windows core-test and macOS/Windows native-smoke gates. PR caller omits secrets: inherit (gates need none).
 - [Phase 06 Plan 01]: Docker Hub creds via org OAT at REPOSITORY scope (env-scope rejected: docker job declares no environment); stable/3.0.x ancestry recorded via user-run -s ours merge 8978b395 on main (D-10, real merge commit, zero drift)
+- [Phase ?]: [Phase 06 Plan 02]: D-01 cross-check added 3 missing changelog entries (#756 __all__, #757 base PR CI, devbox/direnv); PR #795 squash-merged to main as 1173c469 carrying the finalized 3.0.16 changelog + VERSION bump
+- [Phase 06]: [Phase 06 Plan 03]: CI-04 baseline = GREEN workflow_dispatch run 29262360749 of release.yml against finalized main 1173c469 (all 5 testpypi-smoke legs green, publish-pypi skipped); 3.0.16 bytes frozen on TestPyPI — live tag run skip-exists and re-smokes the identical artifact
+- [Phase ?]: [Phase 06 Plan 04]: 3.0.16 shipped — user-pushed tag on 1173c469 (D-07, FF-OK proven); run 29263984129 green through approval-gated PyPI publish, docker, branch/tag sync, gh-release; dev-bump PR #796 open
+- [Phase ?]: [Phase 06 Plan 04]: post-release-checklist job fails deterministically (gh issue create without checkout/-R); D-08 manual completion via issue #797, release.yml fix deferred — no rerun (cannot recover, all release-critical jobs green)
+- [Phase 06-release-cut-3-0-16]: 3.0.16 closed — REL-04 clean-venv proof off production PyPI (Python 3.14.3); dev-bump PR #796 merged (e9aede10), main on 3.0.17 dev cycle; all 7 phase requirement IDs Complete — Phase 6 D-12 boundary reached; RTD force-updated-tag trigger gap logged as deferred item 2; milestone completion is a separate /gsd-complete-milestone session (D-15)
 
 ### Roadmap Evolution
 
@@ -207,6 +217,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-07-13T14:49:54.551Z
+Last session: 2026-07-13T18:59:20.497Z
 Stopped at: Phase 6 context gathered
 Resume file: .planning/phases/06-release-cut-3-0-16/06-CONTEXT.md

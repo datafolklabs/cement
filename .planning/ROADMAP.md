@@ -20,7 +20,7 @@ This roadmap delivers Cement 3.0.16, a maintenance/modernization release on the 
 - [x] **Phase 3: Internal Refactor & Coverage Hardening** - Cleanup-only refactor under the 100% coverage gate (completed 2026-05-04; all 9 D-24 conjuncts GREEN — see 03-VERIFICATION.md)
 - [x] **Phase 4: Backlog Triage** - Bulk-close stale issues with user approval, label and prioritize survivors (completed 2026-05-05 via manual pass outside GSD; see 04-NOTE.md)
 - [x] **Phase 5: Deprecations, Docs & Security Stubs** - Add warn-only deprecations, refresh docs, capture audit-tooling backlog (completed 2026-05-08; 12/12 must-haves verified — see 05-VERIFICATION.md)
-- [ ] **Phase 6: Release Cut 3.0.16** - Changelog, TestPyPI smoke test, tag, GitHub release, PyPI publish, bump to 3.0.17
+- [x] **Phase 6: Release Cut 3.0.16** - Changelog, TestPyPI smoke test, tag, GitHub release, PyPI publish, bump to 3.0.17 (completed 2026-07-13; 5/5 success criteria verified — see 06-VERIFICATION.md)
 
 ## Phase Details
 
@@ -349,7 +349,7 @@ Plans:
   4. The `3.0.16` git tag exists, the GitHub release page is published with the changelog body, and `pip install cement==3.0.16` from PyPI succeeds on a clean venv
   5. The release workflow itself (not just the artifacts) ran end-to-end without manual intervention beyond the user-approved publish step
 
-**Plans**: 1/5 plans executed
+**Plans**: 5/5 plans complete
 
   **Wave 1**
 
@@ -357,19 +357,19 @@ Plans:
 
   **Wave 2** *(blocked on Wave 1)*
 
-  - [ ] 06-02-PLAN.md — Release-prep PR: finalize CHANGELOG to `## 3.0.16` (D-01..D-04) + bump backend.py VERSION to 3.0.16 (REL-01); user reviews + merges (D-05)
+  - [x] 06-02-PLAN.md — Release-prep PR: finalize CHANGELOG to `## 3.0.16` (D-01..D-04) + bump backend.py VERSION to 3.0.16 (REL-01); user reviews + merges (D-05)
 
   **Wave 3** *(blocked on Wave 2)*
 
-  - [ ] 06-03-PLAN.md — Final `workflow_dispatch` dry-run against the merged 3.0.16 commit; 5-Python TestPyPI smoke green (D-06, CI-04, REL-02)
+  - [x] 06-03-PLAN.md — Final `workflow_dispatch` dry-run against the merged 3.0.16 commit; 5-Python TestPyPI smoke green (D-06, CI-04, REL-02)
 
   **Wave 4** *(blocked on Waves 1 + 3)*
 
-  - [ ] 06-04-PLAN.md — Pre-tag safety + USER tag push (D-07) + shepherd live run through the single approval gate; tag + GitHub Release published (D-08, REL-03)
+  - [x] 06-04-PLAN.md — Pre-tag safety + USER tag push (D-07) + shepherd live run through the single approval gate; tag + GitHub Release published (D-08, REL-03)
 
   **Wave 5** *(blocked on Wave 4)*
 
-  - [ ] 06-05-PLAN.md — REL-04 clean-venv PyPI check (D-13) + merge dev-bump PR to 3.0.17 (REL-05, D-12) + announcement draft (D-14) + 06-VERIFICATION.md flipping REL-01..05/CI-04/DOCS-03
+  - [x] 06-05-PLAN.md — REL-04 clean-venv PyPI check (D-13) + merge dev-bump PR to 3.0.17 (REL-05, D-12) + announcement draft (D-14) + 06-VERIFICATION.md flipping REL-01..05/CI-04/DOCS-03
 
 ## Progress
 
@@ -388,7 +388,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6, with inserted 
 | 05.2. ext.argparse command self-meta accessor (INSERTED) | 1/1 | Complete   | 2026-06-25 |
 | 05.3. Template packaging modernization + typed templates (INSERTED) | 6/6 | Complete   | 2026-07-11 |
 | 05.4. GitHub Actions Release Workflow (INSERTED) | 5/5 | Complete    | 2026-07-12 |
-| 6. Release Cut 3.0.16 | 1/5 | In Progress|  |
+| 6. Release Cut 3.0.16 | 5/5 | Complete    | 2026-07-13 |
 
 ## Backlog
 
@@ -407,7 +407,7 @@ so the core stays zero-dependency. Fully typed (mypy strict), 100% test coverage
 ruff-clean, with Sphinx API docs, a GitBook narrative note, and a `[ext.pydantic]`
 CHANGELOG entry.
 **Requirements:** TBD (promote to derive REQ IDs)
-**Plans:** 0 plans
+**Plans:** 5/5 plans complete
 **Source:** https://github.com/datafolklabs/cement/issues/674 (open; author derks; low priority by design)
 **Scope note:** NEW feature — out of scope for the v1.0 "Clean & Green"
 maintenance milestone (PROJECT.md Out of Scope: "New features beyond maintenance

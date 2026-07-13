@@ -97,7 +97,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 | Internal refactor is cleanup-only — no Cement 4 architectural seams | Cement 4 is unscoped; introducing seams for an undefined target risks locking in premature decisions and constitutes architectural change, which is out of bounds on 3.0.x. A future Cement 4 milestone gets a clean slate. | — Pending |
 | GitHub issues triaged in batch-approve mode | User-reviewed bulk triage balances throughput against accuracy on issues that may have real signal buried in the pile | — Pending |
 | Python 3.9 dropped this milestone (EOL Oct 2025) | Standing project policy: drop at upstream EOL. Internal/dev matrix change, not treated as public-API breakage | ✓ Done — Phase 01 |
-| Release cut as Cement 3.0.16 | Even-patch convention for stable release; current dev in git = 3.0.15 (odd) | — Pending |
+| Release cut as Cement 3.0.16 | Even-patch convention for stable release; current dev in git = 3.0.15 (odd) | ✓ Validated (Phase 6 — 3.0.16 live on PyPI 2026-07-13; main on 3.0.17 dev cycle) |
 | Security audit tooling (pip-audit/bandit/SAST) stubbed, not implemented | Adding tooling while the lint baseline is already red would multiply noise; revisit once CI is green | — Pending |
 | 100% coverage gate stays absolute | Non-negotiable for a framework; relaxing the gate erodes downstream confidence | — Pending |
 
@@ -119,4 +119,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-07-12 after Phase 05.4 completion (github-actions-release-workflow; automates issue #791's manual release checklist — release machinery built and dry-run-validated end-to-end against TestPyPI; requirement IDs CI-04/CI-05/REL-02..05/DOCS-03 flip in Phase 6, which runs the real release)*
+*Last updated: 2026-07-13 after Phase 6 completion (release-cut-3-0-16; 3.0.16 shipped live — PyPI/Docker/GitHub Release published, stable/3.0.x + moving tags synced, main advanced to 3.0.17 dev cycle; REL-01..05/CI-04/DOCS-03 all Complete; remaining human follow-ups on checklist issue #797, milestone completion deferred to /gsd-complete-milestone per D-15)*
