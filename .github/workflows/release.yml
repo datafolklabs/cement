@@ -128,7 +128,7 @@ jobs:
           name: dist
           path: dist
       - name: Publish to TestPyPI
-        uses: pypa/gh-action-pypi-publish@v1.14.0
+        uses: pypa/gh-action-pypi-publish@v1.14.1
         with:
           repository-url: https://test.pypi.org/legacy/
           skip-existing: true
@@ -202,7 +202,7 @@ jobs:
           name: dist
           path: dist
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.14.0
+        uses: pypa/gh-action-pypi-publish@v1.14.1
 
   # Docker Hub multi-arch images (D-11). Fans out only after the single
   # approval (`needs: publish-pypi`). buildx builds linux/amd64 + linux/arm64
