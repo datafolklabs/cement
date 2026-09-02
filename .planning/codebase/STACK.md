@@ -5,12 +5,12 @@
 ## Languages
 
 **Primary:**
-- Python 3.9+ - Entire framework and CLI application
+- Python 3.10+ - Entire framework and CLI application
 
 ## Runtime
 
 **Environment:**
-- Python (3.9, 3.10, 3.11, 3.12, 3.13, 3.14 supported)
+- Python (3.10, 3.11, 3.12, 3.13, 3.14 supported; 3.9 dropped in 3.0.16 per the EOL policy)
 
 **Package Manager:**
 - PDM (Python Dependency Manager)
@@ -43,7 +43,7 @@
 - mock 5.1.0+ - Object mocking
 
 **Code Quality:**
-- ruff 0.3.2+ - Linting and code formatting
+- ruff ~=0.15.12 - Linting and code formatting
 - mypy 1.9.0+ - Static type checking
 
 **Documentation:**
@@ -77,7 +77,7 @@
 
 **Environment:**
 - Development environment via Devbox with pre-installed services (Redis, Memcached, Mailpit)
-- Docker Compose setup for multi-version testing (Python 3.9 - 3.14)
+- Docker Compose setup for multi-version testing (Python 3.10 - 3.14)
 - Environment variables for service configuration:
   - `REDIS_HOST` - Redis server hostname
   - `MEMCACHED_HOST` - Memcached server hostname
@@ -88,7 +88,7 @@
 - `pyproject.toml` - Primary project configuration
 - `pdm.lock` - Dependency lock file
 - Ruff config in `pyproject.toml` (`[tool.ruff]`):
-  - Target Python 3.9+
+  - Target Python 3.10+
   - Line length: 100 characters
   - Indent width: 4 spaces
 - MyPy config in `pyproject.toml` (`[tool.mypy]`):
@@ -113,7 +113,7 @@
 - Makefile-based workflow
 
 **Production:**
-- Python 3.9 or higher
+- Python 3.10 or higher
 - No external runtime dependencies required for core framework
 - Optional services (Redis, Memcached, SMTP) if using corresponding extensions
 - Alpine Linux compatible (see `Dockerfile` for production image)

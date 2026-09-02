@@ -156,9 +156,9 @@ Cement is a mature, extensible Python CLI application framework built around a h
 ## Technology Stack
 
 ## Languages
-- Python 3.9+ - Entire framework and CLI application
+- Python 3.10+ - Entire framework and CLI application
 ## Runtime
-- Python (3.9, 3.10, 3.11, 3.12, 3.13, 3.14 supported)
+- Python (3.10, 3.11, 3.12, 3.13, 3.14 supported; 3.9 dropped in 3.0.16 per the EOL policy)
 - PDM (Python Dependency Manager)
 - Lockfile: `pdm.lock` (present)
 ## Frameworks
@@ -196,7 +196,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - `pypng` - For PNG image handling (dev dependency)
 ## Configuration
 - Development environment via Devbox with pre-installed services (Redis, Memcached, Mailpit)
-- Docker Compose setup for multi-version testing (Python 3.9 - 3.14)
+- Docker Compose setup for multi-version testing (Python 3.10 - 3.14)
 - Environment variables for service configuration:
 - `pyproject.toml` - Primary project configuration
 - `pdm.lock` - Dependency lock file
@@ -207,7 +207,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - Devbox environment manager with:
 - Docker Compose for multi-version testing
 - Makefile-based workflow
-- Python 3.9 or higher
+- Python 3.10 or higher
 - No external runtime dependencies required for core framework
 - Optional services (Redis, Memcached, SMTP) if using corresponding extensions
 - Alpine Linux compatible (see `Dockerfile` for production image)
@@ -227,13 +227,15 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - Instance variables: lowercase_with_underscores
 - Module-level logger: `LOG = minimal_logger(__name__)`
 - Use PascalCase for class names
-- Type annotations use full form: `Dict[str, Any]`, `Optional[str]`, `List[str]`, `Tuple[int, str]`
+- Use PEP 585 builtin generics: `dict[str, Any]`, `list[str]`, `tuple[int, str]`, `type[Handler]`
+- Use PEP 604 unions: `str | None`, `int | str`, `dict[str, Any] | None` — NOT `Union[...]` / `Optional[...]`
+- Ruff `UP006`/`UP007`/`UP045` rewrite legacy typing syntax on every `make comply-ruff-fix`; `cement/` contains zero `Dict[`/`List[`/`Optional[`/`Union[`
 - Private Meta attribute annotations: `_meta: MetaClassName  # type: ignore` (see `cement/ext/ext_smtp.py` line 72)
 ## Code Style
-- Tool: `ruff` (v0.3.2+)
+- Tool: `ruff` (`~=0.15.12`)
 - Line length: 100 characters
 - Indentation: 4 spaces
-- Python target: 3.9+
+- Python target: 3.10 (`target-version = "py310"`)
 - Tool: `ruff check cement/ tests/`
 - All code must pass without errors before commit
 - Run via `make comply-ruff`
@@ -241,10 +243,11 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - No centralized alias configuration; use relative imports exclusively (`..core.`, `..utils.`)
 ## Type Annotations
 - mypy config in `pyproject.toml` enforces strict mode:
-- Always annotate function parameters and return types: `def send(self, msg: str, **kw: Any) -> Dict[str, Any]:`
+- Always annotate function parameters and return types: `def send(self, body: _BodyType, **kw: Any) -> bool:`
+- Applies to `cement/` only — mypy's `files` excludes `tests/`, and no test function in `tests/` is annotated
 - Use `TYPE_CHECKING` block for deferred imports to prevent circular dependencies
 - Private Meta attributes require `# type: ignore` due to metaclass pattern (framework constraint)
-- Union types: `Union[str, int]` for multiple types
+- Union types: `str | int` (PEP 604) for multiple types
 ## Error Handling
 - `FrameworkError` - General framework (non-application) errors with message passing
 - `InterfaceError` - Interface-related errors
@@ -287,7 +290,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - Default values for kwargs handled via `Meta.config_defaults` pattern (not function signatures)
 - Return types must be explicit (no `-> Any` without reason)
 - Boolean returns for success/failure (parse_file returns `bool`)
-- Dict/List returns should be typed: `-> Dict[str, Any]`, `-> List[str]`
+- Dict/list returns should be typed: `-> dict[str, Any]`, `-> list[str]`
 ## Module Design
 - Core framework exports via `__all__` lists in main modules (not observed, but interface defines implicit contracts)
 - Private functions/classes prefixed with `_`
