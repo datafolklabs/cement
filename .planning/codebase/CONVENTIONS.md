@@ -29,10 +29,10 @@
 ## Code Style
 
 **Formatting:**
-- Tool: `ruff` (v0.3.2+)
+- Tool: `ruff` (`~=0.15.12`)
 - Line length: 100 characters
 - Indentation: 4 spaces
-- Python target: 3.9+
+- Python target: 3.10 (`target-version = "py310"`)
 
 **Ruff Configuration** (`pyproject.toml` [tool.ruff]):
 ```
@@ -59,17 +59,35 @@ fixable = ["ALL"]
 
 **Example** from `cement/core/foundation.py`:
 ```python
-from __future__ import annotations
 import os
 import platform
 import signal
 import sys
+from collections.abc import Callable
 from importlib import reload as reload_module
+from pathlib import Path as _Path
 from time import sleep
-from typing import (IO, Any, Callable, Dict, List, Optional, TextIO, Tuple,
-                    Type, Union, TYPE_CHECKING)
-from ..core import (arg, cache, config, controller, exc, extension, log, mail,
-                    meta, output, plugin, template)
+from typing import (
+    IO,
+    TYPE_CHECKING,
+    Any,
+    TextIO,
+)
+
+from ..core import (
+    arg,
+    cache,
+    config,
+    controller,
+    exc,
+    extension,
+    log,
+    mail,
+    meta,
+    output,
+    plugin,
+    template,
+)
 from ..core.deprecations import deprecate
 from ..utils.misc import is_true, minimal_logger
 
