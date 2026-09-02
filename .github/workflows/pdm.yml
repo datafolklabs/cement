@@ -10,6 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.0
+        with:
+          # update-deps-action bundles create-pull-request v7.0.8, which probes
+          # for an existing credential with `git config --local` only. Modern
+          # checkout stores its own outside .git/config (an includeIf.gitdir
+          # pointing at a temp credentials file), so that probe misses it and
+          # cpr adds a second AUTHORIZATION extraheader -- git then sends two
+          # and GitHub rejects the push with `Duplicate header: "Authorization"`
+          # (HTTP 400). Dropping checkout's credential leaves cpr's as the only
+          # one. See dep/update-pdm-lock CI history from 2026-05-04 onward.
+          persist-credentials: false
 
       - name: Update dependencies
         uses: pdm-project/update-deps-action@v1.12
