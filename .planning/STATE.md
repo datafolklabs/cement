@@ -4,16 +4,16 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 3.0.16
 status: Awaiting next milestone
-stopped_at: Phase 6 context gathered
+stopped_at: Milestone 3.0.16 archived
 last_updated: "2026-07-13T21:10:22.671Z"
 last_activity: 2026-07-13
 last_activity_desc: Milestone 3.0.16 completed and archived
 progress:
   total_phases: 11
-  completed_phases: 10
+  completed_phases: 11
   total_plans: 50
   completed_plans: 50
-  percent: 91
+  percent: 100
 current_phase_name: "Awaiting next milestone"
 ---
 
@@ -48,7 +48,7 @@ Items acknowledged and deferred at milestone close on 2026-07-13:
 
 **Velocity:**
 
-- Total plans completed: 28
+- Total plans completed: 50
 - Average duration: —
 - Total execution time: 0 hours
 
@@ -56,9 +56,13 @@ Items acknowledged and deferred at milestone close on 2026-07-13:
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 4 | - | - |
+| 01 | 5 | - | - |
 | 01.1 | 1 | - | - |
-| 05 | 6 | - | - |
+| 02 | 8 | - | - |
+| 03 | 8 | - | - |
+| 04 | manual | - | - |
+| 05 | 7 | - | - |
+| 05.1 | 4 | - | - |
 | 05.2 | 1 | - | - |
 | 05.3 | 6 | - | - |
 | 05.4 | 5 | - | - |

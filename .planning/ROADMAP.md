@@ -59,7 +59,7 @@ so the core stays zero-dependency. Fully typed (mypy strict), 100% test coverage
 ruff-clean, with Sphinx API docs, a GitBook narrative note, and a `[ext.pydantic]`
 CHANGELOG entry.
 **Requirements:** TBD (promote to derive REQ IDs)
-**Plans:** 5/5 plans complete
+**Plans:** 0 plans
 **Source:** https://github.com/datafolklabs/cement/issues/674 (open; author derks; low priority by design)
 **Scope note:** NEW feature — out of scope for the v1.0 "Clean & Green"
 maintenance milestone (PROJECT.md Out of Scope: "New features beyond maintenance
