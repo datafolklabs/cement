@@ -5,9 +5,19 @@ on:
     - cron: "5 3 * * 1"
   workflow_dispatch:
 
+# Least privilege, matching release.yml (V14): read-only at the workflow level,
+# with the one job elevating to exactly what it needs. The repository default is
+# `write`, so without this the job ran with every write scope -- packages, pages,
+# deployments, issues -- to push a branch and open a PR.
+permissions:
+  contents: read
+
 jobs:
   update-dependencies:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write        # push the dep/update-pdm-lock branch
+      pull-requests: write   # open the lockfile PR
     steps:
       - uses: actions/checkout@v7.0.0
         with:

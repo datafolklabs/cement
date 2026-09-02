@@ -19,6 +19,10 @@ Bugs:
   bundled `create-pull-request` v7.0.8 could not see it and added a second
   `AUTHORIZATION` extraheader, and GitHub rejected the push with
   `Duplicate header: "Authorization"` (HTTP 400).
+- `[ci]` Scope the `pdm.yml` token to `contents: write` +
+  `pull-requests: write` on the update job, with the workflow defaulting to
+  `contents: read`. The repository default is `write`, so the job had been
+  running with every write scope to push a branch and open a PR.
 
 Features:
 
