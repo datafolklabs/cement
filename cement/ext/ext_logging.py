@@ -178,10 +178,24 @@ class LoggingLogHandler(log.LogHandler):
     def clear_loggers(self, namespace: str) -> None:
         """Clear any previously configured loggers for ``namespace``."""
 
-        for i in logging.getLogger(f"cement:app:{namespace}").handlers:
-            logging.getLogger(f"cement:app:{namespace}").removeHandler(i)
+        logger = logging.getLogger(f"cement:app:{namespace}")
 
-        self.backend = logging.getLogger(f"cement:app:{namespace}")
+        # Iterate over a copy. `removeHandler()` mutates `Logger.handlers` in
+        # place on CPython up to 3.13.14 / 3.14.6, but rebinds it to a new list
+        # from 3.13.15 / 3.14.7 onward. Iterating the attribute live therefore
+        # skipped every other handler on the former and cleared everything on
+        # the latter -- the same call did different things depending on the
+        # interpreter's patch version. A copy makes every version agree.
+        for i in list(logger.handlers):
+            logger.removeHandler(i)
+
+        # Leave a NullHandler attached. Older CPython left one behind as a
+        # side effect of the skipping above, so this is the state callers have
+        # always observed; making it explicit keeps that contract on the newer
+        # patch versions instead of handing back a handler-less logger.
+        logger.addHandler(NullHandler())
+
+        self.backend = logger
 
     def _get_console_format(self) -> str:
         if self.get_level() == logging.getLevelName(logging.DEBUG):
@@ -220,10 +234,13 @@ class LoggingLogHandler(log.LogHandler):
         else:
             console_handler = NullHandler()
 
-        # FIXME: self._clear_loggers() should be preventing this but it's not!
-        for i in logging.getLogger(f"cement:app:{namespace}").handlers:
-            if isinstance(i, logging.StreamHandler):
-                self.backend.removeHandler(i)
+        # Iterate over a copy -- see clear_loggers() for why. This loop is what
+        # the old `FIXME: self._clear_loggers() should be preventing this but
+        # it's not!` comment was working around: clear_loggers() was in fact
+        # leaving handlers behind, because it had this same bug.
+        for i in list(logging.getLogger(f"cement:app:{namespace}").handlers):
+            if isinstance(i, logging.StreamHandler):    # pragma: nocover  # defensive: unreachable
+                self.backend.removeHandler(i)           # pragma: nocover  # defensive: unreachable
 
         self.backend.addHandler(console_handler)
 
@@ -261,8 +278,8 @@ class LoggingLogHandler(log.LogHandler):
         else:
             file_handler = NullHandler()
 
-        # FIXME: self._clear_loggers() should be preventing this but it's not!
-        for i in logging.getLogger(f"cement:app:{namespace}").handlers:
+        # Iterate over a copy -- see clear_loggers() for why.
+        for i in list(logging.getLogger(f"cement:app:{namespace}").handlers):
             if isinstance(i, file_handler.__class__):   # pragma: nocover  # defensive: unreachable
                 self.backend.removeHandler(i)           # pragma: nocover  # defensive: unreachable
 
