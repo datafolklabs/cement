@@ -23,6 +23,16 @@ Bugs:
   `pull-requests: write` on the update job, with the workflow defaulting to
   `contents: read`. The repository default is `write`, so the job had been
   running with every write scope to push a branch and open a PR.
+- `[ext.logging]` Fix `clear_loggers()` leaving handlers behind. The three
+  handler-removal loops iterated `Logger.handlers` while `removeHandler()`
+  mutated it, so every other handler was skipped -- the cause of the two
+  long-standing `FIXME: self._clear_loggers() should be preventing this but
+  it's not!` comments. CPython 3.13.15 and 3.14.7 changed `removeHandler()` to
+  rebind `Logger.handlers` rather than mutate it in place, which silently made
+  the same call clear *everything* on those patch versions and left a
+  handler-less logger. The loops now iterate a copy and `clear_loggers()`
+  explicitly leaves a `NullHandler` attached, so behavior is identical on every
+  supported interpreter and matches what callers have always observed.
 
 Features:
 
