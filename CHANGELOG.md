@@ -4,6 +4,22 @@
 
 Bugs:
 
+- `[dev]` Bump the `backend.VERSION` assertions in
+  `tests/core/test_backend.py` to 3.0.17. The automated post-release dev bump
+  rewrote `cement/core/backend.py` but not the test, so `main` had been red
+  since the 3.0.17 cycle opened.
+- `[dev]` Teach `scripts/bump_dev_version.py` to rewrite the
+  `tests/core/test_backend.py` version assertions alongside `backend.py` and
+  `CHANGELOG.md`, restoring what every manual dev bump did by hand. The three
+  rewrites stay all-or-nothing, so a shape change fails the release workflow
+  instead of landing a half-bumped tree.
+- `[ci]` Set `persist-credentials: false` on the `pdm.yml` checkout step. The
+  weekly dependency-update workflow had failed every run since 2026-05-04:
+  modern `actions/checkout` stores its credential outside `.git/config`, the
+  bundled `create-pull-request` v7.0.8 could not see it and added a second
+  `AUTHORIZATION` extraheader, and GitHub rejected the push with
+  `Duplicate header: "Authorization"` (HTTP 400).
+
 Features:
 
 Refactoring:
