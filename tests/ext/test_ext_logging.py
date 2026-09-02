@@ -82,9 +82,13 @@ def test_clear_loggers():
 def test_clear_loggers_via_keyword():
     with TestApp() as app:
         label = app._meta.label
-        han = logging.getLogger(f"cement:app:{label}").handlers
         MyLog = LoggingLogHandler(clear_loggers=[f"{label}:{label}"])
         MyLog._setup(app)
+        # Read the handlers after _setup, not before. removeHandler() rebinds
+        # Logger.handlers to a new list on CPython 3.13.15 / 3.14.7+, so a
+        # reference captured up front goes stale instead of tracking the
+        # logger, and this asserted against the pre-setup state.
+        han = logging.getLogger(f"cement:app:{label}").handlers
         assert len(han) == 1
         assert isinstance(han[0], logging.NullHandler)
 
