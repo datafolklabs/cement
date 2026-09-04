@@ -59,7 +59,7 @@ commit:
 	pdm run cz commit
 
 diff:
-	@git diff main...HEAD -- . ':!.planning'
+	@git diff main...HEAD
 
 docs:
 	# AUDIT POINT (Phase 5 D-09): -W enforces zero docs warnings.
