@@ -7,7 +7,14 @@ endif
 .PHONY: init dev up down test test-core cli-smoke-test audit-public-api comply-fix commit diff docs clean superclean dist dist-upload docker docker-push
 
 init:
-	bash ../shared/scripts/init.sh
+	@# ../shared is an optional sibling checkout; a fork or CI clone has none.
+	@# The shared script runs scripts/init.sh last, so the fallback is that step alone.
+	@if [ -f ../shared/scripts/init.sh ]; then \
+	    bash ../shared/scripts/init.sh; \
+	else \
+	    echo "../shared not found - running project setup only"; \
+	    bash scripts/init.sh; \
+	fi
 
 dev:
 	docker compose up -d
