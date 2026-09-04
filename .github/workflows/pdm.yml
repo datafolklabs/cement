@@ -19,7 +19,7 @@ jobs:
       contents: write        # push the dep/update-pdm-lock branch
       pull-requests: write   # open the lockfile PR
     steps:
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
         with:
           # update-deps-action bundles create-pull-request v7.0.8, which probes
           # for an existing credential with `git config --local` only. Modern
