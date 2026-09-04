@@ -76,7 +76,7 @@ with the following core concepts:
 - `gh pr checks <number> -R datafolklabs/cement` - View CI status for a PR
 - `gh api repos/datafolklabs/cement/pulls/<number>/comments` - View PR review comments
 
-## Conventions
+## Practices
 
 **Key Development Practices:**
 - 100% test coverage required (pytest with coverage reporting)
