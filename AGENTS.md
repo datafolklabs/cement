@@ -123,7 +123,10 @@ When working with extensions:
   clone.
 
 <!-- These GSD blocks are a manual copy of what `gsd-tools generate-claude-md`
-     produces; it writes to `.claude/CLAUDE.md`, not here — re-sync after a codebase remap by copying from that output. -->
+     produces; it writes to `.claude/CLAUDE.md`, not here — re-sync after a codebase
+     remap by copying from that output, then re-apply one change: the generator emits
+     every heading inside a block at H2, so demote all but each block's first heading
+     by one level or this file goes back to ~38 flat, colliding H2s. -->
 <!-- GSD:project-start source:PROJECT.md -->
 ## Project
 
@@ -146,13 +149,13 @@ Cement is a mature, extensible Python CLI application framework built around a h
 <!-- GSD:stack-start source:codebase/STACK.md -->
 ## Technology Stack
 
-## Languages
+### Languages
 - Python 3.10+ - Entire framework and CLI application
-## Runtime
+### Runtime
 - Python (3.10, 3.11, 3.12, 3.13, 3.14 supported; 3.9 dropped in 3.0.16 per the EOL policy)
 - PDM (Python Dependency Manager)
 - Lockfile: `pdm.lock` (present)
-## Frameworks
+### Frameworks
 - Cement - Self (CLI application framework with handler/interface pattern)
 - Argparse - Command-line argument parsing (extension: `cement/ext/ext_argparse.py`)
 - Jinja2 - Template rendering (extension: `cement/ext/ext_jinja2.py`)
@@ -173,7 +176,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - sphinxcontrib-napoleon - Google/NumPy docstring support
 - pdm-backend - Build system backend
 - PDM - Dependency and package management
-## Key Dependencies
+### Key Dependencies
 - None - Cement core has **zero external dependencies**
 - `colorlog` - For colored logging output
 - `jinja2` - For Jinja2 template rendering
@@ -185,7 +188,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - `tabulate` - For ASCII table formatting
 - `requests` - For HTTP requests (dev dependency)
 - `pypng` - For PNG image handling (dev dependency)
-## Configuration
+### Configuration
 - Development environment via Devbox with pre-installed services (Redis, Memcached, Mailpit)
 - Docker Compose setup for multi-version testing (Python 3.10 - 3.14)
 - Environment variables for service configuration:
@@ -194,7 +197,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - Ruff config in `pyproject.toml` (`[tool.ruff]`):
 - MyPy config in `pyproject.toml` (`[tool.mypy]`):
 - Pytest config in `pyproject.toml` (`[tool.pytest.ini_options]`):
-## Platform Requirements
+### Platform Requirements
 - Devbox environment manager with:
 - Docker Compose for multi-version testing
 - Makefile-based workflow
@@ -207,7 +210,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 <!-- GSD:conventions-start source:CONVENTIONS.md -->
 ## Conventions
 
-## Naming Patterns
+### Naming Patterns
 - Module files: lowercase with underscores (`foundation.py`, `ext_smtp.py`)
 - Classes: PascalCase (e.g., `FrameworkError`, `SMTPMailHandler`, `MetaMixin`)
 - Test files: `test_<module>.py` pattern (e.g., `test_foundation.py`, `test_ext_smtp.py`)
@@ -222,7 +225,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - Use PEP 604 unions: `str | None`, `int | str`, `dict[str, Any] | None` — NOT `Union[...]` / `Optional[...]`
 - Ruff `UP006`/`UP007`/`UP045` rewrite legacy typing syntax on every `make comply-ruff-fix`; `cement/` contains zero `Dict[`/`List[`/`Optional[`
 - Private Meta attribute annotations: `_meta: MetaClassName  # type: ignore` (see `cement/ext/ext_smtp.py` line 72)
-## Code Style
+### Code Style
 - Tool: `ruff` (`~=0.15.12`)
 - Line length: 100 characters
 - Indentation: 4 spaces
@@ -230,50 +233,50 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - Tool: `ruff check cement/ tests/`
 - All code must pass without errors before commit
 - Run via `make comply-ruff`
-## Import Organization
+### Import Organization
 - No centralized alias configuration; use relative imports exclusively (`..core.`, `..utils.`)
-## Type Annotations
+### Type Annotations
 - mypy config in `pyproject.toml` enforces strict mode:
 - Always annotate function parameters and return types: `def send(self, body: _BodyType, **kw: Any) -> bool:`
 - Applies to `cement/` only — mypy's `files` excludes `tests/`, and no test function in `tests/` is annotated
 - Use `TYPE_CHECKING` block for deferred imports to prevent circular dependencies
 - Private Meta attributes require `# type: ignore` due to metaclass pattern (framework constraint)
 - Union types: `str | int` (PEP 604) for multiple types
-## Error Handling
+### Error Handling
 - `FrameworkError` - General framework (non-application) errors with message passing
 - `InterfaceError` - Interface-related errors
 - `CaughtSignal(signum, frame)` - Raised when signal is caught
 - Raise framework exceptions for framework-level errors
 - Custom applications should extend `FrameworkError` for app-specific exceptions
 - Always include a message: `raise FrameworkError("descriptive message")`
-## Logging
+### Logging
 - Module-level logger created as: `LOG = minimal_logger(__name__)`
 - No logging.config setup needed; minimal logger is intentionally simple for framework
 - Use `LOG.debug()` for framework internals: `LOG.debug(f'hook {hook_spec[0]} not defined')`
 - Framework runs silently by default; debug output only when app.debug is True
 - No INFO/WARNING/ERROR logging in framework core (by design)
-## Comments
+### Comments
 - Framework code is internally documented via docstrings; comments for non-obvious logic
 - Use `# FIXME:` for known issues that need attention (e.g., line 125 in `foundation.py`)
 - Use `# pragma: nocover` for unreachable code in handlers/interfaces (abstract methods)
 - Use `# type: ignore` for framework Meta pattern workarounds (mypy limitation)
 - Use `# noqa: E501` to suppress line-too-long warnings for long strings (deprecation messages)
-## Docstring Style
+### Docstring Style
 - Class docstrings: one-line description + Args/Returns sections
 - Method docstrings: one-line + Args/Returns if needed
 - Abstract methods: `pass    # pragma: nocover`
-## Meta Class Pattern
+### Meta Class Pattern
 - `MetaMixin` base class provides `self._meta` attribute via MRO merging
 - Each class defines nested `Meta` inner class with configuration
 - Meta attributes cascade through inheritance: parent Meta → child Meta → kwargs
 - Used throughout: `App`, `Handler`, `Interface`, all handler implementations
 - Read: `self._meta.label`, `self._meta.config_section`
 - Frameworks queries: `handler._meta.interface`, `handler._meta.overridable`
-## Handler/Interface Contracts
+### Handler/Interface Contracts
 - Interface defines abstract methods in `InterfaceHandler` base
 - Concrete handlers implement interface and subclass `Handler`
 - All handlers must define `Meta.label` and `Meta.interface`
-## Function Design
+### Function Design
 - Keep functions focused; multi-responsibility functions are common in setup/teardown (40-60 lines acceptable for setup methods)
 - Private helper methods should be small (<30 lines)
 - Prefer `**kwargs` for optional parameters (handler/interface pattern)
@@ -282,11 +285,11 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - Return types must be explicit (no `-> Any` without reason)
 - Boolean returns for success/failure (parse_file returns `bool`)
 - Dict/list returns should be typed: `-> dict[str, Any]`, `-> list[str]`
-## Module Design
+### Module Design
 - Core framework exports via `__all__` lists in main modules (not observed, but interface defines implicit contracts)
 - Private functions/classes prefixed with `_`
 - Not used; direct imports from submodules preferred
-## PEP 8 Compliance
+### PEP 8 Compliance
 - All code must pass before commit
 - Ruff auto-fix available: `make comply-ruff-fix`
 - Violations will block CI (see `.github/workflows/build_and_test.yml`)
@@ -295,13 +298,13 @@ Cement is a mature, extensible Python CLI application framework built around a h
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->
 ## Architecture
 
-## Pattern Overview
+### Pattern Overview
 - **Interface-driven design:** Core interfaces (`ArgumentInterface`, `ConfigInterface`, `LogInterface`, `OutputInterface`, etc.) define abstract contracts that handlers must implement
 - **Handler registry system:** A `HandlerManager` registers, retrieves, and resolves handlers by interface and label (e.g., `app.handler.get('output', 'json')`)
 - **Meta class pattern:** Configuration via nested `Meta` classes that are merged through MRO (method resolution order); allows inheritance-based configuration
 - **Lifecycle hooks:** Extensible hook system (`pre_setup`, `post_setup`, `pre_run`, `post_run`, `pre_close`, `post_close`, `signal`, `pre_render`, `post_render`) for plugins to inject behavior
 - **Extension/Plugin loading:** Dynamic module loading for optional functionality and application-level extensions
-## Layers
+### Layers
 - Purpose: Main entry point and orchestrator for the framework
 - Location: `cement/core/foundation.py` (the `App` class)
 - Contains: Application lifecycle methods (`setup()`, `run()`, `close()`), handler setup methods, argument parsing, configuration management, signal handling
@@ -352,13 +355,13 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - Precedence: System config → User config → Application config → Command-line overrides
 - Depends on: Filesystem, environment
 - Used by: Application setup, handler initialization
-## Data Flow
+### Data Flow
 - **Application Meta:** Configuration stored in `app._meta` (merged from `App.Meta` class hierarchy and keyword args)
 - **Parsed Arguments:** `app.pargs` (set during argument parsing, accessible to controllers)
 - **Last Rendered Output:** `app._last_rendered` tuple of `(data, output_text)`
 - **Handler State:** Handlers store state in instance attributes (e.g., `config.data`, `log.logger`)
 - **Loaded Extensions/Plugins:** Tracked in `app.ext._loaded_extensions`, `app.plugin.get_enabled_plugins()`
-## Key Abstractions
+### Key Abstractions
 - **Purpose:** Abstract interface contracts with concrete implementations
 - **Examples:**
 - **Pattern:** Interface defines abstract methods; handler implements them. App resolves handlers by interface label + handler label (e.g., `app.handler.get('output', 'json')`).
@@ -374,7 +377,7 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - **Purpose:** Register handlers and hooks in a pluggable way
 - **Pattern:** Each extension module (e.g., `cement/ext/ext_json.py`) implements:
 - **Load trigger:** `ExtensionHandler.load_extension(module_name)` imports the module, then calls `module.load(app)` if it exists
-## Entry Points
+### Entry Points
 - Location: `cement/cli/main.py:main()`
 - Triggers: Called from `setuptools` entry point (see `pyproject.toml`)
 - Responsibilities:
@@ -383,14 +386,14 @@ Cement is a mature, extensible Python CLI application framework built around a h
 - Extends: `Controller` (alias for `ArgparseController`)
 - Meta:
 - Methods:
-## Error Handling
+### Error Handling
 - **Interface/Handler Errors:** `cement.core.exc.InterfaceError` when interface not defined or handler doesn't implement interface
 - **Framework Errors:** `cement.core.exc.FrameworkError` for general framework issues (e.g., missing required config, invalid labels)
 - **Caught Signals:** `cement.core.exc.CaughtSignal` raised when signal handler catches SIGTERM/SIGINT/SIGHUP
 - **Signal Handling:** Signals trigger `cement_signal_handler()` which runs `signal` hook then raises `CaughtSignal`
 - **Config Validation:** `validate_config()` can be overridden to check config after loading
 - **Handler Fallback:** `handler.get()` and `handler.resolve()` support optional `fallback` parameter for graceful degradation
-## Cross-Cutting Concerns
+### Cross-Cutting Concerns
 - Framework uses `minimal_logger()` for internal logging (see `cement/utils/misc.py`)
 - App delegates logging to configured `log_handler` (default: `LoggingLogHandler` from `ext_logging`)
 - Debug mode enabled via `--debug` flag or `debug=True` in config
