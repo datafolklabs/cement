@@ -7,8 +7,7 @@ endif
 .PHONY: init dev up down test test-core cli-smoke-test audit-public-api comply-fix commit diff docs clean superclean dist dist-upload docker docker-push
 
 init:
-	devbox install
-	devbox run pdm install
+	bash ../shared/scripts/init.sh
 
 dev:
 	docker compose up -d

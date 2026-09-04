@@ -1,0 +1,39 @@
+default_install_hook_types: [pre-commit, post-commit]
+
+# Nothing that rewrites files: auto-fixing hooks stash mid-commit and collide
+# with the index.lock `git commit` already holds.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+        # Jinja-templated, not real YAML: `{{ project_name }}` parses as a
+        # nested flow mapping and trips check-yaml's parser.
+        exclude: ^demo/generate-features/templates/generate/webapp/docker-compose\.yml$
+        stages: [pre-commit]
+      - id: check-added-large-files
+        stages: [pre-commit]
+
+  - repo: https://github.com/betterleaks/betterleaks
+    rev: v1.8.1
+    hooks:
+      - id: betterleaks
+        stages: [pre-commit]
+
+  # `stages` and `always_run` are both load-bearing on these two.
+  - repo: local
+    hooks:
+      - id: custom-pre-commit-script
+        name: Custom Pre Commit Script
+        language: unsupported_script
+        entry: ./scripts/pre-commit.sh
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+      - id: custom-post-commit-script
+        name: Custom Post Commit Script
+        language: unsupported_script
+        entry: ./scripts/post-commit.sh
+        pass_filenames: false
+        always_run: true
+        stages: [post-commit]
