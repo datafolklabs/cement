@@ -1,0 +1,7 @@
+# Self-contained: never add an extend.path outside this repo.
+title = "cement"
+
+[extend]
+useDefault = true
+
+# Project rules and allowlists below.

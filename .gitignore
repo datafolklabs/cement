@@ -88,3 +88,7 @@ __pypackages__
 # Claude Code agent worktrees (harness-internal scratch)
 .claude/worktrees/
 scratchpad/
+
+.envrc.local
+.claude/settings.local.json
+.planning
