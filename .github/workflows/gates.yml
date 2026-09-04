@@ -28,7 +28,7 @@ jobs:
         with:
           apt: libmemcached-dev
       - name: Set up Python
-        uses: actions/setup-python@v6.3.0
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: "3.x"
           architecture: "x64"
@@ -49,7 +49,7 @@ jobs:
         with:
           apt: libmemcached-dev
       - name: Set up Python
-        uses: actions/setup-python@v6.3.0
+        uses: actions/setup-python@v7.0.0
         with:
           python-version: "3.x"
           architecture: "x64"
@@ -126,7 +126,7 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v7.0.0
   #     - name: Set up Python
-  #       uses: actions/setup-python@v6.3.0
+  #       uses: actions/setup-python@v7.0.0
   #       with:
   #         python-version: "3.x"
   #     # NOT `pdm install`: pdm.lock selects all extras, including pylibmc,
@@ -155,7 +155,7 @@ jobs:
   #   steps:
   #     - uses: actions/checkout@v7.0.0
   #     - name: Set up Python
-  #       uses: actions/setup-python@v6.3.0
+  #       uses: actions/setup-python@v7.0.0
   #       with:
   #         python-version: ${{ matrix.python-version }}
   #     # The smoke script resolves the `cement` console script from PATH and
