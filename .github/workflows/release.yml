@@ -103,7 +103,7 @@ jobs:
         with:
           python-version: "3.x"
       - name: Setup PDM
-        uses: pdm-project/setup-pdm@v4.5
+        uses: pdm-project/setup-pdm@v4.6
       - name: Build distribution
         run: pdm build
       - name: Upload dist artifact
