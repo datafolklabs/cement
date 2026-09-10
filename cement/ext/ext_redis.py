@@ -11,7 +11,7 @@ extensions.
   dependencies.
 """
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 import redis
 
@@ -128,8 +128,10 @@ class RedisCacheHandler(cache.CacheHandler):
             bool: ``True`` if the key is successfully deleted, ``False``
             otherwise
         """
-        res = self.r.delete(key)
-        return int(res) > 0  # type: ignore[arg-type]
+        # redis-py annotates sync and async client responses identically; this
+        # handler is sync-only, so the result is always the concrete value.
+        res = cast(int, self.r.delete(key))
+        return res > 0
 
     def purge(self, **kw: Any) -> None:
         """
@@ -138,9 +140,9 @@ class RedisCacheHandler(cache.CacheHandler):
         redis ``flush_all()`` function.
 
         """
-        keys = self.r.keys('*')
+        keys = cast('list[Any]', self.r.keys('*'))
         if keys:
-            self.r.delete(*keys)  # type: ignore[misc]
+            self.r.delete(*keys)
 
 
 def load(app: "App") -> None:
