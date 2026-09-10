@@ -33,6 +33,12 @@ Bugs:
   handler-less logger. The loops now iterate a copy and `clear_loggers()`
   explicitly leaves a `NullHandler` attached, so behavior is identical on every
   supported interpreter and matches what callers have always observed.
+- `[ext.redis]` Replace unused `# type: ignore` suppressions in `delete()`
+  and `purge()` with `typing.cast()`. redis 8.1 narrowed the
+  `delete()`/`keys()` return annotations, which made the two suppressions
+  unused and failed the type-check gate under `warn_unused_ignores`. The
+  `redis` extra stays unpinned; the handler type-checks clean against both
+  redis 7.4.0 and 8.1.0.
 
 Features:
 
