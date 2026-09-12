@@ -92,3 +92,4 @@ scratchpad/
 .envrc.local
 .claude/settings.local.json
 .planning
+.gsd/
