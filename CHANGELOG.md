@@ -42,6 +42,10 @@ Bugs:
 - `[dev]` Drop the invalid `README` entry from `project.dynamic` in
   `pyproject.toml`; pdm-backend 2.5.0 rejects it and the editable install
   failed in CI.
+- `[ext.smtp]` Fix `TypeError` when an attachment has no alternate name.
+  - [Issue #819](https://github.com/datafolklabs/cement/issues/819)
+- `[ext.smtp]` Fix `TypeError` sending X-headers with `header_encoding` set.
+  - [Issue #820](https://github.com/datafolklabs/cement/issues/820)
 
 Features:
 
