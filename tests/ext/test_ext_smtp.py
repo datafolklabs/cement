@@ -2,6 +2,7 @@
 import json
 import os
 import warnings
+from email.header import decode_header, make_header
 from time import sleep
 from unittest import mock
 
@@ -52,6 +53,21 @@ def delete_msg(message_id):
         'content-type': 'application/json',
     }
     requests.delete(f"{mailpit_api}/messages", data=payload, headers=headers)
+
+
+def _make_png(path):
+    # cid attachments are sent as MIMEImage, so they need real image bytes
+    width = 255
+    height = 255
+    img = []
+    for y in range(height):
+        row = ()
+        for x in range(width):
+            row = row + (x, max(0, 255 - x - y), y)
+        img.append(row)
+    with open(path, 'wb') as f:
+        w = png.Writer(width, height, greyscale=False)
+        w.write(f, img)
 
 
 def test_smtp_send(rando):
@@ -176,14 +192,20 @@ def test_smtp_send_with_base64_encoding(rando):
                       to=[f'to-{rando}@localhost'],
                       from_addr=f'from-{rando}@localhost',
                       header_encoding='base64',
-                      body_encoding='base64')
+                      body_encoding='base64',
+                      X_Test_Header=f'x_header_{rando}')
 
         res = requests.get(f"{mailpit_api}/search?query={rando}")
         data = res.json()
         assert len(data['messages']) == 1
         msg = data['messages'][0]
 
-        # FIXME: Not sure how to test this? See: PR #742
+        res_headers = requests.get(f"{mailpit_api}/message/{msg['ID']}/headers")
+        raw = res_headers.json()['X-Test-Header'][0]
+        assert raw.startswith('=?utf-8?b?')
+        assert str(make_header(decode_header(raw))) == f'x_header_{rando}'
+
+        # FIXME: Not sure how to test body encoding? See: PR #742
 
         delete_msg(msg['ID'])
 
@@ -198,14 +220,20 @@ def test_smtp_send_with_qp_encoding(rando):
                       to=[f'to-{rando}@localhost'],
                       from_addr=f'from-{rando}@localhost',
                       header_encoding='qp',
-                      body_encoding='qp')
+                      body_encoding='qp',
+                      X_Test_Header=f'x_header_{rando}')
 
         res = requests.get(f"{mailpit_api}/search?query={rando}")
         data = res.json()
         assert len(data['messages']) == 1
         msg = data['messages'][0]
 
-        # FIXME: Not sure how to test this? See: PR #742
+        res_headers = requests.get(f"{mailpit_api}/message/{msg['ID']}/headers")
+        raw = res_headers.json()['X-Test-Header'][0]
+        assert raw.startswith('=?utf-8?q?')
+        assert str(make_header(decode_header(raw))) == f'x_header_{rando}'
+
+        # FIXME: Not sure how to test body encoding? See: PR #742
 
         delete_msg(msg['ID'])
 
@@ -403,18 +431,7 @@ def test_smtp_image_files_as_dict(rando, tmp):
     defaults = _get_defaults(subject=rando)
 
     image_file = os.path.join(tmp.dir, 'gradient.png')
-    # create a png (coverage)
-    width = 255
-    height = 255
-    img = []
-    for y in range(height):
-        row = ()
-        for x in range(width):
-            row = row + (x, max(0, 255 - x - y), y)
-        img.append(row)
-    with open(image_file, 'wb') as f:
-        w = png.Writer(width, height, greyscale=False)
-        w.write(f, img)
+    _make_png(image_file)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -439,18 +456,7 @@ def test_smtp_image_files_as_dict_inline(rando, tmp):
     defaults = _get_defaults(subject=rando)
 
     image_file = os.path.join(tmp.dir, 'gradient.png')
-    # create a png (coverage)
-    width = 255
-    height = 255
-    img = []
-    for y in range(height):
-        row = ()
-        for x in range(width):
-            row = row + (x, max(0, 255 - x - y), y)
-        img.append(row)
-    with open(image_file, 'wb') as f:
-        w = png.Writer(width, height, greyscale=False)
-        w.write(f, img)
+    _make_png(image_file)
 
     with SMTPApp(config_defaults=defaults) as app:
         app.run()
@@ -499,6 +505,54 @@ def test_smtp_files_alt_name_is_path(rando, tmp):
         res_full = requests.get(f"{mailpit_api}/message/{msg['ID']}")
         data = res_full.json()
         assert data['Attachments'][0]['FileName'] == os.path.basename(tmp.file)
+        delete_msg(msg['ID'])
+
+
+def test_smtp_files_tuple_no_alt_name(rando, tmp):
+    # a None alt name falls back to the basename of the file path
+    defaults = _get_defaults(subject=rando)
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        files = [(None, tmp.file)]
+        app.mail.send(f"{rando}", files=files)
+        sleep(3)
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        assert msg['Attachments'] == 1
+
+        res_full = requests.get(f"{mailpit_api}/message/{msg['ID']}")
+        data = res_full.json()
+        assert data['Attachments'][0]['FileName'] == os.path.basename(tmp.file)
+        delete_msg(msg['ID'])
+
+
+def test_smtp_image_files_as_dict_no_name(rando, tmp):
+    defaults = _get_defaults(subject=rando)
+
+    image_file = os.path.join(tmp.dir, 'gradient.png')
+    _make_png(image_file)
+
+    with SMTPApp(config_defaults=defaults) as app:
+        app.run()
+
+        app.mail.send(f"{rando}",
+            files=[dict(path=image_file, cid=f'cid-{rando}')])
+        sleep(3)
+        res = requests.get(f"{mailpit_api}/search?query={rando}")
+        data = res.json()
+        assert len(data['messages']) == 1
+        msg = data['messages'][0]
+
+        # Mailpit lists cid parts under Inline, not Attachments
+        res_full = requests.get(f"{mailpit_api}/message/{msg['ID']}")
+        data = res_full.json()
+        assert data['Inline'][0]['FileName'] == 'gradient.png'
+        assert data['Inline'][0]['ContentID'] == f'cid-{rando}'
         delete_msg(msg['ID'])
 
 

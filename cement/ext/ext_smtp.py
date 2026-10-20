@@ -315,9 +315,8 @@ class SMTPMailHandler(mail.MailHandler):
         # X-headers
         for item in params.keys():
             if item.startswith('X-'):
-                msg.add_header(item,
-                               self._header(f'{params[item]}',  # type: ignore
-                                            _charset=cs_header, **params))
+                msg[item] = self._header(f'{params[item]}',  # type: ignore[assignment]
+                                         _charset=cs_header, **params)
 
     def _attach_body(self, msg: MIMEMultipart, part_text: MIMEText | None,
                      part_html: MIMEText | None, cs_body: Charset,
@@ -367,11 +366,12 @@ class SMTPMailHandler(mail.MailHandler):
             #       {'name': 'altname', 'path': 'path/filename.ext', cid: 'cidname'},
             #      ]
             if isinstance(in_path, tuple):
-                altname = os.path.basename(in_path[0])
+                altname = os.path.basename(in_path[0]) if in_path[0] else None
                 path = in_path[1]
                 cid = in_path[2] if len(in_path) >= 3 else None
             elif isinstance(in_path, dict):
-                altname = os.path.basename(in_path.get('name', None))  # type: ignore[arg-type]
+                name = in_path.get('name', None)
+                altname = os.path.basename(name) if name else None
                 path = in_path.get('path')
                 cid = in_path.get('cid', None)
             else:
