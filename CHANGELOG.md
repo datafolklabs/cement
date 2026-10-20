@@ -39,6 +39,9 @@ Bugs:
   unused and failed the type-check gate under `warn_unused_ignores`. The
   `redis` extra stays unpinned; the handler type-checks clean against both
   redis 7.4.0 and 8.1.0.
+- `[dev]` Drop the invalid `README` entry from `project.dynamic` in
+  `pyproject.toml`; pdm-backend 2.5.0 rejects it and the editable install
+  failed in CI.
 
 Features:
 
