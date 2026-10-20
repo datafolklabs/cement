@@ -269,6 +269,18 @@ def test_minimal_logger_framework_log_file_unwritable_file(tmp_path, monkeypatch
     backend.handlers = []
 
 
+def test_safe_file_handler_swallows_emit_error(tmp_path):
+    # Python 3.13.16+ catches open errors inside FileHandler.emit itself, so
+    # the path-based tests above no longer reach _SafeFileHandler's except.
+    handler = misc._SafeFileHandler(str(tmp_path / 'x.log'), delay=True)
+    record = logging.LogRecord('ns', logging.DEBUG, __file__, 0, 'msg', None, None)
+
+    with patch('logging.FileHandler.emit', side_effect=OSError('disk full')):
+        handler.emit(record)
+
+    handler.close()
+
+
 def test_minimal_logger_framework_log_file_not_created_until_write(
         tmp_path, monkeypatch):
     # issue-593: setting CEMENT_FRAMEWORK_LOG_FILE without enabling
