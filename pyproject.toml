@@ -14,7 +14,7 @@ classifiers = [
     "License :: OSI Approved :: BSD License"
 ]
 
-dynamic = ["version", "README"]
+dynamic = ["version"]
 
 requires-python = ">=3.10"
 dependencies = []
