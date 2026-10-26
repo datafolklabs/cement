@@ -107,7 +107,7 @@ jobs:
       - name: Build distribution
         run: pdm build
       - name: Upload dist artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: dist
           path: dist/
