@@ -185,7 +185,7 @@ files = [
 
 [[package]]
 name = "commitizen"
-version = "4.19.2"
+version = "4.19.3"
 requires_python = "<4.0,>=3.10"
 summary = "Python commitizen client tool"
 groups = ["dev"]
@@ -206,8 +206,8 @@ dependencies = [
     "typing-extensions<5.0.0,>=4.0.1; python_full_version < \"3.11\"",
 ]
 files = [
-    {file = "commitizen-4.19.2-py3-none-any.whl", hash = "sha256:178505ff30a9740b33e4d8e6a01854306213d88f5068fbc88554dbcb1a39fd4b"},
-    {file = "commitizen-4.19.2.tar.gz", hash = "sha256:af0fb25f2fb60956b9d64eecd6e3ec7b710c2f9b012ce8728cb32c728c2c5a8a"},
+    {file = "commitizen-4.19.3-py3-none-any.whl", hash = "sha256:d625e038cce66d92da20d24c2c366d410caca43966eba8ec036debf48fda2a68"},
+    {file = "commitizen-4.19.3.tar.gz", hash = "sha256:db77b1d521b5b9a16231a4fd5093d09ca519c5f170938806a784309b81938419"},
 ]
 
 [[package]]
