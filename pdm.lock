@@ -185,7 +185,7 @@ files = [
 
 [[package]]
 name = "commitizen"
-version = "4.19.2"
+version = "4.19.3"
 requires_python = "<4.0,>=3.10"
 summary = "Python commitizen client tool"
 groups = ["dev"]
@@ -206,8 +206,8 @@ dependencies = [
     "typing-extensions<5.0.0,>=4.0.1; python_full_version < \"3.11\"",
 ]
 files = [
-    {file = "commitizen-4.19.2-py3-none-any.whl", hash = "sha256:178505ff30a9740b33e4d8e6a01854306213d88f5068fbc88554dbcb1a39fd4b"},
-    {file = "commitizen-4.19.2.tar.gz", hash = "sha256:af0fb25f2fb60956b9d64eecd6e3ec7b710c2f9b012ce8728cb32c728c2c5a8a"},
+    {file = "commitizen-4.19.3-py3-none-any.whl", hash = "sha256:d625e038cce66d92da20d24c2c366d410caca43966eba8ec036debf48fda2a68"},
+    {file = "commitizen-4.19.3.tar.gz", hash = "sha256:db77b1d521b5b9a16231a4fd5093d09ca519c5f170938806a784309b81938419"},
 ]
 
 [[package]]
@@ -838,13 +838,13 @@ files = [
 
 [[package]]
 name = "pluggy"
-version = "1.5.0"
-requires_python = ">=3.8"
+version = "1.7.0"
+requires_python = ">=3.10"
 summary = "plugin and hook calling mechanisms for python"
 groups = ["dev"]
 files = [
-    {file = "pluggy-1.5.0-py3-none-any.whl", hash = "sha256:44e1ad92c8ca002de6377e165f3e0f1be63266ab4d554740532335b9d75ea669"},
-    {file = "pluggy-1.5.0.tar.gz", hash = "sha256:2cffa88e94fdc978c4c574f15f9e59b7f4201d439195c3715ca9e2486f1d0cf1"},
+    {file = "pluggy-1.7.0-py3-none-any.whl", hash = "sha256:7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec"},
+    {file = "pluggy-1.7.0.tar.gz", hash = "sha256:d1eaa46ebb595891b860ab086b4d09c8588af65ebd4361b8e8f4bb8920b90ba8"},
 ]
 
 [[package]]
@@ -887,20 +887,36 @@ files = [
 
 [[package]]
 name = "pylibmc"
-version = "1.6.3"
-requires_python = ">=3.6"
+version = "1.7.1"
+requires_python = ">=3.8"
 summary = "Quick and small memcached client for Python"
 groups = ["memcached"]
 files = [
-    {file = "pylibmc-1.6.3-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:a7baf4b78720f8b72839b3642b374754cb77cf57dab465a70ed1764d943e19d5"},
-    {file = "pylibmc-1.6.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:dd98054a571bd450200a61a12b9ada3424678d17a25456bbf9a6100470401e52"},
-    {file = "pylibmc-1.6.3-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e847cdc78d82964236599ff5b312bc97fde3d10f4b93c9ee17dc33b7cf3c032a"},
-    {file = "pylibmc-1.6.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4f46b5aa0364bca5e02000f5d62eb408d834a20722ffaf7dae20f75e7d009e6c"},
-    {file = "pylibmc-1.6.3-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:3c35816082848723455071670770d89b5a531d40e9063fe4e942ea456f86da49"},
-    {file = "pylibmc-1.6.3-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:9d2ff6d702eb5ae502e29d97772dc85c749d596c6cb8c82a5d18f175fd4eabcc"},
-    {file = "pylibmc-1.6.3-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e589b7e70dec4daf0da1216789713c753d85611d70cfcd32574161cc75b1527e"},
-    {file = "pylibmc-1.6.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7b93e381dec1520a3fec922765e04679ac553d2f3fda830a5faa7cdc527280a2"},
-    {file = "pylibmc-1.6.3.tar.gz", hash = "sha256:eefa46115537abad65fbe2e032acd1b3463d9bf9e335af4b0916df4e4d3206e0"},
+    {file = "pylibmc-1.7.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:0e4c3ea403083f6a17f20d5e2f4fb34d95c20373e4a4a3bf44cffaae84ebddf6"},
+    {file = "pylibmc-1.7.1-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:a5fd3464f53cdcb25ac7fb425ce3fb584314abce5753862eac5ef5172ebe78f1"},
+    {file = "pylibmc-1.7.1-cp310-cp310-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:dfff13b6ddecc74e17d2d610889a15fa3eaf4dfc1e1e40c396a73d59c97a9c9c"},
+    {file = "pylibmc-1.7.1-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:bf423c52745c42b6d0b22b8f947fbfa414743814416af7b5c4309abf36648253"},
+    {file = "pylibmc-1.7.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:23584d364415a3d7ef0c9ad0aff7c15dad568ba280f95c861c518e4a4d30e3e4"},
+    {file = "pylibmc-1.7.1-cp311-cp311-macosx_11_0_x86_64.whl", hash = "sha256:6fe8a66991efde8bdb9a4854ff147a19e003f0ac7f7f53df689d1d2b0eb2fe44"},
+    {file = "pylibmc-1.7.1-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b95dc7f769a23e41501fb1dc7636ea53df3df4bd81334845a5d527be66ae1b4c"},
+    {file = "pylibmc-1.7.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:0f0fc645ca490da759a6eeaca41db45b50ee179bc5864126c47909170d2655c5"},
+    {file = "pylibmc-1.7.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:c03e6a798231ff18d384f1aa5fe4ffdcb5ec8668342073809458a3e6e8027e3f"},
+    {file = "pylibmc-1.7.1-cp312-cp312-macosx_11_0_x86_64.whl", hash = "sha256:ba2a2fb87ea51ca128841a6ce4bfeb0af95e6b819426d688fca605595f173334"},
+    {file = "pylibmc-1.7.1-cp312-cp312-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:9cb910f2e1eeb23a7a3742782efb1894d6285e0012e406bde485ad6d8dd2bcf0"},
+    {file = "pylibmc-1.7.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:a2512171d065d88a584e6746c1ef2bea98ebc2499016ec06ac50b51779eb9be6"},
+    {file = "pylibmc-1.7.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:36d9f977a83ded2cf58b7ac73fdc4c14a57271db8b0908d6fde7da83da342848"},
+    {file = "pylibmc-1.7.1-cp313-cp313-macosx_11_0_x86_64.whl", hash = "sha256:75eaa7e1e1971bacda8ad8a44c03d2c5fdd08995dbaa4eddac58ac383b35faef"},
+    {file = "pylibmc-1.7.1-cp313-cp313-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b6574142d9051467f065f4a74629e0db2506f16c45aa5ae9ba039f79a5fee399"},
+    {file = "pylibmc-1.7.1-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:485efe8bf93ceb058c9fd13b73016d608e8543d3eeb57b3d9bbce5e12302eb92"},
+    {file = "pylibmc-1.7.1-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:66058115e9d918637abb1f350fc105495674f0a823e6c8362425f9807968c5dd"},
+    {file = "pylibmc-1.7.1-cp314-cp314-macosx_11_0_x86_64.whl", hash = "sha256:274686207bd5772a5d24fde15dc5ebef1c7870e4222e6c2b483fd0be61a4b52b"},
+    {file = "pylibmc-1.7.1-cp314-cp314-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:e6d6f1ae39d7f6b08360a3bf07f28443b61e3e1ee73f42c0ce133e04fdd6acb5"},
+    {file = "pylibmc-1.7.1-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:65795600c2b44670a9b0c2bf6d319193d0f4bbb07025f569e2c88ce62af431e9"},
+    {file = "pylibmc-1.7.1-pp311-pypy311_pp73-macosx_11_0_arm64.whl", hash = "sha256:2f7fe52f390dd5100255d30cae8c6a7decee9b456faf47eff2f2c97209027174"},
+    {file = "pylibmc-1.7.1-pp311-pypy311_pp73-macosx_11_0_x86_64.whl", hash = "sha256:bb2993cbbd3cdd8d9dd6c182c21648f3367e66c0002bcc91d66fae3a98d02b45"},
+    {file = "pylibmc-1.7.1-pp311-pypy311_pp73-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:2ea7ab7ba8780f11a095d3b9c3aa9fb522c7268339ed46e27529327d4ee042fd"},
+    {file = "pylibmc-1.7.1-pp311-pypy311_pp73-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d4167b2020a2587895e8566bf3513d66e69771dbd61adb99a14750803c0fa8f9"},
+    {file = "pylibmc-1.7.1.tar.gz", hash = "sha256:c6efee7a072cf21a92c29efdb3d01605b7c7984c602b9d41e0efd34cfb98cd02"},
 ]
 
 [[package]]
@@ -929,22 +945,22 @@ files = [
 
 [[package]]
 name = "pytest"
-version = "9.1.1"
+version = "9.2.0"
 requires_python = ">=3.10"
 summary = "pytest: simple powerful testing with Python"
 groups = ["dev"]
 dependencies = [
     "colorama>=0.4; sys_platform == \"win32\"",
     "exceptiongroup>=1; python_version < \"3.11\"",
-    "iniconfig>=1.0.1",
-    "packaging>=22",
-    "pluggy<2,>=1.5",
-    "pygments>=2.7.2",
-    "tomli>=1; python_version < \"3.11\"",
+    "iniconfig>=2",
+    "packaging>=24",
+    "pluggy<2,>=1.6",
+    "pygments>=2.15",
+    "tomli>=2; python_version < \"3.11\"",
 ]
 files = [
-    {file = "pytest-9.1.1-py3-none-any.whl", hash = "sha256:37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c"},
-    {file = "pytest-9.1.1.tar.gz", hash = "sha256:1088fbde8f2b49d95a549a195707afa7a76a3ce9bcadc26b6d71f0ffda5fe313"},
+    {file = "pytest-9.2.0-py3-none-any.whl", hash = "sha256:07acdcf88ec174f907dc01af70bf52d49b014bbab03faeeade31c96b18c2e588"},
+    {file = "pytest-9.2.0.tar.gz", hash = "sha256:97c4f3b1f3c7414aa36465e09b8220f1d03627993bd51b1282e193753c80557b"},
 ]
 
 [[package]]
